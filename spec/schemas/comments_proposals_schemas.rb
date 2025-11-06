@@ -34,6 +34,178 @@ module Schemas
       required: %w[id created_at updated_at]
     }.freeze
 
+    MAP_LOCATION_ATTRIBUTES_CREATE = {
+      type: :object,
+      nullable: true,
+      description: 'Geographic location data for mapping the proposal',
+      properties: {
+        id: { type: :integer, nullable: true },
+        latitude: { type: :number, description: 'Latitude coordinate' },
+        longitude: { type: :number, description: 'Longitude coordinate' },
+        altitude: { type: :number, nullable: true },
+        zoom: { type: :integer, nullable: true },
+        features: { type: :string, nullable: true },
+        rendering_library: { type: :string, nullable: true },
+        show_admin_shape: { type: :boolean, nullable: true },
+        _destroy: { type: :boolean, nullable: true }
+      },
+      required: %w[latitude longitude]
+    }.freeze
+
+    MAP_LOCATION_ATTRIBUTES_UPDATE = {
+      type: :object,
+      nullable: true,
+      description: 'Geographic location data for mapping the proposal',
+      properties: {
+        id: { type: :integer, nullable: true },
+        latitude: { type: :number, nullable: true, description: 'Latitude coordinate' },
+        longitude: { type: :number, nullable: true, description: 'Longitude coordinate' },
+        altitude: { type: :number, nullable: true },
+        zoom: { type: :integer, nullable: true },
+        features: { type: :string, nullable: true },
+        rendering_library: { type: :string, nullable: true },
+        show_admin_shape: { type: :boolean, nullable: true },
+        _destroy: { type: :boolean, nullable: true }
+      }
+    }.freeze
+
+    IMAGE_ATTRIBUTES_CREATE = {
+      type: :object,
+      nullable: true,
+      description: 'Optional: Image to illustrate the proposal. Upload as base64-encoded data.',
+      properties: {
+        id: { type: :integer, nullable: true },
+        title: { type: :string, nullable: true, description: 'Image caption or alt text' },
+        attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Supported formats: JPEG, PNG, GIF, WebP' },
+        cached_attachment: { type: :string, nullable: true },
+        credits: { type: :string, nullable: true, description: 'Image source attribution' },
+        user_id: { type: :integer, nullable: true },
+        _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image' }
+      }
+    }.freeze
+
+    IMAGE_ATTRIBUTES_UPDATE = {
+      type: :object,
+      nullable: true,
+      description: 'Update, replace, or remove the proposal image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove.',
+      properties: {
+        id: { type: :integer, nullable: true },
+        title: { type: :string, nullable: true, description: 'Image caption or alt text' },
+        attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Supported formats: JPEG, PNG, GIF, WebP' },
+        cached_attachment: { type: :string, nullable: true },
+        credits: { type: :string, nullable: true, description: 'Image source attribution' },
+        user_id: { type: :integer, nullable: true },
+        _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image' }
+      }
+    }.freeze
+
+    DOCUMENTS_ATTRIBUTES = {
+      type: :array,
+      nullable: true,
+      description: 'Array of document attachments',
+      items: {
+        type: :object,
+        properties: {
+          id: { type: :integer, nullable: true },
+          title: { type: :string, nullable: true },
+          attachment: { type: :string, nullable: true },
+          cached_attachment: { type: :string, nullable: true },
+          user_id: { type: :integer, nullable: true },
+          _destroy: { type: :boolean, nullable: true }
+        }
+      }
+    }.freeze
+
+    TRANSLATIONS_ATTRIBUTES_CREATE = {
+      type: :array,
+      description: 'Multilingual content. Provide title and description for each language.',
+      items: {
+        type: :object,
+        properties: {
+          id: { type: :integer, nullable: true },
+          locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
+          title: { type: :string, description: 'Proposal title in the specified language' },
+          description: { type: :string, description: 'Proposal description in the specified language' },
+          summary: { type: :string, nullable: true, description: 'Brief summary in the specified language' },
+          retired_explanation: { type: :string, nullable: true, description: 'Explanation for retirement in the specified language' },
+          _destroy: { type: :boolean, nullable: true }
+        }
+      }
+    }.freeze
+
+    TRANSLATIONS_ATTRIBUTES_UPDATE = {
+      type: :array,
+      nullable: true,
+      description: 'Update multilingual content',
+      items: {
+        type: :object,
+        properties: {
+          id: { type: :integer, nullable: true },
+          locale: { type: :string, description: 'Language code' },
+          title: { type: :string, nullable: true, description: 'Localized proposal title' },
+          description: { type: :string, nullable: true, description: 'Localized proposal description' },
+          summary: { type: :string, nullable: true, description: 'Brief summary in the specified language' },
+          retired_explanation: { type: :string, nullable: true, description: 'Explanation for retirement in the specified language' },
+          _destroy: { type: :boolean, nullable: true }
+        }
+      }
+    }.freeze
+
+    PROPOSAL_PARAMS_BASE = {
+      responsible_name: { type: :string, description: 'Name of the person or organization responsible for the proposal' },
+      video_url: { type: :string, nullable: true, description: 'URL to a video explaining the proposal (YouTube, Vimeo, etc.)' },
+      geozone_id: { type: :integer, description: 'ID of the geographic zone where the proposal applies' },
+      selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this proposal is selected' },
+      on_behalf_of: { type: :string, nullable: true, description: 'Name of the organization or group submitting on behalf of' },
+      sentiment_id: { type: :integer, nullable: true, description: 'ID of the sentiment classification for this proposal' },
+      official_answer: { type: :string, nullable: true, description: 'Official response or answer from administrators' },
+      admin_accepted: { type: :boolean, nullable: true, description: 'Admin-only: Whether the proposal has been accepted by administrators' },
+      tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization' },
+      related_sdg_list: { type: :string, nullable: true, description: 'Comma-separated list of related Sustainable Development Goals' },
+      resource_terms: { type: :boolean, description: 'Acceptance of resource terms (required for creation)' },
+      projekt_label_ids: {
+        type: :array,
+        items: { type: :integer },
+        nullable: true,
+        description: 'Array of projekt label IDs to associate with this proposal'
+      }
+    }.freeze
+
+    PROPOSAL_CREATE_PARAMS = {
+      type: :object,
+      properties: {
+        proposal: {
+          type: :object,
+          properties: PROPOSAL_PARAMS_BASE.merge(
+            map_location_attributes: MAP_LOCATION_ATTRIBUTES_CREATE,
+            image_attributes: IMAGE_ATTRIBUTES_CREATE,
+            documents_attributes: DOCUMENTS_ATTRIBUTES,
+            translations_attributes: TRANSLATIONS_ATTRIBUTES_CREATE
+          ),
+          required: %w[title description responsible_name geozone_id resource_terms]
+        }
+      },
+      required: ['proposal']
+    }.freeze
+
+    PROPOSAL_UPDATE_PARAMS = {
+      type: :object,
+      properties: {
+        proposal: {
+          type: :object,
+          properties: PROPOSAL_PARAMS_BASE.merge(
+            responsible_name: { type: :string, nullable: true, description: 'Name of the person or organization responsible for the proposal' },
+            geozone_id: { type: :integer, nullable: true, description: 'ID of the geographic zone where the proposal applies' },
+            resource_terms: { type: :boolean, nullable: true, description: 'Acceptance of resource terms' },
+            map_location_attributes: MAP_LOCATION_ATTRIBUTES_UPDATE,
+            image_attributes: IMAGE_ATTRIBUTES_UPDATE,
+            documents_attributes: DOCUMENTS_ATTRIBUTES,
+            translations_attributes: TRANSLATIONS_ATTRIBUTES_UPDATE
+          )
+        }
+      }
+    }.freeze
+
     def self.all
       {
         Comment: COMMENT_SCHEMA,

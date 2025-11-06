@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_minimal_prereqs
@@ -148,31 +148,62 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               resource_terms: { type: :boolean },
               map_location_attributes: {
                 type: :object,
+                nullable: true,
+                description: 'Geographic location data for mapping the idea',
                 properties: {
-                  latitude: { type: :number },
-                  longitude: { type: :number },
-                  zoom: { type: :integer }
+                  id: { type: :integer, nullable: true },
+                  latitude: { type: :number, description: 'Latitude coordinate' },
+                  longitude: { type: :number, description: 'Longitude coordinate' },
+                  altitude: { type: :number, nullable: true },
+                  zoom: { type: :integer, nullable: true },
+                  features: { type: :string, nullable: true },
+                  rendering_library: { type: :string, nullable: true },
+                  show_admin_shape: { type: :boolean, nullable: true },
+                  _destroy: { type: :boolean, nullable: true }
                 },
                 required: %w[latitude longitude]
               },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Optional: Image to illustrate the idea (photo, diagram, visualization, etc.). Upload as base64-encoded data. Recommended for presenting visual evidence or demonstrating the idea concept.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the idea. Does not affect other idea properties.' }
+                }
+              },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the idea. Upload documents as base64-encoded data.',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true },
+                    title: { type: :string, nullable: true, description: 'Document title or filename' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    user_id: { type: :integer, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
                 }
               },
               translations_attributes: {
                 type: :array,
+                nullable: true,
                 items: {
                   type: :object,
                   properties: {
-                    locale: { type: :string },
-                    title: { type: :string },
-                    description: { type: :string }
+                    id: { type: :integer, nullable: true },
+                    locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
+                    title: { type: :string, description: 'Idea title in the specified language' },
+                    description: { type: :string, description: 'Idea description in the specified language' },
+                    _destroy: { type: :boolean, nullable: true }
                   }
                 }
               }
@@ -248,14 +279,15 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
       response '201', 'idea created with base64 image' do
         let(:idea) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
+          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             idea: {
               title: 'New Idea',
               description: 'A meaningful description',
               resource_terms: true,
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_image,
                 title: 'Idea Cover Image'
               },
               translations_attributes: [
@@ -399,22 +431,45 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               idea_category_id: { type: :integer, nullable: true },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Update, replace, or remove the idea image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content for screen readers.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the idea while preserving the idea text and other properties.' }
+                }
+              },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true, description: 'ID of existing document when updating. Omit for new documents.' },
+                    title: { type: :string, nullable: true, description: 'Document title or filename' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    user_id: { type: :integer, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
                 }
               },
               translations_attributes: {
                 type: :array,
+                nullable: true,
                 items: {
                   type: :object,
                   properties: {
-                    locale: { type: :string },
-                    title: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
+                    id: { type: :integer, nullable: true },
+                    locale: { type: :string, description: 'Language code' },
+                    title: { type: :string, nullable: true, description: 'Localized idea title' },
+                    description: { type: :string, nullable: true, description: 'Localized idea description' },
+                    _destroy: { type: :boolean, nullable: true }
                   }
                 }
               }
@@ -576,12 +631,13 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
         let(:id) { existing_idea.id }
         let(:idea) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
+          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             idea: {
               description: 'Updated description',
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_image,
                 title: 'Updated Idea Image'
               }
             }

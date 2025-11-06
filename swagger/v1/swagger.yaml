@@ -489,61 +489,149 @@ paths:
                       nullable: true
                       description: Estimated budget/cost for the investment in the
                         budget's currency.
+                    feasibility:
+                      type: string
+                      nullable: true
+                      enum:
+                      - feasible
+                      - unfeasible
+                      - undecided
+                      description: Admin feasibility assessment (admin only). Set
+                        to "feasible" (can be completed), "unfeasible" (cannot be
+                        done), or "undecided" (still evaluating).
+                    valuation_finished:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether feasibility assessment is
+                        complete'
+                    selected:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether this investment is selected
+                        as a winner'
+                    visible_to_valuators:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether this investment is visible
+                        to valuators during the assessment phase'
                     map_location_attributes:
                       type: object
-                      description: 'Optional: Geographic location details for the
-                        investment. Required latitude and longitude.'
+                      nullable: true
+                      description: Geographic location data for mapping the investment
                       properties:
+                        id:
+                          type: integer
+                          nullable: true
                         latitude:
                           type: number
-                          description: Geographic latitude (-90 to 90)
+                          description: Latitude coordinate
                         longitude:
                           type: number
-                          description: Geographic longitude (-180 to 180)
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
                         zoom:
                           type: integer
-                          description: Map zoom level (0-18)
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
                       required:
                       - latitude
                       - longitude
                     image_attributes:
                       type: object
+                      nullable: true
                       description: 'Optional: Image to visualize the investment project
                         (rendering, photo, diagram, etc.). Upload as base64-encoded
                         data. Recommended for presenting visual evidence or demonstrating
                         the project concept.'
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file. Required when adding
-                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB for optimal performance).'
                         title:
                           type: string
                           nullable: true
                           description: Image caption, alt text, or brief description.
                             Used for accessibility and displayed with the image. Helps
                             visually-impaired users understand the image content.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the current image from
                             the budget investment. Does not affect other investment
                             properties.
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Array of document attachments (PDFs, Word docs,
+                        spreadsheets, etc.) to support the investment proposal. Upload
+                        documents as base64-encoded data.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          title:
+                            type: string
+                            nullable: true
+                            description: Document title or filename
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: 'Base64-encoded document file. Supported
+                              formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
                     translations_attributes:
                       type: array
+                      nullable: true
                       description: Multilingual content. Provide title and description
                         for each language.
                       items:
                         type: object
                         properties:
+                          id:
+                            type: integer
+                            nullable: true
                           locale:
                             type: string
                             description: Language code (e.g., en, de, es)
@@ -553,6 +641,9 @@ paths:
                           description:
                             type: string
                             description: Project description in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
                     tag_list:
                       type: array
                       items:
@@ -781,41 +872,127 @@ paths:
                       nullable: true
                       description: 'Admin-only: Whether this investment is selected
                         as a winner'
+                    visible_to_valuators:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether this investment is visible
+                        to valuators during the assessment phase'
+                    map_location_attributes:
+                      type: object
+                      nullable: true
+                      description: Geographic location data for mapping the investment
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        latitude:
+                          type: number
+                          nullable: true
+                          description: Latitude coordinate
+                        longitude:
+                          type: number
+                          nullable: true
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
                     image_attributes:
                       type: object
+                      nullable: true
                       description: Update, replace, or remove the investment image.
                         Attach a new image (base64-encoded), update metadata (title/credits),
                         or set _destroy=true to remove. All fields are optional.
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
                         title:
                           type: string
                           nullable: true
                           description: Updated image caption or alt text. Improves
                             accessibility by describing the image content for screen
                             readers.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the image entirely from
                             the budget investment while preserving the investment
                             text and other properties.
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Update document attachments. Add new documents,
+                        update existing ones (provide id), or remove documents (set
+                        _destroy=true).
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: ID of existing document when updating. Omit
+                              for new documents.
+                          title:
+                            type: string
+                            nullable: true
+                            description: Document title or filename
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: 'Base64-encoded document file. Supported
+                              formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
                     translations_attributes:
                       type: array
+                      nullable: true
                       description: Update multilingual content
                       items:
                         type: object
                         properties:
+                          id:
+                            type: integer
+                            nullable: true
                           locale:
                             type: string
                             description: Language code
@@ -827,6 +1004,9 @@ paths:
                             type: string
                             nullable: true
                             description: Localized project description
+                          _destroy:
+                            type: boolean
+                            nullable: true
                     tag_list:
                       type: array
                       items:
@@ -1070,43 +1250,58 @@ paths:
                         phase)
                     phase:
                       type: string
+                      nullable: true
                       description: 'Optional: budget phase identifier'
                     currency_symbol:
                       type: string
+                      nullable: true
                       description: Currency symbol to display (e.g., $, €, £)
                     voting_style:
                       type: string
+                      nullable: true
                       description: 'Voting mechanism type: "knapsack" (individual
                         budget allocation), "plurality" (select preferred options),
                         or others'
                     published:
                       type: boolean
+                      nullable: true
                       description: Whether the budget is visible to the public
                     slug:
                       type: string
+                      nullable: true
                       description: URL-friendly identifier for the budget (auto-generated
                         if not provided)
                     image_attributes:
                       type: object
+                      nullable: true
                       description: 'Optional: Image for budget branding or visualization
                         (logo, cover image, etc.). Upload as base64-encoded data.'
                       properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image.
                         attachment:
                           type: string
                           nullable: true
                           description: 'Base64-encoded image file. Required when adding
                             a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
                             max 5MB for optimal performance).'
-                        title:
+                        cached_attachment:
                           type: string
                           nullable: true
-                          description: Image caption, alt text, or brief description.
-                            Used for accessibility and displayed with the image.
                         credits:
                           type: string
                           nullable: true
                           description: Image source attribution, photographer/artist
                             name, or copyright information.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
@@ -1239,38 +1434,60 @@ paths:
                   properties:
                     name:
                       type: string
+                      nullable: true
                       description: Budget display name to update
+                    phase:
+                      type: string
+                      nullable: true
+                      description: Budget phase identifier
                     currency_symbol:
                       type: string
+                      nullable: true
                       description: New currency symbol to display
                     voting_style:
                       type: string
+                      nullable: true
                       description: New voting mechanism type
                     published:
                       type: boolean
+                      nullable: true
                       description: Publish or unpublish the budget
+                    slug:
+                      type: string
+                      nullable: true
+                      description: URL-friendly identifier for the budget
                     image_attributes:
                       type: object
+                      nullable: true
                       description: Update, replace, or remove the budget image. Attach
                         a new image (base64-encoded), update metadata (title/credits),
                         or set _destroy=true to remove. All fields are optional.
                       properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content.
                         attachment:
                           type: string
                           nullable: true
                           description: 'Base64-encoded image file to replace current
                             image. Supported formats: JPEG, PNG, GIF, WebP (recommended
                             max 5MB). Omit to keep existing image.'
-                        title:
+                        cached_attachment:
                           type: string
                           nullable: true
-                          description: Updated image caption or alt text. Improves
-                            accessibility by describing the image content.
                         credits:
                           type: string
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
@@ -1801,57 +2018,153 @@ paths:
                       type: integer
                     deficiency_report_status_id:
                       type: integer
+                      nullable: true
                     title:
                       type: string
                     description:
                       type: string
                       nullable: true
+                    summary:
+                      type: string
+                      nullable: true
+                      description: Brief summary or overview of the deficiency report
+                    official_answer:
+                      type: string
+                      nullable: true
+                      description: Official response or answer from administrators
+                        regarding the reported issue
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                      description: Name of the organization or group submitting on
+                        behalf of
+                    video_url:
+                      type: string
+                      nullable: true
+                      description: URL to a video documenting the deficiency (YouTube,
+                        Vimeo, etc.)
+                    responsible_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the responsible party (user or organization)
+                        assigned to address this deficiency
+                    responsible_type:
+                      type: string
+                      nullable: true
+                      description: Type of responsible party (e.g., "User", "Organization")
+                    tag_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of tags for categorization
                     resource_terms:
                       type: boolean
                     admin_accepted:
                       type: boolean
+                      nullable: true
                     map_location_attributes:
                       type: object
+                      nullable: true
+                      description: Geographic location data for mapping the deficiency
+                        report
                       properties:
+                        id:
+                          type: integer
+                          nullable: true
                         latitude:
                           type: number
+                          description: Latitude coordinate
                         longitude:
                           type: number
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
                         zoom:
                           type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
                       required:
                       - latitude
                       - longitude
                     image_attributes:
                       type: object
+                      nullable: true
                       description: 'Optional: Image documenting the deficiency issue
                         (photo of damage, problem area, etc.). Upload as base64-encoded
                         data. Highly recommended for visual evidence of the reported
                         problem.'
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file. Required when adding
-                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB for optimal performance).'
                         title:
                           type: string
                           nullable: true
                           description: Image caption, alt text, or brief description.
                             Used for accessibility and displayed with the image. Helps
                             visually-impaired users understand the image content.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the current image from
                             the deficiency report. Does not affect other report properties.
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Multilingual content. Provide title and description
+                        for each language.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de, es)
+                          title:
+                            type: string
+                            description: Report title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Report description in the specified language
+                          summary:
+                            type: string
+                            nullable: true
+                            description: Report summary in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
                   required:
                   - deficiency_report_category_id
                   - title
@@ -1947,38 +2260,151 @@ paths:
                   properties:
                     title:
                       type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    summary:
+                      type: string
+                      nullable: true
+                      description: Brief summary or overview of the deficiency report
+                    official_answer:
+                      type: string
+                      nullable: true
+                      description: Official response or answer from administrators
+                        regarding the reported issue
+                    deficiency_report_category_id:
+                      type: integer
+                      nullable: true
                     deficiency_report_status_id:
                       type: integer
+                      nullable: true
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                      description: Name of the organization or group submitting on
+                        behalf of
+                    video_url:
+                      type: string
+                      nullable: true
+                      description: URL to a video documenting the deficiency (YouTube,
+                        Vimeo, etc.)
+                    responsible_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the responsible party (user or organization)
+                        assigned to address this deficiency
+                    responsible_type:
+                      type: string
+                      nullable: true
+                      description: Type of responsible party (e.g., "User", "Organization")
+                    tag_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of tags for categorization
+                    map_location_attributes:
+                      type: object
+                      nullable: true
+                      description: Geographic location data for mapping the deficiency
+                        report
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        latitude:
+                          type: number
+                          nullable: true
+                          description: Latitude coordinate
+                        longitude:
+                          type: number
+                          nullable: true
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
                     image_attributes:
                       type: object
+                      nullable: true
                       description: Update, replace, or remove the deficiency report
                         image. Attach a new image (base64-encoded), update metadata
                         (title/credits), or set _destroy=true to remove. All fields
                         are optional.
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
                         title:
                           type: string
                           nullable: true
                           description: Updated image caption or alt text. Improves
                             accessibility by describing the image content for screen
                             readers.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the image entirely from
                             the deficiency report while preserving the report text
                             and other properties.
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code
+                          title:
+                            type: string
+                            nullable: true
+                            description: Localized report title
+                          description:
+                            type: string
+                            nullable: true
+                            description: Localized report description
+                          summary:
+                            type: string
+                            nullable: true
+                            description: Localized report summary
+                          _destroy:
+                            type: boolean
+                            nullable: true
         description: Deficiency report attributes to update (title, description, status,
           image). Any field not provided remains unchanged.
   "/api/projekt_phases/{projekt_phase_id}/events":
@@ -3021,57 +3447,131 @@ paths:
                       type: boolean
                     map_location_attributes:
                       type: object
+                      nullable: true
+                      description: Geographic location data for mapping the idea
                       properties:
+                        id:
+                          type: integer
+                          nullable: true
                         latitude:
                           type: number
+                          description: Latitude coordinate
                         longitude:
                           type: number
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
                         zoom:
                           type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
                       required:
                       - latitude
                       - longitude
                     image_attributes:
                       type: object
+                      nullable: true
                       description: 'Optional: Image to illustrate the idea (photo,
                         diagram, visualization, etc.). Upload as base64-encoded data.
                         Recommended for presenting visual evidence or demonstrating
                         the idea concept.'
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file. Required when adding
-                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB for optimal performance).'
                         title:
                           type: string
                           nullable: true
                           description: Image caption, alt text, or brief description.
                             Used for accessibility and displayed with the image. Helps
                             visually-impaired users understand the image content.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the current image from
                             the idea. Does not affect other idea properties.
-                    translations_attributes:
+                    documents_attributes:
                       type: array
+                      nullable: true
+                      description: Array of document attachments (PDFs, Word docs,
+                        spreadsheets, etc.) to support the idea. Upload documents
+                        as base64-encoded data.
                       items:
                         type: object
                         properties:
-                          locale:
-                            type: string
+                          id:
+                            type: integer
+                            nullable: true
                           title:
                             type: string
+                            nullable: true
+                            description: Document title or filename
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: 'Base64-encoded document file. Supported
+                              formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de, es)
+                          title:
+                            type: string
+                            description: Idea title in the specified language
                           description:
                             type: string
+                            description: Idea description in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
                   required:
                   - title
                   - description
@@ -3212,44 +3712,97 @@ paths:
                       nullable: true
                     image_attributes:
                       type: object
+                      nullable: true
                       description: Update, replace, or remove the idea image. Attach
                         a new image (base64-encoded), update metadata (title/credits),
                         or set _destroy=true to remove. All fields are optional.
                       properties:
-                        attachment:
-                          type: string
+                        id:
+                          type: integer
                           nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
                         title:
                           type: string
                           nullable: true
                           description: Updated image caption or alt text. Improves
                             accessibility by describing the image content for screen
                             readers.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        cached_attachment:
+                          type: string
+                          nullable: true
                         credits:
                           type: string
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        user_id:
+                          type: integer
+                          nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
                           description: Set to true to remove the image entirely from
                             the idea while preserving the idea text and other properties.
-                    translations_attributes:
+                    documents_attributes:
                       type: array
+                      nullable: true
+                      description: Update document attachments. Add new documents,
+                        update existing ones (provide id), or remove documents (set
+                        _destroy=true).
                       items:
                         type: object
                         properties:
-                          locale:
-                            type: string
+                          id:
+                            type: integer
+                            nullable: true
+                            description: ID of existing document when updating. Omit
+                              for new documents.
                           title:
                             type: string
                             nullable: true
+                            description: Document title or filename
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: 'Base64-encoded document file. Supported
+                              formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code
+                          title:
+                            type: string
+                            nullable: true
+                            description: Localized idea title
                           description:
                             type: string
+                            nullable: true
+                            description: Localized idea description
+                          _destroy:
+                            type: boolean
                             nullable: true
         description: Idea attributes to update (title, description, category, video_url,
           image, translations). Any field not provided remains unchanged.
@@ -5986,43 +6539,119 @@ paths:
                       - ProjektPhase::NewsfeedPhase
                       - ProjektPhase::IframePhase
                       - ProjektPhase::PointOfInterestPhase
-                      description: Projekt phase type.
+                      description: 'The type of projekt phase that determines what
+                        kind of participation or content is available. Regular phases:
+                        CommentPhase (discussion/feedback), ProposalPhase (citizen
+                        proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),
+                        BudgetPhase (participatory budgeting), LegislationPhase (legislative
+                        process), FormularPhase (forms/surveys). Special phases: LivestreamPhase
+                        (live streaming), MilestonePhase (timeline milestones), ProjektNotificationPhase
+                        (announcements), EventPhase (events/meetings), ArgumentPhase
+                        (pro/con arguments), NewsfeedPhase (news feed), IframePhase
+                        (embedded content), PointOfInterestPhase (map pins). Required
+                        for creation.'
                     start_date:
                       type: string
                       format: date
                       nullable: true
+                      description: The date when the phase becomes active and participation
+                        begins (YYYY-MM-DD format). If null, the phase can be activated
+                        immediately via the active flag. Must be before end_date if
+                        both are provided. Used to schedule phases in advance.
                     end_date:
                       type: string
                       format: date
                       nullable: true
+                      description: The date when the phase becomes inactive and participation
+                        ends (YYYY-MM-DD format). If null, the phase continues indefinitely
+                        until manually deactivated. Must be after start_date if both
+                        are provided. After this date, users can no longer submit
+                        new content but existing content remains visible.
                     active:
                       type: boolean
+                      description: Whether the phase is currently active and allowing
+                        participation. When true, users can interact with the phase
+                        (submit comments, proposals, vote, etc.) based on other restrictions.
+                        When false, the phase is inactive regardless of date settings.
+                        Defaults to false if not specified.
                     frontend_visibility:
                       type: boolean
+                      description: Whether the phase is visible to users on the frontend
+                        interface. When true, the phase appears in navigation tabs
+                        and phase listings. When false, the phase is hidden from public
+                        view but may still be accessible via direct links or admin
+                        interfaces. Useful for preparing phases before public launch.
+                        Defaults to true.
                     given_order:
                       type: integer
                       nullable: true
+                      description: The display order/position of this phase among
+                        other phases in the projekt. Lower numbers appear first in
+                        phase navigation and listings. If null, phases are ordered
+                        by creation date. Use this to control the sequence in which
+                        phases appear to users (e.g., planning phase before voting
+                        phase).
                     geozone_restricted:
                       type: boolean
+                      description: Whether participation in this phase is restricted
+                        to specific geographic zones. When true, only users from geozones
+                        listed in geozone_restriction_ids can participate. When false,
+                        all users can participate (subject to other restrictions).
+                        Must be true if geozone_restriction_ids is provided.
                     age_range_id:
                       type: integer
                       nullable: true
+                      description: ID of an age range restriction that limits participation
+                        to users within a specific age group. If null, there is no
+                        age restriction. Age ranges are predefined categories (e.g.,
+                        "18-25", "26-35", "65+") used to ensure age-appropriate participation
+                        or comply with legal requirements.
                     user_status:
                       type: string
                       nullable: true
+                      description: 'Minimum user status required to participate in
+                        this phase. Valid values: "guest" (anyone, including anonymous),
+                        "registered" (must be logged in), "verified" (must have verified
+                        account). If null, defaults to "registered". Higher verification
+                        levels ensure more trusted participation but may reduce engagement.'
                     lock_on:
                       type: string
                       format: date
                       nullable: true
+                      description: Date after which the phase becomes locked and no
+                        longer editable (YYYY-MM-DD format). After this date, administrators
+                        cannot modify phase settings or content, ensuring data integrity
+                        for completed phases. Useful for preserving historical records
+                        of participation processes. If null, the phase remains editable
+                        indefinitely.
                     phase_tab_name:
                       type: string
                       nullable: true
-                      description: Translated attribute
+                      description: 'The display name of the phase shown in the frontend
+                        interface navigation tabs and phase listings. This is a translatable
+                        field - provide translations via translations_attributes for
+                        multilingual support. If null, defaults to a name derived
+                        from the phase type. Examples: "Discussion", "Proposals",
+                        "Voting", "Budget Planning".'
                     registered_address_grouping_restriction:
                       type: boolean
                       nullable: true
+                      description: Whether participation is restricted based on registered
+                        address grouping (e.g., district, neighborhood, street). When
+                        true, only users whose registered address matches the criteria
+                        in registered_address_grouping_restrictions can participate.
+                        When false or null, address grouping is not used as a restriction.
+                        Useful for hyper-local participation initiatives.
                     registered_address_grouping_restrictions:
                       type: object
+                      nullable: true
+                      description: 'Detailed restrictions by registered address grouping
+                        as key-value pairs. Key is the grouping type (e.g., "district",
+                        "neighborhood", "street"), value is an array of allowed grouping
+                        values (e.g., ["District A", "District B"]). Only users whose
+                        registered address matches at least one value in each specified
+                        grouping can participate. Example: { "district": ["North",
+                        "South"], "neighborhood": ["Downtown"] }.'
                       additionalProperties:
                         type: array
                         items:
@@ -6031,27 +6660,65 @@ paths:
                       type: array
                       items:
                         type: integer
+                      description: Array of individual group/demographic value IDs
+                        that are allowed to participate in this phase. Individual
+                        groups represent demographic segments (e.g., "seniors", "students",
+                        "business owners") defined in the system. Only users belonging
+                        to at least one of these groups can participate. Empty array
+                        means no demographic restriction. Used for targeted engagement
+                        campaigns.
                     geozone_restriction_ids:
                       type: array
                       items:
                         type: integer
+                      description: Array of geographic zone IDs where participation
+                        is allowed. Only users whose registered address is in one
+                        of these geozones can participate. Requires geozone_restricted
+                        to be true. Geozones represent administrative boundaries (districts,
+                        neighborhoods, etc.). Empty array with geozone_restricted=true
+                        means no one can participate. Used for location-based participation
+                        initiatives.
                     settings_attributes:
                       type: array
+                      description: 'Configuration settings for the phase as an array
+                        of setting objects. Settings control phase-specific behaviors
+                        and features (e.g., comment sorting, moderation rules, display
+                        options). Each setting has a key (identifier) and value (configuration).
+                        Common keys: "feature.general.newest_first" (sort comments
+                        by newest), "moderation.enabled" (enable moderation), etc.
+                        Provide id when updating existing settings, omit for new settings.'
                       items:
                         type: object
                         properties:
                           id:
                             type: integer
                             nullable: true
+                            description: ID of the setting when updating an existing
+                              setting. Omit this field when creating a new setting.
+                              Required when modifying or deleting existing settings.
                           key:
                             type: string
                             nullable: true
+                            description: Setting identifier/key that determines which
+                              feature or behavior is being configured. Format is typically
+                              dot-separated (e.g., "feature.general.newest_first",
+                              "moderation.enabled"). Must match a valid setting key
+                              for the phase type.
                           value:
                             type: string
                             nullable: true
+                            description: 'The setting value/configuration. Common
+                              values: "active", "inactive", "true", "false", or other
+                              configuration strings depending on the setting key.
+                              Some settings accept numeric or JSON values. Null values
+                              may remove the setting depending on context.'
                           _destroy:
                             type: boolean
                             nullable: true
+                            description: Set to true to delete this setting during
+                              update. The setting will be removed from the phase configuration.
+                              Only applicable when updating existing settings (id
+                              must be provided).
                   required:
                   - type
               required:
@@ -6231,43 +6898,109 @@ paths:
                       - ProjektPhase::NewsfeedPhase
                       - ProjektPhase::IframePhase
                       - ProjektPhase::PointOfInterestPhase
-                      description: Projekt phase type.
+                      description: 'The type of projekt phase that determines what
+                        kind of participation or content is available. Regular phases:
+                        CommentPhase (discussion/feedback), ProposalPhase (citizen
+                        proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),
+                        BudgetPhase (participatory budgeting), LegislationPhase (legislative
+                        process), FormularPhase (forms/surveys). Special phases: LivestreamPhase
+                        (live streaming), MilestonePhase (timeline milestones), ProjektNotificationPhase
+                        (announcements), EventPhase (events/meetings), ArgumentPhase
+                        (pro/con arguments), NewsfeedPhase (news feed), IframePhase
+                        (embedded content), PointOfInterestPhase (map pins).'
                     start_date:
                       type: string
                       format: date
                       nullable: true
+                      description: The date when the phase becomes active and participation
+                        begins (YYYY-MM-DD format). If null, the phase can be activated
+                        immediately via the active flag. Must be before end_date if
+                        both are provided. Used to schedule phases in advance.
                     end_date:
                       type: string
                       format: date
                       nullable: true
+                      description: The date when the phase becomes inactive and participation
+                        ends (YYYY-MM-DD format). If null, the phase continues indefinitely
+                        until manually deactivated. Must be after start_date if both
+                        are provided. After this date, users can no longer submit
+                        new content but existing content remains visible.
                     active:
                       type: boolean
+                      nullable: true
+                      description: Whether the phase is currently active and allowing
+                        participation. When true, users can interact with the phase
+                        (submit comments, proposals, vote, etc.) based on other restrictions.
+                        When false, the phase is inactive regardless of date settings.
                     frontend_visibility:
                       type: boolean
+                      nullable: true
+                      description: Whether the phase is visible to users on the frontend
+                        interface. When true, the phase appears in navigation tabs
+                        and phase listings. When false, the phase is hidden from public
+                        view but may still be accessible via direct links or admin
+                        interfaces.
                     given_order:
                       type: integer
                       nullable: true
+                      description: The display order/position of this phase among
+                        other phases in the projekt. Lower numbers appear first in
+                        phase navigation and listings. If null, phases are ordered
+                        by creation date.
                     geozone_restricted:
                       type: boolean
+                      nullable: true
+                      description: Whether participation in this phase is restricted
+                        to specific geographic zones. When true, only users from geozones
+                        listed in geozone_restriction_ids can participate. When false,
+                        all users can participate (subject to other restrictions).
                     age_range_id:
                       type: integer
                       nullable: true
+                      description: ID of an age range restriction that limits participation
+                        to users within a specific age group. If null, there is no
+                        age restriction. Age ranges are predefined categories (e.g.,
+                        "18-25", "26-35", "65+") used to ensure age-appropriate participation
+                        or comply with legal requirements.
                     user_status:
                       type: string
                       nullable: true
+                      description: 'Minimum user status required to participate in
+                        this phase. Valid values: "guest" (anyone, including anonymous),
+                        "registered" (must be logged in), "verified" (must have verified
+                        account). Higher verification levels ensure more trusted participation
+                        but may reduce engagement.'
                     lock_on:
                       type: string
                       format: date
                       nullable: true
+                      description: Date after which the phase becomes locked and no
+                        longer editable (YYYY-MM-DD format). After this date, administrators
+                        cannot modify phase settings or content, ensuring data integrity
+                        for completed phases.
                     phase_tab_name:
                       type: string
                       nullable: true
-                      description: Translated attribute
+                      description: 'The display name of the phase shown in the frontend
+                        interface navigation tabs and phase listings. This is a translatable
+                        field - provide translations via translations_attributes for
+                        multilingual support. Examples: "Discussion", "Proposals",
+                        "Voting", "Budget Planning".'
                     registered_address_grouping_restriction:
                       type: boolean
                       nullable: true
+                      description: Whether participation is restricted based on registered
+                        address grouping (e.g., district, neighborhood, street). When
+                        true, only users whose registered address matches the criteria
+                        in registered_address_grouping_restrictions can participate.
                     registered_address_grouping_restrictions:
                       type: object
+                      nullable: true
+                      description: 'Detailed restrictions by registered address grouping
+                        as key-value pairs. Key is the grouping type (e.g., "district",
+                        "neighborhood", "street"), value is an array of allowed grouping
+                        values. Example: { "district": ["North", "South"], "neighborhood":
+                        ["Downtown"] }.'
                       additionalProperties:
                         type: array
                         items:
@@ -6276,27 +7009,54 @@ paths:
                       type: array
                       items:
                         type: integer
+                      nullable: true
+                      description: Array of individual group/demographic value IDs
+                        that are allowed to participate in this phase. Individual
+                        groups represent demographic segments (e.g., "seniors", "students",
+                        "business owners") defined in the system.
                     geozone_restriction_ids:
                       type: array
                       items:
                         type: integer
+                      nullable: true
+                      description: Array of geographic zone IDs where participation
+                        is allowed. Only users whose registered address is in one
+                        of these geozones can participate. Requires geozone_restricted
+                        to be true.
                     settings_attributes:
                       type: array
+                      nullable: true
+                      description: 'Configuration settings for the phase as an array
+                        of setting objects. Settings control phase-specific behaviors
+                        and features (e.g., comment sorting, moderation rules, display
+                        options). Common keys: "feature.general.newest_first" (sort
+                        comments by newest), "moderation.enabled" (enable moderation).'
                       items:
                         type: object
                         properties:
                           id:
                             type: integer
                             nullable: true
+                            description: ID of the setting when updating an existing
+                              setting. Omit when creating a new setting.
                           key:
                             type: string
                             nullable: true
+                            description: Setting identifier/key that determines which
+                              feature or behavior is being configured. Format is typically
+                              dot-separated (e.g., "feature.general.newest_first").
                           value:
                             type: string
                             nullable: true
+                            description: 'The setting value/configuration. Common
+                              values: "active", "inactive", "true", "false", or other
+                              configuration strings.'
                           _destroy:
                             type: boolean
                             nullable: true
+                            description: Set to true to delete this setting during
+                              update. Only applicable when updating existing settings
+                              (id must be provided).
         description: Phase attributes to update - all optional (type, dates, active
           status, visibility, restrictions, settings, etc.)
     delete:
@@ -7173,16 +7933,182 @@ paths:
                 proposal:
                   type: object
                   properties:
-                    title:
-                      type: string
-                    description:
-                      type: string
                     responsible_name:
                       type: string
+                      description: Name of the person or organization responsible
+                        for the proposal
+                    video_url:
+                      type: string
+                      nullable: true
+                      description: URL to a video explaining the proposal (YouTube,
+                        Vimeo, etc.)
                     geozone_id:
                       type: integer
+                      description: ID of the geographic zone where the proposal applies
+                    selected:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether this proposal is selected'
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                      description: Name of the organization or group submitting on
+                        behalf of
+                    sentiment_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the sentiment classification for this proposal
+                    official_answer:
+                      type: string
+                      nullable: true
+                      description: Official response or answer from administrators
+                    admin_accepted:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether the proposal has been accepted
+                        by administrators'
+                    tag_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of tags for categorization
+                    related_sdg_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of related Sustainable Development
+                        Goals
                     resource_terms:
                       type: boolean
+                      description: Acceptance of resource terms (required for creation)
+                    projekt_label_ids:
+                      type: array
+                      items:
+                        type: integer
+                      nullable: true
+                      description: Array of projekt label IDs to associate with this
+                        proposal
+                    map_location_attributes:
+                      type: object
+                      nullable: true
+                      description: Geographic location data for mapping the proposal
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        latitude:
+                          type: number
+                          description: Latitude coordinate
+                        longitude:
+                          type: number
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                      required:
+                      - latitude
+                      - longitude
+                    image_attributes:
+                      type: object
+                      nullable: true
+                      description: 'Optional: Image to illustrate the proposal. Upload
+                        as base64-encoded data.'
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption or alt text
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Supported formats:
+                            JPEG, PNG, GIF, WebP'
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution
+                        user_id:
+                          type: integer
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Array of document attachments
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          title:
+                            type: string
+                            nullable: true
+                          attachment:
+                            type: string
+                            nullable: true
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                    translations_attributes:
+                      type: array
+                      description: Multilingual content. Provide title and description
+                        for each language.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de, es)
+                          title:
+                            type: string
+                            description: Proposal title in the specified language
+                          description:
+                            type: string
+                            description: Proposal description in the specified language
+                          summary:
+                            type: string
+                            nullable: true
+                            description: Brief summary in the specified language
+                          retired_explanation:
+                            type: string
+                            nullable: true
+                            description: Explanation for retirement in the specified
+                              language
+                          _destroy:
+                            type: boolean
+                            nullable: true
                   required:
                   - title
                   - description
@@ -7355,8 +8281,187 @@ paths:
                 proposal:
                   type: object
                   properties:
-                    title:
+                    responsible_name:
                       type: string
+                      nullable: true
+                      description: Name of the person or organization responsible
+                        for the proposal
+                    video_url:
+                      type: string
+                      nullable: true
+                      description: URL to a video explaining the proposal (YouTube,
+                        Vimeo, etc.)
+                    geozone_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the geographic zone where the proposal applies
+                    selected:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether this proposal is selected'
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                      description: Name of the organization or group submitting on
+                        behalf of
+                    sentiment_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the sentiment classification for this proposal
+                    official_answer:
+                      type: string
+                      nullable: true
+                      description: Official response or answer from administrators
+                    admin_accepted:
+                      type: boolean
+                      nullable: true
+                      description: 'Admin-only: Whether the proposal has been accepted
+                        by administrators'
+                    tag_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of tags for categorization
+                    related_sdg_list:
+                      type: string
+                      nullable: true
+                      description: Comma-separated list of related Sustainable Development
+                        Goals
+                    resource_terms:
+                      type: boolean
+                      nullable: true
+                      description: Acceptance of resource terms
+                    projekt_label_ids:
+                      type: array
+                      items:
+                        type: integer
+                      nullable: true
+                      description: Array of projekt label IDs to associate with this
+                        proposal
+                    map_location_attributes:
+                      type: object
+                      nullable: true
+                      description: Geographic location data for mapping the proposal
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        latitude:
+                          type: number
+                          nullable: true
+                          description: Latitude coordinate
+                        longitude:
+                          type: number
+                          nullable: true
+                          description: Longitude coordinate
+                        altitude:
+                          type: number
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+                        features:
+                          type: string
+                          nullable: true
+                        rendering_library:
+                          type: string
+                          nullable: true
+                        show_admin_shape:
+                          type: boolean
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                    image_attributes:
+                      type: object
+                      nullable: true
+                      description: Update, replace, or remove the proposal image.
+                        Attach a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove.
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption or alt text
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Supported formats:
+                            JPEG, PNG, GIF, WebP'
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution
+                        user_id:
+                          type: integer
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Array of document attachments
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          title:
+                            type: string
+                            nullable: true
+                          attachment:
+                            type: string
+                            nullable: true
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          user_id:
+                            type: integer
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          locale:
+                            type: string
+                            description: Language code
+                          title:
+                            type: string
+                            nullable: true
+                            description: Localized proposal title
+                          description:
+                            type: string
+                            nullable: true
+                            description: Localized proposal description
+                          summary:
+                            type: string
+                            nullable: true
+                            description: Brief summary in the specified language
+                          retired_explanation:
+                            type: string
+                            nullable: true
+                            description: Explanation for retirement in the specified
+                              language
+                          _destroy:
+                            type: boolean
+                            nullable: true
         description: Attributes to update on the proposal
     delete:
       summary: Delete a proposal
@@ -8775,66 +9880,108 @@ components:
           - ProjektPhase::NewsfeedPhase
           - ProjektPhase::IframePhase
           - ProjektPhase::PointOfInterestPhase
-          description: 'Projekt phase type. Regular phases: CommentPhase, ProposalPhase,
-            QuestionPhase, VotingPhase, BudgetPhase, LegislationPhase, FormularPhase.
-            Special phases: LivestreamPhase, MilestonePhase, ProjektNotificationPhase,
-            EventPhase, ArgumentPhase, NewsfeedPhase, IframePhase, PointOfInterestPhase'
+          description: 'The type of projekt phase that determines what kind of participation
+            or content is available. Regular phases: CommentPhase (discussion/feedback),
+            ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),
+            BudgetPhase (participatory budgeting), LegislationPhase (legislative process),
+            FormularPhase (forms/surveys). Special phases: LivestreamPhase (live streaming),
+            MilestonePhase (timeline milestones), ProjektNotificationPhase (announcements),
+            EventPhase (events/meetings), ArgumentPhase (pro/con arguments), NewsfeedPhase
+            (news feed), IframePhase (embedded content), PointOfInterestPhase (map
+            pins). Required for creation.'
         start_date:
           type: string
           format: date
           nullable: true
-          description: The date when the phase becomes active (YYYY-MM-DD format).
-            Null means no start date restriction.
+          description: The date when the phase becomes active and participation begins
+            (YYYY-MM-DD format). If null, the phase can be activated immediately via
+            the active flag. Must be before end_date if both are provided. Used to
+            schedule phases in advance.
         end_date:
           type: string
           format: date
           nullable: true
-          description: The date when the phase becomes inactive (YYYY-MM-DD format).
-            Null means no end date restriction.
+          description: The date when the phase becomes inactive and participation
+            ends (YYYY-MM-DD format). If null, the phase continues indefinitely until
+            manually deactivated. Must be after start_date if both are provided. After
+            this date, users can no longer submit new content but existing content
+            remains visible.
         active:
           type: boolean
-          description: Whether the phase is currently active and allowing participation
+          description: Whether the phase is currently active and allowing participation.
+            When true, users can interact with the phase (submit comments, proposals,
+            vote, etc.) based on other restrictions. When false, the phase is inactive
+            regardless of date settings. Defaults to false if not specified.
         frontend_visibility:
           type: boolean
-          description: Whether the phase is visible to users on the frontend
+          description: Whether the phase is visible to users on the frontend interface.
+            When true, the phase appears in navigation tabs and phase listings. When
+            false, the phase is hidden from public view but may still be accessible
+            via direct links or admin interfaces. Useful for preparing phases before
+            public launch. Defaults to true.
         given_order:
           type: integer
           nullable: true
-          description: The display order of this phase. Lower numbers appear first.
-            Null for default ordering.
+          description: The display order/position of this phase among other phases
+            in the projekt. Lower numbers appear first in phase navigation and listings.
+            If null, phases are ordered by creation date. Use this to control the
+            sequence in which phases appear to users (e.g., planning phase before
+            voting phase).
         geozone_restricted:
           type: boolean
           description: Whether participation in this phase is restricted to specific
-            geographic zones
+            geographic zones. When true, only users from geozones listed in geozone_restriction_ids
+            can participate. When false, all users can participate (subject to other
+            restrictions). Must be true if geozone_restriction_ids is provided.
         age_range_id:
           type: integer
           nullable: true
-          description: ID of an age range restriction. Null means no age restriction.
+          description: ID of an age range restriction that limits participation to
+            users within a specific age group. If null, there is no age restriction.
+            Age ranges are predefined categories (e.g., "18-25", "26-35", "65+") used
+            to ensure age-appropriate participation or comply with legal requirements.
         user_status:
           type: string
           nullable: true
-          description: User status required to participate (e.g., "verified", "resident").
-            Null means no restriction.
+          description: 'Minimum user status required to participate in this phase.
+            Valid values: "guest" (anyone, including anonymous), "registered" (must
+            be logged in), "verified" (must have verified account). If null, defaults
+            to "registered". Higher verification levels ensure more trusted participation
+            but may reduce engagement.'
         lock_on:
           type: string
           format: date
           nullable: true
-          description: Date after which the phase is locked and no longer editable
-            (YYYY-MM-DD format)
+          description: Date after which the phase becomes locked and no longer editable
+            (YYYY-MM-DD format). After this date, administrators cannot modify phase
+            settings or content, ensuring data integrity for completed phases. Useful
+            for preserving historical records of participation processes. If null,
+            the phase remains editable indefinitely.
         phase_tab_name:
           type: string
           nullable: true
-          description: The display name of the phase shown in the frontend interface
+          description: 'The display name of the phase shown in the frontend interface
+            navigation tabs and phase listings. This is a translatable field - provide
+            translations via translations_attributes for multilingual support. If
+            null, defaults to a name derived from the phase type. Examples: "Discussion",
+            "Proposals", "Voting", "Budget Planning".'
         registered_address_grouping_restriction:
           type: boolean
           nullable: true
           description: Whether participation is restricted based on registered address
-            grouping
+            grouping (e.g., district, neighborhood, street). When true, only users
+            whose registered address matches the criteria in registered_address_grouping_restrictions
+            can participate. When false or null, address grouping is not used as a
+            restriction. Useful for hyper-local participation initiatives.
         registered_address_grouping_restrictions:
           type: object
           nullable: true
-          description: Restrictions by registered address grouping as key-value pairs
-            where key is grouping type and value is array of allowed values
+          description: 'Detailed restrictions by registered address grouping as key-value
+            pairs. Key is the grouping type (e.g., "district", "neighborhood", "street"),
+            value is an array of allowed grouping values (e.g., ["District A", "District
+            B"]). Only users whose registered address matches at least one value in
+            each specified grouping can participate. Example: { "district": ["North",
+            "South"], "neighborhood": ["Downtown"] }.'
           additionalProperties:
             type: array
             items:
@@ -8843,36 +9990,58 @@ components:
           type: array
           items:
             type: integer
-          description: Array of individual group IDs that are allowed to participate
+          description: Array of individual group/demographic value IDs that are allowed
+            to participate in this phase. Individual groups represent demographic
+            segments (e.g., "seniors", "students", "business owners") defined in the
+            system. Only users belonging to at least one of these groups can participate.
+            Empty array means no demographic restriction. Used for targeted engagement
+            campaigns.
         geozone_restriction_ids:
           type: array
           items:
             type: integer
-          description: Array of geographic zone IDs that are allowed for this phase
+          description: Array of geographic zone IDs where participation is allowed.
+            Only users whose registered address is in one of these geozones can participate.
+            Requires geozone_restricted to be true. Geozones represent administrative
+            boundaries (districts, neighborhoods, etc.). Empty array with geozone_restricted=true
+            means no one can participate. Used for location-based participation initiatives.
         settings_attributes:
           type: array
-          description: Configuration settings for the phase as an array of setting
-            objects
+          description: 'Configuration settings for the phase as an array of setting
+            objects. Settings control phase-specific behaviors and features (e.g.,
+            comment sorting, moderation rules, display options). Each setting has
+            a key (identifier) and value (configuration). Common keys: "feature.general.newest_first"
+            (sort comments by newest), "moderation.enabled" (enable moderation), etc.
+            Provide id when updating existing settings, omit for new settings.'
           items:
             type: object
             properties:
               id:
                 type: integer
                 nullable: true
-                description: ID of the setting when updating existing settings. Omit
-                  for new settings.
+                description: ID of the setting when updating an existing setting.
+                  Omit this field when creating a new setting. Required when modifying
+                  or deleting existing settings.
               key:
                 type: string
                 nullable: true
-                description: Setting identifier (e.g., feature.general.newest_first)
+                description: Setting identifier/key that determines which feature
+                  or behavior is being configured. Format is typically dot-separated
+                  (e.g., "feature.general.newest_first", "moderation.enabled"). Must
+                  match a valid setting key for the phase type.
               value:
                 type: string
                 nullable: true
-                description: Setting value (e.g., active, inactive)
+                description: 'The setting value/configuration. Common values: "active",
+                  "inactive", "true", "false", or other configuration strings depending
+                  on the setting key. Some settings accept numeric or JSON values.
+                  Null values may remove the setting depending on context.'
               _destroy:
                 type: boolean
                 nullable: true
-                description: Set to true to delete this setting during update
+                description: Set to true to delete this setting during update. The
+                  setting will be removed from the phase configuration. Only applicable
+                  when updating existing settings (id must be provided).
     ContentBlock:
       type: object
       properties:

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative 'shared/api_client_helper'
 require_relative 'schemas/projekts_schemas'
 require_relative 'schemas/ideas_schemas'
 require_relative 'schemas/comments_proposals_schemas'
@@ -119,4 +120,6 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  config.include ApiClientHelper, type: :request
 end

@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   # Authentication setup - create an ApiClient with an auth_token
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/budgets' do
@@ -119,18 +119,22 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             type: :object,
             properties: {
               name: { type: :string, description: 'Budget display name (required, must be unique within phase)' },
-              phase: { type: :string, description: 'Optional: budget phase identifier' },
-              currency_symbol: { type: :string, description: 'Currency symbol to display (e.g., $, €, £)' },
-              voting_style: { type: :string, description: 'Voting mechanism type: "knapsack" (individual budget allocation), "plurality" (select preferred options), or others' },
-              published: { type: :boolean, description: 'Whether the budget is visible to the public' },
-              slug: { type: :string, description: 'URL-friendly identifier for the budget (auto-generated if not provided)' },
+              phase: { type: :string, nullable: true, description: 'Optional: budget phase identifier' },
+              currency_symbol: { type: :string, nullable: true, description: 'Currency symbol to display (e.g., $, €, £)' },
+              voting_style: { type: :string, nullable: true, description: 'Voting mechanism type: "knapsack" (individual budget allocation), "plurality" (select preferred options), or others' },
+              published: { type: :boolean, nullable: true, description: 'Whether the budget is visible to the public' },
+              slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the budget (auto-generated if not provided)' },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Optional: Image for budget branding or visualization (logo, cover image, etc.). Upload as base64-encoded data.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the budget.' }
                 }
               }
@@ -346,17 +350,23 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           budget: {
             type: :object,
             properties: {
-              name: { type: :string, description: 'Budget display name to update' },
-              currency_symbol: { type: :string, description: 'New currency symbol to display' },
-              voting_style: { type: :string, description: 'New voting mechanism type' },
-              published: { type: :boolean, description: 'Publish or unpublish the budget' },
+              name: { type: :string, nullable: true, description: 'Budget display name to update' },
+              phase: { type: :string, nullable: true, description: 'Budget phase identifier' },
+              currency_symbol: { type: :string, nullable: true, description: 'New currency symbol to display' },
+              voting_style: { type: :string, nullable: true, description: 'New voting mechanism type' },
+              published: { type: :boolean, nullable: true, description: 'Publish or unpublish the budget' },
+              slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the budget' },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Update, replace, or remove the budget image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the budget while preserving other budget properties.' }
                 }
               }

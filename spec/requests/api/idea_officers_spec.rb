@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Idea Officers API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_user_for_officer

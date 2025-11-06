@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/projekt_phases/{projekt_phase_id}/livestreams' do

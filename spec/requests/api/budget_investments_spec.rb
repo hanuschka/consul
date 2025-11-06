@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_minimal_prereqs
@@ -164,35 +164,69 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               on_behalf_of: { type: :string, nullable: true, description: 'Optional: Organization or group name if the proposal is made on behalf of an entity rather than an individual.' },
               resource_terms: { type: :boolean, description: 'Must be true. Confirms the submitter accepts the terms and conditions.' },
               price: { type: :number, nullable: true, description: 'Estimated budget/cost for the investment in the budget\'s currency.' },
+              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
+              valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
+              selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
+              visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
               map_location_attributes: {
                 type: :object,
-                description: 'Optional: Geographic location details for the investment. Required latitude and longitude.',
+                nullable: true,
+                description: 'Geographic location data for mapping the investment',
                 properties: {
-                  latitude: { type: :number, description: 'Geographic latitude (-90 to 90)' },
-                  longitude: { type: :number, description: 'Geographic longitude (-180 to 180)' },
-                  zoom: { type: :integer, description: 'Map zoom level (0-18)' }
+                  id: { type: :integer, nullable: true },
+                  latitude: { type: :number, description: 'Latitude coordinate' },
+                  longitude: { type: :number, description: 'Longitude coordinate' },
+                  altitude: { type: :number, nullable: true },
+                  zoom: { type: :integer, nullable: true },
+                  features: { type: :string, nullable: true },
+                  rendering_library: { type: :string, nullable: true },
+                  show_admin_shape: { type: :boolean, nullable: true },
+                  _destroy: { type: :boolean, nullable: true }
                 },
                 required: %w[latitude longitude]
               },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Optional: Image to visualize the investment project (rendering, photo, diagram, etc.). Upload as base64-encoded data. Recommended for presenting visual evidence or demonstrating the project concept.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the budget investment. Does not affect other investment properties.' }
+                }
+              },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. Upload documents as base64-encoded data.',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true },
+                    title: { type: :string, nullable: true, description: 'Document title or filename' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    user_id: { type: :integer, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
                 }
               },
               translations_attributes: {
                 type: :array,
+                nullable: true,
                 description: 'Multilingual content. Provide title and description for each language.',
                 items: {
                   type: :object,
                   properties: {
+                    id: { type: :integer, nullable: true },
                     locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
                     title: { type: :string, description: 'Project title in the specified language' },
-                    description: { type: :string, description: 'Project description in the specified language' }
+                    description: { type: :string, description: 'Project description in the specified language' },
+                    _destroy: { type: :boolean, nullable: true }
                   }
                 }
               },
@@ -602,25 +636,65 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
+              visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
+              map_location_attributes: {
+                type: :object,
+                nullable: true,
+                description: 'Geographic location data for mapping the investment',
+                properties: {
+                  id: { type: :integer, nullable: true },
+                  latitude: { type: :number, nullable: true, description: 'Latitude coordinate' },
+                  longitude: { type: :number, nullable: true, description: 'Longitude coordinate' },
+                  altitude: { type: :number, nullable: true },
+                  zoom: { type: :integer, nullable: true },
+                  features: { type: :string, nullable: true },
+                  rendering_library: { type: :string, nullable: true },
+                  show_admin_shape: { type: :boolean, nullable: true },
+                  _destroy: { type: :boolean, nullable: true }
+                }
+              },
               image_attributes: {
                 type: :object,
+                nullable: true,
                 description: 'Update, replace, or remove the investment image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  id: { type: :integer, nullable: true },
                   title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content for screen readers.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the budget investment while preserving the investment text and other properties.' }
+                }
+              },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true, description: 'ID of existing document when updating. Omit for new documents.' },
+                    title: { type: :string, nullable: true, description: 'Document title or filename' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    user_id: { type: :integer, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
                 }
               },
               translations_attributes: {
                 type: :array,
+                nullable: true,
                 description: 'Update multilingual content',
                 items: {
                   type: :object,
                   properties: {
+                    id: { type: :integer, nullable: true },
                     locale: { type: :string, description: 'Language code' },
                     title: { type: :string, nullable: true, description: 'Localized project title' },
-                    description: { type: :string, nullable: true, description: 'Localized project description' }
+                    description: { type: :string, nullable: true, description: 'Localized project description' },
+                    _destroy: { type: :boolean, nullable: true }
                   }
                 }
               },

@@ -6,6 +6,9 @@ class ApiClient < ApplicationRecord
   has_one :user
 
   validates :access_level, presence: true
+  validates :name, presence: true
+  validates :service_user_email, presence: true
+  validates :service_user_email, uniqueness: true
 
   before_create do
     if registration_status.nil?
@@ -41,7 +44,7 @@ class ApiClient < ApplicationRecord
 
     User.create!(
       username: username,
-      email: "#{username.downcase.gsub(/\s+/, '_')}@api-service.local",
+      email: service_user_email,
       password: SecureRandom.hex(32),
       confirmed_at: Time.current,
       api_client: self,

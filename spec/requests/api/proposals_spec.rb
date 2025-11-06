@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
+  let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_phase_with_context
@@ -143,23 +143,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       security [bearer_auth: []]
       description 'Submit a new proposal within a projekt phase. Proposals are citizen-initiated action items that require a responsible party, geozone location, and acceptance of terms. Proposals go through an admin review process before being published.'
 
-      parameter name: :proposal, in: :body, description: 'Proposal submission with required title, description, responsible party, geozone, and terms acceptance', schema: {
-        type: :object,
-        properties: {
-          proposal: {
-            type: :object,
-            properties: {
-              title: { type: :string },
-              description: { type: :string },
-              responsible_name: { type: :string },
-              geozone_id: { type: :integer },
-              resource_terms: { type: :boolean }
-            },
-            required: %w[title description responsible_name geozone_id resource_terms]
-          }
-        },
-        required: ['proposal']
-      }
+      parameter name: :proposal, in: :body, description: 'Proposal submission with required title, description, responsible party, geozone, and terms acceptance', schema: Schemas::CommentsProposals::PROPOSAL_CREATE_PARAMS
 
       response '201', 'proposal created' do
         let!(:context) { create_phase_with_context }
@@ -538,17 +522,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :proposal, in: :body, description: 'Attributes to update on the proposal', schema: {
-        type: :object,
-        properties: {
-          proposal: {
-            type: :object,
-            properties: {
-              title: { type: :string }
-            }
-          }
-        }
-      }
+      parameter name: :proposal, in: :body, description: 'Attributes to update on the proposal', schema: Schemas::CommentsProposals::PROPOSAL_UPDATE_PARAMS
 
       response '200', 'proposal updated' do
         let!(:context) { create_phase_with_context }

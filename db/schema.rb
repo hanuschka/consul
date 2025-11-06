@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_31_204618) do
+ActiveRecord::Schema.define(version: 2025_11_06_225219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2025_10_31_204618) do
     t.datetime "updated_at", null: false
     t.string "service_api_token"
     t.string "access_level"
+    t.string "service_user_email"
     t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
   end
 

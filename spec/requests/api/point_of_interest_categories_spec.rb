@@ -9,6 +9,51 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
   path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
+    get 'List projekt point of interest categories for a projekt phase' do
+      tags 'Point Of Interest Categories'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt point of interest categories found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:projekt_phase_id) { poi_phase.id }
+
+        before do
+          poi_phase.projekt_point_of_interest_categories.create!(name: 'Category 1', color: '#FF0000', icon: 'icon-1')
+          poi_phase.projekt_point_of_interest_categories.create!(name: 'Category 2', color: '#00FF00', icon: 'icon-2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     categories: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['categories']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt point of interest category' do
       tags 'Point Of Interest Categories'
       consumes 'application/json'
@@ -87,6 +132,54 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
                    }
                  }
                }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/point_of_interest_categories' do
+    get 'List all projekt point of interest categories' do
+      tags 'Point Of Interest Categories'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt point of interest categories found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:poi_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:poi_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+
+        before do
+          poi_phase1.projekt_point_of_interest_categories.create!(name: 'Category 1', color: '#FF0000', icon: 'icon-1')
+          poi_phase2.projekt_point_of_interest_categories.create!(name: 'Category 2', color: '#00FF00', icon: 'icon-2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     categories: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['categories']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
 
         run_test!
       end

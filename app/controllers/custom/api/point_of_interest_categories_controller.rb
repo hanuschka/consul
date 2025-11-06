@@ -1,9 +1,31 @@
 class Api::PointOfInterestCategoriesController < Api::BaseController
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_category, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+    categories = if @projekt_phase.present?
+      @projekt_phase.projekt_point_of_interest_categories
+        .includes(:projekt_phase, projekt_phase: :projekt)
+    else
+      ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt)
+    end
+
+    categories = categories
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_categories = PointOfInterestCategorySerializer.serialize_collection(categories)
+
+    render json: {
+      data: { categories: serialized_categories },
+      pagination: pagination_meta(categories)
+    }
+  end
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     category = @projekt_phase.projekt_point_of_interest_categories.new(category_params)
 
     if category.save
@@ -53,11 +75,20 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
   end
 
   def find_projekt_phase
-    @projekt_phase = ProjektPhase::PointOfInterestPhase.find(params[:projekt_phase_id])
+    @projekt_phase = ProjektPhase::PointOfInterestPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
   end
 
   def find_category
-    @category = ProjektPointOfInterestCategory.find(params[:id])
+    @category = ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end
 

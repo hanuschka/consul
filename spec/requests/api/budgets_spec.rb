@@ -110,19 +110,30 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new participatory budget for a projekt phase. Budgets define spending priorities, voting mechanisms, and investment categories. Supports optional image attachments for budget visualization or branding. Requires admin access. Supports multiple voting styles (knapsack, plurality, etc.) and currency configurations.'
 
-      parameter name: :budget, in: :body, description: 'Budget creation payload', schema: {
+      parameter name: :budget, in: :body, description: 'Budget configuration with required name and optional currency, voting style, publication settings, and image attachment', schema: {
         type: :object,
         properties: {
           budget: {
             type: :object,
             properties: {
-              name: { type: :string },
-              phase: { type: :string },
-              currency_symbol: { type: :string },
-              voting_style: { type: :string },
-              published: { type: :boolean },
-              slug: { type: :string }
+              name: { type: :string, description: 'Budget display name (required, must be unique within phase)' },
+              phase: { type: :string, description: 'Optional: budget phase identifier' },
+              currency_symbol: { type: :string, description: 'Currency symbol to display (e.g., $, €, £)' },
+              voting_style: { type: :string, description: 'Voting mechanism type: "knapsack" (individual budget allocation), "plurality" (select preferred options), or others' },
+              published: { type: :boolean, description: 'Whether the budget is visible to the public' },
+              slug: { type: :string, description: 'URL-friendly identifier for the budget (auto-generated if not provided)' },
+              image_attributes: {
+                type: :object,
+                description: 'Optional: Image for budget branding or visualization (logo, cover image, etc.). Upload as base64-encoded data.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the budget.' }
+                }
+              }
             },
             required: ['name']
           }
@@ -130,7 +141,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         required: ['budget']
       }
 
-      response '201', 'budget created' do
+      response '201', 'budget created successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase_id) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt).id }
         let(:budget) do
@@ -217,6 +228,44 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      response '201', 'budget created with base64 image' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase_id) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt).id }
+        let(:budget) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            budget: {
+              name: 'Test Budget',
+              currency_symbol: '$',
+              voting_style: 'knapsack',
+              published: true,
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Budget Cover Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget: { type: :object }
+                   },
+                   required: ['budget']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['budget']).to be_present
+          expect(response.status).to eq(201)
+        end
+      end
     end
   end
 
@@ -227,8 +276,9 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Retrieve a single budget by ID with all configuration details. Returns budget metadata (name, currency, voting style), phase information, and statistics about associated investments.'
 
-      response '200', 'budget found' do
+      response '200', 'budget found and returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
         let(:test_budget) { Budget.create!(name_en: 'Test Budget', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'test-budget') }
@@ -288,24 +338,35 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update budget configuration such as name, voting style, currency, publication status, or image. Can add, replace, or remove the budget image. All fields are optional - only provide fields to change. Requires admin access. Returns the updated budget object.'
 
-      parameter name: :budget, in: :body, description: 'Attributes to update on the budget', schema: {
+      parameter name: :budget, in: :body, description: 'Budget attributes to update (name, currency_symbol, voting_style, published, image). Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           budget: {
             type: :object,
             properties: {
-              name: { type: :string },
-              currency_symbol: { type: :string },
-              voting_style: { type: :string },
-              published: { type: :boolean }
+              name: { type: :string, description: 'Budget display name to update' },
+              currency_symbol: { type: :string, description: 'New currency symbol to display' },
+              voting_style: { type: :string, description: 'New voting mechanism type' },
+              published: { type: :boolean, description: 'Publish or unpublish the budget' },
+              image_attributes: {
+                type: :object,
+                description: 'Update, replace, or remove the budget image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content.' },
+                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the budget while preserving other budget properties.' }
+                }
+              }
             }
           }
         },
         required: ['budget']
       }
 
-      response '200', 'budget updated' do
+      response '200', 'budget updated successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
         let(:test_budget) { Budget.create!(name_en: 'Original Name', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'original-name') }
@@ -405,14 +466,52 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      response '200', 'budget updated with base64 image' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) { Budget.create!(name_en: 'Original Name', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'original-name') }
+        let(:id) { test_budget.id }
+        let(:budget) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            budget: {
+              name: 'Updated Name',
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Updated Budget Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget: { type: :object }
+                   },
+                   required: ['budget']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['budget']).to be_present
+          expect(response.status).to eq(200)
+        end
+      end
     end
 
     delete 'Delete a budget' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Delete a budget and all associated investments and voting data. Only admin users can delete budgets. This action is permanent and cannot be undone. All data related to this budget will be removed.'
 
-      response '200', 'budget deleted' do
+      response '200', 'budget deleted successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
         let(:test_budget) { Budget.create!(name_en: 'To Delete', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'to-delete') }

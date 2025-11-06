@@ -5,6 +5,7 @@ class Api::BaseController < ActionController::API
   class UnauthorizedError < StandardError; end
 
   before_action :authenticate_api_client!
+  rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized
@@ -60,6 +61,15 @@ class Api::BaseController < ActionController::API
     render json: {
       error: { type: "not_found", messages: ["Not found"]}
     }, status: 404
+  end
+
+  def render_internal_server_error(exception)
+    render json: {
+      error: {
+        type: "internal_server_error",
+        messages: ["Internal server error"]
+      }
+    }, status: 500
   end
 
   protected

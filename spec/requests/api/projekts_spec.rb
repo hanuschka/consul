@@ -569,9 +569,9 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update or replace the projekt cover image that appears on the frontend. Supports uploading a new image, updating image metadata (title/credits), or removing the image entirely. Image should be provided as base64-encoded data. Requires admin access.'
+      description 'Update or replace the projekt cover image that appears on the frontend. Supports uploading a new image, updating image metadata (title/credits), or removing the image entirely. Image must be provided as base64-encoded data. Requires admin access.'
 
-      parameter name: :image, in: :body, description: 'Image attributes: attachment (base64-encoded image file for JPEG/PNG/GIF/WebP), title (alt text), credits (attribution), or _destroy=true to remove the image', schema: { '$ref' => '#/components/schemas/ImageAttributesApi' }
+      parameter name: :image, in: :body, description: 'Image attributes for uploading or updating projekt cover image. Attachment must be base64-encoded image data. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Title serves as alt text for accessibility. Use _destroy=true to remove the current image.', schema: { '$ref' => '#/components/schemas/ImageAttributesApi' }
 
       response '200', 'projekt page image updated' do
         let!(:test_user) do

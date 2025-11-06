@@ -14,24 +14,26 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new argument (pro or con) for a projekt phase. Arguments present reasoning, evidence, or positions on a topic within the ArgumentPhase. Can include supporting images with titles and credits. Requires admin access.'
 
-      parameter name: :projekt_argument, in: :body, description: 'Projekt argument creation payload', schema: {
+      parameter name: :projekt_argument, in: :body, description: 'Argument details with optional name, position, note, pro/con flag, and image attachment', schema: {
         type: :object,
         properties: {
           projekt_argument: {
             type: :object,
             properties: {
-              name: { type: :string, nullable: true },
-              position: { type: :integer, nullable: true },
-              note: { type: :string, nullable: true },
-              pro: { type: :boolean, nullable: true },
+              name: { type: :string, nullable: true, description: 'Argument title or name. Optional, can be auto-generated if not provided.' },
+              position: { type: :integer, nullable: true, description: 'Display order among other arguments in the phase. Lower numbers appear first.' },
+              note: { type: :string, nullable: true, description: 'Detailed argument text explaining the position, evidence, and reasoning.' },
+              pro: { type: :boolean, nullable: true, description: 'true = pro-argument (in favor), false/null = con-argument (against)' },
               image_attributes: {
                 type: :object,
+                description: 'Optional: Image to support the argument (infographic, chart, diagram, evidence photo, etc.). Upload as base64-encoded data. Recommended for presenting visual evidence or data supporting the argument position.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image' },
-                  title: { type: :string, nullable: true },
-                  credits: { type: :string, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the argument. Does not affect other argument properties.' }
                 }
               }
             }
@@ -40,7 +42,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
         required: ['projekt_argument']
       }
 
-      response '201', 'projekt argument created' do
+      response '201', 'projekt argument created successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:projekt_phase_id) { argument_phase.id }
@@ -148,8 +150,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       tags 'Arguments'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Retrieve a single argument by ID with all its details. Returns the argument text, pro/con classification, display position, and any associated image with metadata.'
 
-      response '200', 'projekt argument found' do
+      response '200', 'projekt argument found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:projekt_argument) do
@@ -189,24 +192,26 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing argument with new content, positioning, or pro/con classification. Can also add, replace, or remove the supporting image. All fields are optional - only provide fields to change. Requires admin access.'
 
-      parameter name: :projekt_argument, in: :body, description: 'Attributes to update on the projekt argument', schema: {
+      parameter name: :projekt_argument, in: :body, description: 'Argument attributes to update (name, position, note, pro/con flag, image). Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           projekt_argument: {
             type: :object,
             properties: {
-              name: { type: :string, nullable: true },
-              position: { type: :integer, nullable: true },
-              note: { type: :string, nullable: true },
-              pro: { type: :boolean, nullable: true },
+              name: { type: :string, nullable: true, description: 'Updated argument title or name' },
+              position: { type: :integer, nullable: true, description: 'New display order among arguments' },
+              note: { type: :string, nullable: true, description: 'Updated argument text/evidence/reasoning' },
+              pro: { type: :boolean, nullable: true, description: 'true = pro-argument, false/null = con-argument' },
               image_attributes: {
                 type: :object,
+                description: 'Update, replace, or remove the supporting image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
                 properties: {
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image' },
-                  title: { type: :string, nullable: true },
-                  credits: { type: :string, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content for screen readers and improving discoverability.' },
+                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the argument while preserving the argument text and other properties.' }
                 }
               }
             }
@@ -215,7 +220,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
         required: ['projekt_argument']
       }
 
-      response '200', 'projekt argument updated' do
+      response '200', 'projekt argument updated successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:test_projekt_argument) do
@@ -351,8 +356,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       tags 'Arguments'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Delete an argument and all associated data (including any attached images). Only admin users can delete arguments. This action is permanent and cannot be undone.'
 
-      response '200', 'projekt argument deleted' do
+      response '200', 'projekt argument deleted successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:projekt_argument) do

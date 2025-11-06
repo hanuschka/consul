@@ -94,9 +94,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Submit a new deficiency report for a maintenance issue or infrastructure problem. Reports must include a location (latitude/longitude) and category. Supports geographic mapping, image attachments, and admin review before publishing. Requires acceptance of terms.'
+      description 'Submit a new deficiency report for a maintenance issue or infrastructure problem. Reports must include a location (latitude/longitude) and category. Supports geographic mapping, image attachments for documenting the issue, and admin review before publishing. Requires acceptance of terms.'
 
-      parameter name: :deficiency_report, in: :body, description: 'Deficiency report with required title, description, location, category, and terms acceptance', schema: {
+      parameter name: :deficiency_report, in: :body, description: 'Deficiency report with required title, description, location, category, and terms acceptance. Optional image attachment for documenting the issue.', schema: {
         type: :object,
         properties: {
           deficiency_report: {
@@ -117,6 +117,16 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                   zoom: { type: :integer }
                 },
                 required: %w[latitude longitude]
+              },
+              image_attributes: {
+                type: :object,
+                description: 'Optional: Image documenting the deficiency issue (photo of damage, problem area, etc.). Upload as base64-encoded data. Highly recommended for visual evidence of the reported problem.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the deficiency report. Does not affect other report properties.' }
+                }
               }
             },
             required: %w[deficiency_report_category_id title resource_terms map_location_attributes]
@@ -189,6 +199,53 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      response '201', 'deficiency report created with base64 image' do
+        let!(:pre) { create_minimal_prereqs }
+        let(:status_id) { pre[0].id }
+        let(:category_id) { pre[1].id }
+        let(:deficiency_report) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            deficiency_report: {
+              deficiency_report_category_id: category_id,
+              deficiency_report_status_id: status_id,
+              resource_terms: true,
+              admin_accepted: true,
+              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Deficiency Photo'
+              },
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'Broken streetlight',
+                  description: 'The lamp is out on 3rd street.'
+                }
+              ]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     deficiency_report: { type: :object }
+                   },
+                   required: ['deficiency_report']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['deficiency_report']).to be_present
+          expect(response.status).to eq(201)
+        end
+      end
     end
   end
 
@@ -251,15 +308,26 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing deficiency report with new information, status, or image. Can add, replace, or remove the report image. All fields are optional - only provide fields to change. Requires admin access.'
 
-      parameter name: :deficiency_report, in: :body, description: 'Attributes to update on the deficiency report', schema: {
+      parameter name: :deficiency_report, in: :body, description: 'Deficiency report attributes to update (title, description, status, image). Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           deficiency_report: {
             type: :object,
             properties: {
               title: { type: :string },
-              deficiency_report_status_id: { type: :integer }
+              deficiency_report_status_id: { type: :integer },
+              image_attributes: {
+                type: :object,
+                description: 'Update, replace, or remove the deficiency report image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content for screen readers.' },
+                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the deficiency report while preserving the report text and other properties.' }
+                }
+              }
             }
           }
         }
@@ -362,6 +430,62 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                }
 
         run_test!
+      end
+
+      response '200', 'deficiency report updated with base64 image' do
+        let!(:pre) { create_minimal_prereqs }
+        let(:status_id) { pre[0].id }
+        let(:category_id) { pre[1].id }
+        let!(:record) do
+          report = DeficiencyReport.new(
+            author: api_client.user,
+            deficiency_report_category_id: category_id,
+            deficiency_report_status_id: status_id,
+            resource_terms: true,
+            admin_accepted: true,
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Graffiti',
+                description: 'Graffiti on the wall'
+              }
+            ]
+          )
+          report.save!
+          report
+        end
+        let(:id) { record.id }
+        let(:deficiency_report) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            deficiency_report: {
+              title: 'Graffiti updated',
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Updated Deficiency Photo'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     deficiency_report: { type: :object }
+                   },
+                   required: ['deficiency_report']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['deficiency_report']).to be_present
+          expect(response.status).to eq(200)
+        end
       end
     end
   end

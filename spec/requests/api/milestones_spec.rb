@@ -80,16 +80,26 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new milestone in a projekt phase milestone timeline. Milestones mark important dates and include status updates. Required fields: publication_date and status_id. Requires admin access.'
+      description 'Create a new milestone in a projekt phase milestone timeline. Milestones mark important dates and include status updates. Required fields: publication_date and status_id. Supports optional image attachments for visual representation of milestone progress. Requires admin access.'
 
-      parameter name: :milestone, in: :body, description: 'Milestone creation with required publication date and status', schema: {
+      parameter name: :milestone, in: :body, description: 'Milestone creation with required publication date and status, and optional image attachment', schema: {
         type: :object,
         properties: {
           milestone: {
             type: :object,
             properties: {
               publication_date: { type: :string, format: :date },
-              status_id: { type: :integer }
+              status_id: { type: :integer },
+              image_attributes: {
+                type: :object,
+                description: 'Optional: Image to represent the milestone (progress photo, status visualization, etc.). Upload as base64-encoded data.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the milestone.' }
+                }
+              }
             }
           }
         },
@@ -185,6 +195,42 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      response '201', 'milestone created with base64 image' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase_id) { ProjektPhase::MilestonePhase.create!(projekt: test_projekt).id }
+        let(:milestone) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            milestone: {
+              publication_date: Date.today.to_s,
+              status_id: 1,
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Milestone Progress Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     milestone: { type: :object }
+                   },
+                   required: ['milestone']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['milestone']).to be_present
+          expect(response.status).to eq(201)
+        end
+      end
     end
   end
 
@@ -256,15 +302,26 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing milestone with new dates, status, or image. Can add, replace, or remove the milestone image. All fields are optional - only provide fields to change. Requires admin access.'
 
-      parameter name: :milestone, in: :body, description: 'Attributes to update on the milestone', schema: {
+      parameter name: :milestone, in: :body, description: 'Milestone attributes to update (publication_date, status_id, image). Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           milestone: {
             type: :object,
             properties: {
               publication_date: { type: :string, format: :date },
-              status_id: { type: :integer }
+              status_id: { type: :integer },
+              image_attributes: {
+                type: :object,
+                description: 'Update, replace, or remove the milestone image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content.' },
+                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the milestone while preserving other milestone properties.' }
+                }
+              }
             }
           }
         },
@@ -376,6 +433,43 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'milestone updated with base64 image' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::MilestonePhase.create!(projekt: test_projekt) }
+        let(:test_milestone) { Milestone.create!(milestoneable: projekt_phase, publication_date: Date.today, description_en: 'Test milestone') }
+        let(:id) { test_milestone.id }
+        let(:milestone) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            milestone: {
+              publication_date: (Date.today + 1).to_s,
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Updated Milestone Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     milestone: { type: :object }
+                   },
+                   required: ['milestone']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['milestone']).to be_present
+          expect(response.status).to eq(200)
         end
       end
     end

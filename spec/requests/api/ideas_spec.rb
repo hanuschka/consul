@@ -132,9 +132,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Submit a new citizen idea for community improvement. Ideas go through an admin review process before being published. Supports categorization, video attachments, location mapping, and optional on-behalf-of attribution. Requires acceptance of terms and conditions.'
+      description 'Submit a new citizen idea for community improvement. Ideas go through an admin review process before being published. Supports categorization, video attachments, location mapping, image attachments, and optional on-behalf-of attribution. Requires acceptance of terms and conditions.'
 
-      parameter name: :idea, in: :body, description: 'Idea submission with required title/description and optional category, location, video, and behalf-of information', schema: {
+      parameter name: :idea, in: :body, description: 'Idea submission with required title/description and optional category, location, video, image, and behalf-of information', schema: {
         type: :object,
         properties: {
           idea: {
@@ -154,6 +154,16 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                   zoom: { type: :integer }
                 },
                 required: %w[latitude longitude]
+              },
+              image_attributes: {
+                type: :object,
+                description: 'Optional: Image to illustrate the idea (photo, diagram, visualization, etc.). Upload as base64-encoded data. Recommended for presenting visual evidence or demonstrating the idea concept.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the idea. Does not affect other idea properties.' }
+                }
               },
               translations_attributes: {
                 type: :array,
@@ -234,6 +244,48 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                }
 
         run_test!
+      end
+
+      response '201', 'idea created with base64 image' do
+        let(:idea) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            idea: {
+              title: 'New Idea',
+              description: 'A meaningful description',
+              resource_terms: true,
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Idea Cover Image'
+              },
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'New Idea',
+                  description: 'A meaningful description'
+                }
+              ]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     idea: { type: :object }
+                   },
+                   required: ['idea']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['idea']).to be_present
+          expect(response.status).to eq(201)
+        end
       end
 
     end
@@ -332,8 +384,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing idea with new content, category, location, video, or image. Can add, replace, or remove the idea image. All fields are optional - only provide fields to change. Requires admin access.'
 
-      parameter name: :idea, in: :body, description: 'Attributes to update on the idea', schema: {
+      parameter name: :idea, in: :body, description: 'Idea attributes to update (title, description, category, video_url, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           idea: {
@@ -344,6 +397,16 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               video_url: { type: :string, nullable: true },
               on_behalf_of: { type: :string, nullable: true },
               idea_category_id: { type: :integer, nullable: true },
+              image_attributes: {
+                type: :object,
+                description: 'Update, replace, or remove the idea image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                properties: {
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content for screen readers.' },
+                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the idea while preserving the idea text and other properties.' }
+                }
+              },
               translations_attributes: {
                 type: :array,
                 items: {
@@ -492,6 +555,56 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                }
 
         run_test!
+      end
+
+      response '200', 'idea updated with base64 image' do
+        let(:existing_idea) do
+          idea = Idea.new(
+            author: api_client.user,
+            resource_terms: true,
+            admin_accepted_at: Time.current,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Original Idea',
+                description: 'Original Description'
+              }
+            ]
+          )
+          idea.save!
+          idea
+        end
+        let(:id) { existing_idea.id }
+        let(:idea) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            idea: {
+              description: 'Updated description',
+              image_attributes: {
+                attachment: base64_png,
+                title: 'Updated Idea Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     idea: { type: :object }
+                   },
+                   required: ['idea']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['idea']).to be_present
+          expect(response.status).to eq(200)
+        end
       end
 
     end

@@ -18,10 +18,13 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
+      description: Create a new argument (pro or con) for a projekt phase. Arguments
+        present reasoning, evidence, or positions on a topic within the ArgumentPhase.
+        Can include supporting images with titles and credits. Requires admin access.
       parameters: []
       responses:
         '201':
-          description: projekt argument created
+          description: projekt argument created successfully
           content:
             application/json:
               schema:
@@ -62,34 +65,57 @@ paths:
                     name:
                       type: string
                       nullable: true
+                      description: Argument title or name. Optional, can be auto-generated
+                        if not provided.
                     position:
                       type: integer
                       nullable: true
+                      description: Display order among other arguments in the phase.
+                        Lower numbers appear first.
                     note:
                       type: string
                       nullable: true
+                      description: Detailed argument text explaining the position,
+                        evidence, and reasoning.
                     pro:
                       type: boolean
                       nullable: true
+                      description: true = pro-argument (in favor), false/null = con-argument
+                        (against)
                     image_attributes:
                       type: object
+                      description: 'Optional: Image to support the argument (infographic,
+                        chart, diagram, evidence photo, etc.). Upload as base64-encoded
+                        data. Recommended for presenting visual evidence or data supporting
+                        the argument position.'
                       properties:
                         attachment:
                           type: string
                           nullable: true
-                          description: Base64-encoded image
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
                         title:
                           type: string
                           nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image. Helps
+                            visually-impaired users understand the image content.
                         credits:
                           type: string
                           nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information. Displayed with the image
+                            to give proper credit.
                         _destroy:
                           type: boolean
                           nullable: true
+                          description: Set to true to remove the current image from
+                            the argument. Does not affect other argument properties.
               required:
               - projekt_argument
-        description: Projekt argument creation payload
+        description: Argument details with optional name, position, note, pro/con
+          flag, and image attachment
   "/api/arguments/{id}":
     parameters:
     - name: id
@@ -104,9 +130,12 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
+      description: Retrieve a single argument by ID with all its details. Returns
+        the argument text, pro/con classification, display position, and any associated
+        image with metadata.
       responses:
         '200':
-          description: projekt argument found
+          description: projekt argument found and returned
           content:
             application/json:
               schema:
@@ -129,10 +158,13 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
+      description: Update an existing argument with new content, positioning, or pro/con
+        classification. Can also add, replace, or remove the supporting image. All
+        fields are optional - only provide fields to change. Requires admin access.
       parameters: []
       responses:
         '200':
-          description: projekt argument updated
+          description: projekt argument updated successfully
           content:
             application/json:
               schema:
@@ -176,43 +208,64 @@ paths:
                     name:
                       type: string
                       nullable: true
+                      description: Updated argument title or name
                     position:
                       type: integer
                       nullable: true
+                      description: New display order among arguments
                     note:
                       type: string
                       nullable: true
+                      description: Updated argument text/evidence/reasoning
                     pro:
                       type: boolean
                       nullable: true
+                      description: true = pro-argument, false/null = con-argument
                     image_attributes:
                       type: object
+                      description: Update, replace, or remove the supporting image.
+                        Attach a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
                       properties:
                         attachment:
                           type: string
                           nullable: true
-                          description: Base64-encoded image
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
                         title:
                           type: string
                           nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content for screen
+                            readers and improving discoverability.
                         credits:
                           type: string
                           nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice. Properly credits original creators.
                         _destroy:
                           type: boolean
                           nullable: true
+                          description: Set to true to remove the image entirely from
+                            the argument while preserving the argument text and other
+                            properties.
               required:
               - projekt_argument
-        description: Attributes to update on the projekt argument
+        description: Argument attributes to update (name, position, note, pro/con
+          flag, image). Any field not provided remains unchanged.
     delete:
       summary: Delete a projekt argument
       tags:
       - Arguments
       security:
       - bearer_auth: []
+      description: Delete an argument and all associated data (including any attached
+        images). Only admin users can delete arguments. This action is permanent and
+        cannot be undone.
       responses:
         '200':
-          description: projekt argument deleted
+          description: projekt argument deleted successfully
           content:
             application/json:
               schema:
@@ -346,12 +399,12 @@ paths:
       description: Submit a new budget investment (project proposal) to a specific
         budget. Investments must be assigned to a category heading and include title,
         description, and estimated budget/price. Supports video attachments, geographic
-        location mapping, multilingual descriptions, and tagging. Requires acceptance
-        of terms.
+        location mapping, multilingual descriptions, image attachments for project
+        visualization, and tagging. Requires acceptance of terms.
       parameters: []
       responses:
         '201':
-          description: budget investment created
+          description: budget investment created with base64 image
           content:
             application/json:
               schema:
@@ -407,48 +460,105 @@ paths:
                   properties:
                     heading_id:
                       type: integer
+                      description: Category heading ID where the investment belongs
+                        (required). Defines the project category and budget allocation.
                     title:
                       type: string
+                      description: Project title/name (required). Concise name visible
+                        to voters.
                     description:
                       type: string
+                      description: Detailed project description (required). Explains
+                        the investment and its benefits.
                     video_url:
                       type: string
                       nullable: true
+                      description: Optional URL to a demonstration or explanation
+                        video. Supports YouTube, Vimeo, etc.
                     on_behalf_of:
                       type: string
                       nullable: true
+                      description: 'Optional: Organization or group name if the proposal
+                        is made on behalf of an entity rather than an individual.'
                     resource_terms:
                       type: boolean
+                      description: Must be true. Confirms the submitter accepts the
+                        terms and conditions.
                     price:
                       type: number
                       nullable: true
+                      description: Estimated budget/cost for the investment in the
+                        budget's currency.
                     map_location_attributes:
                       type: object
+                      description: 'Optional: Geographic location details for the
+                        investment. Required latitude and longitude.'
                       properties:
                         latitude:
                           type: number
+                          description: Geographic latitude (-90 to 90)
                         longitude:
                           type: number
+                          description: Geographic longitude (-180 to 180)
                         zoom:
                           type: integer
+                          description: Map zoom level (0-18)
                       required:
                       - latitude
                       - longitude
+                    image_attributes:
+                      type: object
+                      description: 'Optional: Image to visualize the investment project
+                        (rendering, photo, diagram, etc.). Upload as base64-encoded
+                        data. Recommended for presenting visual evidence or demonstrating
+                        the project concept.'
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image. Helps
+                            visually-impaired users understand the image content.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information. Displayed with the image
+                            to give proper credit.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image from
+                            the budget investment. Does not affect other investment
+                            properties.
                     translations_attributes:
                       type: array
+                      description: Multilingual content. Provide title and description
+                        for each language.
                       items:
                         type: object
                         properties:
                           locale:
                             type: string
+                            description: Language code (e.g., en, de, es)
                           title:
                             type: string
+                            description: Project title in the specified language
                           description:
                             type: string
+                            description: Project description in the specified language
                     tag_list:
                       type: array
                       items:
                         type: string
+                      description: 'Optional: Comma-separated or array of tags for
+                        categorization and searching.'
                   required:
                   - heading_id
                   - title
@@ -456,8 +566,9 @@ paths:
                   - resource_terms
               required:
               - budget_investment
-        description: Budget investment submission with required heading, title, description,
-          price, and terms acceptance
+        description: Budget investment submission with required heading ID, title,
+          description, and terms acceptance. Optional image attachment for project
+          visualization.
   "/api/budget_investments":
     get:
       summary: List all budget investments
@@ -465,22 +576,25 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
+      description: Retrieve all budget investments across all budgets. Includes investment
+        details (title, description, status, cost) and voting/support statistics.
+        Useful for global investment tracking and analytics.
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: 'Pagination page number (default: 1)'
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: 'Number of investments per page (default: 100, max: 500)'
         required: false
         schema:
           type: integer
       responses:
         '200':
-          description: budget investments found
+          description: budget investments found and returned
           content:
             application/json:
               schema:
@@ -522,6 +636,9 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
+      description: Retrieve a single budget investment by ID with full details. Returns
+        project information, feasibility assessment, admin valuation status, voting
+        statistics, and selected status.
       responses:
         '200':
           description: budget investment found with public_data access
@@ -563,10 +680,14 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
+      description: 'Update a budget investment details. Allows editing project information,
+        admin feasibility assessment, selection status, or image. Can add, replace,
+        or remove the investment image. Admin-only: can set feasibility status and
+        mark as selected. All fields are optional - only provide fields to change.'
       parameters: []
       responses:
         '200':
-          description: budget investment updated
+          description: budget investment updated with base64 image
           content:
             application/json:
               schema:
@@ -623,18 +744,23 @@ paths:
                     title:
                       type: string
                       nullable: true
+                      description: Project title
                     description:
                       type: string
                       nullable: true
+                      description: Project description
                     video_url:
                       type: string
                       nullable: true
+                      description: URL to demonstration or explanation video
                     on_behalf_of:
                       type: string
                       nullable: true
+                      description: Organization or group name if applicable
                     price:
                       type: number
                       nullable: true
+                      description: Estimated project cost in budget currency
                     feasibility:
                       type: string
                       nullable: true
@@ -642,39 +768,84 @@ paths:
                       - feasible
                       - unfeasible
                       - undecided
+                      description: Admin feasibility assessment (admin only). Set
+                        to "feasible" (can be completed), "unfeasible" (cannot be
+                        done), or "undecided" (still evaluating).
                     valuation_finished:
                       type: boolean
                       nullable: true
+                      description: 'Admin-only: Whether feasibility assessment is
+                        complete'
                     selected:
                       type: boolean
                       nullable: true
+                      description: 'Admin-only: Whether this investment is selected
+                        as a winner'
+                    image_attributes:
+                      type: object
+                      description: Update, replace, or remove the investment image.
+                        Attach a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content for screen
+                            readers.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice. Properly credits original creators.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the image entirely from
+                            the budget investment while preserving the investment
+                            text and other properties.
                     translations_attributes:
                       type: array
+                      description: Update multilingual content
                       items:
                         type: object
                         properties:
                           locale:
                             type: string
+                            description: Language code
                           title:
                             type: string
                             nullable: true
+                            description: Localized project title
                           description:
                             type: string
                             nullable: true
+                            description: Localized project description
                     tag_list:
                       type: array
                       items:
                         type: string
-        description: Attributes to update on the budget investment
+                      description: Tags for categorization
+        description: Investment attributes to update (title, description, price, feasibility,
+          selection status, image, translations). Any field not provided remains unchanged.
     delete:
       summary: Delete a budget investment
       tags:
       - Budget Investments
       security:
       - bearer_auth: []
+      description: Delete a budget investment and all associated voting data. Only
+        admin users can delete investments. This action is permanent and cannot be
+        undone.
       responses:
         '200':
-          description: budget investment deleted
+          description: budget investment deleted successfully
           content:
             application/json:
               schema:
@@ -833,10 +1004,15 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
+      description: Create a new participatory budget for a projekt phase. Budgets
+        define spending priorities, voting mechanisms, and investment categories.
+        Supports optional image attachments for budget visualization or branding.
+        Requires admin access. Supports multiple voting styles (knapsack, plurality,
+        etc.) and currency configurations.
       parameters: []
       responses:
         '201':
-          description: budget created
+          description: budget created with base64 image
           content:
             application/json:
               schema:
@@ -890,21 +1066,58 @@ paths:
                   properties:
                     name:
                       type: string
+                      description: Budget display name (required, must be unique within
+                        phase)
                     phase:
                       type: string
+                      description: 'Optional: budget phase identifier'
                     currency_symbol:
                       type: string
+                      description: Currency symbol to display (e.g., $, €, £)
                     voting_style:
                       type: string
+                      description: 'Voting mechanism type: "knapsack" (individual
+                        budget allocation), "plurality" (select preferred options),
+                        or others'
                     published:
                       type: boolean
+                      description: Whether the budget is visible to the public
                     slug:
                       type: string
+                      description: URL-friendly identifier for the budget (auto-generated
+                        if not provided)
+                    image_attributes:
+                      type: object
+                      description: 'Optional: Image for budget branding or visualization
+                        (logo, cover image, etc.). Upload as base64-encoded data.'
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image from
+                            the budget.
                   required:
                   - name
               required:
               - budget
-        description: Budget creation payload
+        description: Budget configuration with required name and optional currency,
+          voting style, publication settings, and image attachment
   "/api/budgets/{id}":
     parameters:
     - name: id
@@ -919,9 +1132,12 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
+      description: Retrieve a single budget by ID with all configuration details.
+        Returns budget metadata (name, currency, voting style), phase information,
+        and statistics about associated investments.
       responses:
         '200':
-          description: budget found
+          description: budget found and returned
           content:
             application/json:
               schema:
@@ -960,10 +1176,14 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
+      description: Update budget configuration such as name, voting style, currency,
+        publication status, or image. Can add, replace, or remove the budget image.
+        All fields are optional - only provide fields to change. Requires admin access.
+        Returns the updated budget object.
       parameters: []
       responses:
         '200':
-          description: budget updated
+          description: budget updated with base64 image
           content:
             application/json:
               schema:
@@ -1019,24 +1239,59 @@ paths:
                   properties:
                     name:
                       type: string
+                      description: Budget display name to update
                     currency_symbol:
                       type: string
+                      description: New currency symbol to display
                     voting_style:
                       type: string
+                      description: New voting mechanism type
                     published:
                       type: boolean
+                      description: Publish or unpublish the budget
+                    image_attributes:
+                      type: object
+                      description: Update, replace, or remove the budget image. Attach
+                        a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the image entirely from
+                            the budget while preserving other budget properties.
               required:
               - budget
-        description: Attributes to update on the budget
+        description: Budget attributes to update (name, currency_symbol, voting_style,
+          published, image). Any field not provided remains unchanged.
     delete:
       summary: Delete a budget
       tags:
       - Budgets
       security:
       - bearer_auth: []
+      description: Delete a budget and all associated investments and voting data.
+        Only admin users can delete budgets. This action is permanent and cannot be
+        undone. All data related to this budget will be removed.
       responses:
         '200':
-          description: budget deleted
+          description: budget deleted successfully
           content:
             application/json:
               schema:
@@ -1496,12 +1751,12 @@ paths:
       - bearer_auth: []
       description: Submit a new deficiency report for a maintenance issue or infrastructure
         problem. Reports must include a location (latitude/longitude) and category.
-        Supports geographic mapping, image attachments, and admin review before publishing.
-        Requires acceptance of terms.
+        Supports geographic mapping, image attachments for documenting the issue,
+        and admin review before publishing. Requires acceptance of terms.
       parameters: []
       responses:
         '201':
-          description: deficiency report created
+          description: deficiency report created with base64 image
           content:
             application/json:
               schema:
@@ -1567,6 +1822,36 @@ paths:
                       required:
                       - latitude
                       - longitude
+                    image_attributes:
+                      type: object
+                      description: 'Optional: Image documenting the deficiency issue
+                        (photo of damage, problem area, etc.). Upload as base64-encoded
+                        data. Highly recommended for visual evidence of the reported
+                        problem.'
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image. Helps
+                            visually-impaired users understand the image content.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information. Displayed with the image
+                            to give proper credit.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image from
+                            the deficiency report. Does not affect other report properties.
                   required:
                   - deficiency_report_category_id
                   - title
@@ -1575,7 +1860,8 @@ paths:
               required:
               - deficiency_report
         description: Deficiency report with required title, description, location,
-          category, and terms acceptance
+          category, and terms acceptance. Optional image attachment for documenting
+          the issue.
   "/api/deficiency_reports/{id}":
     parameters:
     - name: id
@@ -1615,10 +1901,13 @@ paths:
       - Deficiency Reports
       security:
       - bearer_auth: []
+      description: Update an existing deficiency report with new information, status,
+        or image. Can add, replace, or remove the report image. All fields are optional
+        - only provide fields to change. Requires admin access.
       parameters: []
       responses:
         '200':
-          description: deficiency report updated
+          description: deficiency report updated with base64 image
           content:
             application/json:
               schema:
@@ -1660,7 +1949,38 @@ paths:
                       type: string
                     deficiency_report_status_id:
                       type: integer
-        description: Attributes to update on the deficiency report
+                    image_attributes:
+                      type: object
+                      description: Update, replace, or remove the deficiency report
+                        image. Attach a new image (base64-encoded), update metadata
+                        (title/credits), or set _destroy=true to remove. All fields
+                        are optional.
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content for screen
+                            readers.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice. Properly credits original creators.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the image entirely from
+                            the deficiency report while preserving the report text
+                            and other properties.
+        description: Deficiency report attributes to update (title, description, status,
+          image). Any field not provided remains unchanged.
   "/api/projekt_phases/{projekt_phase_id}/events":
     parameters:
     - name: projekt_phase_id
@@ -2641,12 +2961,12 @@ paths:
       - bearer_auth: []
       description: Submit a new citizen idea for community improvement. Ideas go through
         an admin review process before being published. Supports categorization, video
-        attachments, location mapping, and optional on-behalf-of attribution. Requires
-        acceptance of terms and conditions.
+        attachments, location mapping, image attachments, and optional on-behalf-of
+        attribution. Requires acceptance of terms and conditions.
       parameters: []
       responses:
         '201':
-          description: idea created
+          description: idea created with base64 image
           content:
             application/json:
               schema:
@@ -2711,6 +3031,36 @@ paths:
                       required:
                       - latitude
                       - longitude
+                    image_attributes:
+                      type: object
+                      description: 'Optional: Image to illustrate the idea (photo,
+                        diagram, visualization, etc.). Upload as base64-encoded data.
+                        Recommended for presenting visual evidence or demonstrating
+                        the idea concept.'
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image. Helps
+                            visually-impaired users understand the image content.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information. Displayed with the image
+                            to give proper credit.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image from
+                            the idea. Does not affect other idea properties.
                     translations_attributes:
                       type: array
                       items:
@@ -2729,7 +3079,7 @@ paths:
               required:
               - idea
         description: Idea submission with required title/description and optional
-          category, location, video, and behalf-of information
+          category, location, video, image, and behalf-of information
   "/api/ideas/{id}":
     parameters:
     - name: id
@@ -2785,10 +3135,13 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
+      description: Update an existing idea with new content, category, location, video,
+        or image. Can add, replace, or remove the idea image. All fields are optional
+        - only provide fields to change. Requires admin access.
       parameters: []
       responses:
         '200':
-          description: idea updated
+          description: idea updated with base64 image
           content:
             application/json:
               schema:
@@ -2857,6 +3210,34 @@ paths:
                     idea_category_id:
                       type: integer
                       nullable: true
+                    image_attributes:
+                      type: object
+                      description: Update, replace, or remove the idea image. Attach
+                        a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content for screen
+                            readers.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice. Properly credits original creators.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the image entirely from
+                            the idea while preserving the idea text and other properties.
                     translations_attributes:
                       type: array
                       items:
@@ -2870,7 +3251,8 @@ paths:
                           description:
                             type: string
                             nullable: true
-        description: Attributes to update on the idea
+        description: Idea attributes to update (title, description, category, video_url,
+          image, translations). Any field not provided remains unchanged.
   "/api/projekt_phases/{projekt_phase_id}/iframe":
     parameters:
     - name: projekt_phase_id
@@ -3698,11 +4080,12 @@ paths:
       - bearer_auth: []
       description: 'Create a new milestone in a projekt phase milestone timeline.
         Milestones mark important dates and include status updates. Required fields:
-        publication_date and status_id. Requires admin access.'
+        publication_date and status_id. Supports optional image attachments for visual
+        representation of milestone progress. Requires admin access.'
       parameters: []
       responses:
         '201':
-          description: milestone created
+          description: milestone created with base64 image
           content:
             application/json:
               schema:
@@ -3759,9 +4142,37 @@ paths:
                       format: date
                     status_id:
                       type: integer
+                    image_attributes:
+                      type: object
+                      description: 'Optional: Image to represent the milestone (progress
+                        photo, status visualization, etc.). Upload as base64-encoded
+                        data.'
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current image from
+                            the milestone.
               required:
               - milestone
-        description: Milestone creation with required publication date and status
+        description: Milestone creation with required publication date and status,
+          and optional image attachment
   "/api/milestones/{id}":
     parameters:
     - name: id
@@ -3817,10 +4228,13 @@ paths:
       - Milestones
       security:
       - bearer_auth: []
+      description: Update an existing milestone with new dates, status, or image.
+        Can add, replace, or remove the milestone image. All fields are optional -
+        only provide fields to change. Requires admin access.
       parameters: []
       responses:
         '200':
-          description: milestone updated
+          description: milestone updated with base64 image
           content:
             application/json:
               schema:
@@ -3879,9 +4293,37 @@ paths:
                       format: date
                     status_id:
                       type: integer
+                    image_attributes:
+                      type: object
+                      description: Update, replace, or remove the milestone image.
+                        Attach a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file to replace current
+                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB). Omit to keep existing image.'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Updated image caption or alt text. Improves
+                            accessibility by describing the image content.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Updated image source attribution, photographer/artist
+                            name, or copyright notice.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the image entirely from
+                            the milestone while preserving other milestone properties.
               required:
               - milestone
-        description: Attributes to update on the milestone
+        description: Milestone attributes to update (publication_date, status_id,
+          image). Any field not provided remains unchanged.
     delete:
       summary: Delete a milestone
       tags:
@@ -4410,6 +4852,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt point of interest categories for a projekt phase
+      tags:
+      - Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt point of interest categories found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - categories
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a projekt point of interest category
       tags:
@@ -4469,6 +4960,56 @@ paths:
               required:
               - projekt_point_of_interest_category
         description: Projekt point of interest category creation payload
+  "/api/point_of_interest_categories":
+    get:
+      summary: List all projekt point of interest categories
+      tags:
+      - Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt point of interest categories found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - categories
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/point_of_interest_categories/{id}":
     parameters:
     - name: id
@@ -4603,6 +5144,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt point of interest pins for a projekt phase
+      tags:
+      - Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt point of interest pins found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pins:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - pins
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a projekt point of interest pin
       tags:
@@ -4676,6 +5266,56 @@ paths:
               required:
               - projekt_point_of_interest_pin
         description: Projekt point of interest pin creation payload
+  "/api/point_of_interest_pins":
+    get:
+      summary: List all projekt point of interest pins
+      tags:
+      - Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt point of interest pins found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pins:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - pins
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/point_of_interest_pins/{id}":
     parameters:
     - name: id
@@ -6102,7 +6742,7 @@ paths:
       - bearer_auth: []
       description: Update or replace the projekt cover image that appears on the frontend.
         Supports uploading a new image, updating image metadata (title/credits), or
-        removing the image entirely. Image should be provided as base64-encoded data.
+        removing the image entirely. Image must be provided as base64-encoded data.
         Requires admin access.
       parameters: []
       responses:
@@ -6157,9 +6797,10 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ImageAttributesApi"
-        description: 'Image attributes: attachment (base64-encoded image file for
-          JPEG/PNG/GIF/WebP), title (alt text), credits (attribution), or _destroy=true
-          to remove the image'
+        description: 'Image attributes for uploading or updating projekt cover image.
+          Attachment must be base64-encoded image data. Supported formats: JPEG, PNG,
+          GIF, WebP (recommended max 5MB). Title serves as alt text for accessibility.
+          Use _destroy=true to remove the current image.'
   "/api/projekts/{id}/update_setting":
     parameters:
     - name: id

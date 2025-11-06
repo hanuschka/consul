@@ -60,104 +60,104 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
                 type: :string,
                 example: 'ProjektPhase::CommentPhase',
                 enum: ProjektPhase::PROJEKT_PHASES_TYPES,
-                description: 'The type of projekt phase that determines what kind of participation or content is available. Regular phases: CommentPhase (discussion/feedback), ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting), BudgetPhase (participatory budgeting), LegislationPhase (legislative process), FormularPhase (forms/surveys). Special phases: LivestreamPhase (live streaming), MilestonePhase (timeline milestones), ProjektNotificationPhase (announcements), EventPhase (events/meetings), ArgumentPhase (pro/con arguments), NewsfeedPhase (news feed), IframePhase (embedded content), PointOfInterestPhase (map pins). Required for creation.'
+                description: 'Phase type determining participation type. Required for creation.'
               },
               start_date: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'The date when the phase becomes active and participation begins (YYYY-MM-DD format). If null, the phase can be activated immediately via the active flag. Must be before end_date if both are provided. Used to schedule phases in advance.'
+                description: 'Date when the phase becomes active (YYYY-MM-DD). Must be before end_date if both provided.'
               },
               end_date: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'The date when the phase becomes inactive and participation ends (YYYY-MM-DD format). If null, the phase continues indefinitely until manually deactivated. Must be after start_date if both are provided. After this date, users can no longer submit new content but existing content remains visible.'
+                description: 'Date when the phase becomes inactive (YYYY-MM-DD). Must be after start_date if both provided.'
               },
               active: {
                 type: :boolean,
-                description: 'Whether the phase is currently active and allowing participation. When true, users can interact with the phase (submit comments, proposals, vote, etc.) based on other restrictions. When false, the phase is inactive regardless of date settings. Defaults to false if not specified.'
+                description: 'Whether the phase is currently active and allowing participation.'
               },
               frontend_visibility: {
                 type: :boolean,
-                description: 'Whether the phase is visible to users on the frontend interface. When true, the phase appears in navigation tabs and phase listings. When false, the phase is hidden from public view but may still be accessible via direct links or admin interfaces. Useful for preparing phases before public launch. Defaults to true.'
+                description: 'Whether the phase is visible to users on the frontend interface.'
               },
               given_order: {
                 type: :integer,
                 nullable: true,
-                description: 'The display order/position of this phase among other phases in the projekt. Lower numbers appear first in phase navigation and listings. If null, phases are ordered by creation date. Use this to control the sequence in which phases appear to users (e.g., planning phase before voting phase).'
+                description: 'Display order of this phase. Lower numbers appear first.'
               },
               geozone_restricted: {
                 type: :boolean,
-                description: 'Whether participation in this phase is restricted to specific geographic zones. When true, only users from geozones listed in geozone_restriction_ids can participate. When false, all users can participate (subject to other restrictions). Must be true if geozone_restriction_ids is provided.'
+                description: 'Whether participation is restricted to specific geographic zones.'
               },
               age_range_id: {
                 type: :integer,
                 nullable: true,
-                description: 'ID of an age range restriction that limits participation to users within a specific age group. If null, there is no age restriction. Age ranges are predefined categories (e.g., "18-25", "26-35", "65+") used to ensure age-appropriate participation or comply with legal requirements.'
+                description: 'ID of an age range restriction. If null, there is no age restriction.'
               },
               user_status: {
                 type: :string,
                 nullable: true,
-                description: 'Minimum user status required to participate in this phase. Valid values: "guest" (anyone, including anonymous), "registered" (must be logged in), "verified" (must have verified account). If null, defaults to "registered". Higher verification levels ensure more trusted participation but may reduce engagement.'
+                description: 'Minimum user status required. Valid values: "guest", "registered", "verified".'
               },
               lock_on: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD format). After this date, administrators cannot modify phase settings or content, ensuring data integrity for completed phases. Useful for preserving historical records of participation processes. If null, the phase remains editable indefinitely.'
+                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD).'
               },
               phase_tab_name: {
                 type: :string,
                 nullable: true,
-                description: 'The display name of the phase shown in the frontend interface navigation tabs and phase listings. This is a translatable field - provide translations via translations_attributes for multilingual support. If null, defaults to a name derived from the phase type. Examples: "Discussion", "Proposals", "Voting", "Budget Planning".'
+                description: 'Display name shown in frontend navigation tabs and phase listings.'
               },
               registered_address_grouping_restriction: {
                 type: :boolean,
                 nullable: true,
-                description: 'Whether participation is restricted based on registered address grouping (e.g., district, neighborhood, street). When true, only users whose registered address matches the criteria in registered_address_grouping_restrictions can participate. When false or null, address grouping is not used as a restriction. Useful for hyper-local participation initiatives.'
+                description: 'Whether participation is restricted based on registered address grouping.'
               },
               registered_address_grouping_restrictions: {
                 type: :object,
                 nullable: true,
-                description: 'Detailed restrictions by registered address grouping as key-value pairs. Key is the grouping type (e.g., "district", "neighborhood", "street"), value is an array of allowed grouping values (e.g., ["District A", "District B"]). Only users whose registered address matches at least one value in each specified grouping can participate. Example: { "district": ["North", "South"], "neighborhood": ["Downtown"] }.',
+                description: 'Restrictions by address grouping as key-value pairs. Example: { "district": ["North", "South"] }.',
                 additionalProperties: { type: :array, items: { type: :string } }
               },
               individual_group_value_ids: {
                 type: :array,
                 items: { type: :integer },
-                description: 'Array of individual group/demographic value IDs that are allowed to participate in this phase. Individual groups represent demographic segments (e.g., "seniors", "students", "business owners") defined in the system. Only users belonging to at least one of these groups can participate. Empty array means no demographic restriction. Used for targeted engagement campaigns.'
+                description: 'Array of demographic group IDs allowed to participate.'
               },
               geozone_restriction_ids: {
                 type: :array,
                 items: { type: :integer },
-                description: 'Array of geographic zone IDs where participation is allowed. Only users whose registered address is in one of these geozones can participate. Requires geozone_restricted to be true. Geozones represent administrative boundaries (districts, neighborhoods, etc.). Empty array with geozone_restricted=true means no one can participate. Used for location-based participation initiatives.'
+                description: 'Array of geographic zone IDs where participation is allowed. Requires geozone_restricted to be true.'
               },
               settings_attributes: {
                 type: :array,
-                description: 'Configuration settings for the phase as an array of setting objects. Settings control phase-specific behaviors and features (e.g., comment sorting, moderation rules, display options). Each setting has a key (identifier) and value (configuration). Common keys: "feature.general.newest_first" (sort comments by newest), "moderation.enabled" (enable moderation), etc. Provide id when updating existing settings, omit for new settings.',
+                description: 'Configuration settings for the phase. Provide id when updating existing settings.',
                 items: {
                   type: :object,
                   properties: {
                     id: {
                       type: :integer,
                       nullable: true,
-                      description: 'ID of the setting when updating an existing setting. Omit this field when creating a new setting. Required when modifying or deleting existing settings.'
+                      description: 'ID of the setting when updating. Omit when creating new.'
                     },
                     key: {
                       type: :string,
                       nullable: true,
-                      description: 'Setting identifier/key that determines which feature or behavior is being configured. Format is typically dot-separated (e.g., "feature.general.newest_first", "moderation.enabled"). Must match a valid setting key for the phase type.'
+                      description: 'Setting identifier/key (e.g., "feature.general.newest_first").'
                     },
                     value: {
                       type: :string,
                       nullable: true,
-                      description: 'The setting value/configuration. Common values: "active", "inactive", "true", "false", or other configuration strings depending on the setting key. Some settings accept numeric or JSON values. Null values may remove the setting depending on context.'
+                      description: 'Setting value (e.g., "active", "inactive", "true", "false").'
                     },
                     _destroy: {
                       type: :boolean,
                       nullable: true,
-                      description: 'Set to true to delete this setting during update. The setting will be removed from the phase configuration. Only applicable when updating existing settings (id must be provided).'
+                      description: 'Set to true to delete this setting during update.'
                     }
                   }
                 }
@@ -373,110 +373,110 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
               type: {
                 type: :string,
                 enum: ProjektPhase::PROJEKT_PHASES_TYPES,
-                description: 'The type of projekt phase that determines what kind of participation or content is available. Regular phases: CommentPhase (discussion/feedback), ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting), BudgetPhase (participatory budgeting), LegislationPhase (legislative process), FormularPhase (forms/surveys). Special phases: LivestreamPhase (live streaming), MilestonePhase (timeline milestones), ProjektNotificationPhase (announcements), EventPhase (events/meetings), ArgumentPhase (pro/con arguments), NewsfeedPhase (news feed), IframePhase (embedded content), PointOfInterestPhase (map pins).'
+                description: 'Phase type determining participation type.'
               },
               start_date: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'The date when the phase becomes active and participation begins (YYYY-MM-DD format). If null, the phase can be activated immediately via the active flag. Must be before end_date if both are provided. Used to schedule phases in advance.'
+                description: 'Date when the phase becomes active (YYYY-MM-DD). Must be before end_date if both provided.'
               },
               end_date: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'The date when the phase becomes inactive and participation ends (YYYY-MM-DD format). If null, the phase continues indefinitely until manually deactivated. Must be after start_date if both are provided. After this date, users can no longer submit new content but existing content remains visible.'
+                description: 'Date when the phase becomes inactive (YYYY-MM-DD). Must be after start_date if both provided.'
               },
               active: {
                 type: :boolean,
                 nullable: true,
-                description: 'Whether the phase is currently active and allowing participation. When true, users can interact with the phase (submit comments, proposals, vote, etc.) based on other restrictions. When false, the phase is inactive regardless of date settings.'
+                description: 'Whether the phase is currently active and allowing participation.'
               },
               frontend_visibility: {
                 type: :boolean,
                 nullable: true,
-                description: 'Whether the phase is visible to users on the frontend interface. When true, the phase appears in navigation tabs and phase listings. When false, the phase is hidden from public view but may still be accessible via direct links or admin interfaces.'
+                description: 'Whether the phase is visible to users on the frontend interface.'
               },
               given_order: {
                 type: :integer,
                 nullable: true,
-                description: 'The display order/position of this phase among other phases in the projekt. Lower numbers appear first in phase navigation and listings. If null, phases are ordered by creation date.'
+                description: 'Display order of this phase. Lower numbers appear first.'
               },
               geozone_restricted: {
                 type: :boolean,
                 nullable: true,
-                description: 'Whether participation in this phase is restricted to specific geographic zones. When true, only users from geozones listed in geozone_restriction_ids can participate. When false, all users can participate (subject to other restrictions).'
+                description: 'Whether participation is restricted to specific geographic zones.'
               },
               age_range_id: {
                 type: :integer,
                 nullable: true,
-                description: 'ID of an age range restriction that limits participation to users within a specific age group. If null, there is no age restriction. Age ranges are predefined categories (e.g., "18-25", "26-35", "65+") used to ensure age-appropriate participation or comply with legal requirements.'
+                description: 'ID of an age range restriction. If null, there is no age restriction.'
               },
               user_status: {
                 type: :string,
                 nullable: true,
-                description: 'Minimum user status required to participate in this phase. Valid values: "guest" (anyone, including anonymous), "registered" (must be logged in), "verified" (must have verified account). Higher verification levels ensure more trusted participation but may reduce engagement.'
+                description: 'Minimum user status required. Valid values: "guest", "registered", "verified".'
               },
               lock_on: {
                 type: :string,
                 format: :date,
                 nullable: true,
-                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD format). After this date, administrators cannot modify phase settings or content, ensuring data integrity for completed phases.'
+                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD).'
               },
               phase_tab_name: {
                 type: :string,
                 nullable: true,
-                description: 'The display name of the phase shown in the frontend interface navigation tabs and phase listings. This is a translatable field - provide translations via translations_attributes for multilingual support. Examples: "Discussion", "Proposals", "Voting", "Budget Planning".'
+                description: 'Display name shown in frontend navigation tabs and phase listings.'
               },
               registered_address_grouping_restriction: {
                 type: :boolean,
                 nullable: true,
-                description: 'Whether participation is restricted based on registered address grouping (e.g., district, neighborhood, street). When true, only users whose registered address matches the criteria in registered_address_grouping_restrictions can participate.'
+                description: 'Whether participation is restricted based on registered address grouping.'
               },
               registered_address_grouping_restrictions: {
                 type: :object,
                 nullable: true,
-                description: 'Detailed restrictions by registered address grouping as key-value pairs. Key is the grouping type (e.g., "district", "neighborhood", "street"), value is an array of allowed grouping values. Example: { "district": ["North", "South"], "neighborhood": ["Downtown"] }.',
+                description: 'Restrictions by address grouping as key-value pairs. Example: { "district": ["North", "South"] }.',
                 additionalProperties: { type: :array, items: { type: :string } }
               },
               individual_group_value_ids: {
                 type: :array,
                 items: { type: :integer },
                 nullable: true,
-                description: 'Array of individual group/demographic value IDs that are allowed to participate in this phase. Individual groups represent demographic segments (e.g., "seniors", "students", "business owners") defined in the system.'
+                description: 'Array of demographic group IDs allowed to participate.'
               },
               geozone_restriction_ids: {
                 type: :array,
                 items: { type: :integer },
                 nullable: true,
-                description: 'Array of geographic zone IDs where participation is allowed. Only users whose registered address is in one of these geozones can participate. Requires geozone_restricted to be true.'
+                description: 'Array of geographic zone IDs where participation is allowed. Requires geozone_restricted to be true.'
               },
               settings_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Configuration settings for the phase as an array of setting objects. Settings control phase-specific behaviors and features (e.g., comment sorting, moderation rules, display options). Common keys: "feature.general.newest_first" (sort comments by newest), "moderation.enabled" (enable moderation).',
+                description: 'Configuration settings for the phase. Provide id when updating existing settings.',
                 items: {
                   type: :object,
                   properties: {
                     id: {
                       type: :integer,
                       nullable: true,
-                      description: 'ID of the setting when updating an existing setting. Omit when creating a new setting.'
+                      description: 'ID of the setting when updating. Omit when creating new.'
                     },
                     key: {
                       type: :string,
                       nullable: true,
-                      description: 'Setting identifier/key that determines which feature or behavior is being configured. Format is typically dot-separated (e.g., "feature.general.newest_first").'
+                      description: 'Setting identifier/key (e.g., "feature.general.newest_first").'
                     },
                     value: {
                       type: :string,
                       nullable: true,
-                      description: 'The setting value/configuration. Common values: "active", "inactive", "true", "false", or other configuration strings.'
+                      description: 'Setting value (e.g., "active", "inactive", "true", "false").'
                     },
                     _destroy: {
                       type: :boolean,
                       nullable: true,
-                      description: 'Set to true to delete this setting during update. Only applicable when updating existing settings (id must be provided).'
+                      description: 'Set to true to delete this setting during update.'
                     }
                   }
                 }

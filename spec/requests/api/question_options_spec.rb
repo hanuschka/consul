@@ -33,9 +33,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:question_id) { projekt_question.id }
@@ -80,9 +78,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:question_id) { projekt_question.id }
@@ -129,16 +125,12 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:question_option) do
           projekt_question.question_options.create!(
-            translations_attributes: [
-              { locale: 'en', value: 'Option 1' }
-            ]
+            value: 'Option 1'
           )
         end
         let(:id) { question_option.id }
@@ -189,16 +181,12 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:test_option) do
           projekt_question.question_options.create!(
-            translations_attributes: [
-              { locale: 'en', value: 'Original Option' }
-            ]
+            value: 'Option 1'
           )
         end
         let(:id) { test_option.id }
@@ -243,16 +231,12 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:test_option) do
           projekt_question.question_options.create!(
-            translations_attributes: [
-              { locale: 'en', value: 'Original Option' }
-            ]
+            value: 'Option 1'
           )
         end
         let(:id) { test_option.id }
@@ -288,16 +272,12 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:question_option) do
           projekt_question.question_options.create!(
-            translations_attributes: [
-              { locale: 'en', value: 'Option To Delete' }
-            ]
+            value: 'Option 1'
           )
         end
         let(:id) { question_option.id }
@@ -322,16 +302,12 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:question_option) do
           projekt_question.question_options.create!(
-            translations_attributes: [
-              { locale: 'en', value: 'Option' }
-            ]
+            value: 'Option 1'
           )
         end
         let(:id) { question_option.id }

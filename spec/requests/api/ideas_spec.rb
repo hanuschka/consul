@@ -38,13 +38,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               author: api_client.user,
               resource_terms: true,
               admin_accepted_at: Time.current,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Idea #{i+1}",
-                  description: "Description #{i+1}"
-                }
-              ]
+              title: "Idea #{i}",
+              description: "Description for idea #{i}"
             )
             idea.save!
           end
@@ -98,13 +93,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               author: api_client.user,
               resource_terms: true,
               admin_accepted_at: Time.current,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Idea #{i+1}",
-                  description: "Description #{i+1}"
-                }
-              ]
+              title: "Idea #{i}",
+              description: "Description for idea #{i}"
             )
             idea.save!
           end
@@ -192,20 +182,6 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
-              },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
-                    title: { type: :string, description: 'Idea title in the specified language' },
-                    description: { type: :string, description: 'Idea description in the specified language' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
               }
             },
             required: %w[title description resource_terms]
@@ -220,14 +196,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             idea: {
               title: 'New Idea',
               description: 'A meaningful description',
-              resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Idea',
-                  description: 'A meaningful description'
-                }
-              ]
+              resource_terms: true
             }
           }
         end
@@ -289,14 +258,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               image_attributes: {
                 attachment: base64_image,
                 title: 'Idea Cover Image'
-              },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Idea',
-                  description: 'A meaningful description'
-                }
-              ]
+              }
             }
           }
         end
@@ -337,13 +299,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Idea',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Idea',
+            description: 'Test Description'
           )
           idea.save!
           idea
@@ -376,20 +333,15 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Idea',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Idea',
+            description: 'Test Description'
           )
           idea.save!
           idea
         end
         let(:id) { idea.id }
         before do
-          idea # Ensure idea is created before the request
+          idea
           api_client.update_column(:access_level, nil)
         end
 
@@ -458,20 +410,6 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
-              },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code' },
-                    title: { type: :string, nullable: true, description: 'Localized idea title' },
-                    description: { type: :string, nullable: true, description: 'Localized idea description' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
               }
             }
           }
@@ -484,13 +422,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Idea',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Idea',
+            description: 'Original Description'
           )
           idea.save!
           idea
@@ -529,13 +462,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Idea',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Idea',
+            description: 'Original Description'
           )
           idea.save!
           idea
@@ -572,13 +500,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Idea',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Idea',
+            description: 'Original Description'
           )
           idea.save!
           idea
@@ -618,13 +541,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Idea',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Idea',
+            description: 'Original Description'
           )
           idea.save!
           idea

@@ -27,14 +27,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       deficiency_report_status_id: status.id,
       admin_accepted: true,
       resource_terms: true,
-      map_location_attributes: { latitude: 40.0, longitude: -3.0, zoom: 12 },
-      translations_attributes: [
-        {
-          locale: 'en',
-          title: "Report #{SecureRandom.hex(4)}",
-          description: "Description #{SecureRandom.hex(4)}"
-        }
-      ]
+      map_location_attributes: { latitude: 40.0, longitude: -3.0, zoom: 12 }
     )
     report.save!
     report
@@ -59,14 +52,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               deficiency_report_status_id: status.id,
               admin_accepted: true,
               resource_terms: true,
-              map_location_attributes: { latitude: 40.0 + i, longitude: -3.0 - i, zoom: 12 },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Report #{i+1}",
-                  description: "Description for report #{i+1}"
-                }
-              ]
+              title: "Deficiency Report #{i}",
+              map_location_attributes: { latitude: 40.0 + i, longitude: -3.0 - i, zoom: 12 }
             )
             report.save!
           end
@@ -146,22 +133,6 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the deficiency report. Does not affect other report properties.' }
                 }
-              },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                description: 'Multilingual content. Provide title and description for each language.',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
-                    title: { type: :string, description: 'Report title in the specified language' },
-                    description: { type: :string, nullable: true, description: 'Report description in the specified language' },
-                    summary: { type: :string, nullable: true, description: 'Report summary in the specified language' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
               }
             },
             required: %w[deficiency_report_category_id title resource_terms map_location_attributes]
@@ -181,14 +152,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               deficiency_report_status_id: status_id,
               resource_terms: true,
               admin_accepted: true,
-              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'Broken streetlight',
-                  description: 'The lamp is out on 3rd street.'
-                }
-              ]
+              title: 'Test Deficiency Report',
+              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 }
             }
           }
         end
@@ -248,18 +213,12 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               deficiency_report_status_id: status_id,
               resource_terms: true,
               admin_accepted: true,
+              title: 'Test Deficiency Report with Image',
               map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
               image_attributes: {
                 attachment: base64_image,
                 title: 'Deficiency Photo'
-              },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'Broken streetlight',
-                  description: 'The lamp is out on 3rd street.'
-                }
-              ]
+              }
             }
           }
         end
@@ -304,14 +263,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
             deficiency_report_status_id: status_id,
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Pothole',
-                description: 'A pothole in the road'
-              }
-            ]
+            title: 'Test Deficiency Report',
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
           )
           report.save!
           report
@@ -392,22 +345,6 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the deficiency report while preserving the report text and other properties.' }
                 }
-              },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                description: 'Update multilingual content',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code' },
-                    title: { type: :string, nullable: true, description: 'Localized report title' },
-                    description: { type: :string, nullable: true, description: 'Localized report description' },
-                    summary: { type: :string, nullable: true, description: 'Localized report summary' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
               }
             }
           }
@@ -425,14 +362,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
             deficiency_report_status_id: status_id,
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Graffiti',
-                description: 'Graffiti on the wall'
-              }
-            ]
+            title: 'Original Title',
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
           )
           report.save!
           report
@@ -472,14 +403,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
             deficiency_report_status_id: status_id,
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Trash overflow',
-                description: 'Trash bin is overflowing'
-              }
-            ]
+            title: 'Original Title',
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
           )
           report.save!
           report
@@ -524,14 +449,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
             deficiency_report_status_id: status_id,
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Graffiti',
-                description: 'Graffiti on the wall'
-              }
-            ]
+            title: 'Original Title',
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
           )
           report.save!
           report

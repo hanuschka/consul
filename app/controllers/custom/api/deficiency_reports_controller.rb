@@ -107,8 +107,7 @@ class Api::DeficiencyReportsController < Api::BaseController
       :responsible_type,
       :tag_list,
       map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes,
-      translations_attributes: [:id, :locale, :_destroy, :title, :description, :summary]
+      image_attributes: image_attributes
     )
   end
 

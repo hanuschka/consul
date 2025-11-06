@@ -32,12 +32,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         before do
           2.times do |i|
             Idea::Category.create!(
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: "Category #{i+1}"
-                }
-              ]
+              name: "Category #{i}"
             )
           end
         end
@@ -85,12 +80,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
           api_client.update!(access_level: :public_data)
           2.times do |i|
             Idea::Category.create!(
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: "Category #{i+1}"
-                }
-              ]
+              name: "Category #{i}"
             )
           end
         end
@@ -115,12 +105,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         before do
           5.times do |i|
             Idea::Category.create!(
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: "Category #{i+1}"
-                }
-              ]
+              name: "Category #{i}"
             )
           end
         end
@@ -170,19 +155,9 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
           idea_category: {
             type: :object,
             properties: {
-              idea_officer_id: { type: :integer, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    name: { type: :string }
-                  }
-                }
-              }
+              idea_officer_id: { type: :integer, nullable: true }
             },
-            required: ['translations_attributes']
+            required: []
           }
         },
         required: ['idea_category']
@@ -192,12 +167,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'New Category'
-                }
-              ]
+              name: 'New Category'
             }
           }
         end
@@ -222,13 +192,8 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:idea_category) do
           {
             idea_category: {
-              idea_officer_id: officer.id,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'Category With Officer'
-                }
-              ]
+              name: 'Category with Officer',
+              idea_officer_id: officer.id
             }
           }
         end
@@ -258,12 +223,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'New Category'
-                }
-              ]
+              name: 'Forbidden Category'
             }
           }
         end
@@ -291,12 +251,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'New Category'
-                }
-              ]
+              name: 'Unauthorized Category'
             }
           }
         end
@@ -322,7 +277,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: []
+              name: ''
             }
           }
         end
@@ -360,12 +315,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '200', 'idea category found' do
         let(:category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Test Category'
-              }
-            ]
+            name: 'Test Category'
           )
         end
         let(:id) { category.id }
@@ -393,12 +343,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '403', 'forbidden - insufficient access' do
         let(:category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Test Category'
-              }
-            ]
+            name: 'Test Category'
           )
         end
         let(:id) { category.id }
@@ -437,17 +382,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
           idea_category: {
             type: :object,
             properties: {
-              idea_officer_id: { type: :integer, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    name: { type: :string, nullable: true }
-                  }
-                }
-              }
+              idea_officer_id: { type: :integer, nullable: true }
             }
           }
         }
@@ -456,24 +391,14 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '200', 'idea category updated' do
         let(:existing_category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Original Category'
-              }
-            ]
+            name: 'Original Category'
           )
         end
         let(:id) { existing_category.id }
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'Updated Category'
-                }
-              ]
+              name: 'Updated Category'
             }
           }
         end
@@ -497,25 +422,15 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:officer) { create_idea_officer }
         let(:existing_category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Original Category'
-              }
-            ]
+            name: 'Original Category'
           )
         end
         let(:id) { existing_category.id }
         let(:idea_category) do
           {
             idea_category: {
-              idea_officer_id: officer.id,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'Updated Category'
-                }
-              ]
+              name: 'Updated Category with Officer',
+              idea_officer_id: officer.id
             }
           }
         end
@@ -544,24 +459,14 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
 
         let(:existing_category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Original Category'
-              }
-            ]
+            name: 'Original Category'
           )
         end
         let(:id) { existing_category.id }
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: 'Updated Category'
-                }
-              ]
+              name: 'Forbidden Update'
             }
           }
         end
@@ -586,24 +491,14 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '422', 'invalid request' do
         let(:existing_category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Original Category'
-              }
-            ]
+            name: 'Original Category'
           )
         end
         let(:id) { existing_category.id }
         let(:idea_category) do
           {
             idea_category: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  name: ''
-                }
-              ]
+              name: ''
             }
           }
         end
@@ -637,12 +532,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '204', 'idea category deleted' do
         let(:category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Category to Delete'
-              }
-            ]
+            name: 'Category to Delete'
           )
         end
         let(:id) { category.id }
@@ -653,25 +543,15 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       response '422', 'cannot delete category with associated ideas' do
         let(:category) do
           cat = Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Category with Ideas'
-              }
-            ]
+            name: 'Category with Ideas'
           )
           idea = Idea.new(
             author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
             idea_category_id: cat.id,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Idea',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Idea',
+            description: 'Test Description'
           )
           idea.save!
           cat
@@ -698,12 +578,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
 
         let(:category) do
           Idea::Category.create!(
-            translations_attributes: [
-              {
-                locale: 'en',
-                name: 'Category to Delete'
-              }
-            ]
+            name: 'Category to Delete'
           )
         end
         let(:id) { category.id }

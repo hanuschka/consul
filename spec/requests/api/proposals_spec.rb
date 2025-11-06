@@ -36,13 +36,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               responsible_name: 'John Doe',
               admin_accepted: true,
               resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Proposal #{i + 1}",
-                  description: "Description #{i + 1}"
-                }
-              ]
+              title: "Proposal #{i}",
+              description: "Description for proposal #{i}"
             )
             proposal.save!
           end
@@ -105,13 +100,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               responsible_name: 'John Doe',
               admin_accepted: true,
               resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Proposal #{i + 1}",
-                  description: "Description #{i + 1}"
-                }
-              ]
+              title: "Proposal #{i}",
+              description: "Description for proposal #{i}"
             )
             proposal.save!
           end
@@ -155,13 +145,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               responsible_name: 'Jane Smith',
               geozone_id: geozone_id,
               resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Proposal',
-                  description: 'A meaningful description'
-                }
-              ]
+              title: 'New Proposal',
+              description: 'A meaningful description for the proposal'
             }
           }
         end
@@ -189,14 +174,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             proposal: {
               responsible_name: '',
               geozone_id: nil,
-              resource_terms: false,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: '',
-                  description: ''
-                }
-              ]
+              resource_terms: false
             }
           }
         end
@@ -256,24 +234,18 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let(:projekt_phase_id) { context[2].id }
         let(:geozone_id) { context[1].id }
         let(:proposal) do
-          # Small valid PNG image in base64 (1x1 transparent pixel)
           base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             proposal: {
               responsible_name: 'Jane Smith',
               geozone_id: geozone_id,
               resource_terms: true,
+              title: 'Proposal with Image',
+              description: 'A proposal with an image attachment',
               image: {
                 title: 'Proposal Cover Image',
                 base64data: base64_png
-              },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'Proposal with Image',
-                  description: 'A proposal created with an image'
-                }
-              ]
+              }
             }
           }
         end
@@ -322,13 +294,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Proposal 1',
-                description: 'Description 1'
-              }
-            ]
+            title: 'Proposal 1',
+            description: 'Description for proposal 1'
           )
           proposal1.save!
 
@@ -339,13 +306,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'Jane Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Proposal 2',
-                description: 'Description 2'
-              }
-            ]
+            title: 'Proposal 2',
+            description: 'Description for proposal 2'
           )
           proposal2.save!
         end
@@ -397,13 +359,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Show Proposal',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -440,13 +397,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Show Proposal',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -487,13 +439,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Show Proposal',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -534,13 +481,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Old Title',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -579,13 +521,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Old Title',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -633,13 +570,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Old Title',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -680,13 +612,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Old Title',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -741,13 +668,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'To Delete',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -778,13 +700,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Cannot Delete',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal
@@ -825,13 +742,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'To Delete',
-                description: 'Desc'
-              }
-            ]
+            title: 'Test Proposal',
+            description: 'Test Description'
           )
           proposal.save!
           proposal

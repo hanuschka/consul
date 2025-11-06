@@ -31,13 +31,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
                 latitude: 52.5200 + i,
                 longitude: 13.4050 + i,
                 zoom: 15
-              },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  description: "Pin #{i + 1}"
-                }
-              ]
+              }
             )
             pin.save!
           end
@@ -109,12 +103,6 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
           {
             projekt_point_of_interest_pin: {
               projekt_point_of_interest_category_id: category.id,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  description: 'Test pin description'
-                }
-              ],
               map_location_attributes: {
                 latitude: 52.5200,
                 longitude: 13.4050,
@@ -200,13 +188,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Pin from phase 1'
-              }
-            ]
+            }
           )
           pin.save!
 
@@ -217,13 +199,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 51.5074,
               longitude: -0.1278,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Pin from phase 2'
-              }
-            ]
+            }
           )
           pin.save!
         end
@@ -277,13 +253,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Test pin'
-              }
-            ]
+            }
           )
           pin.save!
           pin
@@ -353,13 +323,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Original description'
-              }
-            ]
+            }
           )
           pin.save!
           pin
@@ -368,12 +332,6 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:projekt_point_of_interest_pin) do
           {
             projekt_point_of_interest_pin: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  description: 'Updated description'
-                }
-              ],
               map_location_attributes: {
                 latitude: 51.5074,
                 longitude: -0.1278,
@@ -403,13 +361,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:projekt_point_of_interest_pin) do
           {
             projekt_point_of_interest_pin: {
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  description: 'Updated description'
-                }
-              ]
-            }
+              }
           }
         end
 
@@ -428,13 +380,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Original description'
-              }
-            ]
+            }
           )
           pin.save!
           pin
@@ -489,13 +435,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Pin To Delete'
-              }
-            ]
+            }
           )
           pin.save!
           pin
@@ -529,13 +469,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               latitude: 52.5200,
               longitude: 13.4050,
               zoom: 15
-            },
-            translations_attributes: [
-              {
-                locale: 'en',
-                description: 'Pin'
-              }
-            ]
+            }
           )
           pin.save!
           pin

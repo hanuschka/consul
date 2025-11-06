@@ -312,7 +312,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
         let(:milestone) do
           phase.milestones.create!(
             publication_date: Date.current,
-            translations_attributes: [{ locale: 'en', title: 'Test Milestone', description: 'Test' }]
+            description: 'Test Milestone'
           )
         end
         let(:milestone_id) { milestone.id }
@@ -358,7 +358,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
         let(:milestone) do
           phase.milestones.create!(
             publication_date: Date.current,
-            translations_attributes: [{ locale: 'en', title: 'Test Milestone', description: 'Test' }]
+            description: 'Test Milestone'
           )
         end
         let(:milestone_id) { milestone.id }

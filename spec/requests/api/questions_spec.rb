@@ -24,14 +24,10 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         before do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question 1' }
-            ]
+            title: 'Test Question 1'
           )
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question 2' }
-            ]
+            title: 'Test Question 2'
           )
         end
 
@@ -155,14 +151,10 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         before do
           question_phase1.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question 1' }
-            ]
+            title: 'Test Question 1'
           )
           question_phase2.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question 2' }
-            ]
+            title: 'Test Question 2'
           )
         end
 
@@ -208,9 +200,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Test Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:id) { projekt_question.id }
@@ -262,9 +252,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:test_projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Original Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:id) { test_projekt_question.id }
@@ -309,9 +297,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:test_projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Original Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:id) { test_projekt_question.id }
@@ -347,9 +333,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question To Delete' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:id) { projekt_question.id }
@@ -374,9 +358,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_question) do
           question_phase.questions.create!(
-            translations_attributes: [
-              { locale: 'en', title: 'Question' }
-            ]
+            title: 'Test Question'
           )
         end
         let(:id) { projekt_question.id }

@@ -34,19 +34,7 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               allegations_phase_enabled: { type: :boolean, nullable: true },
               draft_publication_enabled: { type: :boolean, nullable: true },
               result_publication_enabled: { type: :boolean, nullable: true },
-              published: { type: :boolean, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    title: { type: :string, nullable: true },
-                    summary: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
-                  }
-                }
-              }
+              published: { type: :boolean, nullable: true }
             }
           }
         },
@@ -65,10 +53,7 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               debate_start_date: '2025-02-01',
               debate_end_date: '2025-02-28',
               published: true,
-              title: 'Text',
-              translations_attributes: [
-                { locale: 'en', title: 'Text', summary: 'Summary', description: 'Description' }
-              ]
+              title: 'Text'
             }
           }
         end
@@ -190,19 +175,7 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               allegations_phase_enabled: { type: :boolean, nullable: true },
               draft_publication_enabled: { type: :boolean, nullable: true },
               result_publication_enabled: { type: :boolean, nullable: true },
-              published: { type: :boolean, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    title: { type: :string, nullable: true },
-                    summary: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
-                  }
-                }
-              }
+              published: { type: :boolean, nullable: true }
             }
           }
         },

@@ -109,8 +109,7 @@ class Api::ProposalsController < Api::BaseController
       projekt_label_ids: [],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
-      documents_attributes: document_attributes,
-      translations_attributes: [:id, :locale, :_destroy, :title, :description, :summary, :retired_explanation]
+      documents_attributes: document_attributes
     )
   end
 

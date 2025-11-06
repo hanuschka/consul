@@ -52,13 +52,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               heading: heading,
               budget: budget,
               resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Investment #{i+1}",
-                  description: "Description #{i+1}"
-                }
-              ]
+              title: "Investment #{i}",
+              description: "Description for investment #{i}"
             )
             investment.save!
           end
@@ -114,13 +109,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               heading: heading,
               budget: budget,
               resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: "Investment #{i+1}",
-                  description: "Description #{i+1}"
-                }
-              ]
+              title: "Investment #{i}",
+              description: "Description for investment #{i}"
             )
             investment.save!
           end
@@ -215,21 +205,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                   }
                 }
               },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                description: 'Multilingual content. Provide title and description for each language.',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code (e.g., en, de, es)' },
-                    title: { type: :string, description: 'Project title in the specified language' },
-                    description: { type: :string, description: 'Project description in the specified language' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
-              },
               tag_list: {
                 type: :array,
                 items: { type: :string },
@@ -254,14 +229,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               heading_id: heading.id,
               title: 'New Budget Investment',
               description: 'A meaningful description for the investment',
-              resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Budget Investment',
-                  description: 'A meaningful description for the investment'
-                }
-              ]
+              resource_terms: true
             }
           }
         end
@@ -327,14 +295,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               heading_id: heading.id,
               title: 'New Budget Investment',
               description: 'A meaningful description for the investment',
-              resource_terms: true,
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Budget Investment',
-                  description: 'A meaningful description for the investment'
-                }
-              ]
+              resource_terms: true
             }
           }
         end
@@ -373,14 +334,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               image_attributes: {
                 attachment: base64_png,
                 title: 'Investment Cover Image'
-              },
-              translations_attributes: [
-                {
-                  locale: 'en',
-                  title: 'New Budget Investment',
-                  description: 'A meaningful description for the investment'
-                }
-              ]
+              }
             }
           }
         end
@@ -425,13 +379,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading1,
             budget: budget1,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Investment 1',
-                description: 'Description 1'
-              }
-            ]
+            title: 'Investment 1',
+            description: 'Description for investment 1'
           )
 
           Budget::Investment.create!(
@@ -439,13 +388,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading2,
             budget: budget2,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Investment 2',
-                description: 'Description 2'
-              }
-            ]
+            title: 'Investment 2',
+            description: 'Description for investment 2'
           )
         end
 
@@ -497,13 +441,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Investment',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment
@@ -540,13 +479,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Investment',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment
@@ -583,13 +517,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Test Investment',
-                description: 'Test Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment
@@ -683,21 +612,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                   }
                 }
               },
-              translations_attributes: {
-                type: :array,
-                nullable: true,
-                description: 'Update multilingual content',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    locale: { type: :string, description: 'Language code' },
-                    title: { type: :string, nullable: true, description: 'Localized project title' },
-                    description: { type: :string, nullable: true, description: 'Localized project description' },
-                    _destroy: { type: :boolean, nullable: true }
-                  }
-                }
-              },
               tag_list: {
                 type: :array,
                 items: { type: :string },
@@ -718,13 +632,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Investment',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Investment',
+            description: 'Original Description'
           )
           investment.save!
           investment
@@ -763,13 +672,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Investment',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Investment',
+            description: 'Original Description'
           )
           investment.save!
           investment
@@ -813,13 +717,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Investment',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Investment',
+            description: 'Original Description'
           )
           investment.save!
           investment
@@ -863,13 +762,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Original Investment',
-                description: 'Original Description'
-              }
-            ]
+            title: 'Original Investment',
+            description: 'Original Description'
           )
           investment.save!
           investment
@@ -924,13 +818,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'To Delete',
-                description: 'Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment
@@ -961,13 +850,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'Cannot Delete',
-                description: 'Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment
@@ -1008,13 +892,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             heading: heading,
             budget: budget,
             resource_terms: true,
-            translations_attributes: [
-              {
-                locale: 'en',
-                title: 'To Delete',
-                description: 'Description'
-              }
-            ]
+            title: 'Test Investment',
+            description: 'Test Description'
           )
           investment.save!
           investment

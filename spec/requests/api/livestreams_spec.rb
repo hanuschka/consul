@@ -13,10 +13,11 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.'
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of livestreams per page (default: 100, max: 500)', required: false
 
-      response '200', 'projekt livestreams found' do
+      response '200', 'projekt livestreams found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:livestream_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
         let(:projekt_phase_id) { livestream_phase.id }
@@ -67,8 +68,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Schedule a new livestream event for a projekt phase. Livestreams support multiple video platforms (YouTube, Vimeo, etc.) and can include scheduled start/end times. Participants can submit questions during livestreams. Requires admin access.'
 
-      parameter name: :projekt_livestream, in: :body, description: 'Projekt livestream creation payload', schema: {
+      parameter name: :projekt_livestream, in: :body, description: 'Livestream details with URL, title, platform, and optional scheduling information', schema: {
         type: :object,
         properties: {
           projekt_livestream: {

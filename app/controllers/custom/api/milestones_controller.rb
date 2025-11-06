@@ -64,10 +64,11 @@ class Api::MilestonesController < Api::BaseController
 
   def milestone_params
     params.require(:milestone).permit(
+      :title,
+      :description,
       :publication_date,
       :status_id,
-      image_attributes: image_attributes,
-      **translation_params(Milestone)
+      image_attributes: image_attributes
     )
   end
 

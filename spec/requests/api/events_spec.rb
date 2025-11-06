@@ -13,10 +13,11 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).'
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (default: 100, max: 500)', required: false
 
-      response '200', 'projekt events found' do
+      response '200', 'projekt events found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
         let(:projekt_phase_id) { event_phase.id }
@@ -59,8 +60,9 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Schedule a new event for a projekt phase. Events can be in-person meetings (with location), online webinars (with registration URL), or open-ended events. Required: event title. Requires admin access.'
 
-      parameter name: :projekt_event, in: :body, description: 'Projekt Event creation payload', schema: {
+      parameter name: :projekt_event, in: :body, description: 'Event details with required title and optional datetime, location, and registration URL', schema: {
         type: :object,
         properties: {
           projekt_event: {

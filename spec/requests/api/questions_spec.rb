@@ -13,10 +13,11 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve all questions from a specific projekt phase. Questions can be standalone survey questions or livestream questions. Each question includes its options and answer statistics. Returns paginated results.'
+      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of questions per page (default: 100, max: 500)', required: false
 
-      response '200', 'projekt questions found' do
+      response '200', 'projekt questions found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:projekt_phase_id) { question_phase.id }
@@ -67,6 +68,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes.'
 
       parameter name: :projekt_question, in: :body, description: 'Projekt question creation payload', schema: {
         type: :object,
@@ -74,40 +76,10 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           projekt_question: {
             type: :object,
             properties: {
-              projekt_livestream_id: { type: :integer, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    title: { type: :string, nullable: true }
-                  }
-                }
-              },
-              question_options_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    _destroy: { type: :boolean, nullable: true },
-                    translations_attributes: {
-                      type: :array,
-                      items: {
-                        type: :object,
-                        properties: {
-                          id: { type: :integer, nullable: true },
-                          locale: { type: :string },
-                          value: { type: :string, nullable: true },
-                          _destroy: { type: :boolean, nullable: true }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+              title: { type: :string, description: 'Title of the question' },
+              projekt_livestream_id: { type: :integer, nullable: true, description: 'Optional: ID of the livestream to associate this question with. If provided, validates that the livestream exists and the question becomes a livestream question.' }
+            },
+            required: ['title']
           }
         },
         required: ['projekt_question']
@@ -120,13 +92,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           {
             projekt_question: {
-              translations_attributes: [
-                { locale: 'en', title: 'Test Question' }
-              ],
-              question_options_attributes: [
-                { translations_attributes: [{ locale: 'en', value: 'Option 1' }] },
-                { translations_attributes: [{ locale: 'en', value: 'Option 2' }] }
-              ]
+              title: 'Test Question'
             }
           }
         end
@@ -153,16 +119,9 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           {
             projekt_question: {
-              translations_attributes: []
+              title: ''
             }
           }
-        end
-
-        before do
-          allow_any_instance_of(ProjektQuestion).to receive(:save).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Title is required'])
-          allow_any_instance_of(ProjektQuestion).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,
@@ -290,39 +249,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           projekt_question: {
             type: :object,
             properties: {
-              projekt_livestream_id: { type: :integer, nullable: true },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    title: { type: :string, nullable: true }
-                  }
-                }
-              },
-              question_options_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    _destroy: { type: :boolean, nullable: true },
-                    translations_attributes: {
-                      type: :array,
-                      items: {
-                        type: :object,
-                        properties: {
-                          id: { type: :integer, nullable: true },
-                          locale: { type: :string },
-                          value: { type: :string, nullable: true },
-                          _destroy: { type: :boolean, nullable: true }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              title: { type: :string, nullable: true },
+              projekt_livestream_id: { type: :integer, nullable: true }
             }
           }
         },
@@ -343,9 +271,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           {
             projekt_question: {
-              translations_attributes: [
-                { locale: 'en', title: 'Updated Question', description: 'Updated description' }
-              ]
+              title: 'Updated Question'
             }
           }
         end
@@ -370,9 +296,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           {
             projekt_question: {
-              translations_attributes: [
-                { locale: 'en', title: 'Updated Question' }
-              ]
+              title: 'Updated Question'
             }
           }
         end
@@ -394,13 +318,10 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           {
             projekt_question: {
-              translations_attributes: [
-                { id: test_projekt_question.translations.find_by(locale: 'en').id, locale: 'en', title: '' }
-              ]
+              title: ''
             }
           }
         end
-
 
         schema type: :object,
                properties: {

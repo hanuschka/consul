@@ -49,6 +49,10 @@ class Api::TextsController < Api::BaseController
 
   def text_params
     params.require(:text).permit(
+      :title,
+      :summary,
+      :description,
+      :additional_info,
       :start_date,
       :end_date,
       :debate_start_date,
@@ -62,7 +66,6 @@ class Api::TextsController < Api::BaseController
       :draft_publication_enabled,
       :result_publication_enabled,
       :published,
-      **translation_params(Legislation::Process)
     )
   end
 

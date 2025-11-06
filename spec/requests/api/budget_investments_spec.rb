@@ -34,15 +34,16 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
-      parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter by heading ID'
-      parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter by group ID'
-      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility (feasible, unfeasible, undecided)'
-      parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status (true, false)'
-      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort order (id, supports, confidence_score, price, ballots, newest)'
+      description 'Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of investments per page (default: 100, max: 500)'
+      parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
+      parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
+      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
+      parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status: "true" for selected investments, "false" for unselected'
+      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (default), "supports" (vote count), "confidence_score", "price", "ballots", or "newest"'
 
-      response '200', 'budget investments found' do
+      response '200', 'budget investments found and returned' do
         let(:budget_id) do
           _user, budget, heading = create_minimal_prereqs
           2.times do |i|
@@ -148,8 +149,9 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Submit a new budget investment (project proposal) to a specific budget. Investments must be assigned to a category heading and include title, description, and estimated budget/price. Supports video attachments, geographic location mapping, multilingual descriptions, and tagging. Requires acceptance of terms.'
 
-      parameter name: :budget_investment, in: :body, description: 'Budget investment payload', schema: {
+      parameter name: :budget_investment, in: :body, description: 'Budget investment submission with required heading, title, description, price, and terms acceptance', schema: {
         type: :object,
         properties: {
           budget_investment: {

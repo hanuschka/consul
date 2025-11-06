@@ -2,6 +2,14 @@
 
 require 'rails_helper'
 require_relative 'schemas/projekts_schemas'
+require_relative 'schemas/ideas_schemas'
+require_relative 'schemas/comments_proposals_schemas'
+require_relative 'schemas/budgets_schemas'
+require_relative 'schemas/questions_formulars_schemas'
+require_relative 'schemas/deficiency_reports_schemas'
+require_relative 'schemas/milestones_livestreams_schemas'
+require_relative 'schemas/point_of_interest_schemas'
+require_relative 'schemas/miscellaneous_schemas'
 
 Rswag::Specs::SwaggerRoot = Rails.root.join('public').to_s
 
@@ -94,6 +102,14 @@ RSpec.configure do |config|
           }
         },
         schemas: Schemas::Projekts.all
+                         .merge(Schemas::Ideas.all)
+                         .merge(Schemas::CommentsProposals.all)
+                         .merge(Schemas::Budgets.all)
+                         .merge(Schemas::QuestionsFormulars.all)
+                         .merge(Schemas::DeficiencyReports.all)
+                         .merge(Schemas::MilestonesLivestreams.all)
+                         .merge(Schemas::PointOfInterest.all)
+                         .merge(Schemas::Miscellaneous.all)
       }
     }
   }

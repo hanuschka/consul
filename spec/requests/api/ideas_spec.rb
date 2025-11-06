@@ -26,10 +26,11 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Ideas'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
+      description 'Retrieve a paginated list of citizen ideas and proposals. Ideas are user-submitted suggestions for community improvements that may have been reviewed and accepted by administrators. Supports both admin and public_data access levels.'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of ideas per page (default: 100, max: 500)'
 
-      response '200', 'ideas found' do
+      response '200', 'ideas found and returned' do
         before do
           _user, _category = create_minimal_prereqs
           2.times do |i|
@@ -131,8 +132,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Submit a new citizen idea for community improvement. Ideas go through an admin review process before being published. Supports categorization, video attachments, location mapping, and optional on-behalf-of attribution. Requires acceptance of terms and conditions.'
 
-      parameter name: :idea, in: :body, description: 'Idea payload', schema: {
+      parameter name: :idea, in: :body, description: 'Idea submission with required title/description and optional category, location, video, and behalf-of information', schema: {
         type: :object,
         properties: {
           idea: {
@@ -233,6 +235,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
     end
   end
 
@@ -490,6 +493,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
     end
   end
 end

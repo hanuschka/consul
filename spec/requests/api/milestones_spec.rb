@@ -14,10 +14,11 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
       tags 'Milestones'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
+      description 'Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates. Each milestone spans a date range and contains status information about completed activities.'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of milestones per page (default: 100, max: 500)'
 
-      response '200', 'milestones found' do
+      response '200', 'milestones found and returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase_id) { ProjektPhase::MilestonePhase.create!(projekt: test_projekt).id }
 
@@ -79,8 +80,9 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new milestone in a projekt phase milestone timeline. Milestones mark important dates and include status updates. Required fields: publication_date and status_id. Requires admin access.'
 
-      parameter name: :milestone, in: :body, description: 'Milestone creation payload', schema: {
+      parameter name: :milestone, in: :body, description: 'Milestone creation with required publication date and status', schema: {
         type: :object,
         properties: {
           milestone: {

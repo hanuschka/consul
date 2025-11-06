@@ -20,11 +20,12 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       tags 'Proposals'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
-      parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, filters to proposals visible for public render'
+      description 'Retrieve all proposals submitted for a specific projekt phase. Proposals are citizen-initiated action items or projects proposed within a participation phase. Can filter by visibility for public rendering. Returns paginated results.'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of proposals per page (default: 100, max: 500)'
+      parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend'
 
-      response '200', 'proposals found' do
+      response '200', 'proposals found and returned' do
         before do
           _projekt, geozone, phase = create_phase_with_context
           2.times do |i|
@@ -140,8 +141,9 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Submit a new proposal within a projekt phase. Proposals are citizen-initiated action items that require a responsible party, geozone location, and acceptance of terms. Proposals go through an admin review process before being published.'
 
-      parameter name: :proposal, in: :body, description: 'Proposal creation payload', schema: {
+      parameter name: :proposal, in: :body, description: 'Proposal submission with required title, description, responsible party, geozone, and terms acceptance', schema: {
         type: :object,
         properties: {
           proposal: {

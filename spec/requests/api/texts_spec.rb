@@ -14,8 +14,9 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new text/legislation document for participatory review. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period. Supports multilingual content and customizable phase dates. Requires admin access.'
 
-      parameter name: :text, in: :body, description: 'Text creation payload', schema: {
+      parameter name: :text, in: :body, description: 'Text document with multilingual translations and optional phase scheduling (debate, allegations, publication)', schema: {
         type: :object,
         properties: {
           text: {

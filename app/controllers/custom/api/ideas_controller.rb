@@ -37,16 +37,22 @@ class Api::IdeasController < Api::BaseController
     check_admin_access!
     idea = Idea.new(idea_params)
     idea.author = @current_client.user
+    idea.resource_terms = true
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
     if idea.save
+      process_image_with_base64(idea, idea_params[:image_attributes])
       serialized_idea = IdeaSerializer.new(idea).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
     else
       render json: { error: { messages: idea.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def update
@@ -54,23 +60,29 @@ class Api::IdeasController < Api::BaseController
     @idea.assign_attributes(idea_params)
 
     if @idea.save
+      process_image_with_base64(@idea, params[:idea][:image_attributes]) if params[:idea]&.key?(:image_attributes)
       serialized_idea = IdeaSerializer.new(@idea).serialize
 
       render json: { data: { idea: serialized_idea } }
     else
       render json: { error: { messages: @idea.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   private
 
   def idea_params
     params.require(:idea).permit(
+      :title,
+      :description,
       :resource_terms,
       :idea_category_id,
       :video_url,
       :on_behalf_of,
-      **translation_params(Idea),
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes,
       image_attributes: image_attributes

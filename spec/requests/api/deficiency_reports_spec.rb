@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'swagger_helper'
 
 RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagger.yaml' do
@@ -22,15 +20,36 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
     [status, category, user]
   end
 
+  def create_deficiency_report(author, category, status)
+    report = DeficiencyReport.new(
+      author: author,
+      deficiency_report_category_id: category.id,
+      deficiency_report_status_id: status.id,
+      admin_accepted: true,
+      resource_terms: true,
+      map_location_attributes: { latitude: 40.0, longitude: -3.0, zoom: 12 },
+      translations_attributes: [
+        {
+          locale: 'en',
+          title: "Report #{SecureRandom.hex(4)}",
+          description: "Description #{SecureRandom.hex(4)}"
+        }
+      ]
+    )
+    report.save!
+    report
+  end
+
   path '/api/deficiency_reports' do
     get 'List deficiency reports' do
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
+      description 'Retrieve a paginated list of deficiency reports (citizen-reported maintenance/repair issues). Reports include location data, category, status, and author information. Useful for public issue tracking and municipal maintenance prioritization.'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of reports per page (default: 100, max: 500)'
 
-      response '200', 'deficiency reports found' do
+      response '200', 'deficiency reports found and returned' do
         before do
           status, category, = create_minimal_prereqs
           2.times do |i|
@@ -75,8 +94,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Submit a new deficiency report for a maintenance issue or infrastructure problem. Reports must include a location (latitude/longitude) and category. Supports geographic mapping, image attachments, and admin review before publishing. Requires acceptance of terms.'
 
-      parameter name: :deficiency_report, in: :body, description: 'Deficiency Report payload', schema: {
+      parameter name: :deficiency_report, in: :body, description: 'Deficiency report with required title, description, location, category, and terms acceptance', schema: {
         type: :object,
         properties: {
           deficiency_report: {
@@ -345,6 +365,5 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       end
     end
   end
+
 end
-
-

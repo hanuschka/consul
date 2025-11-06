@@ -6,37 +6,39 @@ module Schemas
     PROJEKT_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        name: { type: :string, example: 'Sample Projekt' },
-        parent_id: { type: :integer, nullable: true, example: nil },
-        created_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' },
-        order_number: { type: :integer, nullable: true, example: 1 },
-        total_duration_start: { type: :string, format: :datetime, nullable: true, example: '2024-01-01T00:00:00Z' },
-        total_duration_end: { type: :string, format: :datetime, nullable: true, example: '2024-12-31T23:59:59Z' },
-        comments_count: { type: :integer, nullable: true, example: 0 },
-        geozone_affiliated: { type: [:boolean, :string], nullable: true, example: false },
-        level: { type: :integer, nullable: true, example: 0 },
-        show_start_date_in_frontend: { type: [:boolean, :string], nullable: true, example: true },
-        show_end_date_in_frontend: { type: [:boolean, :string], nullable: true, example: true },
-        top_level_projekt_id: { type: :integer, nullable: true, example: nil },
-        tsv: { type: :string, nullable: true, example: nil },
-        preview_code: { type: :string, nullable: true, example: 'abc123' },
+        id: { type: :integer, description: 'Unique identifier for the projekt', example: 1 },
+        name: { type: :string, description: 'The name or title of the projekt', example: 'Sample Projekt' },
+        parent_id: { type: :integer, nullable: true, description: 'ID of the parent projekt if this is a sub-projekt. Null if this is a top-level projekt.', example: nil },
+        created_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was created', example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was last modified', example: '2024-01-01T00:00:00Z' },
+        order_number: { type: :integer, nullable: true, description: 'The display order of this projekt among its siblings. Lower numbers appear first.', example: 1 },
+        total_duration_start: { type: :string, format: :datetime, nullable: true, description: 'The project start date. When set, this defines when the projekt begins.', example: '2024-01-01T00:00:00Z' },
+        total_duration_end: { type: :string, format: :datetime, nullable: true, description: 'The project end date. When set, this defines when the projekt concludes.', example: '2024-12-31T23:59:59Z' },
+        comments_count: { type: :integer, nullable: true, description: 'The total number of comments on the projekt', example: 0 },
+        geozone_affiliated: { type: [:boolean, :string], nullable: true, description: 'Indicates if the projekt is restricted to specific geographic zones', example: false },
+        level: { type: :integer, nullable: true, description: 'The hierarchy level of the projekt. Level 0 is a top-level projekt, higher numbers indicate deeper nesting.', example: 0 },
+        show_start_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project start date on the frontend', example: true },
+        show_end_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project end date on the frontend', example: true },
+        top_level_projekt_id: { type: :integer, nullable: true, description: 'ID of the top-level projekt in the hierarchy. Null if this is the top level.', example: nil },
+        tsv: { type: :string, nullable: true, description: 'Text search vector for full-text search optimization. Maintained automatically.', example: nil },
+        preview_code: { type: :string, nullable: true, description: 'A unique code used for generating preview links to the projekt before publication', example: 'abc123' },
         page: {
           type: :object,
           nullable: true,
+          description: 'The associated Projekt page containing content and metadata',
           properties: {
-            title: { type: :string, nullable: true, example: 'Sample Projekt Page' },
-            slug: { type: :string, nullable: true, example: 'sample-projekt' }
+            title: { type: :string, nullable: true, description: 'The page title displayed in the frontend', example: 'Sample Projekt Page' },
+            slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' }
           }
         },
         projekt_settings: {
           type: :array,
+          description: 'Configuration settings for the projekt as key-value pairs',
           items: {
             type: :object,
             properties: {
-              key: { type: :string, example: 'show_map' },
-              value: { type: :string, nullable: true, example: 'true' }
+              key: { type: :string, description: 'Setting identifier (e.g., show_map, enable_comments)', example: 'show_map' },
+              value: { type: :string, nullable: true, description: 'Setting value (e.g., true, false, or other values)', example: 'true' }
             }
           },
           example: [
@@ -46,10 +48,12 @@ module Schemas
         },
         projekt_phases: {
           type: :array,
+          description: 'Array of phases this projekt contains (e.g., Comment phase, Voting phase)',
           items: { '$ref' => '#/components/schemas/ProjektPhase' }
         },
         content_blocks: {
           type: :array,
+          description: 'Array of content blocks that compose the projekt page content',
           items: { '$ref' => '#/components/schemas/ContentBlock' }
         }
       },
@@ -104,39 +108,41 @@ module Schemas
       properties: {
         projekt: {
           type: :object,
+          description: 'Projekt data for creation',
           properties: {
-            name: { type: :string },
-            parent_id: { type: :integer, nullable: true },
-            total_duration_start: { type: :string, format: :date_time, nullable: true },
-            total_duration_end: { type: :string, format: :date_time, nullable: true },
-            show_start_date_in_frontend: { type: :boolean },
-            show_end_date_in_frontend: { type: :boolean },
-            geozone_affiliated: { type: :boolean },
-            order_number: { type: :integer, nullable: true },
-            tag_list: { type: :string, nullable: true },
-            related_sdg_list: { type: :string, nullable: true },
-            landing_page_ids: { type: :array, items: { type: :integer } },
-            geozone_affiliation_ids: { type: :array, items: { type: :integer } },
-            sdg_goal_ids: { type: :array, items: { type: :integer } },
-            individual_group_value_ids: { type: :array, items: { type: :integer } },
+            name: { type: :string, description: 'The name or title of the projekt (required)' },
+            parent_id: { type: :integer, nullable: true, description: 'ID of the parent projekt if creating a sub-projekt. Omit for top-level projekts.' },
+            total_duration_start: { type: :string, format: :date_time, nullable: true, description: 'Project start date (ISO 8601 format). Omit for no start date.' },
+            total_duration_end: { type: :string, format: :date_time, nullable: true, description: 'Project end date (ISO 8601 format). Omit for no end date.' },
+            show_start_date_in_frontend: { type: :boolean, description: 'Whether to display the start date on the frontend' },
+            show_end_date_in_frontend: { type: :boolean, description: 'Whether to display the end date on the frontend' },
+            geozone_affiliated: { type: :boolean, description: 'Whether this projekt is restricted to specific geographic zones' },
+            order_number: { type: :integer, nullable: true, description: 'Display order among sibling projekts. Lower numbers appear first. Omit for default ordering.' },
+            tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization (e.g., "environment,infrastructure")' },
+            related_sdg_list: { type: :string, nullable: true, description: 'Comma-separated list of related Sustainable Development Goal IDs' },
+            landing_page_ids: { type: :array, items: { type: :integer }, description: 'Array of landing page IDs associated with this projekt' },
+            geozone_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Array of geographic zone IDs this projekt belongs to' },
+            sdg_goal_ids: { type: :array, items: { type: :integer }, description: 'Array of Sustainable Development Goal IDs this projekt aligns with' },
+            individual_group_value_ids: { type: :array, items: { type: :integer }, description: 'Array of individual group/demographic IDs with special restrictions or access' },
             map_location_attributes: {
               type: :object,
+              description: 'Geographic coordinates and zoom level for map display',
               properties: {
-                latitude: { type: :number },
-                longitude: { type: :number },
-                zoom: { type: :integer }
+                latitude: { type: :number, description: 'Latitude coordinate (-90 to 90)' },
+                longitude: { type: :number, description: 'Longitude coordinate (-180 to 180)' },
+                zoom: { type: :integer, description: 'Map zoom level (0-18, where 0 is world view)' }
               }
             },
-            # page updates are handled via dedicated endpoints
             projekt_manager_assignments_attributes: {
               type: :array,
+              description: 'Array of projekt manager role assignments. Omit if no managers need to be assigned.',
               items: {
                 type: :object,
                 properties: {
-                  id: { type: :integer, nullable: true },
-                  projekt_manager_id: { type: :integer },
-                  projekt_id: { type: :integer },
-                  permissions: { type: :array, items: { type: :string } }
+                  id: { type: :integer, nullable: true, description: 'ID of existing assignment when updating. Omit for new assignments.' },
+                  projekt_manager_id: { type: :integer, description: 'ID of the user to assign as projekt manager' },
+                  projekt_id: { type: :integer, description: 'ID of the projekt (set by API)' },
+                  permissions: { type: :array, items: { type: :string }, description: 'Array of permission names (e.g., ["admin", "edit", "view"])' }
                 }
               }
             }
@@ -163,10 +169,11 @@ module Schemas
     PROJEKT_PHASE_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        phase_tab_name: { type: :string, example: 'Planning Phase' },
+        id: { type: :integer, description: 'Unique identifier for the projekt phase', example: 1 },
+        phase_tab_name: { type: :string, description: 'The display name of the phase shown in the frontend interface', example: 'Planning Phase' },
         type: {
           type: :string,
+          description: 'The phase type determining what kind of participation or content is available during this phase',
           example: 'ProjektPhase::CommentPhase',
           enum: [
             'ProjektPhase::CommentPhase',
@@ -186,14 +193,14 @@ module Schemas
             'ProjektPhase::PointOfInterestPhase'
           ]
         },
-        projekt_id: { type: :integer, example: 1 },
-        active: { type: :boolean, example: true },
-        visible: { type: :boolean, example: true },
-        position: { type: :integer, example: 0 },
-        start_date: { type: :string, format: :datetime, nullable: true, example: '2024-01-01T00:00:00Z' },
-        end_date: { type: :string, format: :datetime, nullable: true, example: '2024-03-31T23:59:59Z' },
-        created_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' }
+        projekt_id: { type: :integer, description: 'ID of the projekt this phase belongs to', example: 1 },
+        active: { type: :boolean, description: 'Whether the phase is currently active and allowing participation', example: true },
+        visible: { type: :boolean, description: 'Whether the phase is visible to users on the frontend', example: true },
+        position: { type: :integer, description: 'The display order of this phase among other phases in the projekt. Lower numbers appear first.', example: 0 },
+        start_date: { type: :string, format: :datetime, nullable: true, description: 'When the phase becomes active. Null means no start date restriction.', example: '2024-01-01T00:00:00Z' },
+        end_date: { type: :string, format: :datetime, nullable: true, description: 'When the phase becomes inactive. Null means no end date restriction.', example: '2024-03-31T23:59:59Z' },
+        created_at: { type: :string, format: :datetime, description: 'Timestamp when the phase was created', example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :datetime, description: 'Timestamp when the phase was last modified', example: '2024-01-01T00:00:00Z' }
       },
       required: %w[id phase_tab_name type projekt_id]
     }.freeze
@@ -208,29 +215,30 @@ module Schemas
           enum: ProjektPhase::PROJEKT_PHASES_TYPES,
           description: 'Projekt phase type. Regular phases: CommentPhase, ProposalPhase, QuestionPhase, VotingPhase, BudgetPhase, LegislationPhase, FormularPhase. Special phases: LivestreamPhase, MilestonePhase, ProjektNotificationPhase, EventPhase, ArgumentPhase, NewsfeedPhase, IframePhase, PointOfInterestPhase'
         },
-        start_date: { type: :string, format: :date, nullable: true },
-        end_date: { type: :string, format: :date, nullable: true },
-        active: { type: :boolean },
-        frontend_visibility: { type: :boolean },
-        given_order: { type: :integer, nullable: true },
-        geozone_restricted: { type: :boolean },
-        age_range_id: { type: :integer, nullable: true },
-        user_status: { type: :string, nullable: true },
-        lock_on: { type: :string, format: :date, nullable: true },
-        phase_tab_name: { type: :string, nullable: true, description: 'Translated attribute' },
-        registered_address_grouping_restriction: { type: :boolean, nullable: true },
-        registered_address_grouping_restrictions: { type: :object, additionalProperties: { type: :array, items: { type: :string } } },
-        individual_group_value_ids: { type: :array, items: { type: :integer } },
-        geozone_restriction_ids: { type: :array, items: { type: :integer } },
+        start_date: { type: :string, format: :date, nullable: true, description: 'The date when the phase becomes active (YYYY-MM-DD format). Null means no start date restriction.' },
+        end_date: { type: :string, format: :date, nullable: true, description: 'The date when the phase becomes inactive (YYYY-MM-DD format). Null means no end date restriction.' },
+        active: { type: :boolean, description: 'Whether the phase is currently active and allowing participation' },
+        frontend_visibility: { type: :boolean, description: 'Whether the phase is visible to users on the frontend' },
+        given_order: { type: :integer, nullable: true, description: 'The display order of this phase. Lower numbers appear first. Null for default ordering.' },
+        geozone_restricted: { type: :boolean, description: 'Whether participation in this phase is restricted to specific geographic zones' },
+        age_range_id: { type: :integer, nullable: true, description: 'ID of an age range restriction. Null means no age restriction.' },
+        user_status: { type: :string, nullable: true, description: 'User status required to participate (e.g., "verified", "resident"). Null means no restriction.' },
+        lock_on: { type: :string, format: :date, nullable: true, description: 'Date after which the phase is locked and no longer editable (YYYY-MM-DD format)' },
+        phase_tab_name: { type: :string, nullable: true, description: 'The display name of the phase shown in the frontend interface' },
+        registered_address_grouping_restriction: { type: :boolean, nullable: true, description: 'Whether participation is restricted based on registered address grouping' },
+        registered_address_grouping_restrictions: { type: :object, nullable: true, description: 'Restrictions by registered address grouping as key-value pairs where key is grouping type and value is array of allowed values', additionalProperties: { type: :array, items: { type: :string } } },
+        individual_group_value_ids: { type: :array, items: { type: :integer }, description: 'Array of individual group IDs that are allowed to participate' },
+        geozone_restriction_ids: { type: :array, items: { type: :integer }, description: 'Array of geographic zone IDs that are allowed for this phase' },
         settings_attributes: {
           type: :array,
+          description: 'Configuration settings for the phase as an array of setting objects',
           items: {
             type: :object,
             properties: {
-              id: { type: :integer, nullable: true },
-              key: { type: :string, nullable: true },
-              value: { type: :string, nullable: true },
-              _destroy: { type: :boolean, nullable: true }
+              id: { type: :integer, nullable: true, description: 'ID of the setting when updating existing settings. Omit for new settings.' },
+              key: { type: :string, nullable: true, description: 'Setting identifier (e.g., feature.general.newest_first)' },
+              value: { type: :string, nullable: true, description: 'Setting value (e.g., active, inactive)' },
+              _destroy: { type: :boolean, nullable: true, description: 'Set to true to delete this setting during update' }
             }
           }
         }
@@ -241,9 +249,9 @@ module Schemas
     PROJEKT_PHASE_SETTING_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        key: { type: :string, example: 'feature.general.newest_first' },
-        value: { type: :string, nullable: true, example: 'active' }
+        id: { type: :integer, description: 'Unique identifier for the phase setting', example: 1 },
+        key: { type: :string, description: 'Setting identifier that determines which feature or behavior is being configured', example: 'feature.general.newest_first' },
+        value: { type: :string, nullable: true, description: 'The setting value (e.g., "active", "inactive", or other configuration values)', example: 'active' }
       },
       required: %w[id key]
     }.freeze
@@ -252,41 +260,44 @@ module Schemas
     POLL_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        name: { type: :string, example: 'Community Vote' },
-        summary: { type: :string, nullable: true, example: 'Summary' },
-        description: { type: :string, nullable: true, example: 'Description' },
-        starts_at: { type: :string, format: :date_time, nullable: true, example: '2025-01-01T00:00:00Z' },
-        ends_at: { type: :string, format: :date_time, nullable: true, example: '2025-01-31T23:59:59Z' },
-        geozone_restricted: { type: :boolean, nullable: true, example: false },
-        budget_id: { type: :integer, nullable: true, example: 1 },
-        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
+        id: { type: :integer, description: 'Unique identifier for the poll', example: 1 },
+        name: { type: :string, description: 'The name or title of the poll', example: 'Community Vote' },
+        summary: { type: :string, nullable: true, description: 'A brief summary of the poll topic or purpose', example: 'Summary' },
+        description: { type: :string, nullable: true, description: 'Detailed description of the poll and its context', example: 'Description' },
+        starts_at: { type: :string, format: :date_time, nullable: true, description: 'When the poll opens for voting. Null means no start time restriction.', example: '2025-01-01T00:00:00Z' },
+        ends_at: { type: :string, format: :date_time, nullable: true, description: 'When the poll closes. Null means the poll never automatically closes.', example: '2025-01-31T23:59:59Z' },
+        geozone_restricted: { type: :boolean, nullable: true, description: 'Whether voting in this poll is restricted to specific geographic zones', example: false },
+        budget_id: { type: :integer, nullable: true, description: 'ID of an associated budget if this poll is part of participatory budgeting. Null if not associated with a budget.', example: 1 },
+        created_at: { type: :string, format: :date_time, description: 'Timestamp when the poll was created', example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the poll was last modified', example: '2025-01-01T00:00:00Z' },
         geozones: {
           type: :array,
+          description: 'List of geographic zones where this poll is available (only present if geozone_restricted is true)',
           items: {
             type: :object,
             properties: {
-              id: { type: :integer },
-              name: { type: :string }
+              id: { type: :integer, description: 'Geographic zone identifier' },
+              name: { type: :string, description: 'Geographic zone name' }
             }
           }
         },
         budget: {
           type: :object,
           nullable: true,
+          description: 'Associated budget information if this poll is part of participatory budgeting',
           properties: {
-            id: { type: :integer },
-            name: { type: :string }
+            id: { type: :integer, description: 'Budget identifier' },
+            name: { type: :string, description: 'Budget name' }
           }
         },
         questions: {
           type: :array,
+          description: 'Array of questions included in this poll for voters to answer',
           items: {
             type: :object,
             properties: {
-              id: { type: :integer },
-              title: { type: :string }
+              id: { type: :integer, description: 'Question identifier' },
+              title: { type: :string, description: 'Question text or title' }
             }
           }
         }
@@ -298,16 +309,16 @@ module Schemas
     PROJEKT_EVENT_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        title: { type: :string, example: 'Town Hall' },
-        description: { type: :string, nullable: true, example: 'Discussion on city planning' },
-        datetime: { type: :string, format: :date_time, nullable: true, example: '2025-02-01T18:00:00Z' },
-        end_datetime: { type: :string, format: :date_time, nullable: true, example: '2025-02-01T20:00:00Z' },
-        location: { type: :string, nullable: true, example: 'City Hall' },
-        registration_url: { type: :string, nullable: true, example: 'https://example.com/register' },
-        projekt_phase_id: { type: :integer, example: 10 },
-        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' }
+        id: { type: :integer, description: 'Unique identifier for the event', example: 1 },
+        title: { type: :string, description: 'The name or title of the event', example: 'Town Hall' },
+        description: { type: :string, nullable: true, description: 'Detailed description of the event, its purpose, and agenda', example: 'Discussion on city planning' },
+        datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event starts. Null means no specific start time is set.', example: '2025-02-01T18:00:00Z' },
+        end_datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event ends. Null means no specific end time is set.', example: '2025-02-01T20:00:00Z' },
+        location: { type: :string, nullable: true, description: 'Physical location or venue where the event takes place. Null for virtual-only events.', example: 'City Hall' },
+        registration_url: { type: :string, nullable: true, description: 'URL for event registration or further information. Null if no registration link is provided.', example: 'https://example.com/register' },
+        projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this event is associated with', example: 10 },
+        created_at: { type: :string, format: :date_time, description: 'Timestamp when the event was created', example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the event was last modified', example: '2025-01-01T00:00:00Z' }
       },
       required: %w[id title created_at updated_at]
     }.freeze
@@ -316,15 +327,15 @@ module Schemas
     PROJEKT_NOTIFICATION_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        title: { type: :string, example: 'Update' },
-        body: { type: :string, nullable: true, example: 'We have news' },
-        link_text: { type: :string, nullable: true, example: 'Read more' },
-        link_url: { type: :string, nullable: true, example: 'https://example.com' },
-        segment_recipient: { type: :string, nullable: true, example: 'all' },
-        projekt_phase_id: { type: :integer, example: 10 },
-        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' }
+        id: { type: :integer, description: 'Unique identifier for the notification', example: 1 },
+        title: { type: :string, description: 'The notification headline or subject line', example: 'Update' },
+        body: { type: :string, nullable: true, description: 'The full text content of the notification message', example: 'We have news' },
+        link_text: { type: :string, nullable: true, description: 'The text displayed for a clickable link (e.g., "Read more", "Learn more")', example: 'Read more' },
+        link_url: { type: :string, nullable: true, description: 'The URL that the link_text directs to when clicked', example: 'https://example.com' },
+        segment_recipient: { type: :string, nullable: true, description: 'The audience segment for this notification (e.g., "all", specific user groups)', example: 'all' },
+        projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this notification is associated with', example: 10 },
+        created_at: { type: :string, format: :date_time, description: 'Timestamp when the notification was created', example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the notification was last modified', example: '2025-01-01T00:00:00Z' }
       },
       required: %w[id title created_at updated_at]
     }.freeze
@@ -333,15 +344,15 @@ module Schemas
     CONTENT_BLOCK_SCHEMA = {
       type: :object,
       properties: {
-        id: { type: :integer, example: 1 },
-        title: { type: :string, nullable: true, example: 'Introduction' },
-        body: { type: :string, nullable: true, example: 'This is the content of the block.' },
-        locale: { type: :string, example: 'en' },
-        position: { type: :integer, example: 0 },
-        blockable_type: { type: :string, example: 'Projekt' },
-        blockable_id: { type: :integer, example: 1 },
-        created_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' }
+        id: { type: :integer, description: 'Unique identifier for the content block', example: 1 },
+        title: { type: :string, nullable: true, description: 'Optional heading or title for the content block', example: 'Introduction' },
+        body: { type: :string, nullable: true, description: 'The main text content of the block (supports HTML/rich text)', example: 'This is the content of the block.' },
+        locale: { type: :string, description: 'Language code for this content block (e.g., "en" for English, "de" for German)', example: 'en' },
+        position: { type: :integer, description: 'The display order of this block. Lower numbers appear first.', example: 0 },
+        blockable_type: { type: :string, description: 'The type of resource this block belongs to (e.g., "Projekt", "Page")', example: 'Projekt' },
+        blockable_id: { type: :integer, description: 'The ID of the resource this block belongs to', example: 1 },
+        created_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was created', example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was last modified', example: '2024-01-01T00:00:00Z' }
       },
       required: %w[id position blockable_type blockable_id]
     }.freeze

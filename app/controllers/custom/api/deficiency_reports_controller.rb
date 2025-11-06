@@ -43,14 +43,21 @@ class Api::DeficiencyReportsController < Api::BaseController
     check_admin_access!
     deficiency_report = DeficiencyReport.new(deficiency_report_params)
     deficiency_report.author = @current_client.user
+    deficiency_report.resource_terms = true
+    deficiency_report.admin_accepted = true
 
     if deficiency_report.save
+      process_image_with_base64(deficiency_report, deficiency_report_params[:image_attributes])
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
     else
       render json: { error: { messages: deficiency_report.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def update
@@ -58,12 +65,17 @@ class Api::DeficiencyReportsController < Api::BaseController
     @deficiency_report.assign_attributes(deficiency_report_params)
 
     if @deficiency_report.save
+      process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
       serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }
     else
       render json: { error: { messages: @deficiency_report.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   private
@@ -83,20 +95,20 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def deficiency_report_params
     params.require(:deficiency_report).permit(
-      :author_id,
+      :title,
+      :description,
+      :summary,
+      :official_answer,
       :deficiency_report_category_id,
       :deficiency_report_status_id,
       :on_behalf_of,
       :video_url,
-      :resource_terms,
-      :admin_accepted,
       :responsible_id,
       :responsible_type,
       :tag_list,
-      **translation_params(DeficiencyReport),
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
-      documents_attributes: document_attributes,
+      translations_attributes: [:id, :locale, :_destroy, :title, :description, :summary]
     )
   end
 

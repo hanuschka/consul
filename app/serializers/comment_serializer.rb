@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class CommentSerializer < BaseSerializer
-  attr_reader :comment
+  attr_reader :comment, :include_children
 
-  def initialize(comment)
+  def initialize(comment, include_children: true)
     @comment = comment
+    @include_children = include_children
   end
 
   def serialize
@@ -54,6 +55,31 @@ class CommentSerializer < BaseSerializer
           title: comment.commentable.phase_tab_name,
           type: comment.commentable.type
         }
+      end
+    end
+
+    if comment.parent.present?
+      parent_comment = comment.parent
+      comment_data[:parent_comment] = {
+        id: parent_comment.id,
+        body: parent_comment.body,
+        user_id: parent_comment.user_id,
+        created_at: parent_comment.created_at,
+        updated_at: parent_comment.updated_at
+      }
+
+      if parent_comment.user.present?
+        comment_data[:parent_comment][:author] = {
+          id: parent_comment.user.id,
+          username: parent_comment.user.username,
+          public_name: parent_comment.user.public_name
+        }
+      end
+    end
+
+    if include_children && comment.respond_to?(:children) && comment.children.any?
+      comment_data[:child_comments] = comment.children.map do |child|
+        CommentSerializer.new(child, include_children: false).serialize
       end
     end
 

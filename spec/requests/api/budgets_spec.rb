@@ -12,10 +12,11 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve a paginated list of all participatory budgets across all projects. Includes budget details (name, currency, slug) and associated investment information. Useful for overview pages and budget selection.'
+      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
 
-      response '200', 'budgets found' do
+      response '200', 'budgets found and returned' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
         let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
         let(:budget_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::BudgetPhase', active: true) }
@@ -62,10 +63,11 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve all budgets associated with a specific projekt phase. Each budget within a phase represents a separate participatory budgeting instance with its own investments and voting.'
+      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
 
-      response '200', 'budgets found' do
+      response '200', 'budgets found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:budget_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::BudgetPhase', active: true) }
         let(:projekt_phase_id) { budget_phase.id }

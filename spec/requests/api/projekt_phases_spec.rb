@@ -13,8 +13,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Retrieve all phases defined for a specific projekt. Phases define different stages of participation (comments, proposals, voting, budgeting, etc.) with their own active/inactive periods, visibility settings, and restrictions. Returns full details including phase type, dates, and configuration.'
 
-      response '200', 'projekt phases found' do
+      response '200', 'projekt phases found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
         let(:projekt_id) { projekt.id }
 
@@ -47,8 +48,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new phase for a projekt. Phases are time-bounded periods that enable specific types of participation (comments, proposals, voting, etc.). Requires admin access. Supports restrictions by geozone, age range, user status, and demographic groups.'
 
-      parameter name: :projekt_phase, in: :body, description: 'Projekt Phase creation payload', schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Phase configuration with required type and optional start/end dates, visibility, restrictions, and settings', schema: {
         type: :object,
         properties: {
           projekt_phase: {
@@ -183,8 +185,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update or create a configuration setting for a projekt phase. Settings control behavior and features for the phase (e.g., feature.general.newest_first controls comment sorting). Requires admin access. Returns the updated setting.'
 
-      parameter name: :projekt_phase_setting, in: :body, description: 'Setting payload', schema: {
+      parameter name: :projekt_phase_setting, in: :body, description: 'Setting with required key and optional value to update or create', schema: {
         type: :object,
         properties: {
           projekt_phase_setting: {
@@ -251,8 +254,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings.'
 
-      response '200', 'projekt phase found' do
+      response '200', 'projekt phase found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }
         let(:test_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments') }
         let(:id) { test_phase.id }
@@ -284,8 +288,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing projekt phase configuration. All fields are optional - only provide fields to change. Supports updating type, dates, visibility, restrictions, settings, and more. Requires admin access. Returns the updated phase.'
 
-      parameter name: :projekt_phase, in: :body, description: 'Attributes to update on the projekt phase', schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Phase attributes to update - all optional (type, dates, active status, visibility, restrictions, settings, etc.)', schema: {
         type: :object,
         properties: {
           projekt_phase: {

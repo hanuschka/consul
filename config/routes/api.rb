@@ -1,3 +1,6 @@
+  get "/api/docs", to: "docs#api"
+  get "/api/docs_alt", to: "docs#api_alt"
+
   namespace :api do
     resources :projekts, shallow: true do
       member do
@@ -34,27 +37,33 @@
       resources :texts, only: [:create, :show, :update, :destroy]
       resources :point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :point_of_interest_categories, only: [:create, :show, :update, :destroy]
-      resources :comments, only: [:index, :create, :show]
+      resources :comments, only: [:index, :create, :show, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:create, :show, :update, :destroy]
-      resources :milestones, only: [:index, :create, :show, :update, :destroy]
+      resources :milestones, only: [:index, :create, :show, :update, :destroy], shallow: true do
+        resources :milestone_statuses, only: [:create, :show, :update, :destroy]
+      end
       resource :iframe, only: [:show, :update]
     end
     # settings are updated via projekt_phases#update_setting
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
+    resources :deficiency_report_categories, only: [:index]
     resources :ideas, only: [:index, :show, :create, :update]
+    resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
+    resources :idea_officers, only: [:index]
     resources :polls, only: [:index, :show]
     resources :livestreams, only: [:index, :show]
     resources :proposals, only: [:index, :show]
     resources :events, only: [:index, :show]
     resources :notifications, only: [:index, :show]
     resources :questions, only: [:index, :show]
+    resources :comments, only: [:index, :show]
+    resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
     resources :budgets, only: [:index, :show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
-  end
 
-  get "/api/docs", to: "docs#api"
-  get "/api/docs_alt", to: "docs#api_alt"
+    match '*path', to: 'not_found#index', via: [:get, :post, :patch, :put, :delete]
+  end

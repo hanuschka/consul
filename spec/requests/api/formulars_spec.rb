@@ -15,8 +15,9 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new custom form for a projekt phase. Forms collect structured input from participants using customizable fields and validation rules. Required: form title and field definitions. Requires admin access.'
 
-      parameter name: :formular, in: :body, description: 'Formular creation payload', schema: {
+      parameter name: :formular, in: :body, description: 'Formular (form) creation with required title and form field configuration', schema: {
         type: :object,
         properties: {
           formular: {

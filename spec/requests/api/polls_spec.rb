@@ -13,6 +13,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'List all polls within a specific voting phase. Polls are voting mechanisms within a phase that allow communities to vote on various options. Returns paginated results with pagination metadata.'
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -59,6 +60,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Create a new poll within a voting phase. Polls enable structured voting on community decisions. Requires admin access level. Each poll must have a name and can optionally include summary, description, and scheduling information (starts_at and ends_at).'
 
       parameter name: :poll, in: :body, description: 'Poll creation payload', schema: {
         type: :object,
@@ -66,25 +68,14 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           poll: {
             type: :object,
             properties: {
-              starts_at: { type: :string, format: :date_time, nullable: true },
-              ends_at: { type: :string, format: :date_time, nullable: true },
-              geozone_restricted: { type: :boolean, nullable: true },
-              summary: { type: :string, nullable: true },
-              description: { type: :string, nullable: true },
-              budget_id: { type: :integer, nullable: true },
-              geozone_ids: { type: :array, items: { type: :integer } },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    name: { type: :string, nullable: true },
-                    summary: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
-                  }
-                }
-              }
+              name: { type: :string, description: 'Display name of the poll' },
+              summary: { type: :string, nullable: true, description: 'Short summary of the poll topic' },
+              description: { type: :string, nullable: true, description: 'Detailed description of what is being voted on' },
+              starts_at: { type: :string, format: :date_time, nullable: true, description: 'When voting begins (ISO 8601 format)' },
+              ends_at: { type: :string, format: :date_time, nullable: true, description: 'When voting ends (ISO 8601 format)' },
+              geozone_restricted: { type: :boolean, nullable: true, description: 'Whether voting is restricted to specific geozones' },
+              budget_id: { type: :integer, nullable: true, description: 'Optional: Associated budget ID if this is a budget voting poll' },
+              geozone_ids: { type: :array, items: { type: :integer }, description: 'IDs of geozones where voting is allowed (if geozone_restricted is true)' }
             }
           }
         },
@@ -98,19 +89,11 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         let(:poll) do
           {
             poll: {
+              name: 'Community Vote',
               starts_at: '2025-01-01T00:00:00Z',
               ends_at: '2025-01-31T23:59:59Z',
-              name: 'Community Vote',
               summary: 'Summary',
-              description: 'Description',
-              translations_attributes: [
-                { 
-                  locale: 'en', 
-                  name: 'Community Vote', 
-                  summary: 'Summary', 
-                  description: 'Description'
-                }
-              ]
+              description: 'Description'
             }
           }
         end
@@ -169,19 +152,11 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         let(:poll) do
           {
             poll: {
+              name: 'Community Vote',
               starts_at: '2025-01-01T00:00:00Z',
               ends_at: '2025-01-31T23:59:59Z',
-              name: 'Community Vote',
               summary: 'Summary',
-              description: 'Description',
-              translations_attributes: [
-                { 
-                  locale: 'en', 
-                  name: 'Community Vote', 
-                  summary: 'Summary', 
-                  description: 'Description'
-                }
-              ]
+              description: 'Description'
             }
           }
         end
@@ -210,6 +185,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'List all polls across all voting phases. Returns paginated results with polling information and current voting status. Accessible to users with public_data or admin access levels.'
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -260,6 +236,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Retrieve a specific poll by ID. Returns complete poll information including metadata, scheduling, and voting options. Different access levels may see different information (admin sees all details, public_data sees public information only).'
 
       response '200', 'poll found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -344,6 +321,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Update an existing poll. Allows modifying poll details such as name, timing, description, and geozone restrictions. Requires admin access level. Only the fields that need updating should be provided in the request.'
 
       parameter name: :poll, in: :body, description: 'Attributes to update on the poll', schema: {
         type: :object,
@@ -351,25 +329,14 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           poll: {
             type: :object,
             properties: {
-              starts_at: { type: :string, format: :date_time, nullable: true },
-              ends_at: { type: :string, format: :date_time, nullable: true },
-              geozone_restricted: { type: :boolean, nullable: true },
-              summary: { type: :string, nullable: true },
-              description: { type: :string, nullable: true },
-              budget_id: { type: :integer, nullable: true },
-              geozone_ids: { type: :array, items: { type: :integer } },
-              translations_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    locale: { type: :string },
-                    name: { type: :string, nullable: true },
-                    summary: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
-                  }
-                }
-              }
+              name: { type: :string, nullable: true, description: 'Display name of the poll' },
+              summary: { type: :string, nullable: true, description: 'Short summary of the poll topic' },
+              description: { type: :string, nullable: true, description: 'Detailed description of what is being voted on' },
+              starts_at: { type: :string, format: :date_time, nullable: true, description: 'When voting begins (ISO 8601 format)' },
+              ends_at: { type: :string, format: :date_time, nullable: true, description: 'When voting ends (ISO 8601 format)' },
+              geozone_restricted: { type: :boolean, nullable: true, description: 'Whether voting is restricted to specific geozones' },
+              budget_id: { type: :integer, nullable: true, description: 'Associated budget ID if this is a budget voting poll' },
+              geozone_ids: { type: :array, items: { type: :integer }, description: 'IDs of geozones where voting is allowed' }
             }
           }
         }
@@ -463,6 +430,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Delete an existing poll. Permanently removes the poll and all associated voting data. Requires admin access level. This operation cannot be undone.'
 
       response '200', 'poll deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

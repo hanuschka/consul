@@ -13,10 +13,11 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      description 'Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.'
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of notifications per page (default: 100, max: 500)', required: false
 
-      response '200', 'projekt notifications found' do
+      response '200', 'projekt notifications found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:notif_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true) }
         let(:projekt_phase_id) { notif_phase.id }
@@ -59,8 +60,9 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description 'Send a notification to projekt participants. Notifications are announcements and updates that can include call-to-action links. Supports segment-based targeting (e.g., "all", specific groups). Required: notification title. Requires admin access.'
 
-      parameter name: :projekt_notification, in: :body, description: 'Projekt Notification creation payload', schema: {
+      parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body, link, and recipient segment', schema: {
         type: :object,
         properties: {
           projekt_notification: {

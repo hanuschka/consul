@@ -50,11 +50,12 @@ class Api::EventsController < Api::BaseController
     params.require(:projekt_event).permit(
       :title,
       :description,
+      :summary,
       :datetime,
       :end_datetime,
       :location,
-      :registration_url,
-      image_attributes: image_attributes
+      :weblink,
+      :open_ended
     )
   end
 

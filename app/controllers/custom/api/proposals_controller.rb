@@ -43,10 +43,7 @@ class Api::ProposalsController < Api::BaseController
     proposal.resource_terms = true
 
     if proposal.save
-      if params[:proposal]&.key?(:image_attributes)
-        process_image_with_base64(proposal, proposal_params[:image_attributes])
-      end
-
+      process_image_with_base64(proposal, proposal_params[:image_attributes])
       serialized_proposal = ProposalSerializer.new(proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
@@ -65,7 +62,6 @@ class Api::ProposalsController < Api::BaseController
 
     if @proposal.save
       process_image_with_base64(@proposal, params[:proposal][:image_attributes]) if params[:proposal]&.key?(:image_attributes)
-
       serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }

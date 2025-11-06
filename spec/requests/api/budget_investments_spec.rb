@@ -309,8 +309,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
     end
   end
 
-  path '/api/budgets/{budget_id}/investments/{id}' do
-    parameter name: :budget_id, in: :path, type: :integer, description: 'Budget ID'
+  path '/api/investments/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
 
     get 'Retrieve a budget investment' do
@@ -320,7 +319,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'budget investment found' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -358,14 +356,12 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '404', 'budget investment not found' do
-        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
         let(:id) { 999999 }
         run_test!
       end
 
       response '403', 'forbidden - insufficient access' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -409,7 +405,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'budget investment found with public_data access' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -492,7 +487,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'budget investment updated' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
@@ -538,7 +532,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '422', 'invalid request' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
@@ -589,7 +582,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '403', 'forbidden - admin access required' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do

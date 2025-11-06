@@ -48,13 +48,16 @@ class Api::PollsController < Api::BaseController
 
   def poll_params
     params.require(:poll).permit(
+      :name,
+      :summary,
+      :description,
+      :closing_note,
       :starts_at,
       :ends_at,
       :geozone_restricted,
       :summary,
       :description,
       :budget_id,
-      **translation_params(Poll),
       geozone_ids: [],
     )
   end

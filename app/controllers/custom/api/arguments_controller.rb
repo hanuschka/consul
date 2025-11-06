@@ -9,12 +9,18 @@ class Api::ArgumentsController < Api::BaseController
     projekt_argument = @projekt_phase.projekt_arguments.new(projekt_argument_params)
 
     if projekt_argument.save
+      process_image_with_base64(projekt_argument, projekt_argument_params[:image_attributes])
+
       serialized_projekt_argument = ArgumentSerializer.new(projekt_argument).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }, status: 201
     else
       render json: { error: { messages: projekt_argument.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def show
@@ -27,12 +33,18 @@ class Api::ArgumentsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_argument.update(projekt_argument_params)
+      process_image_with_base64(@projekt_argument, projekt_argument_params[:image_attributes])
+
       serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }
     else
       render json: { error: { messages: @projekt_argument.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def destroy

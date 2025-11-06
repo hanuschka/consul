@@ -40,7 +40,7 @@
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :ideas, only: [:index, :show, :create, :update]
-    resources :budgets, only: [:show] do
+    resources :budgets, only: [:show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update]
     end
   end

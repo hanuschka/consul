@@ -101,6 +101,43 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      response '422', 'projekt argument with invalid image returns validation error' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
+        let(:projekt_phase_id) { argument_phase.id }
+        let(:projekt_argument) do
+          {
+            projekt_argument: {
+              name: 'Argument with Invalid Image',
+              position: 1,
+              note: 'Test argument with invalid image',
+              pro: true,
+              image_attributes: {
+                attachment: 'invalid-base64-data',
+                title: 'Invalid Image',
+                credits: 'Test'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']).to be_present
+          expect(response.status).to eq(422)
+        end
+      end
     end
   end
 
@@ -264,6 +301,49 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
                }
 
         run_test!
+      end
+
+      response '422', 'projekt argument update with invalid image returns validation error' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
+        let(:test_projekt_argument) do
+          argument_phase.projekt_arguments.create!(
+            name: 'Original Argument',
+            position: 1,
+            note: 'Original note',
+            pro: true
+          )
+        end
+        let(:id) { test_projekt_argument.id }
+        let(:projekt_argument) do
+          {
+            projekt_argument: {
+              name: 'Updated Argument',
+              note: 'Updated note',
+              image_attributes: {
+                attachment: 'invalid-base64-data',
+                title: 'Invalid Updated Image',
+                credits: 'Test'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']).to be_present
+          expect(response.status).to eq(422)
+        end
       end
     end
 

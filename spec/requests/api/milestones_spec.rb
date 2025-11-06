@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Milestones API', type: :request do
+RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   # Authentication setup - create an ApiClient with an auth_token
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }

@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Iframes API', type: :request do
+RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   # Authentication setup - create an ApiClient with an auth_token
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
@@ -16,6 +16,10 @@ RSpec.describe 'Iframes API', type: :request do
       security [bearer_auth: []]
 
       response '200', 'iframe found' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
+        let(:id) { test_iframe_phase.id }
+
         schema type: :object,
                properties: {
                  data: {
@@ -27,10 +31,6 @@ RSpec.describe 'Iframes API', type: :request do
                  }
                },
                required: ['data']
-
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
-        let(:id) { test_iframe_phase.id }
 
         run_test!
       end

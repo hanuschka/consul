@@ -88,6 +88,17 @@ class ProjektPhase < ApplicationRecord
   }
 
   validates :projekt, presence: true
+  validate :type_must_be_valid
+
+  def self.find_sti_class(type_name)
+    if PROJEKT_PHASES_TYPES.include?(type_name)
+      super
+    else
+      self
+    end
+  rescue NameError
+    self
+  end
 
   default_scope { order(:given_order, :id) }
 
@@ -425,6 +436,14 @@ class ProjektPhase < ApplicationRecord
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def type_must_be_valid
+      if type.blank?
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+      elsif !PROJEKT_PHASES_TYPES.include?(type)
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
       end
     end
 end

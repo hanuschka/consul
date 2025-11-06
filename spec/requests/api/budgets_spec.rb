@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Budgets API', type: :request do
+RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   # Authentication setup - create an ApiClient with an auth_token
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
@@ -134,6 +134,11 @@ RSpec.describe 'Budgets API', type: :request do
       security [bearer_auth: []]
 
       response '200', 'budget found' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) { Budget.create!(name_en: 'Test Budget', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'test-budget') }
+        let(:id) { test_budget.id }
+
         schema type: :object,
                properties: {
                  data: {
@@ -145,11 +150,6 @@ RSpec.describe 'Budgets API', type: :request do
                  }
                },
                required: ['data']
-
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { Budget.create!(name_en: 'Test Budget', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'test-budget') }
-        let(:id) { test_budget.id }
 
         run_test!
       end

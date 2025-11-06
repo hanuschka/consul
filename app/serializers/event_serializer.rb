@@ -11,10 +11,12 @@ class EventSerializer < BaseSerializer
         :id,
         :title,
         :description,
+        :summary,
         :datetime,
         :end_datetime,
         :location,
-        :registration_url,
+        :weblink,
+        :open_ended,
         :projekt_phase_id,
         :created_at,
         :updated_at

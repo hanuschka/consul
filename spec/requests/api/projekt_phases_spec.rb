@@ -122,22 +122,42 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
         run_test!
       end
 
-      response '422', 'invalid request' do
+      response '422', 'invalid projekt phase type' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Create') }
         let(:projekt_id) { projekt.id }
         let(:projekt_phase) do
           {
             projekt_phase: {
-              type: ''
+              type: 'InvalidPhaseType',
+              active: true,
+              frontend_visibility: true
             }
           }
         end
 
-        before do
-          allow_any_instance_of(ProjektPhase).to receive(:save).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Type is invalid'])
-          allow_any_instance_of(ProjektPhase).to receive(:errors).and_return(errors_mock)
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      response '422', 'missing required type field' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Create') }
+        let(:projekt_id) { projekt.id }
+        let(:projekt_phase) do
+          {
+            projekt_phase: {
+              active: true,
+              frontend_visibility: true
+            }
+          }
         end
 
         schema type: :object,

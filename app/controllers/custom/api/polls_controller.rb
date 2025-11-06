@@ -1,11 +1,34 @@
 class Api::PollsController < Api::BaseController
   include Translatable
 
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_poll, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+
+    polls = if @projekt_phase.present?
+      @projekt_phase.polls
+        .includes(:projekt_phase, projekt_phase: :projekt)
+    else
+      Poll.includes(:projekt_phase, projekt_phase: :projekt)
+    end
+
+    polls = polls
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_polls = PollSerializer.serialize_collection(polls)
+
+    render json: {
+      data: { polls: serialized_polls },
+      pagination: pagination_meta(polls)
+    }
+  end
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     poll = @projekt_phase.polls.new(poll_params)
 
     if poll.save
@@ -67,7 +90,16 @@ class Api::PollsController < Api::BaseController
   end
 
   def find_poll
-    @poll = Poll.find(params[:id])
+    @poll = Poll.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end
 

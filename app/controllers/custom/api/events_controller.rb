@@ -1,11 +1,33 @@
 class Api::EventsController < Api::BaseController
   include ImageAttributes
 
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_projekt_event, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+    events = if @projekt_phase.present?
+      @projekt_phase.projekt_events
+        .includes(:projekt_phase, projekt_phase: :projekt)
+    else
+      ProjektEvent.includes(:projekt_phase, projekt_phase: :projekt)
+    end
+
+    events = events
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_events = EventSerializer.serialize_collection(events)
+
+    render json: {
+      data: { events: serialized_events },
+      pagination: pagination_meta(events)
+    }
+  end
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     projekt_event = @projekt_phase.projekt_events.new(projekt_event_params)
 
     if projekt_event.save
@@ -46,6 +68,15 @@ class Api::EventsController < Api::BaseController
 
   private
 
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
+  end
+
   def projekt_event_params
     params.require(:projekt_event).permit(
       :title,
@@ -64,7 +95,7 @@ class Api::EventsController < Api::BaseController
   end
 
   def find_projekt_event
-    @projekt_event = ProjektEvent.find(params[:id])
+    @projekt_event = ProjektEvent.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
   end
 end
 

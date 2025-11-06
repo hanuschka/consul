@@ -9,6 +9,7 @@ class ProjektQuestion < ApplicationRecord
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id", optional: true # TODO: remove column after data migration con1538
   delegate :projekt, to: :projekt_phase
 
+  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekt_questions
   belongs_to :projekt_phase, optional: true
   belongs_to :projekt_livestream, optional: true
 

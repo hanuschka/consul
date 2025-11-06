@@ -11,13 +11,17 @@ class Api::IframesController < Api::BaseController
   def update
     check_admin_access!
 
-    if params[:iframe]
-      if params[:iframe][:iframe_url].present?
-        update_or_create_setting("option.iframe.url", params[:iframe][:iframe_url])
+    if params[:projekt_iframe]
+      if params[:projekt_iframe][:url].present?
+        update_or_create_setting("option.iframe.url", params[:projekt_iframe][:url])
       end
 
-      if params[:iframe][:iframe_height].present?
-        update_or_create_setting("option.iframe.height", params[:iframe][:iframe_height])
+      if params[:projekt_iframe][:width].present?
+        update_or_create_setting("option.iframe.width", params[:projekt_iframe][:width])
+      end
+
+      if params[:projekt_iframe][:height].present?
+        update_or_create_setting("option.iframe.height", params[:projekt_iframe][:height])
       end
     end
 
@@ -29,7 +33,7 @@ class Api::IframesController < Api::BaseController
   private
 
   def find_projekt_phase
-    @projekt_phase = ProjektPhase::IframePhase.find(params[:id])
+    @projekt_phase = ProjektPhase::IframePhase.find(params[:projekt_phase_id])
   end
 
   def update_or_create_setting(key, value)

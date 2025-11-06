@@ -75,11 +75,70 @@ class BudgetInvestmentSerializer < BaseSerializer
 
     # Add budget information
     if budget_investment.budget.present?
+      budget = budget_investment.budget
       investment_data[:budget] = {
-        id: budget_investment.budget.id,
-        name: budget_investment.budget.name
+        id: budget.id,
+        name: budget.name,
+        phase: budget.phase,
+        currency_symbol: budget.currency_symbol,
+        voting_style: budget.voting_style,
+        published: budget.published,
+        slug: budget.slug,
+        hide_money: budget.hide_money,
+        max_number_of_winners: budget.max_number_of_winners,
+        show_percentage_values_only: budget.show_percentage_values_only,
+        show_results_after_first_vote: budget.show_results_after_first_vote,
+        max_preselected: budget.max_preselected,
+        created_at: budget.created_at,
+        updated_at: budget.updated_at
       }
+
+      if budget.projekt_phase.present?
+        investment_data[:budget][:projekt_phase] = {
+          id: budget.projekt_phase.id,
+          title: budget.projekt_phase.phase_tab_name,
+          type: budget.projekt_phase.type,
+          projekt_id: budget.projekt_phase.projekt_id
+        }
+
+        if budget.projekt_phase.projekt.present?
+          projekt = budget.projekt_phase.projekt
+          investment_data[:budget][:projekt] = {
+            id: projekt.id,
+            title: projekt.page&.title || projekt.name
+          }
+        end
+      end
+
+      if budget.respond_to?(:image) && budget.image.present?
+        serialized_image = ImageSerializer.new(budget.image, include_variants: false).serialize
+        investment_data[:budget][:image] = serialized_image if serialized_image.present?
+      end
+
+      if budget.respond_to?(:group) && budget.group.present?
+        group = budget.group
+        group_data = {
+          id: group.id,
+          name: group.name,
+          slug: group.slug
+        }
+
+        if group.heading.present?
+          heading = group.heading
+          group_data[:heading] = {
+            id: heading.id,
+            name: heading.name,
+            slug: heading.slug,
+            price: heading.price
+          }
+        end
+
+        investment_data[:budget][:group] = group_data
+      end
     end
+
+    investment_data[:projekt_phase] = investment_data[:budget][:projekt_phase] if investment_data[:budget] && investment_data[:budget][:projekt_phase]
+    investment_data[:projekt] = investment_data[:budget][:projekt] if investment_data[:budget] && investment_data[:budget][:projekt]
 
     # Add administrator information
     if budget_investment.administrator.present?

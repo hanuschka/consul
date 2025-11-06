@@ -313,6 +313,86 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
     end
   end
 
+  path '/api/proposals' do
+    get 'List all proposals' do
+      tags 'Proposals'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'proposals found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:geozone) { Geozone.create!(name: "Zone #{SecureRandom.hex(2)}") }
+        let(:proposal_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:proposal_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+
+        before do
+          proposal1 = Proposal.new(
+            author: api_client.user,
+            projekt_phase: proposal_phase1,
+            geozone: geozone,
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Proposal 1',
+                description: 'Description 1'
+              }
+            ]
+          )
+          proposal1.save!
+
+          proposal2 = Proposal.new(
+            author: api_client.user,
+            projekt_phase: proposal_phase2,
+            geozone: geozone,
+            responsible_name: 'Jane Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Proposal 2',
+                description: 'Description 2'
+              }
+            ]
+          )
+          proposal2.save!
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposals: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['proposals']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+  end
+
   path '/api/proposals/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Proposal ID'
 

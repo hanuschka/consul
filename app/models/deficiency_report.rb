@@ -35,7 +35,7 @@ class DeficiencyReport < ApplicationRecord
 
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
-  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports, optional: true
+  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy

@@ -9,6 +9,59 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
   path '/api/projekt_phases/{projekt_phase_id}/questions' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (QuestionPhase or LivestreamPhase)'
 
+    get 'List projekt questions for a projekt phase' do
+      tags 'Questions'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt questions found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
+        let(:projekt_phase_id) { question_phase.id }
+
+        before do
+          question_phase.questions.create!(
+            translations_attributes: [
+              { locale: 'en', title: 'Question 1' }
+            ]
+          )
+          question_phase.questions.create!(
+            translations_attributes: [
+              { locale: 'en', title: 'Question 2' }
+            ]
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     questions: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['questions']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt question' do
       tags 'Questions'
       consumes 'application/json'
@@ -121,6 +174,62 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
                    }
                  }
                }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/questions' do
+    get 'List all projekt questions' do
+      tags 'Questions'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt questions found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:question_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
+        let(:question_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
+
+        before do
+          question_phase1.questions.create!(
+            translations_attributes: [
+              { locale: 'en', title: 'Question 1' }
+            ]
+          )
+          question_phase2.questions.create!(
+            translations_attributes: [
+              { locale: 'en', title: 'Question 2' }
+            ]
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     questions: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['questions']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
 
         run_test!
       end

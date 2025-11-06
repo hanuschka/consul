@@ -33,7 +33,7 @@ class Proposal < ApplicationRecord
   include Globalizable
   translation_class_delegate :retired_at
 
-  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :proposals, optional: true
+  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :proposals
   belongs_to :geozone
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_many :proposal_notifications, dependent: :destroy

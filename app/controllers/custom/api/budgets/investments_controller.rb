@@ -6,12 +6,34 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
-  before_action :find_budget, only: [:index, :create]
-  before_action :find_budget_investment, only: [:show, :update]
+  before_action :find_budget, only: [:index, :create], if: -> { params[:budget_id].present? }
+  before_action :find_budget_investment, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
-    budget_investments = @budget.investments.includes(:author, :heading, :map_location)
+    budget_investments = if @budget.present?
+      @budget.investments.includes(
+        :author,
+        :heading,
+        :map_location,
+        budget: {
+          projekt_phase: :projekt,
+          group: :heading
+        }
+      )
+    else
+      Budget::Investment.includes(
+        :author,
+        :heading,
+        :map_location,
+        budget: {
+          projekt_phase: :projekt,
+          group: :heading
+        }
+      )
+    end
+
+    budget_investments = budget_investments
       .page(params[:page])
       .per(params[:per_page] || 100)
 
@@ -35,6 +57,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
   def create
     check_admin_access!
+    find_budget unless @budget.present?
     budget_investment = @budget.investments.new(budget_investment_params)
     budget_investment.author = @current_client.user
     budget_investment.resource_terms = true
@@ -58,6 +81,15 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       render json: { data: { budget_investment: serialized_budget_investment } }
     else
       render json: { error: { messages: @budget_investment.errors.full_messages } }, status: 422
+    end
+  end
+
+  def destroy
+    check_admin_access!
+    if @budget_investment.destroy
+      render json: { message: "Budget investment destroyed" }
+    else
+      render json: { error: { messages: @budget_investment.errors.messages } }, status: 422
     end
   end
 
@@ -88,7 +120,12 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   end
 
   def find_budget_investment
-    @budget_investment = Budget::Investment.find(params[:id])
+    @budget_investment = Budget::Investment.includes(
+      budget: {
+        projekt_phase: :projekt,
+        group: :heading
+      }
+    ).find(params[:id])
   end
 
   def apply_filters(budget_investments)

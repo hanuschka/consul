@@ -5,7 +5,7 @@ class ProjektPointOfInterestPin < ApplicationRecord
   include Globalizable
 
   belongs_to :projekt_phase
-  belongs_to :author, class_name: "User", optional: true
+  belongs_to :author, class_name: "User"
   belongs_to :projekt_point_of_interest_category, optional: true
 
   scope :ordered, -> { order(created_at: :desc) }

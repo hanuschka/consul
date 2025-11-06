@@ -7,8 +7,101 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
+  path '/api/budgets' do
+    get 'List all budgets' do
+      tags 'Budgets'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'budgets found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:budget_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::BudgetPhase', active: true) }
+        let(:budget_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::BudgetPhase', active: true) }
+
+        before do
+          Budget.create!(name_en: 'Budget 1', projekt_phase_id: budget_phase1.id, currency_symbol: '$', slug: 'budget-1')
+          Budget.create!(name_en: 'Budget 2', projekt_phase_id: budget_phase2.id, currency_symbol: '€', slug: 'budget-2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budgets: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['budgets']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+  end
+
   path '/api/projekt_phases/{projekt_phase_id}/budgets' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID'
+
+    get 'List budgets for a projekt phase' do
+      tags 'Budgets'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'budgets found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:budget_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::BudgetPhase', active: true) }
+        let(:projekt_phase_id) { budget_phase.id }
+
+        before do
+          Budget.create!(name_en: 'Budget 1', projekt_phase_id: budget_phase.id, currency_symbol: '$', slug: 'budget-1')
+          Budget.create!(name_en: 'Budget 2', projekt_phase_id: budget_phase.id, currency_symbol: '€', slug: 'budget-2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budgets: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['budgets']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
 
     post 'Create a budget' do
       tags 'Budgets'

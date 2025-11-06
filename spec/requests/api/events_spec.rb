@@ -9,6 +9,51 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
   path '/api/projekt_phases/{projekt_phase_id}/events' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (EventPhase)'
 
+    get 'List projekt events for a projekt phase' do
+      tags 'Events'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt events found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+        let(:projekt_phase_id) { event_phase.id }
+
+        before do
+          event_phase.projekt_events.create!(title: 'Event 1', datetime: '2025-02-01T18:00:00Z')
+          event_phase.projekt_events.create!(title: 'Event 2', datetime: '2025-02-02T18:00:00Z')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     events: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektEvent' }
+                     }
+                   },
+                   required: ['events']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt event' do
       tags 'Events'
       consumes 'application/json'
@@ -23,10 +68,12 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
             properties: {
               title: { type: :string },
               description: { type: :string, nullable: true },
+              summary: { type: :string, nullable: true },
               datetime: { type: :string, format: :date_time, nullable: true },
               end_datetime: { type: :string, format: :date_time, nullable: true },
               location: { type: :string, nullable: true },
-              registration_url: { type: :string, nullable: true }
+              weblink: { type: :string, nullable: true },
+              open_ended: { type: :boolean, nullable: true }
             },
             required: ['title']
           }
@@ -136,10 +183,12 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
             properties: {
               title: { type: :string },
               description: { type: :string, nullable: true },
+              summary: { type: :string, nullable: true },
               datetime: { type: :string, format: :date_time, nullable: true },
               end_datetime: { type: :string, format: :date_time, nullable: true },
               location: { type: :string, nullable: true },
-              registration_url: { type: :string, nullable: true }
+              weblink: { type: :string, nullable: true },
+              open_ended: { type: :boolean, nullable: true }
             }
           }
         }

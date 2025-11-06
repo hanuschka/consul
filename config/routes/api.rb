@@ -21,28 +21,39 @@
         end
       end
       resources :debates, only: [:create, :show, :update, :destroy]
-      resources :polls, only: [:create, :show, :update, :destroy]
-      resources :livestreams, only: [:create, :show, :update, :destroy]
-      resources :questions, only: [:create, :show, :update, :destroy]
-      resources :events, only: [:create, :show, :update, :destroy]
+      resources :polls, only: [:index, :create, :show, :update, :destroy]
+      resources :livestreams, only: [:index, :create, :show, :update, :destroy] do
+        resources :questions, only: [:create]
+      end
+      resources :questions, only: [:index, :create, :show, :update, :destroy], shallow: true do
+        resources :question_options, only: [:create, :show, :update, :destroy]
+      end
+      resources :events, only: [:index, :create, :show, :update, :destroy]
       resources :arguments, only: [:create, :show, :update, :destroy]
-      resources :notifications, only: [:create, :show, :update, :destroy]
+      resources :notifications, only: [:index, :create, :show, :update, :destroy]
       resources :texts, only: [:create, :show, :update, :destroy]
       resources :point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :point_of_interest_categories, only: [:create, :show, :update, :destroy]
       resources :comments, only: [:index, :create, :show]
-      resources :budgets, only: [:create, :show, :update, :destroy]
+      resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:create, :show, :update, :destroy]
       resources :milestones, only: [:index, :create, :show, :update, :destroy]
-      resources :iframes, only: [:show, :update]
+      resource :iframe, only: [:show, :update]
     end
     # settings are updated via projekt_phases#update_setting
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :ideas, only: [:index, :show, :create, :update]
-    resources :budgets, only: [:show], shallow: true do
-      resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update]
+    resources :polls, only: [:index, :show]
+    resources :livestreams, only: [:index, :show]
+    resources :proposals, only: [:index, :show]
+    resources :events, only: [:index, :show]
+    resources :notifications, only: [:index, :show]
+    resources :questions, only: [:index, :show]
+    resources :budgets, only: [:index, :show], shallow: true do
+      resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
     end
+    resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
   end
 
   get "/api/docs", to: "docs#api"

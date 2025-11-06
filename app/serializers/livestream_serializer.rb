@@ -40,12 +40,9 @@ class LivestreamSerializer < BaseSerializer
     end
 
     if projekt_livestream.projekt_questions.any?
-      livestream_data[:questions] = projekt_livestream.projekt_questions.map do |question|
-        {
-          id: question.id,
-          title: question.title
-        }
-      end
+      livestream_data[:questions] = QuestionSerializer.serialize_collection(
+        projekt_livestream.projekt_questions
+      )
     end
 
     livestream_data

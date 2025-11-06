@@ -37,7 +37,7 @@ paths:
                 required:
                 - data
         '422':
-          description: invalid request
+          description: projekt argument with invalid image returns validation error
           content:
             application/json:
               schema:
@@ -150,7 +150,8 @@ paths:
         '404':
           description: projekt argument not found
         '422':
-          description: invalid request
+          description: projekt argument update with invalid image returns validation
+            error
           content:
             application/json:
               schema:
@@ -444,14 +445,58 @@ paths:
               required:
               - budget_investment
         description: Budget investment payload
-  "/api/budgets/{budget_id}/investments/{id}":
+  "/api/budget_investments":
+    get:
+      summary: List all budget investments
+      tags:
+      - Budget Investments
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: budget investments found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_investments:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - budget_investments
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
+  "/api/investments/{id}":
     parameters:
-    - name: budget_id
-      in: path
-      description: Budget ID
-      required: true
-      schema:
-        type: integer
     - name: id
       in: path
       description: Budget Investment ID
@@ -608,6 +653,104 @@ paths:
                       items:
                         type: string
         description: Attributes to update on the budget investment
+    delete:
+      summary: Delete a budget investment
+      tags:
+      - Budget Investments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: budget investment deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: budget investment not found
+        '422':
+          description: unable to delete budget investment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/budgets":
+    get:
+      summary: List all budgets
+      tags:
+      - Budgets
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: budgets found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budgets:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - budgets
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/projekt_phases/{projekt_phase_id}/budgets":
     parameters:
     - name: projekt_phase_id
@@ -616,6 +759,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List budgets for a projekt phase
+      tags:
+      - Budgets
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: budgets found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budgets:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - budgets
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a budget
       tags:
@@ -1271,6 +1463,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt events for a projekt phase
+      tags:
+      - Events
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt events found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ProjektEvent"
+                    required:
+                    - events
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a projekt event
       tags:
@@ -1323,6 +1564,9 @@ paths:
                     description:
                       type: string
                       nullable: true
+                    summary:
+                      type: string
+                      nullable: true
                     datetime:
                       type: string
                       format: date_time
@@ -1334,8 +1578,11 @@ paths:
                     location:
                       type: string
                       nullable: true
-                    registration_url:
+                    weblink:
                       type: string
+                      nullable: true
+                    open_ended:
+                      type: boolean
                       nullable: true
                   required:
                   - title
@@ -1427,6 +1674,9 @@ paths:
                     description:
                       type: string
                       nullable: true
+                    summary:
+                      type: string
+                      nullable: true
                     datetime:
                       type: string
                       format: date_time
@@ -1438,8 +1688,11 @@ paths:
                     location:
                       type: string
                       nullable: true
-                    registration_url:
+                    weblink:
                       type: string
+                      nullable: true
+                    open_ended:
+                      type: boolean
                       nullable: true
         description: Attributes to update on the event
     delete:
@@ -2110,6 +2363,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt livestreams for a projekt phase
+      tags:
+      - Livestreams
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt livestreams found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_livestreams:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - projekt_livestreams
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a projekt livestream
       tags:
@@ -2182,6 +2484,56 @@ paths:
               required:
               - projekt_livestream
         description: Projekt livestream creation payload
+  "/api/livestreams":
+    get:
+      summary: List all projekt livestreams
+      tags:
+      - Livestreams
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt livestreams found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_livestreams:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - projekt_livestreams
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/livestreams/{id}":
     parameters:
     - name: id
@@ -2640,6 +2992,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt notifications for a projekt phase
+      tags:
+      - Notifications
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt notifications found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      notifications:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ProjektNotification"
+                    required:
+                    - notifications
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a projekt notification
       tags:
@@ -2706,6 +3107,56 @@ paths:
               required:
               - projekt_notification
         description: Projekt Notification creation payload
+  "/api/notifications":
+    get:
+      summary: List all projekt notifications
+      tags:
+      - Notifications
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt notifications found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      notifications:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ProjektNotification"
+                    required:
+                    - notifications
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/notifications/{id}":
     parameters:
     - name: id
@@ -3253,6 +3704,55 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List polls for a projekt phase
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: polls found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      polls:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/Poll"
+                    required:
+                    - polls
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
     post:
       summary: Create a poll
       tags:
@@ -3359,6 +3859,56 @@ paths:
               required:
               - poll
         description: Poll creation payload
+  "/api/polls":
+    get:
+      summary: List all polls
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: polls found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      polls:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/Poll"
+                    required:
+                    - polls
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/polls/{id}":
     parameters:
     - name: id
@@ -3616,7 +4166,7 @@ paths:
                 required:
                 - data
         '422':
-          description: invalid request
+          description: missing required type field
           content:
             application/json:
               schema:
@@ -4800,6 +5350,56 @@ paths:
               required:
               - proposal
         description: Proposal creation payload
+  "/api/proposals":
+    get:
+      summary: List all proposals
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        description: 'Page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Items per page (default: 100)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: proposals found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposals:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - proposals
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/proposals/{id}":
     parameters:
     - name: id

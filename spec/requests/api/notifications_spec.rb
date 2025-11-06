@@ -9,6 +9,51 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
   path '/api/projekt_phases/{projekt_phase_id}/notifications' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ProjektNotificationPhase)'
 
+    get 'List projekt notifications for a projekt phase' do
+      tags 'Notifications'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt notifications found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:notif_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true) }
+        let(:projekt_phase_id) { notif_phase.id }
+
+        before do
+          notif_phase.projekt_notifications.create!(title: 'Notification 1', body: 'Body 1')
+          notif_phase.projekt_notifications.create!(title: 'Notification 2', body: 'Body 2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     notifications: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektNotification' }
+                     }
+                   },
+                   required: ['notifications']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt notification' do
       tags 'Notifications'
       consumes 'application/json'
@@ -80,6 +125,54 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
                    }
                  }
                }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/notifications' do
+    get 'List all projekt notifications' do
+      tags 'Notifications'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt notifications found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:notif_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true) }
+        let(:notif_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true) }
+
+        before do
+          notif_phase1.projekt_notifications.create!(title: 'Notification 1', body: 'Body 1')
+          notif_phase2.projekt_notifications.create!(title: 'Notification 2', body: 'Body 2')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     notifications: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektNotification' }
+                     }
+                   },
+                   required: ['notifications']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
 
         run_test!
       end

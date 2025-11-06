@@ -349,9 +349,9 @@ class Projekt < ApplicationRecord
   end
 
   def searchable_values
-    { page.title          => "A",
+    { page&.title          => "A",
       title               => "A",
-      page.content        => "C" }
+      page&.content       => "C" }
   end
 
   def projekt_phases_for(resource)

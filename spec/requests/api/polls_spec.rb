@@ -9,6 +9,51 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   path '/api/projekt_phases/{projekt_phase_id}/polls' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (VotingPhase)'
 
+    get 'List polls for a projekt phase' do
+      tags 'Polls'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'polls found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:projekt_phase_id) { voting_phase.id }
+
+        before do
+          voting_phase.polls.create!(name: 'Poll 1', starts_at: '2025-01-01T00:00:00Z', ends_at: '2025-01-31T23:59:59Z')
+          voting_phase.polls.create!(name: 'Poll 2', starts_at: '2025-02-01T00:00:00Z', ends_at: '2025-02-28T23:59:59Z')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     polls: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/Poll' }
+                     }
+                   },
+                   required: ['polls']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a poll' do
       tags 'Polls'
       consumes 'application/json'
@@ -156,6 +201,54 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
         end
+      end
+    end
+  end
+
+  path '/api/polls' do
+    get 'List all polls' do
+      tags 'Polls'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'polls found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:voting_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:voting_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+
+        before do
+          voting_phase1.polls.create!(name: 'Poll 1', starts_at: '2025-01-01T00:00:00Z', ends_at: '2025-01-31T23:59:59Z')
+          voting_phase2.polls.create!(name: 'Poll 2', starts_at: '2025-02-01T00:00:00Z', ends_at: '2025-02-28T23:59:59Z')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     polls: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/Poll' }
+                     }
+                   },
+                   required: ['polls']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
       end
     end
   end

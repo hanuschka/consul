@@ -36,7 +36,7 @@ class Budget
               only: Budget::Investment.translated_attribute_names
     end
 
-    belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :budget_investments, optional: true
+    belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :budget_investments
     belongs_to :heading
     belongs_to :group
     belongs_to :budget

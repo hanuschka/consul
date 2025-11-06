@@ -309,6 +309,77 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
     end
   end
 
+  path '/api/budget_investments' do
+    get 'List all budget investments' do
+      tags 'Budget Investments'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'budget investments found' do
+        before do
+          _user1, budget1, heading1 = create_minimal_prereqs
+          _user2, budget2, heading2 = create_minimal_prereqs
+
+          Budget::Investment.create!(
+            author: api_client.user,
+            heading: heading1,
+            budget: budget1,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Investment 1',
+                description: 'Description 1'
+              }
+            ]
+          )
+
+          Budget::Investment.create!(
+            author: api_client.user,
+            heading: heading2,
+            budget: budget2,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Investment 2',
+                description: 'Description 2'
+              }
+            ]
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investments: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['budget_investments']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+  end
+
   path '/api/investments/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
 
@@ -612,6 +683,136 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             }
           }
         end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+    end
+
+    delete 'Delete a budget investment' do
+      tags 'Budget Investments'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      response '200', 'budget investment deleted' do
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'To Delete',
+                description: 'Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+
+        run_test!
+      end
+
+      response '404', 'budget investment not found' do
+        let(:id) { 999999 }
+        run_test!
+      end
+
+      response '422', 'unable to delete budget investment' do
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Cannot Delete',
+                description: 'Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :object }
+                   }
+                 }
+               }
+
+        before do
+          allow_any_instance_of(Budget::Investment).to receive(:destroy).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:messages).and_return({ base: ['Cannot delete budget investment'] })
+          allow_any_instance_of(Budget::Investment).to receive(:errors).and_return(errors_mock)
+        end
+
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'To Delete',
+                description: 'Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
 
         schema type: :object,
                properties: {

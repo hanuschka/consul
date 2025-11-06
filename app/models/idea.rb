@@ -6,7 +6,7 @@ class Idea < ApplicationRecord
   include OnBehalfOfSubmittable
   include Memoable
 
-  belongs_to :author, class_name: "User", inverse_of: :ideas, optional: true
+  belongs_to :author, class_name: "User", inverse_of: :ideas
 
   translates :title, :description, :official_answer, touch: true
   include Globalizable

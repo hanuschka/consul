@@ -6,20 +6,25 @@ class Api::ProposalsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
-  before_action :find_projekt_phase, only: [:index, :create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_proposal, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
-    proposals =
-        @projekt_phase.resources
-            .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
-            .page(params[:page])
-            .per(params[:per_page] || 100)
+    proposals = if @projekt_phase.present?
+      @projekt_phase.resources
+        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+    else
+      Proposal.includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+    end
 
     if params["for_public_render"] == "true"
       proposals = proposals.for_public_render
     end
+
+    proposals = proposals
+      .page(params[:page])
+      .per(params[:per_page] || 100)
 
     serialized_proposals = ProposalSerializer.serialize_collection(proposals)
 
@@ -38,6 +43,7 @@ class Api::ProposalsController < Api::BaseController
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     proposal = @projekt_phase.resources.new(proposal_params)
     proposal.author = @current_client.user
     proposal.resource_terms = true

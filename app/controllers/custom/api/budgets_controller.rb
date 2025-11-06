@@ -1,13 +1,34 @@
 class Api::BudgetsController < Api::BaseController
   include ImageAttributes
 
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_budget, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+    budgets = if @projekt_phase.present?
+      Budget.where(projekt_phase_id: @projekt_phase.id)
+        .includes(:projekt_phase)
+    else
+      Budget.includes(:projekt_phase)
+    end
+
+    budgets = budgets
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_budgets = BudgetSerializer.serialize_collection(budgets)
+
+    render json: {
+      data: { budgets: serialized_budgets },
+      pagination: pagination_meta(budgets)
+    }
+  end
 
   def create
     check_admin_access!
-    budget = Budget.new(budget_params)
-    budget.projekt_phase = @projekt_phase
+    find_projekt_phase unless @projekt_phase.present?
+    budget = @projekt_phase.build_budget(budget_params)
 
     if budget.save
       serialized_budget = BudgetSerializer.new(budget).serialize
@@ -65,5 +86,14 @@ class Api::BudgetsController < Api::BaseController
 
   def find_budget
     @budget = Budget.find(params[:id])
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end

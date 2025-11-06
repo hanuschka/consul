@@ -24,6 +24,23 @@ class PollSerializer < BaseSerializer
       description: poll.description
     )
 
+    if poll.projekt_phase.present?
+      poll_data[:projekt_phase] = {
+        id: poll.projekt_phase.id,
+        title: poll.projekt_phase.phase_tab_name,
+        type: poll.projekt_phase.type,
+        projekt_id: poll.projekt_phase.projekt_id
+      }
+
+      if poll.projekt_phase.projekt.present?
+        projekt = poll.projekt_phase.projekt
+        poll_data[:projekt] = {
+          id: projekt.id,
+          title: projekt.page&.title || projekt.name
+        }
+      end
+    end
+
     if poll.geozone_restricted? && poll.geozones.any?
       poll_data[:geozones] = poll.geozones.map do |geozone|
         {

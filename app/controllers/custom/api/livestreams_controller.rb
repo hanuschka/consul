@@ -1,9 +1,31 @@
 class Api::LivestreamsController < Api::BaseController
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_projekt_livestream, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+    livestreams = if @projekt_phase.present?
+      @projekt_phase.projekt_livestreams
+        .includes(:projekt_phase)
+    else
+      ProjektLivestream.includes(:projekt_phase)
+    end
+
+    livestreams = livestreams
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams)
+
+    render json: {
+      data: { projekt_livestreams: serialized_livestreams },
+      pagination: pagination_meta(livestreams)
+    }
+  end
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     projekt_livestream = @projekt_phase.projekt_livestreams.new(projekt_livestream_params)
 
     if projekt_livestream.save
@@ -62,6 +84,15 @@ class Api::LivestreamsController < Api::BaseController
 
   def find_projekt_livestream
     @projekt_livestream = ProjektLivestream.find(params[:id])
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end
 

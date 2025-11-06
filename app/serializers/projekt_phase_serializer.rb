@@ -28,10 +28,12 @@ class ProjektPhaseSerializer < BaseSerializer
       ]
     )
 
+    phase_data[:active] = false if phase_data[:active].nil?
+
     # Add translated attributes if they exist
     translatable_attributes = {}
     if projekt_phase.respond_to?(:phase_tab_name)
-      translatable_attributes[:phase_tab_name] = projekt_phase.phase_tab_name
+      translatable_attributes[:phase_tab_name] = projekt_phase.phase_tab_name || projekt_phase.type.split('::').last
     end
     if projekt_phase.respond_to?(:description)
       translatable_attributes[:description] = projekt_phase.description

@@ -9,6 +9,59 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
   path '/api/projekt_phases/{projekt_phase_id}/livestreams' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (LivestreamPhase)'
 
+    get 'List projekt livestreams for a projekt phase' do
+      tags 'Livestreams'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt livestreams found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:livestream_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
+        let(:projekt_phase_id) { livestream_phase.id }
+
+        before do
+          livestream_phase.projekt_livestreams.create!(
+            url: 'https://example.com/livestream1',
+            title: 'Livestream 1',
+            video_platform: 'youtube'
+          )
+          livestream_phase.projekt_livestreams.create!(
+            url: 'https://example.com/livestream2',
+            title: 'Livestream 2',
+            video_platform: 'youtube'
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_livestreams: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['projekt_livestreams']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt livestream' do
       tags 'Livestreams'
       consumes 'application/json'
@@ -95,6 +148,62 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
                    }
                  }
                }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/livestreams' do
+    get 'List all projekt livestreams' do
+      tags 'Livestreams'
+      produces 'application/json'
+      security [bearer_auth: []]
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+
+      response '200', 'projekt livestreams found' do
+        let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
+        let(:projekt2) { Projekt.create!(name: 'Projekt 2') }
+        let(:livestream_phase1) { projekt1.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
+        let(:livestream_phase2) { projekt2.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
+
+        before do
+          livestream_phase1.projekt_livestreams.create!(
+            url: 'https://example.com/livestream1',
+            title: 'Livestream 1',
+            video_platform: 'youtube'
+          )
+          livestream_phase2.projekt_livestreams.create!(
+            url: 'https://example.com/livestream2',
+            title: 'Livestream 2',
+            video_platform: 'youtube'
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_livestreams: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['projekt_livestreams']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   }
+                 }
+               },
+               required: ['data']
 
         run_test!
       end

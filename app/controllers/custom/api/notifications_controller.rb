@@ -1,9 +1,31 @@
 class Api::NotificationsController < Api::BaseController
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_projekt_notification, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+    notifications = if @projekt_phase.present?
+      @projekt_phase.projekt_notifications
+        .includes(:projekt_phase, projekt_phase: :projekt)
+    else
+      ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+    end
+
+    notifications = notifications
+      .page(params[:page])
+      .per(params[:per_page] || 100)
+
+    serialized_notifications = NotificationSerializer.serialize_collection(notifications)
+
+    render json: {
+      data: { notifications: serialized_notifications },
+      pagination: pagination_meta(notifications)
+    }
+  end
 
   def create
     check_admin_access!
+    find_projekt_phase unless @projekt_phase.present?
     projekt_notification = @projekt_phase.projekt_notifications.new(projekt_notification_params)
 
     if projekt_notification.save
@@ -47,10 +69,7 @@ class Api::NotificationsController < Api::BaseController
   def projekt_notification_params
     params.require(:projekt_notification).permit(
       :title,
-      :body,
-      :link_text,
-      :link_url,
-      :segment_recipient
+      :body
     )
   end
 
@@ -59,7 +78,16 @@ class Api::NotificationsController < Api::BaseController
   end
 
   def find_projekt_notification
-    @projekt_notification = ProjektNotification.find(params[:id])
+    @projekt_notification = ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end
 

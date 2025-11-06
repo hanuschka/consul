@@ -6,7 +6,18 @@ class IframeSerializer < BaseSerializer
   end
 
   def serialize
-    iframe_data = {
+    iframe_data = {}
+
+    url_setting = projekt_phase.settings.find_by(key: "option.iframe.url")
+    iframe_data[:url] = url_setting&.value if url_setting
+
+    width_setting = projekt_phase.settings.find_by(key: "option.iframe.width")
+    iframe_data[:width] = width_setting&.value if width_setting
+
+    height_setting = projekt_phase.settings.find_by(key: "option.iframe.height")
+    iframe_data[:height] = height_setting&.value if height_setting
+
+    projekt_phase_data = {
       id: projekt_phase.id,
       type: projekt_phase.type,
       title: projekt_phase.phase_tab_name,
@@ -18,18 +29,13 @@ class IframeSerializer < BaseSerializer
 
     if projekt_phase.projekt.present?
       projekt = projekt_phase.projekt
-      iframe_data[:projekt] = {
+      projekt_phase_data[:projekt] = {
         id: projekt.id,
         title: projekt.page&.title || projekt.name
       }
     end
 
-    # Include iframe-specific settings
-    iframe_url_setting = projekt_phase.settings.find_by(key: "option.iframe.url")
-    iframe_data[:iframe_url] = iframe_url_setting&.value if iframe_url_setting
-
-    iframe_height_setting = projekt_phase.settings.find_by(key: "option.iframe.height")
-    iframe_data[:iframe_height] = iframe_height_setting&.value if iframe_height_setting
+    iframe_data[:projekt_phase] = projekt_phase_data
 
     iframe_data
   end

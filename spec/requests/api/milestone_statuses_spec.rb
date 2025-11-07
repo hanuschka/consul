@@ -11,6 +11,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       tags 'Milestone Statuses'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all milestone statuses. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -53,6 +54,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Create a new milestone status for tracking project progress. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :milestone_status, in: :body, description: 'Milestone status creation payload', schema: {
         type: :object,
@@ -123,6 +125,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       tags 'Milestone Statuses'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single milestone status by ID. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'milestone status found' do
         let(:milestone_status) { Milestone::Status.create!(name: 'In Progress') }
@@ -155,6 +158,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing milestone status. Allows modifying the status name. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :milestone_status, in: :body, description: 'Attributes to update on the milestone status', schema: {
         type: :object,
@@ -237,6 +241,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       tags 'Milestone Statuses'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a milestone status. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'milestone status deleted' do
         let(:milestone_status) { Milestone::Status.create!(name: 'Status To Delete') }
@@ -291,6 +296,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Create a new milestone status and associate it with a specific milestone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :milestone_status, in: :body, description: 'Milestone status creation payload', schema: {
         type: :object,

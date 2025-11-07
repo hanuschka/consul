@@ -38,7 +38,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a paginated list of deficiency reports (citizen-reported maintenance/repair issues). Reports include location data, category, status, and author information. Useful for public issue tracking and municipal maintenance prioritization.'
+      description "Retrieve a paginated list of deficiency reports (citizen-reported maintenance/repair issues). Reports include location data, category, status, and author information. Useful for public issue tracking and municipal maintenance prioritization. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of reports per page (default: 100, max: 500)'
 
@@ -81,7 +81,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Submit a new deficiency report for a maintenance issue or infrastructure problem. Reports must include a location (latitude/longitude) and category. Supports geographic mapping, image attachments for documenting the issue, and admin review before publishing. Requires acceptance of terms.'
+      description "Submit a new deficiency report for a maintenance issue or infrastructure problem. Reports must include a location (latitude/longitude) and category. Supports geographic mapping, image attachments for documenting the issue, and admin review before publishing. Requires acceptance of terms. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :deficiency_report, in: :body, description: 'Deficiency report with required title, description, location, category, and terms acceptance. Optional image attachment for documenting the issue.', schema: {
         type: :object,
@@ -251,6 +251,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single deficiency report by ID with all its details. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'deficiency report found' do
         let!(:pre) { create_minimal_prereqs }
@@ -297,7 +298,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update an existing deficiency report with new information, status, or image. Can add, replace, or remove the report image. All fields are optional - only provide fields to change. Requires admin access.'
+      description "Update an existing deficiency report with new information, status, or image. Can add, replace, or remove the report image. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :deficiency_report, in: :body, description: 'Deficiency report attributes to update (title, description, status, image). Any field not provided remains unchanged.', schema: {
         type: :object,

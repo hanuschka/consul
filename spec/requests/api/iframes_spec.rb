@@ -14,6 +14,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Iframes'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single iframe by ID.#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'iframe found' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
@@ -82,6 +83,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing iframe. Allows modifying iframe URL and properties. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_iframe, in: :body, description: 'Attributes to update on the iframe', schema: {
         type: :object,

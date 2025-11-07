@@ -34,15 +34,14 @@
       resources :events, only: [:index, :create, :show, :update, :destroy]
       resources :arguments, only: [:create, :show, :update, :destroy]
       resources :notifications, only: [:index, :create, :show, :update, :destroy]
-      resources :texts, only: [:create, :show, :update, :destroy]
+      resources :texts, only: [:index]
       resources :point_of_interest_pins, only: [:index, :create, :show, :update, :destroy]
       resources :point_of_interest_categories, only: [:index, :create, :show, :update, :destroy]
       resources :comments, only: [:index, :create, :show, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
-      resources :formulars, only: [:create, :show, :update, :destroy]
-      resources :milestones, only: [:index, :create, :show, :update, :destroy], shallow: true do
-        resources :milestone_statuses, only: [:create, :show, :update, :destroy]
-      end
+      resources :formulars, only: [:index, :create, :show, :update, :destroy]
+      resources :milestones, only: [:index]
+
       resource :iframe, only: [:show, :update]
     end
     # settings are updated via projekt_phases#update_setting

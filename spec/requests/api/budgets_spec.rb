@@ -12,7 +12,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a paginated list of all participatory budgets across all projects. Includes budget details (name, currency, slug) and associated investment information. Useful for overview pages and budget selection.'
+      description "Retrieve a paginated list of all participatory budgets across all projects. Includes budget details (name, currency, slug) and associated investment information. Useful for overview pages and budget selection. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
 
@@ -63,7 +63,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all budgets associated with a specific projekt phase. Each budget within a phase represents a separate participatory budgeting instance with its own investments and voting.'
+      description "Retrieve all budgets associated with a specific projekt phase. Each budget within a phase represents a separate participatory budgeting instance with its own investments and voting. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
 
@@ -110,7 +110,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new participatory budget for a projekt phase. Budgets define spending priorities, voting mechanisms, and investment categories. Supports optional image attachments for budget visualization or branding. Requires admin access. Supports multiple voting styles (knapsack, plurality, etc.) and currency configurations.'
+      description "Create a new participatory budget for a projekt phase. Budgets define spending priorities, voting mechanisms, and investment categories. Supports optional image attachments for budget visualization or branding. Supports multiple voting styles (knapsack, plurality, etc.) and currency configurations. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget, in: :body, description: 'Budget configuration with required name and optional currency, voting style, publication settings, and image attachment', schema: {
         type: :object,
@@ -280,7 +280,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a single budget by ID with all configuration details. Returns budget metadata (name, currency, voting style), phase information, and statistics about associated investments.'
+      description "Retrieve a single budget by ID with all configuration details. Returns budget metadata (name, currency, voting style), phase information, and statistics about associated investments. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'budget found and returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
@@ -342,7 +342,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update budget configuration such as name, voting style, currency, publication status, or image. Can add, replace, or remove the budget image. All fields are optional - only provide fields to change. Requires admin access. Returns the updated budget object.'
+      description "Update budget configuration such as name, voting style, currency, publication status, or image. Can add, replace, or remove the budget image. All fields are optional - only provide fields to change. Returns the updated budget object. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget, in: :body, description: 'Budget attributes to update (name, currency_symbol, voting_style, published, image). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -519,7 +519,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Budgets'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Delete a budget and all associated investments and voting data. Only admin users can delete budgets. This action is permanent and cannot be undone. All data related to this budget will be removed.'
+      description "Delete a budget and all associated investments and voting data. This action is permanent and cannot be undone. All data related to this budget will be removed. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'budget deleted successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }

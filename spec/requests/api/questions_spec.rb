@@ -13,7 +13,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all questions from a specific projekt phase. Questions can be standalone survey questions or livestream questions. Each question includes its options and answer statistics. Returns paginated results.'
+      description "Retrieve all questions from a specific projekt phase. Questions can be standalone survey questions or livestream questions. Each question includes its options and answer statistics. Returns paginated results. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of questions per page (default: 100, max: 500)', required: false
 
@@ -64,7 +64,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes.'
+      description "Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Projekt question creation payload', schema: {
         type: :object,
@@ -140,6 +140,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all projekt questions across all phases. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -194,6 +195,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single projekt question by ID with all its details and options. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt question found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -232,6 +234,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing projekt question. Allows modifying question text and associated options. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Attributes to update on the projekt question', schema: {
         type: :object,
@@ -327,6 +330,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a projekt question and all associated options. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt question deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

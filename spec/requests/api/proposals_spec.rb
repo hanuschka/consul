@@ -20,7 +20,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       tags 'Proposals'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all proposals submitted for a specific projekt phase. Proposals are citizen-initiated action items or projects proposed within a participation phase. Can filter by visibility for public rendering. Returns paginated results.'
+      description "Retrieve all proposals submitted for a specific projekt phase. Proposals are citizen-initiated action items or projects proposed within a participation phase. Can filter by visibility for public rendering. Returns paginated results. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of proposals per page (default: 100, max: 500)'
       parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend'
@@ -131,7 +131,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Submit a new proposal within a projekt phase. Proposals are citizen-initiated action items that require a responsible party, geozone location, and acceptance of terms. Proposals go through an admin review process before being published.'
+      description "Submit a new proposal within a projekt phase. Proposals are citizen-initiated action items that require a responsible party, geozone location, and acceptance of terms. Proposals go through an admin review process before being published. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :proposal, in: :body, description: 'Proposal submission with required title, description, responsible party, geozone, and terms acceptance', schema: Schemas::CommentsProposals::PROPOSAL_CREATE_PARAMS
 
@@ -276,6 +276,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       tags 'Proposals'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all proposals across all projekt phases. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -348,6 +349,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       tags 'Proposals'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single proposal by ID with all its details. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'proposal found' do
         let!(:context) { create_phase_with_context }
@@ -468,6 +470,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing proposal. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :proposal, in: :body, description: 'Attributes to update on the proposal', schema: Schemas::CommentsProposals::PROPOSAL_UPDATE_PARAMS
 
@@ -657,6 +660,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       tags 'Proposals'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete an existing proposal. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'proposal deleted' do
         let!(:context) { create_phase_with_context }

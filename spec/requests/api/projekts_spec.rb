@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a paginated list of all projekts. Optionally filter by visibility or include/exclude nested phases and content blocks. Requires admin or public_data access level.'
+      description "Retrieve a paginated list of all projekts. Optionally filter by visibility or include/exclude nested phases and content blocks. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :only_visible, in: :query, type: :boolean, required: false,
                 description: 'If true, returns only activated projekts with published custom pages that are shown in the overview. Default: false (returns all projekts accessible to the user)'
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
@@ -89,7 +89,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new projekt with the provided configuration. Only admin users can create projekts. Supports hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments. The response includes the full projekt object with all nested relationships.'
+      description "Create a new projekt with the provided configuration. Supports hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments. The response includes the full projekt object with all nested relationships. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt, in: :body, description: 'Projekt creation payload with required name and optional configuration (dates, geozones, phases, managers, etc.)', schema: { '$ref' => '#/components/schemas/ProjektCreateParams' }
 
@@ -186,7 +186,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings.'
+      description "Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
                 description: 'If false, excludes projekt phases from response. When true (default), returns all phases with their settings and configuration.'
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
@@ -270,7 +270,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update an existing projekt with new values. All fields are optional - only provide the fields you want to change. Requires admin access level. Returns the updated projekt object.'
+      description "Update an existing projekt with new values. All fields are optional - only provide the fields you want to change. Returns the updated projekt object. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt, in: :body, description: 'Projekt attributes to update (name, dates, visibility settings, geozones, phases, managers, etc.). Any field not provided remains unchanged.', schema: { '$ref' => '#/components/schemas/ProjektUpdateParams' }
 
@@ -374,7 +374,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Delete a projekt and all associated data (phases, comments, votes, etc.). Only admin users can delete projekts. This action is permanent and cannot be undone.'
+      description "Delete a projekt and all associated data (phases, comments, votes, etc.). This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt deleted successfully' do
         let(:test_projekt) { Projekt.create!(name: 'To Delete') }
@@ -457,7 +457,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update the projekt page title and subtitle that appear on the frontend. Requires admin access. Title and subtitle are displayed prominently on the projekt overview page.'
+      description "Update the projekt page title and subtitle that appear on the frontend. Title and subtitle are displayed prominently on the projekt overview page. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :page, in: :body, description: 'Page attributes containing title (main heading) and subtitle (tagline) to update', schema: {
         type: :object,
@@ -569,7 +569,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update or replace the projekt cover image that appears on the frontend. Supports uploading a new image, updating image metadata (title/credits), or removing the image entirely. Image must be provided as base64-encoded data. Requires admin access.'
+      description "Update or replace the projekt cover image that appears on the frontend. Supports uploading a new image, updating image metadata (title/credits), or removing the image entirely. Image must be provided as base64-encoded data. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :image, in: :body, description: 'Image attributes for uploading or updating projekt cover image. Attachment must be base64-encoded image data. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Title serves as alt text for accessibility. Use _destroy=true to remove the current image.', schema: { '$ref' => '#/components/schemas/ImageAttributesApi' }
 
@@ -678,7 +678,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update a specific projekt configuration setting identified by key. Settings control feature flags and behaviors (e.g., show_map, enable_comments). Requires admin access. Creates the setting if it does not exist, otherwise updates the existing value.'
+      description "Update a specific projekt configuration setting identified by key. Settings control feature flags and behaviors (e.g., show_map, enable_comments). Creates the setting if it does not exist, otherwise updates the existing value. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :setting, in: :body, description: 'Setting key/value pair: key identifies the setting (e.g., show_map, enable_comments), value is the new setting value', schema: {
         type: :object,
@@ -850,7 +850,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update the main content block body (HTML) for a projekt. This is the primary rich-text description that appears on the projekt detail page. Supports HTML formatting. Requires admin access. Updates the default locale content block.'
+      description "Update the main content block body (HTML) for a projekt. This is the primary rich-text description that appears on the projekt detail page. Supports HTML formatting. Updates the default locale content block. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt, in: :body, description: 'Content block body containing HTML-formatted text for the projekt description', schema: {
         type: :object,

@@ -6,6 +6,45 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
+  PROJEKT_LIVESTREAM_PARAMS = {
+    type: :object,
+    properties: {
+      url: {
+        type: :string,
+        nullable: true,
+        description: 'The URL where the livestream will be broadcast',
+        example: 'https://youtube.com/live/ABC123'
+      },
+      title: {
+        type: :string,
+        nullable: true,
+        description: 'The title or name of the livestream event',
+        example: 'Community Town Hall Discussion'
+      },
+      description: {
+        type: :string,
+        nullable: true,
+        description: 'Description of the livestream content and agenda',
+        example: 'Live discussion with city officials on budget priorities'
+      },
+      starts_at: {
+        type: :string,
+        format: :date_time,
+        nullable: true,
+        description: 'When the livestream is scheduled to start',
+        example: '2024-02-01T18:00:00Z'
+      }
+    }
+  }.freeze
+
+  PROJEKT_LIVESTREAM_PARAM_SCHEMA = {
+    type: :object,
+    properties: {
+      projekt_livestream: PROJEKT_LIVESTREAM_PARAMS
+    },
+    required: ['projekt_livestream']
+  }.freeze
+
   path '/api/projekt_phases/{projekt_phase_id}/livestreams' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (LivestreamPhase)'
 
@@ -13,7 +52,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.'
+      description "Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of livestreams per page (default: 100, max: 500)', required: false
 
@@ -68,26 +107,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Schedule a new livestream event for a projekt phase. Livestreams support multiple video platforms (YouTube, Vimeo, etc.) and can include scheduled start/end times. Participants can submit questions during livestreams. Requires admin access.'
+      description "Schedule a new livestream event for a projekt phase. Livestreams support multiple video platforms (YouTube, Vimeo, etc.) and can include scheduled start/end times. Participants can submit questions during livestreams. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_livestream, in: :body, description: 'Livestream details with URL, title, platform, and optional scheduling information', schema: {
-        type: :object,
-        properties: {
-          projekt_livestream: {
-            type: :object,
-            properties: {
-              url: { type: :string, nullable: true },
-              title: { type: :string, nullable: true },
-              description: { type: :string, nullable: true },
-              starts_at: { type: :string, format: :date_time, nullable: true },
-              video_platform: { type: :string, nullable: true },
-              external_id: { type: :string, nullable: true },
-              preview_image_url: { type: :string, nullable: true }
-            }
-          }
-        },
-        required: ['projekt_livestream']
-      }
+      parameter name: :projekt_livestream, in: :body, description: 'Livestream details with URL, title, and optional scheduling information', schema: PROJEKT_LIVESTREAM_PARAM_SCHEMA
 
       response '201', 'projekt livestream created' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -99,9 +121,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
               url: 'https://example.com/livestream',
               title: 'Test Livestream',
               description: 'Test description',
-              starts_at: '2025-01-01T12:00:00Z',
-              video_platform: 'youtube',
-              external_id: 'abc123'
+              starts_at: '2025-01-01T12:00:00Z'
             }
           }
         end
@@ -161,6 +181,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all livestreams across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -219,6 +240,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single livestream by ID.#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt livestream found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -259,25 +281,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing projekt livestream. Allows modifying livestream URL, title, description, and scheduled time. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_livestream, in: :body, description: 'Attributes to update on the projekt livestream', schema: {
-        type: :object,
-        properties: {
-          projekt_livestream: {
-            type: :object,
-            properties: {
-              url: { type: :string, nullable: true },
-              title: { type: :string, nullable: true },
-              description: { type: :string, nullable: true },
-              starts_at: { type: :string, format: :date_time, nullable: true },
-              video_platform: { type: :string, nullable: true },
-              external_id: { type: :string, nullable: true },
-              preview_image_url: { type: :string, nullable: true }
-            }
-          }
-        },
-        required: ['projekt_livestream']
-      }
+      parameter name: :projekt_livestream, in: :body, description: 'Attributes to update on the projekt livestream', schema: PROJEKT_LIVESTREAM_PARAM_SCHEMA
 
       response '200', 'projekt livestream updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -371,6 +377,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a projekt livestream. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt livestream deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

@@ -25,6 +25,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       tags 'Idea Categories'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all idea categories. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
 
@@ -148,6 +149,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Create a new idea category for organizing and classifying citizen ideas. Categories help administrators manage ideas thematically. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea_category, in: :body, description: 'Idea category payload', schema: {
         type: :object,
@@ -311,6 +313,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       tags 'Idea Categories'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single idea category by ID. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'idea category found' do
         let(:category) do
@@ -375,6 +378,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing idea category. Allows modifying category name and assigned officer. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea_category, in: :body, description: 'Attributes to update on the idea category', schema: {
         type: :object,
@@ -528,6 +532,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       tags 'Idea Categories'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete an idea category. Categories with associated ideas cannot be deleted. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '204', 'idea category deleted' do
         let(:category) do

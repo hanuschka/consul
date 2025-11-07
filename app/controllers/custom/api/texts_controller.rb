@@ -1,79 +1,32 @@
 class Api::TextsController < Api::BaseController
-  include Translatable
+  before_action :find_projekt_phase, only: [:index]
 
-  before_action :find_projekt_phase, only: [:create]
-  before_action :find_text, only: [:show, :update, :destroy]
-
-  def create
-    check_admin_access!
-    text = Legislation::Process.new(text_params)
-    text.projekt_phase = @projekt_phase
-
-    if text.save
-      serialized_text = LegislationProcessSerializer.new(text).serialize
-
-      render json: { data: { text: serialized_text } }, status: 201
-    else
-      render json: { error: { messages: text.errors.full_messages } }, status: 422
-    end
-  end
-
-  def show
+  def index
     check_read_access!
-    serialized_text = LegislationProcessSerializer.new(@text).serialize
+    texts = @projekt_phase.legislation_processes
+      .page(params[:page])
+      .per(params[:per_page] || 100)
 
-    render json: { data: { text: serialized_text } }
-  end
+    serialized_texts = texts.map { |text| LegislationProcessSerializer.new(text).serialize }
 
-  def update
-    check_admin_access!
-    if @text.update(text_params)
-      serialized_text = LegislationProcessSerializer.new(@text).serialize
-
-      render json: { data: { text: serialized_text } }
-    else
-      render json: { error: { messages: @text.errors.full_messages } }, status: 422
-    end
-  end
-
-  def destroy
-    check_admin_access!
-    if @text.destroy
-      render json: { message: "Text destroyed" }
-    else
-      render json: { error: { messages: @text.errors.messages } }, status: 422
-    end
+    render json: {
+      data: { texts: serialized_texts },
+      pagination: pagination_meta(texts)
+    }
   end
 
   private
-
-  def text_params
-    params.require(:text).permit(
-      :title,
-      :summary,
-      :description,
-      :additional_info,
-      :start_date,
-      :end_date,
-      :debate_start_date,
-      :debate_end_date,
-      :draft_publication_date,
-      :allegations_start_date,
-      :allegations_end_date,
-      :result_publication_date,
-      :debate_phase_enabled,
-      :allegations_phase_enabled,
-      :draft_publication_enabled,
-      :result_publication_enabled,
-      :published,
-    )
-  end
 
   def find_projekt_phase
     @projekt_phase = ProjektPhase::LegislationPhase.find(params[:projekt_phase_id])
   end
 
-  def find_text
-    @text = Legislation::Process.find(params[:id])
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end

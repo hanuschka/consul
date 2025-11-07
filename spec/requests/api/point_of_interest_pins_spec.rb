@@ -13,6 +13,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve all point of interest pins for a specific projekt phase. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -70,6 +71,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Create a new point of interest pin on the map. Pins mark specific locations with descriptions and categories. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Projekt point of interest pin creation payload', schema: {
         type: :object,
@@ -169,6 +171,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all point of interest pins across all projekt phases. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -240,6 +243,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single point of interest pin by ID. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt point of interest pin found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -287,6 +291,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing point of interest pin. Allows modifying pin location, description, and category. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Attributes to update on the projekt point of interest pin', schema: {
         type: :object,
@@ -422,6 +427,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a point of interest pin. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt point of interest pin deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

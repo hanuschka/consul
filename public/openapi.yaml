@@ -3,6 +3,141 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
+  description: |
+    # Consul Projekt API
+
+    The Consul Projekt API provides programmatic access to manage participatory budgeting and citizen engagement projects. This API enables you to create and manage various project phases, collect citizen input through proposals, polls, and surveys, and track project progress.
+
+    ## Authentication
+
+    This API uses **Bearer Token (Auth Token)** authentication. All requests require an API client with a valid authentication token.
+
+    ### Creating an API Client
+
+    First, create an API client in your Rails console:
+
+    ```ruby
+    ApiClient.create(
+      name: "Name of api client",
+      service_user_email: "email@example.com",
+      access_level: "admin"  # Can be "admin" or "public_data"
+    )
+    ```
+
+    The `service_user_email` is used to create a service user for the API client.
+
+    ### Authentication Header
+
+    Include your API client's authentication token in the `Authorization` header:
+
+    ```
+    Authorization: Bearer YOUR_AUTH_TOKEN
+    ```
+
+    The auth token is automatically generated for each API client and can be obtained via:
+
+    ```ruby
+    api_client.auth_token
+    ```
+
+    ### Access Levels
+
+    Access levels determine which endpoints and actions are available:
+    - **Admin**: Full access to all resources. Required for POST (create), PATCH (update), and DELETE operations.
+    - **Public Data**: Read-only access to publicly available resources. GET requests only.
+
+    #### HTTP Method Requirements
+
+    - **GET**: Available to both `admin` and `public_data` access levels
+    - **POST (Create)**: Requires `admin` access level
+    - **PATCH (Update)**: Requires `admin` access level
+    - **DELETE**: Requires `admin` access level
+
+    Requests with `public_data` access level attempting to use POST, PATCH, or DELETE will receive a `403 Forbidden` error.
+
+    ## Key Features
+
+    - **Project Management**: Create and manage projects with multiple phases
+    - **Participatory Budgeting**: Implement budget allocation mechanisms
+    - **Citizen Engagement**: Collect ideas, proposals, and feedback from participants
+    - **Surveys & Forms**: Deploy custom forms to gather structured input
+    - **Event & Livestream Support**: Schedule and manage live events and streams
+    - **Milestone Tracking**: Track project progress with status updates
+    - **Geospatial Features**: Mark points of interest on maps
+
+    ## Getting Started
+
+    ### API Documentation
+
+    API documentation is automatically generated from test specifications using the Rswag gem. The following documentation formats are available:
+    - `/api/docs` - Interactive OpenAPI documentation
+    - `/api/docs_alt` - Alternative documentation view
+
+    To regenerate API documentation after making changes to specs, run:
+
+    ```bash
+    bin/rails api:generate_docs
+    ```
+
+    This generates:
+    - `swagger/v1/swagger.yaml` - OpenAPI specification in YAML format
+    - `public/openapi.yaml` - Public OpenAPI specification
+
+    **Note:** Whenever you modify specs in `spec/requests/api` or `spec/schemas`, you must regenerate the API documentation.
+
+    ### Running API Tests
+
+    To verify that your API specifications are valid, run:
+
+    ```bash
+    bundle exec rspec spec/requests/api
+    ```
+
+    ## Response Format
+
+    All API responses are in JSON format with the following structure:
+
+    **Success Response:**
+    ```json
+    {
+      "data": {
+        "resource_name": { ... }
+      },
+      "pagination": {
+        "current_page": 1,
+        "total_pages": 10,
+        "total_count": 100,
+        "per_page": 10
+      }
+    }
+    ```
+
+    **Error Response:**
+    ```json
+    {
+      "error": {
+        "type": "forbidden",
+        "messages": ["Access denied"]
+      }
+    }
+    ```
+
+    ## Pagination
+
+    List endpoints support pagination using `page` and `per_page` query parameters:
+    - `page`: Page number (default: 1)
+    - `per_page`: Results per page (default: 100, max: 500)
+
+    ## API Sections
+
+    The API is organized into logical groups:
+    - **Projekts**: Core project management
+    - **Ideas**: Citizen ideas and proposals
+    - **Deficiency Reports**: Issue tracking and reporting
+
+    ## Support
+
+    For issues or questions about the API, please refer to the detailed endpoint documentation below or contact support.
 paths:
   "/api/projekt_phases/{projekt_phase_id}/arguments":
     parameters:
@@ -18,9 +153,11 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
-      description: Create a new argument (pro or con) for a projekt phase. Arguments
+      description: "Create a new argument (pro or con) for a projekt phase. Arguments
         present reasoning, evidence, or positions on a topic within the ArgumentPhase.
-        Can include supporting images with titles and credits. Requires admin access.
+        Can include supporting images with titles and credits. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -130,9 +267,10 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
-      description: Retrieve a single argument by ID with all its details. Returns
+      description: "Retrieve a single argument by ID with all its details. Returns
         the argument text, pro/con classification, display position, and any associated
-        image with metadata.
+        image with metadata. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       responses:
         '200':
           description: projekt argument found and returned
@@ -158,9 +296,11 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
-      description: Update an existing argument with new content, positioning, or pro/con
-        classification. Can also add, replace, or remove the supporting image. All
-        fields are optional - only provide fields to change. Requires admin access.
+      description: "Update an existing argument with new content, positioning, or
+        pro/con classification. Can also add, replace, or remove the supporting image.
+        All fields are optional - only provide fields to change. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -208,48 +348,53 @@ paths:
                     name:
                       type: string
                       nullable: true
-                      description: Updated argument title or name
+                      description: Argument title or name. Optional, can be auto-generated
+                        if not provided.
                     position:
                       type: integer
                       nullable: true
-                      description: New display order among arguments
+                      description: Display order among other arguments in the phase.
+                        Lower numbers appear first.
                     note:
                       type: string
                       nullable: true
-                      description: Updated argument text/evidence/reasoning
+                      description: Detailed argument text explaining the position,
+                        evidence, and reasoning.
                     pro:
                       type: boolean
                       nullable: true
-                      description: true = pro-argument, false/null = con-argument
+                      description: true = pro-argument (in favor), false/null = con-argument
+                        (against)
                     image_attributes:
                       type: object
-                      description: Update, replace, or remove the supporting image.
-                        Attach a new image (base64-encoded), update metadata (title/credits),
-                        or set _destroy=true to remove. All fields are optional.
+                      description: 'Optional: Image to support the argument (infographic,
+                        chart, diagram, evidence photo, etc.). Upload as base64-encoded
+                        data. Recommended for presenting visual evidence or data supporting
+                        the argument position.'
                       properties:
                         attachment:
                           type: string
                           nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB for optimal performance).'
                         title:
                           type: string
                           nullable: true
-                          description: Updated image caption or alt text. Improves
-                            accessibility by describing the image content for screen
-                            readers and improving discoverability.
+                          description: Image caption, alt text, or brief description.
+                            Used for accessibility and displayed with the image. Helps
+                            visually-impaired users understand the image content.
                         credits:
                           type: string
                           nullable: true
-                          description: Updated image source attribution, photographer/artist
-                            name, or copyright notice. Properly credits original creators.
+                          description: Image source attribution, photographer/artist
+                            name, or copyright information. Displayed with the image
+                            to give proper credit.
                         _destroy:
                           type: boolean
                           nullable: true
-                          description: Set to true to remove the image entirely from
-                            the argument while preserving the argument text and other
-                            properties.
+                          description: Set to true to remove the current image from
+                            the argument. Does not affect other argument properties.
               required:
               - projekt_argument
         description: Argument attributes to update (name, position, note, pro/con
@@ -260,9 +405,10 @@ paths:
       - Arguments
       security:
       - bearer_auth: []
-      description: Delete an argument and all associated data (including any attached
-        images). Only admin users can delete arguments. This action is permanent and
-        cannot be undone.
+      description: "Delete an argument and all associated data (including any attached
+        images). This action is permanent and cannot be undone. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt argument deleted successfully
@@ -303,10 +449,10 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: Retrieve all budget investments (project proposals) for a specific
-        participatory budget. Investments can be filtered by category (heading/group),
-        feasibility status, selection status, and sorted by various criteria. Returns
-        paginated results with voting/support information.
+      description: |-
+        Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -396,11 +542,13 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: Submit a new budget investment (project proposal) to a specific
+      description: "Submit a new budget investment (project proposal) to a specific
         budget. Investments must be assigned to a category heading and include title,
         description, and estimated budget/price. Supports video attachments, geographic
         location mapping, multilingual descriptions, image attachments for project
-        visualization, and tagging. Requires acceptance of terms.
+        visualization, and tagging. Requires acceptance of terms. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -644,9 +792,10 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: Retrieve all budget investments across all budgets. Includes investment
-        details (title, description, status, cost) and voting/support statistics.
-        Useful for global investment tracking and analytics.
+      description: |-
+        Retrieve all budget investments across all budgets. Includes investment details (title, description, status, cost) and voting/support statistics. Useful for global investment tracking and analytics.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -704,9 +853,10 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: Retrieve a single budget investment by ID with full details. Returns
-        project information, feasibility assessment, admin valuation status, voting
-        statistics, and selected status.
+      description: |-
+        Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
           description: budget investment found with public_data access
@@ -748,10 +898,12 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: 'Update a budget investment details. Allows editing project information,
+      description: "Update a budget investment details. Allows editing project information,
         admin feasibility assessment, selection status, or image. Can add, replace,
         or remove the investment image. Admin-only: can set feasibility status and
-        mark as selected. All fields are optional - only provide fields to change.'
+        mark as selected. All fields are optional - only provide fields to change.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -973,9 +1125,9 @@ paths:
       - Budget Investments
       security:
       - bearer_auth: []
-      description: Delete a budget investment and all associated voting data. Only
-        admin users can delete investments. This action is permanent and cannot be
-        undone.
+      description: "Delete a budget investment and all associated voting data. This
+        action is permanent and cannot be undone. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: budget investment deleted successfully
@@ -1025,9 +1177,10 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Retrieve a paginated list of all participatory budgets across all
-        projects. Includes budget details (name, currency, slug) and associated investment
-        information. Useful for overview pages and budget selection.
+      description: "Retrieve a paginated list of all participatory budgets across
+        all projects. Includes budget details (name, currency, slug) and associated
+        investment information. Useful for overview pages and budget selection. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -1085,9 +1238,10 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Retrieve all budgets associated with a specific projekt phase.
+      description: "Retrieve all budgets associated with a specific projekt phase.
         Each budget within a phase represents a separate participatory budgeting instance
-        with its own investments and voting.
+        with its own investments and voting. \n\n*Authorization: Available to both
+        `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -1137,11 +1291,12 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Create a new participatory budget for a projekt phase. Budgets
+      description: "Create a new participatory budget for a projekt phase. Budgets
         define spending priorities, voting mechanisms, and investment categories.
         Supports optional image attachments for budget visualization or branding.
-        Requires admin access. Supports multiple voting styles (knapsack, plurality,
-        etc.) and currency configurations.
+        Supports multiple voting styles (knapsack, plurality, etc.) and currency configurations.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -1280,9 +1435,10 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Retrieve a single budget by ID with all configuration details.
+      description: "Retrieve a single budget by ID with all configuration details.
         Returns budget metadata (name, currency, voting style), phase information,
-        and statistics about associated investments.
+        and statistics about associated investments. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: budget found and returned
@@ -1324,10 +1480,11 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Update budget configuration such as name, voting style, currency,
+      description: "Update budget configuration such as name, voting style, currency,
         publication status, or image. Can add, replace, or remove the budget image.
-        All fields are optional - only provide fields to change. Requires admin access.
-        Returns the updated budget object.
+        All fields are optional - only provide fields to change. Returns the updated
+        budget object. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -1456,9 +1613,10 @@ paths:
       - Budgets
       security:
       - bearer_auth: []
-      description: Delete a budget and all associated investments and voting data.
-        Only admin users can delete budgets. This action is permanent and cannot be
-        undone. All data related to this budget will be removed.
+      description: "Delete a budget and all associated investments and voting data.
+        This action is permanent and cannot be undone. All data related to this budget
+        will be removed. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: budget deleted successfully
@@ -1515,10 +1673,11 @@ paths:
       - Comments
       security:
       - bearer_auth: []
-      description: Retrieve all root-level comments for a projekt phase. Comments
+      description: "Retrieve all root-level comments for a projekt phase. Comments
         support nested replies (children). Returns paginated results with comment
         hierarchy information. Can be filtered by phase to see all discussion within
-        that phase.
+        that phase. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: page
         in: query
@@ -1575,10 +1734,12 @@ paths:
       - Comments
       security:
       - bearer_auth: []
-      description: Create a new comment on a projekt phase. Supports both root-level
+      description: "Create a new comment on a projekt phase. Supports both root-level
         comments and nested replies. To create a reply, specify the parent_id of the
         comment being responded to. Root comments do not have a parent_id. Comments
-        support rich HTML content and are moderated by administrators.
+        support rich HTML content and are moderated by administrators. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -1665,9 +1826,10 @@ paths:
       - Comments
       security:
       - bearer_auth: []
-      description: Retrieve all comments across all projekt phases. Returns a paginated
+      description: "Retrieve all comments across all projekt phases. Returns a paginated
         list of root-level comments from all phases. Useful for moderation, analytics,
-        and global discussion oversight.
+        and global discussion oversight. \n\n*Authorization: Available to both `admin`
+        and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -1716,10 +1878,11 @@ paths:
       - Comments
       security:
       - bearer_auth: []
-      description: 'Retrieve a comment by ID. The response includes: (1) parent_comment
+      description: "Retrieve a comment by ID. The response includes: (1) parent_comment
         reference if this comment is a reply, (2) child_comments array containing
         all direct replies to this comment. This enables clients to reconstruct the
-        full comment thread hierarchy.'
+        full comment thread hierarchy. \n\n*Authorization: Available to both `admin`
+        and `public_data` access levels.*"
       responses:
         '200':
           description: reply comment with parent reference
@@ -1782,9 +1945,10 @@ paths:
       - Comments
       security:
       - bearer_auth: []
-      description: Delete a comment and all its nested replies from a projekt phase.
-        Only admins can delete comments. Deletion is permanent and affects the entire
-        comment thread hierarchy.
+      description: "Delete a comment and all its nested replies from a projekt phase.
+        Deletion is permanent and affects the entire comment thread hierarchy. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       responses:
         '200':
           description: comment deleted successfully
@@ -1834,6 +1998,10 @@ paths:
       - Deficiency Report Categories
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a paginated list of all deficiency report categories.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -1875,10 +2043,11 @@ paths:
       - Deficiency Reports
       security:
       - bearer_auth: []
-      description: Retrieve a paginated list of deficiency reports (citizen-reported
+      description: "Retrieve a paginated list of deficiency reports (citizen-reported
         maintenance/repair issues). Reports include location data, category, status,
         and author information. Useful for public issue tracking and municipal maintenance
-        prioritization.
+        prioritization. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: page
         in: query
@@ -1919,10 +2088,12 @@ paths:
       - Deficiency Reports
       security:
       - bearer_auth: []
-      description: Submit a new deficiency report for a maintenance issue or infrastructure
+      description: "Submit a new deficiency report for a maintenance issue or infrastructure
         problem. Reports must include a location (latitude/longitude) and category.
         Supports geographic mapping, image attachments for documenting the issue,
-        and admin review before publishing. Requires acceptance of terms.
+        and admin review before publishing. Requires acceptance of terms. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -2114,6 +2285,8 @@ paths:
       - Deficiency Reports
       security:
       - bearer_auth: []
+      description: "Retrieve a single deficiency report by ID with all its details.
+        \n\n*Authorization: Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: deficiency report found
@@ -2139,9 +2312,10 @@ paths:
       - Deficiency Reports
       security:
       - bearer_auth: []
-      description: Update an existing deficiency report with new information, status,
+      description: "Update an existing deficiency report with new information, status,
         or image. Can add, replace, or remove the report image. All fields are optional
-        - only provide fields to change. Requires admin access.
+        - only provide fields to change. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -2318,10 +2492,10 @@ paths:
       - Events
       security:
       - bearer_auth: []
-      description: Retrieve all events scheduled for a specific projekt phase. Events
-        are public meetings, webinars, or participation activities scheduled as part
-        of the project engagement. Returns paginated results with event details (time,
-        location, registration link).
+      description: |-
+        Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -2371,9 +2545,10 @@ paths:
       - Events
       security:
       - bearer_auth: []
-      description: 'Schedule a new event for a projekt phase. Events can be in-person
+      description: "Schedule a new event for a projekt phase. Events can be in-person
         meetings (with location), online webinars (with registration URL), or open-ended
-        events. Required: event title. Requires admin access.'
+        events. Required: event title. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -2460,6 +2635,10 @@ paths:
       - Events
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a single event by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
           description: projekt event found
@@ -2485,6 +2664,10 @@ paths:
       - Events
       security:
       - bearer_auth: []
+      description: "Update an existing projekt event. Allows modifying event details
+        such as title, description, datetime, location, and weblink. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -2558,6 +2741,9 @@ paths:
       - Events
       security:
       - bearer_auth: []
+      description: "Delete a projekt event. This action is permanent and cannot be
+        undone. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt event deleted
@@ -2586,23 +2772,36 @@ paths:
     parameters:
     - name: projekt_phase_id
       in: path
-      description: Projekt Phase ID
+      description: Projekt Phase ID (FormularPhase)
       required: true
       schema:
         type: integer
-    post:
-      summary: Create a formular
+    get:
+      summary: List formulars for a projekt phase
       tags:
       - Formulars
       security:
       - bearer_auth: []
-      description: 'Create a new custom form for a projekt phase. Forms collect structured
-        input from participants using customizable fields and validation rules. Required:
-        form title and field definitions. Requires admin access.'
-      parameters: []
+      description: |-
+        Retrieve all forms configured for a projekt phase. Forms are used to collect structured input from participants with customizable fields and validation rules.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        description: 'Pagination page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Number of formulars per page (default: 100, max: 500)'
+        required: false
+        schema:
+          type: integer
       responses:
-        '201':
-          description: formular created
+        '200':
+          description: formulars found and returned
           content:
             application/json:
               schema:
@@ -2611,52 +2810,87 @@ paths:
                   data:
                     type: object
                     properties:
-                      formular:
-                        type: object
-                    required:
-                    - formular
-                required:
-                - data
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
+                      formulars:
                         type: array
                         items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formular:
-                  type: object
-                  properties: {}
-              required:
-              - formular
-        description: Formular (form) creation with required title and form field configuration
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: Unique identifier for the formular
+                              example: 1
+                            projekt_phase_id:
+                              type: integer
+                              description: ID of the projekt phase this formular belongs
+                                to
+                              example: 5
+                            formular_fields_count:
+                              type: integer
+                              description: Number of form fields defined in this formular
+                              example: 12
+                            formular_answers_count:
+                              type: integer
+                              description: Number of participant responses submitted
+                                to this formular
+                              example: 45
+                            projekt_phase:
+                              type: object
+                              description: The projekt phase this formular belongs
+                                to
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 5
+                                title:
+                                  type: string
+                                  nullable: true
+                                  example: Feedback Phase
+                                type:
+                                  type: string
+                                  example: ProjektPhase::FormularPhase
+                                projekt_id:
+                                  type: integer
+                                  example: 2
+                            projekt:
+                              type: object
+                              description: The projekt this formular belongs to
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 2
+                                title:
+                                  type: string
+                                  example: Community Survey
+                            created_at:
+                              type: string
+                              format: date_time
+                              description: Timestamp when the formular was created
+                              example: '2024-01-10T10:00:00Z'
+                            updated_at:
+                              type: string
+                              format: date_time
+                              description: Timestamp when the formular was last modified
+                              example: '2024-01-15T14:30:00Z'
+                          required:
+                          - id
+                          - projekt_phase_id
+                          - created_at
+                          - updated_at
+                    required:
+                    - formulars
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
   "/api/formulars/{id}":
     parameters:
     - name: id
@@ -2671,9 +2905,13 @@ paths:
       - Formulars
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a single formular with all its metadata including field count and submission count. Returns information about the form structure and participant responses.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
-          description: formular found
+          description: formular found and returned
           content:
             application/json:
               schema:
@@ -2684,142 +2922,73 @@ paths:
                     properties:
                       formular:
                         type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Unique identifier for the formular
+                            example: 1
+                          projekt_phase_id:
+                            type: integer
+                            description: ID of the projekt phase this formular belongs
+                              to
+                            example: 5
+                          formular_fields_count:
+                            type: integer
+                            description: Number of form fields defined in this formular
+                            example: 12
+                          formular_answers_count:
+                            type: integer
+                            description: Number of participant responses submitted
+                              to this formular
+                            example: 45
+                          projekt_phase:
+                            type: object
+                            description: The projekt phase this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 5
+                              title:
+                                type: string
+                                nullable: true
+                                example: Feedback Phase
+                              type:
+                                type: string
+                                example: ProjektPhase::FormularPhase
+                              projekt_id:
+                                type: integer
+                                example: 2
+                          projekt:
+                            type: object
+                            description: The projekt this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 2
+                              title:
+                                type: string
+                                example: Community Survey
+                          created_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was created
+                            example: '2024-01-10T10:00:00Z'
+                          updated_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was last modified
+                            example: '2024-01-15T14:30:00Z'
+                        required:
+                        - id
+                        - projekt_phase_id
+                        - created_at
+                        - updated_at
                     required:
                     - formular
                 required:
                 - data
         '404':
           description: formular not found
-        '403':
-          description: forbidden - insufficient access
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-    patch:
-      summary: Update a formular
-      tags:
-      - Formulars
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '200':
-          description: formular updated
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      formular:
-                        type: object
-                    required:
-                    - formular
-                required:
-                - data
-        '404':
-          description: formular not found
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formular:
-                  type: object
-                  properties: {}
-              required:
-              - formular
-        description: Attributes to update on the formular
-    delete:
-      summary: Delete a formular
-      tags:
-      - Formulars
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: formular deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                - message
-        '404':
-          description: formular not found
-        '422':
-          description: unable to delete formular
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: object
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
   "/api/idea_categories":
     get:
       summary: List idea categories
@@ -2827,6 +2996,8 @@ paths:
       - Idea Categories
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all idea categories. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -2892,6 +3063,10 @@ paths:
       - Idea Categories
       security:
       - bearer_auth: []
+      description: "Create a new idea category for organizing and classifying citizen
+        ideas. Categories help administrators manage ideas thematically. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -2986,6 +3161,8 @@ paths:
       - Idea Categories
       security:
       - bearer_auth: []
+      description: "Retrieve a single idea category by ID. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: idea category found
@@ -3027,6 +3204,9 @@ paths:
       - Idea Categories
       security:
       - bearer_auth: []
+      description: "Update an existing idea category. Allows modifying category name
+        and assigned officer. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -3094,6 +3274,9 @@ paths:
       - Idea Categories
       security:
       - bearer_auth: []
+      description: "Delete an idea category. Categories with associated ideas cannot
+        be deleted. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '204':
           description: idea category deleted
@@ -3136,6 +3319,10 @@ paths:
       - Idea Officers
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a paginated list of all idea officers.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -3202,10 +3389,10 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
-      description: Retrieve a paginated list of citizen ideas and proposals. Ideas
+      description: "Retrieve a paginated list of citizen ideas and proposals. Ideas
         are user-submitted suggestions for community improvements that may have been
-        reviewed and accepted by administrators. Supports both admin and public_data
-        access levels.
+        reviewed and accepted by administrators. \n\n*Authorization: Available to
+        both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -3262,10 +3449,12 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
-      description: Submit a new citizen idea for community improvement. Ideas go through
-        an admin review process before being published. Supports categorization, video
-        attachments, location mapping, image attachments, and optional on-behalf-of
-        attribution. Requires acceptance of terms and conditions.
+      description: "Submit a new citizen idea for community improvement. Ideas go
+        through an admin review process before being published. Supports categorization,
+        video attachments, location mapping, image attachments, and optional on-behalf-of
+        attribution. Requires acceptance of terms and conditions. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -3450,6 +3639,8 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
+      description: "Retrieve a single idea by ID with all its details. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: idea found
@@ -3491,9 +3682,10 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
-      description: Update an existing idea with new content, category, location, video,
-        or image. Can add, replace, or remove the idea image. All fields are optional
-        - only provide fields to change. Requires admin access.
+      description: "Update an existing idea with new content, category, location,
+        video, or image. Can add, replace, or remove the idea image. All fields are
+        optional - only provide fields to change. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -3653,6 +3845,10 @@ paths:
       - Iframes
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a single iframe by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
           description: iframe found
@@ -3705,6 +3901,9 @@ paths:
       - Iframes
       security:
       - bearer_auth: []
+      description: "Update an existing iframe. Allows modifying iframe URL and properties.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -3782,9 +3981,10 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
-      description: Retrieve all livestream events scheduled for a projekt phase. Livestreams
-        are real-time video broadcasts used for Q&A sessions, town halls, and participation
-        events. Includes video platform information and streaming URLs.
+      description: |-
+        Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -3834,10 +4034,11 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
-      description: Schedule a new livestream event for a projekt phase. Livestreams
+      description: "Schedule a new livestream event for a projekt phase. Livestreams
         support multiple video platforms (YouTube, Vimeo, etc.) and can include scheduled
-        start/end times. Participants can submit questions during livestreams. Requires
-        admin access.
+        start/end times. Participants can submit questions during livestreams. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -3882,29 +4083,27 @@ paths:
                     url:
                       type: string
                       nullable: true
+                      description: The URL where the livestream will be broadcast
+                      example: https://youtube.com/live/ABC123
                     title:
                       type: string
                       nullable: true
+                      description: The title or name of the livestream event
+                      example: Community Town Hall Discussion
                     description:
                       type: string
                       nullable: true
+                      description: Description of the livestream content and agenda
+                      example: Live discussion with city officials on budget priorities
                     starts_at:
                       type: string
                       format: date_time
                       nullable: true
-                    video_platform:
-                      type: string
-                      nullable: true
-                    external_id:
-                      type: string
-                      nullable: true
-                    preview_image_url:
-                      type: string
-                      nullable: true
+                      description: When the livestream is scheduled to start
+                      example: '2024-02-01T18:00:00Z'
               required:
               - projekt_livestream
-        description: Livestream details with URL, title, platform, and optional scheduling
-          information
+        description: Livestream details with URL, title, and optional scheduling information
   "/api/livestreams":
     get:
       summary: List all projekt livestreams
@@ -3912,6 +4111,10 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a paginated list of all livestreams across all projekt phases.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -3969,6 +4172,10 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a single livestream by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
           description: projekt livestream found
@@ -3994,6 +4201,10 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
+      description: "Update an existing projekt livestream. Allows modifying livestream
+        URL, title, description, and scheduled time. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -4040,25 +4251,24 @@ paths:
                     url:
                       type: string
                       nullable: true
+                      description: The URL where the livestream will be broadcast
+                      example: https://youtube.com/live/ABC123
                     title:
                       type: string
                       nullable: true
+                      description: The title or name of the livestream event
+                      example: Community Town Hall Discussion
                     description:
                       type: string
                       nullable: true
+                      description: Description of the livestream content and agenda
+                      example: Live discussion with city officials on budget priorities
                     starts_at:
                       type: string
                       format: date_time
                       nullable: true
-                    video_platform:
-                      type: string
-                      nullable: true
-                    external_id:
-                      type: string
-                      nullable: true
-                    preview_image_url:
-                      type: string
-                      nullable: true
+                      description: When the livestream is scheduled to start
+                      example: '2024-02-01T18:00:00Z'
               required:
               - projekt_livestream
         description: Attributes to update on the projekt livestream
@@ -4068,6 +4278,9 @@ paths:
       - Livestreams
       security:
       - bearer_auth: []
+      description: "Delete a projekt livestream. This action is permanent and cannot
+        be undone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt livestream deleted
@@ -4101,6 +4314,8 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all milestone statuses. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -4150,6 +4365,9 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Create a new milestone status for tracking project progress. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -4212,6 +4430,8 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Retrieve a single milestone status by ID. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: milestone status found
@@ -4237,6 +4457,9 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Update an existing milestone status. Allows modifying the status
+        name. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -4291,6 +4514,9 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Delete a milestone status. This action is permanent and cannot
+        be undone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: milestone status deleted
@@ -4331,6 +4557,9 @@ paths:
       - Milestone Statuses
       security:
       - bearer_auth: []
+      description: "Create a new milestone status and associate it with a specific
+        milestone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -4395,9 +4624,10 @@ paths:
       - Milestones
       security:
       - bearer_auth: []
-      description: Retrieve all milestones for a projekt phase. Milestones track project
-        progress over time and include status updates. Each milestone spans a date
-        range and contains status information about completed activities.
+      description: |-
+        Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates. Each milestone spans a date range and contains status information about completed activities.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -4444,306 +4674,6 @@ paths:
                 - pagination
         '403':
           description: forbidden - insufficient access
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-    post:
-      summary: Create a milestone
-      tags:
-      - Milestones
-      security:
-      - bearer_auth: []
-      description: 'Create a new milestone in a projekt phase milestone timeline.
-        Milestones mark important dates and include status updates. Required fields:
-        publication_date and status_id. Supports optional image attachments for visual
-        representation of milestone progress. Requires admin access.'
-      parameters: []
-      responses:
-        '201':
-          description: milestone created with base64 image
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      milestone:
-                        type: object
-                    required:
-                    - milestone
-                required:
-                - data
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                milestone:
-                  type: object
-                  properties:
-                    publication_date:
-                      type: string
-                      format: date
-                    status_id:
-                      type: integer
-                    image_attributes:
-                      type: object
-                      description: 'Optional: Image to represent the milestone (progress
-                        photo, status visualization, etc.). Upload as base64-encoded
-                        data.'
-                      properties:
-                        attachment:
-                          type: string
-                          nullable: true
-                          description: 'Base64-encoded image file. Required when adding
-                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB for optimal performance).'
-                        title:
-                          type: string
-                          nullable: true
-                          description: Image caption, alt text, or brief description.
-                            Used for accessibility and displayed with the image.
-                        credits:
-                          type: string
-                          nullable: true
-                          description: Image source attribution, photographer/artist
-                            name, or copyright information.
-                        _destroy:
-                          type: boolean
-                          nullable: true
-                          description: Set to true to remove the current image from
-                            the milestone.
-              required:
-              - milestone
-        description: Milestone creation with required publication date and status,
-          and optional image attachment
-  "/api/milestones/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: Milestone ID
-      required: true
-      schema:
-        type: integer
-    get:
-      summary: Retrieve a milestone
-      tags:
-      - Milestones
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: milestone found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      milestone:
-                        type: object
-                    required:
-                    - milestone
-                required:
-                - data
-        '404':
-          description: milestone not found
-        '403':
-          description: forbidden - insufficient access
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-    patch:
-      summary: Update a milestone
-      tags:
-      - Milestones
-      security:
-      - bearer_auth: []
-      description: Update an existing milestone with new dates, status, or image.
-        Can add, replace, or remove the milestone image. All fields are optional -
-        only provide fields to change. Requires admin access.
-      parameters: []
-      responses:
-        '200':
-          description: milestone updated with base64 image
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      milestone:
-                        type: object
-                    required:
-                    - milestone
-                required:
-                - data
-        '404':
-          description: milestone not found
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                milestone:
-                  type: object
-                  properties:
-                    publication_date:
-                      type: string
-                      format: date
-                    status_id:
-                      type: integer
-                    image_attributes:
-                      type: object
-                      description: Update, replace, or remove the milestone image.
-                        Attach a new image (base64-encoded), update metadata (title/credits),
-                        or set _destroy=true to remove. All fields are optional.
-                      properties:
-                        attachment:
-                          type: string
-                          nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
-                        title:
-                          type: string
-                          nullable: true
-                          description: Updated image caption or alt text. Improves
-                            accessibility by describing the image content.
-                        credits:
-                          type: string
-                          nullable: true
-                          description: Updated image source attribution, photographer/artist
-                            name, or copyright notice.
-                        _destroy:
-                          type: boolean
-                          nullable: true
-                          description: Set to true to remove the image entirely from
-                            the milestone while preserving other milestone properties.
-              required:
-              - milestone
-        description: Milestone attributes to update (publication_date, status_id,
-          image). Any field not provided remains unchanged.
-    delete:
-      summary: Delete a milestone
-      tags:
-      - Milestones
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: milestone deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                - message
-        '404':
-          description: milestone not found
-        '422':
-          description: unable to delete milestone
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: object
-        '403':
-          description: forbidden - admin access required
           content:
             application/json:
               schema:
@@ -4937,10 +4867,10 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
-      description: Retrieve all notifications for a projekt phase. Notifications are
-        messages sent to participants with updates, announcements, or calls to action.
-        Can include links for directing users to relevant pages. Returns paginated
-        results.
+      description: |-
+        Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -4990,10 +4920,11 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
-      description: 'Send a notification to projekt participants. Notifications are
+      description: "Send a notification to projekt participants. Notifications are
         announcements and updates that can include call-to-action links. Supports
-        segment-based targeting (e.g., "all", specific groups). Required: notification
-        title. Requires admin access.'
+        segment-based targeting (e.g., \"all\", specific groups). Required: notification
+        title. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -5062,6 +4993,10 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a paginated list of all notifications across all projekt phases.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
       - name: page
         in: query
@@ -5119,6 +5054,10 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve a single notification by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
         '200':
           description: projekt notification found
@@ -5144,6 +5083,9 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
+      description: "Update an existing projekt notification. Allows modifying notification
+        title, body, and link information. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -5206,6 +5148,9 @@ paths:
       - Notifications
       security:
       - bearer_auth: []
+      description: "Delete a projekt notification. This action is permanent and cannot
+        be undone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt notification deleted
@@ -5244,6 +5189,9 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Retrieve all point of interest categories for a specific projekt
+        phase. \n\n*Authorization: Available to both `admin` and `public_data` access
+        levels.*"
       parameters:
       - name: page
         in: query
@@ -5293,6 +5241,9 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Create a new point of interest category for organizing map pins
+        and locations. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -5353,6 +5304,9 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all point of interest categories
+        across all projekt phases. \n\n*Authorization: Available to both `admin` and
+        `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -5410,6 +5364,8 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Retrieve a single point of interest category by ID. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: projekt point of interest category found
@@ -5435,6 +5391,9 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Update an existing point of interest category. Allows modifying
+        category name and properties. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -5496,6 +5455,9 @@ paths:
       - Point Of Interest Categories
       security:
       - bearer_auth: []
+      description: "Delete a point of interest category. This action is permanent
+        and cannot be undone. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt point of interest category deleted
@@ -5536,6 +5498,8 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Retrieve all point of interest pins for a specific projekt phase.
+        \n\n*Authorization: Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -5585,6 +5549,9 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Create a new point of interest pin on the map. Pins mark specific
+        locations with descriptions and categories. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -5659,6 +5626,9 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all point of interest pins across
+        all projekt phases. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: page
         in: query
@@ -5716,6 +5686,8 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Retrieve a single point of interest pin by ID. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: projekt point of interest pin found
@@ -5741,6 +5713,9 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Update an existing point of interest pin. Allows modifying pin
+        location, description, and category. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -5816,6 +5791,9 @@ paths:
       - Point Of Interest Pins
       security:
       - bearer_auth: []
+      description: "Delete a point of interest pin. This action is permanent and cannot
+        be undone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt point of interest pin deleted
@@ -5856,9 +5834,10 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: List all polls within a specific voting phase. Polls are voting
+      description: "List all polls within a specific voting phase. Polls are voting
         mechanisms within a phase that allow communities to vote on various options.
-        Returns paginated results with pagination metadata.
+        Returns paginated results with pagination metadata. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -5908,10 +5887,11 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: Create a new poll within a voting phase. Polls enable structured
-        voting on community decisions. Requires admin access level. Each poll must
-        have a name and can optionally include summary, description, and scheduling
-        information (starts_at and ends_at).
+      description: "Create a new poll within a voting phase. Polls enable structured
+        voting on community decisions. Each poll must have a name and can optionally
+        include summary, description, and scheduling information (starts_at and ends_at).
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -6015,9 +5995,9 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: List all polls across all voting phases. Returns paginated results
-        with polling information and current voting status. Accessible to users with
-        public_data or admin access levels.
+      description: "List all polls across all voting phases. Returns paginated results
+        with polling information and current voting status. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -6075,10 +6055,9 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: Retrieve a specific poll by ID. Returns complete poll information
-        including metadata, scheduling, and voting options. Different access levels
-        may see different information (admin sees all details, public_data sees public
-        information only).
+      description: "Retrieve a specific poll by ID. Returns complete poll information
+        including metadata, scheduling, and voting options. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: poll found with public_data access
@@ -6120,9 +6099,11 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: Update an existing poll. Allows modifying poll details such as
-        name, timing, description, and geozone restrictions. Requires admin access
-        level. Only the fields that need updating should be provided in the request.
+      description: "Update an existing poll. Allows modifying poll details such as
+        name, timing, description, and geozone restrictions. Only the fields that
+        need updating should be provided in the request. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -6223,8 +6204,10 @@ paths:
       - Polls
       security:
       - bearer_auth: []
-      description: Delete an existing poll. Permanently removes the poll and all associated
-        voting data. Requires admin access level. This operation cannot be undone.
+      description: "Delete an existing poll. Permanently removes the poll and all
+        associated voting data. This operation cannot be undone. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       responses:
         '200':
           description: poll deleted
@@ -6279,10 +6262,11 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
-      description: Retrieve all phases defined for a specific projekt. Phases define
+      description: "Retrieve all phases defined for a specific projekt. Phases define
         different stages of participation (comments, proposals, voting, budgeting,
         etc.) with their own active/inactive periods, visibility settings, and restrictions.
-        Returns full details including phase type, dates, and configuration.
+        Returns full details including phase type, dates, and configuration. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: projekt phases found and returned
@@ -6308,10 +6292,11 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
-      description: Create a new phase for a projekt. Phases are time-bounded periods
+      description: "Create a new phase for a projekt. Phases are time-bounded periods
         that enable specific types of participation (comments, proposals, voting,
-        etc.). Requires admin access. Supports restrictions by geozone, age range,
-        user status, and demographic groups.
+        etc.). Supports restrictions by geozone, age range, user status, and demographic
+        groups. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -6495,9 +6480,11 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
-      description: Update or create a configuration setting for a projekt phase. Settings
-        control behavior and features for the phase (e.g., feature.general.newest_first
-        controls comment sorting). Requires admin access. Returns the updated setting.
+      description: "Update or create a configuration setting for a projekt phase.
+        Settings control behavior and features for the phase (e.g., feature.general.newest_first
+        controls comment sorting). Returns the updated setting. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -6563,9 +6550,10 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
-      description: Retrieve a single projekt phase by ID with all its configuration
+      description: "Retrieve a single projekt phase by ID with all its configuration
         details. Returns the phase type, active status, dates, visibility settings,
-        restrictions (geozone, age range, user status), and all settings.
+        restrictions (geozone, age range, user status), and all settings. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: projekt phase found and returned
@@ -6591,10 +6579,11 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
-      description: Update an existing projekt phase configuration. All fields are
+      description: "Update an existing projekt phase configuration. All fields are
         optional - only provide fields to change. Supports updating type, dates, visibility,
-        restrictions, settings, and more. Requires admin access. Returns the updated
-        phase.
+        restrictions, settings, and more. Returns the updated phase. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -6770,6 +6759,9 @@ paths:
       - Projekt Phases
       security:
       - bearer_auth: []
+      description: "Delete a projekt phase and all associated data. This action is
+        permanent and cannot be undone. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt phase deleted
@@ -6803,9 +6795,9 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Retrieve a paginated list of all projekts. Optionally filter by
-        visibility or include/exclude nested phases and content blocks. Requires admin
-        or public_data access level.
+      description: "Retrieve a paginated list of all projekts. Optionally filter by
+        visibility or include/exclude nested phases and content blocks. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: only_visible
         in: query
@@ -6870,10 +6862,11 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Create a new projekt with the provided configuration. Only admin
-        users can create projekts. Supports hierarchy (sub-projekts), geographic restrictions,
-        phases, and manager assignments. The response includes the full projekt object
-        with all nested relationships.
+      description: "Create a new projekt with the provided configuration. Supports
+        hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments.
+        The response includes the full projekt object with all nested relationships.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -6941,9 +6934,10 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Retrieve a single projekt by ID with all its details. Can optionally
+      description: "Retrieve a single projekt by ID with all its details. Can optionally
         include/exclude nested phases and content blocks. Returns full projekt hierarchy
-        information, page metadata, and settings.
+        information, page metadata, and settings. \n\n*Authorization: Available to
+        both `admin` and `public_data` access levels.*"
       parameters:
       - name: include_phases
         in: query
@@ -7000,9 +6994,10 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Update an existing projekt with new values. All fields are optional
-        - only provide the fields you want to change. Requires admin access level.
-        Returns the updated projekt object.
+      description: "Update an existing projekt with new values. All fields are optional
+        - only provide the fields you want to change. Returns the updated projekt
+        object. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -7064,9 +7059,10 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Delete a projekt and all associated data (phases, comments, votes,
-        etc.). Only admin users can delete projekts. This action is permanent and
-        cannot be undone.
+      description: "Delete a projekt and all associated data (phases, comments, votes,
+        etc.). This action is permanent and cannot be undone. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt deleted successfully
@@ -7123,9 +7119,10 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Update the projekt page title and subtitle that appear on the frontend.
-        Requires admin access. Title and subtitle are displayed prominently on the
-        projekt overview page.
+      description: "Update the projekt page title and subtitle that appear on the
+        frontend. Title and subtitle are displayed prominently on the projekt overview
+        page. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -7205,10 +7202,11 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Update or replace the projekt cover image that appears on the frontend.
-        Supports uploading a new image, updating image metadata (title/credits), or
-        removing the image entirely. Image must be provided as base64-encoded data.
-        Requires admin access.
+      description: "Update or replace the projekt cover image that appears on the
+        frontend. Supports uploading a new image, updating image metadata (title/credits),
+        or removing the image entirely. Image must be provided as base64-encoded data.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -7280,10 +7278,11 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Update a specific projekt configuration setting identified by key.
-        Settings control feature flags and behaviors (e.g., show_map, enable_comments).
-        Requires admin access. Creates the setting if it does not exist, otherwise
-        updates the existing value.
+      description: "Update a specific projekt configuration setting identified by
+        key. Settings control feature flags and behaviors (e.g., show_map, enable_comments).
+        Creates the setting if it does not exist, otherwise updates the existing value.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -7399,10 +7398,11 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: Update the main content block body (HTML) for a projekt. This is
-        the primary rich-text description that appears on the projekt detail page.
-        Supports HTML formatting. Requires admin access. Updates the default locale
-        content block.
+      description: "Update the main content block body (HTML) for a projekt. This
+        is the primary rich-text description that appears on the projekt detail page.
+        Supports HTML formatting. Updates the default locale content block. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -7511,10 +7511,11 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
-      description: Retrieve all proposals submitted for a specific projekt phase.
+      description: "Retrieve all proposals submitted for a specific projekt phase.
         Proposals are citizen-initiated action items or projects proposed within a
         participation phase. Can filter by visibility for public rendering. Returns
-        paginated results.
+        paginated results. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: page
         in: query
@@ -7578,9 +7579,11 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
-      description: Submit a new proposal within a projekt phase. Proposals are citizen-initiated
+      description: "Submit a new proposal within a projekt phase. Proposals are citizen-initiated
         action items that require a responsible party, geozone location, and acceptance
         of terms. Proposals go through an admin review process before being published.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -7831,6 +7834,9 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all proposals across all projekt
+        phases. \n\n*Authorization: Available to both `admin` and `public_data` access
+        levels.*"
       parameters:
       - name: page
         in: query
@@ -7888,6 +7894,8 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
+      description: "Retrieve a single proposal by ID with all its details. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: proposal found with public_data access
@@ -7929,6 +7937,8 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
+      description: "Update an existing proposal. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -8174,6 +8184,8 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
+      description: "Delete an existing proposal. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: proposal deleted
@@ -8230,6 +8242,10 @@ paths:
       - Question Options
       security:
       - bearer_auth: []
+      description: "Create a new answer option for a question. Options are multiple
+        choice answers that participants can select. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -8292,6 +8308,8 @@ paths:
       - Question Options
       security:
       - bearer_auth: []
+      description: "Retrieve a single question option by ID. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: question option found
@@ -8317,6 +8335,9 @@ paths:
       - Question Options
       security:
       - bearer_auth: []
+      description: "Update an existing question option. Allows modifying option text
+        and properties. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -8371,6 +8392,9 @@ paths:
       - Question Options
       security:
       - bearer_auth: []
+      description: "Delete a question option. This action is permanent and cannot
+        be undone. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: question option deleted
@@ -8411,9 +8435,10 @@ paths:
       - Questions
       security:
       - bearer_auth: []
-      description: Retrieve all questions from a specific projekt phase. Questions
+      description: "Retrieve all questions from a specific projekt phase. Questions
         can be standalone survey questions or livestream questions. Each question
-        includes its options and answer statistics. Returns paginated results.
+        includes its options and answer statistics. Returns paginated results. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -8463,10 +8488,12 @@ paths:
       - Questions
       security:
       - bearer_auth: []
-      description: 'Create a new projekt question in a specific phase. Questions can
+      description: "Create a new projekt question in a specific phase. Questions can
         be created as: (1) root questions in a QuestionPhase, (2) livestream questions
         in a LivestreamPhase by specifying projekt_livestream_id. Questions support
-        multiple choice options via nested question_options_attributes.'
+        multiple choice options via nested question_options_attributes. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -8529,6 +8556,9 @@ paths:
       - Questions
       security:
       - bearer_auth: []
+      description: "Retrieve a paginated list of all projekt questions across all
+        phases. \n\n*Authorization: Available to both `admin` and `public_data` access
+        levels.*"
       parameters:
       - name: page
         in: query
@@ -8586,6 +8616,9 @@ paths:
       - Questions
       security:
       - bearer_auth: []
+      description: "Retrieve a single projekt question by ID with all its details
+        and options. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       responses:
         '200':
           description: projekt question found
@@ -8611,6 +8644,9 @@ paths:
       - Questions
       security:
       - bearer_auth: []
+      description: "Update an existing projekt question. Allows modifying question
+        text and associated options. \n\n*Authorization: Requires `admin` access level.
+        Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -8669,6 +8705,9 @@ paths:
       - Questions
       security:
       - bearer_auth: []
+      description: "Delete a projekt question and all associated options. This action
+        is permanent and cannot be undone. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       responses:
         '200':
           description: projekt question deleted
@@ -8703,125 +8742,32 @@ paths:
       required: true
       schema:
         type: integer
-    post:
-      summary: Create a text
-      tags:
-      - Texts
-      security:
-      - bearer_auth: []
-      description: 'Create a new text/legislation document for participatory review.
-        Texts support multi-phase review processes: draft publication, debate period,
-        and allegations/amendments period. Supports multilingual content and customizable
-        phase dates. Requires admin access.'
-      parameters: []
-      responses:
-        '201':
-          description: text created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      text:
-                        type: object
-                    required:
-                    - text
-                required:
-                - data
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                text:
-                  type: object
-                  properties:
-                    start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    draft_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    result_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    allegations_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    draft_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    result_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    published:
-                      type: boolean
-                      nullable: true
-              required:
-              - text
-        description: Text document with multilingual translations and optional phase
-          scheduling (debate, allegations, publication)
-  "/api/texts/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: Text ID
-      required: true
-      schema:
-        type: integer
     get:
-      summary: Retrieve a text
+      summary: List all texts
       tags:
       - Texts
       security:
       - bearer_auth: []
+      description: |-
+        Retrieve all texts/legislation documents for a projekt phase. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: 'Pagination page number (default: 1)'
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of texts per page (default: 100, max: 500)'
+        schema:
+          type: integer
       responses:
         '200':
-          description: text found
+          description: texts found and returned
           content:
             application/json:
               schema:
@@ -8830,42 +8776,28 @@ paths:
                   data:
                     type: object
                     properties:
-                      text:
-                        type: object
+                      texts:
+                        type: array
+                        items:
+                          type: object
                     required:
-                    - text
-                required:
-                - data
-        '404':
-          description: text not found
-    patch:
-      summary: Update a text
-      tags:
-      - Texts
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '200':
-          description: text updated
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
+                    - texts
+                  pagination:
                     type: object
                     properties:
-                      text:
-                        type: object
-                    required:
-                    - text
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
                 required:
                 - data
-        '404':
-          description: text not found
-        '422':
-          description: invalid request
+                - pagination
+        '403':
+          description: forbidden - insufficient access
           content:
             application/json:
               schema:
@@ -8874,101 +8806,12 @@ paths:
                   error:
                     type: object
                     properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
                           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                text:
-                  type: object
-                  properties:
-                    start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    draft_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    result_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    allegations_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    draft_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    result_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    published:
-                      type: boolean
-                      nullable: true
-              required:
-              - text
-        description: Attributes to update on the text
-    delete:
-      summary: Delete a text
-      tags:
-      - Texts
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: text deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                - message
-        '404':
-          description: text not found
-        '422':
-          description: unable to delete text
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: object
 tags:
 - name: Projekts
   description: Projekt management and core operations
@@ -9042,7 +8885,7 @@ components:
     bearer_auth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      bearerFormat: Auth Token
   schemas:
     Projekt:
       type: object

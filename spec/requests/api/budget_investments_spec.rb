@@ -34,7 +34,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.'
+      description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of investments per page (default: 100, max: 500)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
@@ -139,7 +139,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Submit a new budget investment (project proposal) to a specific budget. Investments must be assigned to a category heading and include title, description, and estimated budget/price. Supports video attachments, geographic location mapping, multilingual descriptions, image attachments for project visualization, and tagging. Requires acceptance of terms.'
+      description "Submit a new budget investment (project proposal) to a specific budget. Investments must be assigned to a category heading and include title, description, and estimated budget/price. Supports video attachments, geographic location mapping, multilingual descriptions, image attachments for project visualization, and tagging. Requires acceptance of terms. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget_investment, in: :body, description: 'Budget investment submission with required heading ID, title, description, and terms acceptance. Optional image attachment for project visualization.', schema: {
         type: :object,
@@ -365,7 +365,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all budget investments across all budgets. Includes investment details (title, description, status, cost) and voting/support statistics. Useful for global investment tracking and analytics.'
+      description "Retrieve all budget investments across all budgets. Includes investment details (title, description, status, cost) and voting/support statistics. Useful for global investment tracking and analytics.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of investments per page (default: 100, max: 500)', required: false
 
@@ -429,7 +429,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.'
+      description "Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'budget investment found and returned' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
@@ -549,7 +549,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status and mark as selected. All fields are optional - only provide fields to change.'
+      description "Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status and mark as selected. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget_investment, in: :body, description: 'Investment attributes to update (title, description, price, feasibility, selection status, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -806,7 +806,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Delete a budget investment and all associated voting data. Only admin users can delete investments. This action is permanent and cannot be undone.'
+      description "Delete a budget investment and all associated voting data. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'budget investment deleted successfully' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }

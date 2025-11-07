@@ -13,7 +13,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).'
+      description "Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (default: 100, max: 500)', required: false
 
@@ -60,7 +60,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Schedule a new event for a projekt phase. Events can be in-person meetings (with location), online webinars (with registration URL), or open-ended events. Required: event title. Requires admin access.'
+      description "Schedule a new event for a projekt phase. Events can be in-person meetings (with location), online webinars (with registration URL), or open-ended events. Required: event title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_event, in: :body, description: 'Event details with required title and optional datetime, location, and registration URL', schema: {
         type: :object,
@@ -143,6 +143,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single event by ID.#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt event found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -176,6 +177,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing projekt event. Allows modifying event details such as title, description, datetime, location, and weblink. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_event, in: :body, description: 'Attributes to update on the event', schema: {
         type: :object,
@@ -254,6 +256,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a projekt event. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt event deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

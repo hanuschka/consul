@@ -13,7 +13,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.'
+      description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of notifications per page (default: 100, max: 500)', required: false
 
@@ -60,7 +60,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Send a notification to projekt participants. Notifications are announcements and updates that can include call-to-action links. Supports segment-based targeting (e.g., "all", specific groups). Required: notification title. Requires admin access.'
+      description "Send a notification to projekt participants. Notifications are announcements and updates that can include call-to-action links. Supports segment-based targeting (e.g., \"all\", specific groups). Required: notification title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body, link, and recipient segment', schema: {
         type: :object,
@@ -138,6 +138,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a paginated list of all notifications across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -188,6 +189,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single notification by ID.#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt notification found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -221,6 +223,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing projekt notification. Allows modifying notification title, body, and link information. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_notification, in: :body, description: 'Attributes to update on the notification', schema: {
         type: :object,
@@ -296,6 +299,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a projekt notification. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt notification deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

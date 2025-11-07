@@ -19,7 +19,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all root-level comments for a projekt phase. Comments support nested replies (children). Returns paginated results with comment hierarchy information. Can be filtered by phase to see all discussion within that phase.'
+      description "Retrieve all root-level comments for a projekt phase. Comments support nested replies (children). Returns paginated results with comment hierarchy information. Can be filtered by phase to see all discussion within that phase. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number for results (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of comments per page (default: 100, max: 500)'
 
@@ -87,7 +87,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       produces 'application/json'
       consumes 'application/json'
       security [bearer_auth: []]
-      description 'Create a new comment on a projekt phase. Supports both root-level comments and nested replies. To create a reply, specify the parent_id of the comment being responded to. Root comments do not have a parent_id. Comments support rich HTML content and are moderated by administrators.'
+      description "Create a new comment on a projekt phase. Supports both root-level comments and nested replies. To create a reply, specify the parent_id of the comment being responded to. Root comments do not have a parent_id. Comments support rich HTML content and are moderated by administrators. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :comment, in: :body, description: 'Comment data with required body text and optional parent_id for nested replies', schema: {
         type: :object,
@@ -380,7 +380,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all comments across all projekt phases. Returns a paginated list of root-level comments from all phases. Useful for moderation, analytics, and global discussion oversight.'
+      description "Retrieve all comments across all projekt phases. Returns a paginated list of root-level comments from all phases. Useful for moderation, analytics, and global discussion oversight. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number for results (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of comments per page (default: 100, max: 500)'
 
@@ -429,7 +429,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a comment by ID. The response includes: (1) parent_comment reference if this comment is a reply, (2) child_comments array containing all direct replies to this comment. This enables clients to reconstruct the full comment thread hierarchy.'
+      description "Retrieve a comment by ID. The response includes: (1) parent_comment reference if this comment is a reply, (2) child_comments array containing all direct replies to this comment. This enables clients to reconstruct the full comment thread hierarchy. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'comment found' do
         let!(:context) { create_phase_with_context }
@@ -612,7 +612,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Delete a comment and all its nested replies from a projekt phase. Only admins can delete comments. Deletion is permanent and affects the entire comment thread hierarchy.'
+      description "Delete a comment and all its nested replies from a projekt phase. Deletion is permanent and affects the entire comment thread hierarchy. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'comment deleted successfully' do
         let!(:context) { create_phase_with_context }

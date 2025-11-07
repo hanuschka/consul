@@ -1,9 +1,5 @@
 class Api::MilestonesController < Api::BaseController
-  include ImageAttributes
-  include Translatable
-
-  before_action :find_projekt_phase, only: [:index, :create]
-  before_action :find_milestone, only: [:show, :update, :destroy]
+  before_action :find_projekt_phase, only: [:index]
 
   def index
     check_read_access!
@@ -20,64 +16,10 @@ class Api::MilestonesController < Api::BaseController
     }
   end
 
-  def create
-    check_admin_access!
-    milestone = @projekt_phase.milestones.new(milestone_params)
-
-    if milestone.save
-      serialized_milestone = MilestoneSerializer.new(milestone).serialize
-
-      render json: { data: { milestone: serialized_milestone } }, status: 201
-    else
-      render json: { error: { messages: milestone.errors.full_messages } }, status: 422
-    end
-  end
-
-  def show
-    check_read_access!
-    serialized_milestone = MilestoneSerializer.new(@milestone).serialize
-
-    render json: { data: { milestone: serialized_milestone } }
-  end
-
-  def update
-    check_admin_access!
-    if @milestone.update(milestone_params)
-      serialized_milestone = MilestoneSerializer.new(@milestone).serialize
-
-      render json: { data: { milestone: serialized_milestone } }
-    else
-      render json: { error: { messages: @milestone.errors.full_messages } }, status: 422
-    end
-  end
-
-  def destroy
-    check_admin_access!
-    if @milestone.destroy
-      render json: { message: "Milestone destroyed" }
-    else
-      render json: { error: { messages: @milestone.errors.messages } }, status: 422
-    end
-  end
-
   private
-
-  def milestone_params
-    params.require(:milestone).permit(
-      :title,
-      :description,
-      :publication_date,
-      :status_id,
-      image_attributes: image_attributes
-    )
-  end
 
   def find_projekt_phase
     @projekt_phase = ProjektPhase::MilestonePhase.find(params[:projekt_phase_id])
-  end
-
-  def find_milestone
-    @milestone = Milestone.find(params[:id])
   end
 
   def pagination_meta(collection)

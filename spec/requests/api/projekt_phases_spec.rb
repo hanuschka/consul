@@ -13,7 +13,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve all phases defined for a specific projekt. Phases define different stages of participation (comments, proposals, voting, budgeting, etc.) with their own active/inactive periods, visibility settings, and restrictions. Returns full details including phase type, dates, and configuration.'
+      description "Retrieve all phases defined for a specific projekt. Phases define different stages of participation (comments, proposals, voting, budgeting, etc.) with their own active/inactive periods, visibility settings, and restrictions. Returns full details including phase type, dates, and configuration. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt phases found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
@@ -48,7 +48,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new phase for a projekt. Phases are time-bounded periods that enable specific types of participation (comments, proposals, voting, etc.). Requires admin access. Supports restrictions by geozone, age range, user status, and demographic groups.'
+      description "Create a new phase for a projekt. Phases are time-bounded periods that enable specific types of participation (comments, proposals, voting, etc.). Supports restrictions by geozone, age range, user status, and demographic groups. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_phase, in: :body, description: 'Phase configuration with required type and optional start/end dates, visibility, restrictions, and settings', schema: {
         type: :object,
@@ -259,7 +259,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update or create a configuration setting for a projekt phase. Settings control behavior and features for the phase (e.g., feature.general.newest_first controls comment sorting). Requires admin access. Returns the updated setting.'
+      description "Update or create a configuration setting for a projekt phase. Settings control behavior and features for the phase (e.g., feature.general.newest_first controls comment sorting). Returns the updated setting. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_phase_setting, in: :body, description: 'Setting with required key and optional value to update or create', schema: {
         type: :object,
@@ -328,7 +328,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings.'
+      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt phase found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }
@@ -362,7 +362,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update an existing projekt phase configuration. All fields are optional - only provide fields to change. Supports updating type, dates, visibility, restrictions, settings, and more. Requires admin access. Returns the updated phase.'
+      description "Update an existing projekt phase configuration. All fields are optional - only provide fields to change. Supports updating type, dates, visibility, restrictions, settings, and more. Returns the updated phase. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_phase, in: :body, description: 'Phase attributes to update - all optional (type, dates, active status, visibility, restrictions, settings, etc.)', schema: {
         type: :object,
@@ -552,6 +552,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a projekt phase and all associated data. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'projekt phase deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Delete') }

@@ -14,6 +14,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Create a new answer option for a question. Options are multiple choice answers that participants can select. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :question_option, in: :body, description: 'Question option creation payload', schema: {
         type: :object,
@@ -119,6 +120,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
       tags 'Question Options'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Retrieve a single question option by ID. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'question option found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -162,6 +164,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Update an existing question option. Allows modifying option text and properties. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :question_option, in: :body, description: 'Attributes to update on the question option', schema: {
         type: :object,
@@ -266,6 +269,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
       tags 'Question Options'
       produces 'application/json'
       security [bearer_auth: []]
+      description "Delete a question option. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'question option deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

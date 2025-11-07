@@ -13,7 +13,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'List all polls within a specific voting phase. Polls are voting mechanisms within a phase that allow communities to vote on various options. Returns paginated results with pagination metadata.'
+      description "List all polls within a specific voting phase. Polls are voting mechanisms within a phase that allow communities to vote on various options. Returns paginated results with pagination metadata. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -60,7 +60,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Create a new poll within a voting phase. Polls enable structured voting on community decisions. Requires admin access level. Each poll must have a name and can optionally include summary, description, and scheduling information (starts_at and ends_at).'
+      description "Create a new poll within a voting phase. Polls enable structured voting on community decisions. Each poll must have a name and can optionally include summary, description, and scheduling information (starts_at and ends_at). #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :poll, in: :body, description: 'Poll creation payload', schema: {
         type: :object,
@@ -185,7 +185,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'List all polls across all voting phases. Returns paginated results with polling information and current voting status. Accessible to users with public_data or admin access levels.'
+      description "List all polls across all voting phases. Returns paginated results with polling information and current voting status. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
 
@@ -236,7 +236,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Retrieve a specific poll by ID. Returns complete poll information including metadata, scheduling, and voting options. Different access levels may see different information (admin sees all details, public_data sees public information only).'
+      description "Retrieve a specific poll by ID. Returns complete poll information including metadata, scheduling, and voting options. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'poll found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -321,7 +321,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Update an existing poll. Allows modifying poll details such as name, timing, description, and geozone restrictions. Requires admin access level. Only the fields that need updating should be provided in the request.'
+      description "Update an existing poll. Allows modifying poll details such as name, timing, description, and geozone restrictions. Only the fields that need updating should be provided in the request. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :poll, in: :body, description: 'Attributes to update on the poll', schema: {
         type: :object,
@@ -430,7 +430,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Polls'
       produces 'application/json'
       security [bearer_auth: []]
-      description 'Delete an existing poll. Permanently removes the poll and all associated voting data. Requires admin access level. This operation cannot be undone.'
+      description "Delete an existing poll. Permanently removes the poll and all associated voting data. This operation cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       response '200', 'poll deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

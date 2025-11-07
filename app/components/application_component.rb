@@ -5,4 +5,11 @@ class ApplicationComponent < ViewComponent::Base
 
   delegate :projekt_phase_feature?, to: :helpers
   delegate :show_projekt_studio_controls?, to: :helpers
+
+  def t(key, **options)
+    if key.start_with?(".")
+      key = "components.#{self.class.name.underscore.tr("/", ".")}#{key}"
+    end
+    super
+  end
 end

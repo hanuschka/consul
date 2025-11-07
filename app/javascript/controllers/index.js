@@ -13,15 +13,9 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
-import AdmSettingController from "./adm/setting_controller"
-application.register("adm-setting", AdmSettingController)
 
-import ComponentsAdmSettingsImageController from "./components/adm/settings/image_controller"
-application.register("components-adm-settings-image", ComponentsAdmSettingsImageController)
-
-
-
-
+import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
+application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
 
 
 import ModeSwitcherController from "./mode_switcher_controller"

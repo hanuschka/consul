@@ -1,0 +1,15 @@
+<table class="kern-table content-cards-table">
+  <thead class="kern-table__head">
+    <tr class="kern-table__row">
+      <th scope="col" class="kern-table__header"><%= t('.table.headers.title') %></th>
+      <th scope="col" class="kern-table__header"><%= t('.table.headers.count') %></th>
+      <th scope="col" class="kern-table__header"><%= t('.table.headers.status') %></th>
+      <th scope="col" class="kern-table__header"></th>
+    </tr>
+  </thead>
+  <tbody class="kern-table__body">
+    <% content_cards.each do |cc| %>
+      <%= render Adm::SiteCustomization::ContentCardComponent.new(cc) %>
+    <% end %>
+  </tbody>
+</table>

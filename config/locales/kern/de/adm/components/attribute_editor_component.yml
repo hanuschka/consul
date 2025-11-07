@@ -1,0 +1,8 @@
+de:
+  adm:
+    components:
+      attribute_editor:
+        saved: Einstellung erfolgreich aktualisiert
+      attribute_editors:
+        image_component:
+          choose_different: Anderes Bild wählen

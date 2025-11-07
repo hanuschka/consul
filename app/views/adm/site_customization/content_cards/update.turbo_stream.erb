@@ -1,0 +1,3 @@
+<%= turbo_stream.replace @content_card do %>
+  <%= render Adm::SiteCustomization::ContentCardComponent.new(content_card: @content_card) %>
+<% end %>

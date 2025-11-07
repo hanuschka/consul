@@ -1,5 +1,5 @@
-.setting-component {
-  .setting-input {
+.attribute-editor-component {
+  .attribute-form {
     position: relative;
 
     .success-message {
@@ -10,21 +10,21 @@
     }
   }
 
-  .setting-input.string {
-    .setting-controls {
+  .attribute-form.string {
+    form {
       display: flex;
       gap: 8px;
 
-      .kern-form-input {
+      .kern-form-input__input {
         flex: 1;
       }
     }
   }
 
-  .setting-input.boolean {
+  .attribute-form.boolean {
   }
 
-  .setting-input.image {
+  .attribute-form.image {
     .kern-form-input .form-error {
       display: none;
     }

@@ -1,0 +1,28 @@
+<%= content_for :title, [@content_card.title, t("adm.projekts.index.title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @content_card.title, breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+  <%= form_with model: @content_card, url: [:adm, @content_card] do |f| %>
+    <div class="kern-row">
+      <div class="kern-col-md-8 kern-col-xl-4">
+        <%= localized_fields_for(f, :title, :text_field) %>
+
+        <%= f.fields_for :settings do |settings_form| %>
+          <% @default_settings.each do |key, value| %>
+            <div class="kern-row mb-5">
+              <div class="kern-col">
+                <div class="kern-form-input">
+                  <label class="kern-label" for="<%= key %>"><%= t("adm.site_customization.content_cards.setting.label.#{key}") %></label>
+                  <input class="kern-form-input__input" id="<%= key %>" name="<%= key %>" type="text">
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+
+        <%= kern_submit_button(text: t("shared.submit")) %>
+      </div>
+    </div>
+  <% end %>
+</div>

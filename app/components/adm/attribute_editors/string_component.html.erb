@@ -1,0 +1,12 @@
+<%= form_with model: @record, url: @path do |form| %>
+  <%= hidden_field_tag :kind, "string" %>
+
+  <%= form.text_field :value,
+    label: false,
+    placeholder: @label,
+    class: "kern-form-input__input",
+    data: {"components-adm-attribute-editor-target": "input"},
+    aria: { describedby: dom_id(@record, :description) } %>
+
+  <%= helpers.kern_submit_button(icon: "save", autofocus: @updated) %>
+<% end %>

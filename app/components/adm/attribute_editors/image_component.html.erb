@@ -1,0 +1,27 @@
+<%= form_with model: @record, url: @path do |form| %>
+  <%= hidden_field_tag :kind, "image" %>
+
+    <div class="kern-form-input <%= 'd-none' if show_preview? %>">
+      <%= form.file_field @attribute,
+                          label: false,
+                          accept: SiteCustomization::Image::VALID_FORMATS.join(','),
+                          class: 'kern-form-input__input js-file-input',
+                          autofocus: (helpers.turbo_frame_request? && !show_preview?),
+                          onchange: "this.form.requestSubmit();" %>
+    </div>
+
+    <%= image_tag(@record.send(@attribute), style: "width:100%;") if show_preview? %>
+
+    <div class='error-message mt-3 <%= 'd-none' if @record.errors.blank? %>'>
+      <%= helpers.content_tag(:span, class: '') { sanitize @record.errors[@attribute].join('; ') } %>
+    </div>
+
+    <button type='button'
+            class="kern-btn kern-btn--secondary mt-2 <%= 'd-none' unless show_preview? %>"
+            style="float: right;"
+            onclick="this.form.querySelector('.js-file-input').click(); return false;">
+      <span class="kern-label">
+        <%= t('adm.components.attribute_editors.image_component.choose_different') %>
+      </span>
+    </button>
+<% end %>

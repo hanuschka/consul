@@ -1,0 +1,10 @@
+<tr class="kern-table__row">
+  <th scope="row" class="kern-table__header"><%= @content_card.title %></th>
+  <td class="kern-table__cell"><%= @content_card.settings["limit"] %></td>
+  <td class="kern-table__cell"><%=  %></td>
+  <td class="kern-table__cell">
+    <%= link_to edit_adm_site_customization_content_card_path(@content_card) do %>
+      <%= tag.span(class: "material-symbols-outlined") { "edit" } %>
+    <% end %>
+  </td>
+</tr>

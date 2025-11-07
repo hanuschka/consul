@@ -9,6 +9,8 @@ class SiteCustomization::ContentCard < ApplicationRecord
     events
   ].freeze
 
+  belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
+
   translates :title, touch: true
   include Globalizable
 

@@ -3,17 +3,17 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.settings.metadata.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "org_name"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "url"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "mailer_from_address"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "mailer_from_name"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "meta_title"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "meta_description"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "meta_keywords"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "facebook_handle"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "instagram_handle"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "twitter_handle"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "twitter_hashtag"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "telegram_handle"), kind: :string) %>
-  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "youtube_handle"), kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "org_name"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "url"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "mailer_from_address"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "mailer_from_name"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_title"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_description"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_handle"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_hashtag"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "telegram_handle"), :value, kind: :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "youtube_handle"), :value, kind: :string) %>
 </div>

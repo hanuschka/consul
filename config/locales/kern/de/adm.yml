@@ -26,9 +26,6 @@ de:
     projekts:
       index:
         title: Projekte
-    homepage:
-      show:
-        title: Homepage
     landing_pages:
       index:
         title: Landingpages

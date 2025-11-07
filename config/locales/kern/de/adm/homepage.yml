@@ -1,0 +1,7 @@
+de:
+  adm:
+    homepage:
+      show:
+        title: Homepage
+        content_cards_title: Inhaltskacheln
+        content_cards_description: Aktivieren Sie optionale Inhaltskacheln für die Startseite, z. B. „Aktuelle Projekte“, „Beliebte Vorschläge“ oder „Veranstaltungen“. Die Kacheln erscheinen im Inhaltsbereich der Homepage und können per Drag & Drop sortiert werden. Über den „Bearbeiten“-Button lassen sich Titel und Anzahl der angezeigten Inhalte anpassen. Zwischen den Kacheln wird automatisch ein benutzerdefinierter Inhaltsblock eingefügt.

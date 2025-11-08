@@ -1,0 +1,42 @@
+<%= back_link_to admin_api_clients_path %>
+
+<h2><%= @api_client.name %></h2>
+
+<div class="callout">
+  <p>
+  <strong><%= ApiClient.human_attribute_name(:domain) %>:</strong><br>
+  <%= @api_client.domain %>
+  </p>
+
+  <p>
+  <strong><%= ApiClient.human_attribute_name(:service_user_email) %>:</strong><br>
+  <%= @api_client.service_user_email %>
+  </p>
+
+  <p>
+  <strong><%= ApiClient.human_attribute_name(:access_level) %>:</strong><br>
+  <span class="label <%= access_level_label_class(@api_client.access_level) %>">
+    <%= t("admin.api_clients.access_level.#{@api_client.access_level}") %>
+  </span>
+  </p>
+
+  <p>
+  <strong><%= ApiClient.human_attribute_name(:auth_token) %>:</strong><br>
+  <code class="break-word"><%= @api_client.auth_token %></code>
+  </p>
+
+  <div style="background-color: #f5f5f5; padding: 12px 16px; border-radius: 4px; margin-top: 8px;">
+    <p style="margin: 0; color: #666;">
+      <em><%= t("admin.api_clients.show.auth_token_explanation_text") %></em>
+    </p>
+  </div>
+
+  <% if @api_client.service_api_token.present? %>
+    <p>
+    <strong><%= ApiClient.human_attribute_name(:service_api_token) %>:</strong><br>
+    <code class="break-word"><%= @api_client.service_api_token %></code>
+    </p>
+  <% end %>
+</div>
+
+

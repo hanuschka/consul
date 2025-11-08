@@ -737,6 +737,7 @@ en:
       hidden_proposal_notifications: Hidden proposal notifications
       hidden_users: Hidden users
       administrators: Administrators
+      api_clients: API Clients
       managers: Managers
       sdg_managers: SDG Managers
       moderators: Moderators
@@ -805,6 +806,19 @@ en:
       form:
         edit_title: "Edit administrator"
         updated: "Administrator updated successfully"
+    api_clients:
+      index:
+        title: API Clients
+        id: API Client ID
+        no_api_clients: There are no API clients.
+      show:
+        auth_token_explanation_text: "Include this token in the Authorization header of your API requests. Use it as a Bearer token in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+      form:
+        create_title: "Create New API Client"
+        edit_title: "Edit API Client"
+        created: "API Client created successfully"
+        updated: "API Client updated successfully"
+        deleted: "API Client deleted successfully"
     moderators:
       index:
         title: Moderators

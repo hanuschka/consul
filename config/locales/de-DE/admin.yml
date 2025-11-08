@@ -684,6 +684,7 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
       managers: Manager*innen
       sdg_managers: SDG Managers
       moderators: Moderator*innen
@@ -750,6 +751,21 @@ de:
       form:
         edit_title: "Administrator bearbeiten"
         updated: "Administrator Update erfolgreich"
+    api_clients:
+      index:
+        title: API-Clients
+        id: API-Client ID
+        create_new: "Neuen API-Client erstellen"
+        no_api_clients: Keine API-Clients vorhanden.
+      show:
+        tokens: Tokens
+        auth_token_explanation_text: "Fügen Sie diesen Token im Authorization-Header Ihrer API-Anfragen ein. Verwenden Sie ihn als Bearer-Token im Format: Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+      form:
+        create_title: "Neuen API-Client erstellen"
+        edit_title: "API-Client bearbeiten"
+        created: "API-Client erfolgreich erstellt"
+        updated: "API-Client erfolgreich aktualisiert"
+        deleted: "API-Client erfolgreich gelöscht"
     moderators:
       index:
         title: Moderator*innen
@@ -1326,6 +1342,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag

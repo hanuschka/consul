@@ -25,8 +25,12 @@ You can run api tests which used for generatin docs, to ensure they valid with:
   bundle exec rspec spec/requests/api
 ``` 
 
+
 ## Auth
-First create api client:
+
+You can create api client on admin page: `/admin/api_clients`
+
+Or reate api client from rails console:
 ```ruby 
     ApiClient.create(
         name: "Name of api client", 

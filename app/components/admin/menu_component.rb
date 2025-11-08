@@ -17,6 +17,7 @@ class Admin::MenuComponent < ApplicationComponent
       site_customization_links,
       moderated_content_links,
       profiles_links,
+      api_clients_link,
       registered_addresses_links,
       matomo_link,
       settings_links,
@@ -51,7 +52,7 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def profiles?
-      %w[administrators organizations officials moderators valuators managers users].include?(controller_name)
+      %w[administrators api_clients organizations officials moderators valuators managers users].include?(controller_name)
     end
 
     def settings?
@@ -408,6 +409,15 @@ class Admin::MenuComponent < ApplicationComponent
         t("admin.menu.administrators"),
         admin_administrators_path,
         controller_name == "administrators"
+      ]
+    end
+
+    def api_clients_link
+      [
+        t("admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
       ]
     end
 

@@ -168,4 +168,13 @@ class Admin::MenuComponent < ApplicationComponent
         controller_name == "recipient_groups"
       ]
     end
+
+    def api_clients_link
+      [
+        t("custom.admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
+      ]
+    end
 end

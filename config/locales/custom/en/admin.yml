@@ -1,6 +1,14 @@
 en:
   activerecord:
     attributes:
+      api_client:
+        name: "Client Name"
+        domain: "Domain"
+        auth_token: "Auth Token"
+        registration_status: "Registration Status"
+        access_level: "Access Level"
+        service_user_email: "Service User Email"
+        service_api_token: "Service API Token"
       tag:
         name: "Type the name of the tag"
   admin:
@@ -25,6 +33,7 @@ en:
         cloud: Tag cloud
     menu:
       proposals_topics: Predefined tags
+      api_clients: API Clients
     tags:
       create: Create tag
       destroy: Delete tag
@@ -41,6 +50,39 @@ en:
         cloud_category: Tag cloud for category
         cloud_subcategory: Tag cloud for subcategory
         custom_tags: User tags
+
+    api_clients:
+      index:
+        title: "API Clients"
+        id: "ID"
+        create_new: "Create new API Client"
+        no_api_clients: "No API clients found"
+      show:
+        tokens: "Tokens"
+      form:
+        create_title: "Create New API Client"
+        edit_title: "Edit API Client"
+        created: "API Client created successfully"
+        updated: "API Client updated successfully"
+        deleted: "API Client deleted successfully"
+      status:
+        registration_in_progress: "Registration In Progress"
+        registered: "Registered"
+      access_level:
+        public_data: "Public Data"
+        admin: "Admin"
+
+    shared:
+      created: "Created"
+      actions: "Actions"
+      show: "Show"
+      edit: "Edit"
+      delete: "Delete"
+      sure: "Are you sure?"
+      details: "Details"
+      timestamps: "Timestamps"
+      created_at: "Created At"
+      updated_at: "Updated At"
 
     legislation:
       processes:

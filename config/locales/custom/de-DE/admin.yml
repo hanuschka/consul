@@ -801,12 +801,23 @@ de:
         no_api_clients: Keine API-Clients vorhanden.
       show:
         tokens: Tokens
+        service_user_title: "Service-Benutzer"
+        service_user_name: "Name"
+        auth_token_explanation_text: "Verwenden Sie diesen Token im Authorization-Header bei API-Anfragen"
+        auth_token_example_title: "Beispiel"
+        auth_token_example: "Authorization: Bearer YOUR_TOKEN_HERE"
       form:
         create_title: "Neuen API-Client erstellen"
         edit_title: "API-Client bearbeiten"
         created: "API-Client erfolgreich erstellt"
         updated: "API-Client erfolgreich aktualisiert"
         deleted: "API-Client erfolgreich gelöscht"
+        service_user_form_title: "Service-Benutzer"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_title: "Service-Benutzer"
+        service_user_errors_message: "%{count} Fehler hinderten das"
+        update_service_user: "Service-Benutzer aktualisieren"
+        service_user_explanation: "Ein Service-Benutzer ist ein automatisch erstelltes Benutzerkonto, das vom API-Client verwendet wird, um Ressourcen im Namen des Systems zu erstellen, wie Vorschläge, Mängelberichte und Ideen. Dies ermöglicht es dem API-Client, für alle von ihm erstellten Ressourcen eine eigene Identität zu behalten, ohne dabei reguläre Benutzerkonten zu verwenden."
     administrators:
       index:
         title: Administrator*innen

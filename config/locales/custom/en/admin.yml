@@ -59,12 +59,23 @@ en:
         no_api_clients: "No API clients found"
       show:
         tokens: "Tokens"
+        service_user_title: "Service User"
+        service_user_name: "Name"
+        auth_token_explanation_text: "Use this token in the Authorization header when making requests to the API"
+        auth_token_example_title: "Example"
+        auth_token_example: "Authorization: Bearer YOUR_TOKEN_HERE"
       form:
         create_title: "Create New API Client"
         edit_title: "Edit API Client"
         created: "API Client created successfully"
         updated: "API Client updated successfully"
         deleted: "API Client deleted successfully"
+        service_user_form_title: "Service User"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_title: "Service User"
+        service_user_errors_message: "%{count} error prevented the"
+        update_service_user: "Update Service User"
+        service_user_explanation: "A service user is an automatically created user account used by the API client to create resources on behalf of the system, such as proposals, deficiency reports, and ideas. This allows the API client to maintain a distinct identity for all resources it creates without using regular user accounts."
       status:
         registration_in_progress: "Registration In Progress"
         registered: "Registered"

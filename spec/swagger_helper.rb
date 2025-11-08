@@ -72,9 +72,8 @@ RSpec.configure do |config|
 
           ### Access Levels
 
-          Access levels determine which endpoints and actions are available:
-          - **Admin**: Full access to all resources. Required for POST (create), PATCH (update), and DELETE operations.
-          - **Public Data**: Read-only access to publicly available resources. GET requests only.
+          - **Admin**: #{I18n.t('admin.service_users.access_level_admin')}
+          - **Public Data**: #{I18n.t('admin.service_users.access_level_public_data')}
 
           #### HTTP Method Requirements
 

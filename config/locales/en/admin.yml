@@ -807,6 +807,9 @@ en:
         edit_title: "Edit administrator"
         updated: "Administrator updated successfully"
     api_clients:
+      access_level:
+        public_data: "Public Data"
+        admin: "Admin"
       index:
         title: API Clients
         id: API Client ID
@@ -838,10 +841,12 @@ en:
         update_service_user: "Update Service User"
         service_user_email_note: "This email should be unique and different from any other user email already used in API clients."
         service_user_email_description: "Service user account email. This service user will be created to act as the author when resources (proposals, ideas, deficiency reports) are created through this API client."
+        access_level_public_data: "Read-only access (GET requests only)."
+        access_level_admin: "Full access to retrieve, create, update, and delete resources."
         access_level_description: |
-          Public Data: Read-only access to retrieve all resources through GET requests. Can view projects, proposals, polls, events, comments, budgets, and all other data, but cannot create, update, or delete any resources.
+          Public Data: Read-only access (GET requests only).
 
-          Admin: Full administrative access with all permissions. Can retrieve resources with GET requests, create new resources with POST requests, update existing resources with PATCH requests, and delete resources with DELETE requests. Use this level for integrations that need complete control over data management.
+          Admin: Full access to retrieve, create, update, and delete resources.
     moderators:
       index:
         title: Moderators

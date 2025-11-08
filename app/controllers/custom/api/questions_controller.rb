@@ -16,7 +16,7 @@ class Api::QuestionsController < Api::BaseController
 
     questions = questions
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_questions = QuestionSerializer.serialize_collection(questions)
 

@@ -19,7 +19,7 @@ class Api::DeficiencyReportsController < Api::BaseController
       )
       .admin_accepted
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     deficiency_reports = apply_filters(deficiency_reports)
     deficiency_reports = apply_sorting(deficiency_reports)

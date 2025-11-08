@@ -7,7 +7,7 @@ class Api::MilestoneStatusesController < Api::BaseController
 
     milestone_statuses = Milestone::Status.all
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_statuses = MilestoneStatusSerializer.serialize_collection(milestone_statuses)
 

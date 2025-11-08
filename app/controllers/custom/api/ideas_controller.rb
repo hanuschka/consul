@@ -13,7 +13,7 @@ class Api::IdeasController < Api::BaseController
     ideas = Idea.accepted
       .includes(:author, :category, :map_location)
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     ideas = apply_filters(ideas)
     ideas = apply_sorting(ideas)

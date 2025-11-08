@@ -3,7 +3,7 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-  description: |
+  description: |-
     # Consul Projekt API
 
     The Consul Projekt API provides programmatic access to manage participatory budgeting and citizen engagement projects. This API enables you to create and manage various project phases, collect citizen input through proposals, polls, and surveys, and track project progress.
@@ -42,8 +42,8 @@ info:
 
     ### Access Levels
 
-    - **Admin**: Translation missing: en.admin.service_users.access_level_admin
-    - **Public Data**: Translation missing: en.admin.service_users.access_level_public_data
+    - **Admin**: Full access to create, read, update, and delete resources
+    - **Public Data**: Read-only access to public data
 
     #### HTTP Method Requirements
 
@@ -125,7 +125,7 @@ info:
 
     List endpoints support pagination using `page` and `per_page` query parameters:
     - `page`: Page number (default: 1)
-    - `per_page`: Results per page (default: 100, max: 500)
+    - `per_page`: Results per page (default: 500 for most endpoints, 5000 for comments)
 
     ## API Sections
 

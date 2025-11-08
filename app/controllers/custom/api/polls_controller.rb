@@ -16,7 +16,7 @@ class Api::PollsController < Api::BaseController
 
     polls = polls
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_polls = PollSerializer.serialize_collection(polls)
 

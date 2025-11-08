@@ -10,7 +10,7 @@ class Api::IdeaCategoriesController < Api::BaseController
     categories = Idea::Category
       .includes(:ideas)
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_categories = IdeaCategorySerializer.serialize_collection(categories)
 

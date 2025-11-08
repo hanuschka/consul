@@ -13,7 +13,7 @@ class Api::LivestreamsController < Api::BaseController
 
     livestreams = livestreams
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams)
 

@@ -4,6 +4,9 @@ class Api::BaseController < ActionController::API
   class ForbiddenError < StandardError; end
   class UnauthorizedError < StandardError; end
 
+  DEFAULT_PER_PAGE = 500
+  COMMENTS_PER_PAGE = 5000
+
   before_action :authenticate_api_client!
   rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found

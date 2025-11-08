@@ -6,7 +6,7 @@ class Api::MilestonesController < Api::BaseController
     milestones = @projekt_phase.milestones
       .order_by_publication_date
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_milestones = MilestoneSerializer.serialize_collection(milestones)
 

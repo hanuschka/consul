@@ -1,7 +1,8 @@
 <h2><%= t("admin.api_clients.index.title") %></h2>
 
-<div class="margin-bottom">
+<div class="margin-bottom" style="display: flex; justify-content: space-between; align-items: center;">
   <%= link_to t("admin.api_clients.index.create_new"), new_admin_api_client_path, class: "button" %>
+  <%= link_to t("admin.api_clients.index.api_docs_link"), api_docs_path, class: "button secondary", target: "_blank" %>
 </div>
 
 <div id="api_clients">

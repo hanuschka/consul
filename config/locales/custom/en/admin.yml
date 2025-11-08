@@ -57,6 +57,7 @@ en:
         id: "ID"
         create_new: "Create new API Client"
         no_api_clients: "No API clients found"
+        api_docs_link: "Api docs"
       show:
         tokens: "Tokens"
         service_user_title: "Service User"

@@ -799,6 +799,7 @@ de:
         id: API-Client ID
         create_new: "Neuen API-Client erstellen"
         no_api_clients: Keine API-Clients vorhanden.
+        api_docs_link: "API-Docs"
       show:
         tokens: Tokens
         service_user_title: "Service-Benutzer"

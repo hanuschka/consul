@@ -23,10 +23,10 @@
       <%= t("admin.api_clients.access_level.#{@api_client.access_level}") %>
     </span>
     </p>
-    <div style="margin-bottom: 20px; padding: 6px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px;">
-      <small style="color: #444; font-size: 12px; line-height: 1.5;">
-        <%= t("admin.api_clients.form.access_level_description") %>
-      </small>
+    <div style="margin-bottom: 20px; padding: 8px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px;">
+      <% t("admin.api_clients.form.access_level_description").split("\n\n").each do |paragraph| %>
+        <p style="margin: 0 0 10px 0; color: #444; font-size: 12px; line-height: 1.6;"><%= paragraph %></p>
+      <% end %>
     </div>
 
     <p>

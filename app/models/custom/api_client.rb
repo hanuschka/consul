@@ -12,12 +12,6 @@ class ApiClient < ApplicationRecord
   validates :service_user_email, presence: true
   validates :service_user_email, uniqueness: true
 
-  private
-
-  def domain_present?
-    domain.present?
-  end
-
   before_create do
     if registration_status.nil?
       self.registration_status = :registration_in_progress
@@ -66,6 +60,10 @@ class ApiClient < ApplicationRecord
   end
 
   private
+
+  def domain_present?
+    domain.present?
+  end
 
   def generate_service_username
     base_username = "#{name}_service".parameterize.underscore

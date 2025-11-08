@@ -3,7 +3,10 @@ class Api::TextsController < Api::BaseController
 
   def index
     check_read_access!
-    texts = @projekt_phase.legislation_processes
+    legislation_process = @projekt_phase.legislation_process
+    return render json: { data: { texts: [] }, pagination: default_pagination_meta } unless legislation_process
+
+    texts = legislation_process.draft_versions
       .page(params[:page])
       .per(params[:per_page] || 100)
 
@@ -27,6 +30,15 @@ class Api::TextsController < Api::BaseController
       total_pages: collection.total_pages,
       total_count: collection.total_count,
       per_page: collection.limit_value
+    }
+  end
+
+  def default_pagination_meta
+    {
+      current_page: 1,
+      total_pages: 0,
+      total_count: 0,
+      per_page: params[:per_page] || 100
     }
   end
 end

@@ -95,6 +95,7 @@ class Admin::UsersController < Admin::BaseController
                                    :city_name, :plz, :street_name, :street_number, :street_number_extension,
                                    :registered_address_id,
                                    :gender, :date_of_birth,
+                                   :background_image,
                                    image_attributes: image_attributes)
                                    # :document_type, :document_last_digits,
                                    # :password, :password_confirmation)

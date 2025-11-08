@@ -10,31 +10,25 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="columns medium-6">
-      <%= f.text_field :name, placeholder: ApiClient.human_attribute_name(:name) %>
-    </div>
-    <div class="columns medium-6">
-      <%= f.text_field :domain, placeholder: ApiClient.human_attribute_name(:domain) %>
-    </div>
+  <div class="medium-6">
+    <%= f.text_field :name, placeholder: ApiClient.human_attribute_name(:name) %>
+  </div>
+  <div class="medium-6">
+    <%= f.text_field :domain, placeholder: "#{ApiClient.human_attribute_name(:domain)} (#{t('admin.api_clients.form.domain_hint')})" %>
   </div>
 
-  <div class="row">
-    <div class="columns medium-6">
-      <%= f.email_field :service_user_email, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
-    </div>
-    <div class="columns medium-6">
-      <%= f.select :access_level,
-        options_for_select(ApiClient.access_levels.keys.map { |level| [t("admin.api_clients.access_level.#{level}"), level] },
-        @api_client.access_level),
-        {},
-        { class: "form-control" } %>
-    </div>
+
+  <div class="medium-6">
+    <%= f.email_field :service_user_email, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
+  </div>
+  <div class="medium-6">
+    <%= f.select :access_level,
+      options_for_select(ApiClient.access_levels.keys.map { |level| [t("admin.api_clients.access_level.#{level}"), level] },
+                         @api_client.access_level),
+                         {},
+                         { class: "form-control" } %>
   </div>
 
-  <div class="row">
-    <div class="columns">
-      <%= f.submit class: "button success" %>
-    </div>
-  </div>
+
+  <%= f.submit class: "button success" %>
 <% end %>

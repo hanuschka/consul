@@ -773,6 +773,7 @@ de:
         created: "API-Client erfolgreich erstellt"
         updated: "API-Client erfolgreich aktualisiert"
         deleted: "API-Client erfolgreich gelöscht"
+        domain_hint: "optional"
     moderators:
       index:
         title: Moderator*innen

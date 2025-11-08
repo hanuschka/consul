@@ -42,7 +42,8 @@ module CsvServices
           "community_id",
           "selected",
           "latitude",
-          "longitude"
+          "longitude",
+          "geometry"
         ]
       end
 
@@ -70,14 +71,9 @@ module CsvServices
           proposal.community_id,
           proposal.selected,
           geo_field(proposal.map_location&.latitude),
-          geo_field(proposal.map_location&.longitude)
+          geo_field(proposal.map_location&.longitude),
+          format_geometry(proposal.map_location&.features)
         ]
-      end
-
-      def geo_field(field)
-        return nil if field.blank?
-
-        "\"#{field}\""
       end
   end
 end

@@ -282,6 +282,14 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
+  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
+    if landing_page_id.blank?
+      joins(:landing_pages).distinct
+    else
+      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
+    end
+  }
+
   ##################
 
   scope :show_in_sidebar_filter, -> {

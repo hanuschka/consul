@@ -154,5 +154,7 @@ class ApplicationController < ActionController::Base
       if landing_page.landing_site_logo_follow_to_landing_page
         @ui_site_homepage_path = landing_page.url
       end
+
+      @ui_landing_page = landing_page
     end
 end

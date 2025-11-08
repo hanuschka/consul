@@ -1,10 +1,9 @@
-ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   contentBlockImageLoadingState: {},
   currentImg: null,
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -120,10 +119,10 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(this.currentImg);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(this.currentImg);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.openDialog(
       (selectedPicture) => {
         this.replaceImage(selectedPicture);
       },
@@ -167,12 +166,12 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   async replaceImage(selectedPicture) {
     const img = this.currentImg;
     const imageWrapper = this.getImageWrapper(img)
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     // Lock the content block and track loading state
     this.incrementImageLoadingCount(contentBlockId);
-    ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, true)
+    ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
 
     // img.style.height = "auto"
     imageWrapper.classList.add("-loading")
@@ -248,7 +247,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     // If all images in this content block are done loading, unlock the save/cancel buttons
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
-      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
+      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(
         contentBlockWrapper,
         false
       )

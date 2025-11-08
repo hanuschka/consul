@@ -13,7 +13,7 @@ class Api::NotificationsController < Api::BaseController
 
     notifications = notifications
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_notifications = NotificationSerializer.serialize_collection(notifications)
 

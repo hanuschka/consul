@@ -16,7 +16,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
 
     pins = pins
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_pins = PointOfInterestPinSerializer.serialize_collection(pins)
 

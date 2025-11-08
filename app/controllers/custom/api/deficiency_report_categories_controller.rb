@@ -4,7 +4,7 @@ class Api::DeficiencyReportCategoriesController < Api::BaseController
     categories = DeficiencyReport::Category
       .includes(:deficiency_reports)
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
     serialized_categories = DeficiencyReportCategorySerializer.serialize_collection(categories)
     render json: {
       data: { deficiency_report_categories: serialized_categories },

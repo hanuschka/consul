@@ -8,7 +8,7 @@ class Api::TextsController < Api::BaseController
 
     texts = legislation_process.draft_versions
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_texts = texts.map { |text| LegislationProcessSerializer.new(text).serialize }
 
@@ -38,7 +38,7 @@ class Api::TextsController < Api::BaseController
       current_page: 1,
       total_pages: 0,
       total_count: 0,
-      per_page: params[:per_page] || 100
+      per_page: params[:per_page] || DEFAULT_PER_PAGE
     }
   end
 end

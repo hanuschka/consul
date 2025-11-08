@@ -35,7 +35,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
     budget_investments = budget_investments
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     budget_investments = apply_filters(budget_investments)
     budget_investments = apply_sorting(budget_investments)

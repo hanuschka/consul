@@ -15,7 +15,7 @@ class Api::EventsController < Api::BaseController
 
     events = events
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_events = EventSerializer.serialize_collection(events)
 

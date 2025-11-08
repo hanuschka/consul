@@ -16,7 +16,7 @@ class Api::CommentsController < Api::BaseController
     comments = comments
       .order(created_at: :desc)
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || COMMENTS_PER_PAGE)
 
     serialized_comments = CommentSerializer.serialize_collection(comments)
 

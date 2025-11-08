@@ -15,7 +15,7 @@ class Api::BudgetsController < Api::BaseController
 
     budgets = budgets
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_budgets = BudgetSerializer.serialize_collection(budgets)
 

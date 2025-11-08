@@ -6,7 +6,7 @@ class Api::IdeaOfficersController < Api::BaseController
     officers = Idea::Officer
       .includes(:user)
       .page(params[:page])
-      .per(params[:per_page] || 100)
+      .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_officers = IdeaOfficerSerializer.serialize_collection(officers)
 

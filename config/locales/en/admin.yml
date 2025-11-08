@@ -812,7 +812,14 @@ en:
         id: API Client ID
         no_api_clients: There are no API clients.
       show:
+        show_token: "Show"
+        hide_token: "Hide"
+        copy_token: "Copy"
+        copied: "Copied!"
+        token_hidden_message: "Token is hidden. Click \"Show\" first to reveal and copy."
         auth_token_explanation_text: "Include this token in the Authorization header of your API requests. Use it as a Bearer token in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        auth_token_example_title: "HTTP Example:"
+        auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
       form:
         create_title: "Create New API Client"
         edit_title: "Edit API Client"

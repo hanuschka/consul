@@ -5,10 +5,18 @@ class ApiClient < ApplicationRecord
 
   has_one :user
 
+  validates :name, uniqueness: true
   validates :access_level, presence: true
   validates :name, presence: true
+  validates :domain, uniqueness: true, if: :domain_present?
   validates :service_user_email, presence: true
   validates :service_user_email, uniqueness: true
+
+  private
+
+  def domain_present?
+    domain.present?
+  end
 
   before_create do
     if registration_status.nil?

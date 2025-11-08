@@ -64,6 +64,8 @@ class Api::BaseController < ActionController::API
   end
 
   def render_internal_server_error(exception)
+    raise exception unless Rails.env.production?
+
     render json: {
       error: {
         type: "internal_server_error",

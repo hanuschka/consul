@@ -2,6 +2,29 @@ require_dependency Rails.root.join("app", "components", "admin", "menu_component
 
 class Admin::MenuComponent < ApplicationComponent
 
+  def links
+    [
+      (proposals_link if feature?(:proposals)),
+      (debates_link if feature?(:debates)),
+      comments_link,
+      (polls_link if feature?(:polls)),
+      (legislation_link if feature?(:legislation)),
+      (budgets_link if feature?(:budgets)),
+      projekts_link,
+      booths_links,
+      (signature_sheets_link if feature?(:signature_sheets)),
+      messages_links,
+      site_customization_links,
+      moderated_content_links,
+      profiles_links,
+      registered_addresses_links,
+      matomo_link,
+      settings_links,
+      dashboard_links,
+      api_clients_link
+    ]
+  end
+
   private
 
     def profiles?
@@ -166,6 +189,15 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.recipient_groups"),
         admin_recipient_groups_path,
         controller_name == "recipient_groups"
+      ]
+    end
+
+    def api_clients_link
+      [
+        t("custom.admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
       ]
     end
 end

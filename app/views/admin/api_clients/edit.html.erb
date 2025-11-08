@@ -1,0 +1,73 @@
+<%= back_link_to admin_api_clients_path %>
+
+<h2><%= t("admin.api_clients.form.edit_title") %></h2>
+
+<div class="medium-8">
+  <%= render "form" %>
+
+  <% if @api_client.user.present? %>
+    <hr style="margin-top: 32px; margin-bottom: 32px;">
+
+    <h3><%= t("admin.api_clients.form.service_user_form_title") %></h3>
+
+    <div style="margin-bottom: 20px; padding: 12px; background-color: #f0f4f8; border-left: 4px solid #003A71; border-radius: 4px;">
+      <p style="margin: 0; font-size: 14px; color: #333;">
+        <%= t("admin.api_clients.form.service_user_explanation") %>
+      </p>
+    </div>
+
+    <div style="margin-top: 32px;margin-bottom:20px">
+      <h4><%= t("admin.api_clients.form.service_user_avatar_title") %></h4>
+      <div class="users-profile-banner--avatar-wrapper">
+        <% if @api_client.user.image.blank? %>
+          <% @api_client.user.build_image %>
+        <% end %>
+        <%= form_for [:admin, @api_client.user], remote: true do |f| %>
+          <%= f.fields_for :image do |image_builder| %>
+            <%= render Images::DirectUploadComponent.new(image_builder, imageable: @api_client.user, submit_form: true, variant: :medium) do |c| %>
+              <% c.with_placeholder do %>
+                <div class="users-profile-banner--avatar-placeholder">
+                  <%= @api_client.user.first_letter_of_name %>
+                </div>
+              <% end %>
+
+              <% c.with_custom_edit_button do %>
+                <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button">
+                  <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <%= form_for [:admin, @api_client.user], local: true do |f| %>
+      <% if @api_client.user.errors.any? %>
+        <div id="error_explanation" class="callout alert">
+          <h4><%= t("admin.api_clients.form.service_user_errors_message", count: @api_client.user.errors.count) %> <%= t("admin.api_clients.form.service_user_errors_title") %></h4>
+          <ul>
+            <% @api_client.user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="medium-6">
+        <%= f.text_field :username, placeholder: User.human_attribute_name(:username) %>
+      </div>
+
+      <div class="medium-6">
+        <%= f.text_field :first_name, placeholder: User.human_attribute_name(:first_name) %>
+      </div>
+
+      <div class="medium-6">
+        <%= f.text_field :last_name, placeholder: User.human_attribute_name(:last_name) %>
+      </div>
+
+      <div style="clear: both; margin-top: 16px;">
+        <%= f.submit t("admin.api_clients.form.update_service_user"), class: "button success" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

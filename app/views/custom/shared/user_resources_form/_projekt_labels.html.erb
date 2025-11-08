@@ -16,7 +16,7 @@
                      "feature-icon-name" => cb.object.icon,
                      "feature-icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode,
                      "feature-multiple-allowed" => true
-                   }) { cb.check_box + content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") + cb.text } %>
+                   }) { content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") + cb.text } %>
     <% end %>
   </div>
 </div>

@@ -1,0 +1,40 @@
+<%= form_for [:admin, @api_client] do |f| %>
+  <% if @api_client.errors.any? %>
+    <div id="error_explanation" class="callout alert">
+      <h4><%= pluralize(@api_client.errors.count, "error") %> prohibited this API client from being saved:</h4>
+      <ul>
+        <% @api_client.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="medium-6">
+    <%= f.text_field :name, placeholder: ApiClient.human_attribute_name(:name) %>
+  </div>
+  <div class="medium-6">
+    <%= f.select :access_level,
+      options_for_select(ApiClient.access_levels.keys.map { |level| [t("admin.api_clients.access_level.#{level}"), level] },
+                         @api_client.access_level),
+                         {},
+                         { class: "form-control" } %>
+    <div style="margin-top: -10px; margin-bottom: 15px; padding: 8px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px; color: #444; font-size: 12px; line-height: 1.6;">
+      <% t("admin.api_clients.form.access_level_description").split("\n\n").each do |paragraph| %>
+        <div style="margin: 0 0 5px 0;"><%= paragraph %></div>
+      <% end %>
+    </div>
+  </div>
+  <div class="medium-6">
+    <%= f.text_field :domain, placeholder: "#{ApiClient.human_attribute_name(:domain)} (#{t('admin.api_clients.form.domain_hint')})" %>
+  </div>
+
+  <div class="medium-6">
+    <%= f.email_field :service_user_email, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
+    <small style="display: block; margin-top: -10px; margin-bottom: 15px; padding: 6px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px; color: #444; font-size: 12px; line-height: 1.5;">
+      <%= t("admin.api_clients.form.service_user_email_description") %>
+    </small>
+  </div>
+
+  <%= f.submit class: "button success" %>
+<% end %>

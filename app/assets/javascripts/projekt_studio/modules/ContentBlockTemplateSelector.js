@@ -34,51 +34,18 @@ ProjektStudio.ContentBlockTemplateSelector = {
     const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
     const templateContent = contentTemplate.innerHTML.trim();
 
-    // Copy to clipboard
-    if (navigator.clipboard && window.isSecureContext) {
-      // Use modern clipboard API
-      navigator.clipboard.writeText(templateContent).then(() => {
-        this.showCopySuccessFeedback(templateItem.querySelector('.js-copy-content-block-template'));
-      }).catch((err) => {
-        console.error('Failed to copy: ', err);
-        this.fallbackCopyToClipboard(templateContent, templateItem.querySelector('.js-copy-content-block-template'));
-      });
-    } else {
-      // Fallback for older browsers
-      this.fallbackCopyToClipboard(templateContent, templateItem.querySelector('.js-copy-content-block-template'));
-    }
-  },
-
-  fallbackCopyToClipboard(text, button) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-      document.execCommand('copy');
-      this.showCopySuccessFeedback(button);
-    } catch (err) {
-      console.error('Fallback copy failed: ', err);
-      alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
-    } finally {
-      document.body.removeChild(textArea);
-    }
+    navigator.clipboard.writeText(templateContent).then(() => {
+      this.showCopySuccessFeedback(templateItem.querySelector('.js-copy-content-block-template'));
+    })
   },
 
   showCopySuccessFeedback(button) {
     const originalIcon = button.querySelector('i');
     const originalClass = originalIcon.className;
 
-    // Change icon to checkmark
     originalIcon.className = 'fa fas fa-check';
     button.classList.add("-copied")
 
-    // Reset after 2 seconds
     setTimeout(() => {
       originalIcon.className = originalClass;
       button.classList.remove("-copied")

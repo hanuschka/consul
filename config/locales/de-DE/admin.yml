@@ -684,6 +684,7 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
       managers: Manager*innen
       sdg_managers: SDG Managers
       moderators: Moderator*innen
@@ -750,6 +751,44 @@ de:
       form:
         edit_title: "Administrator bearbeiten"
         updated: "Administrator Update erfolgreich"
+    api_clients:
+      index:
+        title: API-Clients
+        id: API-Client ID
+        create_new: "Neuen API-Client erstellen"
+        no_api_clients: Keine API-Clients vorhanden.
+      show:
+        tokens: Tokens
+        show_token: "Anzeigen"
+        hide_token: "Ausblenden"
+        copy_token: "Kopieren"
+        copied: "Kopiert!"
+        token_hidden_message: "Token ist verborgen. Klicken Sie zunächst auf \"Anzeigen\", um ihn anzuzeigen und zu kopieren."
+        auth_token_explanation_text: "Fügen Sie diesen Token im Authorization-Header Ihrer API-Anfragen ein. Verwenden Sie ihn als Bearer-Token im Format: Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+        auth_token_example_title: "HTTP-Beispiel:"
+        auth_token_example: "Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+        service_user_title: "Service-Benutzer"
+        service_user_name: "Name"
+        service_user_login_warning: "⚠️ Hinweis: Sie sollten sich nicht direkt mit diesem Service-Benutzer anmelden. Verwenden Sie stattdessen die API-Authentifizierungsmethoden."
+      form:
+        create_title: "Neuen API-Client erstellen"
+        edit_title: "API-Client bearbeiten"
+        created: "API-Client erfolgreich erstellt"
+        updated: "API-Client erfolgreich aktualisiert"
+        deleted: "API-Client erfolgreich gelöscht"
+        domain_hint: "optional"
+        service_user_explanation: "Dieser Service-Benutzer ist mit diesem API-Client verknüpft und wird für die API-Authentifizierung verwendet."
+        service_user_form_title: "Service-Benutzerinformationen aktualisieren"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_message: "%{count} Fehler"
+        service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
+        update_service_user: "Service-Benutzer aktualisieren"
+        service_user_email_note: "Diese E-Mail sollte eindeutig sein und sich von anderen Benutzer-E-Mails unterscheiden, die bereits in API-Clients verwendet werden."
+        service_user_email_description: "E-Mail des Service-Benutzerkontos. Dieser Service-Benutzer wird als Autor fungieren, wenn Ressourcen (Vorschläge, Ideen, Mängelmeldungen) über diesen API-Client erstellt werden."
+        access_level_description: |
+          Öffentliche Daten: Schreibgeschützter Zugriff zum Abrufen aller Ressourcen über GET-Anfragen. Kann Projekte, Vorschläge, Umfragen, Ereignisse, Kommentare, Budgets und alle anderen Daten anzeigen, kann aber keine Ressourcen erstellen, aktualisieren oder löschen.
+
+          Admin: Vollständiger Administratorzugriff mit allen Berechtigungen. Kann Ressourcen mit GET-Anfragen abrufen, neue Ressourcen mit POST-Anfragen erstellen, vorhandene Ressourcen mit PATCH-Anfragen aktualisieren und Ressourcen mit DELETE-Anfragen löschen. Verwenden Sie diese Ebene für Integrationen, die vollständige Kontrolle über die Datenverwaltung benötigen.
     moderators:
       index:
         title: Moderator*innen
@@ -1326,6 +1365,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag

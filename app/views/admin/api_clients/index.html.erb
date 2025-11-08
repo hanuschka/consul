@@ -1,0 +1,57 @@
+<h2><%= t("admin.api_clients.index.title") %></h2>
+
+<div class="margin-bottom" style="display: flex; justify-content: space-between; align-items: center;">
+  <%= link_to t("admin.api_clients.index.create_new"), new_admin_api_client_path, class: "button" %>
+  <%= link_to t("admin.api_clients.index.api_docs_link"), api_docs_path, class: "button secondary", target: "_blank" %>
+</div>
+
+<div id="api_clients">
+  <% if @api_clients.any? %>
+    <h3><%= page_entries_info @api_clients %></h3>
+
+    <table>
+      <thead>
+        <th scope="col" class="text-center"><%= t("admin.api_clients.index.id") %></th>
+        <th scope="col"><%= ApiClient.human_attribute_name(:name) %></th>
+        <th scope="col"><%= ApiClient.human_attribute_name(:domain) %></th>
+        <th scope="col"><%= ApiClient.human_attribute_name(:access_level) %></th>
+        <th scope="col"><%= ApiClient.human_attribute_name(:service_user_email) %></th>
+        <th scope="col"><%= t("admin.shared.created") %></th>
+        <th scope="col" class="small-3"><%= t("admin.shared.actions") %></th>
+      </thead>
+      <% @api_clients.each do |api_client| %>
+        <tr id="<%= dom_id(api_client) %>">
+          <td class="text-center">
+            <%= api_client.id %>
+          </td>
+          <td>
+            <%= api_client.name %>
+          </td>
+          <td>
+            <%= api_client.domain %>
+          </td>
+          <td>
+            <span class="label <%= access_level_label_class(api_client.access_level) %>">
+              <%= t("admin.api_clients.access_level.#{api_client.access_level}") %>
+            </span>
+          </td>
+          <td>
+            <%= api_client.service_user_email %>
+          </td>
+          <td>
+            <%= l(api_client.created_at, format: :short) %>
+          </td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(api_client, actions: [:show, :edit, :destroy]) %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= paginate @api_clients %>
+  <% else %>
+    <div class="callout primary margin">
+      <%= t("admin.api_clients.index.no_api_clients") %>
+    </div>
+  <% end %>
+</div>

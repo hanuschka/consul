@@ -52,6 +52,8 @@ class User < ApplicationRecord
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
 
+  belongs_to :api_client, optional: true
+
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
@@ -297,6 +299,16 @@ class User < ApplicationRecord
       "#{first_name} #{last_name}"
     else
       name
+    end
+  end
+
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
     end
   end
 

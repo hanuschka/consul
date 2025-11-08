@@ -75,6 +75,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_manager_assignments, dependent: :destroy
   has_many :projekt_managers, through: :projekt_manager_assignments
   accepts_nested_attributes_for :projekt_manager_assignments
+  accepts_nested_attributes_for :page
 
   has_many :subscriptions, -> { where(projekt_subscriptions: { active: true }) },
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
@@ -281,6 +282,14 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
+  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
+    if landing_page_id.blank?
+      joins(:landing_pages).distinct
+    else
+      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
+    end
+  }
+
   ##################
 
   scope :show_in_sidebar_filter, -> {
@@ -348,9 +357,9 @@ class Projekt < ApplicationRecord
   end
 
   def searchable_values
-    { page.title          => "A",
+    { page&.title          => "A",
       title               => "A",
-      page.content        => "C" }
+      page&.content       => "C" }
   end
 
   def projekt_phases_for(resource)

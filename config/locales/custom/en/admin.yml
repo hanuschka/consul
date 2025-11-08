@@ -1,6 +1,14 @@
 en:
   activerecord:
     attributes:
+      api_client:
+        name: "Client Name"
+        domain: "Domain"
+        auth_token: "Auth Token"
+        registration_status: "Registration Status"
+        access_level: "Access Level"
+        service_user_email: "Service User Email"
+        service_api_token: "Service API Token"
       tag:
         name: "Type the name of the tag"
   admin:
@@ -25,6 +33,7 @@ en:
         cloud: Tag cloud
     menu:
       proposals_topics: Predefined tags
+      api_clients: API Clients
     tags:
       create: Create tag
       destroy: Delete tag
@@ -41,6 +50,51 @@ en:
         cloud_category: Tag cloud for category
         cloud_subcategory: Tag cloud for subcategory
         custom_tags: User tags
+
+    api_clients:
+      index:
+        title: "API Clients"
+        id: "ID"
+        create_new: "Create new API Client"
+        no_api_clients: "No API clients found"
+        api_docs_link: "Api docs"
+      show:
+        tokens: "Tokens"
+        service_user_title: "Service User"
+        service_user_name: "Name"
+        auth_token_explanation_text: "Use this token in the Authorization header when making requests to the API"
+        auth_token_example_title: "Example"
+        auth_token_example: "Authorization: Bearer YOUR_TOKEN_HERE"
+      form:
+        create_title: "Create New API Client"
+        edit_title: "Edit API Client"
+        created: "API Client created successfully"
+        updated: "API Client updated successfully"
+        deleted: "API Client deleted successfully"
+        service_user_form_title: "Service User"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_title: "Service User"
+        service_user_errors_message: "%{count} error prevented the"
+        update_service_user: "Update Service User"
+        service_user_explanation: "A service user is an automatically created user account used by the API client to create resources on behalf of the system, such as proposals, deficiency reports, and ideas. This allows the API client to maintain a distinct identity for all resources it creates without using regular user accounts."
+      status:
+        registration_in_progress: "Registration In Progress"
+        registered: "Registered"
+      access_level:
+        public_data: "Public Data"
+        admin: "Admin"
+
+    shared:
+      created: "Created"
+      actions: "Actions"
+      show: "Show"
+      edit: "Edit"
+      delete: "Delete"
+      sure: "Are you sure?"
+      details: "Details"
+      timestamps: "Timestamps"
+      created_at: "Created At"
+      updated_at: "Updated At"
 
     legislation:
       processes:

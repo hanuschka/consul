@@ -16,10 +16,10 @@ window.ProjektStudio = {
 
       // Initialize ContentBlock submodules
       ProjektStudio.ContentBlockTemplateSelector.initialize()
-      ProjektStudio.ContentBlock.Main.initialize()
+      ProjektStudio.ContentBlock.Render.initialize()
       ProjektStudio.ContentBlock.DragDrop.initialize()
       ProjektStudio.ContentBlock.Crud.initialize()
-      ProjektStudio.ContentBlock.VersionControl.initialize()
+      ProjektStudio.ContentBlock.ChangeHistory.initialize()
       ProjektStudio.ContentBlock.CKEditorMode.initialize()
       ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
@@ -30,6 +30,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
       ProjektStudio.ContentBlock.AiEditMode.initialize()
       ProjektStudio.ContentBlock.CodeEditMode.initialize()
+      ProjektStudio.ContentBlock.Copy.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()

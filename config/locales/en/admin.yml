@@ -737,6 +737,7 @@ en:
       hidden_proposal_notifications: Hidden proposal notifications
       hidden_users: Hidden users
       administrators: Administrators
+      api_clients: API Clients
       managers: Managers
       sdg_managers: SDG Managers
       moderators: Moderators
@@ -805,6 +806,42 @@ en:
       form:
         edit_title: "Edit administrator"
         updated: "Administrator updated successfully"
+    api_clients:
+      index:
+        title: API Clients
+        id: API Client ID
+        no_api_clients: There are no API clients.
+      show:
+        show_token: "Show"
+        hide_token: "Hide"
+        copy_token: "Copy"
+        copied: "Copied!"
+        token_hidden_message: "Token is hidden. Click \"Show\" first to reveal and copy."
+        auth_token_explanation_text: "Include this token in the Authorization header of your API requests. Use it as a Bearer token in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        auth_token_example_title: "HTTP Example:"
+        auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        service_user_title: "Service User"
+        service_user_name: "Name"
+        service_user_login_warning: "⚠️ Note: You should not login with this service user directly. Use the API authentication methods instead."
+      form:
+        create_title: "Create New API Client"
+        edit_title: "Edit API Client"
+        created: "API Client created successfully"
+        updated: "API Client updated successfully"
+        deleted: "API Client deleted successfully"
+        domain_hint: "optional"
+        service_user_explanation: "This service user is associated with this API client and will be used for API authentication."
+        service_user_form_title: "Update Service User Information"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_message: "%{count} error"
+        service_user_errors_title: "prevented this service user from being saved:"
+        update_service_user: "Update Service User"
+        service_user_email_note: "This email should be unique and different from any other user email already used in API clients."
+        service_user_email_description: "Service user account email. This service user will be created to act as the author when resources (proposals, ideas, deficiency reports) are created through this API client."
+        access_level_description: |
+          Public Data: Read-only access to retrieve all resources through GET requests. Can view projects, proposals, polls, events, comments, budgets, and all other data, but cannot create, update, or delete any resources.
+
+          Admin: Full administrative access with all permissions. Can retrieve resources with GET requests, create new resources with POST requests, update existing resources with PATCH requests, and delete resources with DELETE requests. Use this level for integrations that need complete control over data management.
     moderators:
       index:
         title: Moderators

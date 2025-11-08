@@ -736,6 +736,7 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
       managers: Verwalter*innen
       sdg_managers: SDG Manager*innen
       moderators: Moderator*innen
@@ -792,6 +793,32 @@ de:
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
       machine_learning: "AI / Machine learning"
+    api_clients:
+      index:
+        title: API-Clients
+        id: API-Client ID
+        create_new: "Neuen API-Client erstellen"
+        no_api_clients: Keine API-Clients vorhanden.
+        api_docs_link: "API-Docs"
+      show:
+        tokens: Tokens
+        service_user_title: "Service-Benutzer"
+        service_user_name: "Name"
+        auth_token_explanation_text: "Verwenden Sie diesen Token im Authorization-Header bei API-Anfragen"
+        auth_token_example_title: "Beispiel"
+        auth_token_example: "Authorization: Bearer YOUR_TOKEN_HERE"
+      form:
+        create_title: "Neuen API-Client erstellen"
+        edit_title: "API-Client bearbeiten"
+        created: "API-Client erfolgreich erstellt"
+        updated: "API-Client erfolgreich aktualisiert"
+        deleted: "API-Client erfolgreich gelöscht"
+        service_user_form_title: "Service-Benutzer"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_title: "Service-Benutzer"
+        service_user_errors_message: "%{count} Fehler hinderten das"
+        update_service_user: "Service-Benutzer aktualisieren"
+        service_user_explanation: "Ein Service-Benutzer ist ein automatisch erstelltes Benutzerkonto, das vom API-Client verwendet wird, um Ressourcen im Namen des Systems zu erstellen, wie Vorschläge, Mängelberichte und Ideen. Dies ermöglicht es dem API-Client, für alle von ihm erstellten Ressourcen eine eigene Identität zu behalten, ohne dabei reguläre Benutzerkonten zu verwenden."
     administrators:
       index:
         title: Administrator*innen
@@ -1382,6 +1409,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag

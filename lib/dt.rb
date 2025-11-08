@@ -1,6 +1,6 @@
 module Dt
   def self.url
-    domain = Rails.application.secrets.dt[:domain]
+    domain = Rails.application.secrets.dt&.fetch(:domain, nil)
 
     return if domain.blank?
 

@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "admin", "users_control
 
 class Admin::UsersController < Admin::BaseController
   include HasRegisteredAddress
+  include ImageAttributes
 
   def index
     @users = @users.not_guests.send(@current_filter).order_filter(params)
@@ -42,7 +43,14 @@ class Admin::UsersController < Admin::BaseController
         @user.reverify!
         @user.update!(reverify: true)
       end
-      redirect_to admin_users_path, notice: "Benutzer aktualisiert"
+
+      if request.xhr?
+        head :ok
+      elsif @user.api_client.present?
+        redirect_to edit_admin_api_client_path(@user.api_client), notice: t("admin.api_clients.form.updated")
+      else
+        redirect_to admin_users_path, notice: "Benutzer aktualisiert"
+      end
     else
       render :edit
     end
@@ -86,7 +94,8 @@ class Admin::UsersController < Admin::BaseController
                                    :first_name, :last_name,
                                    :city_name, :plz, :street_name, :street_number, :street_number_extension,
                                    :registered_address_id,
-                                   :gender, :date_of_birth)
+                                   :gender, :date_of_birth,
+                                   image_attributes: image_attributes)
                                    # :document_type, :document_last_digits,
                                    # :password, :password_confirmation)
     end

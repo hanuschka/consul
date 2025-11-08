@@ -31,6 +31,7 @@
           <% if @page.landing? %>
             <%= f.translatable_fields do |translations_form| %>
               <%= translations_form.text_field :title %>
+              <%= translations_form.text_field :header_title %>
               <%= translations_form.text_field :subtitle %>
             <% end %>
             <%= f.text_field :brand_color %>

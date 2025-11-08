@@ -44,6 +44,8 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
+  translates :projekt_selector_hint # needed for globalize fallback, not used otherwise
+  translates :resource_form_title_hint # needed for globalize fallback, not used otherwise
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -88,6 +90,17 @@ class ProjektPhase < ApplicationRecord
   }
 
   validates :projekt, presence: true
+  validate :type_must_be_valid
+
+  def self.find_sti_class(type_name)
+    if PROJEKT_PHASES_TYPES.include?(type_name)
+      super
+    else
+      self
+    end
+  rescue NameError
+    self
+  end
 
   default_scope { order(:given_order, :id) }
 
@@ -425,6 +438,14 @@ class ProjektPhase < ApplicationRecord
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def type_must_be_valid
+      if type.blank?
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+      elsif !PROJEKT_PHASES_TYPES.include?(type)
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
       end
     end
 end

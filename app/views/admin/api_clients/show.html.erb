@@ -2,7 +2,10 @@
 
 <div class="medium-8">
 
-  <h2><%= @api_client.name %></h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="margin: 0;"><%= @api_client.name %></h2>
+    <%= link_to t("admin.api_clients.edit_button"), edit_admin_api_client_path(@api_client), class: "button" %>
+  </div>
 
   <div class="callout">
     <% if @api_client.domain.present? %>

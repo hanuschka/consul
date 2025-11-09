@@ -752,6 +752,7 @@ de:
         edit_title: "Administrator bearbeiten"
         updated: "Administrator Update erfolgreich"
     api_clients:
+      edit_button: "Bearbeiten"
       access_level:
         public_data: "Öffentliche Daten"
         admin: "Admin"

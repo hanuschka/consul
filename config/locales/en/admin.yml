@@ -807,6 +807,7 @@ en:
         edit_title: "Edit administrator"
         updated: "Administrator updated successfully"
     api_clients:
+      edit_button: "Edit"
       access_level:
         public_data: "Public Data"
         admin: "Admin"

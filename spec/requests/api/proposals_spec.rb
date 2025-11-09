@@ -234,7 +234,6 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let(:projekt_phase_id) { context[2].id }
         let(:geozone_id) { context[1].id }
         let(:proposal) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             proposal: {
               responsible_name: 'Jane Smith',
@@ -244,7 +243,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               description: 'A proposal with an image attachment',
               image: {
                 title: 'Proposal Cover Image',
-                base64data: base64_png
+                base64data: base64_fixture('1x1.png')
               }
             }
           }
@@ -615,14 +614,12 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         end
         let(:id) { record.id }
         let(:proposal) do
-          # Small valid PNG image in base64 (1x1 transparent pixel)
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             proposal: {
               title: 'Updated with Image',
               image: {
                 title: 'postman title',
-                attachment: base64_png
+                attachment: base64_fixture('1x1.png')
               }
             }
           }

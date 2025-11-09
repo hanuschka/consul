@@ -118,9 +118,10 @@ class Api::BaseController < ActionController::API
     if resource.image.nil?
       image = Image.new(
         attachment: uploaded_file,
-        user: User.administrators.first
+        user: User.administrators.first || User.first,
+        imageable: resource
       )
-      resource.image = image
+      image.save!
     else
       resource.image.attachment.attach(uploaded_file)
     end

@@ -31,6 +31,7 @@ class Api::BudgetsController < Api::BaseController
     budget = @projekt_phase.build_budget(budget_params)
 
     if budget.save
+      process_image_with_base64(budget, params[:budget][:image_attributes])
       serialized_budget = BudgetSerializer.new(budget).serialize
 
       render json: { data: { budget: serialized_budget } }, status: 201
@@ -49,6 +50,7 @@ class Api::BudgetsController < Api::BaseController
   def update
     check_admin_access!
     if @budget.update(budget_params)
+      process_image_with_base64(@budget, params[:budget][:image_attributes])
       serialized_budget = BudgetSerializer.new(@budget).serialize
 
       render json: { data: { budget: serialized_budget } }
@@ -76,7 +78,6 @@ class Api::BudgetsController < Api::BaseController
       :voting_style,
       :published,
       :slug,
-      image_attributes: image_attributes
     )
   end
 

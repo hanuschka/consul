@@ -248,15 +248,13 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
       response '201', 'idea created with base64 image' do
         let(:idea) do
-          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
-          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             idea: {
               title: 'New Idea',
               description: 'A meaningful description',
               resource_terms: true,
               image_attributes: {
-                attachment: base64_image,
+                attachment: base64_fixture('clippy.jpg'),
                 title: 'Idea Cover Image'
               }
             }
@@ -550,13 +548,11 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
         let(:id) { existing_idea.id }
         let(:idea) do
-          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
-          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             idea: {
               description: 'Updated description',
               image_attributes: {
-                attachment: base64_image,
+                attachment: base64_fixture('clippy.jpg'),
                 title: 'Updated Idea Image'
               }
             }

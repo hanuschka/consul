@@ -10,21 +10,21 @@
   <div class="callout">
     <% if @api_client.domain.present? %>
       <p>
-      <strong><%= ApiClient.human_attribute_name(:domain) %>:</strong><br>
-      <%= @api_client.domain %>
+        <strong><%= ApiClient.human_attribute_name(:domain) %>:</strong><br>
+        <%= @api_client.domain %>
       </p>
     <% end %>
 
     <p>
-    <strong><%= ApiClient.human_attribute_name(:service_user_email) %>:</strong><br>
-    <%= @api_client.service_user_email %>
+      <strong><%= ApiClient.human_attribute_name(:service_user_email) %>:</strong><br>
+      <%= @api_client.service_user_email %>
     </p>
 
     <p>
-    <strong><%= ApiClient.human_attribute_name(:access_level) %>:</strong><br>
-    <span class="label <%= access_level_label_class(@api_client.access_level) %>">
-      <%= t("admin.api_clients.access_level.#{@api_client.access_level}") %>
-    </span>
+      <strong><%= ApiClient.human_attribute_name(:access_level) %>:</strong><br>
+      <span class="label <%= access_level_label_class(@api_client.access_level) %>">
+        <%= t("admin.api_clients.access_level.#{@api_client.access_level}") %>
+      </span>
     </p>
     <div style="margin-bottom: 20px; padding: 8px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px;">
       <% t("admin.api_clients.form.access_level_description").split("\n\n").each do |paragraph| %>
@@ -34,15 +34,15 @@
 
     <p>
     <strong><%= ApiClient.human_attribute_name(:auth_token) %>:</strong><br>
-    <%= render "auth_token_widget", token: @api_client.auth_token %>
+    <%= render Admin::HiddenTokenWidgetComponent.new(token: @api_client.auth_token) %>
     </p>
 
     <div style="max-width:1000px;background-color: #f5f5f5; padding: 12px 16px; border-radius: 4px; margin-top: 8px;">
       <p style="margin: 0 0 12px 0; color: #666;">
-      <em><%= t("admin.api_clients.show.auth_token_explanation_text") %></em>
+        <em><%= t("admin.api_clients.show.auth_token_explanation_text") %></em>
       </p>
       <p style="margin: 0 0 6px 0; font-weight: 500; color: #333;">
-      <%= t("admin.api_clients.show.auth_token_example_title") %>
+        <%= t("admin.api_clients.show.auth_token_example_title") %>
       </p>
       <code style="background-color: #fff; padding: 2px 4px; border-radius: 2px; color: #666; font-size: 0.9em;">
         <%= t("admin.api_clients.show.auth_token_example") %>
@@ -51,8 +51,8 @@
 
     <% if @api_client.service_api_token.present? %>
       <p>
-      <strong><%= ApiClient.human_attribute_name(:service_api_token) %>:</strong><br>
-      <code class="break-word"><%= @api_client.service_api_token %></code>
+        <strong><%= ApiClient.human_attribute_name(:service_api_token) %>:</strong><br>
+        <code class="break-word"><%= @api_client.service_api_token %></code>
       </p>
     <% end %>
   </div>
@@ -64,10 +64,10 @@
 
     <div style="margin-bottom: 20px; padding: 12px; background-color: #f0f4f8; border-left: 4px solid #003A71; border-radius: 4px;">
       <p style="margin: 0 0 8px 0; font-size: 14px; color: #333;">
-      <%= t("admin.api_clients.form.service_user_explanation") %>
+        <%= t("admin.api_clients.form.service_user_explanation") %>
       </p>
       <p style="margin: 0; font-size: 14px; color: #333;">
-      <%= t("admin.api_clients.show.service_user_login_warning") %>
+        <%= t("admin.api_clients.show.service_user_login_warning") %>
       </p>
     </div>
 
@@ -84,14 +84,14 @@
 
       <% if @api_client.user.first_name.present? || @api_client.user.last_name.present? %>
         <p>
-        <strong><%= t("admin.api_clients.show.service_user_name") %>:</strong><br>
-        <%= "#{@api_client.user.first_name} #{@api_client.user.last_name}".strip %>
+          <strong><%= t("admin.api_clients.show.service_user_name") %>:</strong><br>
+          <%= "#{@api_client.user.first_name} #{@api_client.user.last_name}".strip %>
         </p>
       <% end %>
 
       <p>
-      <strong><%= User.human_attribute_name(:username) %>:</strong><br>
-      <%= @api_client.user.username %>
+        <strong><%= User.human_attribute_name(:username) %>:</strong><br>
+        <%= @api_client.user.username %>
       </p>
     </div>
   <% end %>

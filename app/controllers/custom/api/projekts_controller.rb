@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_image, :update_page, :update_body]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_page, :update_body]
 
   def index
     check_read_access!
@@ -66,6 +66,7 @@ class Api::ProjektsController < Api::BaseController
 
     if projekt.save
       Projekt.ensure_order_integrity
+      process_image_with_base64(projekt.page, params[:projekt][:image_attributes])
 
       create_default_content_block(projekt)
 
@@ -93,28 +94,13 @@ class Api::ProjektsController < Api::BaseController
   def update_page
     check_admin_access!
     if @projekt.page.update(projekt_page_params)
+      process_image_with_base64(@projekt.page, params[:projekt][:image_attributes])
       serailized_projekt = ProjektSerializer.new(@projekt).serialize
 
       render json: { data: { projekt: serailized_projekt } }
     else
       render json: { error: { messages: @projekt.page.errors.full_messages } }, status: 422
     end
-  end
-
-  def update_image
-    check_admin_access!
-    page = @projekt.page
-    image_attrs = params.require(:image).permit(*image_attributes_api)
-
-    process_image_with_base64(page, image_attrs)
-    @projekt.reload
-
-    serialized_projekt = ProjektSerializer.new(@projekt).serialize
-    render json: { data: { projekt: serialized_projekt } }
-  rescue Api::BaseController::ForbiddenError, Api::BaseController::UnauthorizedError
-    raise
-  rescue StandardError => e
-    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def destroy

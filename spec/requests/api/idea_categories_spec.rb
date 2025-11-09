@@ -123,15 +123,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                    },
                    required: ['idea_categories']
                  },
-                 pagination: {
-                   type: :object,
-                   properties: {
-                     current_page: { type: :integer },
-                     total_pages: { type: :integer },
-                     total_count: { type: :integer },
-                     per_page: { type: :integer }
-                   }
-                 }
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
 

@@ -37,7 +37,7 @@ class ArgumentSerializer < BaseSerializer
     end
 
     if projekt_argument.respond_to?(:image) && projekt_argument.image.present?
-      serialized_image = ImageSerializer.new(projekt_argument.image, include_variants: false).serialize
+      serialized_image = ImageSerializer.new(projekt_argument.image, include_variants: true).serialize
       argument_data[:image] = serialized_image if serialized_image.present?
     end
 

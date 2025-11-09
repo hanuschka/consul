@@ -42,7 +42,7 @@ class Api::IdeasController < Api::BaseController
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
     if idea.save
-      process_image_with_base64(idea, idea_params[:image_attributes])
+      process_image_with_base64(idea, params[:idea][:image_attributes])
       serialized_idea = IdeaSerializer.new(idea).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
@@ -60,7 +60,7 @@ class Api::IdeasController < Api::BaseController
     @idea.assign_attributes(idea_params)
 
     if @idea.save
-      process_image_with_base64(@idea, params[:idea][:image_attributes]) if params[:idea]&.key?(:image_attributes)
+      process_image_with_base64(@idea, params[:idea][:image_attributes])
       serialized_idea = IdeaSerializer.new(@idea).serialize
 
       render json: { data: { idea: serialized_idea } }
@@ -84,8 +84,7 @@ class Api::IdeasController < Api::BaseController
       :video_url,
       :on_behalf_of,
       map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes,
-      image_attributes: image_attributes
+      documents_attributes: document_attributes
     )
   end
 

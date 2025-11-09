@@ -47,7 +47,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_report.admin_accepted = true
 
     if deficiency_report.save
-      process_image_with_base64(deficiency_report, deficiency_report_params[:image_attributes])
+      process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
@@ -106,8 +106,7 @@ class Api::DeficiencyReportsController < Api::BaseController
       :responsible_id,
       :responsible_type,
       :tag_list,
-      map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes
+      map_location_attributes: map_location_attributes
     )
   end
 

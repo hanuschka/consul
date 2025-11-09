@@ -63,6 +63,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     budget_investment.resource_terms = true
 
     if budget_investment.save
+      process_image_with_base64(budget_investment, params[:budget_investment][:image_attributes])
       serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }, status: 201
@@ -76,6 +77,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     @budget_investment.assign_attributes(budget_investment_params)
 
     if @budget_investment.save
+      process_image_with_base64(@budget_investment, params[:budget_investment][:image_attributes])
       serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
@@ -110,7 +112,6 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       :visible_to_valuators,
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes,
-      image_attributes: image_attributes,
       tag_list: []
     )
   end

@@ -221,7 +221,6 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase_id) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt).id }
         let(:budget) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             budget: {
               name: 'Test Budget',
@@ -229,7 +228,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               voting_style: 'knapsack',
               published: true,
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_fixture('clippy.png'),
                 title: 'Budget Cover Image'
               }
             }
@@ -467,12 +466,11 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         let(:test_budget) { Budget.create!(name_en: 'Original Name', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'original-name') }
         let(:id) { test_budget.id }
         let(:budget) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             budget: {
               name: 'Updated Name',
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_fixture('clippy.png'),
                 title: 'Updated Budget Image'
               }
             }

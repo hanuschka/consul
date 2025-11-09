@@ -5,10 +5,7 @@
 
 group :development do
   gem 'rack-mini-profiler'
-  gem 'pry', '~> 0.13.0'
-  gem 'pry-byebug', '~> 3.9'
   gem 'solargraph'
-  gem 'pry-rails'
   # gem 'prosopite'
   # gem 'pg_query'
 end
@@ -32,6 +29,10 @@ gem 'prawn-svg', '~> 0.37.0'
 gem "rqrcode", "~> 2.0"
 
 group :development, :test do
+  gem 'pry', '~> 0.13.0'
+  gem 'pry-byebug', '~> 3.9'
+  gem 'pry-rails'
   gem 'rswag-specs'
 end
+
 gem 'ruby_llm', '1.8.2'

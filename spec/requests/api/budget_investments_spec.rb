@@ -324,7 +324,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
 
         let(:budget_investment) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             budget_investment: {
               heading_id: heading.id,
@@ -332,7 +331,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               description: 'A meaningful description for the investment',
               resource_terms: true,
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_fixture('clippy.png'),
                 title: 'Investment Cover Image'
               }
             }
@@ -762,12 +761,11 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         end
         let(:id) { existing_investment.id }
         let(:budget_investment) do
-          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
           {
             budget_investment: {
               description: 'Updated description',
               image_attributes: {
-                attachment: base64_png,
+                attachment: base64_fixture('clippy.png'),
                 title: 'Updated Investment Image'
               }
             }

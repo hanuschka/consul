@@ -205,8 +205,6 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let(:status_id) { pre[0].id }
         let(:category_id) { pre[1].id }
         let(:deficiency_report) do
-          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
-          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             deficiency_report: {
               deficiency_report_category_id: category_id,
@@ -216,7 +214,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               title: 'Test Deficiency Report with Image',
               map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
               image_attributes: {
-                attachment: base64_image,
+                attachment: base64_fixture('clippy.jpg'),
                 title: 'Deficiency Photo'
               }
             }
@@ -458,13 +456,11 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         end
         let(:id) { record.id }
         let(:deficiency_report) do
-          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
-          base64_image = Base64.strict_encode64(File.read(image_path))
           {
             deficiency_report: {
               title: 'Graffiti updated',
               image_attributes: {
-                attachment: base64_image,
+                attachment: base64_fixture('clippy.jpg'),
                 title: 'Updated Deficiency Photo'
               }
             }

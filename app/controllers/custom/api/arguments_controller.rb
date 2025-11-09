@@ -9,7 +9,7 @@ class Api::ArgumentsController < Api::BaseController
     projekt_argument = @projekt_phase.projekt_arguments.new(projekt_argument_params)
 
     if projekt_argument.save
-      process_image_with_base64(projekt_argument, projekt_argument_params[:image_attributes])
+      process_image_with_base64(projekt_argument, params[:projekt_argument][:image_attributes])
 
       serialized_projekt_argument = ArgumentSerializer.new(projekt_argument).serialize
 
@@ -33,7 +33,7 @@ class Api::ArgumentsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_argument.update(projekt_argument_params)
-      process_image_with_base64(@projekt_argument, projekt_argument_params[:image_attributes])
+      process_image_with_base64(@projekt_argument, params[:projekt_argument][:image_attributes])
 
       serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
 
@@ -63,8 +63,7 @@ class Api::ArgumentsController < Api::BaseController
       :name,
       :position,
       :note,
-      :pro,
-      image_attributes: image_attributes
+      :pro
     )
   end
 

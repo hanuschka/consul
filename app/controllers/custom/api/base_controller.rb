@@ -115,30 +115,16 @@ class Api::BaseController < ActionController::API
       type: content_type
     )
 
-    @direct_upload = DirectUpload.new(
-      {
-        resource_relation: "image",
-        resource_type: resource.class.name,
+    if resource.image.nil?
+      image = Image.new(
         attachment: uploaded_file,
-        user: current_client.user
-      }
-    )
-
-    if @direct_upload.valid?
-      @direct_upload.save_attachment
-      @direct_upload.relation.set_cached_attachment_from_attachment
-
-      if resource.image.present?
-        resource.image.destroy
-      end
-
-      @direct_upload.relation.imageable = resource
-      @direct_upload.relation.save!
-
-      resource.reload
+        user: User.administrators.first
+      )
+      resource.image = image
     else
-      raise StandardError, @direct_upload.errors.full_messages.join(", ")
+      resource.image.attachment.attach(uploaded_file)
     end
+
   ensure
     if new_temp_file
       new_temp_file.close

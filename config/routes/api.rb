@@ -6,7 +6,6 @@
       member do
         patch :update_setting
         patch :update_page
-        patch :update_image
         patch :update_body
       end
 

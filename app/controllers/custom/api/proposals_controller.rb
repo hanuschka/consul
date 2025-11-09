@@ -44,12 +44,12 @@ class Api::ProposalsController < Api::BaseController
   def create
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
-    proposal = @projekt_phase.resources.new(proposal_params)
+    proposal = @projekt_phase.resources.new(proposal_params.except("image_attributes"))
     proposal.author = @current_client.user
     proposal.resource_terms = true
 
     if proposal.save
-      process_image_with_base64(proposal, proposal_params[:image_attributes])
+      process_image_with_base64(proposal, params[:proposal][:image_attributes])
       serialized_proposal = ProposalSerializer.new(proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
@@ -64,10 +64,10 @@ class Api::ProposalsController < Api::BaseController
 
   def update
     check_admin_access!
-    @proposal.assign_attributes(proposal_params)
+    @proposal.assign_attributes(proposal_params.except("image_attributes"))
 
     if @proposal.save
-      process_image_with_base64(@proposal, params[:proposal][:image_attributes]) if params[:proposal]&.key?(:image_attributes)
+      process_image_with_base64(@proposal, params[:proposal][:image_attributes])
       serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }
@@ -108,7 +108,6 @@ class Api::ProposalsController < Api::BaseController
       :description,
       projekt_label_ids: [],
       map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes,
       documents_attributes: document_attributes
     )
   end

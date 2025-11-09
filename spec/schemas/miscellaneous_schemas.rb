@@ -33,6 +33,16 @@ module Schemas
       required: %w[id url projekt_phase_id created_at updated_at]
     }.freeze
 
+    PAGINATION_RESPONSE_SCHEMA = {
+      type: :object,
+      properties: {
+        current_page: { type: :integer },
+        total_pages: { type: :integer },
+        total_count: { type: :integer },
+        per_page: { type: :integer }
+      }
+    }.freeze
+
     def self.all
       {
         Argument: ARGUMENT_SCHEMA,

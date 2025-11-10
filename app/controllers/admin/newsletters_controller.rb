@@ -60,6 +60,13 @@ class Admin::NewslettersController < Admin::BaseController
     redirect_to [:admin, @newsletter]
   end
 
+  def send_test
+    @newsletter = Newsletter.find(params[:id])
+    Mailer.newsletter(@newsletter, current_user.email).deliver_now
+
+    redirect_to admin_newsletter_path(@newsletter), notice: t("admin.newsletters.send_test_success")
+  end
+
   private
 
     def newsletter_params
@@ -67,6 +74,7 @@ class Admin::NewslettersController < Admin::BaseController
     end
 
     def allowed_params
-      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting]
+      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting,
+       :title_color, :subtitle_color]
     end
 end

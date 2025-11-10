@@ -1,0 +1,103 @@
+<%= render "custom/idea_management/ideas/subnav", idea: @idea %>
+
+<div class="row expanded full-width">
+  <div class="small-12 large-8 columns">
+    <%= translatable_form_for @idea, url: idea_management_idea_path(@idea) do |f| %>
+      <%= render "shared/errors", resource: @idea %>
+
+      <fieldset class="required-fields">
+
+        <%= render "shared/globalize_locales", resource: @idea %>
+        <%= f.translatable_fields do |translations_form| %>
+          <div>
+            <%= translations_form.text_field :title,
+                label: t("custom.ideas.form.labels.title"),
+                autocomplete: "off" %>
+          </div>
+
+          <div>
+            <%= translations_form.text_area :description,
+                  value: AdminWYSIWYGSanitizer.new.sanitize(@idea.description),
+                  class: "html-area #{ck_editor_class(current_user)}",
+                  label: t("custom.ideas.form.labels.description") %>
+          </div>
+        <% end %>
+
+        <% if feature?(:allow_images) %>
+          <div class="images">
+            <%= render "images/nested_image", imageable: @idea, f: f %>
+          </div>
+
+          <% if can?(:toggle_image, @idea) && @idea.image.present? %>
+            <%= link_to polymorphic_path([@namespace, @idea], action: :toggle_image), method: :patch, class: "button hollow" do %>
+              <% @idea.image.concealed ? "Bild einblenden" : "Bild ausblenden" %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </fieldset>
+
+      <fieldset>
+        <% if feature?(:allow_attached_documents) %>
+          <div class="documents">
+            <%= render "documents/nested_documents", documentable: @idea, f: f %>
+          </div>
+        <% end %>
+
+        <div class="margin-bottom">
+          <%= f.label :video_url, t("custom.ideas.form.labels.video_url") %>
+          <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note"), label: false %>
+        </div>
+
+        <div class="custom-new-design">
+          <div class="margin-bottom">
+            <%= render partial: "custom/shared/user_resources_form/idea_category", locals: { f: f } %>
+          </div>
+
+          <div class="" style="display:flex;align-items:baseline;">
+            <h2 class="rich-form-label" style="flex-grow:1;">
+              <i class="fas fa-map"></i>
+              <%= t("custom.user_resources.form.map_location_label") %>
+              <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+              <span class="small"><%= t("custom.user_resources.form.map_location_instructions_optional") %></span>
+            </h2>
+
+            <%= select_tag :idea_district, options_for_select(RegisteredAddress::District.joins(:map_location).order(id: :asc).all.map { |district|
+              [
+                district.name, district.id,
+                {
+                  data: {
+                    latitude: district.map_location.latitude,
+                    longitude: district.map_location.longitude
+                  }
+                }
+              ]
+            }),
+            { prompt: t("custom.ideas.form.district.placeholder"), label: false,
+              class: "js-update-map-center hide-on-big-tablet",
+              style: "width:unset;",
+              data: {
+                default_latitude: MapLocation.default.latitude,
+                default_longitude: MapLocation.default.longitude
+              }
+            } %>
+          </div>
+
+          <%= render "map_locations/form_fields",
+            form:            f,
+            mappable:        @idea,
+            nesting_prefix: "idea" %>
+        </div>
+
+        <div>
+          <%= f.label :on_behalf_of, t("custom.ideas.form.labels.on_behalf_of") %>
+          <%= f.text_field :on_behalf_of, label: false %>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <%= f.submit class: "button" %>
+      </div>
+
+    <% end %>
+  </div>
+</div>

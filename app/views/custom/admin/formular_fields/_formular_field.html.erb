@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(formular_field) %>" data-answer-id="<%= formular_field.id %>">
   <td><%= formular_field.name %></td>
-  <td><%= formular_field.description %></td>
+  <td><%= AdminWYSIWYGSanitizer.new.sanitize(formular_field.description) %></td>
   <td>
     <%= t("custom.admin.projekt_phases.formular.kinds.#{formular_field.kind}") %>
 

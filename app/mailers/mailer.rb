@@ -290,6 +290,40 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def new_valuator_assignment(valuator_assignment)
+    @investment = valuator_assignment.investment
+    @recipient = valuator_assignment.valuator.user
+    @email_to = @recipient.email
+
+    with_user(@recipient) do
+      mail(to: @email_to, subject: t("mailers.new_valuator_assignment.subject"))
+    end
+  end
+
+  def existing_stamp_notify_existing_user(user)
+    @user = user
+    @email_to = @user.email
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.existing_stamp_notify_existing_user.subject"))
+    end
+  end
+
+  def existing_stamp_notify_new_user(email)
+    @email_to = email
+
+    mail(to: @email_to, subject: t("mailers.existing_stamp_notify_new_user.subject"))
+  end
+
+  def user_verification_failed(user)
+    @user = user
+    @email_to = @user.email
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.user_verification_failed.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)
@@ -297,7 +331,7 @@ class Mailer < ApplicationMailer
     end
 
     def prevent_delivery_to_users_without_email
-      if @email_to.blank?
+      if @email_to.blank? || @email_to.include?("@example.com")
         mail.perform_deliveries = false
       end
     end

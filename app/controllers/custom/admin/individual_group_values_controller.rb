@@ -90,6 +90,13 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
     redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value)
   end
 
+  def remove_email_from_auto_join_emails
+    @individual_group_value = IndividualGroupValue.find(params[:id])
+    @individual_group_value.remove_auto_join_email(params["email"])
+
+    redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value)
+  end
+
   private
 
     def individual_group_value_params

@@ -1,0 +1,14 @@
+<div class="projekt-point-of-interest-categories">
+  <% @categories.each do |category| %>
+    <%= link_to link_path(category),
+      remote: true,
+      class: "js-remote-link-push-state projekt-point-of-interest-category-link",
+      "data-footer-tab-back-url": footer_tab_back_button_url(category),
+      onclick: "$('#footer-content').addClass('show-loader')" do %>
+      <span class="projekt-point-of-interest-category" style="background-color: <%=  category_button_color(category) %>;">
+        <i class="fas fa-<%= category.icon %>"></i>
+        <%= category.name %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

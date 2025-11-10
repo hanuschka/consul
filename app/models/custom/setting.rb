@@ -1,10 +1,14 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
+  PRO_SETTINGS = [
+    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
+  ]
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -37,18 +41,18 @@ class Setting < ApplicationRecord
     def defaults
       {
         "feature.featured_proposals": nil,
-        "feature.facebook_login": false,
-        "feature.google_login": false,
-        "feature.twitter_login": false,
+        "feature.facebook_login": true,
+        "feature.google_login": true,
+        "feature.twitter_login": true,
         "feature.wordpress_login": false,
         "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
-        "feature.user.recommendations": false,
-        # "feature.user.recommendations_on_debates": true,
-        # "feature.user.recommendations_on_proposals": true,
+        "feature.user.recommendations": true,
+        "feature.user.recommendations_on_debates": true,
+        "feature.user.recommendations_on_proposals": true,
         "feature.community": true,
-        "feature.map": true,
+        "feature.map": nil,
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
         "feature.help_page": true,
@@ -64,7 +68,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.active_projekts": true,
+        "homepage.widgets.feeds.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -85,6 +89,7 @@ class Setting < ApplicationRecord
         "process.legislation": true,
         "process.projekts": true,
         "process.deficiency_reports": false,
+        "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
         "proposals.poll_description": nil,
@@ -137,6 +142,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_name": "CONSUL",
         "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,
@@ -170,6 +176,8 @@ class Setting < ApplicationRecord
         "welcomepage.usage_stats": true,
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
+        "welcomepage.share_buttons": "",
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -187,6 +195,19 @@ class Setting < ApplicationRecord
         "deficiency_reports.admin_acceptance_required": false,
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
+        "deficiency_reports.voice_assistant": false,
+        "deficiency_reports.send_feedback_form_link": false,
+
+        "ideas.show_in_main_menu": false,
+        "ideas.admins_must_assign_officer": false,
+        "ideas.officers_can_administer_assigned_reports": true,
+        "ideas.officers_can_edit_assigned_reports": false,
+        "ideas.enable_comments": true,
+        "ideas.intro_text": false,
+        "ideas.enable_geoman_controls_in_maps": true,
+        "ideas.admin_acceptance_required": false,
+        "ideas.document_upload": true,
+        "ideas.external_video": true,
 
         # "extended_feature.general.elasticsearch": false,
 
@@ -200,6 +221,8 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        # "extended_feature.general.homepage_projekt_search": false,
+
         "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",
@@ -233,7 +256,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
         "extended_option.proposals.max_active_proposals_per_user": 100,
-        "extended_option.proposals.description_max_length": 6000,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,

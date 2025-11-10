@@ -105,6 +105,7 @@
       font-size: 20px;
       margin-left: auto !important;
       margin-right: auto !important;
+      line-height: unset;
 
       @media(max-width: $small-tablet-viewport-start) {
         font-size: 16px;
@@ -212,6 +213,7 @@
       padding-left: 15px;
       padding-right: 15px;
       border-radius: 7px;
+      line-height: normal;
     }
 
     .options-group {

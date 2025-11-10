@@ -42,7 +42,14 @@ module CommentableActions
 
   def suggest
     @limit = 5
-    @resources = @search_terms.present? ? resource_relation.search(@search_terms) : nil
+    @projekt_phase = ProjektPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
+    @resources = if @search_terms.present? && @projekt_phase.present?
+                   resource_relation.search(@search_terms).where(projekt_phase: @projekt_phase)
+                 elsif @search_terms.present?
+                   resource_relation.search(@search_terms)
+                 else
+                   nil
+                 end
   end
 
   def create

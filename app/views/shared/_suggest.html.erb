@@ -17,14 +17,8 @@
 
       <% if @resources.count > @limit %>
         <p>
-          <strong>
-            <%= t("shared.suggest.#{resource_name}.message",
-                count: @resources.count,
-                query: @search_terms,
-                limit: @limit) %>
-          </strong>
-          <%= link_to t("shared.suggest.#{resource_name}.see_all"),
-                      polymorphic_path(resource_model, search: @search_terms), target: "_blank" %>
+          <% link_to_all = @projekt_phase.present? ? url_to_footer_tab(extras: { search: @search_terms, anchor: "footer-content" }) : polymorphic_path(resource_model, search: @search_terms) %>
+          <%= link_to t("shared.suggest.#{resource_name}.see_all"), link_to_all, target: "_blank" %>
         </p>
       <% end %>
 

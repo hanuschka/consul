@@ -30,11 +30,32 @@ class PagesController < ApplicationController
 
     @custom_page_page_visible =
       @custom_page&.projekt&.preview_code_valid?(params[:preview_code]) ||
-      @custom_page&.projekt&.frame_access_code_valid?(params[:frame_code]) ||
       @custom_page&.projekt&.visible_for?(current_user)
+
+    if @custom_page&.landing?
+      set_landing_page_topbar_ui_variables(@custom_page)
+    end
+
+    if current_user.present?
+      @namespace =
+        if current_user.administrator?
+          :admin
+        elsif @custom_page.present? && current_user.projekt_manager?(@custom_page.projekt)
+          :projekt_management
+        end
+    end
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
+
+      if params[:page_ref].present?
+        @landing_page =
+          @projekt
+            .landing_pages
+            .find_by(slug: params[:page_ref])
+
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
@@ -43,6 +64,7 @@ class PagesController < ApplicationController
       if @projekt.projekt_phases.active.any?
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
         @projekt_phase = @default_projekt_phase
+
         params[:projekt_phase_id] = @default_projekt_phase.id
         params[:projekt_id] ||= @projekt.id
         send("set_#{@default_projekt_phase.name}_footer_tab_variables")
@@ -60,6 +82,8 @@ class PagesController < ApplicationController
           @custom_page.content.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
+
+      @custom_page.content = process_oembeds(@custom_page.content)
 
       render action: custom_page_name
 
@@ -106,14 +130,6 @@ class PagesController < ApplicationController
     end
   end
 
-  def extended_sidebar_map
-    @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
-
-    respond_to do |format|
-      format.js { render "pages/sidebar/extended_map" }
-    end
-  end
-
   private
 
   def set_comment_phase_footer_tab_variables
@@ -149,29 +165,54 @@ class PagesController < ApplicationController
   end
 
   def set_proposal_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
-                     elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
-                       @current_order = "created_at"
+                     elsif sort_option.present?
+                       @current_order = sort_option.value
                      else
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
+    @resources = @projekt_phase.proposals
+                               .base_selection
+                               .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:search].present?
-      @resources = @resources.search(params[:search])
+    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
-      take_by_projekt_labels
-      take_by_sentiment
-      take_by_my_posts
-    end
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
+        take_by_my_posts
+      end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
-    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
+      @proposals_coordinates = all_proposal_map_locations(@resources)
+
+      @proposals =
+        @resources
+          .perform_sort_by(@current_order, session[:random_seed])
+          .page(params[:page])
+
+      if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
+        @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
+        @proposal = @proposals.first
+
+        if @proposal.present?
+          @comment_tree = CommentTree.new(@proposal, params[:page], "newest")
+          set_comment_flags(@comment_tree.comments)
+        end
+      else
+        @proposals = @proposals.per(24)
+      end
+    end
   end
 
   def set_voting_phase_footer_tab_variables
@@ -226,16 +267,34 @@ class PagesController < ApplicationController
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
-    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
+    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting"])
+    params[:filter] ||= "preselected" if @budget.current_phase.kind.in?(["valuating"])
     params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-    @valid_orders = %w[random total_votes ballots ballot_line_weight newest comments_count]
-    @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
-    @valid_orders.delete("ballots")
+    @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
+    @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif sort_option.present? || @valid_orders.include?(sort_option.value)
+        @current_order = sort_option.value
+      else
+        @valid_orders.first
+      end
+
+    if @budget.current_phase.kind == "finished"
+      if @budget.voting_style == "distributed"
+        @current_order = "ballot_line_weight"
+      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
+        @current_order = "ballots"
+      end
+    end
 
     params[:section] ||= "results" if @budget.current_phase.kind == "finished"
 
@@ -263,26 +322,28 @@ class PagesController < ApplicationController
       @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
       @resources = @budget.investments
-      take_by_projekt_labels
-      take_by_sentiment
-      @investments = @resources
 
-      @investments = @investments.send(@current_filter)
-      @investment_ids = @investments.ids
-    end
-
-    if @budget.current_phase.kind == "finished"
-      if @budget.voting_style == "distributed"
-        @current_order = "ballot_line_weight"
-      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
-        @current_order = "ballots"
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
       end
+
+      @investments = @resources.send(@current_filter)
+      @investment_ids = @investments.ids
+      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:features_json_data)
+      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
-    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+    if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
+      @investments = @investments.page(params[:resource_browse_mode_page]).per(1)
+      @investment = @investments.first
 
-    unless params[:section] == "results" && can?(:read_results, @budget)
-      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
+      if @investment.present?
+        @comment_tree = CommentTree.new(@investment, params[:page], "newest")
+        set_comment_flags(@comment_tree.comments)
+      end
     end
   end
 
@@ -300,6 +361,30 @@ class PagesController < ApplicationController
     @projekt_notifications = @projekt_phase.projekt_notifications
   end
 
+  def set_point_of_interest_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
+
+    map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+    selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
+
+    features = if selected_categories.present?
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"] ))&.unicode }) }
+                   ml.features["features"].select { |f| f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) }
+                 end.flatten.compact
+               else
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) }
+                   ml.features["features"]
+                 end.flatten
+               end
+
+    @pin_coordinates = {
+      type: "FeatureCollection",
+      features: features
+    }
+  end
+
   def set_newsfeed_phase_footer_tab_variables
     @rss_id = @projekt_phase.settings.find_by(key: "option.general.newsfeed_id").value
     @rss_type = @projekt_phase.settings.find_by(key: "option.general.newsfeed_type").value
@@ -308,7 +393,11 @@ class PagesController < ApplicationController
   def set_event_phase_footer_tab_variables
     @valid_filters = %w[all incoming past]
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
-    @projekt_events = @projekt_phase.projekt_events.page(params[:page]).send("sort_by_#{@current_filter}")
+    order = @projekt_phase.feature?("general.reverse_order_for_incoming_events") ? :desc : :asc
+
+    @projekt_events = @projekt_phase.projekt_events
+                                    .send("sort_by_#{@current_filter}")
+                                    .reorder(datetime: order)
   end
 
   def set_question_phase_footer_tab_variables
@@ -338,6 +427,12 @@ class PagesController < ApplicationController
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
   end
 
+  def set_iframe_phase_footer_tab_variables
+    @iframe_url = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_url" }.value
+    @iframe_width = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_width" }.value
+    @iframe_height = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_height" }.value
+  end
+
   def set_livestream_phase_footer_tab_variables
     @all_livestreams = @projekt_phase.projekt_livestreams.order(created_at: :desc)
     @current_projekt_livestream = @all_livestreams.first
@@ -345,6 +440,7 @@ class PagesController < ApplicationController
   end
 
   def set_formular_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @formular = @projekt_phase.formular
 
     if params[:token].present?

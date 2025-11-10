@@ -9,7 +9,13 @@
       </thead>
       <tbody>
         <% features.each do |feature| %>
-          <tr>
+          <% pro_setting = ProjektPhaseSetting::PRO_SETTINGS.find { |s| s == feature.key } %>
+
+          <% if pro_setting.present? %>
+            <% app = App.app_for_projekt_phase_setting(@projekt_phase, feature.key) %>
+          <% end %>
+
+          <tr data-setting-key="<%= feature.key %>">
             <td class='small-9'>
               <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}") %></strong>
               <% if embedded? %>
@@ -18,17 +24,34 @@
                 ) %>
               <% end %>
               <br>
-              <span class="small admin-setting-description">
+              <div class="small admin-setting-description">
                 <%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}_description", default: t("admin.settings.no_description")) %>
-              </span>
+
+                <% if app.present? %>
+                  <div>
+                    <%= link_to "App in Store anzeigen", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
+                  </div>
+                <% end %>
+              </div>
             </td>
 
             <td>
               <div class="admin-projekt-phase-switch">
-                <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <% if embedded? %>
                   <%= link_to "konfigurieren", '#' %>
                 <% end %>
-                <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
+                <% if app.present? && app.inactive? %>
+                  <div class="admin-setting-app-activate-link">
+                    <%= link_to "Aktivieren", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
+                  </div>
+                <% elsif app.present? && app.waiting_for_activation? %>
+                  <div class="admin-setting-app-waiting-for-activation">
+                    Aktivierung in Arbeit
+                    <i class="fas fa-hourglass-half"></i>
+                  </div>
+                <% else %>
+                  <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
+                <% end %>
               </div>
             </td>
           </tr>

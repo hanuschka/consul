@@ -22,6 +22,8 @@
             <%= render SDGManagement::MenuComponent.new %>
           <% elsif namespace == "deficiency_report_management" %>
             <%= render DeficiencyReportManagement::MenuComponent.new %>
+          <% elsif namespace == "idea_management" %>
+            <%= render IdeaManagement::MenuComponent.new %>
           <% else %>
             <%= render "/#{namespace}/menu" %>
           <% end %>

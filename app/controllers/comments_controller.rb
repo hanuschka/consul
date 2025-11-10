@@ -20,7 +20,7 @@ class CommentsController < ApplicationController
 
   def show
     @comment = Comment.find(params[:id])
-    @commentable = @comment
+    @commentable = @comment.commentable || @comment
     if @comment.valuation && @comment.author != current_user
       raise ActiveRecord::RecordNotFound
     else

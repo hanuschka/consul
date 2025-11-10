@@ -270,10 +270,6 @@
 
 // Overriding foundation
 
-.map .map-marker .map-icon {
-  background: $brand;
-}
-
 .button:hover, .button:focus {
   background-color: $secondary;
   color: $brand
@@ -370,6 +366,18 @@ span.toggle-arrow {
 .d-flex-justify-right {
   display: flex;
   justify-content: flex-end;
+}
+
+.d-flex-justify-space-between {
+  justify-content: space-between;
+}
+
+.u-gap-10 {
+  gap: 10px;
+}
+
+.u-gap-5 {
+  gap: 5px;
 }
 
 .d-flex-start {
@@ -491,21 +499,6 @@ span.toggle-arrow {
       color: #004a83;
       font-weight: bold;
       border-bottom: 2px solid;
-    }
-  }
-}
-
-
-// Buttons
-
-.button {
-  &.left-aligned {
-    text-align: start;
-    padding-left: 0.5em;
-
-    i {
-      width: 25px;
-      text-align: center;
     }
   }
 }

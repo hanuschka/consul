@@ -3,7 +3,6 @@
   <li class="nav-element top-level-item top-level-item js-access-top-level-menu js-prevent-key-scroll"
       aria-label='<%= t('custom.links.menu.admin_icon') if placement == 'desktop' %>'
       aria-expanded='false'
-      <%= "aria-haspopup=true" if placement == 'desktop' %>
       <%= "tabindex=0" if placement == 'desktop' %>
   >
 
@@ -21,7 +20,6 @@
       <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
            tabindex='0'
            aria-label='<%= t('custom.links.menu.mobile.arrow_admin')  %>'
-           aria-haspopup=true
            aria-expanded=false
       >
       </div>

@@ -5,29 +5,29 @@
 
   <div class="row">
     <%= f.translatable_fields do |translations_form| %>
-      <div class="small-12 medium-6 column end">
-        <%= translations_form.text_field :label %>
-      </div>
+      <%# <div class="small-12 medium-6 column end"> %>
+      <%#   <%= translations_form.text_field :label %1> %>
+      <%# </div> %>
 
       <div class="column">
         <%= translations_form.text_field :title %>
       </div>
 
-      <div class="column">
-        <%= translations_form.text_area :description, rows: 5 %>
-      </div>
+      <%# <div class="column"> %>
+      <%#   <%= translations_form.text_area :description, rows: 5 %1> %>
+      <%# </div> %>
 
-      <div class="small-12 medium-6 column end">
-        <%= translations_form.text_field :link_text %>
-      </div>
+      <%# <div class="small-12 medium-6 column end"> %>
+      <%#   <%= translations_form.text_field :link_text %1> %>
+      <%# </div> %>
     <% end %>
   </div>
 
-  <div class="row">
-    <div class="small-12 medium-6 column">
-      <%= f.text_field :link_url %>
-    </div>
-  </div>
+  <%# <div class="row"> %>
+  <%#   <div class="small-12 medium-6 column"> %>
+  <%#     <%= f.text_field :link_url %1> %>
+  <%#   </div> %>
+  <%# </div> %>
 
   <div class="row">
     <% unless card.header? %>

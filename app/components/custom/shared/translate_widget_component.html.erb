@@ -2,7 +2,7 @@
   <% if google_translate_accepted? %>
     <div id="google_translate_element_<%= @placement %>" class='google_translate_element'></div>
   <% else %>
-    <%= link_to "#", class: "translate-widget-toggler", onClick: "klaro.show();return false;" do %>
+    <%= link_to "#", class: "translate-widget-toggler", onClick: "klaro.show();return false;", aria: { label: t('custom.accessibility.google-translate.widget-toggler.aria-label') } do %>
       <i class="fas fa-language"></i>
     <% end %>
   <% end %>

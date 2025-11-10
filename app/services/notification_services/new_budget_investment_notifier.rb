@@ -15,16 +15,12 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, moderators, projekt_managers, projekt_phase_subscribers]
-          .flatten.uniq(&:id).reject { |user| user.id == @investment.author.id }
+        [administrators, projekt_managers, projekt_phase_subscribers]
+          .flatten.uniq(&:id).reject { |user| user.id == @investment.author.id || user.not_actual? }
       end
 
       def administrators
         User.joins(:administrator).where(adm_email_on_new_budget_investment: true).to_a
-      end
-
-      def moderators
-        User.joins(:moderator).where(adm_email_on_new_budget_investment: true).to_a
       end
 
       def projekt_managers

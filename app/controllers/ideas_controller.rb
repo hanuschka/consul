@@ -8,8 +8,10 @@ class IdeasController < ApplicationController
 
   feature_flag :ideas
 
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_idea, only: [:show, :vote, :unvote]
+  before_action :authenticate_user!, except: [:index, :show, :json_data]
+  before_action :set_idea, only: [:show, :vote, :unvote, :json_data]
+
+  skip_authorization_check only: [:json_data]
 
   has_orders ->(c) { Idea.idea_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
@@ -19,6 +21,7 @@ class IdeasController < ApplicationController
 
     @ideas = Idea.accepted
 
+    filter_by_category
     filter_by_status
     filter_by_quorum
 
@@ -29,7 +32,7 @@ class IdeasController < ApplicationController
   end
 
   def show
-    @idea = Idea.accepted.find(params[:id])
+    @idea = Idea.find(params[:id])
     authorize! :show, @idea
 
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
@@ -80,14 +83,18 @@ class IdeasController < ApplicationController
   end
 
   def json_data
-    idea = Idea.find(params[:id])
+    image_url = url_for @idea.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+    ) if @idea.image&.attachment&.attached?
 
-    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
     data = {
-      idea_id: idea.id,
+      resource_type: "idea",
+      id: @idea.id,
       image_url: image_url,
-      idea_title: idea.title
+      title: @idea.title
     }.to_json
 
     respond_to do |format|
@@ -110,13 +117,19 @@ class IdeasController < ApplicationController
     def all_idea_map_locations(ideas_for_map)
       ids = ideas_for_map.except(:limit, :offset, :order).ids.uniq
 
-      MapLocation.where(idea_id: ids).map do |map_location|
-        map_location.shape_json_data.presence || map_location.json_data
+      MapLocation.where(mappable_id: ids, mappable_type: "Idea").map do |map_location|
+        map_location.features_json_data
       end
     end
 
     def set_idea
       @idea = Idea.find(params[:id])
+    end
+
+    def filter_by_category
+      return unless params[:idea_category].present?
+
+      @ideas = @ideas.where(idea_category_id: params[:idea_category])
     end
 
     def filter_by_status

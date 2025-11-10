@@ -43,6 +43,9 @@ en:
       recipient_group:
         one: Recipient group
         other: Recipient groups
+      projekt_point_of_interest_category:
+        one: Category
+        other: Categories
     errors:
       models:
         proposal:
@@ -62,6 +65,11 @@ en:
             email:
               invalid: Please enter a valid email format
     attributes:
+      map_location:
+        latitude: Latitude
+        longitude: Longitude
+        zoom: Zoom
+        show_admin_shape: Show in project overview map
       projekt:
         show_start_date_in_frontend: Visible in front end
         show_end_date_in_frontend: Visible in front end
@@ -125,6 +133,7 @@ en:
         date_of_birth: Date of birth
         document_type: Document
         document_last_digits: Document (last 4 digits)
+        guest: Guest
       modal_notification:
         titel: Titel
         active_from: From
@@ -196,3 +205,7 @@ en:
       formular_answer_document:
         title: Title
         attachment: Attachment
+      projekt_point_of_interest_category:
+        name: Name
+        icon: Icon
+        color: Farbe

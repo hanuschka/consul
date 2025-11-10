@@ -36,8 +36,7 @@ class Polls::QuestionsController < ApplicationController
 
     respond_to do |format|
       format.csv do
-        send_data CsvServices::PollQuestionAnswersStreetsExporter.new(question).call,
-          filename: "question_#{question.id}_answers_streets_#{Time.zone.today.strftime("%d/%m/%Y")}.csv"
+        CsvJobs::PollQuestionAnswersStreetsExporterJob.perform_later(current_user.id, question.id)
       end
     end
   end

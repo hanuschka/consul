@@ -5,7 +5,8 @@ module SuggestionsHelper
     {
       js_suggest_result: "js_suggest_result",
       js_suggest: ".js-suggest",
-      js_url: polymorphic_path(record.class, action: :suggest)
+      js_url: polymorphic_path(record.class, action: :suggest),
+      js_projekt_phase_id: record.try(:projekt_phase_id)
     }
   end
 end

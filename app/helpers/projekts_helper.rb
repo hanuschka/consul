@@ -6,7 +6,7 @@ module ProjektsHelper
       projekt = Projekt.find(projekt_id)
 
       if !projekt.page.published? || (projekt == base_projekt && home_page_link)
-        content_tag(:div, projekt.title, class: 'breadcrumbs-item')
+        content_tag(:div, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
       else
         link_to projekt.page.title, projekt.page.url, class: 'breadcrumbs-item'
       end
@@ -14,7 +14,7 @@ module ProjektsHelper
 
     links.unshift(link_to t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item') if home_page_link
 
-    content_tag(:div, safe_join(links, divider_tag).html_safe, class: 'custom-breadcrumbs')
+    content_tag(:nav, safe_join(links, divider_tag).html_safe, class: 'custom-breadcrumbs', "aria-label": "Breadcrumb")
   end
 
   def projekt_filter_resources_name
@@ -34,7 +34,7 @@ module ProjektsHelper
     # classes.push("draft-projekt") unless projekt.activated?
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, projekt.page.url, tabindex: "-1", aria: { hidden: true }, class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, projekt.page.url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
       link_to projekt.page.title, projekt.page.url, class: classes.join(" ")
     else

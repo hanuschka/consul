@@ -13,13 +13,17 @@
     </div>
   <% end %>
 
+  <%= render Shared::MapComponent.new(
+    features: @ideas_coordinates,
+    process: 'ideas'
+  ) %>
+
   <div class="flex-layout">
     <div class="main-column">
       <%= render(
         Shared::ResourcesListComponent.new(
           resources: @ideas,
           resource_type: Idea,
-          map_coordinates: @ideas_coordinates,
           current_filter: @current_order,
           filter_param: "order",
           text_search_enabled: true,
@@ -41,7 +45,7 @@
             <%= t("ideas.index.sidebar.count") %>
           </span>
           <span>
-            <%= Idea.all.count %>
+            <%= @ideas.total_count %>
           </span>
         </div>
 
@@ -50,6 +54,12 @@
             class: "button -orange", style: "display:inline-flex;" %>
         </div>
       <% end %>
+
+      <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :idea_category,
+        options: Idea::Category.all.map { |c| [c.name, c.id] },
+        title: t("ideas.index.sidebar.category_filter.title")
+      ) %>
 
       <%= render Sidebar::RadioFilterComponent.new(
         identifier: :status,
@@ -69,7 +79,7 @@
         title: t("ideas.index.sidebar.quorum_filter.title")
       ) %>
 
-      <div class="show-on-mobile">
+      <div class="show-on-small-tablet">
         <%= render(Mobile::FixedBottomActionComponent.new) do %>
           <%= link_to t("ideas.index.sidebar.button_new"), new_idea_path,
             class: "button -orange", style: "display:inline-flex;" %>

@@ -4,11 +4,6 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
   after_create :copy_map_settings_from_projekt, :create_budget
 
-  def phase_activated?
-    # projekt.budget.present?
-    active?
-  end
-
   def name
     "budget_phase"
   end
@@ -42,6 +37,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       map age_ranges_for_stats
       projekt_labels sentiments
       officing_managers
+      ai_settings
     ]
   end
 

@@ -13,8 +13,7 @@
       <th><%= t("custom.admin.ideas.categories.category.icon") %></th>
       <th><%= t("custom.admin.ideas.categories.category.color") %></th>
       <th><%= t("custom.admin.ideas.categories.category.name") %></th>
-      <th><%#= t("custom.admin.ideas.categories.category.default_idea_officer") %></th>
-      <th><%#= t("custom.admin.ideas.categories.category.warning_text") %></th>
+      <th><%= t("custom.admin.ideas.categories.category.idea_officer") %></th>
       <th><%= t("admin.actions.actions") %></th>
     </tr>
   </thead>
@@ -25,8 +24,7 @@
         <td><%= sanitize("<i class=\"fas fa-#{category.icon}\" style=\"color:#{category.color}\"></i>") if category.icon %></td>
         <td><%= category.color %></td>
         <td><%= category.name %></td>
-        <td><%#= category.default_responsible&.name %></td>
-        <td><%#= strip_tags(category.warning_text)[0..200] %></td>
+        <td><%= category.default_idea_officer&.name %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(category,
                                                       actions: [:edit, :destroy],

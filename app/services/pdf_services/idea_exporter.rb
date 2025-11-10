@@ -28,18 +28,20 @@ module PdfServices
 
         pdf.formatted_text [
           { text: "#{I18n.t("custom.admin.ideas.show.admin_accepted_at")}: ", size: 10, styles: [:bold] },
-          { text: @idea.admin_accepted_at&.strftime("%d %b %Y"), size: 10 }
+          { text: @idea.admin_accepted_at&.strftime("%d %b %Y") || 'Schwebend', size: 10 }
         ]
 
         pdf.formatted_text [
           { text: "#{I18n.t("custom.admin.ideas.show.status")}: ", size: 10, styles: [:bold] },
-          { text: @idea.status, size: 10 }
+          { text: I18n.t("ideas.status.#{@idea.status}"), size: 10 }
         ]
 
-        pdf.formatted_text [
-          { text: "#{I18n.t("custom.admin.ideas.show.category")}: ", size: 10, styles: [:bold] },
-          { text: @idea.category&.name, size: 10 }
-        ]
+        if @idea.category.present?
+          pdf.formatted_text [
+            { text: "#{I18n.t("custom.admin.ideas.show.category")}: ", size: 10, styles: [:bold] },
+            { text: @idea.category&.name, size: 10 }
+          ]
+        end
 
         pdf.move_down 10
 
@@ -49,7 +51,7 @@ module PdfServices
 
         if @idea.approximated_address.present?
           pdf.formatted_text [
-            { text: "#{Idea.human_attribute_name(:approximated_address)}: ", size: 10, styles: [:bold] },
+            { text: "Adresse: ", size: 10, styles: [:bold] },
             { text: @idea.approximated_address, size: 10 }
           ]
         end

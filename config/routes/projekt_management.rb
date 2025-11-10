@@ -4,7 +4,7 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
-      get :frame_new_phase_selector
+      # get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -14,6 +14,7 @@ namespace :projekt_management do
       get :age_ranges_for_stats
       get :map
       patch :update_map
+      get :proposals
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -30,11 +31,16 @@ namespace :projekt_management do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      post :send_notifications
+      get :ai_settings
+      patch :update_ai_settings
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
+      get :map_resources_overview
     end
 
     resources :formular, only: [] do
@@ -52,6 +58,10 @@ namespace :projekt_management do
       end
     end
 
+    resources :proposals, only: %i[show update] do
+      patch :toggle_admin_accepted, on: :member
+      patch :toggle_image_concealed, on: :member
+    end
     resources :projekt_labels, except: %i[index show]
     resources :sentiments, except: %i[index show]
     resources :projekt_questions, except: %i[index show] do
@@ -68,11 +78,15 @@ namespace :projekt_management do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end
     end
+    resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+    resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
+
+    resources :saved_content_blocks, only: [:create, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 
@@ -80,16 +94,30 @@ namespace :projekt_management do
     member do
       patch :update_standard_phase
       get :frame_new_phase_selector
+      patch :update_page
+      patch :update_title_image
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do
       member do
         patch :toggle_active_status
+        patch :toggle_frontend_visibility
       end
       collection do
         post :order_phases
+        patch :update_position
       end
+    end
+
+    resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+      patch :change_with_ai
     end
   end
 
@@ -150,6 +178,8 @@ namespace :projekt_management do
   resources :proposals, only: :index do
     put :hide, on: :member
     put :moderate, on: :collection
+    resources :milestones, controller: "proposal_milestones"
+    resources :progress_bars, except: :show, controller: "proposal_progress_bars"
   end
 
   resources :debates, only: :index do

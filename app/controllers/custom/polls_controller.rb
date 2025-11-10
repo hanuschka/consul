@@ -34,7 +34,7 @@ class PollsController < ApplicationController
     related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
 
-    @scoped_projekt_ids = Poll.scoped_projekt_ids_for_index(current_user)
+    @scoped_projekt_ids = Projekt.visible_for(current_user).joins(voting_phases: :polls).select(:id)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
@@ -72,7 +72,9 @@ class PollsController < ApplicationController
     auto_sign_in_guest_for(@poll.projekt_phase)
 
     @projekt_phase = @poll.projekt_phase
-    @questions = @poll.questions.for_render.root_questions.sort_for_list
+    @questions = @poll.questions.root_questions
+                                .includes(:context, :translations, :votation_type, :question_answers, nested_questions: [:poll, :votation_type, :translations, :question_answers])
+                                .order(given_order: :asc, id: :asc)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
     @answers_by_question_id = {}

@@ -7,8 +7,8 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      can :results, Poll, id: Poll.expired.with_phase_feature("resource.results_enabled").not_budget.ids
-      can :stats, Poll, id: Poll.expired.with_phase_feature("resource.stats_enabled").not_budget.ids
+      can :results, Poll, id: Poll.with_phase_feature("resource.results_enabled").not_budget.ids
+      can :stats, Poll, id: Poll.with_phase_feature("resource.stats_enabled").not_budget.ids
       can :read, Poll::Question
       can [:read, :refresh_activities], User
       can [:read, :welcome], Budget
@@ -81,12 +81,15 @@ module Abilities
         can [:create, :update], FormularAnswer do |formular_answer|
           formular_answer.formular.projekt_phase.permission_problem(user).blank?
         end
+
+        can [:create], ProjektPointOfInterestPin do |pin|
+          pin.projekt_phase.permission_problem(user).blank?
+        end
       end
 
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
-
       can [:index, :show, :json_data], Idea, id: Idea.accepted.ids
     end
   end

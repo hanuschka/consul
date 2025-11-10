@@ -1,29 +1,3 @@
-<% if render_map? %>
-  <% map = capture do %>
-    <% resources_name = resources.first&.class&.name&.underscore&.pluralize %>
-    <% resources_name = "deficiency-reports" if resources.first&.is_a?(DeficiencyReport) %>
-    <% resources_name = "budgets" if resources.first&.is_a?(Budget::Investment) %>
-    <div class="map resources-list--map not-print">
-      <% if @projekt_phase&.projekt&.vc_map_enabled? %>
-        <%= render Shared::VCMapComponent.new(
-          parent_class: resources_name,
-          process_coordinates: @map_coordinates,
-          map_location: @map_location || @projekt_phase&.map_location,
-          projekt_phase: @projekt_phase,
-          show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
-        ) %>
-      <% else %>
-        <%= render Shared::MapComponent.new(
-          parent_class: resources_name,
-          process_coordinates: @map_coordinates,
-          map_location: @map_location || @projekt_phase&.map_location,
-          projekt_phase: @projekt_phase,
-          show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
-        ) %>
-      <% end %>
-    </div>
-  <% end %>
-<% end %>
 
 <% if custom_body.present? %>
   <% body = capture do %>
@@ -50,12 +24,11 @@
 <% else %>
   <div class="resources-list js-resources-list <%= class_names %>">
     <% if @title.present? %>
-      <h3 class="resources-list--title">
+      <h2 class="resources-list--title">
         <%= @title %>
-      </h3>
+      </h2>
     <% end %>
 
-    <%= map if render_map? %>
 
     <div class="resources-list--actions">
       <% if @text_search_enabled && i18n_namespace.present? %>
@@ -86,7 +59,12 @@
       <% end %>
 
       <% unless @hide_view_mode_button %>
-        <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
+        <div class="resources-list--switch-view-button js-resource-list-switch-view-button"
+             role="button"
+             tabindex="0"
+             aria-label="<%= t('custom.accessibility.shared.switch-view-button.aria-label') %>"
+             onkeydown="if (event.key === 'Enter') { this.click(); }"
+             >
           <i class="fa <%= switch_view_mode_icon %>"></i>
         </div>
       <% end %>

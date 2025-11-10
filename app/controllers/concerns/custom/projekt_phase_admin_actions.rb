@@ -9,7 +9,7 @@ module ProjektPhaseAdminActions
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
-      :create, :order_phases, :frame_phases_restrictions,
+      :create, :order_phases, :frame_phases_restrictions
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -43,7 +43,7 @@ module ProjektPhaseAdminActions
         )
       elsif embedded?
         redirect_to(
-          @projekt_phase.projekt.frame_url,
+          @projekt_phase.projekt.url,
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end
@@ -73,11 +73,29 @@ module ProjektPhaseAdminActions
     head :ok
   end
 
+  def update_position
+    authorize!(:order_phases, @projekt)
+
+    if @projekt_phase.insert_at(params[:position].to_i)
+      head :ok
+    else
+      render json: { message: "Error updating content_block" }
+    end
+  end
+
   def toggle_active_status
     authorize!(:toggle_active_status, @projekt_phase)
 
     status_value = params[:projekt][:phase_attributes][:active]
     @projekt_phase.update!(active: status_value)
+  end
+
+  def toggle_frontend_visibility
+    authorize!(:toggle_frontend_visibility, @projekt_phase)
+
+    visibility_value = params[:projekt][:phase_attributes][:frontend_visibility]
+    @projekt_phase.update!(frontend_visibility: visibility_value)
+
   end
 
   def duration
@@ -101,9 +119,25 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/restrictions"
   end
 
+  def projekt_point_of_interest_pins
+    authorize!(:projekt_point_of_interest_pins, @projekt_phase)
+    @pins = @projekt_phase.projekt_point_of_interest_pins.ordered
+
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/projekt_point_of_interest_pins" }
+      format.csv { send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv" }
+    end
+  end
+
+  def projekt_point_of_interest_categories
+    authorize!(:projekt_point_of_interest_categories, @projekt_phase)
+    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+
+    render "custom/admin/projekt_phases/projekt_point_of_interest_categories"
+  end
+
   def settings
     authorize!(:settings, @projekt_phase)
-
 
     set_setting_page_variables(@projekt_phase)
 
@@ -125,15 +159,23 @@ module ProjektPhaseAdminActions
         Budget::Investment::DEFAULT_ORDERS
       end
 
-    @projekt_phase_selectable_settings =
-      [
-        ProjektPhaseSetting::SelectableSettingSet.new(
-          setting: @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order"),
-          options: options
-        )
-      ]
+    selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
+
+    if selectable_setting.present?
+      @projekt_phase_selectable_settings =
+        [
+          ProjektPhaseSetting::SelectableSettingSet.new(
+            setting: selectable_setting,
+            options: options
+          )
+        ]
+    end
 
     render "custom/admin/projekt_phases/user_functions"
+  end
+
+  def map_resources_overview
+    @map_coordinates = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins).map(&:features_json_data)
   end
 
   def user_functions
@@ -159,10 +201,28 @@ module ProjektPhaseAdminActions
   end
 
   def set_setting_page_variables(projekt_phase)
-    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name].keys
+    phase_settings = ProjektPhaseSetting.defaults[projekt_phase.class.name]
 
-    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
-      result[item.key] = item
+    if phase_settings.present?
+      proposal_setting_key_ordered = phase_settings.keys
+
+      projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+        result[item.key] = item
+      end
+
+      setting_ordered = []
+      proposal_setting_key_ordered.each do |setting_key|
+        setting = projekt_phase_settings_by_key[setting_key.to_s]
+        setting_ordered.push(setting)
+      end
+
+      all_settings = setting_ordered.compact.group_by(&:kind)
+
+      @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+      @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
+
+      @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+      @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
 
     setting_ordered = []
@@ -178,11 +238,19 @@ module ProjektPhaseAdminActions
 
     @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
     @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+
+    @apps = App.all
+  end
+
+  def proposals
+    authorize!(:proposals, @projekt_phase)
+    @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])
+
+    render "custom/admin/projekt_phases/proposals"
   end
 
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
-
     @projekt_labels = @projekt_phase.projekt_labels
 
     render "custom/admin/projekt_phases/projekt_labels"
@@ -198,18 +266,19 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"
   end
 
   def update_map
-    map_location = MapLocation.find_by(projekt_phase_id: params[:id])
+    @projekt_phase = ProjektPhase.find(params[:id])
+    map_location = @projekt_phase.map_location || @projekt_phase.build_map_location
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params.except(:id))
+    map_location.update!(map_location_params)
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -355,14 +424,6 @@ module ProjektPhaseAdminActions
                    .page(params[:page]).per(50)
   end
 
-  def poll_results
-    authorize!(:poll_results, @projekt_phase)
-    @poll = @projekt_phase.poll
-    @partial_results = @poll.partial_results
-
-    render "custom/admin/projekt_phases/poll_results"
-  end
-
   def budget_edit
     authorize!(:budget_edit, @projekt_phase)
     @budget = @projekt_phase.budget
@@ -414,6 +475,61 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
   end
 
+  def send_notifications
+    authorize!(:manage, @projekt_phase)
+
+    case params[:resource_type]
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
+    end
+  end
+
+  def ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    @assistant_app_codename = @projekt_phase.voice_assistant_codename
+    @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
+
+    if ApiClient.active_dt?
+      dt_api = DtApi::Client.new
+
+      @ai_assistant_config_response =
+        dt_api
+          .ai_assistant_configs
+          .get(
+            codename: @assistant_app_codename,
+            consul_projekt_phase_id: @projekt_phase.id
+          )
+
+      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+    end
+
+    render "custom/admin/projekt_phases/ai_settings"
+  end
+
+  def update_ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config =
+      dt_api
+        .ai_assistant_configs
+        .update(
+          codename: params[:assistant_codename],
+          consul_projekt_phase_id: @projekt_phase.id,
+          params: {
+            questions: params[:projekt_phase][:questions],
+            criteria: params[:projekt_phase][:criteria],
+            parting_words: params[:projekt_phase][:parting_words]
+          }
+        )
+
+    redirect_to action: "ai_settings"
+  end
+
   # def frame_phases_restrictions
   #   @projekt = Projekt.find(params[:projekt_id])
   #   authorize!(:edit, @projekt)
@@ -451,11 +567,12 @@ module ProjektPhaseAdminActions
     end
 
     def map_location_params
-      if params[:map_location]
-        params.require(:map_location).permit(map_location_attributes)
-      else
-        params.permit(map_location_attributes)
-      end
+      phase_key = params.keys.find { |k| k.start_with?('projekt_phase_') }
+      return {} unless phase_key
+
+      params.require(phase_key)
+            .require(:map_location_attributes)
+            .permit(map_location_attributes)
     end
 
     def set_projekt_phase

@@ -13,6 +13,7 @@ namespace :admin do
       get :form_author
       get :map
       patch :update_map
+      get :proposals
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -29,11 +30,16 @@ namespace :admin do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :ai_settings
+      patch :update_ai_settings
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
+      post :send_notifications
+      get :map_resources_overview
     end
 
     resources :formular, only: [] do
@@ -51,6 +57,10 @@ namespace :admin do
       end
     end
 
+    resources :proposals, only: %i[show update] do
+      patch :toggle_admin_accepted, on: :member
+      patch :toggle_image_concealed, on: :member
+    end
     resources :projekt_labels, except: %i[index show]
     resources :sentiments, except: %i[index show]
     resources :projekt_questions, except: %i[index show] do
@@ -67,11 +77,13 @@ namespace :admin do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end
     end
+    resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+    resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 
@@ -82,17 +94,24 @@ namespace :admin do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
+      patch :update_page
+      patch :update_title_image
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do
       member do
         patch :toggle_active_status
+        patch :toggle_frontend_visibility
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
+    resources :projekt_content_blocks, only: [:create]
+
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
@@ -121,6 +140,7 @@ namespace :admin do
       post :add_user, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
+      delete :remove_email_from_auto_join_emails, on: :member
     end
   end
 
@@ -320,6 +340,7 @@ namespace :admin do
       get :booth_assignments, on: :collection
       patch :add_question, on: :member
       post :send_notifications, on: :member
+      post :regenerate_contexted_clones, on: :member
 
       resources :booth_assignments, only: [:index, :show, :create, :destroy] do
         get :search_booths, on: :collection
@@ -377,6 +398,7 @@ namespace :admin do
   resources :newsletters do
     member do
       post :deliver
+      post :send_test
     end
 
     collection do
@@ -491,6 +513,16 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+      patch :change_with_ai
+    end
+  end
+
+  resources :saved_content_blocks, only: [:create, :update, :destroy]
 end
 
 resolve "Milestone" do |milestone|

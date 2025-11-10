@@ -16,7 +16,7 @@ class Idea < ApplicationRecord
 
   acts_as_votable
 
-  audited only: %i[video_url on_behalf_of cached_votes_up
+  audited only: %i[video_url on_behalf_of timeframe votes_needed_for_success
                    idea_officer_id idea_category_id admin_accepted_at]
   has_associated_audits
   translation_class.class_eval do
@@ -30,6 +30,8 @@ class Idea < ApplicationRecord
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
+  validates_translation :title, presence: true
+  validates_translation :description, presence: true
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }

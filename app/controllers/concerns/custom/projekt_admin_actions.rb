@@ -47,11 +47,25 @@ module ProjektAdminActions
     authorize!(:update, @projekt)
 
     if @projekt.update(projekt_params)
-      redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
-        notice: t("custom.admin.projekts.edit.flash.update_notice")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
+            notice: t("custom.admin.projekts.edit.flash.update_notice")
+        end
+        f.json do
+          render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+        end
+      end
     else
-      redirect_to namespace_projekt_path(action: "edit"),
-        alert: @projekt.errors.messages.values.flatten.join("; ")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit"),
+            alert: @projekt.errors.messages.values.flatten.join("; ")
+        end
+        f.json do
+          render json: { message: "Error updating projekt" }
+        end
+      end
     end
   end
 
@@ -92,6 +106,29 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
+  def update_page
+    if @projekt.page.update(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+    else
+      render json: { message: "Error updating projekt page" }
+    end
+  end
+
+  def update_title_image
+    image = Image.new(
+      attachment: params[:site_customization_page][:image],
+      user: current_user
+    )
+
+    @projekt.page.image = image
+
+    if @projekt.page.save
+      render json: { status: { message: "Projekt page title image updated" }}
+    else
+      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
+    end
+  end
+
   def notify_reviewers
     @projekt = Projekt.find(params[:id])
 
@@ -118,6 +155,12 @@ module ProjektAdminActions
         projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
       ]
       params.require(:projekt).permit(attributes, translation_params(Projekt))
+    end
+
+    def projekt_page_params
+      params.require(:site_customization_page).permit(
+        :title, :subtitle, :image
+      )
     end
 
     def process_tags

@@ -8,6 +8,7 @@ module Budgets
     include DocumentAttributes
     include MapLocationAttributes
     include Translatable
+    include CustomHelper
 
     PER_PAGE = 10
 
@@ -53,7 +54,7 @@ module Budgets
       @investments = investments.page(params[:page]).per(PER_PAGE).for_render
 
       @investment_ids = @investments.ids
-      @investments_map_coordinates = MapLocation.where(investment: investments).map(&:json_data)
+      @investments_map_coordinates = MapLocation.where(mappable: investments).map(&:features_json_data)
 
       @tag_cloud = tag_cloud
       @remote_translations = detect_remote_translations(@investments)
@@ -89,6 +90,7 @@ module Budgets
         render "custom/pages/forbidden", layout: false
 
       elsif Setting.new_design_enabled?
+        @investment.description = process_oembeds(@investment.description)
         render :show_new
 
       else
@@ -232,7 +234,7 @@ module Budgets
       end
 
       def load_map
-        @map_location = MapLocation.load_from_heading(@heading) if @heading.present?
+        @map_location = @heading.budget.projekt_phase.map_location if @heading.present?
       end
   end
 end

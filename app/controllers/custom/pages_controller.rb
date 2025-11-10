@@ -30,11 +30,19 @@ class PagesController < ApplicationController
 
     @custom_page_page_visible =
       @custom_page&.projekt&.preview_code_valid?(params[:preview_code]) ||
-      @custom_page&.projekt&.frame_access_code_valid?(params[:frame_code]) ||
       @custom_page&.projekt&.visible_for?(current_user)
 
     if @custom_page&.landing?
       set_landing_page_topbar_ui_variables(@custom_page)
+    end
+
+    if current_user.present?
+      @namespace =
+        if current_user.administrator?
+          :admin
+        elsif @custom_page.present? && current_user.projekt_manager?(@custom_page.projekt)
+          :projekt_management
+        end
     end
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible

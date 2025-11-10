@@ -19,6 +19,8 @@
   </style>
 <% end %>
 
+<%= render "pages/brand_color_styles", page: @custom_page %>
+
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: root_url %>
 <% end %>

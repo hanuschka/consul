@@ -1,0 +1,7 @@
+<h2><%= t("custom.officing.shared.permission_problem.title") %></h2>
+
+<p>
+  <%= t("custom.officing.shared.permission_problem.text", permission_problem_key: @permission_problem) %>
+</p>
+
+<%= link_to t("custom.officing.shared.permission_problem.next_user"), url_for(action: :verify_user), class: 'button' %>

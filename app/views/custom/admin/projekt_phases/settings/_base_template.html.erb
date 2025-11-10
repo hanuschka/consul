@@ -30,7 +30,7 @@
         <% features_and_options = features_list + options_list %>
 
         <%= render Shared::ExplainButtonComponent.new(
-          explain: "#{projekt_phase.class.model_name.human} phase settings: #{features_and_options.join(', ')}"
+          explain: "#{@projekt_phase.class.model_name.human} phase settings: #{features_and_options.join(', ')}"
         ) %>
       <% end %>
     </h2>
@@ -65,9 +65,9 @@
 
 <% if embedded? %>
   <% content_for :admin_frame_top_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: projekt_phase, show_title: true) %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
   <% end %>
   <%= content_for :admin_frame_bottom_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: projekt_phase) %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
   <% end %>
 <% end %>

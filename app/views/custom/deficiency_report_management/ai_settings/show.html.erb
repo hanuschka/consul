@@ -68,6 +68,7 @@
         <%= f.submit(t("custom.admin.deficiency_reports.ai_settings.update_button"), class: "button success") %>
       </div>
     </div>
+  <% end %>
 <% elsif @ai_assistant_config_response["error"].present? %>
   <div class="row margin-bottom">
     <div class="column large-8 small-12">

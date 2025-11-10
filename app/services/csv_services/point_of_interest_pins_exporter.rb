@@ -21,29 +21,23 @@ module CsvServices
       def headers
         [
           "id",
-          "category_name",
           "address",
+          "created_at",
           "latitude",
           "longitude",
-          "created_at"
+          "geometry"
         ]
       end
 
       def row(pin)
         [
           pin.id,
-          pin.projekt_point_of_interest_category.name,
-          pin.map_location.get_approximated_address,
+          pin.map_location.approximated_address,
+          pin.created_at,
           geo_field(pin.map_location.latitude),
           geo_field(pin.map_location.longitude),
-          pin.created_at
+          format_geometry(pin.map_location&.features)
         ]
-      end
-
-      def geo_field(field)
-        return nil if field.blank?
-
-        "\"#{field}\""
       end
   end
 end

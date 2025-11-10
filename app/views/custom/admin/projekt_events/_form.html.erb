@@ -29,6 +29,12 @@
     </div>
   </div>
 
+  <div class="row margin-bottom">
+    <div class="column images small-12">
+      <%= render "images/nested_image", imageable: event, f: f %>
+    </div>
+  </div>
+
   <div class="row">
     <div class="column small-12">
       <%= f.text_area :description,

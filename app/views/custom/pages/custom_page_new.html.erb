@@ -1,10 +1,6 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
-<% show_admin_controls = current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, @projekt) %>
-<% show_projekt_studio_controls_in_embeded = embedded_and_frame_access_code_valid?(@projekt) %>
-<% show_projekt_studio_controls = show_admin_controls || show_projekt_studio_controls_in_embeded %>
-
-<% if show_projekt_studio_controls %>
+<% if show_admin_controls_for_projekt?(@projekt) %>
   <%= content_for :additional_styles do %>
     <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
   <% end %>
@@ -13,7 +9,7 @@
   <% end %>
 <% end %>
 
-<% if show_projekt_studio_controls %>
+<% if show_admin_controls_for_projekt?(@projekt) %>
   <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
   <div class="js-content-block-link-popup content-block-link-popup">
     <div>
@@ -32,17 +28,64 @@
         In neuem Tab öffnen
       </label>
     </div>
-    <div class="d-flex u-gap-10">
-      <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
-        <i class="fas fa-save"></i>
-        Speichern
-      </button>
-      <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
-        <i class="fas fa-xmark"></i>
-        Abbrechen
-      </button>
+
+    <div class="d-flex justify-between">
+        <div class="d-flex u-gap-10">
+          <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
+            <i class="fas fa-save"></i>
+            Speichern
+          </button>
+
+          <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
+            <i class="fas fa-xmark"></i>
+            Abbrechen
+          </button>
+        </div>
+        <button class="projekt-content-block-edit--button -red -with-background js-content-block-delete-link" style="display: none;">
+          <i class="fas fa-trash"></i>
+          Link entfernen
+        </button>
     </div>
   </div>
+
+  <template class="js-ai-edit-popup-template">
+    <div class="content-block-ai-edit-popup js-content-block-ai-edit-popup">
+      <div class="content-block-ai-edit-popup-content">
+
+        <form class="width-100" action="">
+          <div class="content-block-ai-edit-popup-header">
+            <h3>Mit KI bearbeiten</h3>
+            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
+          </div>
+          <div class="ai-edit-form">
+            <textarea
+              name="instructions"
+              rows="4"
+              required
+              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
+              class="ai-instructions-textarea js-ai-instructions-textarea"
+              ></textarea>
+            <div style="color: #999; font-size: 12px; margin-top: 5px;">
+              Enter zum Absenden, Umschalt+Enter für neue Zeile
+            </div>
+          </div>
+          <div class="ai-edit-actions d-flex justify-between">
+            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+              <span class="js-submit-state">
+                <i class="fas fa-magic"></i>
+                Absenden
+              </span>
+              <span class="js-cancel-state">
+                <i class="fas fa-times"></i>
+                Abbrechen
+              </span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </template>
 
 <% end %>
 
@@ -82,7 +125,7 @@
     <% end %>
   </style>
 
-  <% additional_main_class = show_admin_controls ? "projekt-studio" : "" %>
+  <% additional_main_class = show_admin_controls_for_projekt?(@projekt) ? "projekt-studio" : "" %>
 
   <main class="projekt-page <%= additional_main_class %> js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
     <% if @custom_page.projekt.present? %>
@@ -105,7 +148,7 @@
 
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
-    <% if show_admin_controls && !embedded? %>
+    <% if native_projekt_studio?(@projekt) %>
       <button
         class="projekt-studio--peview-button js-turn-on-preview-mode-button"
         title="Vorschaumodus umschalten"
@@ -144,7 +187,7 @@
       </div>
     <% end %>
 
-    <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_projekt_studio_controls?(@custom_page.projekt)) %>
+    <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_admin_controls_for_projekt?(@custom_page.projekt)) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
         <div class="projekt-footer-anchor" id="projekt-footer"> </div>
         <div class="projekt-footer flex-layout">
@@ -160,8 +203,4 @@
       </div>
     <% end %>
   </main>
-
-  <script>
-    App.Projekts.toggleDefaultProjekts();
-  </script>
 <% end %>

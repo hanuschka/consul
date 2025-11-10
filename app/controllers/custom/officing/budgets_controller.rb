@@ -5,13 +5,19 @@ class Officing::BudgetsController < Officing::BaseController
     @budget = Budget.find(params[:id])
     @heading = @budget.heading
 
+    @permission_problem = @budget.projekt_phase.permission_problem(@offline_user)
+
+    if @permission_problem.present?
+      render "officing/shared/permission_problem" and return
+    end
+
     if @budget.in?(@officing_manager.balloting_budgets)
       @ballot = Budget::Ballot.where(user: @offline_user, budget: @budget)
                               .first_or_create!(conditional: false, physical: true)
       @investments = @budget.investments.selected
       @investment_ids = @investments.ids
     elsif @budget.in? @officing_manager.selecting_budgets
-      debugger
+      Sentry.capture_message("Officing::BudgetsController#officing_desk called with selecting budget")
     else
       raise ActionController::RoutingError.new('Not Found')
     end

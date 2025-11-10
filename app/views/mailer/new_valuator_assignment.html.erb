@@ -1,0 +1,21 @@
+<td style="<%= css_for_mailer_content %>">
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.new_valuator_assignment.hi", username: @recipient.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(
+      t("mailers.new_valuator_assignment.text1",
+        valuation_link: link_to(@investment.title,
+                                valuation_budget_budget_investment_url(@investment.budget, @investment))
+      ),
+      attributes: %w[href style]
+    ) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.shared.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

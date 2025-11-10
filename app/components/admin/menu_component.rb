@@ -19,7 +19,6 @@ class Admin::MenuComponent < ApplicationComponent
       profiles_links,
       registered_addresses_links,
       matomo_link,
-      stats_link,
       settings_links,
       dashboard_links
     ]
@@ -390,6 +389,7 @@ class Admin::MenuComponent < ApplicationComponent
           administrators_link,
           projekt_managers_link,
           deficiency_report_managers_link,
+          idea_managers_link,
           officing_managers_link,
           organizations_link,
           officials_link,

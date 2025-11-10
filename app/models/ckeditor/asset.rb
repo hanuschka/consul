@@ -3,28 +3,24 @@ class Ckeditor::Asset < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
-  ALLOWED_CONTENT_TYPES = %w[].freeze
-  MAX_FILE_SIZE = 2.megabytes
 
   self.table_name = "ckeditor_assets"
 
   has_one_attached :storage_data
 
-  validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
-                           file_size: { less_than: MAX_FILE_SIZE }
-
   def self.search(terms)
     pg_search(terms)
   end
 
-  def attach_uploaded_file(data)
+  def attach_uploaded_file(data, custom_image = nil)
     return unless data.is_a?(ActionDispatch::Http::UploadedFile)
 
-    storage_data.attach(io: data, filename: data.original_filename, content_type: data.content_type)
+    image_to_store = custom_image.presence || data
+    storage_data.attach(io: image_to_store, filename: data.original_filename, content_type: data.content_type)
 
     self.data_file_name = data.original_filename
     self.data_content_type = data.content_type
-    self.data_file_size = data.size
+    self.data_file_size = image_to_store.size
     self.type = type
     self.title = data.original_filename
   end

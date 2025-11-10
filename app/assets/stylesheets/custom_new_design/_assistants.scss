@@ -1,0 +1,9 @@
+@keyframes assistantChangedFieldHighlight {
+  15%, 95% {
+    background-color: #e9ffe7;
+  }
+}
+.assistant-changed-field-highlight {
+  animation: assistantChangedFieldHighlight 2500ms forwards;
+  // background-color: #e9ffe7 !important;
+}

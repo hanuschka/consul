@@ -5,7 +5,7 @@
       <button class="close-button" aria-label="<%= t("application.close") %>" type="button" data-close>
         <span aria-hidden="true">&times;</span>
       </button>
-      <div class="notice-text" role="alert" aria-live="assertive">
+      <div class="notice-text" role="alert">
         <%= sanitize(flash_message) if flash_key.to_sym.in?([:notice, :alert, :success, :error]) %>
       </div>
     </div>

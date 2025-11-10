@@ -47,20 +47,34 @@ module ProjektAdminActions
     authorize!(:update, @projekt)
 
     if @projekt.update(projekt_params)
-      redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
-        notice: t("custom.admin.projekts.edit.flash.update_notice")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
+            notice: t("custom.admin.projekts.edit.flash.update_notice")
+        end
+        f.json do
+          render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+        end
+      end
     else
-      redirect_to namespace_projekt_path(action: "edit"),
-        alert: @projekt.errors.messages.values.flatten.join("; ")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit"),
+            alert: @projekt.errors.messages.values.flatten.join("; ")
+        end
+        f.json do
+          render json: { message: "Error updating projekt" }
+        end
+      end
     end
   end
 
   def update_map
-    map_location = MapLocation.find_by(projekt_id: @projekt.id)
+    map_location = @projekt.map_location || @projekt.build_map_location
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params.except(:id))
+    map_location.update!(map_location_params)
 
     redirect_to namespace_projekt_path(action: "edit", anchor: "tab-projekt-map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -92,11 +106,45 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
+  def update_page
+    if @projekt.page.update(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+    else
+      render json: { message: "Error updating projekt page" }
+    end
+  end
+
+  def update_title_image
+    image = Image.new(
+      attachment: params[:site_customization_page][:image],
+      user: current_user
+    )
+
+    @projekt.page.image = image
+
+    if @projekt.page.save
+      render json: { status: { message: "Projekt page title image updated" }}
+    else
+      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
+    end
+  end
+
+  def notify_reviewers
+    @projekt = Projekt.find(params[:id])
+
+    authorize!(:edit, @projekt)
+
+    NotificationServices::NewProjektNotifier.call(@projekt)
+
+    redirect_to page_path(@projekt.page.slug),
+                notice: "Benachrichtigung erfolgreich gesendet"
+  end
+
   private
 
     def projekt_params
       attributes = [
-        :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+        :name, :parent_id, :total_duration_start, :total_duration_end,
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
         individual_group_value_ids: [],
@@ -109,6 +157,12 @@ module ProjektAdminActions
       params.require(:projekt).permit(attributes, translation_params(Projekt))
     end
 
+    def projekt_page_params
+      params.require(:site_customization_page).permit(
+        :title, :subtitle, :image
+      )
+    end
+
     def process_tags
       if params[:projekt].present?
         params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
@@ -117,11 +171,9 @@ module ProjektAdminActions
     end
 
     def map_location_params
-      if params[:map_location]
-        params.require(:map_location).permit(map_location_attributes)
-      else
-        params.permit(map_location_attributes)
-      end
+      params.require(:projekt)
+            .require(:map_location_attributes)
+            .permit(map_location_attributes)
     end
 
     def find_projekt

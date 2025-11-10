@@ -1,7 +1,102 @@
+<% content_for :wrapper_class, "has-custom-fixed-tabs" %>
+
+<% if show_admin_controls_for_projekt?(@projekt) %>
+  <%= content_for :additional_styles do %>
+    <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+  <% end %>
+  <%= content_for :additional_scripts do %>
+    <%= javascript_include_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+  <% end %>
+<% end %>
+
+<% if show_admin_controls_for_projekt?(@projekt) %>
+  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+  <div class="js-content-block-link-popup content-block-link-popup">
+    <div>
+      <label class="content-block-link-popup-label" style="display: none">
+        Link text: <textarea type="text" class="js-content-block-text-input"></textarea>
+      </label>
+    </div>
+    <div>
+      <label class="content-block-link-popup-label">
+        Link URL: <textarea type="text" class="js-content-block-url-input"></textarea>
+      </label>
+    </div>
+    <div>
+      <label class="content-block-link-popup-checkbox-label">
+        <input type="checkbox" checked class="js-content-block-url-black-checkbox">
+        In neuem Tab öffnen
+      </label>
+    </div>
+
+    <div class="d-flex justify-between">
+        <div class="d-flex u-gap-10">
+          <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
+            <i class="fas fa-save"></i>
+            Speichern
+          </button>
+
+          <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
+            <i class="fas fa-xmark"></i>
+            Abbrechen
+          </button>
+        </div>
+        <button class="projekt-content-block-edit--button -red -with-background js-content-block-delete-link" style="display: none;">
+          <i class="fas fa-trash"></i>
+          Link entfernen
+        </button>
+    </div>
+  </div>
+
+  <template class="js-ai-edit-popup-template">
+    <div class="content-block-ai-edit-popup js-content-block-ai-edit-popup">
+      <div class="content-block-ai-edit-popup-content">
+
+        <form class="width-100" action="">
+          <div class="content-block-ai-edit-popup-header">
+            <h3>Mit KI bearbeiten</h3>
+            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
+          </div>
+          <div class="ai-edit-form">
+            <textarea
+              name="instructions"
+              rows="4"
+              required
+              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
+              class="ai-instructions-textarea js-ai-instructions-textarea"
+              ></textarea>
+            <div style="color: #999; font-size: 12px; margin-top: 5px;">
+              Enter zum Absenden, Umschalt+Enter für neue Zeile
+            </div>
+          </div>
+          <div class="ai-edit-actions d-flex justify-between">
+            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+              <span class="js-submit-state">
+                <i class="fas fa-magic"></i>
+                Absenden
+              </span>
+              <span class="js-cancel-state">
+                <i class="fas fa-times"></i>
+                Abbrechen
+              </span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </template>
+
+<% end %>
+
 <% if @custom_page.landing? %>
-  <% provide(:hide_navigation_menu, @custom_page.landing_hide_all_top_nav_links) %>
   <%= render "pages/landing_page_content" %>
 <% else %>
+  <% landing_page = @custom_page&.projekt&.landing_pages&.first %>
+  <% if landing_page.present? %>
+    <%= render "pages/brand_color_styles", page: landing_page %>
+  <% end %>
+
   <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 
@@ -30,7 +125,9 @@
     <% end %>
   </style>
 
-  <main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
+  <% additional_main_class = show_admin_controls_for_projekt?(@projekt) ? "projekt-studio" : "" %>
+
+  <main class="projekt-page <%= additional_main_class %> js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
     <% if @custom_page.projekt.present? %>
       <div class="custom-fixed-tabs margin-bottom">
         <div class="custom-fixed-tabs--content">
@@ -50,6 +147,19 @@
     <% end %>
 
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
+
+    <% if native_projekt_studio?(@projekt) %>
+      <button
+        class="projekt-studio--peview-button js-turn-on-preview-mode-button"
+        title="Vorschaumodus umschalten"
+        type="button"
+      >
+        <i class="fas fa-laptop"></i>
+        <span class="js-projekt-studio-preview-button-text">
+          Vorschaumodus
+        </span>
+      </button>
+    <% end %>
 
     <% if @custom_page.projekt.present? %>
       <div class="flex-layout">
@@ -77,12 +187,12 @@
       </div>
     <% end %>
 
-    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
+    <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_admin_controls_for_projekt?(@custom_page.projekt)) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
         <div class="projekt-footer-anchor" id="projekt-footer"> </div>
         <div class="projekt-footer flex-layout">
           <div class="full-width-column">
-            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
+            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase, namespace: @namespace) %>
             <% if @default_projekt_phase.present? %>
               <div id="footer-content" class="js-projekt-footer-content">
                 <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
@@ -93,8 +203,4 @@
       </div>
     <% end %>
   </main>
-
-  <script>
-    App.Projekts.toggleDefaultProjekts();
-  </script>
 <% end %>

@@ -26,14 +26,16 @@
         <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
       </div>
 
+      <!-- #cli
       <div class="users-profile-banner--info-line">
-        <% if user.level_three_verified? %>
+        <%# if user.level_three_verified? %>
           <span class="icon-check"></span>
-          <%= t("account.show.verified_account") %>
-        <% else %>
-          <%= t("custom.account.show.not_verified_account") %>
-        <% end %>
+          <%#= t("account.show.verified_account") %>
+        <%# else %>
+          <%#= t("custom.account.show.not_verified_account") %>
+        <%# end %>
       </div>
+      -->
 
       <div class="sidebar-resource-author--resources">
         <% if user.proposals.exists? %>

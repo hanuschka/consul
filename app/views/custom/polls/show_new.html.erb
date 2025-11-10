@@ -47,21 +47,18 @@
               </div>
 
               <div class="question-wizard--questions">
-                <%# <% all_questions_answered = @questions.all? { |question| question.answers.present? } %>
-                <% first_question_shown = false %>
-                <% @questions.each.with_index do |question, index| %>
-                  <% show_question = (index == 0) %>
-                  <% additional_class = show_question ? "-visible" : "" %>
+                <% @questions.where(contextualize_by_poll_question_id: nil).each.with_index do |question, index| %>
                   <div
-                      class="question-wizard-item js-question-wizard-item <%= additional_class %>"
+                      class="question-wizard-item js-question-wizard-item <%= '-visible' if index == 0 %>"
                       data-question-id="<%= question.id %>"
-                      data-next-question-id="<%= question.next_question_id %>"
-                      data-question-number="<%= index + 1 %>">
+                      data-question-number="<%= index + 1 %>"
+                      data-question-context-source="<%= @poll.questions.pluck(:contextualize_by_poll_question_id).compact.uniq.include?(question.id) %>"
+                      data-question-context-id="<%= question.context&.id %>"
+                      data-question-hidden="false"
+                      data-question-order="<%= question.given_order %>"
+                      >
                       <%= render Polls::Questions::QuestionComponent.new(question: question) %>
                   </div>
-                  <% if show_question %>
-                    <% first_question_shown = show_question %>
-                  <% end %>
                 <% end %>
               </div>
 
@@ -113,7 +110,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@poll.projekt_phase, "resource.show_comments") %>
+        <% if projekt_phase_feature?(@poll.projekt_phase, "resource.show_comments") || @poll.comments.exists? %>
           <%= render Shared::NewCommentsComponent.new(@poll, @comment_tree) %>
         <% end %>
       </div>

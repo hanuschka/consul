@@ -3,9 +3,87 @@
     display: flex;
     justify-content: left;
 
+    .projekt-arguments-nav {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: center;
+
+      .projekt-arguments-nav {
+        display: block;
+        width: 100%;
+        margin-bottom: 20px;
+
+        .projekt-arguments-nav-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          gap: 10px;
+
+          .projekt-arguments-nav-item {
+            display: inline-block;
+
+            a {
+              text-decoration: none;
+              color: #222;
+              font-size: 30px;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      input[type='checkbox']#show_cons {
+        display: none;
+
+        &:checked ~ .projekt-arguments.--pro {
+          display: none;
+        }
+
+        &:not(:checked) ~ .projekt-arguments.--contra {
+          display: none;
+        }
+
+        &:not(:checked) ~ .projekt-arguments-nav {
+          a.pro {
+            text-decoration: underline;
+            font-weight: bold;
+          }
+
+          a.contra {
+            text-decoration: none;
+            font-weight: normal;
+          }
+        }
+
+        &:checked ~ .projekt-arguments-nav {
+          a.pro {
+            text-decoration: none;
+            font-weight: normal;
+          }
+
+          a.contra {
+            text-decoration: underline;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .projekt-arguments-title {
+        display: none;
+      }
+    }
+
     .projekt-arguments-separator {
       border-left: 1px solid #e5e5e5;
       margin: 0 30px;
+
+      @media (max-width: 640px) {
+        display: none;
+      }
     }
 
     .projekt-arguments-title {
@@ -13,12 +91,18 @@
       font-weight: bold;
     }
 
+    .projekt-arguments.--pro {
+      .projekt-arguments-title {
+        text-align: right;
+      }
+    }
+
     .projekt-argument {
       border: 1px solid #e5e5e5;
       border-radius: 8px;
       background-color: #fff;
       overflow: hidden;
-      width: 437px;
+      max-width: 437px;
       margin-bottom: 24px;
 
       > * {

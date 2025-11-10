@@ -6,16 +6,31 @@ class Api::EventsController < Api::BaseController
 
   def index
     check_read_access!
-    events = if @projekt_phase.present?
-      @projekt_phase.projekt_events
+
+    if @projekt_phase.present?
+      if current_client.public_data?
+        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+        end
+      end
+
+      events = @projekt_phase.projekt_events
         .includes(:projekt_phase, projekt_phase: :projekt)
     else
-      ProjektEvent.includes(:projekt_phase, projekt_phase: :projekt)
+      events = ProjektEvent.includes(:projekt_phase, projekt_phase: :projekt)
+
+      if current_client.public_data?
+        events = events.joins(:projekt_phase)
+          .where(projekt_phases: { frontend_visibility: true, active: true })
+          .distinct
+      end
     end
 
-    events = events
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    events =
+      events
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_events = EventSerializer.serialize_collection(events)
 

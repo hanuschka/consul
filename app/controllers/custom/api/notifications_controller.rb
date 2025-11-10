@@ -11,9 +11,11 @@ class Api::NotificationsController < Api::BaseController
       ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
     end
 
-    notifications = notifications
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    notifications =
+      notifications
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_notifications = NotificationSerializer.serialize_collection(notifications)
 

@@ -5,6 +5,8 @@ class ProjektSerializer < BaseSerializer
     @projekt = projekt
     @include_phases = options.fetch(:include_phases, false)
     @include_content_blocks = options.fetch(:include_content_blocks, false)
+    @include_nested_fields = options.fetch(:include_nested_fields, false)
+    @current_api_client = options.fetch(:current_api_client, nil)
   end
 
   def serialize
@@ -67,7 +69,23 @@ class ProjektSerializer < BaseSerializer
   end
 
   def projekt_phases
-    ProjektPhaseSerializer.serialize_collection(@projekt.projekt_phases)
+    phases = @projekt.projekt_phases
+
+    if @current_api_client&.public_data?
+      phases = phases.select { |phase| phase_visible_to_client?(phase) }
+    end
+
+    ProjektPhaseSerializer.serialize_collection(
+      phases,
+      include_nested_fields: @include_nested_fields,
+      current_api_client: @current_api_client
+    )
+  end
+
+  private
+
+  def phase_visible_to_client?(phase)
+    phase.frontend_visibility && phase.active && phase.current?
   end
 
   def content_blocks

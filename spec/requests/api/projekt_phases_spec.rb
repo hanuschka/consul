@@ -15,13 +15,13 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       security [bearer_auth: []]
       description "Retrieve all phases defined for a specific projekt. Phases define different stages of participation (comments, proposals, voting, budgeting, etc.) with their own active/inactive periods, visibility settings, and restrictions. Returns full details including phase type, dates, and configuration. #{ApiAccessRequirements::GET_READ_ONLY}"
 
-      response '200', 'projekt phases found and returned' do
+      response '200', 'projekt phases found and returned (admin sees all)' do
         let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
         let(:projekt_id) { projekt.id }
 
         before do
-          projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments')
-          projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: false, phase_tab_name: 'Questions')
+          projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, frontend_visibility: true, phase_tab_name: 'Comments')
+          projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: false, frontend_visibility: false, phase_tab_name: 'Questions')
         end
 
         schema type: :object,
@@ -39,7 +39,42 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['projekt_phases'].length).to eq(2)
+        end
+      end
+
+      response '200', 'projekt phases found and returned (public_data sees only visible/active)' do
+        let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
+        let(:projekt_id) { projekt.id }
+
+        before do
+          api_client.update!(access_level: :public_data)
+          projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, frontend_visibility: true, phase_tab_name: 'Comments')
+          projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: false, frontend_visibility: false, phase_tab_name: 'Questions')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_phases: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektPhase' }
+                     }
+                   },
+                   required: ['projekt_phases']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['projekt_phases'].length).to eq(1)
+          expect(data['data']['projekt_phases'][0]['phase_tab_name']).to eq('Comments')
+        end
       end
     end
 

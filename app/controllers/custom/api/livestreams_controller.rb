@@ -4,16 +4,21 @@ class Api::LivestreamsController < Api::BaseController
 
   def index
     check_read_access!
-    livestreams = if @projekt_phase.present?
-      @projekt_phase.projekt_livestreams
-        .includes(:projekt_phase)
-    else
-      ProjektLivestream.includes(:projekt_phase)
-    end
 
-    livestreams = livestreams
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    livestreams =
+      if @projekt_phase.present?
+        @projekt_phase
+          .projekt_livestreams
+          .includes(:projekt_phase)
+      else
+        ProjektLivestream.includes(:projekt_phase)
+      end
+
+    livestreams =
+      livestreams
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams)
 

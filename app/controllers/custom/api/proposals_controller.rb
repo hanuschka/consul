@@ -11,20 +11,43 @@ class Api::ProposalsController < Api::BaseController
 
   def index
     check_read_access!
-    proposals = if @projekt_phase.present?
-      @projekt_phase.resources
-        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
-    else
-      Proposal.includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+    proposals =
+      if @projekt_phase.present?
+        @projekt_phase.resources
+      else
+        Proposal
+      end
+
+    if current_client.public_data?
+      proposals = proposals.discard_draft.discard_archived
     end
 
     if params["for_public_render"] == "true"
       proposals = proposals.for_public_render
     end
 
-    proposals = proposals
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    orders = %w[hot_score confidence_score created_at relevance archival_date]
+    current_order = orders.include?(params[:sort]) ? params[:sort] : "created_at"
+
+    proposals =
+      case current_order
+      when "hot_score"
+        proposals.order(hot_score: :desc, created_at: :asc)
+      when "confidence_score"
+        proposals.order(confidence_score: :desc, created_at: :asc)
+      when "relevance"
+        proposals.order(cached_votes_total: :desc, created_at: :asc)
+      when "archival_date"
+        proposals.order(archival_date: :desc, created_at: :asc)
+      else
+        proposals.order(created_at: :asc)
+      end
+
+    proposals =
+      proposals
+        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_proposals = ProposalSerializer.serialize_collection(proposals)
 
@@ -36,6 +59,13 @@ class Api::ProposalsController < Api::BaseController
 
   def show
     check_read_access!
+
+    if current_client.public_data?
+      if @proposal.draft? || @proposal.archived?
+        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+      end
+    end
+
     serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
     render json: { data: { proposal: serialized_proposal } }

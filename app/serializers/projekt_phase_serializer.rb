@@ -1,8 +1,10 @@
 class ProjektPhaseSerializer < BaseSerializer
   attr_reader :projekt_phase
 
-  def initialize(projekt_phase)
+  def initialize(projekt_phase, options = {})
     @projekt_phase = projekt_phase
+    @include_nested_fields = options.fetch(:include_nested_fields, false)
+    @current_api_client = options.fetch(:current_api_client, nil)
   end
 
   def serialize
@@ -54,9 +56,11 @@ class ProjektPhaseSerializer < BaseSerializer
       geozone_restrictions: geozone_restrictions
     )
 
-    # Add resources based on phase type
-    resources_data = phase_resources
-    phase_data.merge!(resources_data) if resources_data.any?
+    # Add resources based on phase type (only if nested fields are requested)
+    if @include_nested_fields
+      resources_data = phase_resources
+      phase_data.merge!(resources_data) if resources_data.any?
+    end
 
     phase_data
   end
@@ -181,8 +185,15 @@ class ProjektPhaseSerializer < BaseSerializer
     )
   end
 
-  def self.serialize_collection(projekt_phases)
-    projekt_phases.map { |phase| new(phase).serialize }
+  def self.serialize_collection(projekt_phases, options = {})
+    projekt_phases.map { |phase| new(phase, options).serialize }
+  end
+
+  private
+
+  def client_has_access_to_resources?
+    return true unless @current_api_client&.public_data?
+    projekt_phase.frontend_visibility && projekt_phase.active && projekt_phase.current?
   end
 end
 

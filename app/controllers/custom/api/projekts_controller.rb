@@ -7,24 +7,44 @@ class Api::ProjektsController < Api::BaseController
 
   def index
     check_read_access!
-    projekts =
-      Projekt
-        .regular
 
-    if params[:only_visible] == "true"
+    only_public =
+      if current_client.public_data?
+        true
+      else
+        params[:only_public] != 'false'
+      end
+
+    if only_public
       projekts =
         Projekt
           .activated
           .with_published_custom_page
           .show_in_overview_page
+    else
+      projekts = Projekt.regular
     end
 
-    include_phases = params[:include_phases] != 'false'
-    include_content_blocks = params[:include_content_blocks] != 'false'
+    valid_filters = %w[index_order_all index_order_underway index_order_ongoing index_order_upcoming index_order_expired index_order_individual_list]
+    valid_filters.push("index_order_drafts") if current_client.admin?
+    current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
+    projekts = projekts.send(current_filter)
+
+    if projekts.is_a?(ActiveRecord::Relation)
+      projekts =
+        projekts
+          .includes(:projekt_settings, :translations)
+          .order(created_at: :asc)
+    elsif projekts.is_a?(Array)
+      projekts = projekts.sort_by { |p| p.created_at }
+    end
+
+    include_phases = params[:include_phases] == 'true'
+    include_content_blocks = params[:include_content_blocks] == 'true'
 
     includes_hash = {}
     includes_hash[:content_blocks] = {} if include_content_blocks
-    includes_hash[:page] = { image: { attachment_attachment: :blob } }
+    includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
     if include_phases
       includes_hash[:projekt_phases] = [
@@ -39,7 +59,8 @@ class Api::ProjektsController < Api::BaseController
     serailized_projekts = ProjektSerializer.serialize_collection(
       projekts,
       include_phases: include_phases,
-      include_content_blocks: include_content_blocks
+      include_content_blocks: include_content_blocks,
+      current_api_client: current_client
     )
 
     render json: { data: { projekts: serailized_projekts } }
@@ -48,13 +69,23 @@ class Api::ProjektsController < Api::BaseController
   def show
     check_read_access!
 
-    include_phases = params[:include_phases] != 'false'
-    include_content_blocks = params[:include_content_blocks] != 'false'
+    if current_client.public_data?
+      page_published = @projekt.page&.status == 'published'
+      show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
+
+      unless @projekt.activated? && page_published && show_in_overview
+        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+      end
+    end
+
+    include_phases = params[:include_phases] == 'true'
+    include_content_blocks = params[:include_content_blocks] == 'true'
 
     serailized_projekt = ProjektSerializer.new(
       @projekt,
       include_phases: include_phases,
-      include_content_blocks: include_content_blocks
+      include_content_blocks: include_content_blocks,
+      current_api_client: current_client
     ).serialize
 
     render json: { data: { projekt: serailized_projekt } }
@@ -198,9 +229,6 @@ class Api::ProjektsController < Api::BaseController
   def find_projekt
     @projekt = Projekt
       .includes(
-        :projekt_phases,
-        :content_blocks,
-        page: { image: { attachment_attachment: :blob } },
         projekt_phases: [
           :settings,
           :individual_group_values,

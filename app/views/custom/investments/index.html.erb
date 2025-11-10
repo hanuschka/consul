@@ -7,6 +7,12 @@
     <%= render_custom_block("investments_index_welcome", default_content: t("custom.budgets.investments.index.welcome_default_text_html")) %>
   </div>
 
+  <%= render Shared::MapComponent.new(
+     mappable: @projekt_phase,
+     features: @investment_coordinates,
+     process: 'investments'
+   ) %>
+
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
       <%= render "shared/loader_spinner" %>
@@ -15,7 +21,6 @@
         Shared::ResourcesListComponent.new(
           resources: @investments,
           resource_type: Budget::Investment,
-          map_coordinates: @investment_coordinates,
           current_filter: @current_order,
           filter_param: "order",
           text_search_enabled: true,

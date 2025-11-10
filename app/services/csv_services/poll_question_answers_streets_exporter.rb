@@ -7,7 +7,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: false, col_sep: ";") do |csv|
+      CSV.generate(headers: false, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << street_headers(@question)
 
         RegisteredAddress::Street.find_each do |street|

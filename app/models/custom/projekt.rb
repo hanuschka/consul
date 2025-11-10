@@ -14,17 +14,15 @@ class Projekt < ApplicationRecord
   include SDG::Relatable
   include Taggable
   include Searchable
+  include Notifiable
 
   translates :description
   include Globalizable
 
   has_secure_token :preview_code
-  has_secure_token :frame_access_code
 
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
-
-  has_many :children_projekts_show_in_navigation, -> { show_in_navigation }, class_name: "Projekt", foreign_key: "parent_id"
 
   has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
     inverse_of: :top_level_projekt, dependent: :nullify
@@ -58,9 +56,8 @@ class Projekt < ApplicationRecord
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
 
-  has_many :debates, through: :debate_phases
-  has_many :proposals, through: :proposal_phases
-  has_many :base_selection_proposals, through: :proposal_phases
+  has_many :debates, through: :debate_phases, source: :resources
+  has_many :proposals, through: :proposal_phases, source: :resources
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -96,6 +93,7 @@ class Projekt < ApplicationRecord
     association_foreign_key: 'site_customization_page_id'
 
   delegate :image, to: :page, allow_nil: true
+  delegate :url, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
@@ -127,7 +125,7 @@ class Projekt < ApplicationRecord
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
-  attribute :new_content_block_mode, :boolean, default: false
+  attribute :new_content_block_mode, :boolean, default: true
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -232,23 +230,70 @@ class Projekt < ApplicationRecord
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
   }
 
-  scope :show_in_navigation, -> {
-    joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
+  ##################
+
+  scope :visible_for, ->(user) {
+    return regular if user&.administrator?
+
+    if user.present?
+      user_hard_group_value_ids = user.individual_group_values
+        .joins(:individual_group)
+        .where(individual_groups: { kind: "hard" })
+        .select(:id)
+
+      excluded_projekt_ids = Projekt.joins(:individual_group_values)
+                                    .where.not(id: Projekt
+                                      .joins(:individual_group_values)
+                                      .where(individual_group_values: { id: user_hard_group_value_ids })
+                                    )
+                                    .select(:id)
+
+      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
+
+      arel = Projekt.arel_table
+
+      regular.where(
+        arel[:id].in(
+          Projekt.activated.where.not(id: excluded_projekt_ids).select(:id).arel
+        ).or(
+          arel[:id].in(permitted_projekt_ids.arel)
+        )
+      )
+    else
+      regular.activated
+        .where.not(id: Projekt.joins(:individual_group_values).select(:id))
+    end
+  }
+
+  scope :for_overview_page_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins(:projekt_settings)
+      .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+      .sort_by_order_number
+  }
+
+  scope :for_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
+      .sort_by_order_number
   }
 
-  scope :visible_in_menu, ->(user) {
-    select { |p| p.visible_for?(user) }
+  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
+    if landing_page_id.blank?
+      joins(:landing_pages).distinct
+    else
+      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
+    end
   }
 
-  scope :show_in_sidebar_filter, ->(user = nil) {
+  ##################
+
+  scope :show_in_sidebar_filter, -> {
     joins("INNER JOIN projekt_settings show_in_sidebar_filter_settings ON projekts.id = show_in_sidebar_filter_settings.projekt_id")
       .where("show_in_sidebar_filter_settings.key": "projekt_feature.general.show_in_sidebar_filter", "show_in_sidebar_filter_settings.value": "active")
-  }
-
-  scope :with_active_feature, ->(projekt_feature_key) {
-    joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
-      .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
   }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
@@ -281,11 +326,15 @@ class Projekt < ApplicationRecord
     )
   end
 
-  def self.with_pm_permission_to(permission, projekt_manager)
+  def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
+    return Projekt.none if permissions.blank?
 
-    joins(:projekt_manager_assignments)
-      .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
+    joins(:projekt_manager_assignments).where(
+      "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
+      projekt_manager.id,
+      Array(permissions)
+    )
   end
 
   def self.selectable_in_selector(controller_name, current_user, resource = nil)
@@ -310,14 +359,6 @@ class Projekt < ApplicationRecord
     { page.title          => "A",
       title               => "A",
       page.content        => "C" }
-  end
-
-  def can_filter_proposals?
-    proposal_phases.any?(&:current?) || base_selection_proposals.any?
-  end
-
-  def can_filter_debates?
-    debate_phases.any?(&:current?) || debates.any?
   end
 
   def projekt_phases_for(resource)
@@ -527,15 +568,7 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    return true if user.present? && user.administrator?
-    return true if user.present? && user.projekt_manager&.allowed_to?("manage", self)
-    return false unless activated?
-
-    if hard_individual_group_values.empty?
-      true
-    else
-      user.present? && (hard_individual_group_values.ids & user.individual_group_values.ids).any?
-    end
+    Projekt.visible_for(user).where(id: id).exists?
   end
 
   def hidden_for?(user = nil)
@@ -595,7 +628,6 @@ class Projekt < ApplicationRecord
       name: name,
       total_duration_start: total_duration_start,
       total_duration_end: total_duration_end,
-      frame_access_code: frame_access_code,
       preview_code: preview_code,
       show_map: feature?("show_map"),
       show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
@@ -633,17 +665,6 @@ class Projekt < ApplicationRecord
     save!
   end
 
-  def generate_frame_access_code_if_nedded!
-    return if frame_access_code.present?
-
-    regenerate_frame_access_code
-    save!
-  end
-
-  def frame_url
-    gen_projekt_url(embedded: true, frame_code: frame_access_code)
-  end
-
   def gen_projekt_url(url_params = {})
     uri = URI.parse(page.url)
 
@@ -656,10 +677,6 @@ class Projekt < ApplicationRecord
 
   def preview_code_valid?(code)
     preview_code.present? && preview_code == code
-  end
-
-  def frame_access_code_valid?(code)
-    frame_access_code.present? && frame_access_code == code
   end
 
   def should_be_exported_for_overview?
@@ -678,6 +695,19 @@ class Projekt < ApplicationRecord
     User.joins(:projekt_phase_subscriptions)
       .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
       .ids.uniq
+  end
+
+  def page_content
+    if new_content_block_mode?
+      content_blocks_content =
+        content_blocks
+          .map(&:body)
+          .reduce(&:concat)
+
+      ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
+    else
+      page.content
+    end
   end
 
   private
@@ -762,26 +792,10 @@ class Projekt < ApplicationRecord
     def copy_map_settings
       return if map_location.present?
 
-      if overview_page?
-        MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"],
-          projekt_id: id
-        )
-      else
-        map_location = parent&.map_location&.dup || MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"]
-        )
+      create_map_location
 
-        map_location.projekt_id = id
-        map_location.save!
-
-        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
-          map_layers << map_layer.dup
-        end
+      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 

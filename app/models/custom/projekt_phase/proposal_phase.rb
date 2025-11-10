@@ -1,14 +1,10 @@
 class ProjektPhase::ProposalPhase < ProjektPhase
-  has_many :proposals, foreign_key: :projekt_phase_id, dependent: :restrict_with_exception,
-    inverse_of: :projekt_phase
+  has_many :resources, foreign_key: :projekt_phase_id, class_name: "Proposal",
+                       inverse_of: :projekt_phase, dependent: :destroy
 
-  has_many :base_selection_proposals, -> { base_selection }, foreign_key: :projekt_phase_id, class_name: "Proposal"
+  alias_method :proposals, :resources
 
   after_create :copy_map_settings_from_projekt
-
-  def phase_activated?
-    active?
-  end
 
   def name
     "proposal_phase"
@@ -23,7 +19,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def resource_count
-    proposals.for_public_render.count
+    proposals.base_selection.count
   end
 
   def selectable_by_users?
@@ -37,8 +33,9 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
+      proposals
       projekt_labels sentiments map
-      officing_managers
+      officing_managers ai_settings
     ]
   end
 

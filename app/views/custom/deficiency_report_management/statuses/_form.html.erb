@@ -19,6 +19,12 @@
 
   <div class="clear">
     <div class="small-12 medium-6 column">
+      <%= f.text_field :reminder_delay, label: t("custom.admin.deficiency_reports.statuses.status.reminder_delay") %>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 medium-6 column">
       <%= f.check_box :archive_reports, label: t("custom.admin.deficiency_reports.statuses.status.archive_reports") %>
     </div>
   </div>

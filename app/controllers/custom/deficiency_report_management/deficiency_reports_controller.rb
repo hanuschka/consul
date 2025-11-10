@@ -5,10 +5,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include DocumentAttributes
   include CustomSearch
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: %i[show]
 
   def index
     filter_assigned_reports_only
+    @deficiency_reports = @deficiency_reports.only_hidden if params[:only_hidden] == "1"
     @deficiency_reports = apply_filters(@deficiency_reports)
 
     if params[:responsible].present?
@@ -32,7 +33,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   end
 
   def show
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
+    authorize! :show, @deficiency_report
+
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
 
     set_current_responsible
@@ -92,6 +95,13 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     redirect_to polymorphic_path([@namespace, @deficiency_report], action: :edit)
   end
 
+  def feedback_form
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize! :feedback_form, @deficiency_report
+
+    @feedback_form = @deficiency_report.feedback_form
+  end
+
   private
 
     def deficiency_report_params
@@ -137,6 +147,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+
+      if Setting["deficiency_reports.send_feedback_form_link"].present? &&
+          dr.deficiency_report_status_id.in?(DeficiencyReport::Status.where(archive_reports: true).pluck(:id))
+        DeficiencyReportMailer.send_feedback_form_link(dr).deliver_later(wait: 24.hours)
+      end
     end
 
     def update_status_change_date(dr)

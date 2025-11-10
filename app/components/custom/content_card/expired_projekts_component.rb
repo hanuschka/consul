@@ -21,9 +21,9 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
     def expired_projekts
       @expired_projekts =
         @projekts
-          .sort_by_order_number
+          .visible_for(current_user)
           .index_order_expired
-          .select { |p| p.visible_for?(current_user) }
+          .sort_by_order_number
           .first(@limit)
     end
 end

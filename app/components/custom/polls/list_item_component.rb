@@ -36,9 +36,11 @@ class Polls::ListItemComponent < ApplicationComponent
 
     def button_text
       if poll&.projekt_phase&.current?
-        t("custom.polls.poll.phase_current_button")
+        poll&.projekt_phase&.cta_button_name.presence ||
+          t("custom.polls.poll.phase_current_button")
       elsif poll&.projekt_phase&.expired?
-        t("custom.polls.poll.phase_expired_button")
+        poll&.projekt_phase&.cta_button_name.presence ||
+          t("custom.polls.poll.phase_expired_button")
       else
         t("custom.polls.poll.phase_not_started_button")
       end

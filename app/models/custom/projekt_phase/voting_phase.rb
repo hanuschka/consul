@@ -6,10 +6,6 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
   after_create(-> { create_poll })
 
-  def phase_activated?
-    active?
-  end
-
   def name
     "voting_phase"
   end
@@ -30,7 +26,6 @@ class ProjektPhase::VotingPhase < ProjektPhase
     %w[duration naming restrictions settings
        poll_questions
        officing_managers officing_manager_audits
-       poll_results
        age_ranges_for_stats]
   end
 

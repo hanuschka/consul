@@ -61,15 +61,6 @@ class UserResources::FormComponent < ApplicationComponent
     end
   end
 
-  def max_description_lenght
-    case resource
-    when Debate
-      Debate.description_max_length
-    else
-      2000
-    end
-  end
-
   def banner_class_name
     "-#{resource.class.name.downcase}"
   end
@@ -106,6 +97,10 @@ class UserResources::FormComponent < ApplicationComponent
     return false unless projekt_phase.present?
 
     projekt_phase_feature?(projekt_phase, "form.sentiments")
+  end
+
+  def show_idea_category_selector?
+    resource.is_a?(Idea) && Idea::Category.exists?
   end
 
   def show_documents_input?

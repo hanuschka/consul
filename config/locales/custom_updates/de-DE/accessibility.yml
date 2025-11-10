@@ -1,15 +1,50 @@
 de:
   custom:
+    accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+        missing-image:
+          aria-label: "Kein Bild verfügbar"
+      search:
+        search_input:
+          aria-label: "Suchfeld. Geben Sie hier Ihren Suchbegriff ein."
+        search_button:
+          aria-label: "Suchbutton. Klicken Sie, um die Suche zu starten."
+      google-translate:
+        widget-toggler:
+          aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
+      account:
+        edit_banner:
+          aria-label: "Banner bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_avatar:
+          avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
+          aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_username:
+          edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
+          cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
+          save_button: "Speichern Schaltfläche. Klicken Sie, um die Änderungen zu speichern."
+        notifications:
+          aria-label: "Benachrichtigungsfilter"
+      banner-image:
+        glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
+      events:
+        projekt-aria-label: "Projekt: %{projekt_name}"
+    map:
+      aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:
       menu:
         home_icon: Startseiten Link
         search_icon: Suchen
-        konto_icon: Mein Konto Link
+        konto_icon:
+          zero: "„Mein Konto“-Link"
+          one: "„Mein Konto“-Link. Es gibt eine neue Benachrichtigung."
+          other: "„Mein Konto“-Link. Es gibt %{count} neue Benachrichtigungen."
         admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
         all_projekts: Alle Projekte
         draft_projekts: Entwürfe
-        projekt_name_label: "Projekt Name: %{projekt_name} "
+        projekt_name_label: "Projekt Name: %{projekt_name}. Steuerung mit den Pfeiltasten rauf und runter."
         archived_projekts_label: Archivierte Projekte
         deficiency_reports: Mängelmelder
         ideas: Ideen
@@ -22,10 +57,10 @@ de:
           new_debate: Diskussionsbeitrag erstellen
           new_proposal: Neuen Vorschlag erstellen
         mobile:
-          arrow_projekts: Untermenü umschalten
-          arrow_account: Kontomenü umschalten
-          arrow_admin: Adminmenü umschalten
-          arrow_archived_projekts: Archivierte Projekte umschalten
+          arrow_projekts: "Untermenü umschalten. Steuerung mit den Pfeiltasten rauf und runter."
+          arrow_account: "Kontomenü umschalten. Steuerung mit den Pfeiltasten rauf und runter."
+          arrow_admin: "Adminmenü umschalten. Steuerung mit den Pfeiltasten rauf und runter."
+          arrow_archived_projekts: "Archivierte Projekte umschalten. Steuerung mit den Pfeiltasten rauf und runter."
           menu_label: Mobil Menü
       comments:
         expand_replies: Antworten anzeigen

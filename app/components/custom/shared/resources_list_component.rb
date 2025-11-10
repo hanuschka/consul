@@ -144,12 +144,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
     ]
   end
 
-  def render_map?
-    return false if @projekt_phase.present? && !projekt_phase_feature?(@projekt_phase, "form.show_map")
-
-    @map_coordinates.present? || @map_location.present? || @projekt_phase&.map_location.present?
-  end
-
   def hide_list_line_divider?
     resource_type == Topic
   end

@@ -73,6 +73,7 @@ de:
             edit_projekt_map: Karteneinstellungen
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Newsletter-Entwurf
+            notify_reviewers: Prüfer benachrichtigen
           projekt_information:
             title: Projektinformation
           map:
@@ -167,7 +168,6 @@ de:
           note: Stimme
       projekt_livestreams:
         links_title: Livestreams
-        current_livestream: Aktueller Livestream
         no_livestreams: Keine Livestreams
         video_platform_not_supported: "Videoplattform wird nicht unterstützt. Unterstützte Plattformen: YouTube, Vimeo"
       selector:

@@ -5,7 +5,8 @@
   }
 
   #extended-sidebar-map {
-    top: 150px;
+    top: 108px;
+    width: 80%;
     border-radius: 10px;
     // overflow: hidden;
 
@@ -16,3 +17,238 @@
     }
   }
 }
+
+.map_location.map.expanded {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5000;
+  border-radius: 0 !important;
+}
+
+.control-container {
+  &.leaflet-control {
+    width: 34px;
+    height: 34px;
+    background-color: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+
+.mapbox-instruction-overlay {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.75);
+  padding: 2px 6px;
+  border-radius: 0;
+  font-size: 12px;
+  z-index: 100;
+  transition: opacity 0.3s ease;
+  opacity: 0.8;
+  backdrop-filter: blur(2px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mapboxgl-ctrl-group {
+  border-radius: 7px;
+
+  button {
+    background-size: 70%;
+    font-size: 18px;
+
+    i {
+      font-size: 18px;
+    }
+  }
+
+  .mapbox-switch-to-simple-select-control-button.active {
+    background-color: rgba(0, 0, 0, 0.1)
+  }
+}
+
+.mapbox--poi-labels-toggle {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+
+  label {
+    display: flex;
+    align-items: center;
+    padding: 5px 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0000000d;
+    }
+  }
+
+}
+
+.mapboxgl-ctrl {
+  input[type="checkbox"] {
+    margin-top: 0;
+    margin-bottom: 0 !important;
+    cursor: pointer;
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  label {
+    user-select: none !important;
+  }
+}
+
+.mapboxgl-ctrl-geocoder--input {
+  margin-bottom: 0 !important;
+  height: 36px !important;
+  padding: 6px 35px;
+}
+
+.mapboxgl-ctrl-top-left {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+
+/* Mapbox Layer Control Styles */
+.mapbox-layer-control {
+  position: relative;
+  z-index: 3;
+}
+
+.mapbox-layer-control-button {
+  width: 29px;
+  height: 29px;
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.mapbox-layer-control-button:hover {
+  background-color: #f4f4f4;
+}
+
+.mapbox-layer-control-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 7px;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: white;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  transform: translate(0);
+  // padding: 8px;
+}
+
+.mapboxgl-ctrl {
+  transform: none;
+}
+
+.mapbox-layer-select-section {
+  margin-bottom: 8px;
+}
+
+.mapbox-layer-select-section:last-child {
+  margin-bottom: 0;
+}
+
+.mapbox-layer-select-section-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ddd;
+  padding: 4px 0;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.mapbox-layer-checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 4px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+
+  input {
+    margin: 0;
+  }
+}
+
+.mapboxgl-control-container {
+  input {
+    margin: 0;
+  }
+}
+
+.mapbox-layer-checkbox-label input[type="checkbox"],
+.mapbox-layer-checkbox-label input[type="radio"] {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.mapbox-layer-checkbox-label:hover {
+  background-color: #f4f4f4;
+}
+
+.mapbox-layer-checkbox-label span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mapboxgl-ctrl-group button {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.mapbox-gl-draw_ctrl-draw-btn.active,
+.mapbox-gl-draw_ctrl-draw-btn.active:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.extended-sidebar-map {
+  .mapboxgl-ctrl-top-right {
+    top: 62px;
+  }
+}
+
+// .mapbox-layer-control-button {
+//  &:before {
+//    content: 'f5fd';
+//    display: block;
+//  }
+// }

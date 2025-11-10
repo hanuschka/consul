@@ -1,0 +1,21 @@
+<% if @category.present? %>
+  <%= back_link_to polymorphic_path([@namespace, @projekt_phase], action: @projekt_phase.admin_nav_bar_items.first), t("admin.legislation.questions.new.back") %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <h2>
+      <%= t("custom.admin.projekt_phases.projekt_point_of_interest_categories.page_title") %>
+
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
+      <% end %>
+    </h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <%= render 'custom/admin/projekt_phases/projekt_point_of_interest_categories/form', category: @category, projekt_phase: @projekt_phase %>
+  </div>
+</div>

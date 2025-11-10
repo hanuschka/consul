@@ -22,10 +22,10 @@
 
 <div class="row margin-bottom">
   <div class="column">
-    <% if @formular_fields_primary.any? %>
+    <div class="margin-bottom">
       <h4><%= t("custom.admin.projekt_phases.formular.primary_fields_title") %></h4>
 
-      <table id="formular-fields-primary" class="margin-bottom">
+      <table id="formular-fields-primary" class="<%= "hide" if @formular_fields_primary.blank? %>">
         <thead>
           <tr>
             <th style="width:15%"><%= t("activerecord.attributes.formular_field.name") %></th>
@@ -39,12 +39,12 @@
           <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_primary, as: :formular_field %>
         </tbody>
       </table>
-    <% end %>
+    </div>
 
-    <% if @formular_fields_follow_up.any? %>
+    <div class="margin-bottom">
       <h4><%= t("custom.admin.projekt_phases.formular.follow_up_fields_title") %></h4>
 
-      <table id="formular-fields-follow-up" class="margin-bottom">
+      <table id="formular-fields-follow-up" class="<%= "hide" if @formular_fields_follow_up.blank? %>">
         <thead>
           <tr>
             <th style="width:15%"><%= t("activerecord.attributes.formular_field.name") %></th>
@@ -58,7 +58,7 @@
           <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_follow_up, as: :formular_field %>
         </tbody>
       </table>
-    <% end %>
+    </div>
   </div>
 </div>
 

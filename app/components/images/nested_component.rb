@@ -14,7 +14,12 @@ class Images::NestedComponent < ApplicationComponent
     end
 
     def note
-      t "images.form.note", accepted_content_types: Image.humanized_accepted_content_types,
-        max_file_size: Image.max_file_size
+      if f.object.class.name == "Newsletter"
+        t("images.form.note", accepted_content_types: Image.humanized_accepted_content_types,
+          max_file_size: Image.max_file_size) + " " + "Die maximale Breite des Bildes sollte 1200 Pixel nicht überschreiten."
+      else
+        t("images.form.note", accepted_content_types: Image.humanized_accepted_content_types,
+          max_file_size: Image.max_file_size)
+      end
     end
 end

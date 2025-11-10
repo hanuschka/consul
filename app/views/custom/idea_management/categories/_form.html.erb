@@ -1,0 +1,44 @@
+<% form_path = category.persisted? ? idea_management_category_path(category) : idea_management_categories_path(category) %>
+<%= translatable_form_for category, url: form_path do |f| %>
+
+  <%= render "shared/errors", resource: category %>
+
+  <%= render "shared/globalize_locales", resource: category %>
+  <%= f.translatable_fields do |translations_form| %>
+    <div class="small-12 medium-6 large-4 column" style="float:left;">
+      <%= translations_form.text_field :name %>
+    </div>
+  <% end %>
+
+  <div class="clear">
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.text_field :color, label: t("custom.admin.ideas.categories.category.color"),
+        placeholder: t("custom.admin.ideas.categories.form.color_placeholder") %>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 column">
+      <%= f.label :idea_officer_id, t("custom.admin.ideas.categories.category.idea_officer") %>
+      <div style="column-count:3;margin-top:10px;">
+        <%= f.collection_radio_buttons :idea_officer_id, Idea::Officer.all, :id, :name %>
+      </div>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 column">
+      <%= f.label :icon, t("custom.admin.ideas.categories.category.icon") %>
+      <div class='admin-deficiency-report-category-icons-selector'>
+        <%= f.collection_radio_buttons :icon, Iconable::AVAILABLE_ICONS_SHORT, :first, :first do |rb| %>
+          <%= rb.label { rb.radio_button + "<i class=\"fas fa-#{rb.object.first}\"></i>".html_safe } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="small-12 column">
+    <%= f.submit(value: t("custom.admin.ideas.categories.form.submit_button"),
+                class: "button success") %>
+  </div>
+<% end %>

@@ -1,5 +1,6 @@
 <%= render Shared::ResourcesListComponent.new(
   resources: @expired_projekts,
   resource_type: Projekt,
+  resource_link_additional_url_params: (@custom_page.present? ? { page_ref: @custom_page&.slug } : nil),
   title: @content_card.title || t("custom.content_cards.expired_projekts.title")
   ) %>

@@ -1,26 +1,23 @@
 module ProjektPhasesHelper
-  def projekt_phase_navbar_link(action, projekt_phase)
-    class_names = ["static-subnav-link", static_subnav_link_current?(action)].reject(&:blank?)
-    category = action
-    url_params = {}
+  def projekt_phase_navbar_link(action)
+    class_name = ["static-subnav-link", static_subnav_link_current?(action)].reject(&:blank?).join(" ")
 
-    if projekt_phase.settings_categories.include?(action)
-      url_params[:category] = action
-      action = "settings"
-
-      if params[:category] == url_params[:category]
-        class_names << "current"
-      end
-    end
-
-    class_name = class_names.join(" ")
-
-    link_to namespace_projekt_phase_path(action: action, url_params: url_params), class: class_name do
-      t("custom.admin.projekt_phases.nav_bar.#{category}")
+    link_to namespace_projekt_phase_path(action: action), class: class_name do
+      t("custom.admin.projekt_phases.nav_bar.#{action}")
     end
   end
 
   def link_to_footer_tab(projekt_phase)
+  end
+
+  def browse_mode_in_projekt_footer_tab?(projekt_phase)
+    return false unless projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer")
+
+    if params[:proposal_view_mode].blank?
+      projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer_by_default")
+    else
+      params[:proposal_view_mode] == "browse"
+    end
   end
 
   def admin_projekt_phase_resources_link(projekt_phase)
@@ -111,5 +108,22 @@ module ProjektPhasesHelper
     when ProjektPhase::FormularPhase
       "fa-file-alt"
     end
+  end
+
+  def projekt_phase_view_permission_problem_message(permission_problem_key, projekt_phase)
+    return nil if permission_problem_key.blank?
+
+    sanitize(t("custom.projekt_phases.permission_problem.#{projekt_phase.resources_name}.#{permission_problem_key}",
+             sign_in: link_to_signin,
+             sign_up: link_to_signup,
+             guest_sign_in: link_to_guest_signin,
+             enter_missing_user_data: link_to_enter_missing_user_data,
+             verify: link_to_verify_account,
+             city: Setting["org_name"],
+             geozones: projekt_phase.geozone_restrictions_formatted,
+             age_restriction: projekt_phase.age_restriction_formatted,
+             restricted_streets: projekt_phase.street_restrictions_formatted,
+             individual_group_values: projekt_phase.individual_group_value_restriction_formatted
+            ))
   end
 end

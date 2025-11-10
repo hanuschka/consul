@@ -13,10 +13,18 @@
   <% end %>
   <td>
     <%= l(deficiency_report.created_at, format: "%d.%m.%Y") %>
+    <br>
+    <small><%= deficiency_report.archived? ? "Archiviert" : "Nicht archiviert" %></small>
   </td>
   <td>
     <%= link_to deficiency_report.title, deficiency_report_management_deficiency_report_path(deficiency_report), target: "_blank" %>
-    <small><%= link_to "Front-end", deficiency_report_path(deficiency_report), target: "_blank" %></small>
+    <br>
+    <div style="display:flex;gap:1rem;">
+      <small><%= link_to "Front-end", deficiency_report_path(deficiency_report), target: "_blank" %></small>
+      <% if deficiency_report.feedback_form.present?  %>
+        <small><%= link_to "Feedback Form", feedback_form_deficiency_report_management_deficiency_report_path(deficiency_report), target: "_blank" %></small>
+      <% end %>
+    </div>
   </td>
   <td><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank" %></td>
   <td><%= deficiency_report.status&.title %></td>

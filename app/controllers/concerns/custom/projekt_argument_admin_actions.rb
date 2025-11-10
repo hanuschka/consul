@@ -7,6 +7,22 @@ module ProjektArgumentAdminActions
     before_action :set_projekt_argument, only: [:edit, :update, :destroy]
   end
 
+  def new
+    @projekt_argument = @projekt_phase.projekt_arguments.new
+    authorize!(:create, @projekt_argument)
+
+    @projekt_argument.build_image unless @projekt_argument.image
+
+    render "custom/admin/projekt_phases/projekt_arguments/new"
+  end
+
+  def edit
+    authorize!(:update, @projekt_argument)
+    @projekt_argument.build_image unless @projekt_argument.image
+
+    render "custom/admin/projekt_phases/projekt_arguments/edit"
+  end
+
   def create
     @projekt_argument = @projekt_phase.projekt_arguments.new(projekt_argument_params)
     authorize!(:create, @projekt_argument)

@@ -7,7 +7,7 @@
   </thead>
   <tbody>
     <% features.each do |feature| %>
-      <tr>
+      <tr data-setting-key="<%= feature.key %>">
         <td class='small-10'>
           <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.settings.#{feature.key}") %></strong>
           <br>

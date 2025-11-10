@@ -21,18 +21,34 @@
           <%= content_tag(:small, t("custom.shared.required")) %>
           <br>
         <% end %>
-        <span class="help-text"><%= AdminWYSIWYGSanitizer.new.sanitize(ff.description) %></span>
+        <% if ff.description.present? %>
+          <%= content_tag :div, class: "help-text", id: "#{ff.key}_hint" do %>
+            <%= AdminWYSIWYGSanitizer.new.sanitize(ff.description) %>
+          <% end %>
+        <% end %>
       <% end %>
 
+      <% describedby = [] %>
+      <% describedby.push("#{ff.key}_hint") if ff.description.present? %>
+      <% describedby.push("#{ff.key}_error") if formular_answer.answer_errors[ff.key].present? %>
+      <% describedby = describedby.join(" ").strip.presence %>
+
       <% if ff.kind.in? ["string", "email"] %>
-        <%= text_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>
+        <%= text_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off",
+          required: ff.required?, "aria-describedby": describedby,
+          class: ("is-invalid-input" if invalid_field_class) %>
       <% elsif ff.kind.in? ["textarea"] %>
-        <%= text_area_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class), rows: 10 %>
+        <%= text_area_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off",
+          required: ff.required?, "aria-describedby": describedby,
+          class: ("is-invalid-input" if invalid_field_class), rows: 10 %>
       <% elsif ff.kind == "date" %>
-        <%= date_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>
+        <%= date_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off",
+          required: ff.required?, "aria-describedby": describedby,
+          class: ("is-invalid-input" if invalid_field_class) %>
       <% elsif ff.kind == "dropdown" %>
         <%= select_tag "formular_answer[answers][#{ff.key}]", options_for_select((ff.drop_down_options&.split(",") || []).map(&:strip), formular_answer.answers[ff.key]),
-          include_blank: true, class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
+          required: ff.required?, "aria-describedby": describedby,
+          prompt: t("custom.formular_answer.form.select_prompt"), class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
       <% elsif ff.kind == "image" %>
         <%= render FormularAnswers::NestedImageComponent.new(f: f, formular_field: ff, block_id: "nested-image-#{ff.id}") %>
       <% elsif ff.kind == "document" %>
@@ -40,7 +56,7 @@
       <% end %>
 
       <% if formular_answer.answer_errors[ff.key] %>
-        <%= content_tag :small, class: "form-error is-visible" do %>
+        <%= content_tag :small, id: "#{ff.key}_error", class: "form-error is-visible" do %>
           <%= formular_answer.answer_errors[ff.key] %>
         <% end %>
       <% end %>

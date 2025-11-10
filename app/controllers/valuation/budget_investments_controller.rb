@@ -15,10 +15,13 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
   load_and_authorize_resource :investment, class: "Budget::Investment"
 
   def index
+    params[:direction] ||= "desc"
+    params[:sort_by] ||= "id"
+
     @heading_filters = heading_filters
     @investments = if current_user.valuator? && @budget.present?
                      @budget.investments.scoped_filter(params_for_current_valuator, @current_filter)
-                            .order(cached_votes_up: :desc)
+                            .order_filter(params.merge(budget_id: @budget.id))
                             .page(params[:page])
                    else
                      Budget::Investment.none.page(params[:page])
@@ -132,7 +135,7 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
     end
 
     def restrict_access
-      unless current_user.administrator? || current_budget.valuating?
+      unless current_user.administrator? || Budget.find(params[:budget_id]).current_phase.kind.in?(%w[accepting reviewing selecting valuating])
         raise CanCan::AccessDenied, I18n.t("valuation.budget_investments.not_in_valuating_phase")
       end
     end

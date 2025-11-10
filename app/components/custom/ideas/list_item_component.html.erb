@@ -1,0 +1,18 @@
+<%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_header do %>
+    <div>
+      <%= t("ideas.status.#{idea.status}") %>
+    </div>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <div>
+      <i class="fas fa-clock"></i>
+      <%= t("ideas.remaining_days", count: idea.remaining_days) %>
+    </div>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <%= render Ideas::VotesComponent.new(idea) %>
+  <% end %>
+<% end %>

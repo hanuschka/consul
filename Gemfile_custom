@@ -9,8 +9,8 @@ group :development do
   gem 'pry-byebug', '~> 3.9'
   gem 'solargraph'
   gem 'pry-rails'
-  gem 'prosopite'
-  gem 'pg_query'
+  # gem 'prosopite'
+  # gem 'pg_query'
 end
 
 gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '6.x'
@@ -31,3 +31,7 @@ gem "jwt"
 gem 'rack-cors'
 
 gem "prawn", "2.5.0"
+gem 'prawn-svg', '~> 0.37.0'
+gem "rqrcode", "~> 2.0"
+
+gem 'ruby_llm', '1.8.2'

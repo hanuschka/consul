@@ -7,6 +7,22 @@
     </tr>
   </thead>
   <tbody>
+    <% if options[:show_queue] %>
+      <% individual_group_value.auto_join_emails.each do |email| %>
+        <tr>
+          <td></td>
+          <td><%= email %></td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(individual_group_value, actions: []) do |actions| %>
+              <%= actions.link_to t("custom.admin.individual_groups.table.remove_email"),
+                                  remove_email_from_auto_join_emails_admin_individual_group_value_path(email: email),
+                                  method: :delete,
+                                  class: "destroy-officer-link" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
     <% related_users.each do |related_user| %>
       <tr>
         <td>

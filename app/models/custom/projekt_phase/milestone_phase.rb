@@ -1,8 +1,4 @@
 class ProjektPhase::MilestonePhase < ProjektPhase
-  def phase_activated?
-    active?
-  end
-
   def name
     "milestone_phase"
   end

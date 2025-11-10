@@ -12,9 +12,6 @@ class Poll < ApplicationRecord
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
 
-  has_many :landing_page_resources, as: :resource, class_name: "LandingPageResource", dependent: :destroy
-  has_many :landing_pages, through: :landing_page_resources, source: :landing_page
-
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 
@@ -40,24 +37,6 @@ class Poll < ApplicationRecord
 
   def self.base_selection
     created_by_admin.not_budget
-  end
-
-  def self.scoped_projekt_ids_for_index(current_user)
-    Projekt.top_level
-      .map { |p| p.all_children_projekts.unshift(p) }
-      .flatten.select do |projekt|
-        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.main.activate").value.present? &&
-        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.general.show_in_sidebar_filter").value.present? &&
-        projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
-        Poll.base_selection.joins(projekt_phase: :projekt).where(projekt_phases: { projekts: { id: projekt.all_children_ids.unshift(projekt.id) }}).any?
-      end.pluck(:id)
-  end
-
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-      Poll.base_selection.joins(projekt_phase: :projekt).where(projekt_phases: { projekts: { id: projekt.all_children_ids.unshift(projekt.id) }}).any?
-    end.pluck(:id)
   end
 
   def answerable_by?(user)

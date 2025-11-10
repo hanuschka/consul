@@ -43,7 +43,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
   def update
     authorize!(:udpate, @page)
 
-    optimize_mobile_header_image
+    resize_mobile_header_image
 
     if @page.update(page_params)
       notice = t("admin.site_customization.pages.update.notice")
@@ -93,8 +93,12 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :landing_hide_all_top_nav_links,
         :landing_hide_title_and_subtitle,
         :landing_show_projekts_overview,
-        :landing_site_logo_not_clickable,
+        :landing_navigation_link_color,
+        :landing_site_logo_follow_to_landing_page,
         :landing_mobile_header_image,
+        :landing_site_logo_for_transparent_background,
+        :landing_site_logo_for_white_background,
+        :brand_color,
         image_attributes: image_attributes
       ]
 
@@ -103,7 +107,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
       )
     end
 
-    def optimize_mobile_header_image
+    def resize_mobile_header_image
       if page_params[:landing_mobile_header_image].present?
         new_image =
           ImageProcessing::MiniMagick

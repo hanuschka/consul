@@ -1,14 +1,20 @@
 <table>
   <thead>
     <tr>
-      <th style="width:20%"><%= title %></th>
-      <th>Gesamt</th>
-      <th>Dieses Jahr</th>
-      <th>Letztes Jahr</th>
+      <th style="width:20%"><%= t("custom.admin.deficiency_reports.stats.show.type.#{type}") %></th>
+      <th>Gesamtzeit</th>
+      <th>Diese Woche</th>
+      <th>Letzte Woche</th>
       <th>Diesen Monat</th>
       <th>Letzten Monat</th>
-      <th>Diese Woche</th>
-      <th>Diese Woche</th>
+      <th>Dieses Jahr</th>
+      <th>Letztes Jahr</th>
+      <% if type.in? [:category, :responsible] %>
+        <th>Zufriedenheit</th>
+        <th>Reaktionszeit</th>
+        <th>Höflichkeit</th>
+      <% end %>
+
     </tr>
   </thead>
   <tbody>
@@ -16,13 +22,33 @@
       <tr>
         <td><%= group[0]&.name || "Ohne Status" %></td>
         <td><%= group[1].count %></td>
-        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).count %></td>
-        <td><%= group[1].where(created_at: Time.zone.now.prev_year.beginning_of_year..Time.zone.now.prev_year.end_of_year).count %></td>
-        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %></td>
-        <td><%= group[1].where(created_at: Time.zone.now.prev_month.beginning_of_month..Time.zone.now.prev_month.end_of_month).count %></td>
         <td><%= group[1].where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).count %></td>
         <td><%= group[1].where(created_at: Time.zone.now.prev_week.beginning_of_week..Time.zone.now.prev_week.end_of_week).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.prev_month.beginning_of_month..Time.zone.now.prev_month.end_of_month).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.prev_year.beginning_of_year..Time.zone.now.prev_year.end_of_year).count %></td>
+        <% if type.in? [:category, :responsible] %>
+          <td><%= sanitize "#{group[1].joins(:feedback_form).count} (#{group[1].joins(:feedback_form).average("deficiency_report_feedback_forms.overall_satisfaction").to_s} &#8709;)" %></td>
+          <td><%= sanitize "#{group[1].joins(:feedback_form).count} (#{group[1].joins(:feedback_form).average("deficiency_report_feedback_forms.response_time_satisfaction").to_s} &#8709;)" %></td>
+          <td><%= sanitize "#{group[1].joins(:feedback_form).count} (#{group[1].joins(:feedback_form).average("deficiency_report_feedback_forms.communication_satisfaction").to_s} &#8709;)" %></td>
+        <% end %>
       </tr>
     <% end %>
+    <tr>
+      <td>Gesamt</td>
+      <td><%= all_reports.count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.prev_week.beginning_of_week..Time.zone.now.prev_week.end_of_week).count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.prev_month.beginning_of_month..Time.zone.now.prev_month.end_of_month).count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).count %></td>
+      <td><%= all_reports.where(created_at: Time.zone.now.prev_year.beginning_of_year..Time.zone.now.prev_year.end_of_year).count %></td>
+      <% if type.in? [:category, :responsible] %>
+        <td><%= sanitize "#{all_reports.joins(:feedback_form).count} (#{all_reports.joins(:feedback_form).average("deficiency_report_feedback_forms.overall_satisfaction").to_s} &#8709;)" %></td>
+        <td><%= sanitize "#{all_reports.joins(:feedback_form).count} (#{all_reports.joins(:feedback_form).average("deficiency_report_feedback_forms.response_time_satisfaction").to_s} &#8709;)" %></td>
+        <td><%= sanitize "#{all_reports.joins(:feedback_form).count} (#{all_reports.joins(:feedback_form).average("deficiency_report_feedback_forms.communication_satisfaction").to_s} &#8709;)" %></td>
+      <% end %>
+    </tr>
   </tbody>
 </table>

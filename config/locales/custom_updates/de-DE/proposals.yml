@@ -9,11 +9,14 @@ de:
         tags_custom: Nutzer-Tags
         tags_placeholder: Trennen Sie die Tags mit einem Komma (',')
         required: Ihr Beitrag
-        title_placeholder: "Geben Sie Ihrem Beitrag einen plakativen Titel, zum Beispiel
+        title_placeholder: "
+          Titel hinzufügen\n\n
+          Geben Sie Ihrem Beitrag einen plakativen Titel, zum Beispiel
           „Zebrastreifen vor der XY-Grundschule“ oder „Mehr Vielfalt auf den
           Wochenmärkten“.
         "
         description_placeholder: "
+          Beschreibung hinzufügen\n\n
           Beschreiben Sie hier Ihren Beitrag. Folgendes Vorgehen hat sich bewährt:\n\n
           Beginnen Sie mit einer allgemeinen Beschreibung Ihrer Idee und stellen Sie im Anschluss dar,\n was sich mit der Umsetzung Ihres Vorschlags verbessern würde.\n\n
           Achten Sie beim Schreiben möglichst auf kurze Sätze.\n
@@ -43,7 +46,7 @@ de:
         participation_information: Beteiligungsinformation
         search_form:
           button: Suche
-          placeholder: Vorschläge durchsuchen...
+          placeholder: Beiträge durchsuchen...
           title: Suche
         orders:
           confidence_score: Am besten bewertet
@@ -66,7 +69,6 @@ de:
           random_title: Zufällig
           votes_up: Am meisten gewählt
           votes_up_title: Am meisten gewählt
-
       show:
         community_section:
           title: Beteiligen Sie sich

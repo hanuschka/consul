@@ -1,0 +1,140 @@
+.resource-navigation {
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+
+  &--buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 150px;
+      justify-content: center;
+    }
+  }
+}
+
+.quiz-mode-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  
+  .main-column {
+    flex: 1;
+    min-width: 300px;
+    padding: 1rem;
+    
+    @media (min-width: 768px) {
+      flex: 3;
+      padding: 2rem;
+    }
+  }
+  
+  .sidebar {
+    flex: 1;
+    min-width: 250px;
+    padding: 1rem;
+    
+    @media (min-width: 768px) {
+      padding: 2rem;
+    }
+  }
+}
+
+.quiz-mode-navigation {
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+  
+  .proposal-navigation-links {
+    margin-bottom: 1rem;
+  }
+  
+  .exit-quiz-mode {
+    text-align: center;
+    margin-top: 1.5rem;
+    
+    .button {
+      min-width: 200px;
+    }
+  }
+}
+
+.proposal-navigation-links,
+.investment-navigation-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.proposal-navigation-link,
+.investment-navigation-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: $brand;
+  transition: all 0.2s ease;
+  max-width: 45%;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  
+  &:hover {
+    background-color: $brand;
+    color: white;
+    text-decoration: none;
+  }
+  
+  &.previous {
+    margin-right: auto;
+  }
+  
+  &.next {
+    margin-left: auto;
+    text-align: right;
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: transparent;
+      color: $brand;
+    }
+  }
+  
+  &.button {
+    display: flex;
+    align-items: center;
+    
+    .icon-angle-left, .icon-angle-right {
+      margin-top: 0;
+    }
+  }
+}
+
+.proposal-navigation-text,
+.investment-navigation-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.proposal-navigation-label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.proposal-navigation-title {
+  font-size: 0.85rem;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 

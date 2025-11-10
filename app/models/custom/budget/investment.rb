@@ -8,6 +8,10 @@ class Budget
     include Sentimentable
     include Memoable
 
+    DEFAULT_ORDERS = %w(
+      random total_votes ballot_line_weight newest comments_count
+    ).freeze
+
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
     delegate :approximated_address, to: :map_location, allow_nil: true
 
@@ -83,14 +87,5 @@ class Budget
         selected? &&
         valuator_explanation.present?
     end
-
-    private
-
-      def description_sanitized
-        sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '').gsub(/^$\n/, '').gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
-
-        errors.add(:description, :too_long, message: 'too long text') if
-          sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
-      end
   end
 end

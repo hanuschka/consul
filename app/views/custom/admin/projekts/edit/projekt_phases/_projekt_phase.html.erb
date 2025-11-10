@@ -70,6 +70,16 @@
   </td>
 
   <td>
+    <%= render Admin::LivesubmitCheckbox::Component.new(
+      url: toggle_frontend_visibility_admin_projekt_projekt_phase_path(@projekt, projekt_phase),
+      resource_name: "projekt[phase_attributes]",
+      attribute_name: "frontend_visibility",
+      record_id: projekt_phase.id,
+      current_value: projekt_phase.frontend_visibility
+    ) %>
+  </td>
+
+  <td>
     <%= render Admin::TableActionsComponent.new(projekt_phase,
                                                 actions: [:edit, :destroy],
                                                 edit_path: polymorphic_path([@namespace, projekt_phase], action: projekt_phase.admin_nav_bar_items.first),

@@ -1,0 +1,38 @@
+<main class="user-resources-form point-of-interest-map <%= " -no-image" unless feature?(:allow_images) %>">
+  <%= translatable_form_for(@pin, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
+  <%= hidden_field_tag :projekt_phase_id, @projekt_phase.id %>
+    <%= back_link_to %>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <h1 class="user-resources-form--title">
+          <%= t("custom.projekt_point_of_interest_pins.new.title") %>
+        </h1>
+
+        <%= render "shared/errors", resource: @pin  %>
+
+        <div style="margin-bottom: 10px;">
+					<%= t("custom.projekt_point_of_interest_pins.new.category_hint") %>
+        </div>
+
+        <div class="new-card">
+          <%= render ProjektPointOfInterestPins::CategorySetterComponent.new(projekt_phase: @projekt_phase) %>
+        </div>
+
+        <div class="new-card" id='map-container'>
+          <% i18n_scope = "test" %>
+          <%= render "map_locations/form_fields",
+            label:           t("#{i18n_scope}.form.map_location"),
+            help:            t("custom.user_resources.form.map_location_instructions"),
+            form:            f,
+            mappable:        @pin,
+            nesting_prefix: "point-of-interest-map" %>
+        </div>
+
+        <div class="user-resources-form--submit-section">
+          <%= f.submit t("custom.user_resources.form.submit_button"), class: "button" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</main>

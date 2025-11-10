@@ -7,10 +7,10 @@ class ProposalsController
   include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
+  include CustomHelper
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
 
   def index_customization
     if params[:order].nil?
@@ -116,6 +116,7 @@ class ProposalsController
   def create
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
     @projekt_phase = @proposal.projekt_phase
+    @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
@@ -171,6 +172,17 @@ class ProposalsController
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
+    if params[:page_ref].present?
+      @landing_page =
+        @projekt
+          .landing_pages
+          .find_by(slug: params[:page_ref])
+
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
+    end
+
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
 
@@ -179,6 +191,7 @@ class ProposalsController
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?
+      @proposal.description = process_oembeds(@proposal.description)
       render :show_new
 
     else

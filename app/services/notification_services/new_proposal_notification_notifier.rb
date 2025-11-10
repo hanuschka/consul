@@ -25,7 +25,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        @proposal.followers.to_a.reject { |user| user.id == @proposal.author_id }
+        @proposal.followers.to_a.reject { |user| user.id == @proposal.author_id || user.not_actual? }
       end
   end
 end

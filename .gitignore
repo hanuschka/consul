@@ -35,6 +35,9 @@ tmp/
 /public/machine_learning/data/
 /node_modules/
 
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
 # Bundler config, cache and gemsets
 .bundle/
 .ruby-gemset
@@ -46,3 +49,4 @@ tmp/
 # Test results
 /spec/examples.txt
 /coverage/
+tags

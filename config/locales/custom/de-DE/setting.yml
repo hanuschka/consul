@@ -16,6 +16,11 @@ de:
         newsletter_subscription_description: Fügt eine Box hinzu, die zur Newsletter-Anmeldung auffordert.
         platform_activity: Plattform-Aktivität
         platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
+        projekt_search: Projektsuche auf Startseite aktivieren
+        projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
+        share_buttons: Teilen-Funktion
+        share_buttons_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste.
+
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -103,6 +108,7 @@ de:
           homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
           homepage_button_link: Homepage-Button-Link
           homepage_button_link_description: Link, der über den Button angesteuert werden soll
+
         gdpr:
           devise_timeout_min: Dauer von Nutzer-Sitzungen
           devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
@@ -114,13 +120,6 @@ de:
           description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
           description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
 
-      selectable_setting:
-        debates:
-          default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
-        proposals:
-          default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
 
       projekts:
         overview_page: Projektübersichtsseite in Navigation anzeigen
@@ -172,6 +171,8 @@ de:
           vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
           consider_underway: Projekt als aktive Beteiligung betrachten
           consider_underway_description: Sortiert dieses Projekt in der Projektübersicht immer unter “Aktive Beteiligung”.
+          allow_indexing: Projektseite soll von Suchmaschinen indexiert werden
+          allow_indexing_description: Die Projektseite wird von Google und anderen Suchmaschinen indexiert
         sidebar:
           show_notification_subscription_toggler: Benachrichtigungen
           show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste
@@ -321,6 +322,35 @@ de:
         admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
         document_upload: Zusätzliche Dokumente
         document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+        external_video: Externes Video einbinden
+        external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+        voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
+        voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+        send_feedback_form_link: Feedback-Formular
+        send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
+      ideas:
+        show_in_main_menu: Ideen in Navigation anzeigen
+        show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
+        admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+        admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
+        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
+        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
+        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
+        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
+        allow_voting: Nutzer*innen Bewertung pro Idee
+        allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
+        enable_comments: Kommentarfunktion
+        enable_comments_description: Nutzer*innen können unterhalb einer Idee kommentieren
+        intro_text: Einleitungstext für die Idee
+        intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+        enable_my_posts_filter: Meine Beiträge
+        enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+        enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+        enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+        admin_acceptance_required: Bestätigung durch Administratoren
+        admin_acceptance_required_description: Administratoren müssen neue Idee vor der Veröffentlichung zunächst bestätigen.
+        document_upload: Zusätzliche Dokumente
+        document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
         external_video: Externes Video einbinden
         external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
 

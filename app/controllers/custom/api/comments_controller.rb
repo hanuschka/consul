@@ -6,15 +6,39 @@ class Api::CommentsController < Api::BaseController
 
   def index
     check_read_access!
-    comments = if @projekt_phase.present?
-      @projekt_phase.comments
+
+    if @projekt_phase.present?
+      if current_client.public_data?
+        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+        end
+      end
+
+      comments = @projekt_phase.comments
         .includes(:user, :commentable)
     else
-      Comment.includes(:user, :commentable)
+      comments = Comment.includes(:user, :commentable)
+
+      if current_client.public_data?
+        comments = comments.joins(commentable: :projekt_phases)
+          .where(projekt_phases: { frontend_visibility: true, active: true })
+          .distinct
+      end
     end
 
+    valid_orders = %w[most_voted newest oldest]
+    current_order = valid_orders.include?(params[:sort]) ? params[:sort] : "oldest"
+
+    comments = case current_order
+               when "newest"
+                 comments.order(created_at: :desc)
+               when "most_voted"
+                 comments.order(cached_votes_total: :desc, created_at: :asc)
+               else
+                 comments.order(created_at: :asc)
+               end
+
     comments = comments
-      .order(created_at: :desc)
       .page(params[:page])
       .per(params[:per_page] || COMMENTS_PER_PAGE)
 

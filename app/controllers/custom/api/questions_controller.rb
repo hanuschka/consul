@@ -7,16 +7,31 @@ class Api::QuestionsController < Api::BaseController
 
   def index
     check_read_access!
-    questions =
-      if @projekt_phase.present?
-        @projekt_phase.questions.includes(:projekt_phase, :projekt_livestream, :author, :projekt_phase)
-      else
-        ProjektQuestion.includes(:projekt_phase, :projekt_phase, :projekt_livestream, :author)
+
+    if @projekt_phase.present?
+      if current_client.public_data?
+        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+        end
       end
 
-    questions = questions
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+      questions = @projekt_phase.questions
+        .includes(:projekt_phase, :projekt_livestream, :author)
+    else
+      questions = ProjektQuestion.includes(:projekt_phase, :projekt_livestream, :author)
+
+      if current_client.public_data?
+        questions = questions.joins(:projekt_phase)
+          .where(projekt_phases: { frontend_visibility: true, active: true })
+          .distinct
+      end
+    end
+
+    questions =
+      questions
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_questions = QuestionSerializer.serialize_collection(questions)
 

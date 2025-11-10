@@ -39,6 +39,71 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
   path '/api/projekt_phases/{projekt_phase_id}/arguments' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ArgumentPhase)'
 
+    get 'List projekt arguments by phase' do
+      tags 'Arguments'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "List all arguments (pro and con) for a specific projekt phase. Supports pagination for efficient loading of large argument sets. Arguments are ordered by creation date with pagination support. #{ApiAccessRequirements::GET_READ_ONLY}"
+
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number for pagination (default: 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (default: depends on configuration)'
+
+      response '200', 'projekt arguments list returned successfully' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
+        let(:projekt_phase_id) { argument_phase.id }
+        let!(:pro_argument) do
+          argument_phase.projekt_arguments.create!(
+            name: 'Pro Argument',
+            position: 1,
+            note: 'This is a pro argument',
+            pro: true
+          )
+        end
+        let!(:con_argument) do
+          argument_phase.projekt_arguments.create!(
+            name: 'Con Argument',
+            position: 2,
+            note: 'This is a con argument',
+            pro: false
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     arguments: {
+                       type: :array,
+                       items: { type: :object }
+                     }
+                   },
+                   required: ['arguments']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   },
+                   required: ['current_page', 'total_pages', 'total_count', 'per_page']
+                 }
+               },
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      response '404', 'projekt phase not found' do
+        let(:projekt_phase_id) { 999999 }
+
+        run_test!
+      end
+    end
+
     post 'Create a projekt argument' do
       tags 'Arguments'
       consumes 'application/json'

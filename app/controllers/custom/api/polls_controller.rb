@@ -7,16 +7,30 @@ class Api::PollsController < Api::BaseController
   def index
     check_read_access!
 
-    polls = if @projekt_phase.present?
-      @projekt_phase.polls
+    if @projekt_phase.present?
+      if current_client.public_data?
+        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+        end
+      end
+
+      polls = @projekt_phase.polls
         .includes(:projekt_phase, projekt_phase: :projekt)
     else
-      Poll.includes(:projekt_phase, projekt_phase: :projekt)
+      polls = Poll.includes(:projekt_phase, projekt_phase: :projekt)
+
+      if current_client.public_data?
+        polls = polls.joins(:projekt_phase)
+          .where(projekt_phases: { frontend_visibility: true, active: true })
+          .distinct
+      end
     end
 
-    polls = polls
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    polls =
+      polls
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_polls = PollSerializer.serialize_collection(polls)
 

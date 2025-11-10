@@ -13,9 +13,11 @@ class Api::BudgetsController < Api::BaseController
       Budget.includes(:projekt_phase)
     end
 
-    budgets = budgets
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    budgets =
+      budgets
+        .order(created_at: :asc)
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
 
     serialized_budgets = BudgetSerializer.serialize_collection(budgets)
 

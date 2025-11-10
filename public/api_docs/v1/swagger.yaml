@@ -146,6 +146,67 @@ paths:
       required: true
       schema:
         type: integer
+    get:
+      summary: List projekt arguments by phase
+      tags:
+      - Arguments
+      security:
+      - bearer_auth: []
+      description: "List all arguments (pro and con) for a specific projekt phase.
+        Supports pagination for efficient loading of large argument sets. Arguments
+        are ordered by creation date with pagination support. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: 'Page number for pagination (default: 1)'
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of items per page (default: depends on configuration)'
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt arguments list returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      arguments:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - arguments
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                    required:
+                    - current_page
+                    - total_pages
+                    - total_count
+                    - per_page
+                required:
+                - data
+                - pagination
+        '404':
+          description: projekt phase not found
     post:
       summary: Create a projekt argument
       tags:
@@ -1678,6 +1739,14 @@ paths:
         that phase. \n\n*Authorization: Available to both `admin` and `public_data`
         access levels.*"
       parameters:
+      - name: sort
+        in: query
+        required: false
+        description: 'Sort comments by. Valid values: ''oldest'' (default, oldest
+          comments first), ''newest'' (newest comments first), ''most_voted'' (highest
+          voted first, then oldest)'
+        schema:
+          type: string
       - name: page
         in: query
         required: false
@@ -1692,7 +1761,7 @@ paths:
           type: integer
       responses:
         '200':
-          description: comments found and returned
+          description: comments sorted by newest first
           content:
             application/json:
               schema:
@@ -6201,7 +6270,7 @@ paths:
         Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
-          description: projekt phases found and returned
+          description: projekt phases found and returned (public_data sees only visible/active)
           content:
             application/json:
               schema:
@@ -6727,35 +6796,59 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: "Retrieve a paginated list of all projekts. Optionally filter by
-        visibility or include/exclude nested phases and content blocks. \n\n*Authorization:
-        Available to both `admin` and `public_data` access levels.*"
+      description: "Retrieve a list of all projekts ordered by creation date (oldest
+        first). By default returns only public projekts (activated with published
+        pages). Users with public_data access level can only access public projekts.
+        \n\n*Authorization: Available to both `admin` and `public_data` access levels.*"
       parameters:
-      - name: only_visible
+      - name: filter
         in: query
         required: false
-        description: 'If true, returns only activated projekts with published custom
-          pages that are shown in the overview. Default: false (returns all projekts
-          accessible to the user)'
+        description: |
+          Filter projekts by lifecycle stage or special status. Default: 'index_order_all'. Valid values:
+
+          **Timeline-based filters** (all require projekt to be activated):
+          - 'index_order_underway': Projekts in current/active phase where at least one phase is currently accepting contributions (current_at date is today). Indicators of active participation.
+          - 'index_order_ongoing': Projekts currently within their date range but with no active phases accepting contributions (all phases have finished or not yet started).
+          - 'index_order_upcoming': Projekts not yet started (start date is in the future). Shows planned projects to participants.
+          - 'index_order_expired': Projekts past their end date. Shows completed projects.
+
+          **Special status filters**:
+          - 'index_order_all': All activated projekts with published pages shown in overview (default). Broader view excluding special lists.
+          - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
+          - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
+
+          Results are ordered by creation date (oldest first).
+        schema:
+          type: string
+      - name: only_public
+        in: query
+        required: false
+        description: 'If false, returns all projekts (admin only). Default: true (returns
+          activated projekts with published pages shown in overview). Users with public_data
+          access can only access public projekts.'
         schema:
           type: boolean
       - name: include_phases
         in: query
         required: false
-        description: If false, excludes projekt phases from response. When true (default),
-          returns full phase details including type, active status, and dates.
+        description: 'If true, includes projekt phases in response with full phase
+          details including type, active status, and dates. Users with public_data
+          access will only see phases that are: visible to frontend (frontend_visibility=true),
+          active, and within the current date range. Admin users see all phases. Default:
+          false (excludes phases).'
         schema:
           type: boolean
       - name: include_content_blocks
         in: query
         required: false
-        description: If false, excludes content blocks from response. When true (default),
-          returns HTML content blocks organized by locale.
+        description: 'If true, includes content blocks in response with HTML content
+          organized by locale. Default: false (excludes content blocks).'
         schema:
           type: boolean
       responses:
         '200':
-          description: projekts found with public_data access
+          description: projekts found filtered by status
           content:
             application/json:
               schema:
@@ -6874,20 +6967,23 @@ paths:
       - name: include_phases
         in: query
         required: false
-        description: If false, excludes projekt phases from response. When true (default),
-          returns all phases with their settings and configuration.
+        description: 'If true, includes projekt phases in response with all phases,
+          settings, and configuration. Users with public_data access will only see
+          phases that are: visible to frontend (frontend_visibility=true), active,
+          and within the current date range. Admin users see all phases. Default:
+          false (excludes phases).'
         schema:
           type: boolean
       - name: include_content_blocks
         in: query
         required: false
-        description: If false, excludes content blocks from response. When true (default),
-          includes all localized content blocks.
+        description: 'If true, includes content blocks in response with all localized
+          content blocks. Default: false (excludes content blocks).'
         schema:
           type: boolean
       responses:
         '200':
-          description: projekt found with public_data access
+          description: projekt found with public_data access (public projekt only)
           content:
             application/json:
               schema:
@@ -6905,7 +7001,7 @@ paths:
         '404':
           description: projekt not found
         '403':
-          description: forbidden - insufficient access
+          description: forbidden - public_data cannot access non-public projekt
           content:
             application/json:
               schema:
@@ -7120,82 +7216,6 @@ paths:
                       nullable: true
         description: Page attributes containing title (main heading) and subtitle
           (tagline) to update
-  "/api/projekts/{id}/update_image":
-    parameters:
-    - name: id
-      in: path
-      description: Projekt ID
-      required: true
-      schema:
-        type: integer
-    patch:
-      summary: Update projekt page image
-      tags:
-      - Projekts
-      security:
-      - bearer_auth: []
-      description: "Update or replace the projekt cover image that appears on the
-        frontend. Supports uploading a new image, updating image metadata (title/credits),
-        or removing the image entirely. Image must be provided as base64-encoded data.
-        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
-      parameters: []
-      responses:
-        '200':
-          description: projekt page image updated
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      projekt:
-                        "$ref": "#/components/schemas/Projekt"
-                    required:
-                    - projekt
-                required:
-                - data
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-                        items:
-                          type: string
-        '403':
-          description: forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/ImageAttributesApi"
-        description: 'Image attributes for uploading or updating projekt cover image.
-          Attachment must be base64-encoded image data. Supported formats: JPEG, PNG,
-          GIF, WebP (recommended max 5MB). Title serves as alt text for accessibility.
-          Use _destroy=true to remove the current image.'
   "/api/projekts/{id}/update_setting":
     parameters:
     - name: id
@@ -7445,10 +7465,21 @@ paths:
       - bearer_auth: []
       description: "Retrieve all proposals submitted for a specific projekt phase.
         Proposals are citizen-initiated action items or projects proposed within a
-        participation phase. Can filter by visibility for public rendering. Returns
+        participation phase. Access filtering: public_data users automatically see
+        only published (non-draft) and non-archived proposals. The for_public_render
+        parameter is independent and can be used to apply additional filtering. Returns
         paginated results. \n\n*Authorization: Available to both `admin` and `public_data`
         access levels.*"
       parameters:
+      - name: sort
+        in: query
+        required: false
+        description: 'Sort proposals by. Valid values: ''created_at'' (default, oldest
+          first), ''hot_score'' (trending/most activity), ''confidence_score'' (highest
+          confidence first), ''relevance'' (most voted first), ''archival_date'' (most
+          recently archived first)'
+        schema:
+          type: string
       - name: page
         in: query
         required: false
@@ -7464,13 +7495,16 @@ paths:
       - name: for_public_render
         in: query
         required: false
-        description: If true, returns only proposals that are publicly visible and
-          ready for rendering on frontend
+        description: 'If true, returns only proposals that are publicly visible and
+          ready for rendering on frontend (published, non-archived, non-retired).
+          This filter is independent: public_data users will have discard_draft and
+          discard_archived applied automatically, and can additionally use for_public_render
+          to apply stricter filtering.'
         schema:
           type: boolean
       responses:
         '200':
-          description: proposals found with public_data access
+          description: proposals sorted by hot_score
           content:
             application/json:
               schema:
@@ -7767,8 +7801,10 @@ paths:
       security:
       - bearer_auth: []
       description: "Retrieve a paginated list of all proposals across all projekt
-        phases. \n\n*Authorization: Available to both `admin` and `public_data` access
-        levels.*"
+        phases. Access filtering: public_data users automatically see only published
+        (non-draft) and non-archived proposals. The for_public_render parameter is
+        independent and can be used to apply additional filtering. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -7782,6 +7818,16 @@ paths:
         required: false
         schema:
           type: integer
+      - name: for_public_render
+        in: query
+        required: false
+        description: 'If true, returns only proposals that are publicly visible and
+          ready for rendering on frontend (published, non-archived, non-retired).
+          This filter is independent: public_data users will have discard_draft and
+          discard_archived applied automatically, and can additionally use for_public_render
+          to apply stricter filtering.'
+        schema:
+          type: boolean
       responses:
         '200':
           description: proposals found
@@ -7826,11 +7872,13 @@ paths:
       - Proposals
       security:
       - bearer_auth: []
-      description: "Retrieve a single proposal by ID with all its details. \n\n*Authorization:
-        Available to both `admin` and `public_data` access levels.*"
+      description: "Retrieve a single proposal by ID with all its details. Users with
+        public_data access can only view published (non-draft), non-archived proposals.
+        Admin users can view all proposals. \n\n*Authorization: Available to both
+        `admin` and `public_data` access levels.*"
       responses:
         '200':
-          description: proposal found with public_data access
+          description: proposal found with public_data access (published only)
           content:
             application/json:
               schema:
@@ -7848,7 +7896,7 @@ paths:
         '404':
           description: proposal not found
         '403':
-          description: forbidden - insufficient access
+          description: forbidden - public_data cannot access draft proposal
           content:
             application/json:
               schema:

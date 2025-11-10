@@ -31,7 +31,7 @@
         resources :question_options, only: [:create, :show, :update, :destroy]
       end
       resources :events, only: [:index, :create, :show, :update, :destroy]
-      resources :arguments, only: [:create, :show, :update, :destroy]
+      resources :arguments, only: [:index, :create, :show, :update, :destroy]
       resources :notifications, only: [:index, :create, :show, :update, :destroy]
       resources :texts, only: [:index]
       resources :point_of_interest_pins, only: [:index, :create, :show, :update, :destroy]

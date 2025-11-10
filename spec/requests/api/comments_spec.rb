@@ -20,6 +20,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all root-level comments for a projekt phase. Comments support nested replies (children). Returns paginated results with comment hierarchy information. Can be filtered by phase to see all discussion within that phase. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :sort, in: :query, type: :string, required: false, description: "Sort comments by. Valid values: 'oldest' (default, oldest comments first), 'newest' (newest comments first), 'most_voted' (highest voted first, then oldest)"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number for results (default: 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of comments per page (default: 100, max: 500)'
 
@@ -79,6 +80,38 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
         end
+      end
+
+      response '200', 'comments sorted by newest first' do
+        before do
+          _projekt, phase = create_phase_with_context
+          2.times do |i|
+            comment = Comment.new(
+              user: api_client.user,
+              commentable: phase,
+              body: "Comment #{i + 1}"
+            )
+            comment.save!
+          end
+        end
+
+        let(:projekt_phase_id) { ProjektPhase.last.id }
+        let(:sort) { 'newest' }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     comments: { type: :array, items: { type: :object } }
+                   },
+                   required: ['comments']
+                 },
+                 pagination: { type: :object }
+               },
+               required: ['data']
+
+        run_test!
       end
     end
 

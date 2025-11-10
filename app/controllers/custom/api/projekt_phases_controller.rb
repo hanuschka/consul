@@ -13,14 +13,31 @@ class Api::ProjektPhasesController < Api::BaseController
         :geozone_restrictions
       )
 
-    serialized_projekt_phases = ProjektPhaseSerializer.serialize_collection(projekt_phases)
+    if current_client.public_data?
+      projekt_phases = projekt_phases.frontend_visible.active
+    end
+
+    serialized_projekt_phases = ProjektPhaseSerializer.serialize_collection(
+      projekt_phases,
+      current_api_client: current_client
+    )
 
     render json: { data: { projekt_phases: serialized_projekt_phases } }
   end
 
   def show
     check_read_access!
-    serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase).serialize
+
+    if current_client.public_data?
+      unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+      end
+    end
+
+    serialized_projekt_phase = ProjektPhaseSerializer.new(
+      @projekt_phase,
+      current_api_client: current_client
+    ).serialize
 
     render json: { data: { projekt_phase: serialized_projekt_phase } }
   end

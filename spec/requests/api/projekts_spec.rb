@@ -11,13 +11,30 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all projekts. Optionally filter by visibility or include/exclude nested phases and content blocks. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :only_visible, in: :query, type: :boolean, required: false,
-                description: 'If true, returns only activated projekts with published custom pages that are shown in the overview. Default: false (returns all projekts accessible to the user)'
+      description "Retrieve a list of all projekts ordered by creation date (oldest first). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :filter, in: :query, type: :string, required: false,
+                description: <<~DESC
+                  Filter projekts by lifecycle stage or special status. Default: 'index_order_all'. Valid values:
+
+                  **Timeline-based filters** (all require projekt to be activated):
+                  - 'index_order_underway': Projekts in current/active phase where at least one phase is currently accepting contributions (current_at date is today). Indicators of active participation.
+                  - 'index_order_ongoing': Projekts currently within their date range but with no active phases accepting contributions (all phases have finished or not yet started).
+                  - 'index_order_upcoming': Projekts not yet started (start date is in the future). Shows planned projects to participants.
+                  - 'index_order_expired': Projekts past their end date. Shows completed projects.
+
+                  **Special status filters**:
+                  - 'index_order_all': All activated projekts with published pages shown in overview (default). Broader view excluding special lists.
+                  - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
+                  - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
+
+                  Results are ordered by creation date (oldest first).
+                DESC
+      parameter name: :only_public, in: :query, type: :boolean, required: false,
+                description: 'If false, returns all projekts (admin only). Default: true (returns activated projekts with published pages shown in overview). Users with public_data access can only access public projekts.'
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
-                description: 'If false, excludes projekt phases from response. When true (default), returns full phase details including type, active status, and dates.'
+                description: 'If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
-                description: 'If false, excludes content blocks from response. When true (default), returns HTML content blocks organized by locale.'
+                description: 'If true, includes content blocks in response with HTML content organized by locale. Default: false (excludes content blocks).'
 
       response '200', 'projekts found' do
         schema type: :object,
@@ -64,6 +81,27 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         before do
           api_client.update!(access_level: :public_data)
         end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '200', 'projekts found filtered by status' do
+        let(:filter) { 'index_order_all' }
 
         schema type: :object,
                properties: {
@@ -188,9 +226,9 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       security [bearer_auth: []]
       description "Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
-                description: 'If false, excludes projekt phases from response. When true (default), returns all phases with their settings and configuration.'
+                description: 'If true, includes projekt phases in response with all phases, settings, and configuration. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
-                description: 'If false, excludes content blocks from response. When true (default), includes all localized content blocks.'
+                description: 'If true, includes content blocks in response with all localized content blocks. Default: false (excludes content blocks).'
 
       response '200', 'projekt found and returned' do
         schema type: :object,
@@ -241,7 +279,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         end
       end
 
-      response '200', 'projekt found with public_data access' do
+      response '200', 'projekt found with public_data access (public projekt only)' do
         before do
           api_client.update!(access_level: :public_data)
         end
@@ -258,10 +296,41 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                },
                required: ['data']
 
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:test_projekt) do
+          projekt = Projekt.create!(name: 'Public Test Projekt')
+          projekt.projekt_settings.find_or_create_by(key: 'projekt_feature.main.activate').update!(value: 'active')
+          projekt.projekt_settings.find_or_create_by(key: 'projekt_feature.general.show_in_overview_page').update!(value: 'active')
+          projekt.page.update!(status: 'published')
+          projekt
+        end
         let(:id) { test_projekt.id }
 
         run_test!
+      end
+
+      response '403', 'forbidden - public_data cannot access non-public projekt' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        let(:test_projekt) { Projekt.create!(name: 'Private Test Projekt') }
+        let(:id) { test_projekt.id }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
 

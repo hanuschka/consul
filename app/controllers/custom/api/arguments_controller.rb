@@ -1,8 +1,25 @@
 class Api::ArgumentsController < Api::BaseController
   include ImageAttributes
 
-  before_action :find_projekt_phase, only: [:create]
+  before_action :find_projekt_phase, only: [:index, :create]
   before_action :find_projekt_argument, only: [:show, :update, :destroy]
+
+  def index
+    check_read_access!
+
+    arguments =
+      @projekt_phase
+        .projekt_arguments
+        .page(params[:page])
+        .per(params[:per_page] || DEFAULT_PER_PAGE)
+
+    serialized_arguments = ArgumentSerializer.serialize_collection(arguments)
+
+    render json: {
+      data: { arguments: serialized_arguments },
+      pagination: pagination_meta(arguments)
+    }
+  end
 
   def create
     check_admin_access!
@@ -57,6 +74,15 @@ class Api::ArgumentsController < Api::BaseController
   end
 
   private
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
+  end
 
   def projekt_argument_params
     params.require(:projekt_argument).permit(

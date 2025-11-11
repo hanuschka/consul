@@ -59,12 +59,25 @@
     }
   }
 
+  .supports {
+    .supported {
+      &.remove {
+        form button {
+          font-weight: 400 !important;
+          background-color: #9EADBA;
+          color: #fff;
+        }
+      }
+    }
+  }
+
   .resource-item--footer-section {
     // min-height: 50px !important;
 
     .ballot-section, .price-section, .votes-section, .show-votes-count-section {
       width: 100%;
       min-height: unset !important;
+      max-width: 100% !important;
     }
 
     .ballot-section, .votes-section, .show-votes-count-section {
@@ -84,14 +97,6 @@
 
           form {
             margin-bottom: 5px;
-          }
-
-          &.remove {
-            form button {
-              font-weight: 400 !important;
-              background-color: #9EADBA;
-              color: #fff;
-            }
           }
         }
 
@@ -183,3 +188,11 @@
     }
   }
 }
+
+
+#budget_investment_sticky .supports.ballot {
+  @media(max-width: $small-tablet-viewport-start) {
+    padding: 20px 0;
+  }
+}
+

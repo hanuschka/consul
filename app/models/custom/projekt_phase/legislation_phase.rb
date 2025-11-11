@@ -4,10 +4,6 @@ class ProjektPhase::LegislationPhase < ProjektPhase
 
   after_create :create_legislation_process
 
-  def phase_activated?
-    active?
-  end
-
   def name
     "legislation_phase"
   end

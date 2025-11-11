@@ -29,7 +29,7 @@ module NotificationServices
       end
 
       def reports_with_overdue_assignment_ids
-        DeficiencyReport.where(deficiency_report_officer_id: nil)
+        DeficiencyReport.not_assigned
           .where(assigned_at: @threshold_date.midnight..@threshold_date.end_of_day)
           .ids
       end

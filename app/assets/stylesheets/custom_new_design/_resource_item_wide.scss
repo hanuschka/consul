@@ -259,6 +259,10 @@
           height: 100% !important;
           width: 100%;
         }
+
+        &.-no-image {
+          grid-template-columns: 0 1fr;
+        }
       }
     }
   }

@@ -22,14 +22,6 @@ module CustomHelper
     doc.to_html.html_safe
   end
 
-  def all_projekt_proposals_map_locations(projekt)
-    proposals_for_map = projekt.proposals.not_archived.published
-
-    ids = proposals_for_map.pluck(:id).uniq
-
-    MapLocation.where(proposal_id: ids).map(&:json_data)
-  end
-
   def legislation_process_tabs(process)
     {
       "info"           => edit_admin_legislation_process_path(process),
@@ -59,6 +51,10 @@ module CustomHelper
   def toggle_element_in_array(array, element)
     array ||= []
 
+    if array.present? && !array.is_a?(Array)
+      array = [array]
+    end
+
     if array.include?(element)
       array.delete(element)
     else
@@ -83,6 +79,27 @@ module CustomHelper
     doc.css("iframe").each do |iframe|
       iframe["data-src"] = iframe["src"]
       iframe["src"] = ""
+    end
+
+    doc.to_html
+  end
+
+  def process_oembeds(content)
+    doc = Nokogiri::HTML::DocumentFragment.parse(content)
+
+    doc.css("oembed").each do |oembed|
+      url = oembed["url"]&.strip
+      next unless url&.include?("youtube.com")
+
+      rendered_html = Shared::ExternalVideoPlayer.new(url: url).render_in(view_context)
+      fragment = Nokogiri::HTML::DocumentFragment.parse(rendered_html)
+
+      p_node = Nokogiri::XML::Node.new('p', doc)
+      fragment.children.each { |child| p_node.add_child(child.dup) }
+
+      if (figure = oembed.ancestors("figure").first)
+        figure.replace(p_node)
+      end
     end
 
     doc.to_html

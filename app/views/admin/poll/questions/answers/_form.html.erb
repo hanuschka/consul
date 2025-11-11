@@ -78,6 +78,12 @@
         <%= f.select :next_question_id, @question.sibling_questions, { include_blank: t("custom.shared.select"), label: t("custom.polls.questions.next_question") } %>
       </div>
     </div>
+
+    <div class="row">
+      <div class="small-12 column">
+        <%= f.check_box :terminates_poll %>
+      </div>
+    </div>
   <% end %>
 
   <div class="row">

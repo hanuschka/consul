@@ -240,6 +240,7 @@ de:
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
           feasible: Entspricht den Kriterien
+          preselected: Unter den Top %{preselected_count} Vorschlägen
           selected: Zulassung zur Abstimmung
           undecided: Nicht bewertet
           unfeasible: Entspricht nicht den Kriterien
@@ -275,6 +276,7 @@ de:
           geozone: Bezug der Vorschläge
           feasibility: Kriterien
           valuation_finished: Bewertung beendet
+          preselected: Top %{preselected_count}
           selected: Zulassung zur Abstimmung
           visible_to_valuators: Gutachter*innen zeigen
           author_username: Benutzer*innenname des/der Verfasser*in
@@ -827,6 +829,7 @@ de:
       update_success: Newsletter erfolgreich aktualisiert
       send_success: Newsletter erfolgreich gesendet
       delete_success: Newsletter erfolreich gelöscht
+      send_test_success: Test-Newsletter erfolgreich gesendet
       index:
         title: Newsletter
         new_newsletter: Neuer Newsletter

@@ -1,0 +1,14 @@
+.resources-list {
+  .supports.idea {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &.-wide {
+    .supports.idea {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0 !important;
+    }
+  }
+}

@@ -55,7 +55,7 @@ class Budget
       inverse_of: :commentable,
       class_name: "Comment"
 
-    validates_translation :title, presence: true, length: { in: 4..Budget::Investment.title_max_length }
+    validates_translation :title, length: { in: 4..Budget::Investment.title_max_length }
     # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
     validates_translation :description, presence: true
 
@@ -163,6 +163,7 @@ class Budget
 
       ids = []
       ids += results.valuation_finished_feasible.ids if params[:advanced_filters].include?("feasible")
+      ids += results.where(preselected: true).ids    if params[:advanced_filters].include?("preselected")
       ids += results.where(selected: true).ids       if params[:advanced_filters].include?("selected")
       ids += results.undecided.ids                   if params[:advanced_filters].include?("undecided")
       ids += results.unfeasible.ids                  if params[:advanced_filters].include?("unfeasible")
@@ -215,7 +216,8 @@ class Budget
     end
 
     def self.search(terms)
-      pg_search(terms)
+      search_result_ids = pg_search(terms).pluck(:id)
+      where(id: search_result_ids)
     end
 
     def self.by_heading(heading)

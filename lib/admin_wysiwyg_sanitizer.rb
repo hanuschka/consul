@@ -4,6 +4,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       h1 iframe object param embed
       i input label form button figure figcaption nav
       section textarea
+      oembed
     ]
   end
 
@@ -40,6 +41,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-show-more-text data-show-less-text
       data-pswp-width data-pswp-height
       data-turbolinks
+      url
     ]
   end
 end

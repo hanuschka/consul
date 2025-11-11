@@ -1,0 +1,3 @@
+class Admin::ProjektPointOfInterestCategoriesController < Admin::BaseController
+  include ProjektPointOfInterestCategoriesAdminActions
+end

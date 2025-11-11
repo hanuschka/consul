@@ -1,0 +1,77 @@
+de:
+  idea_management:
+    header:
+      title: Ideenplattform
+  ideas:
+    status:
+      active: Aktiv
+      archived: Archiviert
+      pending: Schwebend
+    remaining_days:
+      one: "Verbleibende Zeit: %{count} Tag"
+      other: "Verbleibende Zeit: %{count} Tage"
+    support: Unterstützen
+    unsupport: Unterstützung zurückziehen
+    supports_count:
+      one: "%{count} Unterstützung"
+      other: "%{count} Unterstützungen"
+    index:
+      title: Ideenplattform
+      welcome_default_text_html: "Die Ideenplattform bietet Ihnen die Möglichkeit, aktiv an der Gestaltung Ihres Lebensumfelds mitzuwirken. Reichen Sie Ihre Idee ein und sammeln Sie Unterstützende. Wird ein festgelegtes Quorum innerhalb einer bestimmten Frist erreicht, nimmt die Verwaltung den Vorschlag offiziell auf und prüft ihn weiter."
+      sidebar:
+        information_default_text: "Sie haben eine Idee, wie das Leben vor Ort verbessert werden kann? Mit einem Klick auf die Schaltfläche können Sie sie einreichen."
+        count: Ideen
+        button_new: "Neue Idee"
+        category_filter:
+          title: Kategorie
+        status_filter:
+          title: Status
+          active: Aktiv
+          archived: Archiviert
+        quorum_filter:
+          title: Quorum
+          reached: Erreicht
+          not_reached: Nicht erreicht
+    show:
+      official_answer_title: "Offizielle Antwort"
+      video_url_title: "Video URL"
+      author_actions:
+        title: Autor
+        delete_button: "Idee löschen"
+    new:
+      start_new: "Neue Idee starten"
+    form:
+      category_label: Kategorie
+      category_hint: Bitte wählen Sie eine Option aus
+      district:
+        title: Schnellauswahl Kartenausschnitt
+        description: Navigieren Sie schnell zu der gewünschten Kartenposition
+        placeholder: Bitte Kartenausschnitt wählen
+  custom:
+    ideas:
+      index:
+        empty_list_text: Es sind noch keine Ideen vorhanden. Reichen Sie jetzt eine Idee ein!
+        search_form:
+          placeholder: Beiträge durchsuchen...
+        orders:
+          most_supported: "Meist unterstützt"
+          most_commented: "Meist kommentiert"
+          newest: "Neueste"
+      form:
+        title_placeholder: 'Geben Sie Ihrer Idee einen plakativen Titel, zum Beispiel "Sicherer Radweg entlang der Bahnhofstraße" oder "Spielplatz für alle Generationen'
+        description_placeholder: "
+          Beschreiben Sie hier Ihren Beitrag. Folgendes Vorgehen hat sich bewährt:\n\n
+          Beginnen Sie mit einer allgemeinen Beschreibung Ihrer Idee und stellen Sie im Anschluss dar,\n was sich mit der Umsetzung Ihres Vorschlags verbessern würde.\n\n
+          Achten Sie beim Schreiben möglichst auf kurze Sätze.\n
+          Beschränken Sie Ihren Inhalt – sofern möglich – auf maximal drei Absätze.\n\n
+          Nutzen Sie außerdem Absätze, um Ihren Text lesbarer zu machen. (Viele Nutzer lesen Ihren Text auf mobilen Geräten.)\n\n
+          Verwenden Sie überdies – wenn passend – Aufzählungen und Stichpunkte für eine bessere Übersichtlichkeit.
+        "
+        map:
+          placeholder: bitte wählen
+        labels:
+          title: Titel
+          description: Beschreibung
+          on_behalf_of: Eingereicht im Namen von
+          video_url: Video URL
+          district_select: Schnellauswahl Kartenausschnitt

@@ -1,0 +1,28 @@
+<% provide :title do %>
+  <%= t("admin.header.title") %> - <%= t("admin.menu.proposals") %> - <%= @idea.title %>
+<% end %>
+
+<%= render "custom/idea_management/ideas/subnav", idea: @idea %>
+
+<%= render "custom/idea_management/ideas/show/basic_data", idea: @idea %>
+
+<% if (Setting["ideas.officers_can_administer_assigned_reports"].present? && current_user.idea_officer?) ||
+       current_user.idea_manager? ||
+       current_user.administrator? %>
+  <% if can?(:edit, @idea) %>
+    <hr>
+    <div class="row expanded full-width">
+      <div class="small-12 large-8 columns margin-bottom">
+        <%= render "custom/idea_management/ideas/show/administer", idea: @idea %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<hr>
+
+<div class="row expanded full-width">
+  <div class="small-12 large-8 columns margin-bottom">
+    <%= render "admin/memos/memos", memoable: @idea %>
+  </div>
+</div>

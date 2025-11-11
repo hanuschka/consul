@@ -337,13 +337,15 @@
           style: function (feature) {
             return {
               weight: 2,
-              color: feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
+              color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
             };
           },
           onEachFeature: function (feature, layer) {
             if (self.editable) {
               self.setupEventListenersForEditableFeature(self.map, layer)
               self.editableLayers.push(layer);
+
+              layer.addTo(self.map);
 
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);

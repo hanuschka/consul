@@ -350,7 +350,7 @@ class Budget
       return true if budget.balloting?
 
       budget.reviewing_ballots? &&
-        args[:controller_name].in?(["offline_ballots", "lines"]) &&
+        args[:controller_path].in?(["officing/budgets", "budgets/ballot/lines"]) &&
         (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
     end
 

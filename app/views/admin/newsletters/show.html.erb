@@ -21,7 +21,7 @@
   </div>
   <div class="small-12 column">
     <strong><%= t("admin.newsletters.show.segment_recipient") %></strong><br>
-    <%= segment_name(@newsletter.segment_recipient) %>
+    <%= @newsletter.recipient_group&.name || segment_name(@newsletter.segment_recipient) %>
     <%= t("admin.newsletters.show.affected_users", n: @recipients_count) %>
   </div>
 
@@ -51,6 +51,8 @@
               id: "js-send-newsletter-alert",
               class: "button success" %>
 <% end %>
+
+<%= link_to 'Test-Email an mich senden', send_test_admin_newsletter_path(@newsletter), method: :post, class: "button secondary" %>
 
 <div class="margin-bottom"></div>
 

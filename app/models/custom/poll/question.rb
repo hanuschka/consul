@@ -1,11 +1,25 @@
 require_dependency Rails.root.join("app", "models", "poll", "question").to_s
 
 class Poll::Question < ApplicationRecord
-  translates :description, :min_rating_scale_label, :max_rating_scale_label, touch: true
+  translates :description, :min_rating_scale_label, :max_rating_scale_label, :intro, touch: true
   has_many :nested_questions, -> { order "given_order asc" },
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
 
   belongs_to :parent_question, class_name: "Poll::Question", optional: true
+  belongs_to :contextualize_by_question, class_name: "Poll::Question",
+                                         foreign_key: :contextualize_by_poll_question_id,
+                                         optional: true
+  belongs_to :contexted_clone_of, class_name: "Poll::Question",
+                                  foreign_key: :contexted_clone_of_poll_question_id,
+                                  optional: true,
+                                  inverse_of: :contexted_clones
+  has_many :contexted_clones, class_name: "Poll::Question",
+                              foreign_key: :contexted_clone_of_poll_question_id,
+                              inverse_of: :contexted_clone_of,
+                              dependent: :destroy
+  belongs_to :context, class_name: "Poll::Question::Answer",
+                       foreign_key: :context_id,
+                       optional: true
 
   validate :validate_parent_question_id
 
@@ -55,4 +69,59 @@ class Poll::Question < ApplicationRecord
   def can_accept_open_answer?
     votation_type.unique? || votation_type.multiple?
   end
+
+  def find_or_clone_for_context(ctx)
+    return unless template_for_context?
+    return if context.present?
+
+    poll.questions.with_context(ctx).find_by(title: title) || clone_for_context(ctx)
+  end
+
+  def regenerate_contexted_clones
+    contexted_clones.destroy_all
+
+    contextualize_by_question.question_answers.each do |qa|
+      clone_for_context(qa)
+    end
+  end
+
+  protected
+
+    def clone_for_context(context, nested: false)
+      new_question = dup
+      new_question.contextualize_by_poll_question_id = nil
+      new_question.contexted_clone_of = self unless nested
+      new_question.context = context unless nested
+
+      new_question.comments_count = 0
+
+      new_question.title = title
+      new_question.description = description
+      new_question.min_rating_scale_label = min_rating_scale_label
+      new_question.max_rating_scale_label = max_rating_scale_label
+      new_question.intro = intro
+
+      question_answers.each do |question_answer|
+        new_question_answer = question_answer.dup
+        new_question_answer.title = question_answer.title
+        new_question_answer.description = question_answer.description
+        new_question.question_answers << new_question_answer
+      end
+
+      new_votation_type = votation_type.dup
+      new_votation_type.save!
+      new_question.votation_type = new_votation_type
+
+      new_question.save!
+
+      if bundle_question?
+        nested_questions.each do |nested_question|
+          nested_question_clone = nested_question.clone_for_context(context, nested: true)
+          new_question.nested_questions << nested_question_clone
+        end
+      end
+
+      new_question
+    end
 end
+# Also clone videos, documents and images for answers

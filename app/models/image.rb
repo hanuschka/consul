@@ -3,7 +3,7 @@ class Image < ApplicationRecord
 
   def self.styles
     {
-      large: { coalesce: true, resize: "x#{Setting["uploads.images.min_height"]}", loader: { page: nil }},
+      large: { coalesce: true, resize: "x475", loader: { page: nil }},
       projekt_image: { coalesce: true, gravity: "center", resize: "620x390^", crop: "620x390+0+0", loader: { page: nil }},
       medium: { coalesce: true, gravity: "center", resize: "300x300^", crop: "300x300+0+0", loader: { page: nil }},
       thumb: { coalesce: true, gravity: "center", resize: "140x245^", crop: "140x245+0+0", loader: { page: nil }},
@@ -25,6 +25,8 @@ class Image < ApplicationRecord
   validates :imageable_id, presence: true,         if: -> { persisted? }
   validates :imageable_type, presence: true,       if: -> { persisted? }
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
+
+  default_scope { with_attached_attachment }
 
   def self.max_file_size
     Setting["uploads.images.max_size"].to_i

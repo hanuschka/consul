@@ -1,10 +1,8 @@
 class ProjektPhase::DebatePhase < ProjektPhase
-  has_many :debates, foreign_key: :projekt_phase_id,
-    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+  has_many :resources, -> { all }, foreign_key: :projekt_phase_id, class_name: "Debate",
+                                   inverse_of: :projekt_phase, dependent: :destroy
 
-  def phase_activated?
-    active?
-  end
+  alias_method :debates, :resources
 
   def name
     "debate_phase"

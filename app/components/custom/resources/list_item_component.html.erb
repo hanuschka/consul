@@ -1,7 +1,7 @@
 <% auther_name_and_avatar = capture do %>
   <% if show_author_name? %>
     <div class="resource-item--author-photo">
-      <% if on_behalf_of? || @resource.author.image&.variant(:popup).blank? %>
+      <% if on_behalf_of? || @resource.author.guest? || @resource.author.image&.variant(:popup).blank? %>
         <div class="resource-item--author-photo--placeholder">
           <%= @resource.author_initial %>
         </div>
@@ -20,7 +20,7 @@
 
 <% author_html = capture do %>
   <% if show_author_name? %>
-    <% if on_behalf_of? %>
+    <% if on_behalf_of? || @resource.author.guest? %>
       <div class="resource-item--author">
         <%= auther_name_and_avatar %>
       </div>
@@ -47,7 +47,7 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link', target: @url_target do %>
+    <%= link_to @url, class: 'resource-item--image-link', target: @url_target, 'aria-hidden': true do %>
       <%= render(
         Shared::ResourceImageComponent.new(
           image_url: @image_url,
@@ -92,14 +92,20 @@
           </div>
 
           <% if @url.present? %>
-            <%= link_to(truncate(@title, length: 72), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
+            <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
+
+            <div class="resource-item--description">
+              <%= link_to(@url, target: @url_target, data: { turbolinks: false }) do %>
+                <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
+              <% end %>
+            </div>
           <% else %>
             <div class="no-link resource-item--title"><%= truncate(@title, length: 72) %></div>
-          <% end %>
 
-          <div class="resource-item--description">
-            <%= truncate(strip_tags(@description), length: 160) %>
-          </div>
+            <div class="resource-item--description">
+              <%= truncate(sanitize(strip_tags(@description)), length: 160, escape: false) %>
+            </div>
+          <% end %>
         </div>
 
         <% if additional_body_sections.any? %>

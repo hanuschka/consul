@@ -52,6 +52,10 @@
 
       <%= render Shared::ContentCardComponent.new(@content_cards.shift) %>
 
+      <%= render_custom_block "home_page_7" %>
+
+      <%= render Shared::ContentCardComponent.new(@content_cards.shift) %>
+
     </div>
 
     <%= render "sidebar" %>

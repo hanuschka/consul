@@ -1,0 +1,15 @@
+.custom-new-design {
+  .projekt-phase-subnav {
+    margin-top: 0px;
+    margin-bottom: 15px;
+
+    .projekt-phase-subnav-item {
+      margin-right: 10px;
+
+      &.is-active {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+    }
+  }
+}

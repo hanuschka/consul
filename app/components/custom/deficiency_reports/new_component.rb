@@ -18,9 +18,7 @@ class DeficiencyReports::NewComponent < ApplicationComponent
     @districts ||= RegisteredAddress::District.joins(:map_location).order(id: :asc)
   end
 
-  def map_coordinates_for_districts
-    districts.map do |district|
-      [district.id, [district.map_location.latitude, district.map_location.longitude]]
-    end.to_h
+  def categories_serialized
+    DeficiencyReport::Category.all.as_json(only: [:name, :id, :warning_text])
   end
 end

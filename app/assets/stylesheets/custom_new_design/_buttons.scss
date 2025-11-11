@@ -18,13 +18,7 @@ button {
     color: white;
     margin-top: 10px;
     margin-bottom: 10px;
-    // padding: 0 20px 0;
     padding: 10px 20px !important;
-    // max-width: 300px;
-    // display: flex !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 15px;
     border-radius: 7px;
     transition: background-color 0.1s ease;
@@ -126,6 +120,7 @@ button {
     &.-green {
       background: $green-button-color;
       color: white;
+      line-height: normal;
 
       &:hover, &:focus {
         background-color: lighten($green-button-color, 5%)
@@ -152,7 +147,6 @@ button {
 
       &:hover  {
         background: rgba($brand, 0.1);
-        color: $brand;
       }
       &:focus, &:active {
         background: rgba($brand, 0.3);
@@ -163,6 +157,31 @@ button {
           background: #ffe7e3;
           color: #cc4b37;
         }
+      }
+    }
+
+    &.full-width {
+      text-align: center;
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    &.left-aligned {
+      text-align: start;
+      padding-left: 0.5em;
+
+      i {
+        width: 25px;
+        text-align: center;
+      }
+    }
+
+    &.with-icon {
+      i {
+        width: 25px;
+        text-align: center;
       }
     }
   }
@@ -194,8 +213,21 @@ button {
     background-color: antiquewhite;
   }
 
-  .open-answer {
-    background-color: #207868;
+  .poll-open-answer-form {
+    .open-answer {
+      border: 1px solid #003A71;
+      color: #003A71;
+    }
+
+    .open-answer.answered {
+      border-color: #207868;
+      background: #207868;
+      color: #fff;
+    }
+
+    .open-answer {
+      min-width: auto;
+    }
   }
 
   @media(min-width: 40em) {
@@ -218,4 +250,10 @@ button {
     text-decoration: none;
     color: white;
   }
+}
+
+.button.close-button {
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
 }

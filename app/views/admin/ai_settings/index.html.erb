@@ -1,0 +1,31 @@
+<h1><%= t("admin.ai_settings.index.title") %></h1>
+
+<div class="ai-settings-container">
+  <% if @ai_settings.any? %>
+    <table class="ai-settings-table">
+      <thead>
+        <tr>
+          <th><%= t("admin.ai_settings.index.setting_name") %></th>
+          <th><%= t("admin.ai_settings.index.value") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ai_settings.each do |setting| %>
+          <tr class="setting-row" data-setting-key="<%= setting.key %>">
+            <td class="setting-label">
+              <strong><%= t("admin.ai_settings.setting.#{setting.key}", default: setting.key.humanize) %></strong>
+              <% if t("admin.ai_settings.setting_description.#{setting.key}", default: nil).present? %>
+                <p class="setting-description"><%= t("admin.ai_settings.setting_description.#{setting.key}") %></p>
+              <% end %>
+            </td>
+            <td class="setting-value">
+              <%= render "ai_setting_form", setting: setting, key: setting.key %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p><%= t("admin.ai_settings.index.no_settings") %></p>
+  <% end %>
+</div>

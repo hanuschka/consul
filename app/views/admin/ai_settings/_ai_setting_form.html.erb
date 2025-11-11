@@ -1,0 +1,41 @@
+<div class="ai-setting-form-wrapper">
+  <% case key %>
+    <% when "llm.provider" %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="field-wrapper">
+          <%= form.select :value, ai_provider_options, { include_blank: "Select provider" }, class: "ai-setting-select" %>
+          <p class="help-text"><%= t("admin.ai_settings.setting_help.llm_provider", default: "Providers will be disabled until credentials are configured in the secrets.yml") %></p>
+        </div>
+        <%= form.submit t("admin.ai_settings.index.update"), class: "button" %>
+      <% end %>
+    <% when "llm.model" %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="field-wrapper">
+          <%= form.select :value, ai_model_options, { include_blank: "Select model" }, class: "ai-setting-select" %>
+        </div>
+        <%= form.submit t("admin.ai_settings.index.update"), class: "button" %>
+      <% end %>
+    <% when "llm.use_llm_for_translations" %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form toggle-form" do |form| %>
+        <div class="toggle-wrapper">
+          <div class="toggle-container">
+            <% is_enabled = setting.value.present? && setting.value != "false" %>
+            <%= form.hidden_field :value, value: (is_enabled ? "false" : "true") %>
+            <label class="switch-toggle">
+              <input type="checkbox" class="toggle-checkbox" onchange="this.form.requestSubmit()" <%= "checked" if is_enabled %> />
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label"><%= is_enabled ? t("shared.yes") : t("shared.no") %></span>
+          </div>
+          <p class="help-text"><%= t("admin.ai_settings.setting_description.llm_use_llm_for_translations", default: "Use LLM for content translations and take precedence over Microsoft translation services.") %></p>
+        </div>
+      <% end %>
+    <% else %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="field-wrapper">
+          <%= form.text_field :value, class: "ai-setting-input" %>
+        </div>
+        <%= form.submit t("admin.ai_settings.index.update"), class: "button" %>
+      <% end %>
+  <% end %>
+</div>

@@ -737,6 +737,7 @@ de:
       debates: "Debatten"
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
+      llm_settings: LLM-Einstellungen
     administrators:
       index:
         title: Administrator*innen
@@ -1296,6 +1297,24 @@ de:
       setting_name: Einstellung
       setting_value: Wert
       no_description: "Ohne Beschreibung"
+    ai_settings:
+      flash:
+        updated: KI-Einstellung erfolgreich aktualisiert
+      index:
+        title: LLM-Einstellungen
+        setting_name: Einstellung
+        value: Wert
+        actions: Aktionen
+        update: Aktualisieren
+        no_settings: Keine KI-Einstellungen verfügbar
+      setting:
+        llm.provider: LLM-Anbieter
+        llm.model: Modell
+        llm.use_llm_for_translations: Inhaltsübersetzung
+      setting_description:
+        llm.use_llm_for_translations: Verwenden Sie LLM für Inhaltsübersetzungen und geben Sie diesen Vorrang vor Microsoft-Übersetzungsdiensten.
+      setting_help:
+        llm_provider: Anbieter werden deaktiviert, bis Anmeldedaten in der secrets.yml konfiguriert sind
     shared:
       search:
         advanced_filters:

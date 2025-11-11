@@ -305,6 +305,8 @@ namespace :admin do
   put :update_map, to: "settings#update_map"
   put :update_content_types, to: "settings#update_content_types"
 
+  resources :ai_settings, only: [:index, :update]
+
   resources :moderators, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end

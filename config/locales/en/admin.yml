@@ -792,6 +792,7 @@ en:
       comments: "Comments"
       local_census_records: Manage local census
       machine_learning: "AI / Machine learning"
+      llm_settings: LLM Settings
     administrators:
       index:
         title: Administrators
@@ -1345,6 +1346,24 @@ en:
       setting_name: Setting
       setting_value: Value
       no_description: "No description"
+    ai_settings:
+      flash:
+        updated: AI setting updated successfully
+      index:
+        title: LLM Settings
+        setting_name: Setting
+        value: Value
+        actions: Actions
+        update: Update
+        no_settings: No AI settings available
+      setting:
+        llm.provider: LLM Provider
+        llm.model: Model
+        llm.use_llm_for_translations: Content Translation
+      setting_description:
+        llm.use_llm_for_translations: Use LLM for content translations and take precedence over Microsoft translation services.
+      setting_help:
+        llm_provider: Providers will be disabled until credentials are configured in the secrets.yml
     shared:
       search:
         advanced_filters:

@@ -20,7 +20,8 @@ class Admin::MenuComponent < ApplicationComponent
       registered_addresses_links,
       matomo_link,
       settings_links,
-      dashboard_links
+      dashboard_links,
+      ai_settings_link
     ]
   end
 
@@ -570,6 +571,15 @@ class Admin::MenuComponent < ApplicationComponent
         t("admin.menu.sdg_managers"),
         admin_sdg_managers_path,
         sdg_managers?
+      ]
+    end
+
+    def ai_settings_link
+      [
+        tag.span(class: "icon-llm") + " " + t("admin.menu.llm_settings"),
+        admin_ai_settings_path,
+        controller_name == "ai_settings",
+        class: "llm-settings-link"
       ]
     end
 end

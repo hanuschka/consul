@@ -14,10 +14,8 @@
 //= require jquery-ujs
 //= require jquery-ui/ui/version
 //= require jquery-ui/ui/data
-//= require jquery-ui/ui/ie
 //= require jquery-ui/ui/keycode
 //= require jquery-ui/ui/position
-//= require jquery-ui/ui/safe-active-element
 //= require jquery-ui/ui/scroll-parent
 //= require jquery-ui/ui/unique-id
 //= require jquery-ui/ui/widget
@@ -51,6 +49,8 @@
 //= require jquery-ui/ui/widgets/autocomplete
 //= require jquery-ui/ui/widgets/sortable
 //= require jquery-fileupload/basic
+//= require leaflet/dist/leaflet
+//= require leaflet.markercluster/dist/leaflet.markercluster
 //= require foundation
 //= require turbolinks
 //= require turbolinks_anchors
@@ -102,8 +102,6 @@
 //= require tree_navigator
 //= require tag_autocomplete
 //= require polls_admin
-//= require leaflet/dist/leaflet
-//= require leaflet.markercluster/dist/leaflet.markercluster
 //= require map
 //= require polls
 //= require sortable
@@ -123,17 +121,19 @@
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
-//= require custom
-//= require_tree ./custom
 //= require leaflet.locatecontrol
 //= require leaflet-geosearch/dist/geosearch.umd
-//= require leaflet-gesture-handling/dist/leaflet-gesture-handling.min
+//= require leaflet-gesture-handling/dist/leaflet-gesture-handling
 //= require Leaflet.Deflate/dist/L.Deflate
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
-//= require ckeditor5/file-upload-manager
+//= require ckeditor5/file-upload-plugin
+// require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min
 //= require select2/dist/js/select2.full
+//= require custom
+//= require_tree ./custom
+//= require_tree ./maps
 
 var initialize_modules = function() {
   "use strict";
@@ -200,6 +200,7 @@ var initialize_modules = function() {
   App.CustomAdmin.initialize();
   App.ModerationCustom.initialize();
   App.CopyContent.initialize();
+  App.CopyDataUrl.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.RemoteLinksPushState.initialize();
   App.ProjektQuestionCustom.initialize();
@@ -233,6 +234,7 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.SocialShare.destroy();
+  App.StikyHeader.destroy();
 };
 
 

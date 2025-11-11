@@ -1,7 +1,7 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <% unless embedded? %>
-  <% if @projekt_phase.phase_activated? %>
+  <% if @projekt_phase.active? %>
     <div class="projekt-questions-container js-projekt-questions-container">
       <% if @projekt_phase.question_list_enabled? %>
         <% if @projekt_questions.any? %>

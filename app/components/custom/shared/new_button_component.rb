@@ -42,7 +42,7 @@ class Shared::NewButtonComponent < ApplicationComponent
       sanitize(
         t(path_to_key(permission_problem_key),
               sign_in: link_to_signin(intended_path: CGI::escape(link_path)),
-              sign_up: link_to_signup,
+              sign_up: link_to_signup(intended_path: CGI::escape(link_path)),
               guest_sign_in: link_to_guest_signin(intended_path: CGI::escape(link_path)),
               enter_missing_user_data: link_to_enter_missing_user_data,
               verify: link_to_verify_account,
@@ -51,7 +51,8 @@ class Shared::NewButtonComponent < ApplicationComponent
               age_restriction: @projekt_phase&.age_restriction_formatted,
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
               individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
-              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"]
+              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"],
+              max_pin_number: @projekt_phase.try(:max_pins_per_user)
         )
       )
     end
@@ -82,7 +83,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     end
 
     def new_button_classes
-      classes = %w[button -orange new-resource-button]
+      classes = %w[button -orange expanded new-resource-button]
 
       if @projekt_phase.class.name.in?(["ProjektPhase::ProposalPhase", "ProjektPhase::DebatePhase"]) ||
           @resources_name.in?(["proposals", "debates"])
@@ -99,6 +100,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        @projekt_phase&.cta_button_name.presence || t("custom.projekt_point_of_interest_pins.index.add_pin")
       end
     end
 
@@ -109,6 +112,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         new_proposal_path(link_params_hash)
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         new_debate_path(link_params_hash)
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        new_projekt_point_of_interest_pin_path(link_params_hash)
       end
     end
 

@@ -19,6 +19,10 @@ module CustomNewHelper
   def custom_new_design_body_class
     css_class = Setting.new_design_enabled? ? "custom-new-design" : ""
 
+    if CustomFeatures.enabled?(:ai)
+      css_class += ' -ai-enabled'
+    end
+
     if embedded?
       css_class += " -embedded"
     end
@@ -29,6 +33,8 @@ module CustomNewHelper
   def sentiment_color_style(sentiment)
     if sentiment.present?
       "background-color:#{sentiment.color};color: #{pick_text_color(sentiment.color)}"
+    else
+      "background-color:#ddeeff;color:#666; "
     end
   end
 

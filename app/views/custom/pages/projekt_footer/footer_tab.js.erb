@@ -1,5 +1,7 @@
 $("#filter-subnav li").removeClass("is-active")
+$("#filter-subnav li").attr("aria-selected", "false")
 $("li#filter-subnav-<%= @projekt_phase.id %>").addClass("is-active")
+$("li#filter-subnav-<%= @projekt_phase.id %>").attr("aria-selected", "true")
 $("#footer-content").removeClass("show-loader");
 <% footer_version = Setting.new_design_enabled? ? 'projekt_footer_new' : 'projekt_footer'  %>
 $("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
@@ -27,8 +29,7 @@ $('#footer-content').foundation();
   var map = document.querySelector("#footer-content *[data-vcmap]")
   App.VCMap.initializeMap(map);
 <% else %>
-  App.Map.destroy();
   App.Map.initialize();
 <% end %>
 
-$("html, body").animate({ scrollTop: $("#footer-content").offset().top - 100 }, 500);
+$("html, body").animate({ scrollTop: $("#<%= params["scroll_to"] || "footer-content" %>").offset().top - 100 }, 500);

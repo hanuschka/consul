@@ -18,6 +18,9 @@ module ModerateActions
 
   def hide
     hide_resource resource
+    if resource.author.email.present? && resource.class.name.in?(["Comment", "Proposal", "Budget::Investment"])
+      Mailer.resource_hidden(resource).deliver_later
+    end
   end
 
   def moderate

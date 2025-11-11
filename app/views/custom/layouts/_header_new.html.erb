@@ -8,35 +8,33 @@
               class="hamburger-menu header--mobile-hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
               role="button"
               tabindex="0"
-              aria-haspopup="true"
               aria-expanded="false"
               aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
               <span class="menu-icon dark" data-toggle></span>
         </span>
 
         <div class="top-bar--title">
-          <% site_logo_images = capture do %>
-            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
-            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
-          <% end %>
+          <%= link_to (@ui_site_homepage_path.presence || root_path) do %>
+            <% transparent_background_logo =
+                @ui_site_logo_transparent_background.presence || image_path_for("logo_header_for_transparent.png")
+            %>
+            <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
 
-          <% if @ui_site_logo_not_clickable %>
-            <%= site_logo_images %>
-          <% else %>
-            <%= link_to root_path do %>
-              <%= site_logo_images %>
-            <% end %>
+            <% white_background_logo =
+                @ui_site_logo_white_background.presence || image_path_for("logo_header.png")
+            %>
+            <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
           <% end %>
         </div>
 
-        <div class="header--navigation expanded not-print">
+        <div class="header--navigation expanded not-print hide-for-small-only">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>
 
           <% if !launch_page && !user_signed_in? %>
             <div class='header--account-buttons show-on-desktop hide-on-mobile'>
-              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand', role: 'button' %>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand flex-centered-content', role: 'button' %>
             </div>
           <% end %>
         </div>
@@ -62,7 +60,7 @@
             <div class="header--responsive-menu--user-name">
               <%= current_user.name %>
             </div>
-            <%= link_to("Profil anzeigen", user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
+            <%= link_to(t("layouts.header.my_account_link"), user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
             <%= link_to t("layouts.header.administration"), admin_root_path if current_user.administrator? %>
           </div>
         <% end %>
@@ -77,8 +75,11 @@
         </div>
 
         <% if !launch_page && !user_signed_in? %>
-          <div class='show-on-mobile header--responsive-menu-sign-in-section'>
-            <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'header--responsive-menu-sign-in-button', role: 'button' %>
+          <div class="show-on-mobile">
+            <div class='header--responsive-menu-sign-in-section'>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'header--responsive-menu-sign-auth-button', role: 'button' %>
+              <%= link_to(t("devise_views.shared.links.signup_link"), new_user_registration_path, class: 'header--responsive-menu-sign-auth-button', style: "background:#00AA0B !important;color:#fff !important", role: "button") %>
+            </div>
           </div>
         <% end %>
 

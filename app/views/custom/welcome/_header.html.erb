@@ -52,23 +52,35 @@
     %>
 
     <% if show_title_and_subtitle %>
-      <div class="homepage-image-header--title">
-        <div>
+      <h1 class="homepage-image-header--title">
           <% if @custom_page&.landing? %>
-           <%= @custom_page.title %>
+           <%= @custom_page.header_title %>
           <% else %>
             <%= Setting["extended_option.general.title"] %>
           <% end %>
-        </div>
-        <div>
+          <br>
           <% if @custom_page&.landing? %>
            <%= @custom_page.subtitle %>
           <% else %>
             <b><%= Setting["extended_option.general.subtitle"] %></b>
           <% end %>
-        </div>
+      </h1>
+    <% end %>
+
+    <% unless @custom_page&.landing? %>
+      <%= header_button_html %>
+    <% end %>
+
+    <% if Setting["welcomepage.projekt_search"].present? %>
+      <div class="homepage-search-form">
+        <%= render(
+          Shared::TextSearchFormComponent.new(
+            url: projekts_path,
+            disable_reset_button_submit: true,
+            i18n_namespace: "custom.projekts.homepage_search_form",
+          )
+        ) %>
       </div>
     <% end %>
-    <%= header_button_html %>
   </div>
 </div>

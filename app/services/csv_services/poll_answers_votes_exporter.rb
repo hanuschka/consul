@@ -7,8 +7,8 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: false, col_sep: ";") do |csv|
-        @poll.questions.root_questions.each do |root_question|
+      CSV.generate(headers: false, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
+        @poll.questions.root_questions.where(contextualize_by_poll_question_id: nil).order(given_order: :asc, id: :asc).each do |root_question|
           csv << question_headers(root_question)
 
           root_question.question_answers.each do |question_answer|
@@ -38,7 +38,7 @@ module CsvServices
 
       def question_headers(question)
         headers = []
-        headers.push(question.title)
+        headers.push(question_title(question))
 
         if question.question_answers.any?
           headers.push("Stimmenanzahl")
@@ -52,7 +52,14 @@ module CsvServices
         row = []
         row.push question_answer.title
         row.push question_answer.total_votes
-        row.push question_answer.total_votes_percentage.round(2)
+        row.push number_to_percentage(
+                   question_answer.total_votes_percentage,
+                   precision: 2,
+                   strip_insignificant_zeros: true,
+                   separator: ",",
+                   format: "%n%"
+                 )
+
         row
       end
 
@@ -63,6 +70,10 @@ module CsvServices
         open_answer.all_open_answers.each do |user_open_answer|
           csv << [sanitize_for_csv(user_open_answer.open_answer_text), "offene Antwort"]
         end
+      end
+
+      def question_title(question)
+        question.context.present? ? "#{question.title} (#{question.context.title})" : question.title
       end
   end
 end

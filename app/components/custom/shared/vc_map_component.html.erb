@@ -6,14 +6,15 @@
       <button onclick="event.preventDefault();App.VCMap.zoom(window.vcsApp.maps.activeMap, true)">-</button>
     </div>
     <div id="controls" class="controls">
-      <button onclick="event.preventDefault();App.VCMap.setActiveMap(window.vcsApp.maps, 'ol3')">2D</button>
-      <button onclick="event.preventDefault();App.VCMap.setActiveMap(window.vcsApp.maps, 'cesium')">3D</button>
-      <% if editable %>
+      <% if @editable %>
         <button onclick="event.preventDefault();App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Point)">Punkt einzeichnen</button>
         <button onclick="event.preventDefault();App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">Fläche einzeichnen</button>
         <button onclick="event.preventDefault();App.VCMap.clearFeatures(window.vcsApp)">Elemente löschen</button>
       <% end %>
     </div>
-    <div id="vc-popup" style="display:none"></div>
+    <div id="vc-popup" class="leaflet-popup-content-wrapper" style="display:none;min-width:2000;">
+      <a class='popup-close-button' onclick='$("#vc-popup").hide();' href='#close' style='outline: none;'>×</a>
+      <div id="vc-popup-content" class="leaflet-popup-content"></div>
+    </div>
   <% end %>
 </div>

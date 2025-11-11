@@ -47,7 +47,9 @@
         <% if @image_flag %>
           <td>
             <%= fa.formular_answer_images.map do |image| %>
-              <% link_to image.formular_field_key || "image", url_for(image.variant(:large)), target: "_blank" %>
+              <% if image.attachment.attached? %>
+                <% link_to image.formular_field_key || "image", rails_blob_path(image.attachment), target: "_blank" %>
+              <% end %>
             <% end.join(", ").html_safe %>
           </td>
         <% end %>

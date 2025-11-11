@@ -84,3 +84,29 @@ en:
       subject: New valuation assignment
       hi: "Hello %{username},"
       text1: "You have been assigned a proposal for evaluation: %{valuation_link}"
+    existing_stamp_notify_existing_user:
+      subject: Verification attempt using a different email address
+      hi: "Hello %{username},"
+      p1: This is to inform you that a verification attempt was made using your details with a different email address. Please continue to use this email address to access Consul.
+      p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.
+    existing_stamp_notify_new_user:
+      subject: Use of existing email address
+      hi: "Hello,"
+      p1: Please use the email address you originally registered with to log in to your account.
+      p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.
+    user_verification_failed:
+      subject: Verification attempt failed
+      hi: "Hello %{username},"
+      p1: Unfortunately, there was no match during the verification via the registration office. This happens occasionally – mostly for formal reasons.
+      b1_title: Common reasons
+      b1_item1: Wrong spelling (umlauts, hyphens, middle names, order of first names).
+      b1_item2: Address not exactly as in the registration office (house number additions, staircase/floor, postal code/district).
+      b1_item3: Recently moved – database not yet updated.
+      b1_item4: Birth date or place differs.
+      b1_item5: Blocked information at the registration office.
+      b1_item6: Typographical errors (e.g. "ß/ss", spaces, leading zeros).
+      b2_title: How to solve the problem
+      b2_item1: "Start your verification again: %{link}"
+      b2_item2: "Use copy & paste from your ID/registration certificate."
+      b2_item3: "If you have recently changed your address: Wait 1-2 business days and try again."
+      b2_item4: "If you have a block on information disclosure/transmission: Contact us directly"

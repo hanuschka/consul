@@ -51,7 +51,7 @@
 </div>
 
 <% if embedded? %>
-  <% back_url = @projekt.frame_url %>
+  <% back_url = @projekt.url %>
 
   <% content_for :admin_frame_top_navigation do %>
     <%= render Admin::Frame::NavigationComponent.new(title: "Projekteinstellungen") do |c| %>

@@ -2,8 +2,6 @@
   .projekt-footer-phase-tab {
     margin-top: 0 !important;
     min-width: 322px;
-    max-height: 124px;
-    min-height: 124px;
     background: white;
     border: 1px solid #CFCECE;
     border-radius: 10px 10px 0px 0px;
@@ -14,13 +12,20 @@
       background-color: $brand-hover;
     }
 
+    @media screen and (min-width: $small-tablet-viewport-start) {
+      max-height: 124px;
+      min-height: 124px;
+    }
+
     @media screen and (max-width: $small-tablet-viewport-start) {
       border-radius: 0;
     }
 
-    h4 {
+    h2 {
       color: $brand;
       font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 0;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -29,7 +34,7 @@
       width: 100%;
       max-width: 500px;
 
-      h4 {
+      h2 {
         font-size: 20px;
       }
     }

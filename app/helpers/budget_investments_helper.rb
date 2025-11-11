@@ -15,6 +15,18 @@ module BudgetInvestmentsHelper
     )
   end
 
+  def link_to_valuator_investments_sorted_by(column)
+    direction = set_direction(params[:direction])
+    icon = set_sorting_icon(direction, column)
+
+    translation = t("valuation.budget_investments.index.table_#{column}")
+
+    link_to(
+      safe_join([translation, tag.span(class: "icon-sortable #{icon}")]),
+      valuation_budget_budget_investments_path(@budget, sort_by: column, direction: direction, filter: params[:filter])
+    )
+  end
+
   def set_sorting_icon(direction, sort_by)
     if sort_by.to_s == params[:sort_by]
       if direction == "desc"

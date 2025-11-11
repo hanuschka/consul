@@ -4,10 +4,6 @@ class ProjektPhase::LivestreamPhase < ProjektPhase
   has_many :questions, -> { order(:id) }, foreign_key: :projekt_phase_id, class_name: "ProjektQuestion",
     inverse_of: :projekt_phase, dependent: :destroy
 
-  def phase_activated?
-    active?
-  end
-
   def name
     "livestream_phase"
   end

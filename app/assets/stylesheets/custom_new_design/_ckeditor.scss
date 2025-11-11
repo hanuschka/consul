@@ -1,0 +1,37 @@
+@media(max-width: $small-tablet-viewport-start) {
+  .ck-toolbar__items {
+    .ck-button[data-cke-tooltip-text='Bulleted List'],
+    .ck-button[data-cke-tooltip-text='Numbered List'],
+    .ck-button[data-cke-tooltip-text='Numbered List'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Increase indent'],
+    .ck-button[data-cke-tooltip-text='Decrease indent'],
+    .ck-button[data-cke-tooltip-text='Decrease indent'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Block quote'],
+    .ck-button[data-cke-tooltip-text='Block quote'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Align left'],
+    .ck-button[data-cke-tooltip-text='Align center'],
+    .ck-button[data-cke-tooltip-text='Align right'],
+    .ck-button[data-cke-tooltip-text='Justify'],
+    .ck-button[data-cke-tooltip-text='Justify'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Dateien hochladen'],
+    .ck-button[data-cke-tooltip-text='Dateien hochladen'] + .ck.ck-toolbar__separator,
+    div.ck-dropdown.ck-color-ui-dropdown,
+    div.ck-dropdown.ck-color-ui-dropdown + .ck.ck-toolbar__separator,
+    div.ck-dropdown.ck-font-size-dropdown,
+    div.ck-dropdown.ck-font-size-dropdown + .ck.ck-toolbar__separator,
+    div.ck-dropdown.ck-heading-dropdown,
+    div.ck-dropdown.ck-heading-dropdown + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Subscript'],
+    .ck-button[data-cke-tooltip-text='Superscript'],
+    .ck-button[data-cke-tooltip-text='Superscript'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Insert table'],
+    .ck-button[data-cke-tooltip-text='Special characters'],
+    .ck-button[data-cke-tooltip-text='Special characters'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Insert media'],
+    .ck-button[data-cke-tooltip-text='Source'],
+    .ck-button[data-cke-tooltip-text='Source'] + .ck.ck-toolbar__separator,
+    .ck-button[data-cke-tooltip-text='Insert HTML'] {
+      display: none;
+    }
+  }
+}

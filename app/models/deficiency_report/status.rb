@@ -9,6 +9,8 @@ class DeficiencyReport::Status < ApplicationRecord
 
   default_scope { order(given_order: :asc) }
 
+  validates :reminder_delay, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+
   def self.create_default_objects
     return if DeficiencyReport::Status.count > 0
     DeficiencyReport::Status.create(
@@ -28,6 +30,10 @@ class DeficiencyReport::Status < ApplicationRecord
     )
   end
 
+  def self.default
+    order(:given_order).first
+  end
+
   def safe_to_destroy?
     !deficiency_reports.exists?
   end
@@ -37,4 +43,6 @@ class DeficiencyReport::Status < ApplicationRecord
       find(status_id).update_column(:given_order, (order + 1))
     end
   end
+
+  alias_attribute :name, :title
 end

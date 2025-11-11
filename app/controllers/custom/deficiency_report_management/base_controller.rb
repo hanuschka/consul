@@ -1,6 +1,9 @@
 class DeficiencyReportManagement::BaseController < ApplicationController
   layout "admin"
 
+  include DeficiencyReportsHelper
+  helper DeficiencyReportsHelper
+
   before_action :set_namespace
   before_action :authenticate_user!
   before_action :verify_deficiency_report_manager, unless: :perform_authorization?

@@ -41,7 +41,7 @@
 }
 
 .map_location, #admin-map {
-  height: 550px;
+  height: 700px;
 }
 
 
@@ -74,12 +74,6 @@
   }
 }
 
-.sidebar-projekt-map {
-  .leaflet-top.leaflet-right {
-    display: none;
-  }
-}
-
 .leaflet-popup-content-wrapper {
   border-radius: 8px;
 
@@ -102,12 +96,19 @@
   width: 30px;
   height: 30px;
   font: 30px Tahoma, Verdana, sans-serif;
-  right: 5px;
-  top: 5px;
+  right: 3px;
+  top: 4px;
   padding: 0;
   border-radius: 50%;
   line-height: 1;
   transition: background-color 50ms ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    position: relative;
+  }
 
   &:hover {
     background: #e5e5e5;
@@ -126,4 +127,8 @@
       margin-bottom: 3px;
     }
   }
+}
+
+.control-icon.leaflet-pm-icon-custom-drag {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBmaWxsPSIjNWI1YjViIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDUuMTUuNCBieSBAZm9udGF3ZXNvbWUgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbSBMaWNlbnNlIC0gaHR0cHM6Ly9mb250YXdlc29tZS5jb20vbGljZW5zZS9mcmVlIENvcHlyaWdodCAyMDI1IEZvbnRpY29ucywgSW5jLi0tPjxwYXRoIGQ9Ik01MTAuOTAwNSwxNDUuMjcwMjcsNDQyLjYwNCw0MzIuMDkzOTFBMTAzLjk5NTA3LDEwMy45OTUwNywwLDAsMSwzNDEuNDM3NDUsNTEySDIxNC4wNzRhMTM1Ljk2OTY4LDEzNS45Njk2OCwwLDAsMS05My4xODQ4OS0zNi45NTI5MUwxMi41OTA3MiwzNzMuMTI3MjNhMzkuOTkyLDM5Ljk5MiwwLDAsMSw1NC44MTIyLTU4LjI0OTg4bDYwLjU5MzQyLDU3LjAyNTI4djBhMjgzLjI0ODQ5LDI4My4yNDg0OSwwLDAsMC0xMS42NzAzLTgwLjQ2NzM0TDczLjYzNzI2LDE0Ny4zNjAxMWE0MC4wMDU3NSw0MC4wMDU3NSwwLDEsMSw3Ni43MTgzMy0yMi43MTg3bDM3LjE1NDU4LDEyNS4zOTQ3N2E4LjMzMTEzLDguMzMxMTMsMCwwLDAsMTYuMDU2NTYtNC40NDE0TDE1My4yNjE4Myw0OS45NTQwNkEzOS45OTYzOCwzOS45OTYzOCwwLDEsMSwyMzAuNzMwMTUsMzAuMDE2Nmw1Ni4wOTQ5MSwyMTguMTU4MjVhMTAuNDIwNDcsMTAuNDIwNDcsMCwwLDAsMjAuMzAwMTgtLjUwMUwzNDQuODA3NjYsNjMuOTY5NjZhNDAuMDUyLDQwLjA1MiwwLDAsMSw1MS4zMDI0NS0zMC4wODkzYzE5Ljg2MDczLDYuMjk5OCwzMC44NjI2MiwyNy42NzM3OCwyNi42NzU2NCw0OC4wODQ4N2wtMzMuODM4NjksMTY0Ljk2NmE3LjU1MTcyLDcuNTUxNzIsMCwwLDAsMTQuNzQ0MDYsMy4yNjY2bDI5LjM5NzMtMTIzLjQ1ODc0YTM5Ljk5NDE0LDM5Ljk5NDE0LDAsMSwxLDc3LjgxMjA4LDE4LjUzMTIxWiIvPjwvc3ZnPgo=");
 }

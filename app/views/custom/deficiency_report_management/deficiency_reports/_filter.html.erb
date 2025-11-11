@@ -40,7 +40,7 @@
         <%= label_tag :responsible, t("custom.admin.deficiency_reports.index.responsible_name") %>
         <%= select_tag :responsible,
           options_for_select(
-            (DeficiencyReport::Officer.all + DeficiencyReport::OfficerGroup.all).map { |r| [r.name, "#{r.class.name}_#{r.id}"] }, params[:responsible]
+            deficiency_report_all_responsible_sorted.map { |r| [r.name, "#{r.class.name}_#{r.id}"] }, params[:responsible]
           ),
           prompt: t("custom.shared.select") %>
       </div>
@@ -59,6 +59,18 @@
         <%= select_tag :admin_accepted,
           options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
           prompt: t("custom.shared.select") %>
+      </div>
+
+      <div>
+        <%= label_tag :archived, t("custom.admin.deficiency_reports.index.archived") %>
+        <%= select_tag :archived,
+          options_for_select([["Ja", true], ["Nein", false]], params[:archived].presence || false),
+          prompt: t("custom.shared.select") %>
+      </div>
+
+      <div>
+        <%= check_box_tag :only_hidden, "1", params[:only_hidden] == "1" %>
+        <%= label_tag :only_hidden, t("custom.admin.deficiency_reports.index.only_hidden") %>
       </div>
     </div>
   </div>

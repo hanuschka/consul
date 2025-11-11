@@ -4,9 +4,10 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
   attr_reader :budget_investment, :budget_investment_ids, :ballot
   delegate :management_controller?, to: :helpers
 
-  def initialize(budget_investment:, budget_investment_ids:, ballot:)
+  def initialize(budget_investment:, budget_investment_ids:, additional_url_params: nil, ballot:)
     @budget_investment = budget_investment
     @budget_investment_ids = budget_investment_ids
+    @additional_url_params = additional_url_params
     @ballot = ballot
   end
 
@@ -16,10 +17,20 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
       projekt: @budget_investment.budget.projekt,
       title: budget_investment.title,
       description: budget_investment.description,
-      url: helpers.url_for(budget_investment),
+      url: budget_investment_path,
       image_url: budget_investment.image&.variant(:card_thumb),
       image_placeholder_icon_class: "fa-euro-sign"
     }
+  end
+
+  def budget_investment_path
+    base_url = helpers.url_for(budget_investment)
+
+    if @additional_url_params.present?
+      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+    end
+
+    base_url
   end
 
   def investment_status_callout
@@ -39,12 +50,6 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
       controller_name != "welcome" &&
       controller_name != "account"
   end
-
-  # def budget_investment_url
-  #   helpers.budget_investment_path(budget_investment.id)
-  # rescue
-  #   ""
-  # end
 
   # def show_status_message?
   #   (

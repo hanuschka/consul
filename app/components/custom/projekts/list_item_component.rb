@@ -5,8 +5,9 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   delegate :projekt_option, to: :helpers
 
-  def initialize(projekt:)
+  def initialize(projekt:, additional_url_params: nil)
     @projekt = projekt
+    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -39,7 +40,13 @@ class Projekts::ListItemComponent < ApplicationComponent
   end
 
   def projekt_url
-    projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
+    base_url = projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
+
+    if @additional_url_params.present?
+      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+    end
+
+    base_url
   end
 
   def url_target

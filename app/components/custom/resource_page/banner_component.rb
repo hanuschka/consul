@@ -1,5 +1,6 @@
 class ResourcePage::BannerComponent < ApplicationComponent
   renders_one :links_section
+  renders_many :additional_resource_details
   attr_reader :resource
 
   delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers

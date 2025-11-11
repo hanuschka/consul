@@ -30,6 +30,7 @@ class User < ApplicationRecord
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
+  after_create :assign_individual_group_values_based_on_auto_join_emails
 
   has_secure_token :frame_sign_in_token
 
@@ -42,6 +43,9 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_many :ideas, inverse_of: :author, foreign_key: :author_id
+  has_one :idea_officer, class_name: "Idea::Officer"
+  has_one :idea_manager
   has_one :officing_manager
   belongs_to :registered_address, optional: true
 
@@ -104,6 +108,14 @@ class User < ApplicationRecord
     def administrators_ids
       joins(:administrator).ids
     end
+  end
+
+  def actual?
+    self.class.actual.include?(self)
+  end
+
+  def not_actual?
+    !actual?
   end
 
   def validate_registered_address?
@@ -194,6 +206,10 @@ class User < ApplicationRecord
 
   def deficiency_report_officer?
     deficiency_report_officer.present?
+  end
+
+  def idea_officer?
+    idea_officer.present?
   end
 
   def projekt_manager?(projekt = nil)
@@ -296,6 +312,10 @@ class User < ApplicationRecord
     deficiency_report_manager.present?
   end
 
+  def idea_manager?
+    idea_manager.present?
+  end
+
   def generate_frame_sign_in_token!
     regenerate_frame_sign_in_token
 
@@ -345,6 +365,7 @@ class User < ApplicationRecord
 
     def attempt_verification
       return false if organization?
+      return false if erased?
       return false unless residency_valid?
 
       verify!
@@ -355,6 +376,7 @@ class User < ApplicationRecord
                                last_name: last_name,
                                street_name: registered_address&.registered_address_street&.name.presence || street_name,
                                street_number: registered_address&.street_number.presence || street_number,
+                               street_number_extension: registered_address&.street_number_extension.presence || street_number_extension,
                                plz: registered_address&.registered_address_street&.plz.presence || plz,
                                city_name: registered_address&.registered_address_city&.name.presence || city_name,
                                date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
@@ -394,6 +416,15 @@ class User < ApplicationRecord
         next unless email.ends_with?(group_value.email_pattern)
 
         group_value.users << self
+      end
+    end
+
+    def assign_individual_group_values_based_on_auto_join_emails
+      return unless email.present?
+
+      IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
+        group_value.users << self unless group_value.users.include?(self)
+        group_value.remove_auto_join_email(email)
       end
     end
 end

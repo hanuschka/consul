@@ -55,8 +55,11 @@ class Verification::Residence
       street_number_extension: street_number_extension,
       document_type:           document_type,
       document_last_digits:    document_last_digits,
-      registered_address_id:   registered_address_id
+      registered_address_id:   registered_address_id,
+      geozone_id:              Geozone.find_with_plz(plz)&.id
     )
+
+
 
     if Setting["feature.melderegister"].present?
       user.save!
@@ -95,11 +98,13 @@ class Verification::Residence
         registered_address = RegisteredAddress.find(form_registered_address_id)
         street_name = registered_address.registered_address_street.name
         street_number = registered_address.street_number
+        street_number_extension = registered_address.street_number_extension
         plz = registered_address.registered_address_street.plz
         city_name = registered_address.registered_address_city.name
       else
         street_name = self.street_name
         street_number = self.street_number
+        street_number_extension = self.street_number_extension
         plz = self.plz
         city_name = self.city_name
       end
@@ -107,6 +112,7 @@ class Verification::Residence
                                                 last_name: last_name,
                                                 street_name: street_name,
                                                 street_number: street_number,
+                                                street_number_extension: street_number_extension,
                                                 plz: plz,
                                                 city_name: city_name,
                                                 date_of_birth: date_of_birth,

@@ -6,6 +6,7 @@ class Ability
       merge Abilities::Valuator.new(user) if user.valuator?
       merge Abilities::ProjektManager.new(user) if user.projekt_manager? && !user.administrator?
       merge Abilities::DeficiencyReportManager.new(user) if user.deficiency_report_manager?
+      merge Abilities::IdeaManager.new(user) if user.idea_manager?
 
       if user.administrator?
         merge Abilities::Administrator.new(user)

@@ -1082,6 +1082,7 @@ de:
         table_question: "Frage"
         table_poll: "Abstimmung"
         poll_not_assigned: "Abstimmung nicht zugeordnet"
+        contextualized_by: "Kontextualisiert durch:"
       edit:
         title: "Frage bearbeiten"
       new:

@@ -5,7 +5,9 @@ de:
         verify_users:
           title: Offline Stimme hinzufügen
           skip_verification: Benutzerüberprüfung überspringen
-          first_name: Vorname
-          last_name: Nachname
-          plz: Postleitzahl
-          date_of_birth: Geburtsdatum
+          mark_as_verified: Als verifiziert markieren
+          mark_as_verified_hint: Nutzer kann nicht über das Melderegister verifiziert werden (Wohnsitz außerhalb des Gebiets), soll jedoch als verifizierter Nutzer markiert werden.
+        permission_problem:
+          title: Berechtigungsproblem
+          text: "Dieser Nutzer darf aus folgendem Grund nicht partizipieren: %{permission_problem_key}."
+          next_user: Nächster Stimmzettel

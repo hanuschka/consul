@@ -17,7 +17,6 @@ module Abilities
 
       can :create, Legislation::Proposal
       can :show, Legislation::Proposal
-      can :proposals, ::Legislation::Process
 
       can :restore, Legislation::Proposal
       cannot :restore, Legislation::Proposal, hidden_at: nil
@@ -122,9 +121,7 @@ module Abilities
       can :access, :ckeditor
       can :manage, Ckeditor::Picture
 
-      can [:read, :debate, :draft_publication, :allegations, :result_publication,
-           :milestones], Legislation::Process
-      can [:create, :update, :destroy], Legislation::Process
+      can [:manage], ::Legislation::Process
       can [:manage], ::Legislation::DraftVersion
       can [:manage], ::Legislation::Question
       can [:manage], ::Legislation::Proposal
@@ -153,7 +150,7 @@ module Abilities
       can [:manage], ::Idea::Category
       can [:manage], Idea
 
-      can [:csv_answers_votes], Poll
+      can [:csv_answers_votes, :regenerate_contexted_clones], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User
 
@@ -207,6 +204,8 @@ module Abilities
       can [:create, :update, :destroy], Ckeditor::Document
 
       can :manage, RecipientGroup
+      can :manage, ProjektPointOfInterestPin
+      can :manage, ProjektPointOfInterestCategory
     end
   end
 end

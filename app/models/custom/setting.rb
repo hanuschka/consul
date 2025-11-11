@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
+  PRO_SETTINGS = [
+    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
+  ]
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
@@ -37,18 +41,18 @@ class Setting < ApplicationRecord
     def defaults
       {
         "feature.featured_proposals": nil,
-        "feature.facebook_login": false,
-        "feature.google_login": false,
-        "feature.twitter_login": false,
+        "feature.facebook_login": true,
+        "feature.google_login": true,
+        "feature.twitter_login": true,
         "feature.wordpress_login": false,
         "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
-        "feature.user.recommendations": false,
-        # "feature.user.recommendations_on_debates": true,
-        # "feature.user.recommendations_on_proposals": true,
+        "feature.user.recommendations": true,
+        "feature.user.recommendations_on_debates": true,
+        "feature.user.recommendations_on_proposals": true,
         "feature.community": true,
-        "feature.map": true,
+        "feature.map": nil,
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
         "feature.help_page": true,
@@ -64,7 +68,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.active_projekts": true,
+        "homepage.widgets.feeds.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -173,6 +177,7 @@ class Setting < ApplicationRecord
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
         "welcomepage.projekt_search": false,
+        "welcomepage.share_buttons": "",
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -190,6 +195,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.admin_acceptance_required": false,
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
+        "deficiency_reports.voice_assistant": false,
+        "deficiency_reports.send_feedback_form_link": false,
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,

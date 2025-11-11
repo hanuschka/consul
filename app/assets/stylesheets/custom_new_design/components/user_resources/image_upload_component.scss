@@ -5,16 +5,16 @@
   height: 100%;
   margin: auto;
   user-select: none;
-  color: #666;
+  color: #5e5e5e;
   background: #feebd3;
   transition: background 0.2s ease-in-out;
   border-radius: 10px 10px 0 0;
   padding-top: 40px;
-  padding-left: 35px;
-  padding-right: 35px;
+  padding-left: 32px;
+  padding-right: 32px;
 
   &:hover {
-    background: #dcdcdc;
+    background: #f6e2c9;
   }
 
   @media(max-width: $big-tablet-viewport-start) {

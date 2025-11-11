@@ -55,5 +55,13 @@
         <%= render "layouts/footer" %>
       </div>
     <% end %>
+
+    <% if @namespace.present? %>
+      <script>
+        $(document).ready(() => {
+          App.routeNamespace = "<%= @namespace %>"
+        })
+      </script>
+    <% end %>
   </body>
 </html>

@@ -5,6 +5,17 @@ module ProjektPhaseSettingsHelper
     projekt_phase.feature?(feature_key)
   end
 
+  def projekt_phase_pro_feature?(projekt_phase, feature_key)
+    projekt_phase_feature?(projekt_phase, feature_key) &&
+      app_active_for_projekt_phase?(projekt_phase, "feature.#{feature_key}")
+  end
+
+  def app_active_for_projekt_phase?(projekt_phase, feature_key)
+    app = App.app_for_projekt_phase_setting(projekt_phase, feature_key)
+
+    app&.active?
+  end
+
   def projekt_phase_option(projekt_phase, option_key)
     projekt_phase.option(option_key)
   end

@@ -1,7 +1,9 @@
-post "ckeditor/assets", to: "ckeditor/assets#index"
+get "ckeditor/assets", to: "ckeditor/assets#index"
 
 namespace :ckeditor do
-  resources :pictures, only: [:create, :update, :destroy]
+  resources :pictures, only: [:create, :update, :destroy] do
+    get :custom_thumb_url, on: :member
+  end
   resources :documents, only: [:create, :update, :destroy]
 end
 
@@ -95,6 +97,8 @@ namespace :api do
 
   resources :images, only: [:create, :destroy]
 
+  resources :apps, only: [:update]
+
   scope path: "settings" do
     patch "enable", to: "settings#enable"
     patch "disable", to: "settings#disable"
@@ -104,3 +108,5 @@ end
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 
 post "iframe_sessions", to: "iframe_sessions#create"
+
+post "/voice_assistant/create_session", to: "voice_assistant#create_session"

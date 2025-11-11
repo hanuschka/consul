@@ -100,3 +100,7 @@ en:
         hi: Hello %{username},
         intro_html: "Author of the proposal %{proposal_link} added a new notification"
         unsubscribe_html: If you no longer wish to receive emails about this Proposal notifications, go to the <a href="%{url}" target="_blank">Proposal page</a> and click “Unfollow” (you must be logged in to do this).
+      new_projekt:
+        subject: Review of the project %{projekt_title}
+        hi: Hello %{username},
+        p1: The project titled %{link} has been released for your review.

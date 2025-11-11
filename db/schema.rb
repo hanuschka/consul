@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_11_123206) do
+ActiveRecord::Schema.define(version: 2025_10_27_104917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -187,6 +187,13 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
   end
 
+  create_table "apps", force: :cascade do |t|
+    t.integer "status"
+    t.string "codename"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
@@ -207,6 +214,15 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "awesome_icons", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "unicode", null: false
+    t.boolean "shortlisted", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_awesome_icons_on_name", unique: true
   end
 
   create_table "bam_street_polls", force: :cascade do |t|
@@ -728,6 +744,19 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
   end
 
+  create_table "deficiency_report_feedback_forms", force: :cascade do |t|
+    t.bigint "deficiency_report_id"
+    t.integer "overall_satisfaction"
+    t.integer "response_time_satisfaction"
+    t.integer "communication_satisfaction"
+    t.boolean "resolved"
+    t.text "what_liked_note"
+    t.text "what_improve_note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
+  end
+
   create_table "deficiency_report_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -785,6 +814,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.integer "given_order"
     t.text "notice_text", default: ""
     t.boolean "archive_reports", default: false
+    t.integer "reminder_delay"
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -1157,6 +1187,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email_pattern", default: "", null: false
+    t.text "auto_join_emails", default: [], array: true
     t.index ["individual_group_id"], name: "index_individual_group_values_on_individual_group_id"
   end
 
@@ -1466,30 +1497,19 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.float "latitude"
     t.float "longitude"
     t.integer "zoom"
-    t.integer "proposal_id"
-    t.integer "investment_id"
-    t.bigint "projekt_id"
     t.string "pin_color"
-    t.bigint "deficiency_report_id"
-    t.jsonb "shape", default: {}, null: false
+    t.jsonb "features", default: {}, null: false
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
-    t.bigint "projekt_phase_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.bigint "registered_address_district_id"
-    t.bigint "idea_id"
     t.string "mappable_type"
     t.bigint "mappable_id"
-    t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
-    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
-    t.index ["investment_id"], name: "index_map_locations_on_investment_id"
+    t.integer "rendering_library", null: false
+    t.jsonb "features_bu", default: {}, null: false
+    t.boolean "default", default: false, null: false
+    t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
-    t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
-    t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
-    t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
-    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
-    t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
   create_table "memos", force: :cascade do |t|
@@ -1584,6 +1604,8 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.text "subtitle"
     t.string "greeting"
     t.bigint "recipient_group_id"
+    t.string "title_color", default: "#000000", null: false
+    t.string "subtitle_color", default: "#000000", null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
@@ -1733,6 +1755,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.string "more_info_link"
     t.integer "next_question_id"
     t.string "more_info_iframe"
+    t.boolean "terminates_poll", default: false, null: false
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1746,6 +1769,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.text "description"
     t.string "min_rating_scale_label"
     t.string "max_rating_scale_label"
+    t.text "intro"
     t.index ["hidden_at"], name: "index_poll_question_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_question_translations_on_locale"
     t.index ["poll_question_id"], name: "index_poll_question_translations_on_poll_question_id"
@@ -1769,7 +1793,13 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
     t.boolean "answer_mandatory", default: false
+    t.bigint "contextualize_by_poll_question_id"
+    t.bigint "contexted_clone_of_poll_question_id"
+    t.bigint "context_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["context_id"], name: "index_poll_questions_on_context_id"
+    t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
+    t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
@@ -2212,7 +2242,6 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
-    t.string "frame_access_code"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
@@ -2418,6 +2447,12 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.index ["sentimentable_type", "sentimentable_id"], name: "index_resource_sentiments_on_sentimentable"
   end
 
+  create_table "saved_content_blocks", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "sdg_goals", force: :cascade do |t|
     t.integer "code", null: false
     t.datetime "created_at", null: false
@@ -2589,6 +2624,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.string "subtitle"
     t.text "content"
     t.text "content_bu"
+    t.string "header_title"
     t.index ["locale"], name: "index_site_customization_page_translations_on_locale"
     t.index ["site_customization_page_id"], name: "index_7fa0f9505738cb31a31f11fb2f4c4531fed7178b"
   end
@@ -2610,6 +2646,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.boolean "landing_show_projekts_overview", default: true
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
+    t.string "brand_color"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -2969,6 +3006,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_feedback_forms", "deficiency_reports"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
@@ -3009,11 +3047,6 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_reports"
-  add_foreign_key "map_locations", "ideas"
-  add_foreign_key "map_locations", "projekt_phases"
-  add_foreign_key "map_locations", "projekts"
-  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"
@@ -3032,6 +3065,9 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"
   add_foreign_key "poll_question_answers", "poll_questions", column: "question_id"
+  add_foreign_key "poll_questions", "poll_question_answers", column: "context_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contexted_clone_of_poll_question_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contextualize_by_poll_question_id"
   add_foreign_key "poll_questions", "polls"
   add_foreign_key "poll_questions", "proposals"
   add_foreign_key "poll_questions", "users", column: "author_id"

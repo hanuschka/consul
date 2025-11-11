@@ -1,4 +1,4 @@
-<% template_content_html = capture do %>
+<div class="js-content-block-template-content" data-enter-ai-mode="true">
   <% if @images.present? %>
     <% if @title.present? %>
       <h3><%= @title %></h3>
@@ -12,21 +12,13 @@
       <% end %>
     </div>
   <% end %>
-<% end %>
-
-
-<% if @template_mode %>
-  <div class="js-content-block-template-content" data-enter-ai-mode="true">
-    <%= template_content_html %>
+</div>
+<div class="content-block-template-hints">
+  <div class="content-block-template-hint">
+    AI will add as much images as you attached in dialog
   </div>
-  <div class="content-block-template-hints">
-    <div class="content-block-template-hint">
-      AI will add as much images as you attached in dialog
-    </div>
-    <div class="content-block-template-hint">
-      You also can ask AI to change count of images displayed per one row (by default there is 2 images per row)
-    </div>
+  <div class="content-block-template-hint">
+    You also can ask AI to change count of images displayed per one row (by default there is 2 images per row)
   </div>
-<% else %>
-  <%= template_content_html %>
-<% end %>
+</div>
+

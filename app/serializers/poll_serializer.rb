@@ -59,10 +59,7 @@ class PollSerializer < BaseSerializer
 
     if poll.questions.any?
       poll_data[:questions] = poll.questions.map do |question|
-        {
-          id: question.id,
-          title: question.title
-        }
+        Poll::QuestionSerializer.new(question).serialize
       end
     end
 

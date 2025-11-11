@@ -370,7 +370,26 @@ module Schemas
             type: :object,
             properties: {
               id: { type: :integer, description: 'Question identifier' },
-              title: { type: :string, description: 'Question text or title' }
+              title: { type: :string, description: 'Question text or title' },
+              created_at: { type: :string, format: :date_time, description: 'Timestamp when the question was created' },
+              updated_at: { type: :string, format: :date_time, description: 'Timestamp when the question was last modified' },
+              answers: {
+                type: :array,
+                description: 'Array of answer options for this question',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, description: 'Answer option identifier' },
+                    title: { type: :string, description: 'Answer option text' },
+                    description: { type: :string, nullable: true, description: 'Detailed description of the answer option' },
+                    given_order: { type: :integer, description: 'Order position of this answer among other answers' },
+                    total_votes: { type: :integer, description: 'Total number of votes for this answer option' },
+                    total_votes_percentage: { type: :number, format: :float, description: 'Percentage of total votes this answer received (0-100)' },
+                    created_at: { type: :string, format: :date_time, description: 'Timestamp when the answer option was created' },
+                    updated_at: { type: :string, format: :date_time, description: 'Timestamp when the answer option was last modified' }
+                  }
+                }
+              }
             }
           }
         }

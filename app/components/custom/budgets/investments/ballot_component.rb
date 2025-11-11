@@ -17,7 +17,7 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
 
     def user
       if (current_user&.administrator? || current_user&.poll_officer?) &&
-          controller_path == "officing/budgets" &&
+          controller_path.in?(["officing/budgets", "budgets/ballot/lines"]) &&
           params[:offline_user_id]
         User.find(params[:offline_user_id])
       else

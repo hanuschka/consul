@@ -5,8 +5,11 @@ class Shared::SidebarCardComponent < ApplicationComponent
   renders_one :edit_link
 
   def initialize(
-    title: nil, description: nil, icon_name: "info",
-    class_name: nil, opened_on_mobile: false
+    title: nil,
+    description: nil,
+    icon_name: "info",
+    class_name: nil,
+    opened_on_mobile: false
   )
     @title = title
     @icon_name = icon_name

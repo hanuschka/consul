@@ -7,7 +7,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: true, encoding: "UTF-8") do |csv|
+      CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
         @proposals.each do |proposal|
@@ -26,6 +26,7 @@ module CsvServices
           "description",
           "project",
           "label(s)",
+          "sentiment",
           "responsible_name",
           "author_username",
           "supports",
@@ -41,7 +42,8 @@ module CsvServices
           "community_id",
           "selected",
           "latitude",
-          "longitude"
+          "longitude",
+          "geometry"
         ]
       end
 
@@ -52,7 +54,8 @@ module CsvServices
           sanitize_for_csv(proposal.summary),
           sanitize_for_csv(strip_tags(proposal.description)),
           proposal.projekt_phase.projekt.name,
-          proposal.projekt_labels&.map(&:name)&.join(" "),
+          proposal.projekt_labels&.map(&:name)&.join(" | "),
+          proposal.sentiment&.name,
           sanitize_for_csv(proposal.responsible_name),
           sanitize_for_csv(proposal.author.username),
           proposal.total_votes,
@@ -68,14 +71,9 @@ module CsvServices
           proposal.community_id,
           proposal.selected,
           geo_field(proposal.map_location&.latitude),
-          geo_field(proposal.map_location&.longitude)
+          geo_field(proposal.map_location&.longitude),
+          format_geometry(proposal.map_location&.features)
         ]
-      end
-
-      def geo_field(field)
-        return nil if field.blank?
-
-        "\"#{field}\""
       end
   end
 end

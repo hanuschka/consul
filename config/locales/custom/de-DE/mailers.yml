@@ -71,7 +71,7 @@ de:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       hi: "Hello %{username},"
-      text: "Bewerben Sie Ihren Vorschlag %{proposal_link} jetzt für die letzte Abstimmungsphase."
+      text: "Bewerben Sie Ihren Vorschlag %{proposal_link} für die Abstimmungsphase."
       share_button: "Jetzt Vorschlag teilen!"
       thanks: "Viel Erfolg!"
       sincerely: "Mit freundlichen Grüßen"

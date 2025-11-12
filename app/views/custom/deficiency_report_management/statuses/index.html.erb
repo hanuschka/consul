@@ -10,9 +10,10 @@
 <table>
   <thead>
     <tr>
+      <th><%= t("custom.admin.deficiency_reports.statuses.status.title") %></th>
       <th><%= t("custom.admin.deficiency_reports.statuses.status.icon") %></th>
       <th><%= t("custom.admin.deficiency_reports.statuses.status.color") %></th>
-      <th><%= t("custom.admin.deficiency_reports.statuses.status.title") %></th>
+      <th><%= t("custom.admin.deficiency_reports.statuses.status.reminder_delay") %></th>
       <th><%= t("custom.admin.deficiency_reports.statuses.status.archive_reports") %></th>
       <th><%= t("custom.admin.deficiency_reports.statuses.status.notice_text") %></th>
       <th><%= t("admin.actions.actions") %></th>
@@ -22,9 +23,10 @@
   <tbody class="sortable" data-js-url=<%= order_statuses_deficiency_report_management_statuses_path %>>
     <% @statuses.each do |status| %>
       <tr id="<%= dom_id(status) %>" data-answer-id="<%= status.id %>">
+        <td><%= status.title %></td>
         <td><%= "<i class=\"fas fa-#{status.icon}\" style=\"color:#{status.color}\"></i>".html_safe if status.icon %></td>
         <td><%= status.color %></td>
-        <td><%= status.title %></td>
+        <td><%= status.reminder_delay %></td>
         <td><%= t("shared.#{status.archive_reports ? 'yes' : 'no'}") %></td>
         <td><%= auto_link_already_sanitized_html(wysiwyg( status.notice_text[0..200] )) %></td>
         <td>

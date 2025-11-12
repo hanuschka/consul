@@ -9,7 +9,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: true, encoding: "UTF-8") do |csv|
+      CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << [I18n.t("stats.total_participants"), @stats.total_participants]
         add_gender_stats(csv)
         add_age_stats(csv)

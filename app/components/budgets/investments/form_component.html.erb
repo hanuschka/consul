@@ -1,18 +1,20 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
+    <% if helpers.projekt_phase_pro_feature?(budget.projekt_phase, "form.voice_assistant") %>
+      <%= render Dt::VoiceAssistantComponent.new(
+        assistant_codename: "budget_proposal_voice_assistant",
+        projekt_phase: investment.projekt_phase
+      ) %>
+    <% end %>
+
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">
         <div class="main-column">
-          <h1 class="user-resources-form--title">
-            <%= investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new") %>
-          </h1>
-
-          <div class="user-resources-form--description">
-            <%= render_custom_block "user_resource_form_budget_investment", default_content: t("custom.budgets.investments.form.page_description") %>
-          </div>
+          <h1 class="user-resources-form--title"><%= form_title %></h1>
+          <div class="user-resources-form--description"><%= AdminWYSIWYGSanitizer.new.sanitize(form_description) %></div>
 
           <%= render "shared/errors", resource: investment %>
         </div>
@@ -27,18 +29,19 @@
                 <%= translations_form.text_area :title,
                   data: suggest_data(investment),
                   label: false,
-                  class: "user-resources-form--banner-editor-title",
-                  placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
+                  class: "user-resources-form--banner-editor-title js-user-resource-form-title",
+                  placeholder: title_placeholder,
                   autocomplete: "off" %>
               </div>
 
               <% if projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>
-                <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
+                <div class="banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
                   <% end %>
                 </div>
               <% end %>
@@ -47,20 +50,40 @@
             <%= translations_form.text_area :description,
               value: AdminWYSIWYGSanitizer.new.sanitize(investment.description),
               label: false,
-              placeholder: t("custom.budgets.investments.form.description_placeholder"),
-              class: "html-area #{ck_editor_class(current_user)}" %>
+              placeholder: description_placeholder,
+              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
-          <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
+          <% if (projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any?) ||
+                (projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any?) ||
+                 projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
             <div class="new-card" id='map-container'>
-              <%= render "map_locations/form_fields",
-                form:     f,
-                map_location: investment.map_location || MapLocation.new,
-                label: t("proposals.form.map_location"),
-                help:     t("custom.budgets.investments.form.map.hint"),
-                parent_class: "budget_investments",
-                projekt_phase: investment.projekt_phase,
-                i18n_namespace: "budgets.investments" %>
+
+              <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
+                <div class="margin-bottom">
+                  <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: investment.projekt_phase, model: investment } %>
+                </div>
+              <% end %>
+
+              <% if projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any? %>
+                <div class="margin-bottom">
+                  <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: investment.projekt_phase, model: investment } %>
+                </div>
+              <% end %>
+
+              <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
+                <h2 class="rich-form-label">
+                  <i class="fas fa-map"></i>
+                  <%= t("custom.user_resources.form.map_location_label") %>
+                  <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+                  <span class="small"><%= t("custom.user_resources.form.map_location_instructions_optional") %></span>
+                </h2>
+
+                <%= render "map_locations/form_fields",
+                  form:            f,
+                  mappable:        investment,
+                  nesting_prefix: "budget_investments" %>
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -80,13 +103,13 @@
                     selected: investment.implementation_performer
                   },
                   {
-                    class: 'implementation-performer show-arrow',
+                    class: 'js-implementation-performer-select implementation-performer show-arrow',
                     style: "width:100%;", onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')"
                   } %>
               </div>
 
               <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-                <%= f.text_field :implementation_contribution %>
+                <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
               </div>
             <% end %>
           <% end %>
@@ -97,57 +120,8 @@
                           description: t("custom.budgets.investments.form.user_cost_estimate.description"),
                           icon_name: "euro-sign"
                        ) do |c| %>
-              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder") %>
+              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder"), class: "js-budget-user-cost-estimate-field" %>
 
-            <% end %>
-          <% end %>
-
-          <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
-            <%= render Shared::SidebarCardComponent.new(title: (investment.projekt_phase.labels_name.presence || "Labels"), opened_on_mobile: true, icon_name: "tag") do |c| %>
-              <div id="projekt_labels_selector" class="projekt-labels">
-                <%= f.label :projekt_labels, t("custom.shared.form.projekt_labels_label"), class: "required" %>
-                <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.projekt_labels_hint") %></p>
-                <div class="projekt-labels-selector--checkboxes">
-                  <%= f.collection_check_boxes :projekt_label_ids, investment.projekt_phase.projekt_labels, :id, :name do |cb| %>
-                    <%= cb.check_box %>
-                    <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
-                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label") { iconn + cb.text } %>
-                  <% end %>
-                </div>
-              </div>
-
-              <% if investment.errors.details[:projekt_labels].any? %>
-                <% investment.errors.details[:projekt_labels].each do |error| %>
-                  <small class='form-error is-visible'>
-                    <%= t("activerecord.errors.models.budget_investment.attributes.projekt_labels.#{error[:error]}") %>
-                  </small>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-
-          <% if projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any? %>
-            <%= render Shared::SidebarCardComponent.new(title: (investment.projekt_phase.sentiments_name.presence || "Sentiments"), opened_on_mobile: true, icon_name: "heart") do |c| %>
-              <div id="sentiment_selector" class="sentiments">
-                <%= f.label :sentiment_id, t("custom.shared.form.sentiment_label"), class: "required" %>
-                <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.sentiment_hint") %></p>
-
-                <div class="projekt-sentiments-selector--checkboxes">
-                  <%= f.collection_radio_buttons :sentiment_id, investment.projekt_phase.sentiments, :id, :name, { include_hidden: false } do |rb| %>
-                    <%= rb.radio_button %>
-                    <% button_styles = "border-color:#{rb.object.color};background-color:#{rb.object.color};color:#{pick_text_color(rb.object.color)}" %>
-                    <%= rb.label(id: dom_id(rb.object), class: "sentiment", data: { "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
-                  <% end %>
-                </div>
-              </div>
-
-              <% if investment.errors.details[:sentiment_id].any? %>
-                <% investment.errors.details[:sentiment_id].each do |error| %>
-                  <small class="form-error is-visible">
-                    <%= t("activerecord.errors.models.budget_investment.attributes.sentiment.#{error[:error]}") %>
-                  </small>
-                <% end %>
-              <% end %>
             <% end %>
           <% end %>
 
@@ -183,7 +157,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),
@@ -243,11 +217,11 @@
 
       <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
         <div>
-          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
+          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'js-implementation-performer-select implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
         </div>
 
         <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-          <%= f.text_field :implementation_contribution %>
+          <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
         </div>
       <% end %>
 
@@ -256,18 +230,14 @@
       <% end %>
 
       <% if projekt_phase_feature?(budget&.projekt_phase, "form.show_map") %>
-        <div class="margin-bottom">
-          <%= render "map_locations/form_fields",
-                     form:           f,
-                     map_location:   investment.map_location || MapLocation.new,
-                     mappable:       investment,
-                     label:          t("budgets.investments.form.map_location"),
-                     help:           t("budgets.investments.form.map_location_instructions"),
-                     parent_class:   "budget_investment",
-                     projekt:        budget&.projekt,
-                     projekt_phase:  budget&.projekt_phase,
-                     i18n_namespace: "budgets.investments" %>
-        </div>
+          <div class="new-card" id='map-container'>
+            <%= render "map_locations/form_fields",
+              label:           t("budgets.investments.form.map_location"),
+              help:            t("budgets.investments.form.map_location_instructions"),
+              form:            f,
+              mappable:        investment,
+              nesting_prefix: "budget_investments" %>
+          </div>
       <% end %>
 
       <div>
@@ -344,5 +314,4 @@
       <%= f.submit %>
     </div>
   <% end %>
-
 <% end %>

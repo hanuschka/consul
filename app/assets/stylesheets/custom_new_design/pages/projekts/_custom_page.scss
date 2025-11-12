@@ -170,6 +170,11 @@
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;
+    max-width: 620px;
+
+    a {
+      height: 100%;
+    }
 
     .image-maximize-button {
       visibility: hidden;
@@ -313,12 +318,6 @@
       margin-bottom: 15px;
       margin-top: 0px;
     }
-
-    .page-subnav-tab {
-      .tab-info-summary {
-        display: none;
-      }
-    }
   }
 
   .projekt-footer {
@@ -359,8 +358,6 @@
   }
 
   .projekt-page {
-    padding-top: 50px;
-
     .main-column {
       display: flex;
       flex-direction: column;
@@ -373,6 +370,10 @@
       top: -270px;
       visibility: hidden;
     }
+
+    @media screen and (min-width: $small-tablet-viewport-start) {
+      padding-top: 50px;
+    }
   }
 
   .custom-page-content {
@@ -383,10 +384,6 @@
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
-    }
-
-    img {
-      border-radius: 5px;
     }
   }
 

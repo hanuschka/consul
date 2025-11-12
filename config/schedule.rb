@@ -5,7 +5,8 @@
 
 # Example:
 #
-# set :output, "/path/to/my/cron_log.log"
+set :output, { error: "log/cron_errors.log", standard: "log/cron.log" }
+set :job_template, "/bin/bash -lc 'export EXECJS_RUNTIME=Disabled && :job'"
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"
@@ -68,7 +69,7 @@ every 1.day, at: "3:00 am", roles: [:cron] do
 end
 
 every 1.day, at: "3:30 am", roles: [:cron] do
-  rake "rake deficiency_reports:archive_closed"
+  rake "deficiency_reports:archive_closed"
 end
 
 every 1.day, at: "6:00 am", roles: [:cron] do

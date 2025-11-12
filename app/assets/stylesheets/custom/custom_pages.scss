@@ -126,14 +126,6 @@ span.sidebar-projekt-phases-title {
   height: 250px;
   cursor: pointer;
   border-radius: 7px;
-
-  .leaflet-control-container {
-    .leaflet-control-zoom,
-    .leaflet-control-locate,
-    .leaflet-control-geosearch {
-      display: none;
-    }
-  }
 }
 
 // .projekt-phase {
@@ -168,8 +160,7 @@ ul.projekt-navigator {
   list-style-type: none;
 }
 
-li.current-projekt,
-li.current-projekt a {
+li.current-projekt > a {
   font-weight: bold;
 }
 
@@ -202,7 +193,8 @@ li.projekt-navigator.current-projekt::before {
     position: relative;
 
     .extended-sidebar-map {
-      height: 500px;
+      height: 1500px;
+      max-height: calc(100vh - 150px);
 
       @media screen and (min-width: 1920px) {
         height: 700px;
@@ -219,8 +211,25 @@ li.projekt-navigator.current-projekt::before {
 
     .close-button {
       position: absolute;
-      top: 0;
-      right: 3px;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 37px;
+      height: 37px;
+      border:  2px solid #d0d0d0;
+      border-radius: 50%;
+      background-color: white;
+
+      &:hover {
+        background-color: #f2f2f2;
+      }
+
+      span {
+        margin-top: -5px;
+        font-weight: bold;
+      }
     }
   }
 
@@ -290,14 +299,13 @@ span.geo-affiliation-icon:before {
 
 li.projekt-navigator {
   position: relative;
-  padding-right: 14px;
   color: #878787;
 
   a {
     color: $dt-base !important;
   }
 
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: none;
   }
 
@@ -319,7 +327,7 @@ li.projekt-navigator {
 }
 
 li.projekt-navigator[aria-expanded="true"] {
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: block;
   }
 
@@ -329,7 +337,7 @@ li.projekt-navigator[aria-expanded="true"] {
 }
 
 li.projekt-navigator[aria-expanded="false"] {
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: none;
   }
 
@@ -425,11 +433,17 @@ li.projekt-navigator[aria-expanded="false"] {
   }
 
   .page-subnav-tab {
-    h4 {
+    h2 {
       margin-right: 30px;
 
       @media screen and (max-width: $small-tablet-viewport-start) {
         margin-right: 85px;
+      }
+    }
+
+    .tab-info-summary {
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        display: none;
       }
     }
 

@@ -10,17 +10,17 @@
   <% if setting["welcomepage.usage_stats"].present? %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.users.title"), icon_name: "users") do |c| %>
       <div class="homepage-users-list">
-        <%= render(Sidebar::UsersListComponent.new(users: User.active)) %>
+        <%= render(Sidebar::UsersListComponent.new(users: User.actual)) %>
 
         <% if setting["extended_feature.general.users_overview_page"].present? %>
           <%= link_to users_path, class: "sidebar-users-list--count" do %>
-            +<%= number_with_delimiter(User.active.where(guest: false).size, delimiter: ".") %>
+            +<%= number_with_delimiter(User.actual.size, delimiter: ".") %>
           <% end %>
         <% end %>
       </div>
       <% if current_user.nil? %>
         <div class="margin-top-20">
-          <%= link_to(t("custom.welcome.sidebar.users.sign_in"), new_user_session_path, class: "button sign-in-button", data: { turbolinks: false }) %>
+          <%= link_to(t("custom.welcome.sidebar.users.sign_in"), new_user_session_path, class: "button sign-in-button flex-centered-content", data: { turbolinks: false }) %>
         </div>
       <% end %>
     <% end %>
@@ -28,6 +28,7 @@
 
   <% if setting["welcomepage.platform_activity"].present? %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.activity.title"), icon_name: "tachometer-alt") do |c| %>
+
       <% projekts_count = Projekt.regular.index_order_all.count %>
       <% if projekts_count > 0 %>
         <%= link_to projekts_path, class: "resources--info-count -no-default-style" do %>
@@ -64,7 +65,7 @@
         <% end %>
       <% end %>
 
-      <% scoped_projekt_ids = Poll.scoped_projekt_ids_for_index(current_user) %>
+      <% scoped_projekt_ids = Projekt.visible_for(current_user).show_in_sidebar_filter.select(:id) %>
       <% polls_count = Poll.for_public_render.by_projekt_id(scoped_projekt_ids).count %>
       <% if polls_count > 0 %>
         <%= link_to polls_path, class: "resources--info-count -no-default-style" do %>
@@ -92,21 +93,30 @@
   <% end %>
 
   <% if setting["welcomepage.newsletter_subscription"].present? %>
-    <div id="newsletter-subscribtion">
-      <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.newsletter.title"), icon_name: "envelope") do |c| %>
-        <% if current_user.present? %>
-          <div class="admin">
-          <%= render Admin::LivesubmitCheckbox::Component.new(
-            url: account_path,
-            resource_name: "account",
-            attribute_name: "newsletter",
-            current_value: current_user.newsletter
-          ) %>
-          </div>
-        <% else %>
-          <%= render "custom/unregistered_newsletter_subscribers/form", unregistered_email_subscriber: UnregisteredNewsletterSubscriber.new %>
-        <% end %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.newsletter.title"), icon_name: "envelope") do |c| %>
+      <% if current_user.present? %>
+        <div class="admin">
+        <%= render Admin::LivesubmitCheckbox::Component.new(
+          url: account_path,
+          resource_name: "account",
+          attribute_name: "newsletter",
+          current_value: current_user.newsletter
+        ) %>
+        </div>
+      <% else %>
+        <%= render "custom/unregistered_newsletter_subscribers/form", unregistered_email_subscriber: UnregisteredNewsletterSubscriber.new %>
       <% end %>
-    </div>
+    <% end %>
+  <% end %>
+
+  <% if setting["welcomepage.share_buttons"].present? %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.share.title"), icon_name: "share-alt") do |c| %>
+      <%= render "shared/social_share",
+        title: Setting["meta_title"],
+        url: root_url,
+        description: Setting["meta_description"].to_s.truncate(200),
+        mobile: Setting["meta_title"]
+      %>
+    <% end %>
   <% end %>
 </div>

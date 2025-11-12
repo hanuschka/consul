@@ -64,6 +64,10 @@
           </div>
         <% end %>
       <% end %>
+
+      <% additional_resource_details.each do |detail| %>
+        <%= detail %>
+      <% end %>
     </div>
 
     <%= links_section %>
@@ -81,6 +85,6 @@
           resource: resource
         )
       ) %>
-  <% end %>
+    <% end %>
   <% end %>
 </div>

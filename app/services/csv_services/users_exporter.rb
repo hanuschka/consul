@@ -9,7 +9,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: true, encoding: "UTF-8") do |csv|
+      CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
         @users.each do |user|

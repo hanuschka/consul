@@ -53,7 +53,7 @@ en:
       subject: "Thank you for creating an investment!"
       title: "Thank you for creating an investment!"
       intro: "Hi <strong>%{author}</strong>,"
-      text: "Thank you for submitting a proposal %{investment_link} for the project. Your proposal is now visible in the project space %{project_link}."
+      text: "Thank you for submitting a proposal %{investment_link} for the project. Your proposal is now visible in the project space %{projekt_link}."
       follow: "Share your suggestion on social networks and invite other people to comment on your suggestion."
       share: "Share your project"
       notifications: "Would you like to receive email notifications when someone comments on your suggestion? Please check the settings in %{account_link}."

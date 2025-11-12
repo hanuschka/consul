@@ -8,7 +8,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: true, encoding: "UTF-8") do |csv|
+      CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
         @budget_investments.each do |budget_investment|
@@ -24,6 +24,8 @@ module CsvServices
           I18n.t("admin.budget_investments.index.list.id"),
           I18n.t("admin.budget_investments.index.list.title"),
           "Beschreibungstext",
+          "Katogorien",
+          "Sentiment",
           I18n.t("admin.budget_investments.index.list.feasibility"),
           I18n.t("admin.budget_investments.index.list.price"),
           "Folgekosten",
@@ -42,6 +44,8 @@ module CsvServices
           investment.id,
           sanitize_for_csv(investment.title),
           sanitize_for_csv(strip_tags(investment.description)),
+          investment.projekt_labels.map { |pl| pl.name }.join(" | "),
+          investment.sentiment&.name,
           I18n.t("admin.budget_investments.index.feasibility.#{investment.feasibility}"),
           investment.formatted_price,
           investment.price_first_year,

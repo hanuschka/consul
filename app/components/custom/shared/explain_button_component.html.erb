@@ -1,9 +1,15 @@
-<button
-  title="Ask AI"
-  type="button"
-  class="frame-explain-button js-frame-explain-button"
-  data-explain="<%= @explain %>"
->
-  <i class="dt-logo-small-icon">
-  </i>
-</button>
+<div class="ai-button-wrapper -inline-block">
+  <div class="ai-button-wrapper--inner">
+    <button
+      title="Fragen Sie die KI"
+      type="button"
+      class="frame-explain-button flex-centered-content js-frame-explain-button"
+      data-explain="<%= @explain %>"
+    >
+      <i class="dt-logo-small-icon">
+      </i>
+    </button>
+  </div>
+  <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
+</div>
+

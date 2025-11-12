@@ -9,7 +9,7 @@
           <%= investment.formatted_price %>
         </p>
       <% end %>
-      <% if investment.should_show_ballots?(controller_name: controller_name, current_user: current_user) %>
+      <% if investment.should_show_ballots?(controller_path: controller_path, current_user: current_user) %>
         <div class="margin-bottom-10">
           <strong>
             <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
@@ -45,7 +45,7 @@
           <%= investment.formatted_price %>
         </p>
       <% end %>
-      <% if investment.should_show_ballots?(controller_name: controller_name, current_user: current_user) %>
+      <% if investment.should_show_ballots?(controller_path: controller_path, current_user: current_user) %>
         <div class="margin-bottom-10">
           <strong>
             <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>

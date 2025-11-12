@@ -18,6 +18,9 @@ de:
         platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
         projekt_search: Projektsuche auf Startseite aktivieren
         projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
+        share_buttons: Teilen-Funktion
+        share_buttons_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste.
+
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -323,6 +326,8 @@ de:
         external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
         voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
         voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+        send_feedback_form_link: Feedback-Formular
+        send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
       ideas:
         show_in_main_menu: Ideen in Navigation anzeigen
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an

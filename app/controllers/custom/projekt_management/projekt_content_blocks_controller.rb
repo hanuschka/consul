@@ -1,0 +1,3 @@
+class ProjektManagement::ProjektContentBlocksController < ProjektManagement::BaseController
+  include ProjektContentBlocksAdminActions
+end

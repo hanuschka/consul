@@ -30,7 +30,8 @@ class ProjektsController < ApplicationController
       if @landing_page.present?
         @landing_page.landing_projekts
       else
-        Projekt
+        projekts_with_landing_page = Projekt.joins(:landing_pages).pluck(:id)
+        Projekt.where.not(id: projekts_with_landing_page)
       end
 
     @projekts = base_projekts.regular
@@ -102,26 +103,21 @@ class ProjektsController < ApplicationController
   end
 
   def json_data
-    projekt = Projekt.find(params[:id])
-    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
-    tags = projekt.tags.pluck(:name)
+    @projekt = Projekt.find(params[:id])
 
-    sdg_goals = []
-    projekt.sdg_goals.each do |goal|
-      sdg_goals.push({
-        code: goal.code,
-        title: goal.title,
-        image: "sdg/goal_#{goal.code}.png"
-      })
-    end
+    image_url = url_for @projekt.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @projekt.image&.attachment&.attached?
 
     data = {
       resource_type: "projekt",
-      id: projekt.id,
-      title: projekt.title,
+      id: @projekt.id,
+      title: @projekt.title,
       image_url: image_url,
-      tags: tags,
-      sdg_goals: sdg_goals
+      tags: @projekt.tags.pluck(:name),
+      sdg_goals: @projekt.sdg_goals.map { |goal| { code: goal.code, title: goal.title, image: "sdg/goal_#{goal.code}.png"} }
     }.to_json
 
     respond_to do |format|

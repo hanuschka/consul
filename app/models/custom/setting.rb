@@ -53,7 +53,6 @@ class Setting < ApplicationRecord
         "feature.user.recommendations_on_proposals": true,
         "feature.community": true,
         "feature.map": nil,
-        "feature.mapbox": false,
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
         "feature.help_page": true,
@@ -178,6 +177,7 @@ class Setting < ApplicationRecord
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
         "welcomepage.projekt_search": false,
+        "welcomepage.share_buttons": "",
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -196,6 +196,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
+        "deficiency_reports.send_feedback_form_link": false,
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,

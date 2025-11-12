@@ -5,16 +5,14 @@ class DeficiencyReportManagement::AiSettingsController < DeficiencyReportManagem
 
     dt_api = DtApi::Client.new
 
-    ai_assistant_config_response =
+    @ai_assistant_config_response =
       dt_api
         .ai_assistant_configs
         .get(
           codename: @assistant_codename
         )
 
-    @ai_assistant_config =
-      ai_assistant_config_response
-        .fetch("client_ai_assistant_config")
+    @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
   end
 
   def update

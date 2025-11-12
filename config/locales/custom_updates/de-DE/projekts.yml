@@ -72,6 +72,7 @@ de:
             edit_projekt_map: Karteneinstellungen
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Newsletter-Entwurf
+            notify_reviewers: Prüfer benachrichtigen
           projekt_information:
             title: Projektinformation
           map:

@@ -12,14 +12,15 @@ class Ckeditor::Asset < ApplicationRecord
     pg_search(terms)
   end
 
-  def attach_uploaded_file(data)
+  def attach_uploaded_file(data, custom_image = nil)
     return unless data.is_a?(ActionDispatch::Http::UploadedFile)
 
-    storage_data.attach(io: data, filename: data.original_filename, content_type: data.content_type)
+    image_to_store = custom_image.presence || data
+    storage_data.attach(io: image_to_store, filename: data.original_filename, content_type: data.content_type)
 
     self.data_file_name = data.original_filename
     self.data_content_type = data.content_type
-    self.data_file_size = data.size
+    self.data_file_size = image_to_store.size
     self.type = type
     self.title = data.original_filename
   end

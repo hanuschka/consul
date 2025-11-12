@@ -28,7 +28,6 @@
     <table class="table-for-mobile">
       <thead>
         <tr>
-          <th><%= t("custom.common.category") %></th>
           <th><%= t("custom.common.address") %></th>
           <th><%= t("custom.common.user") %></th>
           <th><%= t("custom.common.created_at") %></th>
@@ -38,14 +37,7 @@
       <tbody>
         <% @pins.each do |pin| %>
           <tr id="<%= dom_id(pin) %>">
-            <td>
-              <span style="font-size: 20px;margin-right: 10px;margin-left: 10px;color: <%= pin.projekt_point_of_interest_category.color %>">
-                <i class="icon-<%= pin.projekt_point_of_interest_category.icon %>">
-                </i>
-              </span>
-              <%= pin.projekt_point_of_interest_category.name %>
-            </td>
-            <td><%= pin.map_location.get_approximated_address %></td>
+            <td><%= pin.map_location.approximated_address %></td>
             <td><%= pin.author.name %> <br>
               <span style="color:gray">
                 <%=  pin.author.email %>

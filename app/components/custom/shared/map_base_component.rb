@@ -51,16 +51,9 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
-        if admin_editor?
-          [
-            @mappable.map_location.shape_json_data
-          ]
-        else
-          [
-            @mappable.map_location.shape_json_data.presence ||
-              @mappable.map_location.json_data
-          ]
-        end
+        [
+          @mappable.map_location.features_json_data
+        ]
       else
         []
       end
@@ -68,13 +61,10 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def admin_shape
       if @projekt_phase.present?
-        @projekt_phase.map_location&.shape_json_data.presence
+        @projekt_phase.map_location&.features_json_data.presence
       elsif @projekt.present?
-        @projekt.map_location.shape_json_data.presence
+        @projekt.map_location.features_json_data.presence
       end
     end
 
-    def admin_editor?
-      @parent_class == "projekts" || @parent_class == "projekt_phases"
-    end
 end

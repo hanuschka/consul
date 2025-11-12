@@ -60,6 +60,21 @@ table.edit-projekt {
   }
 }
 
+table.projekts {
+  th:nth-child(1),
+  th:nth-child(2) {
+    width: 110px;
+  }
+
+  th:nth-child(3) {
+    width: 230px;
+  }
+
+  th:nth-child(5) {
+    width: 120px;
+  }
+}
+
 #edit_projekt {
   tr.projekt_phase_settings {
     border-bottom: none;
@@ -1686,44 +1701,6 @@ span.projekt-backlink:before {
 }
 
 // tagging in selector
-
-#projekt_labels_selector {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-
-  input {
-    display: none;
-  }
-
-  .projekt-label {
-    color: #fff !important;
-
-    i {
-      margin-right: 7px;
-    }
-  }
-
-  input:checked + .projekt-label {
-    color: #fff !important;
-    background-color: $brand !important;
-  }
-}
-
-#sentiment_selector {
-  margin-top:2rem;
-  margin-bottom:1rem;
-
-  input {
-    display: none;
-  }
-
-  input:checked + .sentiment {
-    &::before {
-      content: "\f192";
-    }
-  }
-}
-
 
 .projekt-footer-navigation {
   position: relative;

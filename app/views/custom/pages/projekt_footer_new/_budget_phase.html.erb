@@ -11,7 +11,7 @@
 
   <div class="flex justify-between items-center">
     <div class="hide-on-small-tablet">
-      <% if can?(:create, Budget::Investment.new(budget: @projekt_phase.budget)) && params[:section] != "results" && params[:section] != "stats" %>
+      <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && params[:section] != "results" && params[:section] != "stats" %>
         <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
           <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
         </div>
@@ -55,10 +55,14 @@
             </div>
           <% end %>
         <% else %>
-          <%= render Shared::ResourceMapComponent.new(
-            marker_coordinates: @investment_coordinates,
-            resource_type: Budget::Investment
-          ) %>
+          <% if projekt_phase_feature?(@projekt_phase, "form.show_map") %>
+            <%= render Shared::MapComponent.new(
+              mappable: @projekt_phase,
+              features: @investment_coordinates,
+              process: 'investments'
+            ) %>
+          <% end %>
+
           <div class="flex-layout">
             <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
             <div class="main-column">

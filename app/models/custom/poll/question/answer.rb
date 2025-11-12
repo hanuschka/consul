@@ -6,6 +6,8 @@ class Poll::Question::Answer < ApplicationRecord
 
   delegate :author_id, to: :question
 
+  default_scope { includes(:translations, :images, :documents, :videos) }
+
   def self.model_name
     mname = super
     mname.instance_variable_set(:@route_key, "answers")
@@ -17,6 +19,13 @@ class Poll::Question::Answer < ApplicationRecord
     return [] unless open_answer?
 
     Poll::Answer.where(question_id: question, answer: title).where.not(open_answer_text: [nil, ""])
+  end
+
+  def all_open_answers_connected_to(base_question_answer)
+    answered_base_question_answer_user_ids = Poll::Answer
+      .where(question_id: base_question_answer.question, answer: base_question_answer.title)
+      .pluck(:author_id)
+    all_open_answers.where(author_id: answered_base_question_answer_user_ids)
   end
 
   def total_votes

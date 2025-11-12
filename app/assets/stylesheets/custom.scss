@@ -23,3 +23,89 @@ textarea{
     font-weight: normal;
   }
 }
+
+/* Mapbox Layer Control Styles */
+.mapbox-layer-control {
+  position: relative;
+}
+
+.mapbox-layer-control-button {
+  width: 29px;
+  height: 29px;
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.mapbox-layer-control-button:hover {
+  background-color: #f4f4f4;
+}
+
+.mapbox-layer-control-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  min-width: 200px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  padding: 8px;
+}
+
+.layer-section {
+  margin-bottom: 8px;
+}
+
+.layer-section:last-child {
+  margin-bottom: 0;
+}
+
+.layer-section-title {
+  font-weight: bold;
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ddd;
+}
+
+.layer-checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+}
+
+.layer-checkbox-label input[type="checkbox"],
+.layer-checkbox-label input[type="radio"] {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.layer-checkbox-label:hover {
+  background-color: #f4f4f4;
+}
+
+.layer-checkbox-label span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.small-centered {
+  margin-left: auto;
+  margin-right: auto;
+}

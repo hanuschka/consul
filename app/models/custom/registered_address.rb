@@ -31,9 +31,13 @@ class RegisteredAddress < ApplicationRecord
 
       grouping_attributes_hash = row.to_hash.slice(*grouping_keys)
 
-      district = RegisteredAddress::District.find_or_create_by!(name: row["district"])
+      if row["district"].blank?
+        district = nil
+      else
+        district = RegisteredAddress::District.find_or_create_by!(name: row["district"])
+      end
 
-      RegisteredAddress.find_or_create_by!(fixed_attributes_hash).update!(groupings: grouping_attributes_hash, registered_address_district_id: district.id)
+      RegisteredAddress.find_or_create_by!(fixed_attributes_hash).update!(groupings: grouping_attributes_hash, registered_address_district_id: district&.id)
     rescue ActiveRecord::RecordInvalid
       next
     end

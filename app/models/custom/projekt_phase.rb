@@ -44,6 +44,8 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
+  translates :projekt_selector_hint # needed for globalize fallback, not used otherwise
+  translates :resource_form_title_hint # needed for globalize fallback, not used otherwise
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -323,7 +325,7 @@ class ProjektPhase < ApplicationRecord
     return if map_location.present?
 
     map_location = projekt.map_location&.dup
-    map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+    map_location.update!(mappable: self) if map_location.present?
 
     projekt.map_layers.each do |map_layer|
       map_layers << map_layer.dup

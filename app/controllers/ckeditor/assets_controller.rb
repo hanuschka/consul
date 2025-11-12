@@ -14,9 +14,12 @@ class Ckeditor::AssetsController < ApplicationController
                 @assets.order(id: :desc)
               end
 
-    @assets = @assets.page(params[:page]).per(12)
+    @assets = @assets.page(params[:page]).per(15)
 
-    render json: json
+    respond_to do |format|
+      format.html { render layout: false }
+      format.json { render json: json }
+    end
   end
 
   private
@@ -37,7 +40,7 @@ class Ckeditor::AssetsController < ApplicationController
       @assets.map do |asset|
         asset.attributes.symbolize_keys.slice(*allowed_attributes).merge(
           url: asset.url_content(editor_id: params[:editor_id]),
-          thumb_url: asset.url_thumb(editor_id: params[:editor_id]),
+          thumb_url: asset.custom_thumb_url(width: 232, height: 190),
           created_at: asset.created_at.strftime("%d.%m.%Y")
         )
       end

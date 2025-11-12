@@ -9,7 +9,7 @@
         </span>
       </td>
       <td class="small-6">
-        <%= form_for([:admin, @selectable_setting]) do |f| %>
+        <%= form_for([:admin, @selectable_setting], html: { class: "row" }) do |f| %>
           <%= f.hidden_field :tab, value: @tab if @tab.present? %>
           <div class="small-12 medium-6 large-8 column">
             <%= f.select :value, translated_options, label: false %>

@@ -43,6 +43,10 @@ de:
     form:
       category_label: Kategorie
       category_hint: Bitte wählen Sie eine Option aus
+      district:
+        title: Schnellauswahl Kartenausschnitt
+        description: Navigieren Sie schnell zu der gewünschten Kartenposition
+        placeholder: Bitte Kartenausschnitt wählen
   custom:
     ideas:
       index:

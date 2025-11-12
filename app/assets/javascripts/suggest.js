@@ -17,7 +17,8 @@
           $.ajax({
             url: $this.data("js-url"),
             data: {
-              search: $this.val()
+              search: $this.val(),
+              projekt_phase_id: $this.data("jsProjektPhaseId")
             },
             type: "GET",
             dataType: "html",

@@ -6,7 +6,7 @@
       <%= "Neue #{notification.notifiable.class.model_name.human}: " %>
     <% elsif notification.notifiable.is_a?(Comment) && notification.notifiable.parent.present? %>
       <%= "Kommentarantwort: "  %>
-    <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment"]) %>
+    <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment", "Projekt"]) %>
       <%= "#{notification.notifiable.class.model_name.human}: " %>
     <% elsif notification.notifiable.class.name.in?(["ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"]) %>
       <%= "#{notification.notifiable.title}: " %>

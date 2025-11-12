@@ -7,9 +7,9 @@ en:
         missing-image:
           aria-label: "Image not available"
       search:
-        search-input:
+        search_input:
           aria-label: "Search input field"
-        search-button:
+        search_button:
           aria-label: "Search button"
       google-translate:
         widget-toggler:

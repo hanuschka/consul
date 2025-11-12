@@ -17,6 +17,7 @@ de:
         district:
           title: Schnellauswahl Kartenausschnitt
           description: Navigieren Sie schnell zu der gewünschten Kartenposition
+          placeholder: Bitte Kartenausschnitt wählen
         category:
           title: Kategorie
           description: "Bitte ordnen Sie Ihr Meldung einer Kategorie zu:"

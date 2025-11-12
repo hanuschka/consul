@@ -26,4 +26,25 @@ class Admin::Poll::Questions::FormComponent < ApplicationComponent
         [poll.name, poll.id]
       end
     end
+
+    def show_contextualize_by_question_selector?
+      poll_questions_for_context_sources.any? && @question.parent_question.blank?
+    end
+
+    def select_options_for_context_sources
+      poll_questions_for_context_sources.map{ |pq| [pq.title, pq.id] }
+    end
+
+    private
+
+      def poll_questions_for_context_sources
+        return [] unless @question.poll.present?
+
+        @poll_questions_for_context_sources ||=
+          @question.poll.questions
+                   .where.not(id: @question.id)
+                   .where(contextualize_by_poll_question_id: nil)
+                   .joins(:votation_type)
+                   .where(votation_types: { vote_type: :multiple })
+      end
 end

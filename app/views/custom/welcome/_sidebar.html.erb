@@ -108,4 +108,15 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <% if setting["welcomepage.share_buttons"].present? %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.share.title"), icon_name: "share-alt") do |c| %>
+      <%= render "shared/social_share",
+        title: Setting["meta_title"],
+        url: root_url,
+        description: Setting["meta_description"].to_s.truncate(200),
+        mobile: Setting["meta_title"]
+      %>
+    <% end %>
+  <% end %>
 </div>

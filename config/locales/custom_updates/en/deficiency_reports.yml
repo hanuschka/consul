@@ -15,6 +15,7 @@ en:
         district:
           title: Quick map zoom
           description: Quickly navigate to the desired map position
+          placeholder: Please select map section
         category:
           title: Category
           description: Please assign a category to your report

@@ -134,6 +134,21 @@
       border: 1px solid #cccccc;
     }
   }
+
+
+  .rich-form-label {
+    font-size: inherit !important;
+    margin-bottom: 0.5rem;
+
+    i {
+      margin-right: 4px;
+      color: $brand;
+    }
+
+    span {
+      font-weight: normal;
+    }
+  }
 }
 
 form .checkbox-label {

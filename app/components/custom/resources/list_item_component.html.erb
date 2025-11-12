@@ -96,7 +96,7 @@
 
             <div class="resource-item--description">
               <%= link_to(@url, target: @url_target, data: { turbolinks: false }) do %>
-                <%= truncate(sanitize(strip_tags(@description)), length: 160, escape: false) %>
+                <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
               <% end %>
             </div>
           <% else %>

@@ -1,4 +1,4 @@
-<div class="comments">
+<div id="new_comments_component" class="comments">
   <div class="new-comments-component">
     <% if @show_title %>
       <h3 class="new-comments-component--title">
@@ -28,7 +28,7 @@
         ) %>
       </div>
     <% end %>
-    <%= render "comments/comment_list", comments: comment_tree.root_comments.where(hidden_at: nil) %>
+    <%= render "comments/comment_list", comments: comment_tree.root_comments.includes(:translations).where(hidden_at: nil) %>
     <%= pagination_links %>
   </div>
 </div>

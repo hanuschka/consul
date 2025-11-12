@@ -22,10 +22,9 @@ class Admin::ProjektsController < Admin::BaseController
       special_name: "projekt_overview_page"
     )
 
-    @map_configuration_settings = Setting.all.group_by(&:type)["map"]
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
 
-    @projekts = @projekts.page(params[:page]).per(5)
+    @projekts = @projekts.page(params[:page]).per(10)
   end
 
   def show
@@ -43,7 +42,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt = Projekt.new(projekt_params)
 
     if @projekt.save
-      redirect_to admin_projekts_path
+      redirect_to page_path(@projekt.page.slug)
     else
       @projekts = Projekt.top_level.page(params[:page])
       render :index

@@ -2,6 +2,8 @@ require_dependency Rails.root.join("app", "models", "site_customization", "page"
 
 class SiteCustomization::Page < ApplicationRecord
   include Search::Generic
+  include ActionView::Helpers::SanitizeHelper
+
   self.inheritance_column = nil
 
   include Imageable
@@ -18,6 +20,11 @@ class SiteCustomization::Page < ApplicationRecord
     class_name: "Projekt"
 
   has_one_attached :landing_mobile_header_image
+
+  has_one_attached :landing_site_logo_for_transparent_background
+  has_one_attached :landing_site_logo_for_white_background
+
+  before_save :sanitize_title_and_subtitle
 
   scope :regular, -> {
     where(landing: false)
@@ -58,6 +65,16 @@ class SiteCustomization::Page < ApplicationRecord
   def self.order_landing_pages(ordered_array)
     ordered_array.each_with_index do |page_id, position|
       find(page_id).update_column(:landing_nav_position, (position + 1))
+    end
+  end
+
+  def sanitize_title_and_subtitle
+    if title.present?
+      self.title = sanitize(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+    end
+
+    if subtitle.present?
+      self.subtitle = sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
     end
   end
 end

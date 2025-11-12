@@ -182,7 +182,7 @@ module Takeable
     return unless !@advanced_search_terms && @search_terms.blank? && params[:retired].blank? && @current_order != "recommendations"
     return unless controller_name == 'proposals'
 
-    if Setting["feature.featured_proposals"]
+    if Setting["feature.featured_proposals"].present?
       @featured_proposals = Proposal.not_archived.unsuccessful
                             .sort_by_confidence_score.limit(Setting["featured_proposals_number"])
       if @featured_proposals.present?

@@ -9,7 +9,7 @@
       }
 
       // $('iframe').each( function() {
-      $('iframe').not('[name="votingFrame"], [sandbox="allow-scripts"]').each( function() {
+      $('iframe').not('[name="votingFrame"], [sandbox="allow-scripts"], .js-iframe-dont-render-overlay-note').each( function() {
         $(this).wrap( "<div class='iframe-wrapper'></div>" );
         $(this).after( expainerText )
       })

@@ -2,7 +2,7 @@ class DeficiencyReportManagement::OfficersController < DeficiencyReportManagemen
   load_and_authorize_resource :officer, class: "DeficiencyReport::Officer", except: [:edit, :show]
 
   def index
-    @officers = DeficiencyReport::Officer.all.page(params[:page])
+    @officers = DeficiencyReport::Officer.joins(:user).order("users.username ASC").page(params[:page])
   end
 
   def search

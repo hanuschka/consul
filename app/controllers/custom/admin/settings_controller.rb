@@ -28,7 +28,6 @@ class Admin::SettingsController < Admin::BaseController
 
     @extra_fields_verification = all_settings["extra_fields.verification"]
     @participation_processes_settings = all_settings["process"]
-    @map_configuration_settings = all_settings["map"]
     @proposals_settings = all_settings["proposals"]
     @remote_census_general_settings = all_settings["remote_census.general"]
     @remote_census_request_settings = all_settings["remote_census.request"]
@@ -49,9 +48,12 @@ class Admin::SettingsController < Admin::BaseController
   end
 
   def update_map
-    Setting["map.latitude"] = params[:latitude].to_f
-    Setting["map.longitude"] = params[:longitude].to_f
-    Setting["map.zoom"] = params[:zoom].to_i
+    @default_map_location = MapLocation.default
+
+    @default_map_location.update(
+      params.require(:map_location).permit(:rendering_library, :latitude, :longitude, :zoom, :altitude, :features)
+    )
+
     redirect_to request_referer, notice: t("admin.settings.index.map.flash.update")
   end
 

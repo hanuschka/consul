@@ -9,10 +9,10 @@ class Ckeditor::DocumentsController < ApplicationController
     if document.save
       render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
         url: document.url_content(editor_id: params[:editor_id]),
-        created_at: asset.created_at.strftime("%d.%m.%Y")
+        created_at: document.created_at.strftime("%d.%m.%Y")
       )
     else
-      render json: { error: { message: document.errors.messages.values.flatten.join(", ") }}
+      render json: { error: { message: document.errors.messages.values.flatten.join(", ") }}, status: :unprocessable_entity
     end
   end
 
@@ -22,7 +22,7 @@ class Ckeditor::DocumentsController < ApplicationController
     document.update!(document_params)
     render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
       url: document.url_content(editor_id: params[:editor_id]),
-      created_at: asset.created_at.strftime("%d.%m.%Y")
+      created_at: document.created_at.strftime("%d.%m.%Y")
     )
   end
 

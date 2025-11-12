@@ -9,6 +9,8 @@ module Budgets
         load_map
         set_filters
 
+        @projekt_phase = @budget.projekt_phase
+
         if permission_problem.present?
           return
         end
@@ -21,6 +23,8 @@ module Budgets
         load_heading
         load_map
         set_filters
+
+        @projekt_phase = @budget.projekt_phase
 
         if permission_problem.present? &&
             !@investment.permission_problem_keys_allowing_ballot_line_deletion.include?(permission_problem)

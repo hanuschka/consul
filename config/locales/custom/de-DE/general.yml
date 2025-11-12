@@ -20,7 +20,7 @@ de:
       user_permission_verify_info: Nur verifizierte Nutzerinnen und Nutzer
       user_permission_votes: An finaler Abstimmung teilnehmen
       verified_account: Konto verifiziert
-      verify_my_account: Daten abgleichen | verifizieren
+      verify_my_account: Daten aktualisieren
   application:
     close: Schließen
     menu: Menü

@@ -5,7 +5,10 @@ de:
         title: "Neuen %{label} erstellen"
         page_description: "Die Plattform lebt von Ihren Beiträgen! Teilen Sie uns mit, was Sie bewegt – und tauschen Sie sich im Anschluss mit anderen zu Ihren Ideen aus. Es gibt kein Richtig und kein Falsch, jeder Beitrag zählt. Danke, dass Sie sich die Zeit nehmen und sich beteiligen!"
         submit_button: Jetzt veröffentlichen
+        map_location_label: Karte
         map_location_instructions: "Wo soll Ihr Beitrag umgesetzt werden? Platzieren Sie einen „Pin“, um andere ins Bild zu setzen."
+        map_location_instructions_mandatory: "Bitte setzen Sie einen Eintrag auf die Karte (Pflichtfeld)."
+        map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte (optional)."
       image_upload:
         top_line_default: Beiträge mit aussagekräftigem Bild erhalten mehr Unterstützung
         title_default: Bild hinzufügen

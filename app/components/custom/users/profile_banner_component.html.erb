@@ -4,8 +4,8 @@
       <%= form_for @user, as: :account, remote: true, authenticity_token: true, url: account_path do |f| %>
         <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true) do |c|%>
           <% c.with_custom_edit_button do %>
-            <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button">
-              <i class="fa fa-pencil-alt"></i>
+            <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
+              <i class="fa fa-pencil-alt" aria-hidden="true"></i>
             </div>
           <% end %>
           <% c.with_placeholder do %>
@@ -30,14 +30,14 @@
           <%= f.fields_for :image do |image_builder| %>
             <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true) do |c| %>
               <% c.with_placeholder do %>
-                <div class="users-profile-banner--avatar-placeholder">
+                <div class="users-profile-banner--avatar-placeholder" aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>">
                   <%= @user.first_letter_of_name %>
                 </div>
               <% end %>
 
               <% c.with_custom_edit_button do %>
-                <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button">
-                  <i class="fa fa-pencil-alt"></i>
+                <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_avatar.aria-label") %>">
+                  <i class="fa fa-pencil-alt" aria-hidden="true"></i>
                 </div>
               <% end %>
             <% end %>
@@ -48,7 +48,7 @@
         <%= image_tag(@user.image&.variant(:medium)) %>
       </div>
     <% else %>
-      <div class="users-profile-banner--avatar users-profile-banner--avatar-placeholder">
+      <div class="users-profile-banner--avatar users-profile-banner--avatar-placeholder" aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>">
         <%= @user.first_letter_of_name %>
       </div>
     <% end %>

@@ -104,7 +104,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       full_street_address = auth_data.extra.raw_info.street_address
       regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
-      match = full_street_address.match(regex)
+      match = full_street_address&.match(regex)
       registered_address = nil
 
       if match

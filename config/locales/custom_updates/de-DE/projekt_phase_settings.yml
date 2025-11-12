@@ -31,8 +31,6 @@ de:
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
             require_admin_acceptance: Adminfreigabe
             require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
-            mapbox: Mapbox-Karte
-            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.
@@ -85,6 +83,9 @@ de:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
             votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
 
         selectable_setting:
           general:
@@ -120,8 +121,6 @@ de:
       budget:
         feature:
           general:
-            mapbox: Mapbox-Karte
-            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
             browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
             browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
             browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
@@ -174,6 +173,10 @@ de:
               total_votes: Aktuelles Ranking
               newest: Neueste zuerst
               comments_count: Meist kommentiert
+        option:
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
       projekt_questions:
         feature:
           general:
@@ -219,8 +222,9 @@ de:
           general:
             users_can_create_pins: Pins setzen
             users_can_create_pins_description: Nutzer können Pins erstellen 
-            mapbox: Mapbox-Karte
-            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
         option:
           general:
             max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.

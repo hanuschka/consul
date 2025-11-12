@@ -1,90 +1,130 @@
-class Shared::MapComponent < Shared::MapBaseComponent
+class Shared::MapComponent < ApplicationComponent
+  def initialize(
+    mappable: nil, # map center, zoom, altitu
+    features: {}, # map features, e.g. markers, polygons (comes from collection)
+    editable: false, # if true user can edit the features
+    process: nil,
+    placement: nil # used to determine the placement of the map (e.g. in a modal or on a page
+  )
+    @mappable = mappable
+    @features = features
+    @editable = editable
+    @process = process
+    @placement = placement
+  end
+
   def map_div
     content_tag :div, "",
-               id: "#{dom_id(@map_location)}_#{@parent_class}",
-                class: "map_location map #{map_lib_class}",
+                id: map_id,
+                class: "map_location map #{rendering_library}",
+                aria: { hidden: true },
                 data: prepare_map_settings
   end
 
   private
 
-    def map_lib_class
-      if use_mapbox?
-        "custom-mapbox-map-styles"
-      else
-        "custom-leaflet-map-styles"
-      end
-    end
-
     def prepare_map_settings
-      options = common_map_settings
-      options[:enable_geoman_controls] = enable_geoman_controls?
-      options[:map_layers] = map_layers if map_layers.present?
+      options = { map: true }
 
-      if use_mapbox? && Rails.application.secrets.mapbox.present?
-        options.delete(:map)
-        options[:mapbox] = true
-        options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
-        options[:mapbox_marker_images] = mapbox_marker_images
-        options[:mapbox_style_id] = mapbox_style_id
+      options[:process] = @process if @process
+      options[:map_location_id] = @mappable.map_location.id if @mappable&.map_location
 
-      else
-        options[:map] = ""
+      options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
+      options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]
+      options[:map_zoom] = map_location&.zoom || Setting["map.zoom"]
+      options[:placement] = @placement if @placement
+
+      options[:layers_data] = layers
+
+      options[:features] = @features
+
+      options[:admin_features] = admin_features
+
+      options[:editable] = @editable
+      options[:enable_shapes] = enable_shapes
+      options[:admin_editor] = admin_editor?
+      options[:editing_projekt_map] = editing_projekt_map?
+      options[:map_features_limit] = map_features_limit if @editable
+
+      if rendering_library == "mapbox"
+        options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
+        options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
+      elsif rendering_library == "virtualcity"
+        options[:map_center_altitude] = map_location&.altitude 
       end
 
       options
     end
 
-    def mapbox_marker_images
-      @process_coordinates
-        .uniq { |coordinate| coordinate[:fa_icon_class] }
-        .map { |coordinate|
-          icon = coordinate[:fa_icon_class]
+    def map_id
+      return dom_id(@mappable, [@placement, "map"].compact.join("_")) if @mappable
+      return "#{@process}_map" if @process
+      return "default_map" if map_location.default?
 
-          return if icon.blank?
-
-          {
-            name: icon,
-            path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
-          }
-        }
-        .compact
+      "map"
     end
 
-    def use_mapbox?
-      if @projekt_phase.present?
-        Setting["feature.mapbox"].present? || projekt_phase_feature?(@projekt_phase, "general.mapbox")
-      else
-        Setting["feature.mapbox"].present?
-      end
+    def map_location
+      @map_location ||= if @mappable.present?
+                          @mappable.map_location || MapLocation.new(mappable: @mappable)
+                        else
+                          MapLocation.default
+                        end
     end
 
-    def enable_geoman_controls?
+    def rendering_library
+      @rendering_library ||= map_location&.rendering_library || "leaflet"
+    end
+
+    def admin_features
+      return {} if admin_editor?
+      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
+
+      @mappable.try(:projekt_phase)&.map_location&.features&.to_json ||
+        @mappable.try(:projekt)&.map_location&.features&.to_json
+    end
+
+    def layers
+      return @mappable.map_layers if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
+
+      @mappable.try(:projekt_phase)&.map_layers ||
+        @mappable.try(:projekt)&.map_layers ||
+        MapLayer.general
+    end
+
+    def admin_editor?
       return false unless @editable
-      return true if @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
 
-      if @mappable.is_a?(DeficiencyReport)
+      @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase) || map_location.default?
+    end
+
+    def editing_projekt_map?
+      admin_editor? && @mappable.is_a?(Projekt)
+    end
+
+    def enable_shapes
+      return false unless @editable
+      return true if admin_editor?
+
+      if @mappable.respond_to?(:projekt_phase) && @mappable.projekt_phase.present?
+        projekt_phase_feature?(@mappable.projekt_phase, "form.enable_geoman_controls_in_maps")
+
+      elsif @mappable.is_a?(DeficiencyReport)
         Setting["deficiency_reports.enable_geoman_controls_in_maps"].present?
 
-      elsif @projekt_phase.present?
-        projekt_phase_feature?(@projekt_phase, "form.enable_geoman_controls_in_maps")
+      elsif @mappable.is_a?(Idea)
+        Setting["ideas.enable_geoman_controls_in_maps"].present?
 
       else
         false
       end
     end
 
-    def mapbox_style_id
-      Rails.application.secrets.dig(:mapbox, :style_id)
-    end
-
-    def map_layers
-      if @projekt_phase.present?
-        @projekt_phase.map_layers_for_render.to_json
-      elsif @projekt.present?
-        @projekt.map_layers_for_render.to_json
+    def map_features_limit
+      if @mappable.respond_to?(:projekt_phase)
+        @mappable.projekt_phase.option("form.map_features_limit")
       else
-        MapLayer.general.to_json
+        1
       end
     end
 end

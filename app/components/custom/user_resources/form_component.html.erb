@@ -9,51 +9,10 @@
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 
-    <% labels_and_sentiments_html = capture do %>
-      <% if show_labels_selector? %>
-        <%= render Shared::SidebarCardComponent.new(
-          title: projekt_phase.labels_name.presence || t("custom.shared.form.projekt_labels_label"),
-          opened_on_mobile: true,
-          icon_name: "tag",
-          class_name: "js-sidebar-labels-section"
-        ) do |c| %>
-          <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
-        <% end %>
-      <% end %>
-
-      <% if show_sentiments_selector? %>
-        <%= render Shared::SidebarCardComponent.new(
-          title: projekt_phase.sentiments_name.presence || I18n.t("custom.shared.form.sentiment_label"),
-          opened_on_mobile: true,
-          icon_name: "heart",
-        ) do |c| %>
-          <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
-        <% end %>
-      <% end %>
-
-      <% if resource.is_a?(Idea) && Idea::Category.exists? %>
-        <%= render Shared::SidebarCardComponent.new(
-          title: t("ideas.form.category_label"),
-          opened_on_mobile: true,
-          icon_name: "tag"
-        ) do |c| %>
-          <div id="idea_category_selector" class="">
-            <p class="small" style="margin-bottom:0.25rem;"><%= t("ideas.form.category_hint") %></p>
-
-            <%= f.select :idea_category_id, Idea::Category.all.map { |category| [category.name, category.id] }, { include_blank: true, label: false }, class: "select" %>
-          </div>
-        <% end %>
-      <% end %>
-    <% end %>
-
     <% sidebar_html = capture do %>
       <aside class="sidebar">
         <fieldset class="required-fields">
           <%= hidden_field_tag :order, params[:order] %>
-
-          <div class="js-remove-on-mobile-section">
-            <%= labels_and_sentiments_html %>
-          </div>
 
           <% if show_documents_input? %>
             <%= render(Shared::SidebarCardComponent.new(
@@ -127,10 +86,6 @@
 
     <div class="flex-layout">
       <div class="main-column">
-        <div class="show-on-small-tablet js-remove-on-desktop-section">
-          <%= labels_and_sentiments_html %>
-        </div>
-
         <% if projekt_phase.present? %>
           <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
         <% end %>
@@ -138,8 +93,7 @@
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-          <div class="user-resources-form--banner-editor <%= banner_class_name %>"
-              style="<%= helpers.sentiment_color_style(resource.try(:sentiment)) %>">
+          <div class="user-resources-form--banner-editor <%= banner_class_name %>">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
                   maxlength: title_max_length,
@@ -167,17 +121,39 @@
             class: "html-area #{helpers.ck_editor_class(current_user)} js-user-resource-form-description" %>
         <% end %>
 
-        <% if show_map_input? %>
+        <% if show_labels_selector? || show_sentiments_selector? || show_idea_category_selector? || show_map_input? %>
           <div class="new-card" id='map-container'>
-            <%= render "map_locations/form_fields",
-              form:          f,
-              map_location:  map_location,
-              label:         t("#{i18n_scope}.form.map_location"),
-              help:          t("custom.user_resources.form.map_location_instructions"),
-              mappable:      resource,
-              projekt_phase: projekt_phase,
-              show_admin_shape: true,
-              parent_class:  "proposal" %>
+            <% if show_labels_selector? %>
+              <div class="margin-bottom">
+                <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
+              </div>
+            <% end %>
+
+            <% if show_sentiments_selector? %>
+              <div class="margin-bottom">
+                <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
+              </div>
+            <% end %>
+
+            <% if show_idea_category_selector? %>
+              <div class="margin-bottom">
+                <%= render partial: "custom/shared/user_resources_form/idea_category", locals: { f: f } %>
+              </div>
+            <% end %>
+
+            <% if show_map_input? %>
+              <h2 class="rich-form-label">
+                <i class="fas fa-map"></i>
+                <%= t("custom.user_resources.form.map_location_label") %>
+                <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+                <span class="small"><%= t("custom.user_resources.form.map_location_instructions_optional") %></span>
+              </h2>
+
+              <%= render "map_locations/form_fields",
+                form:            f,
+                mappable:        resource,
+                nesting_prefix: "proposals" %>
+            <% end %>
           </div>
         <% end %>
 

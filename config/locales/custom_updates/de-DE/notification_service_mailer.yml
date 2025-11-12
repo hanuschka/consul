@@ -107,3 +107,7 @@ de:
       memo:
         subject: Neuer Memo-Beitrag
         intro_html: "Eine neue Memo-Benachrichtigung im Mangel %{root_momoable_link} wurde für Sie hinterlegt:"
+      new_projekt:
+        subject: Überprüfung des Projektes %{projekt_title}
+        hi: Hallo %{username},
+        p1: das Projekt mit dem Titel %{link} wurde zur Überprüfung für Sie freigegeben.

@@ -1,0 +1,36 @@
+<div class="margin-bottom">
+  <h3 style="margin:0;">Feedback form</h3>
+  <div>Erstellt am: <%= l(@feedback_form.created_at, format: "%d.%m.%Y") %></div>
+  <div>For: <%= link_to @deficiency_report.title, deficiency_report_management_deficiency_report_path(@deficiency_report), target: "_blank" %></div>
+</div>
+
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.overall_satisfaction') %></h5>
+  <%= "#{@feedback_form.overall_satisfaction} / 5" %>
+</div>
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.response_time_satisfaction') %></h5>
+  <%= "#{@feedback_form.response_time_satisfaction} / 5" %>
+</div>
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.communication_satisfaction') %></h5>
+  <%= "#{@feedback_form.communication_satisfaction} / 5" %>
+</div>
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.resolved') %></h5>
+  <%= t("shared.#{@feedback_form.resolved ? "yes" : "no"}") %>
+</div>
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.what_liked_note') %></h5>
+  <%= @feedback_form.what_liked_note %>
+</div>
+
+<div class="margin-bottom">
+  <h5><%= t('custom.deficiency_reports.feedback_form.new.what_improve_note') %></h5>
+  <%= @feedback_form.what_improve_note %>
+</div>

@@ -12,10 +12,13 @@
         return;
       }
 
-      window.onscroll = this.handleScroll.bind(this);
+      this.updateHeaderStyles = this.updateHeaderStyles.bind(this)
 
       // Get the offset position of the header
       this.initialHeaderOffsetY = this.header().offsetTop;
+      this.updateHeaderStyles()
+
+      window.onscroll = this.updateHeaderStyles;
       this.initialized = true;
     },
 
@@ -23,11 +26,17 @@
       return document.querySelector(".js-sticky-header");
     },
 
-    handleScroll: function() {
-      if (window.pageYOffset > this.initialHeaderOffsetY) {
-        this.header().classList.add("sticky-header");
-      } else if (window.pageXOffset === this.initialHeaderOffsetY) {
-        this.header().classList.remove("sticky-header");
+    destroy() {
+      window.onscroll = null;
+    },
+
+    updateHeaderStyles() {
+      if (this.header()) {
+        if (window.pageYOffset > this.initialHeaderOffsetY) {
+          this.header().classList.add("sticky-header");
+        } else if (window.pageXOffset === this.initialHeaderOffsetY) {
+          this.header().classList.remove("sticky-header");
+        }
       }
     }
   };

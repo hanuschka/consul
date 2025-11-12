@@ -10,11 +10,7 @@
   }
 }
 
-.resources-list--map {
-  .leaflet-container a.leaflet-popup-close-button {
-    top: 4px;
-    right: 3px;
-  }
+.map.map_location {
   .leaflet-popup-content-wrapper {
     padding: 0;
     border-radius: 8px;

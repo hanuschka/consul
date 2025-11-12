@@ -190,14 +190,21 @@ de:
           new:
             creating: Neue Mangelstatus erstellen
           status:
-            color: Farbe
-            icon: Icon
             title: Name
+            icon: Icon
+            color: Farbe
+            reminder_delay: Erinnerung (Tage)
             archive_reports: Archivieren
             notice_text: E-Mail-Benachrichtigungstext
         districts:
           index:
             title: Gebiete
+        stats:
+          show:
+            type:
+              status: Status
+              category: Kategorie
+              responsible: Verantwortlich
       ideas:
         index:
           title: Ideenplattform
@@ -406,6 +413,9 @@ de:
           send_notifications: Benachrichtigungen senden
           notifications_sent: Benachrichtigungen wurden erfolgreich gesendet
           send_notifications_confirm: Sind Sie sicher?
+          regenerate_contexted_clones: Kontextbezogene Fragen erneuern
+          regenerate_contexted_clones_confirm: Sind Sie sicher?
+          contexted_clones_regenerated: Kontextbezogene Fragen wurden erfolgreich renoviert
         questions:
           show:
             description: Bezeichnung
@@ -491,6 +501,7 @@ de:
               create_on_behalf_of: erstellen im Namen von jemanden
               get_notifications: benachrichtigt werden
               access_graphql: GraphQL-Zugriff
+              review: Projekt überprüfen
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
@@ -694,7 +705,6 @@ de:
           poll_questions: Fragen
           officing_managers: Abstimmungshelfer
           officing_manager_audits: Logs
-          poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
           budget_phases: Phasen
@@ -840,6 +850,7 @@ de:
           button: Stimme erstellen
           argument_image: Bild
         projekt_events:
+          page_title: Veranstaltungen
           button: Event erstellen
           event_created_at: Hergestellt in
           event_datetime: Datum
@@ -903,8 +914,6 @@ de:
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen
-        projekt_events:
-          page_title: Veranstaltungen
         projekt_point_of_interest_pins:
           page_title: Pins
         projekt_point_of_interest_categories:
@@ -967,6 +976,7 @@ de:
           kind: Art
           visible: Sichtbarkeit
           email: Email
+          remove_email: E-Mail entfernen
           remove_user: Profil entfernen
       individual_group_values:
         show:

@@ -93,7 +93,7 @@
     </div>
   <% end %>
 
-  <% if controller_name != "offline_ballots" && (!current_user&.administrator? || !current_user&.poll_officer?) %>
+  <% if !((current_user&.administrator? || current_user&.officing_manager?) && controller_path.in?(["officing/budgets", "budgets/ballot/lines"])) %>
     <% unless ballot.conditional? %>
       <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
     <% end %>

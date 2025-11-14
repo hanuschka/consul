@@ -29,7 +29,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       contentBlock
         .querySelectorAll(`li:not(.${this.listControlClass})`)
         .forEach((li) => {
-          this.addItemDeleteButton(li)
+          this.addItemControlls(li)
         })
 
       this.initSortableForContentBlock(contentBlock)
@@ -43,21 +43,21 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     }
   },
 
-  addItemDeleteButton(li) {
+  addItemControlls(li) {
     const elementStyle = getComputedStyle(li);
     if (elementStyle.position === "static") {
       li.style.position = "relative"
     }
 
-    const buttonHTML = `
+    const deleteButtonHtml = `
         <button class="content-block--item-delete-button ${this.listControlClass} js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
 
-    const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
+    const deleteButton = ProjektStudio.utils.htmlToSingleDomElement(deleteButtonHtml)
 
-    li.appendChild(buttonElement);
+    li.appendChild(deleteButton);
 
     const dragHandleHTML = `
         <button class="content-block--item-drag-handle ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
@@ -130,7 +130,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       $accordionLinks.off("keydown")
     }
 
-    this.addItemDeleteButton(clonedLi)
+    this.addItemControlls(clonedLi)
     this.cleanupSortableForContentBlock(newUl.parentElement)
     this.initSortableForContentBlock(newUl.parentElement)
   },

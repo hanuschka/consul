@@ -149,7 +149,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   saveContentBlockAndExit(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     const editor = this.getEditor(contentBlockWrapper);
     if (!editor) {
@@ -172,7 +171,8 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
-      content
+      content,
+      { scrollIntoView: true }
     );
 
     this.exitCodeEditMode(contentBlockWrapper);

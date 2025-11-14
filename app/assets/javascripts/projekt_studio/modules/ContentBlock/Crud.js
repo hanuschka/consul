@@ -102,7 +102,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
   },
 
-  updateContentBlock(contentBlock, newContent, { resetFoundationState = false, saveVersion = true } = {}) {
+  updateContentBlock(contentBlock, newContent, { scrollIntoView = false, resetFoundationState = false, saveVersion = true } = {}) {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
@@ -144,7 +144,14 @@ ProjektStudio.ContentBlock.Crud = {
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
-    $(contentBlock).foundation();
+
+    if (scrollIntoView) {
+      setTimeout(() => {
+        contentBlockWrapper.scrollIntoView({
+          block: "center", inline: "nearest"
+        })
+      }, 0)
+    }
   },
 
   deleteContentBlock(contentBlockWrapper) {

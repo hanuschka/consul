@@ -6,11 +6,16 @@
   padding-left: 1rem;
 }
 
-// fix for ckeditor
 .accordion-item {
+  // fix for ckeditor
   p {
     margin-bottom: 0;
   }
+}
+
+.accordion-title {
+  color: black;
+  font-size: 18px;
 }
 
 .projekt-content-block {
@@ -18,3 +23,4 @@
     float: left;
   }
 }
+

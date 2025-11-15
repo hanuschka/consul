@@ -102,7 +102,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
   },
 
-  updateContentBlock(contentBlock, newContent, { scrollIntoView = false, resetFoundationState = false, saveVersion = true } = {}) {
+  updateContentBlock(contentBlock, newContent, { resetFoundationState = false, saveVersion = true } = {}) {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
@@ -147,13 +147,6 @@ ProjektStudio.ContentBlock.Crud = {
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
-    if (scrollIntoView) {
-      setTimeout(() => {
-        contentBlockWrapper.scrollIntoView({
-          block: "center", inline: "nearest"
-        })
-      }, 0)
-    }
   },
 
   deleteContentBlock(contentBlockWrapper) {

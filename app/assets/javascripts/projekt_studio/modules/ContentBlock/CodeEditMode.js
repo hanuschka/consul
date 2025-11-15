@@ -133,6 +133,12 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   exitCodeEditMode(contentBlockWrapper) {
     this.removeEditor(contentBlockWrapper);
     this.hideCodeEditModeControls(contentBlockWrapper);
+
+    setTimeout(() => {
+      contentBlockWrapper.scrollIntoView({
+        block: "center", inline: "nearest"
+      })
+    }, 0)
   },
 
   cancelCodeEditMode(e) {
@@ -170,11 +176,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
-      content,
-      { scrollIntoView: true }
+      content
     );
 
     this.exitCodeEditMode(contentBlockWrapper);
+
   },
 
   showSuccessMessage(message) {

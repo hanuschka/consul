@@ -55,22 +55,23 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       baseClass += " -small"
     }
 
-    const dragHandleHTML = `
+    console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
+    if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
+      const dragHandleHTML = `
         <button class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
         <i class="fas fa-up-down-left-right"></i>
        </button>
      `
+      const dragHandleElement = ProjektStudio.utils.htmlToSingleDomElement(dragHandleHTML)
+      li.appendChild(dragHandleElement);
+    }
 
     const deleteButtonHtml = `
         <button class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
-
     const deleteButton = ProjektStudio.utils.htmlToSingleDomElement(deleteButtonHtml)
-    const dragHandleElement = ProjektStudio.utils.htmlToSingleDomElement(dragHandleHTML)
-
-    li.appendChild(dragHandleElement);
     li.appendChild(deleteButton);
   },
 

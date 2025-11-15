@@ -42,5 +42,9 @@ ProjektStudio.ContentBlock.DomHelpers = {
   reinitPluginElementsAndWidgets(contentBlock) {
     $(contentBlock).foundation();
     App.ImageGallery.initialize();
+  },
+
+  isSliderItem(element) {
+    return element.classList.contains("orbit-slide")
   }
 };

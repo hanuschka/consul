@@ -35,5 +35,12 @@ ProjektStudio.ContentBlock.DomHelpers = {
       ProjektStudio.ContentBlock.DragDrop.initSortable();
       App.ImageGallery.initialize();
     }, 10)
+  },
+
+  // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
+  // DO NOT DELETE
+  reinitPluginElementsAndWidgets(contentBlock) {
+    $(contentBlock).foundation();
+    App.ImageGallery.initialize();
   }
 };

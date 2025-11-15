@@ -388,25 +388,6 @@ body.custom-new-design {
   opacity: 0.45;
 }
 
-.content-block--item-drag-handle {
-  position: absolute;
-  bottom: -5px;
-  right: 5px;
-  font-size: 17px;
-  color: #004a83;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  z-index: 2;
-  margin-right: 0;
-  border: none;
-  background-color: #b9daf5;
-
-  &:hover {
-    background-color: $dt-base-transparent-background-hover;
-  }
-}
 
 .projekt-content-block-templates-selector--tabs {
   background-color: transparent;
@@ -1374,17 +1355,59 @@ body:not(.-ai-enabled) {
   }
 }
 
-.content-block--item-delete-button {
+.content-block--item-button {
+  display: none;
   position: absolute;
-  top: 5px;
-  right: 5px;
+  font-size: 17px;
   border-radius: 50%;
-  color: #a41717;
   width: 32px;
   height: 32px;
-  font-size: 19px;
-  background-color: #ffdede;
+  cursor: pointer;
+  z-index: 2;
+  margin-right: 0;
+  border: none;
+  right: 5px;
   transition: 100ms ease background-color;
+
+  &.-small {
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+  }
+}
+
+.projekt-content-block {
+  li:hover {
+    .content-block--item-button {
+      display: block;
+    }
+  }
+}
+
+.content-block--item-drag-handle {
+  bottom: -5px;
+  color: #004a83;
+  background-color: #b9daf5;
+
+  &.-small {
+    top: 0px;
+    right: 12px;
+  }
+
+  &:hover {
+    background-color: $dt-base-transparent-background-hover;
+  }
+}
+
+.content-block--item-delete-button {
+  top: 0;
+  color: #a41717;
+  background-color: #ffdede;
+
+  &.-small {
+    top: 0px;
+    right: -12px;
+  }
 
   &:hover {
     background-color: #facdcd;

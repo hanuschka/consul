@@ -84,8 +84,7 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
 
     contentBlock.innerHTML = params.html
 
-    $(contentBlock).foundation();
-    App.ImageGallery.initialize();
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     contentBlockWrapper
       .classList

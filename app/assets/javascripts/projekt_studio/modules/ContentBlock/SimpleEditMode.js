@@ -105,12 +105,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       // Should be always last item
       this.toggleGlighboxGallery(contentBlock, enabled)
       if (!enabled) {
-        $(contentBlock).foundation();
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }
 
       if (endCallback) {
         endCallback()
       }
+
     }, 10)
   },
 

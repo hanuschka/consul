@@ -49,24 +49,29 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       li.style.position = "relative"
     }
 
+    let baseClass = "content-block--item-button"
+
+    if (li.clientHeight < 70) {
+      baseClass += " -small"
+    }
+
+    const dragHandleHTML = `
+        <button class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
+        <i class="fas fa-up-down-left-right"></i>
+       </button>
+     `
+
     const deleteButtonHtml = `
-        <button class="content-block--item-delete-button ${this.listControlClass} js-projekt-content-block--delete-item -delete">
+        <button class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
 
     const deleteButton = ProjektStudio.utils.htmlToSingleDomElement(deleteButtonHtml)
-
-    li.appendChild(deleteButton);
-
-    const dragHandleHTML = `
-        <button class="content-block--item-drag-handle ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
-        <i class="fas fa-up-down-left-right"></i>
-       </button>
-     `
-
     const dragHandleElement = ProjektStudio.utils.htmlToSingleDomElement(dragHandleHTML)
+
     li.appendChild(dragHandleElement);
+    li.appendChild(deleteButton);
   },
 
 

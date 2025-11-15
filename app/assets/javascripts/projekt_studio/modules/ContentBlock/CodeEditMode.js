@@ -166,8 +166,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }
 
     contentBlock.innerHTML = content;
-    $(contentBlock).foundation();
-    App.ImageGallery.initialize();
+    // ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,

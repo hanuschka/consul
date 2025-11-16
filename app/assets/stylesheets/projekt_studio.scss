@@ -1245,16 +1245,16 @@ body:not(.-ai-enabled) {
 }
 
 .content-block-image-control-button {
-  width: 35px;
-  height: 35px;
-  font-size: 19px;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
 
   &.-small {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     bottom: 5px;
     left: 5px;
-    font-size: 19px;
+    font-size: 17px;
   }
 }
 
@@ -1301,10 +1301,10 @@ body:not(.-ai-enabled) {
   position: absolute;
   top: 5px;
   left: 7px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  height: 25px;
   backdrop-filter: blur(5px);
+  background: #ffffff66;
+  border-radius: 8px;
   z-index: 10;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1316,8 +1316,8 @@ body:not(.-ai-enabled) {
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 0;
+    border-radius: 0;
     transition: background-color 0.2s ease;
     height: 100%;
     width: 35px;
@@ -1336,11 +1336,10 @@ body:not(.-ai-enabled) {
     height: 100%;
     padding: 4px 6px;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     text-align: center;
-    background: white;
+    background: #ffffff57;
     outline: none;
     margin-bottom: 0;
 

@@ -1300,11 +1300,8 @@ body:not(.-ai-enabled) {
   display: flex !important;
   position: absolute;
   top: 5px;
-  left: 7px;
+  left: 5px;
   height: 25px;
-  backdrop-filter: blur(5px);
-  background: #ffffff66;
-  border-radius: 8px;
   z-index: 10;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1313,21 +1310,30 @@ body:not(.-ai-enabled) {
   button {
     background: none;
     border: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 14px;
     cursor: pointer;
     padding: 0;
     border-radius: 0;
     transition: background-color 0.2s ease;
     height: 100%;
     width: 35px;
+    backdrop-filter: blur(5px);
+    background: #ffffff66;
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    &:last-child {
+      border-radius: 0 8px 8px 0px;
+    }
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background: #ffffff66;
     }
 
     &:active {
-      background-color: rgba(0, 0, 0, 0.2);
+      background: #ffffff66;
     }
   }
 
@@ -1339,9 +1345,11 @@ body:not(.-ai-enabled) {
     font-size: 15px;
     font-weight: bold;
     text-align: center;
+    backdrop-filter: blur(5px);
     background: #ffffff57;
     outline: none;
     margin-bottom: 0;
+    border-radius: 0;
 
     &:focus {
       box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);

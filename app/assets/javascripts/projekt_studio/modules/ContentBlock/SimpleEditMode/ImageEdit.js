@@ -71,7 +71,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
       <div class="content-block-image-height-control">
-        <button type="button" class="js-content-block-image-height-decrease">−</button>
+        <button type="button" class="js-content-block-image-height-decrease"><i class="fa fas fa-minus"></i></button>
         <input
           type="number"
           class="js-content-block-image-height-input"
@@ -79,7 +79,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
           max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
-        <button type="button" class="js-content-block-image-height-increase">+</button>
+        <button type="button" class="js-content-block-image-height-increase"><i class="fa fas fa-plus"></i></button>
       </div>
     `
 

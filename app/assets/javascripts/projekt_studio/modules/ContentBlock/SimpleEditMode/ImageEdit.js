@@ -58,8 +58,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
-    const showCropButton = true;
-
     const cropButton = `
       <button
         type="button"
@@ -75,7 +73,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
         <input
           type="number"
           class="js-content-block-image-height-input"
-          min="200"
+          min="30"
           max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >

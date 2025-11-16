@@ -1247,7 +1247,7 @@ body:not(.-ai-enabled) {
 .content-block-image-control-button {
   width: 32px;
   height: 32px;
-  font-size: 18px;
+  font-size: 17px;
 
   &.-small {
     width: 28px;
@@ -1353,6 +1353,7 @@ body:not(.-ai-enabled) {
 
     &:focus {
       box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+      background: #ffffffb0;
     }
 
     &::-webkit-outer-spin-button,

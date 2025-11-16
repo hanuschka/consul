@@ -1329,11 +1329,11 @@ body:not(.-ai-enabled) {
     }
 
     &:hover {
-      background: #ffffff66;
+      background: #ffffff80;
     }
 
     &:active {
-      background: #ffffff66;
+      background: #ffffffb0;
     }
   }
 
@@ -1391,6 +1391,9 @@ body:not(.-ai-enabled) {
     width: 28px;
     height: 28px;
     font-size: 16px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
 }
 
@@ -1408,8 +1411,8 @@ body:not(.-ai-enabled) {
   background-color: #b9daf5;
 
   &.-small {
-    top: 3px;
-    right: 18px;
+    // top: 3px;
+    right: 20px;
   }
 
   &:hover {
@@ -1423,7 +1426,7 @@ body:not(.-ai-enabled) {
   background-color: #ffdede;
 
   &.-small {
-    top: 3px;
+    // top: 3px;
     right: -12px;
   }
 

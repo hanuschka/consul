@@ -4,7 +4,7 @@ class ApiClientsController < ApplicationController
   def connect
     api_client = ApiClient.find_or_create_by!(
       name: "DT",
-      domain: Rails.application.secrets.dt[:domain]
+      domain: Dt.domain
     )
 
     user_role =

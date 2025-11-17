@@ -1,38 +1,65 @@
 class Admin::AiSettingsController < Admin::BaseController
-  helper_method :ai_provider_options, :ai_model_options
+  helper_method :show_api_endpoint?, :show_model_field?, :show_custom_model_field?
 
   def index
-    @ai_settings = Setting.where("key LIKE ?", "llm.%").order(:key)
+    @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
+    @api_key = ExternalApiKey.find_or_initialize_by(name: "ai.llm_api_key")
   end
 
   def update
-    @setting = Setting.find(params[:id])
-    @setting.update!(settings_params)
-
-    respond_to do |format|
-      format.html { redirect_to admin_ai_settings_path, notice: t("admin.ai_settings.flash.updated") }
-      format.js
+    if params[:external_api_key]
+      update_api_key
+    else
+      update_setting
     end
   end
 
   private
 
+    def update_setting
+      @setting = Setting.find(params[:id])
+      @setting.update!(settings_params)
+
+      respond_to do |format|
+        format.html {
+          redirect_to admin_ai_settings_path, notice: t("admin.ai_settings.flash.updated")
+        }
+        format.js
+      end
+    end
+
+    def update_api_key
+      api_key = ExternalApiKey.find_or_initialize_by(name: api_key_params[:name])
+      api_key.update!(api_key_params)
+
+      respond_to do |format|
+        format.html {
+          redirect_to admin_ai_settings_path, notice: t("admin.ai_settings.flash.updated")
+        }
+        format.js
+      end
+    end
+
     def settings_params
       params.require(:setting).permit(:value)
     end
 
-    def ai_provider_options
-      RubyLLM.providers.map { |p| [p.name, p.name.downcase] }
+    def api_key_params
+      params.require(:external_api_key).permit(:name, :value)
     end
 
-    def ai_model_options
-      provider = Setting["llm.provider"]
-      return [] unless provider.present?
+    def show_api_endpoint?
+      provider = Setting["ai.llm_provider"]
+      provider.to_s.downcase == "openai"
+    end
 
-      RubyLLM.models.by_provider(provider.to_sym)
-        .filter {|m| m.modalities.output.include?("text") }
-        .sort_by { |model| model.created_at || Time.new(2000) }
-        .reverse
-        .map { |model| [model.id, model.id] }
+    def show_model_field?
+      provider = Setting["ai.llm_provider"]
+      provider.to_s.downcase != "ollama"
+    end
+
+    def show_custom_model_field?
+      provider = Setting["ai.llm_provider"]
+      provider.to_s.downcase == "ollama"
     end
 end

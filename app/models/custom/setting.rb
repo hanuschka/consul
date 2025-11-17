@@ -20,7 +20,7 @@ class Setting < ApplicationRecord
       key.rpartition(".").first
     elsif %w[extra_fields].include? prefix
       key.rpartition(".").first
-    elsif %w[llm].include? prefix
+    elsif %w[ai].include? prefix
       "ai"
     else
       "configuration"
@@ -153,9 +153,10 @@ class Setting < ApplicationRecord
         "machine_learning.comments_summary": false,
         "machine_learning.related_content": false,
         "machine_learning.tags": false,
-        "ai.provider": nil,
-        "ai.model": nil,
-        "ai.use_llm_for_translations": false,
+        "ai.llm_provider": nil,
+        "ai.llm_model": nil,
+        "ai.llm_api_endpoint": nil,
+        "ai.llm_custom_model": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",

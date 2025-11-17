@@ -306,6 +306,9 @@ namespace :admin do
   put :update_content_types, to: "settings#update_content_types"
 
   resources :ai_settings, only: [:index, :update]
+  patch :ai_settings_api_key, to: "ai_settings#update"
+
+  resources :external_api_keys, only: [:index, :show, :edit, :update]
 
   resources :moderators, only: [:index, :create, :destroy] do
     get :search, on: :collection

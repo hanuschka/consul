@@ -126,6 +126,14 @@
     &.ml-link {
       @include icon(brain, solid);
     }
+
+    &.ai-settings-link {
+      @include icon(cog, solid);
+    }
+
+    &.external-api-keys-link {
+      @include icon(key, solid);
+    }
   }
 
   li {

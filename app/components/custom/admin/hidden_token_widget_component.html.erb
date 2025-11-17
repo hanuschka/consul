@@ -1,0 +1,37 @@
+<div style="max-width: 450px;display: flex; gap: 8px; align-items: flex-start; margin-top: 6px;">
+  <code
+    id="auth-token-display"
+    class="break-word"
+    style="min-height:35px;flex: 1; padding: 8px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 3px; font-size: 0.9em; overflow-wrap: break-word; word-break: break-all;"
+  >
+    <% if @token.present? %>
+      ••••••••••••••••
+    <% end %>
+  </code>
+  <button
+    id="toggle-token-btn"
+    type="button"
+    class="button hollow"
+    style="min-width:35px;min-height:35px;padding: 9px 9px;"
+    title="<%= t('admin.api_clients.show.show_token') %>"
+    data-token="<%= @token %>"
+    data-show-title="<%= t('admin.api_clients.show.show_token') %>"
+    data-hide-title="<%= t('admin.api_clients.show.hide_token') %>"
+    <%= 'disabled' if @token.blank? %>
+  >
+    <i class="fas fa-eye"></i>
+  </button>
+  <button
+    id="copy-token-btn"
+    type="button"
+    class="button hollow"
+    style="min-width: 35px;min-height:35px;padding: 9px 9px;"
+    title="<%= t('admin.api_clients.show.copy_token') %>"
+    data-clipboard-target="#auth-token-display"
+    data-copied-title="<%= t('admin.api_clients.show.copied') %>"
+    data-hidden-message="<%= t('admin.api_clients.show.token_hidden_message') %>"
+    <%= 'disabled' if @token.blank? %>
+  >
+    <span class="icon-document"></span>
+  </button>
+</div>

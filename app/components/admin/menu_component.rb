@@ -21,7 +21,8 @@ class Admin::MenuComponent < ApplicationComponent
       matomo_link,
       settings_links,
       dashboard_links,
-      ai_settings_link
+      ai_settings_link,
+      external_api_keys_link
     ]
   end
 
@@ -576,10 +577,19 @@ class Admin::MenuComponent < ApplicationComponent
 
     def ai_settings_link
       [
-        tag.span(class: "icon-llm") + " " + t("admin.menu.llm_settings"),
+        t("admin.menu.llm_settings"),
         admin_ai_settings_path,
         controller_name == "ai_settings",
-        class: "llm-settings-link"
+        class: "ai-settings-link"
+      ]
+    end
+
+    def external_api_keys_link
+      [
+        t("admin.menu.external_api_keys"),
+        admin_external_api_keys_path,
+        controller_name == "external_api_keys",
+        class: "external-api-keys-link"
       ]
     end
 end

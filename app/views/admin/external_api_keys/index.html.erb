@@ -1,0 +1,54 @@
+<h2 class="inline-block"><%= t("admin.external_api_keys.index.title") %></h2>
+
+<% if @external_api_keys.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 55%;"><%= t("admin.external_api_keys.index.service") %></th>
+        <th><%= t("admin.external_api_keys.index.table_name") %></th>
+        <th><%= t("admin.external_api_keys.index.value") %></th>
+        <th><%= t("admin.shared.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @external_api_keys.each do |api_key| %>
+        <tr id="<%= dom_id(api_key) %>" class="external_api_key">
+          <td style="width: 55%;">
+            <div>
+              <strong><%= t("admin.external_api_keys.services.#{api_key.name}", default: api_key.name) %></strong>
+            </div>
+            <div style="font-size: 0.9em; color: #666; margin-bottom: 0.5em;">
+              <%= t("admin.external_api_keys.services_description.#{api_key.name}", default: "") %>
+            </div>
+            <% if api_key.service_link %>
+              <div>
+                <%= link_to api_key.service_link, api_key.service_link, target: "_blank", rel: "noopener noreferrer", style: "font-size: 0.85em;" %>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <%= api_key.name %>
+          </td>
+          <td>
+            <% if api_key.value.present? %>
+              <span class="badge badge-success" style="background-color: #4caf50; color: white; padding: 0.4em 0.8em; border-radius: 0.25em; font-size: 0.85em;">
+                <%= t("admin.external_api_keys.index.value_set") %>
+              </span>
+            <% else %>
+              <span class="badge badge-alert" style="background-color: #669fd2; color: white; padding: 0.4em 0.8em; border-radius: 0.25em; font-size: 0.85em;">
+                <%= t("admin.external_api_keys.index.value_empty") %>
+              </span>
+            <% end %>
+          </td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(api_key, actions: [:show, :edit]) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div data-alert class="callout primary margin-top clear">
+    <%= t("admin.external_api_keys.index.empty_api_keys") %>
+  </div>
+<% end %>

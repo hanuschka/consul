@@ -1,0 +1,27 @@
+<%= back_link_to admin_external_api_keys_path %>
+
+<%= link_to t("admin.actions.edit"), edit_admin_external_api_key_path(@external_api_key), class: "button hollow float-right" %>
+
+<div class="clear"></div>
+
+<h2><%= t("admin.external_api_keys.services.#{@external_api_key.name}", default: @external_api_key.name) %> API Key</h2>
+
+<div class="callout" style="max-width: 850px">
+  <p>
+    <strong><%= t("admin.external_api_keys.show.key") %></strong><br>
+    <code><%= @external_api_key.name %></code>
+  </p>
+  <p>
+    <strong><%= t("admin.external_api_keys.show.description") %></strong><br>
+    <%= t("admin.external_api_keys.services_description.#{@external_api_key.name}", default: "") %>
+    <p>
+      <% if @external_api_key.service_link %>
+        <%= link_to @external_api_key.service_link, @external_api_key.service_link, target: "_blank", rel: "noopener noreferrer" %>
+      <% end %>
+    </p>
+  </p>
+  <p>
+    <strong><%= t("admin.external_api_keys.show.api_value") %></strong><br>
+    <%= render Admin::HiddenTokenWidgetComponent.new(token: @external_api_key.value) %>
+  </p>
+</div>

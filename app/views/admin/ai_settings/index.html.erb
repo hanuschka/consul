@@ -2,7 +2,7 @@
 
 <div class="ai-settings-container">
   <% if @ai_settings.any? %>
-    <table class="ai-settings-table">
+    <table class="ai-settings-table mixed-settings-table">
       <thead>
         <tr>
           <th><%= t("admin.ai_settings.index.setting_name") %></th>
@@ -11,18 +11,34 @@
       </thead>
       <tbody>
         <% @ai_settings.each do |setting| %>
+          <% next if setting.key == "ai.llm_api_endpoint" && !show_api_endpoint? %>
+          <% next if setting.key == "ai.llm_model" && !show_model_field? %>
+          <% next if setting.key == "ai.llm_custom_model" && !show_custom_model_field? %>
           <tr class="setting-row" data-setting-key="<%= setting.key %>">
-            <td class="setting-label">
-              <strong><%= t("admin.ai_settings.setting.#{setting.key}", default: setting.key.humanize) %></strong>
-              <% if t("admin.ai_settings.setting_description.#{setting.key}", default: nil).present? %>
-                <p class="setting-description"><%= t("admin.ai_settings.setting_description.#{setting.key}") %></p>
-              <% end %>
+            <td>
+              <strong id="<%= dom_id(setting, :title) %>"><%= t("custom.settings.#{setting.key}") %></strong>
+              <br>
+              <span class="small">
+                <%= t("custom.settings.#{setting.key}_description", default: t("admin.settings.no_description")) %>
+              </span>
             </td>
             <td class="setting-value">
-              <%= render "ai_setting_form", setting: setting, key: setting.key %>
+              <%= render Admin::AiSettings::FormComponent.new(setting, setting.key) %>
             </td>
           </tr>
         <% end %>
+        <tr class="setting-row">
+          <td>
+            <strong><%= t("custom.settings.ai.llm_api_key") %></strong>
+            <br>
+            <span class="small">
+              <%= t("custom.settings.ai.llm_api_key_description") %>
+            </span>
+          </td>
+          <td class="setting-value">
+            <%= render Admin::AiSettings::ApiKeyComponent.new("ai.#{RubyLlmFactory.llm_provider}") %>
+          </td>
+        </tr>
       </tbody>
     </table>
   <% else %>

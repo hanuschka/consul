@@ -17,13 +17,13 @@ class Admin::MenuComponent < ApplicationComponent
       site_customization_links,
       moderated_content_links,
       profiles_links,
-      api_clients_link,
       registered_addresses_links,
       matomo_link,
       settings_links,
       dashboard_links,
       ai_settings_link,
-      external_api_keys_link
+      external_api_keys_link,
+      api_clients_link
     ]
   end
 
@@ -600,6 +600,15 @@ class Admin::MenuComponent < ApplicationComponent
         admin_external_api_keys_path,
         controller_name == "external_api_keys",
         class: "external-api-keys-link"
+      ]
+    end
+
+    def api_clients_link
+      [
+        t("custom.admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
       ]
     end
 end

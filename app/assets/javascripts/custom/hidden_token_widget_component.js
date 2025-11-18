@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  App.SecretFieldCopy = {
+  App.HiddenTokenWidgetComponent = {
     initialize: function() {
       const toggleBtn = $('#toggle-token-btn');
       const copyBtn = $('#copy-token-btn');

@@ -1,5 +1,5 @@
 class ApiClients::ConnectToClientComponent < ApplicationComponent
   def render?
-    Rails.application.secrets.dt[:enabled]
+    Dt.enabled?
   end
 end

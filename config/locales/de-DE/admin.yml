@@ -738,6 +738,8 @@ de:
       debates: "Debatten"
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
+      llm_settings: KI-Einstellungen
+      external_api_keys: Externe API-Schlüssel
     administrators:
       index:
         title: Administrator*innen
@@ -1341,6 +1343,63 @@ de:
       setting_name: Einstellung
       setting_value: Wert
       no_description: "Ohne Beschreibung"
+    ai_settings:
+      flash:
+        updated: KI-Einstellung erfolgreich aktualisiert
+      index:
+        title: LLM-Einstellungen
+        setting_name: Einstellung
+        value: Wert
+        actions: Aktionen
+        update: Aktualisieren
+        no_settings: Keine KI-Einstellungen verfügbar
+        enter_api_key: API-Schlüssel eingeben
+      setting:
+        llm.provider: LLM-Anbieter
+        llm.model: Modell
+        llm.use_llm_for_translations: Inhaltsübersetzung
+      setting_help:
+        llm_provider: Anbieter werden deaktiviert, bis Anmeldedaten in der secrets.yml konfiguriert sind
+    external_api_keys:
+      flash:
+        updated: API-Schlüssel erfolgreich aktualisiert
+      index:
+        title: Drittanbieter-API-Schlüssel
+        service: Dienst
+        name: Schlüsselname
+        value: Wert
+        value_set: Gesetzt
+        value_empty: Standard
+        empty_api_keys: Es wurden noch keine API-Schlüssel erstellt
+      show:
+        key: Name
+        value: Wert
+        website: Website
+        api_value: Schlüsselwert
+        default_key_note_title: Standard-API-Schlüssel
+        default_key_note_description: Kein benutzerdefinierter API-Schlüssel gesetzt, System verwendet einen Standard-API-Schlüssel von DemokratieToday. Das Setzen eines benutzerdefinierten Schlüssels setzt den Standard außer Kraft.
+      form:
+        edit_title: API-Schlüssel bearbeiten
+        value: Wert
+      services:
+        matomo: Matomo Analytics
+        mapbox: Mapbox
+        vcs: Virtual City Systems (VCS)
+        openai: OpenAI
+        brevo: Brevo
+      services_description:
+        matomo: "Open-Source-Webanalytics-Plattform zur Verfolgung von Website-Statistiken, Benutzerverhalten und Konversionsoptimierung. Fokus auf DSGVO/CCPA-Compliance und Datenschutz."
+        mapbox: "Karten- und Standort-API zum Erstellen interaktiver Karten, Geocodierung, Adressensuche und Geoanwendungen."
+        vcs: "3D-Stadtmodellierungs- und Simulationsplattform für Stadtplanung, Analyse und Smart-City-Anwendungen einschließlich Verkehrssimulation und Solarpotenzialanalyse."
+        openai: "KI-API mit Zugriff auf GPT-Sprachmodelle für Konversations-KI, Textgenerierung, Inhaltsanalyse und Aufgabenautomatisierung."
+        brevo: "All-in-One-E-Mail-Marketing- und CRM-Plattform mit E-Mail-Kampagnen, SMS, WhatsApp, Automatisierung, KI-gestützter Inhaltsgenerierung und Transaktions-E-Mail-Funktionen."
+    api_clients:
+      show:
+        show_token: Anzeigen
+        hide_token: Ausblenden
+        copy_token: Kopieren
+        copied: Kopiert!
+        token_hidden_message: Token ist verborgen
     shared:
       search:
         advanced_filters:

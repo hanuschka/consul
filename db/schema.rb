@@ -900,6 +900,7 @@ ActiveRecord::Schema.define(version: 2025_11_17_204637) do
   end
 
   create_table "external_api_keys", force: :cascade do |t|
+    t.string "service"
     t.string "name"
     t.text "value"
     t.datetime "created_at", precision: 6, null: false

@@ -4,16 +4,11 @@
 
 <div class="clear"></div>
 
-<h2><%= t("admin.external_api_keys.services.#{@external_api_key.name}", default: @external_api_key.name) %> API Key</h2>
+<h2><%= t("admin.external_api_keys.services.#{@external_api_key.service}", default: @external_api_key.service) %> API Key</h2>
 
 <div class="callout" style="max-width: 850px">
   <p>
-    <strong><%= t("admin.external_api_keys.show.key") %></strong><br>
-    <code><%= @external_api_key.name %></code>
-  </p>
-  <p>
-    <strong><%= t("admin.external_api_keys.show.description") %></strong><br>
-    <%= t("admin.external_api_keys.services_description.#{@external_api_key.name}", default: "") %>
+    <%= t("admin.external_api_keys.services_description.#{@external_api_key.service}", default: "") %>
     <p>
       <% if @external_api_key.service_link %>
         <%= link_to @external_api_key.service_link, @external_api_key.service_link, target: "_blank", rel: "noopener noreferrer" %>
@@ -21,7 +16,18 @@
     </p>
   </p>
   <p>
-    <strong><%= t("admin.external_api_keys.show.api_value") %></strong><br>
-    <%= render Admin::HiddenTokenWidgetComponent.new(token: @external_api_key.value) %>
+    <strong><%= t("admin.external_api_keys.show.key") %></strong><br>
+    <code><%= @external_api_key.name %></code>
   </p>
+  <% if @external_api_key.value.present? %>
+    <p>
+      <strong><%= t("admin.external_api_keys.show.api_value") %></strong><br>
+      <%= render Admin::HiddenTokenWidgetComponent.new(token: @external_api_key.value) %>
+    </p>
+  <% else %>
+    <p style="margin-top: 1em; padding: 0.7em; background-color: #dceefb; border-left: 4px solid #296288; border-radius: 0.25em;">
+      <strong><%= t("admin.external_api_keys.show.default_key_note_title") %></strong><br>
+      <%= t("admin.external_api_keys.show.default_key_note_description") %>
+    </p>
+  <% end %>
 </div>

@@ -36,7 +36,7 @@
             </span>
           </td>
           <td class="setting-value">
-            <%= render Admin::AiSettings::ApiKeyComponent.new("ai.#{RubyLlmFactory.llm_provider}") %>
+            <%= render Admin::AiSettings::ApiKeyComponent.new("api_key", Ai::Settings.current_llm_provider) %>
           </td>
         </tr>
       </tbody>

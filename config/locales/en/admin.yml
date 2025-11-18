@@ -1372,17 +1372,19 @@ en:
       index:
         title: Third Party API Keys
         service: Service
-        table_name: Name
+        name: Key name
         value: Value
         value_set: Custom set
         value_empty: Default
         empty_api_keys: There are no API keys created
       show:
-        key: Key
+        key: Name
         value: Value
         description: Description
         website: Website
-        api_value: API Value
+        api_value: Key value
+        default_key_note_title: Default API Key
+        default_key_note_description: No custom API key is set, system uses a default API key provided by DemokratieToday. Setting a custom key will override the default.
       form:
         edit_title: Edit API Key
         value: Value
@@ -1393,11 +1395,11 @@ en:
         openai: OpenAI
         brevo: Brevo
       services_description:
-        matomo: Open-source web analytics platform for tracking website statistics, user behavior, and conversion optimization. Focused on GDPR/CCPA compliance and data privacy.
-        mapbox: Mapping and location services API for building interactive maps, geocoding, address search, and geospatial applications.
-        vcs: 3D city modeling and urban simulation platform for urban planning, analysis, and smart city applications including traffic simulation and solar potential analysis.
-        openai: AI API providing access to GPT language models for conversational AI, text generation, content analysis, and task automation.
-        brevo: All-in-one email marketing and CRM platform with email campaigns, SMS, WhatsApp, automation, AI-powered content generation, and transactional email capabilities.
+        matomo: "Open-source web analytics platform for tracking website statistics, user behavior, and conversion optimization. Focused on GDPR/CCPA compliance and data privacy."
+        mapbox: "Mapping and location services API for building interactive maps, geocoding, address search, and geospatial applications."
+        vcs: "3D city modeling and urban simulation platform for urban planning, analysis, and smart city applications including traffic simulation and solar potential analysis."
+        openai: "AI API providing access to GPT language models for conversational AI, text generation, content analysis, and task automation."
+        brevo: "All-in-one email marketing and CRM platform with email campaigns, SMS, WhatsApp, automation, AI-powered content generation, and transactional email capabilities."
     api_clients:
       show:
         show_token: Show

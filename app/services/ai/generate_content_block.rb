@@ -6,7 +6,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
   def call
     llm_response =
-      RubyLlmFactory
+      Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
         .ask(
           <<~TEXT

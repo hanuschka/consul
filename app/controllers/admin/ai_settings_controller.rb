@@ -3,7 +3,8 @@ class Admin::AiSettingsController < Admin::BaseController
 
   def index
     @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
-    @api_key = ExternalApiKey.find_or_initialize_by(name: "ai.llm_api_key")
+    service = Setting["ai.llm_provider"].to_s.downcase
+    @api_key = ExternalApiKey.find_or_create_by(name: "api_key", service: service)
   end
 
   def update
@@ -29,7 +30,7 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def update_api_key
-      api_key = ExternalApiKey.find_or_initialize_by(name: api_key_params[:name])
+      api_key = ExternalApiKey.find_or_create_by(name: api_key_params[:name], service: api_key_params[:service])
       api_key.update!(api_key_params)
 
       respond_to do |format|
@@ -45,7 +46,7 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def api_key_params
-      params.require(:external_api_key).permit(:name, :value)
+      params.require(:external_api_key).permit(:name, :service, :value)
     end
 
     def show_api_endpoint?

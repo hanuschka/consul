@@ -5,7 +5,7 @@
     <thead>
       <tr>
         <th style="width: 55%;"><%= t("admin.external_api_keys.index.service") %></th>
-        <th><%= t("admin.external_api_keys.index.table_name") %></th>
+        <th><%= t("admin.external_api_keys.index.name") %></th>
         <th><%= t("admin.external_api_keys.index.value") %></th>
         <th><%= t("admin.shared.actions") %></th>
       </tr>
@@ -15,10 +15,10 @@
         <tr id="<%= dom_id(api_key) %>" class="external_api_key">
           <td style="width: 55%;">
             <div>
-              <strong><%= t("admin.external_api_keys.services.#{api_key.name}", default: api_key.name) %></strong>
+              <strong><%= t("admin.external_api_keys.services.#{api_key.service}", default: api_key.name) %></strong>
             </div>
-            <div style="font-size: 0.9em; color: #666; margin-bottom: 0.5em;">
-              <%= t("admin.external_api_keys.services_description.#{api_key.name}", default: "") %>
+            <div style="margin-bottom: 0.5em;">
+              <%= t("admin.external_api_keys.services_description.#{api_key.service}", default: "") %>
             </div>
             <% if api_key.service_link %>
               <div>
@@ -27,7 +27,9 @@
             <% end %>
           </td>
           <td>
-            <%= api_key.name %>
+            <span style="font-weight: bold">
+              <%= api_key.name %>
+            </span>
           </td>
           <td>
             <% if api_key.value.present? %>
@@ -35,7 +37,7 @@
                 <%= t("admin.external_api_keys.index.value_set") %>
               </span>
             <% else %>
-              <span class="badge badge-alert" style="background-color: #669fd2; color: white; padding: 0.4em 0.8em; border-radius: 0.25em; font-size: 0.85em;">
+              <span class="badge badge-alert" style="background-color: #296288; color: white; padding: 0.4em 0.8em; border-radius: 0.25em; font-size: 0.85em;">
                 <%= t("admin.external_api_keys.index.value_empty") %>
               </span>
             <% end %>

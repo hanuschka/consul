@@ -1321,17 +1321,18 @@ de:
       index:
         title: Drittanbieter-API-Schlüssel
         service: Dienst
-        table_name: Name
+        name: Schlüsselname
         value: Wert
         value_set: Gesetzt
         value_empty: Standard
         empty_api_keys: Es wurden noch keine API-Schlüssel erstellt
       show:
-        key: Schlüssel
+        key: Name
         value: Wert
-        description: Beschreibung
         website: Website
-        api_value: API-Wert
+        api_value: Schlüsselwert
+        default_key_note_title: Standard-API-Schlüssel
+        default_key_note_description: Kein benutzerdefinierter API-Schlüssel gesetzt, System verwendet einen Standard-API-Schlüssel von DemokratieToday. Das Setzen eines benutzerdefinierten Schlüssels setzt den Standard außer Kraft.
       form:
         edit_title: API-Schlüssel bearbeiten
         value: Wert
@@ -1342,11 +1343,11 @@ de:
         openai: OpenAI
         brevo: Brevo
       services_description:
-        matomo: Open-Source-Webanalytics-Plattform zur Verfolgung von Website-Statistiken, Benutzerverhalten und Konversionsoptimierung. Fokus auf DSGVO/CCPA-Compliance und Datenschutz.
-        mapbox: Karten- und Standort-API zum Erstellen interaktiver Karten, Geocodierung, Adressensuche und Geoanwendungen.
-        vcs: 3D-Stadtmodellierungs- und Simulationsplattform für Stadtplanung, Analyse und Smart-City-Anwendungen einschließlich Verkehrssimulation und Solarpotenzialanalyse.
-        openai: KI-API mit Zugriff auf GPT-Sprachmodelle für Konversations-KI, Textgenerierung, Inhaltsanalyse und Aufgabenautomatisierung.
-        brevo: All-in-One-E-Mail-Marketing- und CRM-Plattform mit E-Mail-Kampagnen, SMS, WhatsApp, Automatisierung, KI-gestützter Inhaltsgenerierung und Transaktions-E-Mail-Funktionen.
+        matomo: "Open-Source-Webanalytics-Plattform zur Verfolgung von Website-Statistiken, Benutzerverhalten und Konversionsoptimierung. Fokus auf DSGVO/CCPA-Compliance und Datenschutz."
+        mapbox: "Karten- und Standort-API zum Erstellen interaktiver Karten, Geocodierung, Adressensuche und Geoanwendungen."
+        vcs: "3D-Stadtmodellierungs- und Simulationsplattform für Stadtplanung, Analyse und Smart-City-Anwendungen einschließlich Verkehrssimulation und Solarpotenzialanalyse."
+        openai: "KI-API mit Zugriff auf GPT-Sprachmodelle für Konversations-KI, Textgenerierung, Inhaltsanalyse und Aufgabenautomatisierung."
+        brevo: "All-in-One-E-Mail-Marketing- und CRM-Plattform mit E-Mail-Kampagnen, SMS, WhatsApp, Automatisierung, KI-gestützter Inhaltsgenerierung und Transaktions-E-Mail-Funktionen."
     api_clients:
       show:
         show_token: Anzeigen

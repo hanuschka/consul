@@ -1,6 +1,17 @@
 de:
   custom:
     settings:
+      ai:
+        llm_provider: KI-Anbieter
+        llm_provider_description: Konfigurieren Sie, welcher KI-Dienstanbieter für KI-Funktionen verwendet werden soll
+        llm_model: KI-Modell
+        llm_model_description: Wählen Sie das KI-Modell für die Verarbeitung von Anfragen
+        llm_custom_model: Benutzerdefiniertes Modell
+        llm_custom_model_description: Geben Sie den Modellnamen für Ollama-Anbieter ein
+        llm_api_endpoint: API-Endpunkt
+        llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
+        llm_api_key: API-Schlüssel
+        llm_api_key_description: API-Schlüssel zur Authentifizierung mit dem OpenAI-Dienst
       map_latitude: Breitengrad
       map_latitude_description: Breitengrad zur Anzeige der Kartenposition
       map_longitude: Längengrad

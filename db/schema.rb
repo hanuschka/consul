@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_06_225219) do
+ActiveRecord::Schema.define(version: 2025_11_17_204637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -897,6 +897,14 @@ ActiveRecord::Schema.define(version: 2025_11_06_225219) do
     t.datetime "updated_at", null: false
     t.index ["actionable_id", "actionable_type"], name: "index_email_activities_on_actionable_id_and_actionable_type"
     t.index ["actionable_type", "actionable_id"], name: "index_email_activities_on_actionable_type_and_actionable_id"
+  end
+
+  create_table "external_api_keys", force: :cascade do |t|
+    t.string "service"
+    t.string "name"
+    t.text "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "failed_census_calls", id: :serial, force: :cascade do |t|

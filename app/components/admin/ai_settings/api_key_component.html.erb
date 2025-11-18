@@ -1,0 +1,12 @@
+<%= form_with url: admin_ai_settings_api_key_path, local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+  <div class="d-flex">
+    <div class="small-12 medium-6 large-8 column">
+      <%= form.hidden_field "external_api_key[name]", value: key_name %>
+      <%= form.hidden_field "external_api_key[service]", value: service %>
+      <%= form.password_field "external_api_key[value]", class: "ai-setting-input", label: false, placeholder: t("admin.ai_settings.index.enter_api_key"), value: api_key.value %>
+    </div>
+    <div class="small-12 medium-6 large-4 column">
+      <%= form.submit t("admin.ai_settings.index.update"), class: "button hollow expanded" %>
+    </div>
+  </div>
+<% end %>

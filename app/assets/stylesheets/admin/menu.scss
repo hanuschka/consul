@@ -130,6 +130,14 @@
     &.api-clients-link {
       @include icon(plug, solid);
     }
+
+    &.ai-settings-link {
+      @include icon(magic, solid);
+    }
+
+    &.external-api-keys-link {
+      @include icon(key, solid);
+    }
   }
 
   li {

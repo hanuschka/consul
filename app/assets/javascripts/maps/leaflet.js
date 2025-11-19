@@ -506,7 +506,6 @@
     }
 
     placeCenterMarker(centerLatLng) {
-      console.log("placeCenterMarker")
       if (this.centerMarker) {
         this.map.removeLayer(this.centerMarker);
       }

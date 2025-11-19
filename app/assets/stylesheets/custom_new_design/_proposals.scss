@@ -16,10 +16,10 @@
 }
 
 .voice-assistant-iframe {
-  height: 115px;
-  width: 380px;
+  height: 108px;
+  width: 355px;
   position: fixed;
-  bottom: 10px;
+  bottom: 8px;
   left: 0;
   right: 0;
   border-radius: 20px;
@@ -40,7 +40,7 @@
 
   &.-running {
     transition: width 500ms ease;
-    width: 500px;
+    width: 400px;
   }
 }
 

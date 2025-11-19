@@ -223,8 +223,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
       if (contentBlock) {
         contentBlock.innerHTML = response.content_block_html;
 
-        $(contentBlock).foundation();
-        App.ImageGallery.initialize();
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }
     } else {
       this.showErrorMessage('Ungültige Antwort vom Server');

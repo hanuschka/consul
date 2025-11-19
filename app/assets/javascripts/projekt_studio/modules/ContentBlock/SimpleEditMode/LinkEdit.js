@@ -32,6 +32,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       })
     }
     else {
+      this.hidePopup()
+
       contentBlock
         .querySelectorAll(".js-content-block-link-wrapper")
         .forEach((linkWrapper) => {

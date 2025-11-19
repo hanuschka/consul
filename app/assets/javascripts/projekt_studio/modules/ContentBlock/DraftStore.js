@@ -7,8 +7,8 @@ ProjektStudio.ContentBlock.DraftStore = {
     if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
       contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
       contentBlock.dataset.previousContentBlockHtml = null;
-      $(contentBlock).foundation();
-      App.ImageGallery.initialize();
+
+      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
     }
   }
 };

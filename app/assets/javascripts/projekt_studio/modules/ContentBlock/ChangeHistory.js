@@ -59,8 +59,7 @@ ProjektStudio.ContentBlock.ChangeHistory = {
         if (previousVersion) {
           contentBlock.innerHTML = previousVersion;
 
-          $(contentBlock).foundation();
-          App.ImageGallery.initialize();
+          ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
         }
       }
 

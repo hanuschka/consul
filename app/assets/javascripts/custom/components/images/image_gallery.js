@@ -2,6 +2,22 @@
   "use strict";
   App.ImageGallery = {
     initialize: function() {
+      this.setupGlighbox()
+    },
+
+    getStickyHeader() {
+      return document.querySelector(".top-bar-wrapper")
+    },
+
+    getScrollbarWidth: function() {
+      return window.innerWidth - document.documentElement.clientWidth;
+    },
+
+    initializeFor(element) {
+      this.setupGlighbox(element)
+    },
+
+    setupGlighbox(element = null) {
       this.scrollbarWidth = this.getScrollbarWidth();
 
       var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container">
@@ -15,11 +31,18 @@
                                   </div>
                                 </div>`;
 
+      let additionalParams = {}
+
+      if (element) {
+        additionalParams.elements = element
+      }
+
       var lightbox = new GLightbox({
         lightboxHTML: customLightboxHTML,
         openEffect: "fade",
         closeEffect: "fade",
         preload: false
+        *additionalParams
       });
 
       lightbox.on('open', () => {
@@ -36,14 +59,7 @@
           stickyHeader.style.paddingRight = "0";
         }
       });
-    },
-
-    getStickyHeader() {
-      return document.querySelector(".top-bar-wrapper")
-    },
-
-    getScrollbarWidth: function() {
-      return window.innerWidth - document.documentElement.clientWidth;
     }
+
   };
 }).call(this);

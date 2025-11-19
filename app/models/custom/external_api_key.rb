@@ -5,6 +5,9 @@ class ExternalApiKey < ApplicationRecord
     { service: "openai", name: "api_key"}
   ]
 
+  validates :service, presence: true
+  validates :name, presence: true
+
   def self.service_links
     {
       matomo: "https://matomo.org",
@@ -19,11 +22,11 @@ class ExternalApiKey < ApplicationRecord
     self.class.service_links[service.to_sym]
   end
 
-  def self.matomo_token
+  def self.matomo_access_token
     get_api_key_or_default(
       "matomo",
       "access_token",
-      Rails.application.secrets.dig(:matomo, :access_token)
+      Rails.application.secrets.fetch(:matomo_access_token, '')
     )
   end
 

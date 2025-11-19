@@ -45,7 +45,7 @@ class ExternalApiKey < ApplicationRecord
   #   )
   # end
 
-  def self.openai_token
+  def self.openai_api_key
     get_api_key_or_default(
       "openai",
       "api_key",
@@ -53,6 +53,21 @@ class ExternalApiKey < ApplicationRecord
     )
   end
 
+  def self.gemini_api_key
+    get_api_key_or_default(
+      "gemini",
+      "api_key",
+      Rails.application.secrets.dig(:ai, :gemini_api_key)
+    )
+  end
+
+  def self.gpustack_api_key
+    get_api_key_or_default(
+      "gpustack",
+      "api_key",
+      Rails.application.secrets.dig(:ai, :gpustack_api_key)
+    )
+  end
 
   def self.get_api_key_or_default(service, name, default_api_key = nil)
     api_key = find_by(service: service, name: name).value

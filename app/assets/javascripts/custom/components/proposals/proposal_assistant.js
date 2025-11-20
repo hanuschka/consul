@@ -248,7 +248,7 @@
           }
         }
       } else if (App.Map.anyMapInitialized()) {
-        App.Map.setMarkerTo(coordinates[0], coordinates[1], true)
+        App.Map.setMarkerTo(coordinates[0], coordinates[1], false)
       }
     },
 

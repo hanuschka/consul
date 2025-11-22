@@ -9,7 +9,7 @@ class ProposalsController < ApplicationController
 
   before_action :load_categories, only: [:index, :map, :summary]
   before_action :load_geozones, only: [:edit, :map, :summary]
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
+  before_action :authenticate_user!, except: [:index, :show, :new, :map, :summary, :json_data], unless: -> { current_user&.guest? }
   # before_action :destroy_map_location_association, only: :update
   before_action :set_view, only: :index
   before_action :proposals_recommendations, only: :index, if: :current_user
@@ -21,7 +21,7 @@ class ProposalsController < ApplicationController
   has_orders ->(c) { Proposal.proposals_orders(c.current_user) }, only: :index
   has_orders %w[most_voted newest oldest], only: :show
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: %i[new]
   helper_method :resource_model, :resource_name
   respond_to :html, :js
 

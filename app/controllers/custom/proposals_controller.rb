@@ -82,6 +82,10 @@ class ProposalsController
 
   def new
     @projekt_phase = ProjektPhase::ProposalPhase.find_by(id: params[:projekt_phase_id])
+    auto_sign_in_guest_for(@projekt_phase)
+    authenticate_user! unless current_user.present?
+    @proposal = @projekt_phase.proposals.new
+    authorize! :new, @proposal
 
     if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
       redirect_to proposals_path

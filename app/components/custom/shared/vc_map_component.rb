@@ -39,7 +39,6 @@ class Shared::VCMapComponent < ApplicationComponent
   private
 
     def prepare_map_settings
-<<<<<<< HEAD
       options = {
         vcmap: "",
 

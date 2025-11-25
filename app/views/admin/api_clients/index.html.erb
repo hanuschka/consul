@@ -13,7 +13,6 @@
       <thead>
         <th scope="col" class="text-center"><%= t("admin.api_clients.index.id") %></th>
         <th scope="col"><%= ApiClient.human_attribute_name(:name) %></th>
-        <th scope="col"><%= ApiClient.human_attribute_name(:domain) %></th>
         <th scope="col"><%= ApiClient.human_attribute_name(:access_level) %></th>
         <th scope="col"><%= ApiClient.human_attribute_name(:service_user_email) %></th>
         <th scope="col"><%= t("admin.shared.created") %></th>
@@ -26,9 +25,6 @@
           </td>
           <td>
             <%= api_client.name %>
-          </td>
-          <td>
-            <%= api_client.domain %>
           </td>
           <td>
             <span class="label <%= access_level_label_class(api_client.access_level) %>">

@@ -93,6 +93,10 @@ en:
           Public Data: Read-only access (GET requests only).
 
           Admin: Full access to retrieve, create, update, and delete resources.
+        regenerate_token: "Regenerate Token"
+        regenerate_token_explanation: "Creates a new token and invalidates the current one. Use this if the token has been compromised or to rotate credentials regularly."
+        regenerate_token_confirmation: "Are you sure you want to regenerate this token? All existing integrations using the old token will stop working."
+        token_regenerated: "API token regenerated successfully"
 
     shared:
       created: "Created"

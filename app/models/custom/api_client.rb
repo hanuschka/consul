@@ -14,6 +14,11 @@ class ApiClient < ApplicationRecord
     public_data? || admin?
   end
 
+  def regenerate_access_token
+    generate_access_token
+    save!
+  end
+
   def create_service_user
     username = generate_service_username
 

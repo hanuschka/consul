@@ -27,20 +27,19 @@ class Shared::VCMapComponent < ApplicationComponent
   def map_div
     content_tag :div,
                 id: "myMapUUIDnew",
-                # id: "#{dom_id(map_location)}_#{parent_class}",
-                # class: "map_location map",
                 data: prepare_map_settings do
       content_tag :span, "Map"
     end
   end
 
   def show_controls?
-    parent_class != "proposals_sidebar"
+    @parent_class != "proposals_sidebar"
   end
 
   private
 
     def prepare_map_settings
+<<<<<<< HEAD
       options = {
         vcmap: "",
 

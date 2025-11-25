@@ -1,12 +1,4 @@
 .custom-new-design {
-  .leaflet-popup-content {
-    padding-right: 0;
-
-    h4, h5 {
-      margin-bottom: 8px;
-    }
-  }
-
   #map-container {
     > label {
       display: none;
@@ -18,11 +10,7 @@
   }
 }
 
-.resources-list--map {
-  .leaflet-container a.leaflet-popup-close-button {
-    top: 4px;
-    right: 3px;
-  }
+.map.map_location {
   .leaflet-popup-content-wrapper {
     padding: 0;
     border-radius: 8px;
@@ -86,7 +74,10 @@
   margin-bottom: 10px;
 
   .projekt-labels {
+    display: flex;
     margin-bottom: 2px;
+    gap: 3px;
+    flex-wrap: wrap;
   }
 }
 

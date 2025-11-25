@@ -4,4 +4,5 @@ de:
       index:
         add_pin: "Pin hinzufügen"
       new:
+        category_hint: Bitte wählen Sie zunächst die passende Kategorie (Pflichtauswahl)
         title: "Neuen Pin erstellen"

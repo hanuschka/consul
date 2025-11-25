@@ -21,14 +21,13 @@
   <div class="small-12 column">
     <div class="margin-bottom">
       <%= link_to t("custom.common.export_csv"),
-        projekt_point_of_interest_pins_admin_projekt_phase_path(@projekt_phase, format: :csv),
+        polymorphic_path([@namespace, @projekt_phase], action: :projekt_point_of_interest_pins, format: :csv),
         class: "button hollow" %>
     </div>
 
     <table class="table-for-mobile">
       <thead>
         <tr>
-          <th><%= t("custom.common.category") %></th>
           <th><%= t("custom.common.address") %></th>
           <th><%= t("custom.common.user") %></th>
           <th><%= t("custom.common.created_at") %></th>
@@ -38,14 +37,7 @@
       <tbody>
         <% @pins.each do |pin| %>
           <tr id="<%= dom_id(pin) %>">
-            <td>
-              <span style="font-size: 20px;margin-right: 10px;margin-left: 10px;color: <%= pin.projekt_point_of_interest_category.color %>">
-                <i class="icon-<%= pin.projekt_point_of_interest_category.icon %>">
-                </i>
-              </span>
-              <%= pin.projekt_point_of_interest_category.name %>
-            </td>
-            <td><%= pin.map_location.get_approximated_address %></td>
+            <td><%= pin.map_location.approximated_address %></td>
             <td><%= pin.author.name %> <br>
               <span style="color:gray">
                 <%=  pin.author.email %>
@@ -54,7 +46,7 @@
             <td><%= l pin.created_at, format: :short %></td>
             <td>
               <%= link_to t("custom.common.delete"),
-                admin_projekt_point_of_interest_pin_path(pin, projekt_phase_id: @projekt_phase.id),
+                polymorphic_path([@namespace, @projekt_phase, pin]),
                 method: :delete,
                 class: "button hollow alert",
                 data: { confirm: t("custom.admin.projekt_phases.point_of_interest.pins.destroy.confirm") } %>

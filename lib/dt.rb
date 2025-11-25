@@ -1,13 +1,16 @@
 module Dt
   def self.url
-    protocol =
-      if Rails.env.development? && Rails.application.secrets[:dont_use_https_on_dev]
-        "http"
-      else
-        "https"
-      end
+    domain = Rails.application.secrets.dt[:domain]
 
-    "#{protocol}://#{Rails.application.secrets.dt[:domain]}"
+    return if domain.blank?
+
+    if Rails.env.development?
+      port = Rails.application.secrets.dt[:port]
+
+      "http://#{domain}:#{port}"
+    else
+      "https://#{domain}"
+    end
   end
 
   def self.platforms_overview_url
@@ -16,6 +19,10 @@ module Dt
 
   def self.app_store_url
     "#{url}/apps"
+  end
+
+  def self.navigate_to_app_url(codename)
+    "#{url}/apps/navigate/#{codename}"
   end
 
   def self.ticket_system_url

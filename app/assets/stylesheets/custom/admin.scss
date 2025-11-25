@@ -217,6 +217,7 @@
   .direct-upload {
     .image-preview {
       padding: 0;
+      max-width: 100%;
     }
   }
 }
@@ -242,6 +243,16 @@
     display: block;
     margin-bottom: 0;
   }
+}
+
+.admin-setting-app-activate-link {
+  font-size: 20px;
+  padding-left: 10px;
+}
+
+.admin-setting-app-waiting-for-activation {
+  margin-left: -22px;
+  color: gray;
 }
 
 .admin-color-preview-badge {

@@ -163,6 +163,7 @@ class Budget
 
       ids = []
       ids += results.valuation_finished_feasible.ids if params[:advanced_filters].include?("feasible")
+      ids += results.where(preselected: true).ids    if params[:advanced_filters].include?("preselected")
       ids += results.where(selected: true).ids       if params[:advanced_filters].include?("selected")
       ids += results.undecided.ids                   if params[:advanced_filters].include?("undecided")
       ids += results.unfeasible.ids                  if params[:advanced_filters].include?("unfeasible")
@@ -215,7 +216,8 @@ class Budget
     end
 
     def self.search(terms)
-      pg_search(terms)
+      search_result_ids = pg_search(terms).pluck(:id)
+      where(id: search_result_ids)
     end
 
     def self.by_heading(heading)
@@ -348,8 +350,8 @@ class Budget
       return true if budget.balloting?
 
       budget.reviewing_ballots? &&
-        args[:controller_name].in?(["offline_ballots", "lines"]) &&
-        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
+        args[:controller_path].in?(["officing/budgets", "budgets/ballot/lines"]) &&
+        (args[:current_user]&.administrator? || args[:current_user]&.officing_manager?)
     end
 
     def should_show_price?

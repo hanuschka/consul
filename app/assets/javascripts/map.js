@@ -29,6 +29,8 @@
           App.Map.initializeLeafletMap(this);
         } else if ( this.classList.contains("mapbox")) {
           App.Map.initializeMapboxMap(this);
+        } else if ( this.classList.contains("virtualcity")) {
+          App.Map.initializeVirtualcityMap(this);
         }
       });
     },
@@ -42,6 +44,13 @@
 
     initializeMapboxMap: function(element) {
       const mapInstance = new App.MapboxMapController(element);
+      this.maps.push(mapInstance);
+
+      return mapInstance;
+    },
+
+    initializeVirtualcityMap: function(element) {
+      const mapInstance = new App.VirtualcityMapController(element);
       this.maps.push(mapInstance);
 
       return mapInstance;

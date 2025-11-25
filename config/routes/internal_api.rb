@@ -1,7 +1,7 @@
-post "/connect_dt_service", to: "api_clients#connect", as: :connect_api_clients
+post "/connect_dt_service", to: "internal_api_clients#connect", as: :connect_api_clients
 
 namespace :internal_api do
-  patch "/api_clients_registration/mark_as_registered"
+  patch "/internal_api_clients_registration/mark_as_registered"
 
   post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
 

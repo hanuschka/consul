@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { create_api_client }
-  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+  let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   path '/api/milestone_statuses' do
     get 'List all milestone statuses' do

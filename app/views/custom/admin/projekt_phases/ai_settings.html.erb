@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<% if ApiClient.active_dt? && @ai_assistant_config.present? %>
+<% if InternalApiClient.active_dt? && @ai_assistant_config.present? %>
   <div class="margin-bottom">
     <%= render "custom/admin/projekt_phases/settings/features_table", features: @ai_settings %>
   </div>

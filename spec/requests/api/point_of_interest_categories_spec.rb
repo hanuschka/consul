@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { create_api_client }
-  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+  let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'

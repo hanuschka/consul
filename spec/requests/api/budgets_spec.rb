@@ -3,9 +3,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  # Authentication setup - create an ApiClient with an auth_token
+  # Authentication setup - create an ApiClient with an access_token
   let!(:api_client) { create_api_client }
-  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+  let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   path '/api/budgets' do
     get 'List all budgets' do

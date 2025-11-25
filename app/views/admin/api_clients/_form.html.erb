@@ -26,11 +26,9 @@
                      </div>
 
 
-    <%= f.text_field :domain, placeholder: "#{ApiClient.human_attribute_name(:domain)} (#{t('admin.api_clients.form.domain_hint')})" %>
-
     <%= f.email_field :service_user_email, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
     <small style="display: block; margin-top: -10px; margin-bottom: 15px; padding: 6px 8px; background-color: #f9f9f9; border-left: 3px solid #0066cc; border-radius: 2px; color: #444; font-size: 12px; line-height: 1.5;">
-      <%= t("admin.api_clients.form.service_user_email_description") %>
+      <%= t("admin.api_clients.form.service_user_explanation") %>
     </small>
 
 

@@ -4,35 +4,40 @@
     maps: [],
     initialize: function() {
       $("*[data-map]:visible").each(function() {
-        var mapInstance = null;
-
-        for (var i = 0; i < App.Map.maps.length; i++) {
-          if (App.Map.maps[i].element.id === this.id ) {
-            mapInstance = App.Map.maps[i];
-            break;
-          }
-        }
-
-        if ( mapInstance && this.dataset.placement == 'sidebar' ) {
-          return;
-        }
-
-        if (mapInstance) {
-          mapInstance.map.off();
-          mapInstance.map.remove();
-          App.Map.maps = App.Map.maps.filter(function(m) {
-            return m !== mapInstance;
-          });
-        }
-
-        if ( this.classList.contains("leaflet")) {
-          App.Map.initializeLeafletMap(this);
-        } else if ( this.classList.contains("mapbox")) {
-          App.Map.initializeMapboxMap(this);
-        } else if ( this.classList.contains("virtualcity")) {
-          App.Map.initializeVirtualcityMap(this);
-        }
+        App.Map.destroyMapForElementId(this.id);
+        App.Map.initializeMapForElementId(this.id);
       });
+    },
+
+    destroyMapForElementId: function(elementId) {
+      var mapInstance = null;
+
+      for (var i = 0; i < App.Map.maps.length; i++) {
+        if (App.Map.maps[i].element.id === elementId ) {
+          mapInstance = App.Map.maps[i];
+          break;
+        }
+      }
+
+      if (mapInstance) {
+        mapInstance.map.off();
+        mapInstance.map.remove();
+        App.Map.maps = App.Map.maps.filter(function(m) {
+          return m !== mapInstance;
+        });
+      }
+    },
+
+    initializeMapForElementId: function(elementId) {
+      const element = document.getElementById(elementId);
+
+      if ( element.classList.contains("leaflet")) {
+        App.Map.initializeLeafletMap(element);
+      } else if ( element.classList.contains("mapbox")) {
+        App.Map.initializeMapboxMap(element);
+      } else if ( element.classList.contains("virtualcity")) {
+        App.Map.initializeVirtualcityMap(element);
+      }
     },
 
     initializeLeafletMap: function(element) {

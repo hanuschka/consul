@@ -29,6 +29,8 @@
           App.Map.initializeLeafletMap(this);
         } else if ( this.classList.contains("mapbox")) {
           App.Map.initializeMapboxMap(this);
+        } else if ( this.classList.contains("virtualcity")) {
+          App.Map.initializeVirtualcityMap(this);
         }
       });
     },
@@ -45,6 +47,25 @@
       this.maps.push(mapInstance);
 
       return mapInstance;
+    },
+
+    initializeVirtualcityMap: function(element) {
+      const mapInstance = new App.VirtualcityMapController(element);
+      this.maps.push(mapInstance);
+
+      return mapInstance;
+    },
+
+    anyMapInitialized() {
+      return App.Map.maps.length > 0
+    },
+
+    // Public Interface method for assistant map update and external use
+    // DO NOT DELETE
+    setMarkerTo(lat, lng, shouldScroll) {
+      if (App.Map.anyMapInitialized()) {
+        App.Map.maps[0].setMarkerTo(lat, lng, shouldScroll);
+      }
     },
 
     // shared functions

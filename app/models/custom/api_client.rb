@@ -1,44 +1,17 @@
 class ApiClient < ApplicationRecord
-  enum registration_status: [:registration_in_progress, :registered]
   enum access_level: { public_data: "public_data", admin: "admin" }
-  has_secure_token :auth_token
+  has_secure_token :access_token
 
-  has_one :user
+  has_one :user, foreign_key: :api_client_id
 
-  validates :name, uniqueness: true
+  validates :name, uniqueness: true, presence: true
   validates :access_level, presence: true
-  validates :name, presence: true
-  validates :domain, uniqueness: true, if: :domain_present?
-  validates :service_user_email, presence: true
-  validates :service_user_email, uniqueness: true
-
-  before_create do
-    if registration_status.nil?
-      self.registration_status = :registration_in_progress
-    end
-  end
+  validates :service_user_email, presence: true, uniqueness: true
 
   after_create :create_service_user
 
   def can_read_public_data?
     public_data? || admin?
-  end
-
-  def self.dt
-    registered.find_by(name: "DT")
-  end
-
-  def self.active_dt?
-    client = dt
-
-    client.present? && client.service_api_token.present?
-  end
-
-  def mark_as_registered!(service_api_token)
-    update!(
-      registration_status: :registered,
-      service_api_token: service_api_token
-    )
   end
 
   def create_service_user
@@ -60,10 +33,6 @@ class ApiClient < ApplicationRecord
   end
 
   private
-
-  def domain_present?
-    domain.present?
-  end
 
   def generate_service_username
     base_username = "#{name}_service".parameterize.underscore

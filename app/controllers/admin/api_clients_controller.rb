@@ -13,7 +13,6 @@ class Admin::ApiClientsController < Admin::BaseController
 
   def create
     @api_client = ApiClient.new(api_client_params)
-    @api_client.registration_status = :registered
 
     if @api_client.save
       redirect_to admin_api_client_path(@api_client), notice: t("admin.api_clients.form.created")

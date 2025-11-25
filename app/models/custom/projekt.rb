@@ -119,7 +119,7 @@ class Projekt < ApplicationRecord
       return false
     end
 
-    ApiClient.active_dt? && for_global_overview?
+    InternalApiClient.active_dt? && for_global_overview?
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?

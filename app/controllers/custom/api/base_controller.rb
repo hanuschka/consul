@@ -17,7 +17,7 @@ class Api::BaseController < ActionController::API
 
   def authenticate_api_client!
     token = request.headers['Authorization']&.split(' ')&.last
-    client = ApiClient.find_by(auth_token: token)
+    client = ApiClient.find_by(access_token: token)
 
     if client.present?
       @current_client = client

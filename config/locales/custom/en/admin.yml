@@ -52,37 +52,47 @@ en:
         custom_tags: User tags
 
     api_clients:
+      edit_button: "Edit"
+      access_level:
+        public_data: "Public Data"
+        admin: "Admin"
       index:
-        title: "API Clients"
-        id: "ID"
-        create_new: "Create new API Client"
-        no_api_clients: "No API clients found"
-        api_docs_link: "Api docs"
+        title: API Clients
+        id: API Client ID
+        no_api_clients: There are no API clients.
       show:
-        tokens: "Tokens"
+        show_token: "Show"
+        hide_token: "Hide"
+        copy_token: "Copy"
+        copied: "Copied!"
+        token_hidden_message: "Token is hidden. Click \"Show\" first to reveal and copy."
+        auth_token_explanation_text: "Include this token in the Authorization header of your API requests. Use it as a Bearer token in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        auth_token_example_title: "HTTP Example:"
+        auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
         service_user_title: "Service User"
         service_user_name: "Name"
-        auth_token_explanation_text: "Use this token in the Authorization header when making requests to the API"
-        auth_token_example_title: "Example"
-        auth_token_example: "Authorization: Bearer YOUR_TOKEN_HERE"
+        service_user_login_warning: "Note: You should not login with this service user directly. Use the API authentication methods instead."
       form:
         create_title: "Create New API Client"
         edit_title: "Edit API Client"
         created: "API Client created successfully"
         updated: "API Client updated successfully"
         deleted: "API Client deleted successfully"
-        service_user_form_title: "Service User"
+        domain_hint: "optional"
+        service_user_explanation: "This service user is associated with this API client and will be used for API authentication."
+        service_user_form_title: "Update Service User Information"
         service_user_avatar_title: "Avatar"
-        service_user_errors_title: "Service User"
-        service_user_errors_message: "%{count} error prevented the"
+        service_user_errors_message: "%{count} error"
+        service_user_errors_title: "prevented this service user from being saved:"
         update_service_user: "Update Service User"
-        service_user_explanation: "A service user is an automatically created user account used by the API client to create resources on behalf of the system, such as proposals, deficiency reports, and ideas. This allows the API client to maintain a distinct identity for all resources it creates without using regular user accounts."
-      status:
-        registration_in_progress: "Registration In Progress"
-        registered: "Registered"
-      access_level:
-        public_data: "Public Data"
-        admin: "Admin"
+        service_user_email_note: "This email should be unique and different from any other user email already used in API clients."
+        service_user_email_description: "Service user account email. This service user will be created to act as the author when resources (proposals, ideas, deficiency reports) are created through this API client."
+        access_level_public_data: "Read-only access (GET requests only)."
+        access_level_admin: "Full access to retrieve, create, update, and delete resources."
+        access_level_description: |
+          Public Data: Read-only access (GET requests only).
+
+          Admin: Full access to retrieve, create, update, and delete resources.
 
     shared:
       created: "Created"

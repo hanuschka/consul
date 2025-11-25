@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { create_api_client }
-  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+  let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   def create_minimal_prereqs
     geozone = Geozone.create!(name: "Zone #{SecureRandom.hex(2)}")

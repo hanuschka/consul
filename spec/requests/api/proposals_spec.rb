@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { create_api_client }
-  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+  let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   def create_phase_with_context
     projekt = Projekt.create!(name: 'Projekt For Proposals')

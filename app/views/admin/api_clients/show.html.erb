@@ -8,13 +8,6 @@
   </div>
 
   <div class="callout">
-    <% if @api_client.domain.present? %>
-      <p>
-        <strong><%= ApiClient.human_attribute_name(:domain) %>:</strong><br>
-        <%= @api_client.domain %>
-      </p>
-    <% end %>
-
     <p>
       <strong><%= ApiClient.human_attribute_name(:service_user_email) %>:</strong><br>
       <%= @api_client.service_user_email %>
@@ -34,7 +27,7 @@
 
     <p>
     <strong><%= ApiClient.human_attribute_name(:auth_token) %>:</strong><br>
-    <%= render Admin::HiddenTokenWidgetComponent.new(token: @api_client.auth_token) %>
+    <%= render Admin::HiddenTokenWidgetComponent.new(token: @api_client.access_token) %>
     </p>
 
     <div style="max-width:1000px;background-color: #f5f5f5; padding: 12px 16px; border-radius: 4px; margin-top: 8px;">
@@ -48,13 +41,6 @@
         <%= t("admin.api_clients.show.auth_token_example") %>
       </code>
     </div>
-
-    <% if @api_client.service_api_token.present? %>
-      <p>
-        <strong><%= ApiClient.human_attribute_name(:service_api_token) %>:</strong><br>
-        <code class="break-word"><%= @api_client.service_api_token %></code>
-      </p>
-    <% end %>
   </div>
 
   <% if @api_client.user.present? %>

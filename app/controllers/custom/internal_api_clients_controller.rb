@@ -1,8 +1,8 @@
-class ApiClientsController < ApplicationController
+class InternalApiClientsController < ApplicationController
   skip_authorization_check
 
   def connect
-    api_client = ApiClient.find_or_create_by!(
+    api_client = InternalApiClient.find_or_create_by!(
       name: "DT",
       domain: Dt.domain
     )

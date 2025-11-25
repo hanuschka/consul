@@ -833,6 +833,10 @@ de:
         service_user_email_description: "E-Mail des Service-Benutzerkontos. Dieser Service-Benutzer wird als Autor fungieren, wenn Ressourcen (Vorschläge, Ideen, Mängelmeldungen) über diesen API-Client erstellt werden."
         access_level_public_data: "Schreibgeschützter Zugriff (nur GET-Anfragen)."
         access_level_admin: "Vollständiger Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen von Ressourcen."
+        access_level_description: |
+          Öffentliche Daten: Schreibgeschützter Zugriff (nur GET-Anfragen).
+
+          Admin: Vollständiger Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen von Ressourcen.
     administrators:
       index:
         title: Administrator*innen

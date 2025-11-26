@@ -12,7 +12,7 @@ class DeficiencyReportManagement::AiSettingsController < DeficiencyReportManagem
           codename: @assistant_codename
         )
 
-    @ai_assistant_config = ai_assistant_config_response["client_ai_assistant_config"]
+    @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
   end
 
   def update

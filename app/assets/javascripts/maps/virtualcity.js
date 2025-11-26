@@ -290,6 +290,13 @@
 
         vcfeature.setStyle(pinStyle.style);
         vcfeature.set('olcs_altitudeMode', 'absolute');
+
+        vcfeature.data = {
+          resource_type: feature.properties.resource_type,
+          resource_id: feature.properties.id,
+          id: feature.properties.id
+        }
+
         layer.addFeatures([vcfeature]);
 
       } else if (feature.geometry.type === 'Polygon') {

@@ -22,7 +22,7 @@ class MigrateFeaturesInMapLocations < ActiveRecord::Migration[6.1]
               properties: {},
               geometry: {
                 type: "Point",
-                coordinates: [loc.longitude, loc.latitude]
+                coordinates: [loc.longitude, loc.latitude, loc.altitude.presence].compact
               }
             }
           ]

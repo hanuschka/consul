@@ -37,6 +37,11 @@ class Admin::ApiClientsController < Admin::BaseController
     redirect_to admin_api_clients_path, notice: t("admin.api_clients.form.deleted")
   end
 
+  def regenerate_token
+    @api_client.regenerate_access_token
+    redirect_to admin_api_client_path(@api_client), notice: t("admin.api_clients.form.token_regenerated")
+  end
+
   private
 
   def api_client_params

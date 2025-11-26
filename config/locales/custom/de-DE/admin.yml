@@ -837,6 +837,10 @@ de:
           Öffentliche Daten: Schreibgeschützter Zugriff (nur GET-Anfragen).
 
           Admin: Vollständiger Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen von Ressourcen.
+        regenerate_token: "Token erneuern"
+        regenerate_token_explanation: "Erstellt ein neuen Token und macht den aktuellen ungültig. Verwenden Sie dies, wenn der Token kompromittiert wurde oder um die Anmeldedaten regelmäßig zu aktualisieren."
+        regenerate_token_confirmation: "Sind Sie sicher, dass Sie diesen Token erneuern möchten? Alle bestehenden Integrationen, die den alten Token verwenden, funktionieren nicht mehr."
+        token_regenerated: "API-Token erfolgreich erneuert"
     administrators:
       index:
         title: Administrator*innen

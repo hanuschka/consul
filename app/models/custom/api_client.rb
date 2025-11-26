@@ -51,6 +51,8 @@ class ApiClient < ApplicationRecord
       'te'
     when 'production'
       'pr'
+    when 'staging'
+      'st'
     when 'development'
       'de'
     else

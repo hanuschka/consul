@@ -4,7 +4,7 @@ module Dt
 
     return if domain.blank?
 
-    if Rails.env.development? && Rails.application.secrets.dt[:dont_use_https_on_dev]
+    if Rails.env.development?
       port = Rails.application.secrets.dt[:port]
 
       "http://#{domain}:#{port}"

@@ -28,9 +28,11 @@
     <p>
       <strong><%= ApiClient.human_attribute_name(:auth_token) %>:</strong><br>
 
-      <%= render Admin::HiddenTokenWidgetComponent.new(token: @api_client.access_token) %>
+      <div style="height:55px">
+        <%= render Admin::HiddenTokenWidgetComponent.new(token: @api_client.access_token) %>
+      </div>
 
-      <div style="margin-top: 30px;display: flex">
+      <div style="margin-top: 20px;display: flex">
         <%= button_to regenerate_token_admin_api_client_path(@api_client), method: :post, class: "button alert", data: { confirm: t("admin.api_clients.form.regenerate_token_confirmation") } do %>
           <i class="fa fa-solid fa-arrows-rotate"></i>&nbsp;<%= t("admin.api_clients.form.regenerate_token") %>
       <% end %>

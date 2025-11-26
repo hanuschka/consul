@@ -1,6 +1,5 @@
 class ApiClient < ApplicationRecord
   enum access_level: { public_data: "public_data", admin: "admin" }
-  has_secure_token :access_token, length: 85
 
   has_one :user, foreign_key: :api_client_id
 
@@ -8,16 +7,17 @@ class ApiClient < ApplicationRecord
   validates :access_level, presence: true
   validates :service_user_email, presence: true, uniqueness: true
 
+  before_create :generate_access_token
   after_create :create_service_user
 
   def can_read_public_data?
     public_data? || admin?
   end
 
-  # def regenerate_access_token
-  #   generate_access_token
-  #   save!
-  # end
+  def regenerate_access_token
+    generate_access_token
+    save!
+  end
 
   def create_service_user
     username = generate_service_username
@@ -38,6 +38,10 @@ class ApiClient < ApplicationRecord
   end
 
   private
+
+  def generate_access_token
+    self.access_token = "sk_#{SecureRandom.hex(41)}"
+  end
 
   def generate_service_username
     base_username = "#{name}_service".parameterize.underscore

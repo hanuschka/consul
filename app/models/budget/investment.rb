@@ -351,7 +351,7 @@ class Budget
 
       budget.reviewing_ballots? &&
         args[:controller_path].in?(["officing/budgets", "budgets/ballot/lines"]) &&
-        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
+        (args[:current_user]&.administrator? || args[:current_user]&.officing_manager?)
     end
 
     def should_show_price?

@@ -36,8 +36,6 @@
 <script type="module" src="/upload-files.js"></script>
 -->
 
-<%= yield :vc_maps %>
-
 <% unless embedded? %>
   <% unless Rails.env.development? %>
     <% if Rails.application.secrets.matomo_site_id.present? %>

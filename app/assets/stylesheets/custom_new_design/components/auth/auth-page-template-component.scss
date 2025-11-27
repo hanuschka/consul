@@ -1,25 +1,5 @@
 .custom-new-design {
   .auth-page-template--oauth {
-    .row {
-      display: flex;
-      // justify-content: center;
-      flex-wrap: wrap;
-      column-gap: 18px;
-    }
-    .column {
-      &:first-child {
-        width: 100%;
-      }
-      width: 150px;
-
-      @media(max-width: $small-tablet-viewport-start) {
-        width: auto;
-        width: 47%;
-        // flex-grow: 1;
-        // max-width: 100px;
-      }
-    }
-
     .auth-divider {
       width: 100%;
       margin-bottom: 0;

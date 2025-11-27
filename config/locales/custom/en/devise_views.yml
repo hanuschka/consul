@@ -73,6 +73,7 @@ en:
         remember_me: Save password
         submit: Sign in
         title: Sign in
+        registration_block_title: Register
     shared:
       links:
         login: Sign in
@@ -130,3 +131,5 @@ en:
           instructions_2: After confirmation, you can start participating.
           thank_you: Thank you for registering on this website. You must now <b>confirm your email address</b>.
           title: Confirm email address
+    omniauth:
+      oder: OR

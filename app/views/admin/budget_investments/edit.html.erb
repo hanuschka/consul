@@ -25,6 +25,10 @@
       <% end %>
     </div>
 
+    <div id="attach-image" class="images">
+      <%= render "images/nested_image", f: f %>
+    </div>
+
     <div class="custom-new-design">
       <% if projekt_phase_feature?(@investment.projekt_phase, "form.labels") && @investment.projekt_phase.projekt_labels.any? %>
         <div class="margin-bottom">

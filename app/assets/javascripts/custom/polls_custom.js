@@ -41,8 +41,14 @@
 
       });
 
-      $(".js-rating-scale").each( function() {
+      $(".js-rating-scale:visible").each( function() {
         App.PollsCustom.formatRatingScale(this)
+      });
+
+      $("body").on("click", ".js-question-wizard-next", function() {
+        $(".js-rating-scale:visible").each( function() {
+          App.PollsCustom.formatRatingScale(this)
+        });
       });
     }
   }

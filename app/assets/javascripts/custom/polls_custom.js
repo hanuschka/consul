@@ -12,6 +12,15 @@
       })
     },
 
+    formatRatingScale: function(element) {
+      const $answersContainer = $(element).find('.rating-scale-answer-container');
+      const $parentContainer = $(element).parent();
+
+      if ($answersContainer.width() > $parentContainer.width()) {
+        $(element).addClass('vertical-rating-scale-answers');
+      }
+    },
+
     initialize: function() {
       App.PollsCustom.showOpenAnswers()
 
@@ -30,6 +39,10 @@
           $questionList.show('fast');
         }
 
+      });
+
+      $(".js-rating-scale").each( function() {
+        App.PollsCustom.formatRatingScale(this)
       });
     }
   }

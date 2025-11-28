@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_17_204637) do
+ActiveRecord::Schema.define(version: 2025_11_28_041805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2083,6 +2083,7 @@ ActiveRecord::Schema.define(version: 2025_11_17_204637) do
     t.integer "user_status", default: 1
     t.date "lock_on"
     t.boolean "frontend_visibility", default: true, null: false
+    t.jsonb "ai_stats", default: {}, null: false
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin

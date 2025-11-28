@@ -11,6 +11,11 @@ de:
       enter_missing_user_data: zusätzliche Daten zu Ihrem Konto bereit
       save_form: Speichern
       destroy_confirmation: Sind Sie sicher?
+    participation_stats:
+      ai_summary_title: AI summary of this phase
+      tone_of_proposals: Tone of Proposals
+      tone_of_comments: Tone of Comments
+      further_info: further info
     resource_page:
       banner_component:
         comments: Kommentare

@@ -612,7 +612,7 @@ GEM
       rexml
     ruby-vips (2.2.0)
       ffi (~> 1.12)
-    ruby_llm (1.8.2)
+    ruby_llm (1.9.1)
       base64
       event_stream_parser (~> 1)
       faraday (>= 1.10.0)
@@ -620,7 +620,9 @@ GEM
       faraday-net_http (>= 1)
       faraday-retry (>= 1)
       marcel (~> 1.0)
+      ruby_llm-schema (~> 0.2.1)
       zeitwerk (~> 2)
+    ruby_llm-schema (0.2.5)
     rubyzip (2.3.2)
     rugged (1.7.1)
     rvm1-capistrano3 (1.4.0)
@@ -865,7 +867,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.21.2)
   rubocop-rspec (~> 2.24.1)
   ruby-saml (~> 1.16)
-  ruby_llm (= 1.8.2)
+  ruby_llm (= 1.9.1)
   rvm1-capistrano3 (~> 1.4.0)
   sassc-rails (~> 2.1.2)
   savon (~> 2.14.0)

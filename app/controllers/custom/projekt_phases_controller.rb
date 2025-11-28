@@ -28,6 +28,7 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     @projekt_phase.stats_version&.destroy!
+    @projekt_phase.generate_ai_stats
 
     redirect_to page_path(@projekt_phase.projekt.page.slug,
                           projekt_phase_id: @projekt_phase.id,

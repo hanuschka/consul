@@ -358,6 +358,13 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def generate_ai_stats
+    return unless respond_to?(:resources)
+
+    stats = Ai::GenerateParticipationStats.call(self)
+    update_column(:ai_stats, stats)
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

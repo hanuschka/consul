@@ -13,7 +13,7 @@ class Ai::GenerateParticipationStats < ApplicationService
 
     {
       summary: generate_summary(resources),
-      tone_of_proposals: generate_tone_of_proposals(resources),
+      tone_of_participation: generate_tone_of_participation(resources),
       tone_of_comments: generate_tone_of_comments(resources)
     }
   end
@@ -35,7 +35,7 @@ class Ai::GenerateParticipationStats < ApplicationService
     get_ai_response(prompt)
   end
 
-  def generate_tone_of_proposals(resources)
+  def generate_tone_of_participation(resources)
     proposals_text = resources.map do |proposal|
       "#{proposal.title}. #{proposal.description&.truncate(150)}"
     end.join("\n")

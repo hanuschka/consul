@@ -2,34 +2,27 @@
   <div class="participation-stats-ai">
     <% if ai_summary.present? %>
       <section class="ai-summary-section">
-        <div class="section-header">
-          <i class="fas fa-eye"></i>
-          <h3><%= t("custom.participation_stats.ai_summary_title") %></h3>
-        </div>
+        <h3><%= t("custom.participation_stats.ai_summary_title") %></h3>
         <div class="ai-summary-content">
           <%= ai_summary %>
         </div>
       </section>
     <% end %>
 
-    <% if tone_of_proposals.present? || tone_of_comments.present? %>
-      <div class="tone-sections">
-        <% if tone_of_proposals.present? %>
-          <section class="tone-card">
-            <h4 class="tone-label"><%= t("custom.participation_stats.tone_of_proposals") %></h4>
-            <div class="tone-value"><%= tone_of_proposals %></div>
-            <a href="#" class="further-info-link"><%= t("custom.participation_stats.further_info") %></a>
-          </section>
-        <% end %>
+    <div class="d-flex u-gap-10 u-space-between">
+        <section class="ai-summary-section u-max-w-50">
+          <h3><%= t("custom.participation_stats.tone_of_participation") %></h3>
+          <div class="ai-summary-content">
+            <div class="tone-value"><%= tone_of_participation %></div>
+          </div>
+        </section>
 
-        <% if tone_of_comments.present? %>
-          <section class="tone-card">
-            <h4 class="tone-label"><%= t("custom.participation_stats.tone_of_comments") %></h4>
+        <section class="ai-summary-section u-max-w-50">
+          <h3><%= t("custom.participation_stats.tone_of_comments") %></h3>
+          <div class="ai-summary-content">
             <div class="tone-value"><%= tone_of_comments %></div>
-            <a href="#" class="further-info-link"><%= t("custom.participation_stats.further_info") %></a>
-          </section>
-        <% end %>
-      </div>
-    <% end %>
+          </div>
+        </section>
+    </div>
   </div>
 <% end %>

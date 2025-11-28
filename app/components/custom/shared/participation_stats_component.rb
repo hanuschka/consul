@@ -8,8 +8,8 @@ class Shared::ParticipationStatsComponent < ApplicationComponent
     @ai_stats.dig("summary")
   end
 
-  def tone_of_proposals
-    @ai_stats.dig("tone_of_proposals")
+  def tone_of_participation
+    @ai_stats.dig("tone_of_participation")
   end
 
   def tone_of_comments
@@ -17,6 +17,6 @@ class Shared::ParticipationStatsComponent < ApplicationComponent
   end
 
   def has_ai_stats?
-    ai_summary.present? || tone_of_proposals.present? || tone_of_comments.present?
+    ai_summary.present? || tone_of_participation.present? || tone_of_comments.present?
   end
 end

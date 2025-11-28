@@ -792,6 +792,8 @@ en:
       comments: "Comments"
       local_census_records: Manage local census
       machine_learning: "AI / Machine learning"
+      llm_settings: AI Settings
+      external_api_keys: External API Keys
     administrators:
       index:
         title: Administrators
@@ -1345,6 +1347,66 @@ en:
       setting_name: Setting
       setting_value: Value
       no_description: "No description"
+    ai_settings:
+      flash:
+        updated: AI setting updated successfully
+      index:
+        title: LLM Settings
+        setting_name: Setting
+        value: Value
+        actions: Actions
+        update: Update
+        no_settings: No AI settings available
+        enter_api_key: Enter API Key
+      setting:
+        llm.provider: LLM Provider
+        llm.model: Model
+        llm.use_llm_for_translations: Content Translation
+      setting_description:
+        llm.use_llm_for_translations: Use LLM for content translations and take precedence over Microsoft translation services.
+      setting_help:
+        llm_provider: Providers will be disabled until credentials are configured in the secrets.yml
+    external_api_keys:
+      flash:
+        updated: API key updated successfully
+      index:
+        title: Third Party API Keys
+        service: Service
+        name: Key name
+        value: Value
+        value_set: Custom set
+        value_empty: Default
+        empty_api_keys: There are no API keys created
+      show:
+        key: Name
+        value: Value
+        description: Description
+        website: Website
+        api_value: Key value
+        default_key_note_title: Default API Key
+        default_key_note_description: No custom API key is set, system uses a default API key provided by DemokratieToday. Setting a custom key will override the default.
+      form:
+        edit_title: Edit API Key
+        value: Value
+      services:
+        matomo: Matomo Analytics
+        mapbox: Mapbox
+        vcs: Virtual City Systems (VCS)
+        openai: OpenAI
+        brevo: Brevo
+      services_description:
+        matomo: "Open-source web analytics platform for tracking website statistics, user behavior, and conversion optimization. Focused on GDPR/CCPA compliance and data privacy."
+        mapbox: "Mapping and location services API for building interactive maps, geocoding, address search, and geospatial applications."
+        vcs: "3D city modeling and urban simulation platform for urban planning, analysis, and smart city applications including traffic simulation and solar potential analysis."
+        openai: "AI API providing access to GPT language models for conversational AI, text generation, content analysis, and task automation."
+        brevo: "All-in-one email marketing and CRM platform with email campaigns, SMS, WhatsApp, automation, AI-powered content generation, and transactional email capabilities."
+    api_clients:
+      show:
+        show_token: Show
+        hide_token: Hide
+        copy_token: Copy
+        copied: Copied!
+        token_hidden_message: Token is hidden
     shared:
       search:
         advanced_filters:

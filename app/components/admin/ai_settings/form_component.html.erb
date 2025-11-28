@@ -1,0 +1,37 @@
+<div class="ai-setting-form-wrapper">
+  <% case key %>
+    <% when "ai.llm_provider" %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="d-flex">
+          <div class="small-12 medium-6 large-8 column">
+            <%= form.select :value, ai_provider_options, { label: false, include_blank: "Select provider" }, class: "ai-setting-select" %>
+          </div>
+          <div class="small-12 medium-6 large-4 column">
+            <%= form.submit t("admin.ai_settings.index.update"), class: "button hollow expanded" %>
+          </div>
+        </div>
+      <% end %>
+    <% when "ai.llm_model" %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="d-flex">
+          <div class="small-12 medium-6 large-8 column">
+            <%= form.select :value, ai_model_options, { include_blank: "Select model", label: false }, class: "ai-setting-select" %>
+          </div>
+          <div class="small-12 medium-6 large-4 column">
+            <%= form.submit t("admin.ai_settings.index.update"), class: "button hollow expanded" %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <%= form_with model: [:admin, setting], local: true, method: :patch, class: "ai-setting-form inline-form" do |form| %>
+        <div class="d-flex">
+          <div class="small-12 medium-6 large-8 column">
+            <%= form.text_field :value, label: false, class: "ai-setting-input" %>
+          </div>
+          <div class="small-12 medium-6 large-4 column">
+            <%= form.submit t("admin.ai_settings.index.update"), class: "button hollow expanded" %>
+          </div>
+        </div>
+      <% end %>
+  <% end %>
+</div>

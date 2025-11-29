@@ -1,4 +1,4 @@
-class Ai::GenerateParticipationStats < ApplicationService
+class AiAnalytics::ProjektPhaseSummary < ApplicationService
   attr_reader :projekt_phase
 
   def initialize(projekt_phase)

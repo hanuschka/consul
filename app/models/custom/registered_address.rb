@@ -17,7 +17,7 @@ class RegisteredAddress < ApplicationRecord
 
     create_groupings_from_csv(grouping_keys)
 
-    CSV.foreach(file_path, headers: true) do |row|
+    CSV.foreach(file_path, headers: true, encoding: "bom|utf-8") do |row|
       fixed_attributes_hash = row.to_hash.slice(*fixed_attribute_keys)
       if fixed_attributes_hash["street_number_extension"].present?
         fixed_attributes_hash["street_number_extension"] = fixed_attributes_hash["street_number_extension"].downcase

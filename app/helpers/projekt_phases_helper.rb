@@ -107,6 +107,10 @@ module ProjektPhasesHelper
       "fa-bell"
     when ProjektPhase::FormularPhase
       "fa-file-alt"
+    when ProjektPhase::IframePhase
+      "fa-laptop-code"
+    when ProjektPhase::PointOfInterestPhase
+      "fa-map-pin"
     end
   end
 

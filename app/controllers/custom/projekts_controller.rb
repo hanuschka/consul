@@ -30,8 +30,7 @@ class ProjektsController < ApplicationController
       if @landing_page.present?
         @landing_page.landing_projekts
       else
-        projekts_with_landing_page = Projekt.joins(:landing_pages).pluck(:id)
-        Projekt.where.not(id: projekts_with_landing_page)
+        Projekt.all
       end
 
     @projekts = base_projekts.regular

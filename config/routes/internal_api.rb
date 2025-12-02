@@ -54,4 +54,6 @@ namespace :internal_api do
     patch "enable", to: "settings#enable"
     patch "disable", to: "settings#disable"
   end
+
+  get "dashboard/api_works", to: "dashboard#api_works"
 end

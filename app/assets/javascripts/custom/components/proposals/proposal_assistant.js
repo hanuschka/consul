@@ -312,9 +312,7 @@
   }
 
   function parseIframeEventData(eventData) {
-    if (typeof eventData === "string") {
-      return JSON.parse(eventData)
-    } else if (typeof eventData === "object"){
+    if (typeof eventData === "object"){
       return eventData
     }
   }

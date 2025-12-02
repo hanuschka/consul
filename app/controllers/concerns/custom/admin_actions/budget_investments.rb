@@ -4,6 +4,9 @@ module AdminActions::BudgetInvestments
   include FeatureFlags
   include CommentableActions
   include Translatable
+  include ImageAttributes
+  include DocumentAttributes
+  include MapLocationAttributes
 
   included do
     feature_flag :budgets
@@ -154,9 +157,16 @@ module AdminActions::BudgetInvestments
     end
 
     def allowed_params
-      attributes = [:external_url, :heading_id, :administrator_id, :tag_list,
-                    :valuation_tag_list, :incompatible, :visible_to_valuators, :selected,
-                    :milestone_tag_list, valuator_ids: [], valuator_group_ids: []]
+      attributes = [:administrator_id,
+                    :incompatible, :visible_to_valuators, :selected,
+                    :heading_id, :tag_list, :organization_name, :location, :on_behalf_of, :video_url,
+                    :related_sdg_list, :implementation_performer, :implementation_contribution, :user_cost_estimate,
+                    :sentiment_id,
+                    projekt_label_ids: [],
+                    valuator_ids: [], valuator_group_ids: [],
+                    image_attributes: image_attributes,
+                    documents_attributes: document_attributes,
+                    map_location_attributes: map_location_attributes]
       [*attributes, translation_params(Budget::Investment)]
     end
 

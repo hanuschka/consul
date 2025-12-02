@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_one :poll_officer, class_name: "Poll::Officer"
   has_one :organization
   has_one :lock
+  belongs_to :api_client, optional: true
   has_many :flags
   has_many :identities, dependent: :destroy
   has_many :debates, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author

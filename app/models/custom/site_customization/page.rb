@@ -65,7 +65,7 @@ class SiteCustomization::Page < ApplicationRecord
 
   def sanitize_title_and_subtitle
     if title.present?
-      self.title = sanitize(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      self.title = strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
     end
 
     if subtitle.present?

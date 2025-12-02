@@ -18,6 +18,10 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
   private
 
+  def target_language
+    Rails.env.development? ? "English" : "German"
+  end
+
   def get_resources
     case projekt_phase
     when ProjektPhase::ProposalPhase
@@ -44,6 +48,8 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     prompt = <<~TEXT
       Create a concise, neutral and fluent prose summary of the provided list of #{resource_type} in 5–7 sentences. Focus on identifying the main recurring themes and cluster similar #{resource_type} into meaningful categories (such as support services, physical activity, community life, culture or education). Describe the central trends and dominant topics without listing individual #{resource_type}. Avoid bullet points and write a coherent, well-structured text. Ensure that the summary gives project managers a quick and accurate overview of the overall situation.
 
+      Write the summary in #{target_language}.
+
       #{resource_type.capitalize}:
       #{items_text}
     TEXT
@@ -58,7 +64,7 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     end.join("\n")
 
     prompt = <<~TEXT
-      Identify the overall tone of the following #{resource_type} and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
+      Identify the overall tone of the following #{resource_type} and express it in exactly two words in #{target_language}. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
 
       #{resource_type.capitalize}:
       #{items_text}
@@ -87,7 +93,7 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     resource_type = resource_type_name(resources)
 
     prompt = <<~TEXT
-      Identify the overall tone of the following comments in #{resource_type} and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
+      Identify the overall tone of the following comments in #{resource_type} and express it in exactly two words in #{target_language}. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
 
       Comments:
       #{comments_text}

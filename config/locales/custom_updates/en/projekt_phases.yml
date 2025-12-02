@@ -6,6 +6,10 @@ en:
         overview:
           proposal_phase: Proposals
       stats:
+        refresh_stats_button: "Refresh statistics"
+        refresh_ai_stats_button: "Refresh AI statistics"
+        generate_ai_summary_button: "Generate AI summary"
+        ai_summary_generated: "AI summary was successfully generated"
         proposal_phase:
           total_proposals_title: Proposals
           total_proposals: "Total proposals"

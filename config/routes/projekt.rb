@@ -28,6 +28,7 @@ resources :projekt_phases, only: [] do
     post :toggle_subscription
     post :refresh_stats
     post :refresh_ai_stats
+    post :generate_ai_summary
   end
 end
 

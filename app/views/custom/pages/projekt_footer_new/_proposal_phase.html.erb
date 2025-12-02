@@ -12,7 +12,7 @@
     <% end %>
 
     <div class='participation-stats'>
-      <%= render Shared::ParticipationStatsComponent.new(projekt_phase: @projekt_phase) %>
+      <%= render AiStats::ParticapationSummary.new(projekt_phase: @projekt_phase) %>
       <%= render "shared/stats/participation", stats: @stats %>
     </div>
 

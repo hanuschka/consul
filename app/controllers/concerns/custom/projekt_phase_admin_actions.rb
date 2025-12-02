@@ -9,7 +9,7 @@ module ProjektPhaseAdminActions
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
-      :create, :order_phases, :frame_phases_restrictions,
+      :create, :order_phases, :frame_phases_restrictions
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -43,7 +43,7 @@ module ProjektPhaseAdminActions
         )
       elsif embedded?
         redirect_to(
-          @projekt_phase.projekt.frame_url,
+          @projekt_phase.projekt.url,
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end
@@ -71,6 +71,16 @@ module ProjektPhaseAdminActions
 
     @projekt.projekt_phases.order_phases(params[:ordered_list])
     head :ok
+  end
+
+  def update_position
+    authorize!(:order_phases, @projekt)
+
+    if @projekt_phase.insert_at(params[:position].to_i)
+      head :ok
+    else
+      render json: { message: "Error updating content_block" }
+    end
   end
 
   def toggle_active_status
@@ -465,25 +475,36 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
   end
 
+  def send_notifications
+    authorize!(:manage, @projekt_phase)
+
+    case params[:resource_type]
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
+    end
+  end
+
   def ai_settings
     authorize!(:ai_settings, @projekt_phase)
 
-    @assistant_codename = @projekt_phase.voice_assistant_codename
+    @assistant_app_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    dt_api = DtApi::Client.new
+    if ApiClient.active_dt?
+      dt_api = DtApi::Client.new
 
-    ai_assistant_config_response =
-      dt_api
-        .ai_assistant_configs
-        .get(
-          codename: @assistant_codename,
-          consul_projekt_phase_id: @projekt_phase.id
-        )
+      @ai_assistant_config_response =
+        dt_api
+          .ai_assistant_configs
+          .get(
+            codename: @assistant_app_codename,
+            consul_projekt_phase_id: @projekt_phase.id
+          )
 
-    @ai_assistant_config =
-      ai_assistant_config_response
-        .fetch("client_ai_assistant_config")
+      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+    end
 
     render "custom/admin/projekt_phases/ai_settings"
   end

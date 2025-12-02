@@ -2,6 +2,9 @@ de:
   custom:
     devise_views:
       users:
+        sessions:
+          new:
+            registration_hint: "Sie haben noch kein Konto? <a href='/users/sign_up'>Hier registrieren</a>."
         registrations:
           new:
             message: Schnell. Einfach. Sicher
@@ -27,3 +30,5 @@ de:
             success: Sie haben sich erfolgreich als Gast angemeldet
           sign_out_guest:
             success: Sie haben sich erfolgreich als Gast abgemeldet
+          create:
+            existing_user_with_same_stamp: Bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.

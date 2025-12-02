@@ -58,7 +58,13 @@ class MapLocation < ApplicationRecord
 
   def features_json_data
     if features.is_a?(String)
-      Sentry.capture_message("MapLocation #{id} features is a String")
+      file_path = Rails.root.join("log", "map_location_features_errors.log")
+      current_ids = File.read(file_path).strip.split(",").map(&:strip) rescue []
+
+      unless current_ids.include?(id.to_s)
+        current_ids << id.to_s
+        File.write(file_path, (current_ids).sort.join(","))
+      end
     end
 
     return {} if features == {} || features.is_a?(String)
@@ -175,8 +181,6 @@ class MapLocation < ApplicationRecord
         mappable.sentiment.color
       elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
         mappable.category.color
-      elsif mappable.is_a?(Projekt)
-        "#ff0000"
       end
     end
 

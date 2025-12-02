@@ -30,11 +30,19 @@ class PagesController < ApplicationController
 
     @custom_page_page_visible =
       @custom_page&.projekt&.preview_code_valid?(params[:preview_code]) ||
-      @custom_page&.projekt&.frame_access_code_valid?(params[:frame_code]) ||
       @custom_page&.projekt&.visible_for?(current_user)
 
     if @custom_page&.landing?
       set_landing_page_topbar_ui_variables(@custom_page)
+    end
+
+    if current_user.present?
+      @namespace =
+        if current_user.administrator?
+          :admin
+        elsif @custom_page.present? && current_user.projekt_manager?(@custom_page.projekt)
+          :projekt_management
+        end
     end
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
@@ -267,7 +275,7 @@ class PagesController < ApplicationController
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
-    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"&& !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
 

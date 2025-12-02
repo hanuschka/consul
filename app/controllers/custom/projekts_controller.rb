@@ -30,7 +30,7 @@ class ProjektsController < ApplicationController
       if @landing_page.present?
         @landing_page.landing_projekts
       else
-        Projekt
+        Projekt.all
       end
 
     @projekts = base_projekts.regular

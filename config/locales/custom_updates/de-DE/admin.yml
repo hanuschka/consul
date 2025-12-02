@@ -405,6 +405,9 @@ de:
           send_notifications: Benachrichtigungen senden
           notifications_sent: Benachrichtigungen wurden erfolgreich gesendet
           send_notifications_confirm: Sind Sie sicher?
+          regenerate_contexted_clones: Kontextbezogene Fragen erneuern
+          regenerate_contexted_clones_confirm: Sind Sie sicher?
+          contexted_clones_regenerated: Kontextbezogene Fragen wurden erfolgreich renoviert
         questions:
           show:
             description: Bezeichnung

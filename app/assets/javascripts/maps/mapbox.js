@@ -6,10 +6,8 @@
       this.element = element;
 
       this.initializeProperties();
-      this.bindEventListeners();
 
       this.createMap();
-      // this.setupEventListenersForNewFeatures();
     }
 
     initializeProperties() {
@@ -39,7 +37,7 @@
       this.enableShapes = $element.data("enable-shapes");
       this.editableLayers = [];
       this.editableLayersLimit = $element.data("map-features-limit")
-      this.centerMarker = null;
+      this.currentMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.featureColor = null;
       this.featureIconName = null;
@@ -54,8 +52,21 @@
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
     }
 
-    bindEventListeners() {
-    //  this.openMarkerPopup = this.openMarkerPopup.bind(this);
+    // Public Interface method for assistant map update and external use
+    // DO NOT DELETE
+    setMarkerTo(lat, lng, shouldScroll) {
+      this.map.flyTo({
+        center: [lng, lat],
+        duration: 1000
+      });
+
+      this.moveOrPlaceMarker(lat, lng);
+
+      if (shouldScroll) {
+        this.map.getContainer().scrollIntoView({
+          block: "center", inline: "nearest"
+        })
+      }
     }
 
     initMap(callback) {
@@ -147,18 +158,6 @@
         instance.setupEventListenersForUpdatingFormInputs();
         instance.setupEventListenersForUpdatingMapCenter();
       });
-    }
-
-    setupEventListenersForNewFeatures() {
-    //  const self = this;
-
-    //  self.map.on('pm:create', function(e) {
-    //    if (e.shape === 'Circle') {
-    //      e.layer.options.shape = 'Circle';
-    //    }
-
-    //    self.setupEventListenersForEditableFeature(self.map, e.layer);
-    //  })
     }
 
     setupExpandControl() {
@@ -601,7 +600,7 @@
           point: true,
           line_string: instance.enableShapes,
           polygon: instance.enableShapes,
-          trash: instance.enableShapes
+          trash: true
         },
         defaultMode: 'draw_point',
         userProperties: true,
@@ -691,6 +690,18 @@
           },
         },
         {
+          'id': 'gl-draw-point-outer',
+          'type': 'circle',
+          'filter': [ 'all',
+            ['==', '$type', 'Point'],
+            ['==', 'meta', 'feature'],
+          ],
+          'paint': {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 12],
+            'circle-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor] ]
+          },
+        },
+        {
           'id': 'gl-draw-point-inner',
           'type': 'circle',
           'filter': [ 'all',
@@ -702,7 +713,6 @@
             'circle-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
           },
         },
-
         {
           'id': 'gl-draw-point-icon',
           'type': 'symbol',
@@ -751,41 +761,6 @@
           },
         },
       ];
-    }
-
-    placeCenterMarker(centerLatLng, instance) {
-    //  if (instance.centerMarker) {
-    //    instance.map.removeLayer(instance.centerMarker);
-    //  }
-
-    //  const centerMarker = L.marker(centerLatLng, {
-    //    draggable: true,
-    //    icon: App.Utils.getLeafletMarkerHTML()
-    //  })
-
-    //  instance.centerMarker = centerMarker;
-    //  instance.map.addLayer(centerMarker);
-    //  instance.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
-    //  instance.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
-    }
-
-    setupEventListenersForEditableFeature(map, layer) {
-    //  layer.on('click', function() {
-    //    if (!map.pm.globalDrawModeEnabled() && !map.pm.globalDragModeEnabled() && !layer.pm.enabled()) {
-    //      layer.pm.enable({ allowSelfIntersection: false });
-    //    }
-    //  });
-
-    //  map.on('click', function(e) {
-    //    const isMarker = layer instanceof L.Marker;
-
-    //    if (!isMarker && layer.pm.enabled() && !layer.getBounds().contains(e.latlng)) {
-    //      layer.pm.disable();
-    //    }
-    //  });
-
-    //  layer.on("pm:drawstart", function() { layer.pm.disable() });
-    //  layer.on("pm:dragenable", function() { layer.pm.disable() });
     }
 
     setupEventListenersForUpdatingFormInputs() {
@@ -909,6 +884,19 @@
           this.map.setZoom(this.map.getZoom());
         }
       });
+    }
+
+    moveOrPlaceMarker(lat, lng) {
+      if (this.currentMarker) {
+        this.currentMarker.remove();
+      }
+
+      this.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
+      this.currentMarker.setLngLat([lng, lat]).addTo(this.map);
+
+      this.latitudeInput.value = lat.toFixed(6);
+      this.longitudeInput.value = lng.toFixed(6);
+      this.zoomInput.value = this.map.getZoom();
     }
   }
 
@@ -1073,7 +1061,7 @@
       this.mapboxMapInstance = mapboxMapInstance;
       this.mapContainer = mapboxMapInstance.element;
       this.active = false;
-      this.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
+      this.mapboxMapInstance.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
         .setLngLat([this.mapboxMapInstance.mapCenterLongitude, this.mapboxMapInstance.mapCenterLatitude])
         .addTo(this.mapboxMapInstance.map);
     }
@@ -1118,17 +1106,7 @@
       const instance = this;
 
       this.clickHandler = function(e) {
-        if (instance.currentMarker) {
-          instance.currentMarker.remove();
-        }
-
-        instance.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
-          .setLngLat(e.lngLat)
-          .addTo(instance.mapboxMapInstance.map);
-
-        instance.mapboxMapInstance.latitudeInput.value = e.lngLat.lat.toFixed(6);
-        instance.mapboxMapInstance.longitudeInput.value = e.lngLat.lng.toFixed(6);
-        instance.mapboxMapInstance.zoomInput.value = instance.mapboxMapInstance.map.getZoom();
+        instance.mapboxMapInstance.moveOrPlaceMarker(e.lngLat.lat, e.lngLat.lng);
       }
 
       this._map.on('click', this.clickHandler);

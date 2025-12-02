@@ -183,6 +183,7 @@ class Setting < ApplicationRecord
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
         "welcomepage.projekt_search": false,
+        "welcomepage.share_buttons": "",
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,

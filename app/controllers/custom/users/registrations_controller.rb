@@ -9,25 +9,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
     process_temp_attributes_for(resource)
 
     if resource.valid?
-      validate_absolute_email_uniqueness
-      if resource.errors.any?
-        render :new
+      new_unique_stamp = resource.prepare_unique_stamp
+      existing_user_with_same_stamp = User.find_by(unique_stamp: new_unique_stamp) if new_unique_stamp.present?
+
+      if new_unique_stamp.present? && existing_user_with_same_stamp.present?
+        Mailer.existing_stamp_notify_existing_user(existing_user_with_same_stamp).deliver_later
+        Mailer.existing_stamp_notify_new_user(resource.email).deliver_later
+
+        redirect_to new_user_registration_path,
+          alert: t("custom.devise_views.users.registrations.create.existing_user_with_same_stamp")
       else
         super
       end
     else
       render :new
-    end
-  end
-
-  def validate_absolute_email_uniqueness
-    if @user.present? && @user.email.present?
-      hidden_user_with_same_email = User.only_hidden.find_by(email: @user.email)
-
-      if hidden_user_with_same_email.present?
-         @hidden_user_with_this_email_exists = true
-         @user.errors.add(:email, :taken)
-      end
     end
   end
 

@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
 
 module ContentBlocksHelper
-  def render_custom_block(key, projekt: nil, custom_prefix: nil, default_content: nil, return_path: nil, show_controlls_on_embedded: false)
+  def render_custom_block(key, projekt: nil, custom_prefix: nil, default_content: nil, return_path: nil)
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
     block_body = block&.body.presence || default_content || ""
@@ -14,13 +14,6 @@ module ContentBlocksHelper
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_admin_site_customization_content_block_path(block, return_to: return_path || request.path) )
     elsif current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, projekt)
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: return_path || request.path) )
-    elsif show_controlls_on_embedded
-      edit_link = button_tag(
-        '<i class="fas fa-edit"></i>'.html_safe,
-        type: "button",
-        data: { path: "/site_customization/content_blocks/#{block.id}/edit?return_to=#{return_path}"},
-        class: "js-frame-open-admin-page link-button"
-      )
     end
 
     if block_body.present? && current_user && current_user.email.in?(@partner_emails || [])
@@ -49,7 +42,7 @@ module ContentBlocksHelper
 
     return true if content_block&.body.present?
 
-    current_user&.administrator?
+    current_user.present? && current_user&.administrator?
   end
 
   def render_custom_projekt_content_block?(key, projekt)

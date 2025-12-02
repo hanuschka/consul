@@ -2,6 +2,9 @@ en:
   custom:
     devise_views:
       users:
+        sessions:
+          new:
+            registration_hint: "No account yet? <a href='/users/sign_up'>Sign up here</a>."
         registrations:
           new:
             message: Fast. Simply. Secure
@@ -27,3 +30,4 @@ en:
             success: You have successfully signed in as Guest
           sign_out_guest:
             success: You have successfully signed out as Guest
+            existing_user_with_same_stamp: Please use the email address you originally registered with to log in to your account.

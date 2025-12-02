@@ -13,7 +13,11 @@ set :rvm1_map_bins, -> { fetch(:rvm_map_bins).to_a.concat(%w[rake gem bundle rub
 
 set :application, "consul"
 set :deploy_to, deploysecret(:deploy_to)
-set :ssh_options, port: deploysecret(:ssh_port)
+set :ssh_options, {
+  port: deploysecret(:ssh_port),
+  # Use this for debug ssh connection
+  # verbose: :debug # or :info, :error
+}
 
 set :repo_url, "https://github.com/hanuschka/consul.git"
 

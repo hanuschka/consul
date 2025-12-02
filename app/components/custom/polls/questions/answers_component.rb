@@ -13,26 +13,13 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
     classes = ["poll-question-answers"]
 
     if question&.votation_type&.rating_scale?
-      classes.push("rating-scale")
-
-      count_of_rating_scale_cells = question.question_answers.count
-
-      if Setting.new_design_enabled?
-        count_of_rating_scale_cells += 1 if question.votation_type.min_rating_scale_label.present?
-        count_of_rating_scale_cells += 1 if question.votation_type.max_rating_scale_label.present?
-      end
-
-      if count_of_rating_scale_cells >= 7
-        classes.push("vertical-rating-scale-answers")
-      end
+      classes.push("rating-scale js-rating-scale")
     elsif show_additional_info_images?
       classes.push("regular")
       classes.push("regular-with-images")
 
     else
       classes.push("regular")
-      classes.push("row")
-      classes.push("gutter-small")
     end
 
     classes.join(" ")

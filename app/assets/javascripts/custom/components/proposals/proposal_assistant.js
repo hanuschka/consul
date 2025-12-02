@@ -21,6 +21,10 @@
             this.tryToPushInitialDataToDtAssistant();
           })
         }
+
+        this.initialData["collapsible"] = true
+        this.initialData["collapsed"] = App.Cookies.getCookie("voice_assistant_collapsed") === "true"
+
         this.tryToPushInitialDataToDtAssistant();
       }
     },
@@ -80,7 +84,27 @@
           case "Consul.ResourceForm.updateImplementaionContribution":
             this.updateImplementaionContribution(params.implementaion_contribution, params.shouldScroll)
             break;
+          case "Consul.VoiceAssistant.toggleCollapseState":
+            this.toggleAssistantCollapseState(params.collapsed)
+            break
         }
+      }
+    },
+
+    toggleAssistantCollapseState(collapsed) {
+      this.voiceAssistantIframe.classList.toggle("-collapsed", collapsed)
+
+      App.Cookies.saveCookie("voice_assistant_collapsed", collapsed, 365)
+    },
+
+
+    initCollapseState() {
+      const collapsed = App.Cookies.getCookie("voice_assistant_collapsed")
+
+      if (collapsed === "true") {
+        this.voiceAssistantIframe.classList.add("-collapsed")
+      } else {
+        this.voiceAssistantIframe.classList.remove("-collapsed")
       }
     },
 
@@ -110,11 +134,9 @@
     updateTitle: function(title, scroll) {
       var scroll = scroll || true;
 
-      var titleElement = document.querySelector(
-        ".js-user-resource-form-title"
-      )
+      var titleElement = $(".js-user-resource-form-title:visible").get(0)
 
-      titleElement.value = title
+      $(".js-user-resource-form-title").val(title)
 
       if (scroll) {
         titleElement.scrollIntoView({block: "center", inline: "nearest"})
@@ -128,7 +150,7 @@
     updateDescription: function(description, scroll) {
       var scroll = scroll || true;
 
-      var editor = window.CKeditorInstancesGlobal["userResourceFromEditor"]
+      var editor = App.HTMLEditor.instances["userResourceFromEditor"]
       editor.setData(description)
 
       if (scroll) {
@@ -206,7 +228,7 @@
         if (currentMapInstance && App.Mapbox.maps.length <= 1) {
           // Move map to new coordinates (Mapbox uses [lng, lat] order)
           // currentMapInstance.map.easeTo({
-          currentMapInstance.map.flyTo({
+          currentMapInstance.map.jumpTo({
             center: [coordinates[1], coordinates[0]], // lng, lat
             duration: 1000 // smooth animation
           });
@@ -225,19 +247,8 @@
             })
           }
         }
-      } else if (App.Map.maps.length > 0) {
-        var currentMap = App.Map.maps[0]
-
-        if (currentMap && App.Map.maps.length <= 1) {
-          currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
-          App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
-
-          if (shouldScroll) {
-            currentMap.getContainer().scrollIntoView({
-              block: "center", inline: "nearest"
-            })
-          }
-        }
+      } else if (App.Map.anyMapInitialized()) {
+        App.Map.setMarkerTo(coordinates[0], coordinates[1], false)
       }
     },
 

@@ -15,67 +15,81 @@
   </div>
 </div>
 
-<div class="margin-bottom">
-  <%= render "custom/admin/projekt_phases/settings/features_table", features: @ai_settings %>
-</div>
-
-<%= form_with url: namespace_projekt_phase_path(action: "update_ai_settings"), method: :patch, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
-  <%= hidden_field_tag :action_name, action_name %>
-  <%= hidden_field_tag :assistant_codename, @assistant_codename %>
-
-  <div class="row margin-bottom">
-    <div class="column large-8 small-12">
-      <%= f.text_area(
-        :questions,
-        label: t("custom.admin.projekt_phases.ai_settings.questions"),
-        placeholder: @ai_assistant_config["default_questions"],
-        value: @ai_assistant_config["questions"],
-        rows: 5,
-        style: "field-sizing: content"
-      ) %>
-    </div>
+<% if ApiClient.active_dt? && @ai_assistant_config.present? %>
+  <div class="margin-bottom">
+    <%= render "custom/admin/projekt_phases/settings/features_table", features: @ai_settings %>
   </div>
 
-  <div class="row margin-bottom">
-    <div class="column large-8 small-12">
-      <%= f.text_area(
-        :criteria,
-        label: t("custom.admin.projekt_phases.ai_settings.criteria"),
-        placeholder: @ai_assistant_config["default_criteria"],
-        value: @ai_assistant_config["criteria"],
-        style: "",
-        rows: 5,
-        style: "field-sizing: content"
-      ) %>
-    </div>
-  </div>
+  <%= form_with url: namespace_projekt_phase_path(action: "update_ai_settings"), method: :patch, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
+    <%= hidden_field_tag :action_name, action_name %>
+    <%= hidden_field_tag :assistant_codename, @assistant_app_codename %>
 
-  <div class="row margin-bottom">
-    <div class="column large-8 small-12">
-      <%= f.text_area(
-        :parting_words,
-        label: t("custom.admin.projekt_phases.ai_settings.parting_words"),
-        placeholder: @ai_assistant_config["default_parting_words"],
-        value: @ai_assistant_config["parting_words"],
-        style: "",
-        rows: 5,
-        style: "field-sizing: content"
-      ) %>
+    <div class="row margin-bottom">
+      <div class="column large-8 small-12">
+        <%= f.text_area(
+          :questions,
+          label: t("custom.admin.projekt_phases.ai_settings.questions"),
+          placeholder: @ai_assistant_config["default_questions"],
+          value: @ai_assistant_config["questions"],
+          rows: 5,
+          style: "field-sizing: content"
+        ) %>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="column">
-      <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+    <div class="row margin-bottom">
+      <div class="column large-8 small-12">
+        <%= f.text_area(
+          :criteria,
+          label: t("custom.admin.projekt_phases.ai_settings.criteria"),
+          placeholder: @ai_assistant_config["default_criteria"],
+          value: @ai_assistant_config["criteria"],
+          style: "",
+          rows: 5,
+          style: "field-sizing: content"
+        ) %>
+      </div>
     </div>
-  </div>
-<% end %>
 
-<% if embedded? %>
-  <% content_for :admin_frame_top_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+    <div class="row margin-bottom">
+      <div class="column large-8 small-12">
+        <%= f.text_area(
+          :parting_words,
+          label: t("custom.admin.projekt_phases.ai_settings.parting_words"),
+          placeholder: @ai_assistant_config["default_parting_words"],
+          value: @ai_assistant_config["parting_words"],
+          style: "",
+          rows: 5,
+          style: "field-sizing: content"
+        ) %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+      </div>
+    </div>
   <% end %>
-  <%= content_for :admin_frame_bottom_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+
+  <% if embedded? %>
+    <% content_for :admin_frame_top_navigation do %>
+      <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+    <% end %>
+    <%= content_for :admin_frame_bottom_navigation do %>
+      <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+    <% end %>
   <% end %>
+<% elsif @ai_assistant_config_response["error"].present? %>
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= @ai_assistant_config_response["error"] %>
+    </div>
+  </div>
+<% else %>
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      Die KI-App ist nicht verbunden
+    </div>
+  </div>
 <% end %>

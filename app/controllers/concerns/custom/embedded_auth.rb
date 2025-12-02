@@ -3,9 +3,9 @@ module EmbeddedAuth
 
   included do
     before_action :set_iframe_content_security_policy
+    prepend_before_action :authentificate_frame_session_user!
+
     helper_method :embedded? #, :frame_temp_token_valid?
-    helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
-    helper_method :embedded_and_frame_access_code_valid?
     helper_method :skip_forgery_protection_for_frame_session?, :frame_session_from_authorized_source?, :frame_session
 
     skip_forgery_protection if: :skip_forgery_protection_for_frame_session?
@@ -20,31 +20,13 @@ module EmbeddedAuth
 
     def embedded?
       @embedded ||=
-        (params[:embedded] == "true")
-    end
-
-    def frame_access_code_valid?(projekt)
-      return false if params[:frame_code].blank?
-
-      params[:frame_code] == projekt.frame_access_code
-    end
-
-    def embedded_and_frame_access_code_valid?(projekt)
-      embedded? && frame_access_code_valid?(projekt)
+        (params[:embedded] == "true" || request.headers["HTTP_X_EMBEDDED_FRAME"] == "true")
     end
 
     def skip_forgery_protection_for_frame_session?
       @_frame_session_authentificated ||=
-        frame_session_from_authorized_source? &&
-          Current.frame_current_user.present?
+        frame_session_from_authorized_source? && current_user.present?
     end
-
-    # def frame_session_from_authorized_source?
-    #   @_frame_session_from_authorized_source ||=
-    #     frame_session.present? &&
-    #       origin_allowed? &&
-    #       frame_csrf_token_valid?(frame_session[:frame_csrf_token])
-    # end
 
     def frame_session_from_authorized_source?
       @_frame_session_from_authorized_source ||=
@@ -71,14 +53,22 @@ module EmbeddedAuth
         user = User.find(frame_session["user_id"])
 
         if user.present?
-          update_frame_session_data(user)
+          set_frame_session(user)
         else
           raise "Invalid auth"
+        end
+      elsif params[:frame_sign_in_token].present?
+        user = User.find_by(frame_sign_in_token: params[:frame_sign_in_token])
+
+        if user.present? && user.frame_sign_in_token_valid?
+          set_frame_session(user)
+        else
+          raise "Error sign in"
         end
       end
     end
 
-    def update_frame_session_data(user)
+    def set_frame_session(user)
       new_frame_session = { user_id: user.id }
 
       cookies.encrypted[:frame_session] = {
@@ -90,7 +80,10 @@ module EmbeddedAuth
       }
 
       Current.frame_current_user = user
-      request.env["warden"].set_user(user)
+      # binding.pry
+      # request.env["warden"].set_user(user, store: false)
+      sign_in(user, store: false)
+      # bypass_sign_in(user)
     end
 
     def default_url_options
@@ -122,8 +115,6 @@ module EmbeddedAuth
       url_domain = URI.parse(url).host
 
       (Rails.application.secrets.server_name || request.host) == url_domain
-    # rescue URI::InvalidURIError
-    #   return false
     end
 
     # def frame_csrf_token_valid?(current_frame_csrf_token)

@@ -25,11 +25,9 @@ $("#sidebar-cta").html("<%= j render Pages::Projekts::SidebarCtaComponent.new(@p
 
 $('#footer-content').foundation();
 
-<% if @projekt_phase.projekt.vc_map_enabled? %>
-  var map = document.querySelector("#footer-content *[data-vcmap]")
-  App.VCMap.initializeMap(map);
-<% else %>
-  App.Map.initialize();
-<% end %>
-
 $("html, body").animate({ scrollTop: $("#<%= params["scroll_to"] || "footer-content" %>").offset().top - 100 }, 500);
+
+$('#footer-content').find('.map').each(function() {
+  App.Map.destroyMapForElementId(this.id);
+  App.Map.initializeMapForElementId(this.id);
+});

@@ -345,6 +345,11 @@ class Budget
       budget.valuating?
     end
 
+    def should_show_ballots_count?
+      projekt_phase.present? && !projekt_phase.feature?("resource.hide_ballots_count") &&
+        (budget.reviewing_ballots? || budget.finished?)
+    end
+
     def should_show_ballots?(**args)
       return false unless selected?
       return true if budget.balloting?

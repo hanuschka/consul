@@ -131,6 +131,7 @@
 // require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min
 //= require select2/dist/js/select2.full
+//= require chart.js/dist/chart.umd.min.js
 //= require custom
 //= require_tree ./custom
 //= require_tree ./maps

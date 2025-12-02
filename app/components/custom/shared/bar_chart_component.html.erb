@@ -1,0 +1,11 @@
+<div class="bar-chart-card">
+  <h3 class="bar-chart-title"><%= @title %></h3>
+  <div class="bar-chart-container"
+       data-bar-chart
+       data-chart-labels="<%= labels_json %>"
+       data-chart-values="<%= values_json %>"
+       data-chart-orientation="<%= @orientation %>">
+    <canvas></canvas>
+  </div>
+</div>
+

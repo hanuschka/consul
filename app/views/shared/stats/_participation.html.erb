@@ -67,6 +67,8 @@
         <div class="number"><%= stats.total_reported %></div>
       </div>
     </div>
+
+    <%= render Proposals::PhaseLabelSentimentStatsComponent.new(projekt_phase: stats.projekt_phase) %>
   <% end %>
 
   <% unless stats.show_percentage_values_only? || stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>

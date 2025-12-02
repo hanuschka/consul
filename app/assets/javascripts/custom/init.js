@@ -23,6 +23,7 @@
       App.Shared.initialize();
       App.ProposalAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
+      App.BarChartComponent.initialize();
     }
   };
 }).call(this);

@@ -16,6 +16,7 @@ de:
       tone_of_participation: Tone of Participation
       tone_of_comments: Tone of Comments
       further_info: further info
+      no_resources_to_analyze: Keine Ressourcen zur Analyse verfügbar. Bitte fügen Sie Vorschläge oder Investitionen hinzu, um KI-Statistiken zu generieren.
     resource_page:
       banner_component:
         comments: Kommentare

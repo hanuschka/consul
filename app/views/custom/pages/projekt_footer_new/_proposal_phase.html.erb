@@ -5,11 +5,8 @@
 
   <% if params[:section] == "stats" && can?(:read_stats, @projekt_phase) %>
     <% if can?(:refresh_stats, @projekt_phase) %>
-      <div class="button-group">
-        <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
-        <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary") %>
-        <%= button_to(t("custom.projekt_phases.stats.generate_ai_summary_button"), generate_ai_summary_projekt_phase_path(@projekt_phase), class: "button secondary") %>
-      </div>
+      <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
+      <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary") %>
     <% end %>
 
     <div class='participation-stats'>

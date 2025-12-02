@@ -359,8 +359,6 @@ class ProjektPhase < ApplicationRecord
   end
 
   def generate_ai_stats
-    return unless respond_to?(:resources)
-
     stats = AiAnalytics::ProjektPhaseSummary.call(self)
     update_column(:ai_stats, stats)
   end

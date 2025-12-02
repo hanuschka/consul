@@ -6,9 +6,7 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
   end
 
   def call
-    return {} unless projekt_phase.respond_to?(:resources)
-
-    resources = projekt_phase.resources.includes(:author, comments: :user)
+    resources = get_resources
     return {} if resources.empty?
 
     {
@@ -20,38 +18,62 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
   private
 
+  def get_resources
+    case projekt_phase
+    when ProjektPhase::ProposalPhase
+      projekt_phase.resources.includes(:author, comments: :user)
+    when ProjektPhase::BudgetPhase
+      return [] unless projekt_phase.budget
+      projekt_phase.budget.investments.includes(:author, comments: :user)
+    else
+      []
+    end
+  end
+
+  def resource_type_name(resources)
+    return "proposals" if resources.empty?
+    resources.first.is_a?(Budget::Investment) ? "investments" : "proposals"
+  end
+
   def generate_summary(resources)
-    proposals_text = resources.map do |proposal|
-      "Title: #{proposal.title}. Description: #{proposal.description&.truncate(200)}"
+    resource_type = resource_type_name(resources)
+    items_text = resources.map do |item|
+      "Title: #{item.title}. Description: #{item.description&.truncate(200)}"
     end.join("\n")
 
     prompt = <<~TEXT
-      Create a concise, neutral and fluent prose summary of the provided list of proposals in 5–7 sentences. Focus on identifying the main recurring themes and cluster similar proposals into meaningful categories (such as support services, physical activity, community life, culture or education). Describe the central trends and dominant topics without listing individual proposals. Avoid bullet points and write a coherent, well-structured text. Ensure that the summary gives project managers a quick and accurate overview of the overall situation.
+      Create a concise, neutral and fluent prose summary of the provided list of #{resource_type} in 5–7 sentences. Focus on identifying the main recurring themes and cluster similar #{resource_type} into meaningful categories (such as support services, physical activity, community life, culture or education). Describe the central trends and dominant topics without listing individual #{resource_type}. Avoid bullet points and write a coherent, well-structured text. Ensure that the summary gives project managers a quick and accurate overview of the overall situation.
 
-      Proposals:
-      #{proposals_text}
+      #{resource_type.capitalize}:
+      #{items_text}
     TEXT
 
     get_ai_response(prompt)
   end
 
   def generate_tone_of_participation(resources)
-    proposals_text = resources.map do |proposal|
-      "#{proposal.title}. #{proposal.description&.truncate(150)}"
+    resource_type = resource_type_name(resources)
+    items_text = resources.map do |item|
+      "#{item.title}. #{item.description&.truncate(150)}"
     end.join("\n")
 
     prompt = <<~TEXT
-      Identify the overall tone of the following proposal and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
+      Identify the overall tone of the following #{resource_type} and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
 
-      Proposals:
-      #{proposals_text}
+      #{resource_type.capitalize}:
+      #{items_text}
     TEXT
 
     get_ai_response(prompt)
   end
 
   def generate_tone_of_comments(resources)
-    comments = resources.flat_map(&:comments)
+    comments = if resources.first&.is_a?(Budget::Investment)
+      resources.flat_map { |r| r.comments.where(valuation: false) }
+    else
+      resources.flat_map(&:comments)
+    end
+
     return nil if comments.empty?
 
     comments_text =
@@ -62,8 +84,10 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
     return nil if comments_text.blank?
 
+    resource_type = resource_type_name(resources)
+
     prompt = <<~TEXT
-      Identify the overall tone of the following comments in proposals and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
+      Identify the overall tone of the following comments in #{resource_type} and express it in exactly two words. Use broad, descriptive terms (e.g., "positive supportive", "critical concerned", "neutral informative"). Do not explain your choice and do not add additional text. Output only the two words.
 
       Comments:
       #{comments_text}

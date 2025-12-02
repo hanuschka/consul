@@ -44,20 +44,4 @@ class ProjektPhasesController < ApplicationController
                           projekt_phase_id: @projekt_phase.id,
                           section: "stats")
   end
-
-  def generate_ai_summary
-    @projekt_phase = ProjektPhase.find(params[:id])
-    authorize!(:refresh_stats, @projekt_phase)
-
-    stats = AiAnalytics::ProjektPhaseSummary.new(@projekt_phase).call
-    
-    current_ai_stats = @projekt_phase.ai_stats || {}
-    current_ai_stats['summary'] = stats[:summary]
-    @projekt_phase.update!(ai_stats: current_ai_stats)
-
-    redirect_to page_path(@projekt_phase.projekt.page.slug,
-                          projekt_phase_id: @projekt_phase.id,
-                          section: "stats"),
-                notice: t("custom.projekt_phases.stats.ai_summary_generated")
-  end
 end

@@ -93,7 +93,8 @@ class GenerateProposalsAndCommentsForAiStats
       author: user,
       title: data['title'],
       description: data['description'],
-      responsible_name: user.username || user.email
+      responsible_name: user.username || user.email,
+      resource_terms: true
     )
 
     @proposals << proposal

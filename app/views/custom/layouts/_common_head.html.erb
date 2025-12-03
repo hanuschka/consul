@@ -19,6 +19,8 @@
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= content_for :additional_scripts %>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"></script>
+
 <% if @projekt.present? && !projekt_feature?(@projekt, "general.allow_indexing") %>
   <meta name="robots" content="noindex">
 <% end %>

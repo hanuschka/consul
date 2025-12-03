@@ -32,9 +32,15 @@
                 <ul class="ai-topic-clustering--proposals-list">
                   <% proposals_for_subtopic(subtopic).each do |proposal| %>
                     <li>
-                      <%= link_to proposal.title, proposal_path(proposal), target: "_blank" %>
-                      <% if proposal_image_url(proposal) %>
-                        <%= image_tag proposal_image_url(proposal), class: "ai-topic-clustering--proposal-image" %>
+                      <%= link_to proposal_path(proposal), target: "_blank", class: "ai-topic-clustering--proposal-link" do %>
+                        <% if proposal_has_image?(proposal) %>
+                          <%= image_tag proposal_image_url(proposal), class: "ai-topic-clustering--proposal-image" %>
+                        <% else %>
+                          <div class="ai-topic-clustering--proposal-image-placeholder">
+                            <i class="fa fa-lightbulb" aria-hidden="true"></i>
+                          </div>
+                        <% end %>
+                        <span class="ai-topic-clustering--proposal-title"><%= proposal.title %></span>
                       <% end %>
                     </li>
                   <% end %>

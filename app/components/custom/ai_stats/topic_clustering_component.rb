@@ -42,7 +42,9 @@ class AiStats::TopicClusteringComponent < ApplicationComponent
     proposal_ids = subtopic["proposal_ids"] || []
     return [] if proposal_ids.empty?
 
-    Proposal.base_selection.where(id: proposal_ids).includes(image: { attachment_attachment: :blob })
+    Proposal.base_selection
+            .where(id: proposal_ids)
+            .includes(image: { attachment_attachment: :blob })
   end
 
   def proposal_image_url(proposal)
@@ -53,6 +55,10 @@ class AiStats::TopicClusteringComponent < ApplicationComponent
 
   def proposal_path(proposal)
     Rails.application.routes.url_helpers.proposal_path(proposal)
+  end
+
+  def proposal_has_image?(proposal)
+    proposal.image&.attached?
   end
 end
 

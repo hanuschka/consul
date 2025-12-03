@@ -33,6 +33,9 @@
                   <% proposals_for_subtopic(subtopic).each do |proposal| %>
                     <li>
                       <%= link_to proposal.title, proposal_path(proposal), target: "_blank" %>
+                      <% if proposal_image_url(proposal) %>
+                        <%= image_tag proposal_image_url(proposal), class: "ai-topic-clustering--proposal-image" %>
+                      <% end %>
                     </li>
                   <% end %>
                 </ul>

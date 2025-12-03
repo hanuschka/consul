@@ -62,8 +62,8 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       response = Ai::RubyLlmFactory.chat_with_json_output(output_schema).ask(prompt)
 
-      response.as_json
-    rescue JStandardError => e
+      response.content
+    rescue StandardError => e
       Rails.logger.error("TopicClustering error: #{e.message}")
       { "topics" => [] }
     end

@@ -30,6 +30,8 @@ de:
         title: Zeitverlauf
         submissions_over_time: Einreichungen im Zeitverlauf
         comments_over_time: Kommentare im Zeitverlauf
+      heatmap:
+        title: Heatmap
     ai_stats:
       topic_clustering:
         title: KI-Themengruppierung

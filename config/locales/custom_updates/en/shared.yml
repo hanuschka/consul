@@ -30,6 +30,8 @@ en:
         title: Timeline
         submissions_over_time: Submissions Over Time
         comments_over_time: Comments Over Time
+      heatmap:
+        title: Heatmap
     ai_stats:
       topic_clustering:
         title: AI Topic Clustering

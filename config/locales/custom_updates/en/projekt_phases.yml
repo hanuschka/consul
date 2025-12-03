@@ -8,7 +8,7 @@ en:
           proposal_phase: Proposals
       stats:
         title: Statistics
-        back_to_phase: Back to phase
+        back_to_phase: Back to projekt
         refresh_stats_button: "Refresh statistics"
         refresh_ai_stats_button: "Refresh AI statistics"
         generate_ai_summary_button: "Generate AI summary"

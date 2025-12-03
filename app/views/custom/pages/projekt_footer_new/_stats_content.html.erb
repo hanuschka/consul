@@ -15,5 +15,6 @@
     <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @stats.projekt_phase) %>
     <%= render ParticapationStats::UserSegmentsComponent.new(stats: @stats) %>
     <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @stats.projekt_phase) %>
+    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @stats.projekt_phase) %>
   <% end %>
 </div>

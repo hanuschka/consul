@@ -3,7 +3,7 @@
 <main>
   <div class="row">
     <div class="small-12 column">
-      <%= back_link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id), t("custom.projekt_phases.stats.back_to_phase") %>
+      <%= back_link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer"), t("custom.projekt_phases.stats.back_to_phase") %>
 
       <h1><%= @projekt_phase.title %> - <%= t("custom.projekt_phases.stats.title") %></h1>
 
@@ -12,7 +12,7 @@
   </div>
 
   <div class="projekt-phase-stats--fixed-back-link">
-    <%= link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id), class: "button with-icon" do %>
+    <%= link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer"), class: "button with-icon" do %>
       <i class="fas fa-arrow-left"></i>
       <%= t("custom.projekt_phases.stats.back_to_phase") %>
     <% end %>

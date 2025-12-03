@@ -25,6 +25,7 @@
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
+      App.HeatmapComponent.initialize();
     }
   };
 }).call(this);

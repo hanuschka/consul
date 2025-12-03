@@ -192,11 +192,6 @@ class DeficiencyReport < ApplicationRecord
     true
   end
 
-  def get_default_responsible
-    map_location&.get_district&.default_deficiency_report_responsible ||
-      category&.default_responsible
-  end
-
   def responsible_officers
     case responsible
     when DeficiencyReport::Officer
@@ -210,5 +205,17 @@ class DeficiencyReport < ApplicationRecord
 
   def archived?
     self.class.archived.exists?(id: id)
+  end
+
+  def assign_default_responsible
+    default_responsible = district&.default_deficiency_report_responsible || category&.default_responsible
+
+    if default_responsible.present?
+      update_columns(
+        responsible_type: default_responsible.class.name,
+        responsible_id: default_responsible.id,
+        assigned_at: Time.zone.now
+      )
+    end
   end
 end

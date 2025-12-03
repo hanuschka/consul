@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_27_104917) do
+ActiveRecord::Schema.define(version: 2025_12_02_155437) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1508,8 +1508,10 @@ ActiveRecord::Schema.define(version: 2025_10_27_104917) do
     t.integer "rendering_library", null: false
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
+    t.bigint "registered_address_district_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
+    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
   end
 
   create_table "memos", force: :cascade do |t|
@@ -3047,6 +3049,7 @@ ActiveRecord::Schema.define(version: 2025_10_27_104917) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
+  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"

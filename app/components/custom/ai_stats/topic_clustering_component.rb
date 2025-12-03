@@ -42,7 +42,7 @@ class AiStats::TopicClusteringComponent < ApplicationComponent
     proposal_ids = subtopic["proposal_ids"] || []
     return [] if proposal_ids.empty?
 
-    Proposal.where(id: proposal_ids).includes(image: { attachment_attachment: :blob })
+    Proposal.base_selection.where(id: proposal_ids).includes(image: { attachment_attachment: :blob })
   end
 
   def proposal_image_url(proposal)

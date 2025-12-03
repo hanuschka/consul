@@ -4,8 +4,7 @@ module Ai::RubyLlmFactory
   end
 
   def self.chat_with_json_output(output_schema)
-    chat
-      .with_schema(output_schema)
+    chat.with_schema(output_schema)
   end
 
   def self.init

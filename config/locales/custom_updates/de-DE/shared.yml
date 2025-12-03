@@ -17,6 +17,13 @@ de:
       tone_of_comments: Tone of Comments
       further_info: further info
       no_resources_to_analyze: Keine Ressourcen zur Analyse verfügbar. Bitte fügen Sie Vorschläge oder Investitionen hinzu, um KI-Statistiken zu generieren.
+    ai_stats:
+      topic_clustering:
+        title: KI-Themengruppierung
+        subtopics: Unterthemen
+        proposals: Vorschläge
+        in: in
+        topic_groups: Themengruppen
     resource_page:
       banner_component:
         comments: Kommentare

@@ -17,6 +17,13 @@ en:
       tone_of_comments: Tone of Comments
       further_info: further info
       no_resources_to_analyze: No resources available to analyze. Please add proposals or investments to generate AI statistics.
+    ai_stats:
+      topic_clustering:
+        title: AI Topic Clustering
+        subtopics: subtopics
+        proposals: proposals
+        in: in
+        topic_groups: topic groups
     resource_page:
       banner_component:
         comments: Comments

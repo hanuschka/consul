@@ -1,4 +1,4 @@
-class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
+class ParticapationStats::LabelSentimentComponent < ApplicationComponent
   def initialize(projekt_phase:)
     @projekt_phase = projekt_phase
   end
@@ -65,4 +65,3 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
     { labels: sentiment_names, values: sentiment_counts, colors: sentiment_colors }
   end
 end
-

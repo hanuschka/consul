@@ -4,15 +4,7 @@
   <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
   <% if params[:section] == "stats" && can?(:read_stats, @projekt_phase) %>
-    <% if can?(:refresh_stats, @projekt_phase) %>
-      <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
-      <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary") %>
-    <% end %>
-
-    <div class='participation-stats'>
-      <%= render AiStats::ParticapationSummary.new(projekt_phase: @projekt_phase) %>
-      <%= render "shared/stats/participation", stats: @stats %>
-    </div>
+    <%= render "custom/pages/projekt_footer_new/stats_content" %>
 
   <% else %>
     <div class="flex justify-between items-center">

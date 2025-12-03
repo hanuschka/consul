@@ -1,4 +1,4 @@
-class AiStats::TopicClusteringComponent < ApplicationComponent
+class ParticapationStats::TopicClusteringComponent < ApplicationComponent
   delegate :render?, to: :categories_component
 
   def initialize(projekt_phase:)

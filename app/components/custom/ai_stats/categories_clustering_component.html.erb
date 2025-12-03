@@ -43,7 +43,30 @@
                                 <i class="fa fa-lightbulb" aria-hidden="true"></i>
                               </div>
                             <% end %>
-                            <span class="ai-categories-clustering--resource-title"><%= resource.title %></span>
+                            <div class="ai-categories-clustering--resource-content">
+                              <span class="ai-categories-clustering--resource-title"><%= resource.title %></span>
+                              <% if resource.projekt_labels.any? || resource.sentiment.present?  %>
+                                <div class="ai-categories-clustering--resource-tags">
+                                  <% if resource.projekt_labels.any? %>
+                                    <div class="ai-categories-clustering--resource-labels">
+                                      <% resource.projekt_labels.each do |label| %>
+                                        <span class="projekt-label">
+                                          <i class="fas fa-<%= label.icon %>"></i>
+                                          <%= label.name %>
+                                        </span>
+                                      <% end %>
+                                    </div>
+                                  <% end %>
+                                  <% if resource.sentiment.present? %>
+                                    <div class="ai-categories-clustering--resource-sentiment">
+                                      <span class="sentiment" style="border-color:<%= resource.sentiment.color %>;background-color:<%= resource.sentiment.color %>;color:#fff">
+                                        <%= resource.sentiment.name %>
+                                      </span>
+                                    </div>
+                                  <% end %>
+                                </div>
+                              <% end %>
+                            </div>
                           <% end %>
                         </li>
                       <% end %>

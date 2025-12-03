@@ -3,9 +3,12 @@ en:
     projekt_phases:
       subnav:
         stats: Statistics
+        full_stats: Full Statistics
         overview:
           proposal_phase: Proposals
       stats:
+        title: Statistics
+        back_to_phase: Back to phase
         refresh_stats_button: "Refresh statistics"
         refresh_ai_stats_button: "Refresh AI statistics"
         generate_ai_summary_button: "Generate AI summary"

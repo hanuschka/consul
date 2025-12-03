@@ -49,7 +49,11 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
 
     @resource_class.base_selection
                    .where(id: resource_ids)
-                   .includes(image: { attachment_attachment: :blob })
+                   .includes(
+                     image: { attachment_attachment: :blob },
+                     projekt_labels: :translations,
+                     sentiment: :translations
+                   )
   end
 
   def resource_image_url(resource)

@@ -1,4 +1,4 @@
-class AiStats::SemanticClusteringComponent < ApplicationComponent
+class ParticapationStats::SemanticClusteringComponent < ApplicationComponent
   delegate :render?, to: :categories_component
 
   def initialize(projekt_phase:)
@@ -28,4 +28,3 @@ class AiStats::SemanticClusteringComponent < ApplicationComponent
       end
     end
 end
-

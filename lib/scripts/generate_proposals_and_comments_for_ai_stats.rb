@@ -113,7 +113,7 @@ class GenerateProposalsAndCommentsForAiStats
   end
 
   def generate_comments_for_proposal(proposal)
-    num_comments = rand(5..7)
+    num_comments = rand(2..3)
 
     prompt = <<~TEXT
       Generate #{num_comments} realistic user comments for the following proposal. Mix positive, arguing, and negative feedback.
@@ -121,7 +121,7 @@ class GenerateProposalsAndCommentsForAiStats
       Proposal Title: #{proposal.title}
       Proposal Description: #{proposal.description}
 
-      Return a JSON array of comments. Each comment should be a German text string (2-4 sentences) that provides feedback on the proposal.
+      Return a JSON array of comments. Each comment should be a German text string (1-2 sentences) that provides feedback on the proposal.
       Mix the tone: some should be positive/supportive, some should be critical/arguing, and some should be negative.
       Make them sound like real citizen feedback on a civic participation platform.
 

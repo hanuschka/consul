@@ -24,6 +24,7 @@
       App.ProposalAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
+      App.AreaChartComponent.initialize();
     }
   };
 }).call(this);

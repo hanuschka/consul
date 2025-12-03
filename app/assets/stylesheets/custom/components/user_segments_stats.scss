@@ -1,0 +1,50 @@
+.user-segments-stats {
+  margin: 2rem 0;
+}
+
+.user-segments-stats--title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.user-segments-stats--gender-cards {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.user-segments-stats--gender-card {
+  background: #E7ECF2;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+  min-width: 180px;
+}
+
+.user-segments-stats--gender-card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-segments-stats--gender-card-number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.user-segments-stats--gender-card-diff {
+  font-size: 0.875rem;
+  color: #5B9BD5;
+}
+
+.user-segments-stats .bar-chart-card {
+  margin-bottom: 1.5rem;
+}
+

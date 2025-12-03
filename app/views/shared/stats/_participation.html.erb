@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <%# <%= render Proposals::PhaseLabelSentimentStatsComponent.new(projekt_phase: stats.projekt_phase) %1> %>
+    <%= render Proposals::PhaseLabelSentimentStatsComponent.new(projekt_phase: stats.projekt_phase) %>
     <%= render AiStats::TopicClusteringComponent.new(projekt_phase: stats.projekt_phase) %>
   <% end %>
 

@@ -1,22 +1,27 @@
 .participation-stats-ai {
   margin: 2rem 0;
-
 }
 
-.ai-summary-section {
+.ai-stats-section {
   background: #E7ECF2;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 18px 25px;
   margin-bottom: 1rem;
   flex-grow: 1;
+}
 
-  h3 {
-    margin: 0 0 1rem 0;
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
+.ai-stats-section--title {
+  margin: 0 0 0.5rem 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
 
+.ai-stats-section--subtitle {
+  margin: 0 0 0.25rem 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
 }
 
 .ai-summary-content {

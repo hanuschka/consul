@@ -20,8 +20,11 @@
       var labels = JSON.parse(container.dataset.chartLabels || "[]");
       var values = JSON.parse(container.dataset.chartValues || "[]");
       var orientation = container.dataset.chartOrientation || "vertical";
+      var colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
 
       var isHorizontal = orientation === "horizontal";
+      var backgroundColor = colors || "#6BA3D6";
+      var borderColor = colors || "#6BA3D6";
 
       var ctx = canvas.getContext("2d");
 
@@ -31,8 +34,8 @@
           labels: labels,
           datasets: [{
             data: values,
-            backgroundColor: "#6BA3D6",
-            borderColor: "#6BA3D6",
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
             borderWidth: 0,
             borderRadius: 4,
             barThickness: isHorizontal ? 20 : 40

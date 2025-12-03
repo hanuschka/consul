@@ -4,7 +4,8 @@
        data-bar-chart
        data-chart-labels="<%= labels_json %>"
        data-chart-values="<%= values_json %>"
-       data-chart-orientation="<%= @orientation %>">
+       data-chart-orientation="<%= @orientation %>"
+       <% if colors_json %>data-chart-colors="<%= colors_json %>"<% end %>>
     <canvas></canvas>
   </div>
 </div>

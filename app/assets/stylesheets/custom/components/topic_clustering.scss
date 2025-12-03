@@ -1,47 +1,28 @@
-.ai-topic-clustering {
-  margin-top: 2rem;
-  background: #E7ECF2;
-  border-radius: 12px;
-  padding: 2rem;
-}
-
-.ai-topic-clustering--title {
-  margin: 0 0 0.5rem 0;
-  font-size: 28px;
-  font-weight: 600;
-  color: #333;
-}
-
 .ai-topic-clustering--description {
-  margin: 0 0 2rem 0;
   font-size: 15px;
-  color: #666;
+  color: gray;
+  margin-bottom: 10px;
 }
 
 .ai-topic-clustering--list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 12px;
 }
 
 .ai-topic-clustering--topic-card {
   background: #fff;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px 15px;
   padding-left: 18px;
+  padding-bottom: 15px;
   border-left: 7px solid var(--topic-color, #6BA3D6);
 }
 
 .ai-topic-clustering--topic-header {
-  margin-bottom: 1.25rem;
+  margin-bottom: 12px;
 }
 
-.ai-topic-clustering--topic-name {
-  margin: 0 0 0.25rem 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-}
 
 .ai-topic-clustering--topic-stats {
   margin: 0;
@@ -71,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 15px;
+  padding: 3px 15px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 
@@ -81,7 +62,6 @@
 }
 
 .ai-topic-clustering--subtopic-name {
-  // font-size: 15px;
   font-weight: 500;
   color: #333;
   flex-grow: 1;
@@ -92,7 +72,6 @@
 }
 
 .ai-topic-clustering--subtopic-count {
-  // font-size: 14px;
   color: #555;
   background: #fff;
   padding: 0.375rem 1rem;
@@ -117,7 +96,6 @@
 
   li {
     margin-bottom: 0.5rem;
-    // font-size: 14px;
     line-height: 1.5;
 
     &:last-child {
@@ -134,4 +112,3 @@
     }
   }
 }
-

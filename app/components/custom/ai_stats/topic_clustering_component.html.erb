@@ -1,5 +1,5 @@
-<div class="ai-topic-clustering">
-  <h3 class="ai-topic-clustering--title">
+<div class="ai-stats-section ai-topic-clustering">
+  <h3 class="ai-stats-section--title">
     <%= t("custom.ai_stats.topic_clustering.title") %>
   </h3>
 
@@ -13,7 +13,7 @@
     <% topics.each_with_index do |topic, topic_index| %>
       <div class="ai-topic-clustering--topic-card" style="--topic-color: <%= topic_color(topic_index) %>">
         <div class="ai-topic-clustering--topic-header">
-          <h4 class="ai-topic-clustering--topic-name"><%= topic["name"] %></h4>
+          <h4 class="ai-stats-section--subtitle"><%= topic["name"] %></h4>
           <p class="ai-topic-clustering--topic-stats">
             <%= subtopic_count(topic) %> <%= t("custom.ai_stats.topic_clustering.subtopics") %>,
             <%= proposal_count(topic) %> <%= t("custom.ai_stats.topic_clustering.proposals") %>

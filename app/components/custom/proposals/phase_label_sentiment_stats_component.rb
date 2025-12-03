@@ -52,15 +52,17 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
 
     sentiment_names = []
     sentiment_counts = []
+    sentiment_colors = []
 
     sentiments.each do |sentiment|
       count = Proposal.where(id: proposal_ids, sentiment_id: sentiment.id).count
 
       sentiment_names << sentiment.name
       sentiment_counts << count
+      sentiment_colors << sentiment.color
     end
 
-    { labels: sentiment_names, values: sentiment_counts }
+    { labels: sentiment_names, values: sentiment_counts, colors: sentiment_colors }
   end
 end
 

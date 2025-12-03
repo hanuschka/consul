@@ -22,30 +22,35 @@
 
         <div class="ai-topic-clustering--subtopics-list">
           <% topic["subtopics"]&.each do |subtopic| %>
-            <div class="ai-topic-clustering--subtopic-item js-collapse">
-              <div class="ai-topic-clustering--subtopic-header js-collapse-head">
-                <span class="ai-topic-clustering--subtopic-name"><%= subtopic["name"] %></span>
-                <span class="ai-topic-clustering--subtopic-count"><%= subtopic_proposal_count(subtopic) %></span>
-              </div>
-
-              <div class="ai-topic-clustering--subtopic-body js-collapse-body">
-                <ul class="ai-topic-clustering--proposals-list">
-                  <% proposals_for_subtopic(subtopic).each do |proposal| %>
-                    <li>
-                      <%= link_to proposal_path(proposal), target: "_blank", class: "ai-topic-clustering--proposal-link" do %>
-                        <% if proposal_has_image?(proposal) %>
-                          <%= image_tag proposal_image_url(proposal), class: "ai-topic-clustering--proposal-image" %>
-                        <% else %>
-                          <div class="ai-topic-clustering--proposal-image-placeholder">
-                            <i class="fa fa-lightbulb" aria-hidden="true"></i>
-                          </div>
-                        <% end %>
-                        <span class="ai-topic-clustering--proposal-title"><%= proposal.title %></span>
+            <div class="ai-topic-clustering--subtopic-item">
+              <%= render Shared::CollapseComponent.new do |c| %>
+                <% c.with_head do %>
+                  <div class="ai-topic-clustering--subtopic-header-content">
+                    <span class="ai-topic-clustering--subtopic-name"><%= subtopic["name"] %></span>
+                    <span class="ai-topic-clustering--subtopic-count"><%= subtopic_proposal_count(subtopic) %></span>
+                  </div>
+                <% end %>
+                <% c.with_body do %>
+                  <div class="ai-topic-clustering--subtopic-body">
+                    <ul class="ai-topic-clustering--proposals-list">
+                      <% proposals_for_subtopic(subtopic).each do |proposal| %>
+                        <li>
+                          <%= link_to proposal_path(proposal), target: "_blank", class: "ai-topic-clustering--proposal-link" do %>
+                            <% if proposal_has_image?(proposal) %>
+                              <%= image_tag proposal_image_url(proposal), class: "ai-topic-clustering--proposal-image" %>
+                            <% else %>
+                              <div class="ai-topic-clustering--proposal-image-placeholder">
+                                <i class="fa fa-lightbulb" aria-hidden="true"></i>
+                              </div>
+                            <% end %>
+                            <span class="ai-topic-clustering--proposal-title"><%= proposal.title %></span>
+                          <% end %>
+                        </li>
                       <% end %>
-                    </li>
-                  <% end %>
-                </ul>
-              </div>
+                    </ul>
+                  </div>
+                <% end %>
+              <% end %>
             </div>
           <% end %>
         </div>

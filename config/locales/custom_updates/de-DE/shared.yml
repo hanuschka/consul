@@ -21,9 +21,18 @@ de:
       topic_clustering:
         title: KI-Themengruppierung
         subtopics: Unterthemen
+        subcategories: Unterkategorien
         proposals: Vorschläge
+        resources: Vorschläge
         in: in
         topic_groups: Themengruppen
+        category_groups: Themengruppen
+      semantic_clustering:
+        title: KI-Semantische Gruppierung
+        subcategories: Unterkategorien
+        resources: Vorschläge
+        in: in
+        category_groups: Kategoriegruppen
     resource_page:
       banner_component:
         comments: Kommentare

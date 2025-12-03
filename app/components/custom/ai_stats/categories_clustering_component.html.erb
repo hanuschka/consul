@@ -1,0 +1,61 @@
+<div class="ai-stats-section ai-categories-clustering">
+  <h3 class="ai-stats-section--title">
+    <%= t(title_key + ".title") %>
+  </h3>
+
+  <p class="ai-categories-clustering--description">
+    <%= total_resources_count %> <%= t(title_key + ".resources") %>
+    <%= t(title_key + ".in") %>
+    <%= total_categories_count %> <%= t(title_key + ".category_groups") %>
+  </p>
+
+  <div class="ai-categories-clustering--list">
+    <% categories.each_with_index do |category, category_index| %>
+      <div class="ai-categories-clustering--category-card" style="--category-color: <%= category_color(category_index) %>">
+        <div class="ai-categories-clustering--category-header">
+          <h4 class="ai-stats-section--subtitle"><%= category["name"] %></h4>
+          <p class="ai-categories-clustering--category-stats">
+            <%= subcategory_count(category) %> <%= t(title_key + ".subcategories") %>,
+            <%= resource_count(category) %> <%= t(title_key + ".resources") %>
+          </p>
+        </div>
+
+        <div class="ai-categories-clustering--subcategories-list">
+          <% category["subtopics"]&.each do |subcategory| %>
+            <div class="ai-categories-clustering--subcategory-item">
+              <%= render Shared::CollapseComponent.new do |c| %>
+                <% c.with_head do %>
+                  <div class="ai-categories-clustering--subcategory-header-content">
+                    <span class="ai-categories-clustering--subcategory-name"><%= subcategory["name"] %></span>
+                    <span class="ai-categories-clustering--subcategory-count"><%= subcategory_resource_count(subcategory) %></span>
+                  </div>
+                <% end %>
+                <% c.with_body do %>
+                  <div class="ai-categories-clustering--subcategory-body">
+                    <ul class="ai-categories-clustering--resources-list">
+                      <% resources_for_subcategory(subcategory).each do |resource| %>
+                        <li>
+                          <%= link_to resource_path(resource), target: "_blank", class: "ai-categories-clustering--resource-link" do %>
+                            <% if resource_has_image?(resource) %>
+                              <%= image_tag resource_image_url(resource), class: "ai-categories-clustering--resource-image" %>
+                            <% else %>
+                              <div class="ai-categories-clustering--resource-image-placeholder">
+                                <i class="fa fa-lightbulb" aria-hidden="true"></i>
+                              </div>
+                            <% end %>
+                            <span class="ai-categories-clustering--resource-title"><%= resource.title %></span>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

@@ -21,9 +21,18 @@ en:
       topic_clustering:
         title: AI Topic Clustering
         subtopics: subtopics
+        subcategories: subcategories
         proposals: proposals
+        resources: proposals
         in: in
         topic_groups: topic groups
+        category_groups: topic groups
+      semantic_clustering:
+        title: AI Semantic Clustering
+        subcategories: subcategories
+        resources: proposals
+        in: in
+        category_groups: category groups
     resource_page:
       banner_component:
         comments: Comments

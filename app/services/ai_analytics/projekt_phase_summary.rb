@@ -7,14 +7,23 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
   def call
     resources = get_resources
-    return {} if resources.empty?
+
+    if resources.empty?
+      Rails.logger.info("[AI Analytics] ProjektPhaseSummary: No resources found for projekt_phase ##{projekt_phase.id}")
+      return {}
+    end
+
+    Rails.logger.info("[AI Analytics] ProjektPhaseSummary: Starting analysis for #{resources.count} resources (projekt_phase ##{projekt_phase.id})")
 
     {
       summary: generate_summary(resources),
       tone_of_participation: generate_tone_of_participation(resources),
       tone_of_comments: generate_tone_of_comments(resources),
-      topic_clustering: generate_topic_clustering
-    }
+      topic_clustering: generate_topic_clustering,
+      semantic_clustering: generate_semantic_clustering
+    }.tap do
+      Rails.logger.info("[AI Analytics] ProjektPhaseSummary: Successfully completed analysis for projekt_phase ##{projekt_phase.id}")
+    end
   end
 
   private
@@ -122,5 +131,9 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
     def generate_topic_clustering
       AiAnalytics::TopicClustering.call(projekt_phase)
+    end
+
+    def generate_semantic_clustering
+      AiAnalytics::SemanticClustering.call(projekt_phase)
     end
 end

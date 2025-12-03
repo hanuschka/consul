@@ -1,4 +1,4 @@
-class AiAnalytics::TopicClustering < ApplicationService
+class AiAnalytics::SemanticClustering < ApplicationService
   attr_reader :projekt_phase
 
   def initialize(projekt_phase)
@@ -7,16 +7,9 @@ class AiAnalytics::TopicClustering < ApplicationService
 
   def call
     proposals = get_proposals
+    return { "topics" => [] } if proposals.empty?
 
-    if proposals.empty?
-      Rails.logger.info("[AI Analytics] TopicClustering: No proposals found for projekt_phase ##{projekt_phase.id}")
-      return { "topics" => [] }
-    end
-
-    Rails.logger.info("[AI Analytics] TopicClustering: Starting clustering for #{proposals.count} proposals (projekt_phase ##{projekt_phase.id})")
-    result = generate_clustering(proposals)
-    Rails.logger.info("[AI Analytics] TopicClustering: Successfully generated clustering for projekt_phase ##{projekt_phase.id}")
-    result
+    generate_clustering(proposals)
   end
 
   private
@@ -40,27 +33,25 @@ class AiAnalytics::TopicClustering < ApplicationService
 
     def generate_clustering(proposals)
       proposals_text = proposals.map do |proposal|
-        "ID: #{proposal.id}, Title: #{proposal.title}, Description: #{proposal.description&.truncate(300)}"
+        "Proposal ID: #{proposal.id}, Proposal text: #{proposal.title}. #{proposal.description&.truncate(300)}"
       end.join("\n\n")
 
       prompt = <<~TEXT
-        You are an AI specialized in semantic clustering and topic modeling.
+        You are an AI specialized in semantic analysis, topic extraction, and hierarchical clustering.
 
-        Your task is to create a clean and logical categorization system for a list of proposals.
+        Your task is to analyze a list of proposals and generate a meaningful topic structure.
 
-        What you must do:
+        Your goals:
 
-        1. Read the full list of proposals (see below).
-        2. Identify patterns, themes and semantic clusters in the proposals.
-        3. Generate 5–7 meaningful TOPICS (your choice — choose what fits the data best).
-        4. For each topic, generate 2–4 SUBTOPICS that further structure the content.
-        5. Assign every proposal to exactly one subtopic using its ID.
+        Perform a semantic analysis of all proposals.
 
-        Make sure topics and subtopics:
-        - are non-overlapping,
-        - are easy to understand for non-experts,
-        - cover all proposals without forcing them unnaturally.
-
+        Identify underlying themes, intentions, target groups, and conceptual similarities.
+        Ignore superficial wording; focus on meaning.
+        Based on your semantic understanding, create 5–7 high-level TOPICS that best represent the conceptual structure of the data.
+        For each topic, create 2–4 SUBTOPICS that capture finer semantic distinctions.
+        Assign each proposal to exactly one subtopic (whichever has the strongest semantic fit).
+        Ensure topics and subtopics are: meaningful and human-friendly, non-overlapping , comprehensive (cover everything),
+        semantically justified (not based on superficial keywords),
         Write all topic and subtopic names in #{target_language}.
 
         Proposals:
@@ -71,7 +62,7 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       response.content
     rescue StandardError => e
-      Rails.logger.error("TopicClustering error: #{e.message}")
+      Rails.logger.error("SemanticClustering error: #{e.message}")
       { "topics" => [] }
     end
 
@@ -111,3 +102,4 @@ class AiAnalytics::TopicClustering < ApplicationService
       }
     end
 end
+

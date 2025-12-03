@@ -178,15 +178,11 @@ ActiveRecord::Schema.define(version: 2025_11_28_041805) do
 
   create_table "api_clients", force: :cascade do |t|
     t.string "name"
-    t.integer "registration_status"
-    t.string "auth_token"
-    t.string "domain"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "service_api_token"
     t.string "access_level"
     t.string "service_user_email"
-    t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
+    t.string "access_token"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "apps", force: :cascade do |t|
@@ -1192,6 +1188,17 @@ ActiveRecord::Schema.define(version: 2025_11_28_041805) do
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "internal_api_clients", force: :cascade do |t|
+    t.string "name"
+    t.integer "registration_status"
+    t.string "auth_token"
+    t.string "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "service_api_token"
+    t.index ["service_api_token"], name: "index_internal_api_clients_on_service_api_token"
   end
 
   create_table "landing_pages_projekts", force: :cascade do |t|

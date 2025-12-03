@@ -684,6 +684,7 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
       managers: Manager*innen
       sdg_managers: SDG Managers
       moderators: Moderator*innen
@@ -1385,6 +1386,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag

@@ -737,6 +737,7 @@ en:
       hidden_proposal_notifications: Hidden proposal notifications
       hidden_users: Hidden users
       administrators: Administrators
+      api_clients: API Clients
       managers: Managers
       sdg_managers: SDG Managers
       moderators: Moderators

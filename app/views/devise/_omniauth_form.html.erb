@@ -1,5 +1,5 @@
-<div class="text-center" style="margin-bottom:1rem;margin-top:1rem;">
-  - <%= t("devise_views.omniauth.oder") %> -
+<div class="hr-with-text" style="padding-bottom: 22px;">
+  <span><%= t("devise_views.omniauth.oder") %></div>
 </div>
 
 <% if oauth_logins.any? || feature?("bund_id_login") %>
@@ -26,9 +26,5 @@
                     method: :post %>
       </div>
     <% end %>
-
-    <div class="small-12 column auth-divider">
-      <span><%= t("omniauth.or_fill") %></span>
-    </div>
   </div>
 <% end %>

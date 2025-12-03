@@ -152,6 +152,10 @@ button,
   @include inverted-selection;
   background: $brand;
 
+  &:hover {
+   background: rgba($brand, 0.05);
+  }
+
   &.warning,
   &.warning:hover {
     color: #000;

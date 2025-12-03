@@ -2,7 +2,7 @@
   <%= content %>
 
   <% if actions.include?(:show) %>
-    <%= action(:show) %>
+    <%= action(:show, **show_options.merge(text: show_text, path: show_path)) %>
   <% end %>
 
   <% if actions.include?(:edit) %>

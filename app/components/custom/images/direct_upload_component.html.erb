@@ -41,12 +41,7 @@
           </div>
 
           <% if attachable.attachment.attached? && attachable.attachment.image? %>
-            <div class="image-preview">
-              <%= image_tag attachable.variant(:large),
-                class: helpers.image_class(attachable),
-                alt: attachable.title.unicode_normalize,
-                title: attachable.title.unicode_normalize %>
-            </div>
+            <%= render_image(attachable, preview_variant, false) %>
           <% end %>
 
           <div class="js-direct-image-upload--attachment-actions">

@@ -333,6 +333,12 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      post :regenerate_token
+    end
+  end
+
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"

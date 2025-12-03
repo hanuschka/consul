@@ -26,7 +26,7 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     def get_resources
       case projekt_phase
       when ProjektPhase::ProposalPhase
-        projekt_phase.resources.includes(:author, comments: :user)
+        projekt_phase.resources.base_selection.includes(:author, comments: :user)
       when ProjektPhase::BudgetPhase
         return [] unless projekt_phase.budget
 

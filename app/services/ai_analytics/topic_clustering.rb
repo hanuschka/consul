@@ -21,7 +21,7 @@ class AiAnalytics::TopicClustering < ApplicationService
     def get_proposals
       case projekt_phase
       when ProjektPhase::ProposalPhase
-        projekt_phase.proposals.to_a
+        projekt_phase.proposals.base_selection.to_a
       when ProjektPhase::BudgetPhase
         return [] unless projekt_phase.budget
 

@@ -1,0 +1,36 @@
+<div class="participation-stats-ai">
+  <section class="ai-stats-section">
+    <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.ai_summary_title") %></h3>
+    <div class="ai-summary-content">
+      <% if ai_summary.present? %>
+        <%= ai_summary %>
+      <% else %>
+        <%= t("custom.participation_stats.no_resources_to_analyze") %>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="d-flex u-gap-10 u-space-between">
+    <section class="ai-stats-section u-max-w-50">
+      <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+      <div class="ai-summary-content">
+        <% if tone_of_participation.present? %>
+          <div class="tone-value"><%= tone_of_participation %></div>
+        <% else %>
+          <%= t("custom.participation_stats.no_resources_to_analyze") %>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="ai-stats-section u-max-w-50">
+      <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
+      <div class="ai-summary-content">
+        <% if tone_of_comments.present? %>
+          <div class="tone-value"><%= tone_of_comments %></div>
+        <% else %>
+          <%= t("custom.participation_stats.no_resources_to_analyze") %>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

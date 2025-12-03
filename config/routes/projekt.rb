@@ -27,6 +27,7 @@ resources :projekt_phases, only: [] do
     get :map_html
     post :toggle_subscription
     post :refresh_stats
+    post :refresh_ai_stats
   end
 end
 

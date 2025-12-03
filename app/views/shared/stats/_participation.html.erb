@@ -26,38 +26,53 @@
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <div id="" class="stats-group">
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_proposals_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_proposals,
-        t("custom.projekt_phases.stats.proposal_phase.total_proposals"),
-        html_class: "total-resources"
-      ) %>
+    <div class="participation-stat-number-cards">
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.proposals") %></h4>
+        <div class="number"><%= stats.total_proposals %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_supports,
-        t("custom.projekt_phases.stats.proposal_phase.total_supports"),
-        html_class: "total-resources"
-      ) %>
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.authors") %></h4>
+        <div class="number"><%= stats.total_authors %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_weight_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_supports_weight,
-        t("custom.projekt_phases.stats.proposal_phase.total_supports_weight"),
-        html_class: "total-resources"
-      ) %>
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.participants") %></h4>
+        <div class="number"><%= stats.total_participants %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_authors_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_authors,
-        "",
-        html_class: "total-participants"
-      ) %>
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.supports") %></h4>
+        <div class="number"><%= stats.total_supports %></div>
+      </div>
+
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.weighted_score") %></h4>
+        <div class="number"><%= stats.total_supports_weight %></div>
+      </div>
+
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.comments") %></h4>
+        <div class="number"><%= stats.total_comments %></div>
+      </div>
+
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.hidden") %></h4>
+        <div class="number"><%= stats.total_hidden %></div>
+      </div>
+
+      <div class="participation-stat-number-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.reported") %></h4>
+        <div class="number"><%= stats.total_reported %></div>
+      </div>
     </div>
+
+    <%= render Proposals::PhaseLabelSentimentStatsComponent.new(projekt_phase: stats.projekt_phase) %>
+    <%= render AiStats::TopicClusteringComponent.new(projekt_phase: stats.projekt_phase) %>
   <% end %>
 
-  <% unless stats.show_percentage_values_only? %>
+  <% unless stats.show_percentage_values_only? || stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
     <div id="total_participants" class="stats-group">
       <h4><%= t("stats.total_participants") %></h4>
 

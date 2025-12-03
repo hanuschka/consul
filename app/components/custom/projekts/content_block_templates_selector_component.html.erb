@@ -28,7 +28,7 @@
       <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
         <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
           <% basic_content_templates.each do |template_name| %>
-            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
               template_name: template_name,
               template_dir: "projekts/content_block_templates/basic_content"
             ) %>
@@ -36,7 +36,7 @@
         </div>
         <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
           <% status_and_notes_templates.each do |template_name| %>
-            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
               template_name: template_name,
               template_dir: "projekts/content_block_templates/status_and_notes"
             ) %>
@@ -44,7 +44,7 @@
         </div>
         <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
           <% teasers_and_promotions.each do |template_name| %>
-            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
               template_name: template_name,
               template_dir: "projekts/content_block_templates/teasers_and_promotions"
             ) %>
@@ -52,7 +52,7 @@
         </div>
         <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
           <% media_and_resources_templates.each do |template_name| %>
-            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
               template_name: template_name,
               template_dir: "custom/projekts/content_block_templates/media_and_resources"
             ) %>

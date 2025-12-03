@@ -1,0 +1,28 @@
+.participation-stat-number-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.participation-stat-number-card {
+  background: #E7ECF2;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  flex: 1 1 calc(25% - 1rem);
+  min-width: 200px;
+
+  h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .number {
+    font-size: 2.7rem;
+    font-weight: bold;
+    color: #000;
+    line-height: 1;
+  }
+}

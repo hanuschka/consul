@@ -51,7 +51,8 @@ class Admin::AiSettingsController < Admin::BaseController
 
     def show_api_endpoint?
       provider = Setting["ai.llm_provider"].to_s.downcase
-      provider == "openai" || provider == "ollama"
+
+      ["openai", "ollama", "gemini"].include?(provider)
     end
 
     def show_model_field?

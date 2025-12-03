@@ -367,6 +367,11 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def generate_ai_stats
+    stats = AiAnalytics::ProjektPhaseSummary.call(self)
+    update_column(:ai_stats, stats)
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

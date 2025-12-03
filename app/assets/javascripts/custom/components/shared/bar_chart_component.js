@@ -38,7 +38,7 @@
             borderColor: borderColor,
             borderWidth: 0,
             borderRadius: 4,
-            barThickness: isHorizontal ? 20 : 40
+            barThickness: isHorizontal ? 35 : 40
           }]
         },
         options: {

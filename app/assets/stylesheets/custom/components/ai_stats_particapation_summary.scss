@@ -21,7 +21,7 @@
   margin: 0 0 0.25rem 0;
   font-size: 20px;
   font-weight: 700;
-  color: #333;
+  color: var(--category-color) !important;
 }
 
 .ai-summary-content {

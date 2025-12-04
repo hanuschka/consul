@@ -36,24 +36,29 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def resource_count(category)
-    category["subtopics"]&.sum { |s| s["proposal_ids"]&.size || 0 } || 0
+    category["subtopics"]&.sum { |s| (s["resource_ids"] || s["proposal_ids"])&.size || 0 } || 0
   end
 
   def subcategory_resource_count(subcategory)
-    subcategory["proposal_ids"]&.size || 0
+    (subcategory["resource_ids"] || subcategory["proposal_ids"])&.size || 0
   end
 
   def resources_for_subcategory(subcategory)
-    resource_ids = subcategory["proposal_ids"] || []
+    resource_ids = subcategory["resource_ids"] || subcategory["proposal_ids"] || []
     return [] if resource_ids.empty?
 
-    @resource_class.base_selection
-                   .where(id: resource_ids)
-                   .includes(
-                     image: { attachment_attachment: :blob },
-                     projekt_labels: :translations,
-                     sentiment: :translations
-                   )
+    query = @resource_class.where(id: resource_ids)
+    query = query.base_selection if @resource_class.respond_to?(:base_selection)
+
+    if @resource_class == Comment
+      query.includes(:user)
+    else
+      query.includes(
+        image: { attachment_attachment: :blob },
+        projekt_labels: :translations,
+        sentiment: :translations
+      )
+    end
   end
 
   def resource_image_url(resource)
@@ -65,12 +70,23 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   def resource_path(resource)
     if resource.is_a?(Budget::Investment)
       Rails.application.routes.url_helpers.budget_investment_path(resource.budget, resource)
+    elsif resource.is_a?(Comment)
+      commentable = resource.commentable
+      if commentable.is_a?(Proposal)
+        Rails.application.routes.url_helpers.proposal_path(commentable, anchor: "comment_#{resource.id}")
+      elsif commentable.is_a?(Budget::Investment)
+        Rails.application.routes.url_helpers.budget_investment_path(commentable.budget, commentable, anchor: "comment_#{resource.id}")
+      else
+        "#"
+      end
     else
       Rails.application.routes.url_helpers.proposal_path(resource)
     end
   end
 
   def resource_has_image?(resource)
+    return false if resource.is_a?(Comment)
+
     resource.image&.attached?
   end
 end

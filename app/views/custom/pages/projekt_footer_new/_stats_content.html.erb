@@ -7,14 +7,17 @@
 
 <div class='participation-stats'>
   <%= render ParticapationStats::SummaryComponent.new(projekt_phase: @projekt_phase) %>
-  <%= render "shared/stats/participation", stats: @stats %>
 
   <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) %>
-    <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @stats.projekt_phase) %>
-    <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @stats.projekt_phase) %>
-    <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @stats.projekt_phase) %>
+    <%= render "shared/stats/participation", stats: @stats %>
+    <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
+    <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
+    <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::UserSegmentsComponent.new(stats: @stats) %>
-    <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @stats.projekt_phase) %>
+    <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @stats.projekt_phase) %>
+  <% elsif @projekt_phase.is_a?(ProjektPhase::CommentPhase) %>
+    <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
+    <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>
   <% end %>
 </div>

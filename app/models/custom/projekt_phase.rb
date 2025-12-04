@@ -368,7 +368,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def generate_ai_stats
-    stats = AiAnalytics::ProjektPhaseSummary.call(self)
+    stats = AiAnalytics::GenerateAllStats.call(self)
     update_column(:ai_stats, stats)
   end
 

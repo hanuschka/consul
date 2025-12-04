@@ -23,6 +23,8 @@ class ParticapationStats::SemanticClusteringComponent < ApplicationComponent
       case @projekt_phase
       when ProjektPhase::BudgetPhase
         Budget::Investment
+      when ProjektPhase::CommentPhase
+        Comment
       else
         Proposal
       end

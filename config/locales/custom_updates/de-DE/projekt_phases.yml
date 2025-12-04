@@ -6,6 +6,7 @@ de:
         full_stats: Vollständige Statistiken
         overview:
           proposal_phase: Vorschläge
+          comment_phase: Kommentare
       stats:
         title: Statistiken
         back_to_phase: Zurück zum Projekt

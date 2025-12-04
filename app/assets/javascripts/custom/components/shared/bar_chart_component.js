@@ -17,28 +17,36 @@
         return;
       }
 
+      const chartData = this.getChartData(container);
+      this.adjustContainerHeight(container, chartData);
+
+      const ctx = canvas.getContext("2d");
+      const chartConfig = this.createChartConfig(chartData);
+
+      new Chart(ctx, chartConfig);
+      container.dataset.chartInitialized = "true";
+    },
+
+    getChartData: function(container) {
       const labels = JSON.parse(container.dataset.chartLabels || "[]");
       const values = JSON.parse(container.dataset.chartValues || "[]");
       const orientation = container.dataset.chartOrientation || "vertical";
       const colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
       const usePercentage = container.dataset.chartUsePercentage === "true";
 
-      const isHorizontal = orientation === "horizontal";
-      const backgroundColor = colors || "#6BA3D6";
-      const borderColor = colors || "#6BA3D6";
+      return {
+        labels: labels,
+        values: values,
+        isHorizontal: orientation === "horizontal",
+        backgroundColor: colors || "#6BA3D6",
+        borderColor: colors || "#6BA3D6",
+        usePercentage: usePercentage,
+        maxValue: Math.max.apply(null, values)
+      };
+    },
 
-      if (isHorizontal) {
-        const barHeight = 35;
-        const barSpacing = 12;
-        const paddingTop = 10;
-        const paddingBottom = 30;
-        const calculatedHeight = (labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
-        container.style.height = calculatedHeight + "px";
-      }
-
-      const maxValue = Math.max.apply(null, values);
-
-      const valueAxisConfig = {
+    createValueAxisConfig: function(chartData) {
+      const config = {
         grid: {
           display: true,
           color: "#e0e0e0"
@@ -61,15 +69,15 @@
           display: false
         },
         beginAtZero: true,
-        suggestedMax: maxValue
+        suggestedMax: chartData.maxValue
       };
 
-      if (usePercentage) {
-        valueAxisConfig.min = 0;
-        valueAxisConfig.max = 100;
-        valueAxisConfig.suggestedMax = undefined;
-        valueAxisConfig.ticks.stepSize = undefined;
-        valueAxisConfig.ticks.callback = function(value) {
+      if (chartData.usePercentage) {
+        config.min = 0;
+        config.max = 100;
+        config.suggestedMax = undefined;
+        config.ticks.stepSize = undefined;
+        config.ticks.callback = function(value) {
           if (Number.isInteger(value)) {
             return value + "%";
           }
@@ -77,7 +85,11 @@
         };
       }
 
-      const labelAxisConfig = {
+      return config;
+    },
+
+    createLabelAxisConfig: function() {
+      return {
         grid: {
           display: false,
           color: "#e0e0e0"
@@ -94,61 +106,77 @@
           display: false
         }
       };
+    },
 
-      const ctx = canvas.getContext("2d");
-
-      const tooltipCallbacks = {
-        label: function(context) {
-          const value = isHorizontal ? context.parsed.x : context.parsed.y;
-          const roundedValue = Math.round(value);
-          return usePercentage ? roundedValue + "%" : roundedValue;
+    createTooltipConfig: function(chartData) {
+      return {
+        backgroundColor: "#333",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        cornerRadius: 4,
+        padding: 10,
+        titleFont: {
+          size: 14
+        },
+        bodyFont: {
+          size: 14
+        },
+        callbacks: {
+          label: (context) => {
+            const value = chartData.isHorizontal ? context.parsed.x : context.parsed.y;
+            const roundedValue = Math.round(value);
+            return chartData.usePercentage ? roundedValue + "%" : roundedValue;
+          }
         }
       };
+    },
 
-      new Chart(ctx, {
+    createChartConfig: function(chartData) {
+      const valueAxisConfig = this.createValueAxisConfig(chartData);
+      const labelAxisConfig = this.createLabelAxisConfig();
+
+      return {
         type: "bar",
         data: {
-          labels: labels,
+          labels: chartData.labels,
           datasets: [{
-            data: values,
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
+            data: chartData.values,
+            backgroundColor: chartData.backgroundColor,
+            borderColor: chartData.borderColor,
             borderWidth: 0,
             borderRadius: 4,
-            barThickness: isHorizontal ? 35 : 40
+            barThickness: chartData.isHorizontal ? 35 : 40
           }]
         },
         options: {
-          indexAxis: isHorizontal ? "y" : "x",
+          indexAxis: chartData.isHorizontal ? "y" : "x",
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
               display: false
             },
-            tooltip: {
-              backgroundColor: "#333",
-              titleColor: "#fff",
-              bodyColor: "#fff",
-              cornerRadius: 4,
-              padding: 10,
-              titleFont: {
-                size: 14
-              },
-              bodyFont: {
-                size: 14
-              },
-              callbacks: tooltipCallbacks
-            }
+            tooltip: this.createTooltipConfig(chartData)
           },
           scales: {
-            x: isHorizontal ? valueAxisConfig : labelAxisConfig,
-            y: isHorizontal ? labelAxisConfig : valueAxisConfig
+            x: chartData.isHorizontal ? valueAxisConfig : labelAxisConfig,
+            y: chartData.isHorizontal ? labelAxisConfig : valueAxisConfig
           }
         }
-      });
+      };
+    },
 
-      container.dataset.chartInitialized = "true";
+    adjustContainerHeight: function(container, chartData) {
+      if (!chartData.isHorizontal) {
+        return;
+      }
+
+      const barHeight = 35;
+      const barSpacing = 12;
+      const paddingTop = 10;
+      const paddingBottom = 30;
+      const calculatedHeight = (chartData.labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
+      container.style.height = calculatedHeight + "px";
     }
   };
 }).call(this);

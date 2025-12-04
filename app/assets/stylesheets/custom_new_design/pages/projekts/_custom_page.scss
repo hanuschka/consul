@@ -371,7 +371,12 @@
 
   .custom-page--banner-wrapper.-compact {
     height: auto;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+
+    .custom-page--banner-text-section-wrapper {
+      padding-top: 50px;
+    }
 
     .custom-page--banner {
       position: static;

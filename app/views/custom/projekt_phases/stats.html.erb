@@ -5,8 +5,6 @@
 
   <div class="row">
     <div class="small-12 column">
-      <%= back_link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer"), t("custom.projekt_phases.stats.back_to_phase") %>
-
       <h1><%= @projekt_phase.title %> - <%= t("custom.projekt_phases.stats.title") %></h1>
 
       <%= render "custom/pages/projekt_footer_new/stats_content" %>

@@ -18,7 +18,7 @@
           <% end %>
         </div>
 
-        <% if !@compact && (@custom_page.subtitle.present? || show_embedded_controlls?) %>
+        <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
           <% if show_embedded_controlls? %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
               <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
@@ -31,7 +31,7 @@
         <% end %>
       </div>
 
-      <% if @custom_page.projekt.present? && !@compact %>
+      <% if @custom_page.projekt.present? %>
         <div class="custom-page--banner-breadcrumbs">
           <%= helpers.breadcrumbs_links(@custom_page.projekt) %>
         </div>

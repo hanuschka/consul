@@ -9,6 +9,8 @@ class GenerateProposalsAndCommentsForAiStats
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
     @users = User.where.not(email: nil).limit(20).to_a
     @proposals = []
+    @labels = @projekt_phase.projekt_labels.includes(:translations).to_a
+    @sentiments = @projekt_phase.sentiments.includes(:translations).to_a
   end
 
   def call
@@ -18,6 +20,8 @@ class GenerateProposalsAndCommentsForAiStats
     end
 
     puts "Generating proposals for phase: #{@projekt_phase.title}"
+    puts "  Available labels: #{@labels.count}"
+    puts "  Available sentiments: #{@sentiments.count}"
     generate_proposals
 
     puts "\nGenerating comments for proposals..."
@@ -26,6 +30,11 @@ class GenerateProposalsAndCommentsForAiStats
     puts "\n✓ Done!"
     puts "  Created #{@proposals.count} proposals"
     puts "  Created #{Comment.where(commentable: @proposals).count} comments"
+
+    total_labels = ProjektLabeling.where(labelable: @proposals).count
+    total_sentiments = @proposals.where.not(sentiment_id: nil).count
+    puts "  Assigned #{total_labels} labels" if total_labels > 0
+    puts "  Assigned #{total_sentiments} sentiments" if total_sentiments > 0
   end
 
   private
@@ -99,10 +108,70 @@ class GenerateProposalsAndCommentsForAiStats
       admin_accepted: true
     )
 
+    assign_labels_and_sentiment(proposal)
+
     @proposals << proposal
     puts "    Created: #{proposal.title}"
   rescue => e
     puts "    ✗ Failed to create proposal: #{e.message}"
+  end
+
+  def assign_labels_and_sentiment(proposal)
+    return if @labels.empty? && @sentiments.empty?
+
+    labels_text = @labels.map { |l| "- #{l.name}: #{l.description}" }.join("\n")
+    sentiments_text = @sentiments.map { |s| "- #{s.name}" }.join("\n")
+
+    prompt = <<~TEXT
+      Analyze the following proposal and suggest which labels and sentiment best fit it.
+
+      Proposal:
+      Title: #{proposal.title}
+      Description: #{proposal.description}
+
+      Available Labels:
+      #{labels_text.presence || "None"}
+
+      Available Sentiments:
+      #{sentiments_text.presence || "None"}
+
+      Return ONLY valid JSON with this exact format:
+      {
+        "label_ids": [array of label IDs that fit this proposal],
+        "sentiment_id": single sentiment ID that best matches (or null)
+      }
+
+      Label IDs available: #{@labels.map(&:id).join(', ')}
+      Sentiment IDs available: #{@sentiments.map(&:id).join(', ')}
+    TEXT
+
+    response = Ai::RubyLlmFactory.chat.ask(prompt)
+    data = parse_json_response(response.content)
+
+    if data.is_a?(Hash)
+      if data['label_ids'].is_a?(Array)
+        data['label_ids'].each do |label_id|
+          label = @labels.find { |l| l.id == label_id }
+          if label
+            ProjektLabeling.create!(
+              projekt_label: label,
+              labelable: proposal
+            )
+            puts "      Assigned label: #{label.name}"
+          end
+        end
+      end
+
+      if data['sentiment_id']
+        sentiment = @sentiments.find { |s| s.id == data['sentiment_id'] }
+        if sentiment
+          proposal.update!(sentiment: sentiment)
+          puts "      Assigned sentiment: #{sentiment.name}"
+        end
+      end
+    end
+  rescue => e
+    puts "      ✗ Error assigning labels/sentiment: #{e.message}"
   end
 
   def generate_comments_for_proposals
@@ -157,7 +226,12 @@ class GenerateProposalsAndCommentsForAiStats
   def parse_json_response(content)
     cleaned = content.strip
     cleaned = cleaned.gsub(/^```json\s*/, '').gsub(/\s*```$/, '')
-    cleaned = cleaned[cleaned.index('[')..cleaned.rindex(']')] if cleaned.include?('[')
+
+    if cleaned.include?('{') && cleaned.include?('}')
+      cleaned = cleaned[cleaned.index('{')..cleaned.rindex('}')]
+    elsif cleaned.include?('[') && cleaned.include?(']')
+      cleaned = cleaned[cleaned.index('[')..cleaned.rindex(']')]
+    end
 
     JSON.parse(cleaned)
   rescue JSON::ParserError => e

@@ -1,4 +1,4 @@
-class AiStats::ParticapationSummary < ApplicationComponent
+class ParticapationStats::SummaryComponent < ApplicationComponent
   def initialize(projekt_phase:)
     @projekt_phase = projekt_phase
     @ai_stats = projekt_phase.ai_stats || {}

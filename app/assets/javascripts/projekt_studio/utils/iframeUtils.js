@@ -17,4 +17,7 @@ ProjektStudio.utils.parseIframeEventData = function(eventData) {
   if (typeof eventData === "object"){
     return eventData
   }
+  else {
+    return null
+  }
 }

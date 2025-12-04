@@ -1,0 +1,18 @@
+<% provide :title, t("custom.projekt_phases.stats.title") %>
+
+<main>
+  <%= render ProjektPhases::BannerComponent.new(projekt_phase: @projekt_phase) %>
+
+  <div class="row">
+    <div class="small-12 column">
+      <%= render "custom/pages/projekt_footer_new/stats_content" %>
+    </div>
+  </div>
+
+  <div class="projekt-phase-stats--fixed-back-link">
+    <%= link_to page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer"), class: "button with-icon" do %>
+      <i class="fas fa-arrow-left"></i>
+      <%= t("custom.projekt_phases.stats.back_to_phase") %>
+    <% end %>
+  </div>
+</main>

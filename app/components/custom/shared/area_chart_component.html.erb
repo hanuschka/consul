@@ -1,0 +1,14 @@
+<div class="area-chart-card">
+  <div class="area-chart-card--header">
+    <h3 class="area-chart-card--title"><%= @title %></h3>
+  </div>
+  <div class="area-chart-card--total"><%= total_value %></div>
+  <div class="area-chart-container"
+       data-area-chart
+       data-chart-labels="<%= labels_json %>"
+       data-chart-values="<%= values_json %>"
+       data-chart-color="<%= @color %>">
+    <canvas></canvas>
+  </div>
+</div>
+

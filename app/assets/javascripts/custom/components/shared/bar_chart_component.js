@@ -21,12 +21,73 @@
       var values = JSON.parse(container.dataset.chartValues || "[]");
       var orientation = container.dataset.chartOrientation || "vertical";
       var colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
+      var usePercentage = container.dataset.chartUsePercentage === "true";
 
       var isHorizontal = orientation === "horizontal";
       var backgroundColor = colors || "#6BA3D6";
       var borderColor = colors || "#6BA3D6";
 
+      if (isHorizontal) {
+        var barHeight = 35;
+        var barSpacing = 12;
+        var paddingTop = 10;
+        var paddingBottom = 30;
+        var calculatedHeight = (labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
+        container.style.height = calculatedHeight + "px";
+      }
+
+      var valueAxisConfig = {
+        grid: {
+          display: true,
+          color: "#e0e0e0"
+        },
+        ticks: {
+          color: "#333",
+          font: {
+            size: 15,
+            weight: 400
+          }
+        },
+        border: {
+          display: false
+        },
+        beginAtZero: true
+      };
+
+      if (usePercentage) {
+        valueAxisConfig.min = 0;
+        valueAxisConfig.max = 100;
+        valueAxisConfig.ticks.callback = function(value) {
+          return value + "%";
+        };
+      }
+
+      var labelAxisConfig = {
+        grid: {
+          display: false,
+          color: "#e0e0e0"
+        },
+        ticks: {
+          color: "#333",
+          font: {
+            size: 15,
+            weight: 400
+          },
+          autoSkip: false
+        },
+        border: {
+          display: false
+        }
+      };
+
       var ctx = canvas.getContext("2d");
+
+      var tooltipCallbacks = {};
+      if (usePercentage) {
+        tooltipCallbacks.label = function(context) {
+          return context.parsed.x + "%";
+        };
+      }
 
       new Chart(ctx, {
         type: "bar",
@@ -38,7 +99,7 @@
             borderColor: borderColor,
             borderWidth: 0,
             borderRadius: 4,
-            barThickness: isHorizontal ? 20 : 40
+            barThickness: isHorizontal ? 35 : 40
           }]
         },
         options: {
@@ -60,43 +121,13 @@
               },
               bodyFont: {
                 size: 14
-              }
+              },
+              callbacks: tooltipCallbacks
             }
           },
           scales: {
-            x: {
-              grid: {
-                display: !isHorizontal,
-                color: "#e0e0e0"
-              },
-              ticks: {
-                color: "#333",
-                font: {
-                  size: 15,
-                  weight: 400
-                }
-              },
-              border: {
-                display: false
-              }
-            },
-            y: {
-              grid: {
-                display: isHorizontal,
-                color: "#e0e0e0"
-              },
-              ticks: {
-                color: "#333",
-                font: {
-                  size: 15,
-                  weight: 400
-                }
-              },
-              border: {
-                display: false
-              },
-              beginAtZero: true
-            }
+            x: isHorizontal ? valueAxisConfig : labelAxisConfig,
+            y: isHorizontal ? labelAxisConfig : valueAxisConfig
           }
         }
       });

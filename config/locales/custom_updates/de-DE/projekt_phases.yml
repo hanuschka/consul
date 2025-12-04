@@ -3,9 +3,13 @@ de:
     projekt_phases:
       subnav:
         stats: Statistiken
+        full_stats: Vollständige Statistiken
         overview:
           proposal_phase: Vorschläge
+          comment_phase: Kommentare
       stats:
+        title: Statistiken
+        back_to_phase: Zurück zum Projekt
         refresh_stats_button: "Statistiken aktualisieren"
         refresh_ai_stats_button: "AI-Statistiken aktualisieren"
         generate_ai_summary_button: "AI-Summary generieren"

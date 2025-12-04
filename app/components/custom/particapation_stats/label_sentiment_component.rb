@@ -1,4 +1,4 @@
-class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
+class ParticapationStats::LabelSentimentComponent < ApplicationComponent
   def initialize(projekt_phase:)
     @projekt_phase = projekt_phase
   end
@@ -27,7 +27,7 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
 
   def calculate_labels_data
     labels = @projekt_phase.projekt_labels.includes(:translations)
-    proposal_ids = @projekt_phase.proposals.select(:id)
+    resource_ids = resources.select(:id)
 
     label_names = []
     label_counts = []
@@ -35,8 +35,8 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
     labels.each do |label|
       count = ProjektLabeling.where(
         projekt_label_id: label.id,
-        labelable_type: "Proposal",
-        labelable_id: proposal_ids
+        labelable_type: labelable_type,
+        labelable_id: resource_ids
       ).count
 
       label_names << label.name
@@ -48,14 +48,14 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
 
   def calculate_sentiments_data
     sentiments = @projekt_phase.sentiments.includes(:translations)
-    proposal_ids = @projekt_phase.proposals.select(:id)
+    resource_ids = resources.select(:id)
 
     sentiment_names = []
     sentiment_counts = []
     sentiment_colors = []
 
     sentiments.each do |sentiment|
-      count = Proposal.where(id: proposal_ids, sentiment_id: sentiment.id).count
+      count = resource_class.where(id: resource_ids, sentiment_id: sentiment.id).count
 
       sentiment_names << sentiment.name
       sentiment_counts << count
@@ -64,5 +64,38 @@ class Proposals::PhaseLabelSentimentStatsComponent < ApplicationComponent
 
     { labels: sentiment_names, values: sentiment_counts, colors: sentiment_colors }
   end
-end
 
+  def resources
+    @resources ||=
+      case @projekt_phase
+      when ProjektPhase::ProposalPhase
+        @projekt_phase.proposals
+      when ProjektPhase::BudgetPhase
+        @projekt_phase.budget&.investments || Budget::Investment.none
+      else
+        Proposal.none
+      end
+  end
+
+  def resource_class
+    case @projekt_phase
+    when ProjektPhase::ProposalPhase
+      Proposal
+    when ProjektPhase::BudgetPhase
+      Budget::Investment
+    else
+      Proposal
+    end
+  end
+
+  def labelable_type
+    case @projekt_phase
+    when ProjektPhase::ProposalPhase
+      "Proposal"
+    when ProjektPhase::BudgetPhase
+      "Budget::Investment"
+    else
+      "Proposal"
+    end
+  end
+end

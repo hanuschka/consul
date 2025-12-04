@@ -1,12 +1,10 @@
 <% provide :title, t("custom.projekt_phases.stats.title") %>
 
 <main>
-  <%= render Projekts::BannerComponent.new(custom_page: @projekt.page, compact: true) %>
+  <%= render ProjektPhaseStatsHeaderComponent.new(projekt_phase: @projekt_phase) %>
 
   <div class="row">
     <div class="small-12 column">
-      <h1><%= @projekt_phase.title %> - <%= t("custom.projekt_phases.stats.title") %></h1>
-
       <%= render "custom/pages/projekt_footer_new/stats_content" %>
     </div>
   </div>

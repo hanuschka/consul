@@ -58,7 +58,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="d-flex u-gap-10">
                 <button type="button" class="projekt-content-block-edit--button js-content-block-enter-simple-edit-mode-from-ai">
                   <i class="fas fa-pencil-alt"></i>
-                  Direkt editieren
+                  Im Editor weiterbearbeiten
                 </button>
               </div>
             </div>
@@ -135,6 +135,10 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-code">
                 </i>
               </button>
+              <button type="button" title="Inhaltsblock kopieren" class="js-copy-current-content-block projekt-frame-icon-button">
+                <i class="fas fa-copy">
+                </i>
+              </button>
               <div class="ai-button-wrapper">
                 <div class="ai-button-wrapper--inner">
                   <div class="dropdown-menu-container js-dropdown-menu">
@@ -185,7 +189,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-edit">
                 </i>
               </button>
-              <button title="Auf vorherige Version zurücksetzen" disabled class="projekt-frame-icon-button js-content-block-reset-to-prev-version">
+              <button title="Auf vorherige Version zurücksetzen" disabled class="projekt-frame-icon-button js-content-block-version-managment">
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>

@@ -47,10 +47,10 @@ class Shared::MapComponent < ApplicationComponent
       options[:map_features_limit] = map_features_limit if @editable
 
       if rendering_library == "mapbox"
-        options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
+        options[:mapbox_public_token] = ExternalApiKey.mapbox_public_token
         options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
-        options[:map_center_altitude] = map_location&.altitude 
+        options[:map_center_altitude] = map_location&.altitude
       end
 
       options
@@ -77,8 +77,11 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def admin_features
-      return {} if admin_editor?
-      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
+      if admin_editor?
+        return { type: "FeatureCollection", features: [] }.to_json
+      elsif @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
+        return map_location.features.to_json
+      end
 
       @mappable.try(:projekt_phase)&.map_location&.features&.to_json ||
         @mappable.try(:projekt)&.map_location&.features&.to_json

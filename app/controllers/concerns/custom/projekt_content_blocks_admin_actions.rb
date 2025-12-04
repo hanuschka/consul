@@ -66,22 +66,11 @@ module ProjektContentBlocksAdminActions
   def change_with_ai
     authorize!(:update, @content_block.projekt)
 
-    llm_response = RubyLLM.chat(model: 'gpt-5-nano').ask(
-      <<~TEXT
-        Update the content block html using provided instructions.
-        Instructions: '#{params[:instructions]}'.
-        When requested to add images use "https://placehold.co" for src.
-        Dont replace existing images.
-        For instance: "https://placehold.co/275x275".
-
-        Current content block html content:
-        #{params[:content_block_html]}
-
-        Return just new html.
-      TEXT
-    )
-
-    new_content_block_body = llm_response.content
+    new_content_block_body =
+      Ai::GenerateContentBlock.call(
+        params[:instructions],
+        params[:content_block_html]
+      )
 
     if new_content_block_body.present?
       render json: { content_block_html: new_content_block_body, status: { message: "Content block updated" }}

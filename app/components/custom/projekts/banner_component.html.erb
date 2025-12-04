@@ -1,33 +1,31 @@
-<div class="custom-page--banner-wrapper">
+<div class="<%= banner_wrapper_class %>">
   <div class="custom-page--banner">
     <div class="custom-page--banner-text-section-wrapper">
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
-          <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+          <% if show_embedded_controlls? %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
-              <h1 class="custom-page--banner-title">
-                <%= @custom_page.title %>
-              </h1>
+              <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
           <% else %>
             <h1 class="custom-page--banner-title">
-              <%= @custom_page.title %>
+              <% if @compact %>
+                <%= link_to @custom_page.title, page_path(@custom_page.slug) %>
+              <% else %>
+                <%= @custom_page.title %>
+              <% end %>
             </h1>
           <% end %>
         </div>
 
-        <% if @custom_page.subtitle.present? || show_admin_controls_for_projekt?(@custom_page.projekt) %>
-          <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+        <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
+          <% if show_embedded_controlls? %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
-              <div class="custom-page--banner-description">
-                <%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %>
-              </div>
+              <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
           <% else %>
             <div class="custom-page--banner-description">
-              <p style="font-size:inherit;">
-                <%= sanitize(@custom_page.subtitle, tags: ["br"]) %>
-              </p>
+              <p style="font-size:inherit;"><%= sanitize(@custom_page.subtitle, tags: ["br"]) %> </p>
             </div>
           <% end %>
         <% end %>
@@ -40,7 +38,7 @@
       <% end %>
     </div>
 
-    <% if @custom_page.image.present? || show_admin_controls_for_projekt?(@custom_page.projekt) %>
+    <% if (@custom_page.image.present? || show_embedded_controlls?) %>
       <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
 
       <% if @custom_page.image.present? %>
@@ -70,7 +68,7 @@
       <% end %>
 
       <div class="custom-page--banner-image">
-        <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+        <% if show_embedded_controlls? %>
           <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="">

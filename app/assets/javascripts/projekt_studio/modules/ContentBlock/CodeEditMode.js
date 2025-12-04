@@ -18,7 +18,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   enterCodeEditMode(e) {
     const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper);
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     this.switchToCodeEditMode(contentBlockWrapper);
   },
@@ -133,6 +133,12 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   exitCodeEditMode(contentBlockWrapper) {
     this.removeEditor(contentBlockWrapper);
     this.hideCodeEditModeControls(contentBlockWrapper);
+
+    setTimeout(() => {
+      contentBlockWrapper.scrollIntoView({
+        block: "center", inline: "nearest"
+      })
+    }, 0)
   },
 
   cancelCodeEditMode(e) {
@@ -140,11 +146,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
     if (contentBlockWrapper) {
       const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
-        contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-        $(contentBlock).foundation();
-        App.ImageGallery.initialize();
-      }
+      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
     }
 
     this.exitCodeEditMode(contentBlockWrapper);
@@ -153,7 +155,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   saveContentBlockAndExit(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     const editor = this.getEditor(contentBlockWrapper);
     if (!editor) {
@@ -171,16 +172,15 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }
 
     contentBlock.innerHTML = content;
-    $(contentBlock).foundation();
-    App.ImageGallery.initialize();
+    // ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
-      contentBlockId,
       content
     );
 
     this.exitCodeEditMode(contentBlockWrapper);
+
   },
 
   showSuccessMessage(message) {

@@ -11,6 +11,51 @@ de:
       enter_missing_user_data: zusätzliche Daten zu Ihrem Konto bereit
       save_form: Speichern
       destroy_confirmation: Sind Sie sicher?
+      user_segments:
+        title: Nutzersegmente
+        men: Männer
+        women: Frauen
+        divers: Divers
+        to_average: zum Durchschnitt
+        age: Alter
+        area: Gebiet
+    participation_stats:
+      key_performance_indicators: Kennzahlen
+      ai_summary_title: KI-Zusammenfassung dieser Phase
+      tone_of_participation: Ton der Beteiligung
+      tone_of_comments: Ton der Kommentare
+      further_info: Weitere Informationen
+      no_resources_to_analyze: Keine Ressourcen zur Analyse verfügbar. Bitte fügen Sie Vorschläge oder Investitionen hinzu, um KI-Statistiken zu generieren.
+      timeline:
+        title: Zeitverlauf
+        submissions_over_time: Einreichungen im Zeitverlauf
+        comments_over_time: Kommentare im Zeitverlauf
+      heatmap:
+        title: Heatmap
+    ai_stats:
+      topic_clustering:
+        title: KI-Themengruppierung
+        subtopics: Unterthemen
+        subcategories: Unterkategorien
+        proposals: Vorschläge
+        resources: Vorschläge
+        in: in
+        topic_groups: Themengruppen
+        category_groups: Themengruppen
+      semantic_clustering:
+        title: KI-Semantische Gruppierung
+        subcategories: Unterkategorien
+        resources: Vorschläge
+        in: in
+        category_groups: Kategoriegruppen
+      user_segments:
+        title: Nutzersegmente
+        men: Männer
+        women: Frauen
+        divers: Divers
+        to_average: zum Durchschnitt
+        age: Alter
+        area: Gebiet
     resource_page:
       banner_component:
         comments: Kommentare

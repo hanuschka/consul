@@ -517,6 +517,13 @@ en:
         document_number: Document number
         date_of_birth: Date of birth
         postal_code: Postal code
+      api_client:
+        name: Name
+        domain: Domain
+        service_user_email: Service user email
+        access_level: Access level
+        auth_token: Authentication token
+        service_api_token: Service API token
     errors:
       models:
         user:
@@ -564,6 +571,10 @@ en:
           attributes:
             document_type:
               inclusion: is not included in the list, allowed values are 1 for DNI, 2 for passport and 3 for residence card.
+        api_client:
+          attributes:
+            domain:
+              uniqueness: has already been taken
         proposal:
           attributes:
             tag_list:

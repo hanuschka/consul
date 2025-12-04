@@ -1,0 +1,37 @@
+.participation-stats-ai {
+  margin-bottom: 1.2rem;
+}
+
+.ai-stats-section {
+  background: #E7ECF2;
+  border-radius: 12px;
+  padding: 18px 25px;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.ai-stats-section--title {
+  margin: 0 0 0.5rem 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.ai-stats-section--subtitle {
+  margin: 0 0 0.25rem 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--category-color) !important;
+}
+
+.ai-summary-content {
+  color: #333;
+
+  .tone-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #000;
+    text-transform: lowercase;
+    margin-bottom: 1rem;
+  }
+}

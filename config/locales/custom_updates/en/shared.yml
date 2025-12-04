@@ -11,6 +11,51 @@ en:
       enter_missing_user_data: additional data to your account
       save_form: Save
       destroy_confirmation: Are you sure?
+      user_segments:
+        title: User segments
+        men: Men
+        women: Women
+        divers: Divers
+        to_average: to the ave
+        age: Age
+        area: Area
+    participation_stats:
+      key_performance_indicators: Key Performance Indicators
+      ai_summary_title: AI summary of this phase
+      tone_of_participation: Tone of Participation
+      tone_of_comments: Tone of Comments
+      further_info: further info
+      no_resources_to_analyze: No resources available to analyze. Please add proposals or investments to generate AI statistics.
+      timeline:
+        title: Timeline
+        submissions_over_time: Submissions Over Time
+        comments_over_time: Comments Over Time
+      heatmap:
+        title: Heatmap
+    ai_stats:
+      topic_clustering:
+        title: AI Topic Clustering
+        subtopics: subtopics
+        subcategories: subcategories
+        proposals: proposals
+        resources: proposals
+        in: in
+        topic_groups: topic groups
+        category_groups: topic groups
+      semantic_clustering:
+        title: AI Semantic Clustering
+        subcategories: subcategories
+        resources: proposals
+        in: in
+        category_groups: category groups
+      user_segments:
+        title: User Segments
+        men: Men
+        women: Women
+        divers: Divers
+        to_average: to the ave
+        age: Age
+        area: Area
     resource_page:
       banner_component:
         comments: Comments

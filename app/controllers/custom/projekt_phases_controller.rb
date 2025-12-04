@@ -33,4 +33,30 @@ class ProjektPhasesController < ApplicationController
                           projekt_phase_id: @projekt_phase.id,
                           section: "stats")
   end
+
+  def refresh_ai_stats
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    @projekt_phase.generate_ai_stats
+
+    redirect_to page_path(@projekt_phase.projekt.page.slug,
+                          projekt_phase_id: @projekt_phase.id,
+                          section: "stats")
+  end
+
+  def stats
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:read_stats, @projekt_phase)
+
+    case @projekt_phase
+    when ProjektPhase::ProposalPhase
+      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+    when ProjektPhase::BudgetPhase
+      @budget = @projekt_phase.budget
+      @stats = Budget::Stats.new(@budget) if @budget
+    end
+
+    @projekt = @projekt_phase.projekt
+  end
 end

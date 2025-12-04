@@ -120,6 +120,16 @@
     font-weight: 400;
     margin-top: 0;
     margin-bottom: 0 !important;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
   }
 
   .custom-page--banner-title-wrapper {
@@ -355,6 +365,30 @@
     .projekt-content-block:first-child  {
       h1:first-child, h2:first-child, h3:first-child {
         margin-top: 0;
+      }
+    }
+  }
+
+  .custom-page--banner-wrapper.-compact {
+    height: auto;
+    margin-bottom: 20px;
+    padding-top: 20px;
+
+    .custom-page--banner-text-section-wrapper {
+      padding-top: 50px;
+    }
+
+    .custom-page--banner {
+      position: static;
+      height: 280px;
+      width: 100%;
+      padding: 0 40px;
+
+      .custom-page--banner-image {
+        min-width: 300px;
+        top: 20px;
+        bottom: unset;
+        height: 240px !important;
       }
     }
   }

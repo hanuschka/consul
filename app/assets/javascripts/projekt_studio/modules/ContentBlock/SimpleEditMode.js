@@ -21,7 +21,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   enterSimpleEditMode(e) {
     const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target)
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(
       contentBlock, contentBlockWrapper
     )
 
@@ -59,9 +59,8 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
           ProjektStudio.ContentBlock.Crud.updateContentBlock(
             contentBlock,
-            contentBlockWrapper.dataset.contentBlockId,
             content,
-            true
+            { resetFoundationState: true }
           )
       });
     }
@@ -71,7 +70,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     contentBlockWrapper.classList.remove("-simple-edit-mode")
-    contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
+    ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
 
     this.toggleSimpleEditModeFor(contentBlock, false);
   },
@@ -106,12 +105,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       // Should be always last item
       this.toggleGlighboxGallery(contentBlock, enabled)
       if (!enabled) {
-        $(contentBlock).foundation();
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }
 
       if (endCallback) {
         endCallback()
       }
+
     }, 10)
   },
 
@@ -141,8 +141,9 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
   // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
+    const ignoreClasess = ".orbit-controls";
     const elements = Array.from(
-      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title")
+      contentBlock.querySelectorAll(`div:not(${ignoreClasess}), h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title`)
     );
 
     let firstEditableElement = null;

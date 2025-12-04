@@ -247,19 +247,8 @@
             })
           }
         }
-      } else if (App.Map.maps.length > 0) {
-        var currentMap = App.Map.maps[0]
-
-        if (currentMap && App.Map.maps.length <= 1) {
-          currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
-          App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
-
-          if (shouldScroll) {
-            currentMap.getContainer().scrollIntoView({
-              block: "center", inline: "nearest"
-            })
-          }
-        }
+      } else if (App.Map.anyMapInitialized()) {
+        App.Map.setMarkerTo(coordinates[0], coordinates[1], false)
       }
     },
 
@@ -323,9 +312,7 @@
   }
 
   function parseIframeEventData(eventData) {
-    if (typeof eventData === "string") {
-      return JSON.parse(eventData)
-    } else if (typeof eventData === "object"){
+    if (typeof eventData === "object"){
       return eventData
     }
   }

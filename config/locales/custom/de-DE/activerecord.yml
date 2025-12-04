@@ -372,6 +372,7 @@ de:
       site_customization/page/translation:
         title: Titel
         subtitle: Untertitel
+        header_title: Kopfzeilentitel
         content: Inhalt
       site_customization/image:
         name: Name
@@ -533,6 +534,13 @@ de:
         document_number: Dokumentennummer
         date_of_birth: Geburtsdatum
         postal_code: Postleitzahl
+      api_client:
+        name: Name
+        domain: Domäne
+        service_user_email: Service-Benutzer E-Mail
+        access_level: Zugriffsstufe
+        auth_token: Authentifizierungstoken
+        service_api_token: Service-API-Token
     errors:
       models:
         user:
@@ -580,6 +588,10 @@ de:
           attributes:
             document_type:
               inclusion: ist nicht in der Liste enthalten, zulässig sind die Werte 1 für Personalausweis, 2 für Reisepass und 3 für Aufenthaltsberechtigung.
+        api_client:
+          attributes:
+            domain:
+              uniqueness: wird bereits verwendet
         proposal:
           attributes:
             tag_list:

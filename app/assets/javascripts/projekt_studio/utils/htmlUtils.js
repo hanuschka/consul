@@ -46,8 +46,8 @@ ProjektStudio.utils.htmlToSingleDomElement = function(html) {
 }
 
 const voidElements = [
-  "base", "br", "col", "embed", "hr",
-  "img", "link", "param",
+  "area", "base", "br", "col", "embed", "hr",
+  "img", "input", "link", "meta", "param",
   "source", "track", "wbr"
 ];
 
@@ -64,16 +64,12 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
     };
   }
 
-  const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9]+)\b[^>]*>/g) || [];
-  const originalTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9]+)/)[1]);
-  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9]+)\s*>/g) || [];
-  const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9]+)/)[1]);
+  const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9-]+)\b[^>]*>/g) || [];
+  const allTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9-]+)/)[1]);
+  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9-]+)\s*>/g) || [];
+  const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9-]+)/)[1]);
 
-  voidElements.forEach((tagNameToRemove) => {
-    if (originalTagNames.includes(tagNameToRemove)) {
-      originalTagNames.splice(originalTagNames.indexOf(tagNameToRemove), 1);
-    }
-  })
+  const originalTagNames = allTagNames.filter(tag => !voidElements.includes(tag))
 
   const tagStack = [];
   const issues = [];

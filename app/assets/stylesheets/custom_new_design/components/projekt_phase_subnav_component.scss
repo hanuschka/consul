@@ -2,6 +2,19 @@
   .projekt-phase-subnav {
     margin-top: 0px;
     margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .projekt-phase-subnav--items {
+      display: flex;
+      align-items: center;
+    }
+
+    .projekt-phase-subnav--actions {
+      display: flex;
+      align-items: center;
+    }
 
     .projekt-phase-subnav-item {
       margin-right: 10px;

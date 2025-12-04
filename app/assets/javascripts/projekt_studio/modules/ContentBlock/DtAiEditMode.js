@@ -41,7 +41,7 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
     const contentBlock = contentBlockWrapper.querySelector(".projekt-content-block");
     const contentBlockHTML = contentBlock.innerHTML;
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper)
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     ProjektStudio.utils.sendMessageToDtParentFrame("regenerateContentBlock", {
       regenerate_type: regenerateType,
@@ -80,12 +80,11 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getContentBlockSectionForId(params.content_block_id)
     const contentBlock = contentBlockWrapper.querySelector('.projekt-content-block')
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper)
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     contentBlock.innerHTML = params.html
 
-    $(contentBlock).foundation();
-    App.ImageGallery.initialize();
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     contentBlockWrapper
       .classList
@@ -97,12 +96,7 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
   },
 
   cancelAiEditMode(contentBlockWrapper, contentBlock) {
-    // Revert content to previous version if it exists
-    if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
-      contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-      $(contentBlock).foundation();
-      App.ImageGallery.initialize();
-    }
+    ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
 
     contentBlockWrapper.classList.remove("-ai-edit-mode")
   }

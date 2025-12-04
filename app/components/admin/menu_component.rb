@@ -19,8 +19,12 @@ class Admin::MenuComponent < ApplicationComponent
       profiles_links,
       registered_addresses_links,
       matomo_link,
+      stats_link,
       settings_links,
-      dashboard_links
+      dashboard_links,
+      ai_settings_link,
+      external_api_keys_link,
+      api_clients_link
     ]
   end
 
@@ -51,7 +55,7 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def profiles?
-      %w[administrators organizations officials moderators valuators managers users].include?(controller_name)
+      %w[administrators api_clients organizations officials moderators valuators managers users].include?(controller_name)
     end
 
     def settings?
@@ -411,6 +415,15 @@ class Admin::MenuComponent < ApplicationComponent
       ]
     end
 
+    def api_clients_link
+      [
+        t("admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
+      ]
+    end
+
     def organizations_link
       [
         t("admin.menu.organizations"),
@@ -570,6 +583,33 @@ class Admin::MenuComponent < ApplicationComponent
         t("admin.menu.sdg_managers"),
         admin_sdg_managers_path,
         sdg_managers?
+      ]
+    end
+
+    def ai_settings_link
+      [
+        t("admin.menu.llm_settings"),
+        admin_ai_settings_path,
+        controller_name == "ai_settings",
+        class: "ai-settings-link"
+      ]
+    end
+
+    def external_api_keys_link
+      [
+        t("admin.menu.external_api_keys"),
+        admin_external_api_keys_path,
+        controller_name == "external_api_keys",
+        class: "external-api-keys-link"
+      ]
+    end
+
+    def api_clients_link
+      [
+        t("custom.admin.menu.api_clients"),
+        admin_api_clients_path,
+        controller_name == "api_clients",
+        class: "api-clients-link"
       ]
     end
 end

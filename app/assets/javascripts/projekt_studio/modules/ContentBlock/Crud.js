@@ -102,11 +102,23 @@ ProjektStudio.ContentBlock.Crud = {
     }
   },
 
-  updateContentBlock(contentBlock, contentBlockId, newContent, resetFoundationState = false) {
+  updateContentBlock(contentBlock, newContent, { resetFoundationState = false, saveVersion = true } = {}) {
+    const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+
+    const oldContent = contentBlock.dataset.previousContentBlockHtml
+      ? contentBlock.dataset.previousContentBlockHtml
+      : contentBlock.innerHTML.trim();
+
     const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
+    const newContentTrimmed = updatedContentBlock.innerHTML.trim();
 
     if (resetFoundationState) {
       ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
+    }
+
+    if (saveVersion && oldContent !== newContentTrimmed) {
+      ProjektStudio.ContentBlock.ChangeHistory.saveVersion(contentBlock, contentBlockWrapper, oldContent);
     }
 
     $.ajax({
@@ -129,10 +141,12 @@ ProjektStudio.ContentBlock.Crud = {
         }
       })
 
+
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
-    $(contentBlock).foundation();
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+
   },
 
   deleteContentBlock(contentBlockWrapper) {

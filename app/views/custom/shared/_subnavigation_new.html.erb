@@ -21,6 +21,18 @@
       <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
       <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
     <% end %>
+
+    <% if @ui_landing_page %>
+      <% Projekt.top_level.includes([page: :translations]).for_navigation(current_user).assigned_to_landing_page(@ui_landing_page).each do |active_projekt| %>
+        <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
+            <%= "tabindex=0" if placement == "desktop" %>
+            aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'>
+          <div class='flyout-item-name projekt-name'>
+            <%= prepare_projekt_name(active_projekt, placement) %>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
   </div>
 
   <%= render Shared::TranslateWidgetComponent.new(placement) %>

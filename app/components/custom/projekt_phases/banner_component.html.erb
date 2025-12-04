@@ -1,0 +1,50 @@
+<div class="projekt-phase-banner">
+  <div class="projekt-phase-banner--content">
+    <div class="projekt-phase-banner--text-section">
+      <%= link_to page_path(@custom_page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer") do %>
+        <h1 class="projekt-phase-banner--phase-title">
+          <%= phase_title %>
+        </h1>
+      <% end %>
+
+      <div class="projekt-phase-banner--projekt-info">
+        <%= link_to projekt_url, class: "projekt-phase-banner--projekt-title" do %>
+          <h3 class="projekt-phase-banner--projekt-title">
+            <%= projekt_title %>
+          </h3>
+        <% end %>
+
+        <% if phase_date_range.present? %>
+          <div class="projekt-phase-banner--phase-dates">
+            <i class="fa fa-calendar"></i>
+            <%= phase_date_range %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if projekt_subtitle.present? %>
+        <div class="projekt-phase-banner--projekt-subtitle">
+          <%= sanitize(projekt_subtitle, tags: ["br"]) %>
+        </div>
+      <% end %>
+
+      <div class="projekt-phase-banner--breadcrumbs">
+        <%= helpers.breadcrumbs_links(@projekt) %>
+      </div>
+    </div>
+
+    <% if has_image? %>
+      <div class="projekt-phase-banner--image">
+        <%= link_to projekt_url do %>
+          <%= render(
+            Shared::ResourceImageComponent.new(
+              image_url: image_url,
+              image_placeholder_icon_class: "fa-comments",
+              resource: @custom_page
+            )
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

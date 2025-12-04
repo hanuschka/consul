@@ -61,7 +61,7 @@
           display: false
         },
         beginAtZero: true,
-        suggestedMax: maxValue < 5 ? 5 : undefined
+        suggestedMax: maxValue
       };
 
       if (usePercentage) {

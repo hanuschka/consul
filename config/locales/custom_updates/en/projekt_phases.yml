@@ -9,6 +9,7 @@ en:
           comment_phase: Comments
       stats:
         title: Statistics
+        banner_title: "Stats for %{phase_title}"
         back_to_phase: Back to projekt
         refresh_stats_button: "Refresh statistics"
         refresh_ai_stats_button: "Refresh AI statistics"

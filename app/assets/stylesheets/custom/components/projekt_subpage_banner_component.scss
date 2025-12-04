@@ -1,4 +1,4 @@
-.projekt-phase-banner {
+.projekt-subpage-banner {
   background: #f8f9fa;
   margin-bottom: 1.5rem;
   background: rgba(0, 128, 0, 0.1) 0% 0% no-repeat padding-box;
@@ -9,7 +9,7 @@
     color: $brand;
   }
 
-  .projekt-phase-banner--phase-title {
+  .projekt-subpage-banner--phase-title {
     font-size: 2rem;
     line-height: 1.2;
     margin: 0;
@@ -21,14 +21,14 @@
     }
   }
 
-  .projekt-phase-banner--projekt-title {
+  .projekt-subpage-banner--projekt-title {
     font-size: 1.25rem;
     margin: 0;
     text-decoration: none;
   }
 }
 
-.projekt-phase-banner--content {
+.projekt-subpage-banner--content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.2rem 1rem;
@@ -42,21 +42,21 @@
   }
 }
 
-.projekt-phase-banner--text-section {
+.projekt-subpage-banner--text-section {
   display: flex;
   flex-direction: column;
   padding-top: 15px;
 }
 
 
-.projekt-phase-banner--projekt-info {
+.projekt-subpage-banner--projekt-info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 
-.projekt-phase-banner--phase-dates {
+.projekt-subpage-banner--phase-dates {
   font-size: 0.95rem;
   color: var(--medium-gray-3);
   display: flex;
@@ -68,12 +68,12 @@
   }
 }
 
-.projekt-phase-banner--projekt-subtitle {
+.projekt-subpage-banner--projekt-subtitle {
   color: var(--medium-gray-3);
   margin-bottom: 15px;
 }
 
-.projekt-phase-banner--image {
+.projekt-subpage-banner--image {
   width: 300px;
   height: 200px;
   border-radius: 8px;

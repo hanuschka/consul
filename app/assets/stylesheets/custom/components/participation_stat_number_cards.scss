@@ -1,6 +1,6 @@
 .participation-stat-number-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin: 2rem 0;
 }
@@ -9,8 +9,6 @@
   background: #E7ECF2;
   border-radius: 12px;
   padding: 1.2rem 1.5rem;
-  flex: 1 1 calc(25% - 1rem);
-  min-width: 200px;
 
   h4 {
     margin: 0 0 1rem 0;

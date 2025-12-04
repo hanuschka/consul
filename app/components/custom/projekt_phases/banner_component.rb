@@ -1,4 +1,4 @@
-class ProjektPhaseStatsHeaderComponent < ApplicationComponent
+class ProjektPhases::BannerComponent < ApplicationComponent
   delegate :format_date_range, to: :helpers
 
   def initialize(projekt_phase:)

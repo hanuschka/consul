@@ -1,7 +1,7 @@
 <% provide :title, t("custom.projekt_phases.stats.title") %>
 
 <main>
-  <%= render ProjektPhaseStatsHeaderComponent.new(projekt_phase: @projekt_phase) %>
+  <%= render ProjektPhases::BannerComponent.new(projekt_phase: @projekt_phase) %>
 
   <div class="row">
     <div class="small-12 column">

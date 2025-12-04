@@ -8,14 +8,14 @@
 <div class='participation-stats'>
   <%= render ParticapationStats::SummaryComponent.new(projekt_phase: @projekt_phase) %>
 
-  <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) %>
+  <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
     <%= render "shared/stats/participation", stats: @stats %>
     <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::UserSegmentsComponent.new(stats: @stats) %>
     <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @stats.projekt_phase) %>
+    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
   <% elsif @projekt_phase.is_a?(ProjektPhase::CommentPhase) %>
     <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>

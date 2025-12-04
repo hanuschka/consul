@@ -3,7 +3,7 @@
 
   App.BarChartComponent = {
     initialize: function() {
-      var charts = document.querySelectorAll("[data-bar-chart]");
+      const charts = document.querySelectorAll("[data-bar-chart]");
       charts.forEach(this.initChart.bind(this));
     },
 
@@ -12,33 +12,33 @@
         return;
       }
 
-      var canvas = container.querySelector("canvas");
+      const canvas = container.querySelector("canvas");
       if (!canvas) {
         return;
       }
 
-      var labels = JSON.parse(container.dataset.chartLabels || "[]");
-      var values = JSON.parse(container.dataset.chartValues || "[]");
-      var orientation = container.dataset.chartOrientation || "vertical";
-      var colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
-      var usePercentage = container.dataset.chartUsePercentage === "true";
+      const labels = JSON.parse(container.dataset.chartLabels || "[]");
+      const values = JSON.parse(container.dataset.chartValues || "[]");
+      const orientation = container.dataset.chartOrientation || "vertical";
+      const colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
+      const usePercentage = container.dataset.chartUsePercentage === "true";
 
-      var isHorizontal = orientation === "horizontal";
-      var backgroundColor = colors || "#6BA3D6";
-      var borderColor = colors || "#6BA3D6";
+      const isHorizontal = orientation === "horizontal";
+      const backgroundColor = colors || "#6BA3D6";
+      const borderColor = colors || "#6BA3D6";
 
       if (isHorizontal) {
-        var barHeight = 35;
-        var barSpacing = 12;
-        var paddingTop = 10;
-        var paddingBottom = 30;
-        var calculatedHeight = (labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
+        const barHeight = 35;
+        const barSpacing = 12;
+        const paddingTop = 10;
+        const paddingBottom = 30;
+        const calculatedHeight = (labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
         container.style.height = calculatedHeight + "px";
       }
 
-      var maxValue = Math.max.apply(null, values);
+      const maxValue = Math.max.apply(null, values);
 
-      var valueAxisConfig = {
+      const valueAxisConfig = {
         grid: {
           display: true,
           color: "#e0e0e0"
@@ -77,7 +77,7 @@
         };
       }
 
-      var labelAxisConfig = {
+      const labelAxisConfig = {
         grid: {
           display: false,
           color: "#e0e0e0"
@@ -95,12 +95,12 @@
         }
       };
 
-      var ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d");
 
-      var tooltipCallbacks = {
+      const tooltipCallbacks = {
         label: function(context) {
-          var value = isHorizontal ? context.parsed.x : context.parsed.y;
-          var roundedValue = Math.round(value);
+          const value = isHorizontal ? context.parsed.x : context.parsed.y;
+          const roundedValue = Math.round(value);
           return usePercentage ? roundedValue + "%" : roundedValue;
         }
       };

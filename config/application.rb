@@ -140,6 +140,10 @@ module Consul
     config.paths["app/views"].unshift(Rails.root.join("app", "views", "custom"))
     config.paths["app/views"].unshift(Rails.root.join("app", "views", "cli"))
   end
+
+  console do
+    IRB.conf[:USE_AUTOCOMPLETE] = false
+  end
 end
 
 class Rails::Engine

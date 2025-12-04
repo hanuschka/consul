@@ -31,6 +31,16 @@ class AiAnalytics::ClusteringCore
       end
     end
 
+    def prepare_resources_data(resources)
+      resources.map do |resource|
+        if resource.is_a?(Comment)
+          { id: resource.id, content: resource.body&.truncate(400) }
+        else
+          { id: resource.id, title: resource.title, description: resource.description&.truncate(300) }
+        end
+      end.join("\n\n")
+    end
+
     def output_schema
       {
         type: "object",

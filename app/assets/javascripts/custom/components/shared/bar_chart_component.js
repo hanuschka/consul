@@ -36,6 +36,8 @@
         container.style.height = calculatedHeight + "px";
       }
 
+      var maxValue = Math.max.apply(null, values);
+
       var valueAxisConfig = {
         grid: {
           display: true,
@@ -47,21 +49,31 @@
             size: 15,
             weight: 400
           },
+          stepSize: 1,
           callback: function(value) {
-            return Math.round(value);
+            if (Number.isInteger(value)) {
+              return value;
+            }
+            return null;
           }
         },
         border: {
           display: false
         },
-        beginAtZero: true
+        beginAtZero: true,
+        suggestedMax: maxValue < 5 ? 5 : undefined
       };
 
       if (usePercentage) {
         valueAxisConfig.min = 0;
         valueAxisConfig.max = 100;
+        valueAxisConfig.suggestedMax = undefined;
+        valueAxisConfig.ticks.stepSize = undefined;
         valueAxisConfig.ticks.callback = function(value) {
-          return Math.round(value) + "%";
+          if (Number.isInteger(value)) {
+            return value + "%";
+          }
+          return null;
         };
       }
 

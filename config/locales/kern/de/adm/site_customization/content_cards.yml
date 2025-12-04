@@ -2,11 +2,9 @@ de:
   adm:
     site_customization:
       content_cards:
-        edit:
-          title: "TitelAsd"
         setting:
           label:
-            limit: Anzahl an angezeigten Einträgen1
+            limit: Anzahl an angezeigten Einträgen
             debates_limit: Anzahl an angezeigten Diskussionen
             proposals_limit: Anzahl an angezeigten Vorschläge
             investments_limit: Anzahl an angezeigten Investitionsvorschläge

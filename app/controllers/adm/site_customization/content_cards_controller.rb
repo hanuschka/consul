@@ -6,7 +6,7 @@ module Adm
       def edit
         authorize [:adm, Setting], :update?
         @content_card = ::SiteCustomization::ContentCard.find(params[:id])
-        @default_settings = ::SiteCustomization::ContentCard.default_settings[@content_card.kind] || {}
+        @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
         @breadcrumbs = [
           { name: t("adm.menu.items.home"), url: adm_root_path },
@@ -19,12 +19,9 @@ module Adm
         authorize [:adm, Setting], :update?
 
         @content_card = ::SiteCustomization::ContentCard.find(params[:id])
-        debugger
         @content_card.update(content_card_params) #rubocop:disable Rails/SaveBang
 
-        respond_to do |format|
-          format.html { redirect_to redirect_path, notice: t(".notice") }
-        end
+        redirect_to redirect_path, notice: t(".notice")
       end
 
       private
@@ -32,8 +29,9 @@ module Adm
         def content_card_params
           params.require(:site_customization_content_card).permit(
            :active,
-            translation_params(::SiteCustomization::ContentCard)
-          ).merge(settings_params)
+           *::SiteCustomization::ContentCard::DEFAULT_SETTINGS.map { |_k, v| v.keys }.flatten.uniq,
+           translation_params(::SiteCustomization::ContentCard)
+          )
         end
 
         def landing_page
@@ -41,7 +39,7 @@ module Adm
         end
 
         def redirect_path
-          landing_page.present? ? "#" : adm_homepage_path
+          landing_page.present? ? "#" : adm_homepage_path(anchor: "content-cards-table")
         end
 
         def parent_breadcrumb
@@ -50,18 +48,6 @@ module Adm
           else
             { name: t("adm.menu.items.home"), url: adm_homepage_path }
           end
-        end
-
-        def settings_params
-          return {} unless params[:site_customization_content_card][:settings].present?
-
-          params.require(:site_customization_content_card).permit(
-            settings: params[:site_customization_content_card][:settings].keys && permitted_setting_keys
-          )
-        end
-
-        def permitted_setting_keys
-          SiteCustomization::ContentCard.default_settings.map { |_k, v| v.keys }.flatten.map(&:to_s)
         end
     end
   end

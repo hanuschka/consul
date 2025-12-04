@@ -46,6 +46,9 @@
           font: {
             size: 15,
             weight: 400
+          },
+          callback: function(value) {
+            return Math.round(value);
           }
         },
         border: {
@@ -58,7 +61,7 @@
         valueAxisConfig.min = 0;
         valueAxisConfig.max = 100;
         valueAxisConfig.ticks.callback = function(value) {
-          return value + "%";
+          return Math.round(value) + "%";
         };
       }
 
@@ -82,12 +85,13 @@
 
       var ctx = canvas.getContext("2d");
 
-      var tooltipCallbacks = {};
-      if (usePercentage) {
-        tooltipCallbacks.label = function(context) {
-          return context.parsed.x + "%";
-        };
-      }
+      var tooltipCallbacks = {
+        label: function(context) {
+          var value = isHorizontal ? context.parsed.x : context.parsed.y;
+          var roundedValue = Math.round(value);
+          return usePercentage ? roundedValue + "%" : roundedValue;
+        }
+      };
 
       new Chart(ctx, {
         type: "bar",

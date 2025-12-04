@@ -23,17 +23,10 @@ class AiAnalytics::TopicClustering < ApplicationService
 
     def generate_clustering(resources)
       resource_type = AiAnalytics::ClusteringCore.resource_type_name(resources)
-      resources_text = resources.map do |resource|
-        if resource.is_a?(Comment)
-          "ID: #{resource.id}, Content: #{resource.body&.truncate(400)}"
-        else
-          "ID: #{resource.id}, Title: #{resource.title}, Description: #{resource.description&.truncate(300)}"
-        end
-      end.join("\n\n")
+      resources_text = AiAnalytics::ClusteringCore.prepare_resources_data(resources)
 
       prompt = <<~TEXT
         You are an AI specialized in semantic clustering and topic modeling.
-
         Your task is to create a clean and logical categorization system for a list of #{resource_type}.
 
         What you must do:
@@ -43,6 +36,7 @@ class AiAnalytics::TopicClustering < ApplicationService
         3. Generate 5–7 meaningful TOPICS (your choice — choose what fits the data best).
         4. For each topic, generate 2–4 SUBTOPICS that further structure the content.
         5. Assign every item to exactly one subtopic using its ID.
+        Ignore subtopics which dosent have at least one assigned resource.
 
         Make sure topics and subtopics:
         - are non-overlapping,

@@ -1,9 +1,11 @@
 <div class="projekt-phase-banner">
   <div class="projekt-phase-banner--content">
     <div class="projekt-phase-banner--text-section">
-      <h1 class="projekt-phase-banner--phase-title">
-        <%= phase_title %>
-      </h1>
+      <%= link_to page_path(@custom_page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer") do %>
+        <h1 class="projekt-phase-banner--phase-title">
+          <%= phase_title %>
+        </h1>
+      <% end %>
 
       <div class="projekt-phase-banner--projekt-info">
         <%= link_to projekt_url, class: "projekt-phase-banner--projekt-title" do %>
@@ -25,6 +27,10 @@
           <%= sanitize(projekt_subtitle, tags: ["br"]) %>
         </div>
       <% end %>
+
+      <div class="projekt-phase-banner--breadcrumbs">
+        <%= helpers.breadcrumbs_links(@projekt) %>
+      </div>
     </div>
 
     <% if has_image? %>

@@ -23,8 +23,8 @@ class Projekts::ListItemComponent < ApplicationComponent
     }
   end
 
-  def active_projekt_phases
-    @active_projekt_phases ||= projekt.projekt_phases.active
+  def active_and_visible_projekt_phases
+    @active_and_visible_projekt_phases ||= projekt.active_and_visible_projekt_phases
   end
 
   def projekt_phase_url_for(phase)

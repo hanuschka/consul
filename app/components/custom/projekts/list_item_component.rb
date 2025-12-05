@@ -23,6 +23,10 @@ class Projekts::ListItemComponent < ApplicationComponent
     }
   end
 
+  def active_projekt_phases
+    @active_projekt_phases ||= projekt.projekt_phases.active
+  end
+
   def projekt_phase_url_for(phase)
     return poll_url(phase.poll) if phase.is_a?(ProjektPhase::VotingPhase) && phase.poll.present?
 

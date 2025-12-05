@@ -42,7 +42,8 @@ class DeficiencyReport < ApplicationRecord
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
-  validates :deficiency_report_category_id, :author, presence: true
+  validates :deficiency_report_category_id, presence: true
+  validates :author, presence: true
   validates :map_location, presence: true, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
@@ -134,7 +135,7 @@ class DeficiencyReport < ApplicationRecord
   def searchable_values
     {
       id.to_s               => "A",
-      author.username       => "B",
+      author&.username      => "B",
       tag_list.join(" ")    => "B"
     }.merge!(searchable_globalized_values)
   end

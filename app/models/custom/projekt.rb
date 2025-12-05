@@ -35,6 +35,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_settings, dependent: :destroy
 
   has_many :projekt_phases, dependent: :destroy
+  has_many :active_and_visible_projekt_phases, -> { active.frontend_visible }, class_name: "ProjektPhase"
   has_many :debate_phases, class_name: "ProjektPhase::DebatePhase", dependent: :destroy
   has_many :proposal_phases, class_name: "ProjektPhase::ProposalPhase", dependent: :destroy
   has_many :budget_phases, class_name: "ProjektPhase::BudgetPhase", dependent: :destroy

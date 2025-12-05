@@ -3,7 +3,7 @@
   App.ClickOutWarning = {
     initialize: function() {
       $("body").on("click", "a", function(event) {
-        if (document.querySelector("meta[name='external-links']").getAttribute("content") === 'active' ) {
+        if (document.querySelector("meta[name='external-links']").getAttribute("content") === 'true' ) {
           var showWarning = true;
         }
 

@@ -7,7 +7,7 @@ class AiAnalytics::SemanticClustering < ApplicationService
 
   def call
     resources = AiAnalytics::ClusteringCore.get_resources(projekt_phase)
-    return { "topics" => [] } if resources.empty?
+    return [] if resources.empty?
 
     generate_clustering(resources)
   end
@@ -33,6 +33,7 @@ class AiAnalytics::SemanticClustering < ApplicationService
         Ignore subtopics which dosent have at least one assigned resource.
         Ensure topics and subtopics are: meaningful and human-friendly, non-overlapping , comprehensive (cover everything),
         semantically justified (not based on superficial keywords).
+        Dont include resource name in topics and subtopics.
 
         Write all topic and subtopic names in #{AiAnalytics::ClusteringCore.target_language}.
 
@@ -42,10 +43,10 @@ class AiAnalytics::SemanticClustering < ApplicationService
 
       response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
 
-      response.content
+      response.content["topics"]
     rescue StandardError => e
       Rails.logger.error("SemanticClustering error: #{e.message}")
-      { "topics" => [] }
+      []
     end
 end
 

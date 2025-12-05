@@ -6,11 +6,12 @@ class AiAnalytics::TopicClustering < ApplicationService
   end
 
   def call
+    Rails.logger.info("[AI Analytics] TopicClustering: start for projekt_phase ##{projekt_phase.id}")
     resources = AiAnalytics::ClusteringCore.get_resources(projekt_phase)
 
     if resources.empty?
       Rails.logger.info("[AI Analytics] TopicClustering: No resources found for projekt_phase ##{projekt_phase.id}")
-      return { "topics" => [] }
+      return []
     end
 
     Rails.logger.info("[AI Analytics] TopicClustering: Starting clustering for #{resources.count} resources (projekt_phase ##{projekt_phase.id})")
@@ -39,6 +40,7 @@ class AiAnalytics::TopicClustering < ApplicationService
         Ignore subtopics which dosent have at least one assigned resource.
 
         Make sure topics and subtopics:
+        - Dont include resource name in topics and subtopics.
         - are non-overlapping,
         - are easy to understand for non-experts,
         - cover all #{resource_type} without forcing them unnaturally.
@@ -51,9 +53,9 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
 
-      response.content
+      response.content["topics"]
     rescue StandardError => e
       Rails.logger.error("TopicClustering error: #{e.message}")
-      { "topics" => [] }
+      []
     end
 end

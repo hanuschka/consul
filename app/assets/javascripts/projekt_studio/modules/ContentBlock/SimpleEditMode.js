@@ -105,12 +105,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       // Should be always last item
       this.toggleGlighboxGallery(contentBlock, enabled)
       if (!enabled) {
-        $(contentBlock).foundation();
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }
 
       if (endCallback) {
         endCallback()
       }
+
     }, 10)
   },
 
@@ -140,8 +141,9 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
   // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
+    const ignoreClasess = ".orbit-controls";
     const elements = Array.from(
-      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title")
+      contentBlock.querySelectorAll(`div:not(${ignoreClasess}), h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title`)
     );
 
     let firstEditableElement = null;

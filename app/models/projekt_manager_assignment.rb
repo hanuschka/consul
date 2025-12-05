@@ -9,7 +9,7 @@ class ProjektManagerAssignment < ApplicationRecord
   after_update :sync_permissions_with_dt
 
   def sync_permissions_with_dt
-    if projekt_manager.user.on_dt? && permissions_previously_changed? && ApiClient.active_dt?
+    if projekt_manager.user.on_dt? && permissions_previously_changed? && InternalApiClient.active_dt?
       previous_change = permissions_previously_was
 
       if (previous_change.exclude?("manage") && permissions.include?("manage")) ||

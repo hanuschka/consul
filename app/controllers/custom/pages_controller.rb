@@ -79,7 +79,7 @@ class PagesController < ApplicationController
       )
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
-          @custom_page.content.include?("</iframe>")
+          @custom_page.content&.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
@@ -275,7 +275,7 @@ class PagesController < ApplicationController
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
-    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"&& !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
 

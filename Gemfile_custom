@@ -5,10 +5,7 @@
 
 group :development do
   gem 'rack-mini-profiler'
-  gem 'pry', '~> 0.13.0'
-  gem 'pry-byebug', '~> 3.9'
   gem 'solargraph'
-  gem 'pry-rails'
   # gem 'prosopite'
   # gem 'pg_query'
 end
@@ -19,6 +16,8 @@ gem 'sd_notify', '~> 0.1.1'
 gem 'ruby-saml', '~> 1.16'
 
 gem 'geocoder', '~> 1.8', '>= 1.8.3'
+gem 'rgeo', '~> 3.0', '>= 3.0.1'
+gem 'rgeo-geojson', '~> 2.2'
 
 gem "sentry-ruby"
 gem "sentry-rails"
@@ -30,5 +29,12 @@ gem 'rack-cors'
 gem "prawn", "2.5.0"
 gem 'prawn-svg', '~> 0.37.0'
 gem "rqrcode", "~> 2.0"
+
+group :development, :test do
+  gem 'pry', '~> 0.13.0'
+  gem 'pry-byebug', '~> 3.9'
+  gem 'pry-rails'
+  gem 'rswag-specs'
+end
 
 gem 'ruby_llm', '1.8.2'

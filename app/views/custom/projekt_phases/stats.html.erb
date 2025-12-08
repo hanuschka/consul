@@ -1,7 +1,18 @@
 <% provide :title, t("custom.projekt_phases.stats.title") %>
 
 <main>
-  <%= render ProjektPhases::BannerComponent.new(projekt_phase: @projekt_phase) %>
+  <%
+    phase_date_range =
+      if @projekt_phase.start_date.present? && @projekt_phase.end_date.present?
+        format_date_range(@projekt_phase.start_date, @projekt_phase.end_date)
+      end
+  %>
+  <%= render Projekts::SubpageBannerComponent.new(
+      title: t("custom.projekt_phases.stats.banner_title", phase_title: @projekt_phase.title),
+      projekt: @projekt_phase.projekt,
+      date_range: phase_date_range
+    )
+  %>
 
   <div class="row">
     <div class="small-12 column">

@@ -38,11 +38,17 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
+    # sleep 10
     @projekt_phase.generate_ai_stats
 
-    redirect_to page_path(@projekt_phase.projekt.page.slug,
-                          projekt_phase_id: @projekt_phase.id,
-                          section: "stats")
+    respond_to do |format|
+      format.html do
+        redirect_to page_path(@projekt_phase.projekt.page.slug,
+                              projekt_phase_id: @projekt_phase.id,
+                              section: "stats")
+      end
+      format.js { head :ok }
+    end
   end
 
   def stats

@@ -1,7 +1,15 @@
 <% if can?(:refresh_stats, @projekt_phase) %>
   <div class="margin-bottom">
     <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
-    <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary") %>
+    <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary", remote: true, data: { disable_with: false }) %>
+  </div>
+
+  <div id="ai-stats-loading-modal" class="ai-stats-loading-modal" style="display: none;">
+    <div class="ai-stats-loading-modal--overlay"></div>
+    <div class="ai-stats-loading-modal--content">
+      <div class="ai-stats-loading-modal--spinner"></div>
+      <p class="ai-stats-loading-modal--message"><%= t("custom.projekt_phases.stats.refresh_ai_stats_loading") %></p>
+    </div>
   </div>
 <% end %>
 

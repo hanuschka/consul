@@ -1,9 +1,8 @@
-class ProjektPhases::BannerComponent < ApplicationComponent
-  delegate :format_date_range, to: :helpers
-
-  def initialize(projekt_phase:)
-    @projekt_phase = projekt_phase
-    @projekt = projekt_phase.projekt
+class Projekts::SubpageBannerComponent < ApplicationComponent
+  def initialize(title:, projekt:, date_range: nil)
+    @title = title
+    @projekt = projekt
+    @date_range = date_range
     @custom_page = @projekt.page
   end
 
@@ -17,16 +16,6 @@ class ProjektPhases::BannerComponent < ApplicationComponent
 
   def projekt_url
     page_path(@custom_page.slug)
-  end
-
-  def phase_title
-    @projekt_phase.title
-  end
-
-  def phase_date_range
-    return nil if @projekt_phase.start_date.blank? && @projekt_phase.end_date.blank?
-
-    format_date_range(@projekt_phase.start_date, @projekt_phase.end_date)
   end
 
   def image_url

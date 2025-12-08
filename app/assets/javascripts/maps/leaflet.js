@@ -458,7 +458,7 @@
 
             if (isToggled) {
               this.map.on('click', function(e) {
-                this.placeCenterMarker(e.latlng);
+                self.placeCenterMarker(e.latlng);
               });
             } else {
               this.map.off('click');

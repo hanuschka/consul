@@ -41,8 +41,7 @@ module CsvServices
           "published_at",
           "community_id",
           "selected",
-          "latitude",
-          "longitude",
+          "district",
           "geometry"
         ]
       end
@@ -70,8 +69,7 @@ module CsvServices
           proposal.published_at,
           proposal.community_id,
           proposal.selected,
-          geo_field(proposal.map_location&.latitude),
-          geo_field(proposal.map_location&.longitude),
+          proposal.district&.name,
           format_geometry(proposal.map_location&.features)
         ]
       end

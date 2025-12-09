@@ -8,26 +8,35 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
-  SPECIAL_PROJEKT_PHASES = [
-    "ProjektPhase::LivestreamPhase",
-    "ProjektPhase::MilestonePhase",
-    "ProjektPhase::ProjektNotificationPhase",
-    "ProjektPhase::EventPhase",
-    "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
-  ].freeze
-
+  # Ordered list of projekt phases
   PROJEKT_PHASES_TYPES = [
     "ProjektPhase::CommentPhase",
     "ProjektPhase::ProposalPhase",
+    "ProjektPhase::PointOfInterestPhase",
     "ProjektPhase::QuestionPhase",
     "ProjektPhase::VotingPhase",
+    "ProjektPhase::IframePhase",
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
     "ProjektPhase::FormularPhase",
-  ] + SPECIAL_PROJEKT_PHASES
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
+
+  SPECIAL_PROJEKT_PHASES = [
+    "ProjektPhase::PointOfInterestPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
 
   delegate :icon, :author, :author_id, to: :projekt
 

@@ -1,7 +1,13 @@
-<tr class="kern-table__row">
+<tr class="kern-table__row" id="<%= dom_id @content_card %>" data-id="<%= @content_card.id %>">
   <th scope="row" class="kern-table__header"><%= @content_card.title %></th>
   <td class="kern-table__cell"><%= count %></td>
-  <td class="kern-table__cell"><%=  %></td>
+  <td class="kern-table__cell">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      ::SiteCustomization::ContentCard.find(@content_card.id),
+      :active,
+      toggle_active_adm_site_customization_content_card_path(@content_card)
+    ) %>
+  </td>
   <td class="kern-table__cell">
     <%= link_to edit_adm_site_customization_content_card_path(@content_card) do %>
       <%= tag.span(class: "material-symbols-outlined") { "edit" } %>

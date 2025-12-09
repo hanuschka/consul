@@ -17,6 +17,9 @@ namespace :adm do
 
   namespace :site_customization do
     resources :images, only: [:update]
-    resources :content_cards, only: [:edit, :update]
+    resources :content_cards, only: [:edit, :update] do
+      patch :toggle_active, on: :member
+      patch :order_content_cards, on: :collection
+    end
   end
 end

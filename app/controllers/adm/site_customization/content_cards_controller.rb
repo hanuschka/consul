@@ -24,6 +24,20 @@ module Adm
         redirect_to redirect_path, notice: t(".notice")
       end
 
+      def toggle_active
+        authorize [:adm, Setting], :update?
+
+        @content_card = ::SiteCustomization::ContentCard.find(params[:id])
+        @content_card.update(active: !@content_card.active) #rubocop:disable Rails/SaveBang
+      end
+
+      def order_content_cards
+        authorize [:adm, Setting], :update?
+
+        ::SiteCustomization::ContentCard.order_content_cards(params[:ordered_list])
+        head :ok
+      end
+
       private
 
         def content_card_params

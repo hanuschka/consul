@@ -70,7 +70,7 @@ class ExternalApiKey < ApplicationRecord
   end
 
   def self.get_api_key_or_default(service, name, default_api_key = nil)
-    api_key = find_by(service: service, name: name).value
+    api_key = find_by(service: service, name: name)&.value
 
     api_key.presence || default_api_key
   end

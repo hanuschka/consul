@@ -57,6 +57,11 @@ class ProjektsController < ApplicationController
     @tag_cloud = tag_cloud
     take_only_by_tag_names unless @search_terms.present?
 
+    @used_phases = @projekts.flat_map(&:active_and_visible_projekt_phases).map(&:type).uniq.compact
+    @phases = ProjektPhase.where(type: @used_phases).group_by(&:type).map { |type, phases| phases.first }.sort_by { |p| ProjektPhase::PROJEKT_PHASES_TYPES.index(p.type) || 999 }
+    @selected_phase_type = params[:phase_type] || 'all_phases'
+    take_by_phase_type unless @search_terms.present?
+
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
@@ -166,6 +171,13 @@ class ProjektsController < ApplicationController
         @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
       end
     end
+  end
+
+  def take_by_phase_type
+    return if @selected_phase_type == 'all_phases'
+
+    projekt_ids = @projekts.joins(:active_and_visible_projekt_phases).where(projekt_phases: { type: @selected_phase_type }).pluck(:id).uniq
+    @projekts = @projekts.where(id: projekt_ids)
   end
 
   def tag_cloud

@@ -1,10 +1,8 @@
-class Adm::AttributeEditors::ImageComponent < ApplicationComponent
-  def initialize(record, attribute, path, label: nil, updated: false)
+class Adm::AttributeEditors::ImageComponent < Adm::AttributeEditorComponent
+  def initialize(record, attribute, **options)
     @record = record
     @attribute = attribute
-    @path = path
-    @label = label
-    @updated = updated
+    @options = options
   end
 
   def show_preview?

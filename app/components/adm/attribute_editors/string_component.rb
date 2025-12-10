@@ -1,9 +1,7 @@
-class Adm::AttributeEditors::StringComponent < ApplicationComponent
-  def initialize(record, attribute, path, label: nil, updated: false)
+class Adm::AttributeEditors::StringComponent < Adm::AttributeEditorComponent
+  def initialize(record, attribute, **options)
     @record = record
     @attribute = attribute
-    @path = path
-    @label = label
-    @updated = updated
+    @options = options
   end
 end

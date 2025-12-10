@@ -1,5 +1,6 @@
-<%= form_with model: @record, url: @path do |form| %>
+<%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "image" %>
+  <%= hidden_field_tag :attribute, @attribute %>
 
     <div class="kern-form-input <%= 'd-none' if show_preview? %>">
       <%= form.file_field @attribute,

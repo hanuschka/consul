@@ -11,7 +11,7 @@ de:
         application: Application
         application_subitems:
           homepage: Startseite
-          landing_pages: Landingpages
+          landing_pages: Themenseiten
           documents: Eigene Dokumente
           navbar: Navigationsleiste
           metadata_settings: Metadaten & Kommunikation
@@ -26,9 +26,6 @@ de:
     projekts:
       index:
         title: Projekte
-    landing_pages:
-      index:
-        title: Landingpages
     documents:
       index:
         title: Eigene Dokumente

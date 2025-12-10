@@ -31,7 +31,7 @@ module Adm
         @content_card.update(active: !@content_card.active) #rubocop:disable Rails/SaveBang
       end
 
-      def order_content_cards
+      def reorder
         authorize [:adm, Setting], :update?
 
         ::SiteCustomization::ContentCard.order_content_cards(params[:ordered_list])

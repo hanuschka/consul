@@ -3,8 +3,5 @@ de:
     models:
       projekt: Projekt
     attributes:
-      projekt:
-        total_duration_start: Startdatum
-        total_duration_end: Enddatum
       site_customization/content_card/translation:
         title: Titel

@@ -1,28 +1,13 @@
 class Adm::AttributeEditorComponent < ApplicationComponent
   include Turbo::FramesHelper
 
-  def initialize(record, attribute, **options)
+  SETTING_TYPES = [Setting].freeze
+
+  def initialize(record, attribute, kind, **options)
     @record = record
     @attribute = attribute
+    @kind = kind.to_sym
     @options = options
-    @kind = options[:kind] || :string
-  end
-
-  def label
-    return @options[:label] if @options[:label].present?
-    return I18n.t("#{@record.class.name.underscore}.#{@record.key}") if @record.is_a?(Setting) || @record.is_a?(SiteCustomization::Image)
-
-    @record.class.human_attribute_name(@attribute)
-  end
-
-  def hint
-    return I18n.t("#{@record.class.name.underscore}.#{@record.key}_description") if @record.is_a?(Setting) || @record.is_a?(SiteCustomization::Image)
-
-    @options[:hint] || ""
-  end
-
-  def updated?
-    @options.fetch(:updated, false)
   end
 
   def path
@@ -34,14 +19,42 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     raise "No path provided for attribute editor"
   end
 
+  def label
+    if SETTING_TYPES.any? { |type| @record.is_a?(type) }
+      I18n.t("#{@record.class.name.underscore}.#{@record.key}")
+    elsif @record.is_a?(SiteCustomization::Image)
+      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@record.name}_label")
+    else
+      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@attribute}_label",
+             default: @attribute.to_s.humanize)
+    end
+  end
+
+  def description
+    if SETTING_TYPES.any? { |type| @record.is_a?(type) }
+      I18n.t("#{@record.class.name.underscore}.#{@record.key}_description")
+    elsif @record.is_a?(SiteCustomization::Image)
+      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@record.name}_description")
+    else
+      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@attribute}_description",
+              default: "attribute_editor.default_description")
+    end
+  end
+
+  def updated?
+    @options.fetch(:updated, false)
+  end
+
   def component_for_type
     case @kind
     when :boolean
       Adm::AttributeEditors::BooleanComponent
     when :image
       Adm::AttributeEditors::ImageComponent
-    else
+    when :string
       Adm::AttributeEditors::StringComponent
+    else
+      raise "Unsupported attribute editor kind: #{@kind}"
     end
   end
 end

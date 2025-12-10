@@ -5,7 +5,10 @@ namespace :adm do
 
   # application
   resource :homepage, controller: "homepage", only: [:show]
-  resources :landing_pages, only: [:index]
+  resources :landing_pages do
+    patch :toggle_active, on: :member
+    patch :reorder, on: :collection
+  end
   resources :documents, only: [:index]
   resource :navbar, controller: "navbar", only: [:show]
 
@@ -19,7 +22,7 @@ namespace :adm do
     resources :images, only: [:update]
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
-      patch :order_content_cards, on: :collection
+      patch :reorder, on: :collection
     end
   end
 end

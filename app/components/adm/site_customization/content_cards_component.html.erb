@@ -7,7 +7,7 @@
       <th scope="col" class="kern-table__header"></th>
     </tr>
   </thead>
-  <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= order_content_cards_adm_site_customization_content_cards_path %>">
+  <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_site_customization_content_cards_path %>">
     <% content_cards.each do |cc| %>
       <%= render Adm::SiteCustomization::ContentCardComponent.new(cc) %>
     <% end %>

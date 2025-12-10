@@ -1,6 +1,7 @@
 class Adm::SiteCustomization::ContentCardComponent < ApplicationComponent
-  def initialize(content_card)
+  def initialize(content_card, updated: false)
     @content_card = content_card
+    @updated = updated
   end
 
   def count

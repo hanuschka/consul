@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@landing_page, @attribute) do %>
+  <%= render Adm::AttributeEditorComponent.new(
+    @landing_page, @attribute, kind
+    updated: true %>
+<% end %>

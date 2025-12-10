@@ -58,6 +58,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
   end
 
   def update_order
+    debugger
     # authorize!(:udpate, ::SiteCustomization::Page)
 
     ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])

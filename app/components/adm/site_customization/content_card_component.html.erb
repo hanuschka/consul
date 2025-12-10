@@ -3,9 +3,10 @@
   <td class="kern-table__cell"><%= count %></td>
   <td class="kern-table__cell">
     <%= render Adm::AttributeEditors::BooleanComponent.new(
-      ::SiteCustomization::ContentCard.find(@content_card.id),
+      @content_card,
       :active,
-      toggle_active_adm_site_customization_content_card_path(@content_card)
+      path: toggle_active_adm_site_customization_content_card_path(@content_card),
+      updated: @updated
     ) %>
   </td>
   <td class="kern-table__cell">

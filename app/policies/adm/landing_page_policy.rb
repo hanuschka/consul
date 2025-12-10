@@ -3,9 +3,13 @@ class Adm::LandingPagePolicy < ApplicationPolicy
     true
   end
 
+  def update?
+    true
+  end
+
   class Scope < Scope
     def resolve
-      scope.all
+      scope.landing
     end
   end
 end

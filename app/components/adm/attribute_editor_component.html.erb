@@ -1,13 +1,14 @@
-<%= turbo_frame_tag @record do %>
+<%= turbo_frame_tag dom_id(@record, @attribute) do %>
   <div class="attribute-editor-component mb-5" data-controller="components-adm-attribute-editor" data-components-adm-attribute-editor-updated-value="<%= updated? %>">
     <h2 class="kern-title kern-title--small mb-3"><%= label %></h2>
+
     <div class="kern-row">
       <div class="kern-col-12 kern-col-md-4">
-        <p id="<%= dom_id(@record, :description) %>" class="kern-body mb-3 mb-md-0"><%= sanitize(hint) %></p>
+        <p class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
       </div>
       <div class="kern-col-12 kern-col-md-6">
         <div class="attribute-form <%= @kind %>">
-          <%= render component_for_type.new(@record, @attribute, path, label: label, updated: updated?) %>
+          <%= render component_for_type.new(@record, @attribute, **@options) %>
 
           <% if updated? %>
             <div class="success-message mt-2" data-components-adm-attribute-editor-target="successMessage">

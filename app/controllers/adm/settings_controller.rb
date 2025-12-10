@@ -4,7 +4,6 @@ module Adm
       authorize [:adm, Setting], :update?
 
       @setting = Setting.find(params[:id])
-      @kind = params[:kind].to_sym
       @setting.update!(setting_params)
     end
 

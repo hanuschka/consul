@@ -1,8 +1,10 @@
-<%= form_with model: @record, url: @path, class: "d-flex gap-3 align-items-center" do |form| %>
+<%= form_with model: @record, url: path, class: "d-flex gap-3 align-items-center" do |form| %>
   <%= hidden_field_tag :kind, "boolean" %>
-  <%= form.hidden_field @attribute, id: dom_id(@record, @attribute), value: (@record.send(@attribute) == "active" ? "" : "active") %>
+  <%= hidden_field_tag :attribute, @attribute %>
+
+  <%= form.hidden_field @attribute, value: alternate_value %>
   <%= form.button "", class: 'toggle-button small',
-                  aria: { pressed: @record.send(@attribute).present? },
-                  autofocus: @updated %>
+                  aria: { pressed: toggled_on? },
+                  autofocus: updated? %>
   <span><%= @label %></span>
 <% end %>

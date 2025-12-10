@@ -1,12 +1,12 @@
-<%= form_with model: @record, url: @path do |form| %>
+<%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "string" %>
+  <%= hidden_field_tag :attribute, @attribute %>
 
-  <%= form.text_field :value,
+  <%= form.text_field @attribute,
     label: false,
     placeholder: @label,
     class: "kern-form-input__input",
-    data: {"components-adm-attribute-editor-target": "input"},
-    aria: { describedby: dom_id(@record, :description) } %>
+    data: {"components-adm-attribute-editor-target": "input"} %>
 
-  <%= helpers.kern_submit_button(icon: "save", autofocus: @updated) %>
+  <%= helpers.kern_submit_button(icon: "save", autofocus: updated?) %>
 <% end %>

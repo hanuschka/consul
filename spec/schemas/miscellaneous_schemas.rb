@@ -12,7 +12,8 @@ module Schemas
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this argument belongs to', example: 18 },
         position: { type: :integer, nullable: true, description: 'Display order among other arguments', example: 0 },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the argument was created', example: '2024-01-22T13:00:00Z' },
-        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the argument was last modified', example: '2024-01-25T10:30:00Z' }
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the argument was last modified', example: '2024-01-25T10:30:00Z' },
+        image: { '$ref' => '#/components/schemas/ImageResponse' }
       },
       required: %w[id title projekt_phase_id created_at updated_at]
     }.freeze
@@ -43,10 +44,34 @@ module Schemas
       }
     }.freeze
 
+    IMAGE_RESPONSE_SCHEMA = {
+      type: :object,
+      nullable: true,
+      description: 'Image associated with the resource',
+      properties: {
+        id: { type: :integer, description: 'Image ID', example: 1 },
+        title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
+        credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' },
+        url: { type: :string, description: 'Full URL to the image', example: 'https://example.com/uploads/image.jpg' },
+        variants: {
+          type: :object,
+          nullable: true,
+          description: 'Different sized versions of the image',
+          properties: {
+            large: { type: :string, nullable: true, description: 'URL to large variant', example: 'https://example.com/uploads/large.jpg' },
+            projekt_image: { type: :string, nullable: true, description: 'URL to projekt-sized variant', example: 'https://example.com/uploads/projekt.jpg' },
+            thumb: { type: :string, nullable: true, description: 'URL to thumbnail variant', example: 'https://example.com/uploads/thumb.jpg' },
+            thumb_wider: { type: :string, nullable: true, description: 'URL to wider thumbnail variant', example: 'https://example.com/uploads/thumb_wider.jpg' }
+          }
+        }
+      }
+    }.freeze
+
     def self.all
       {
         Argument: ARGUMENT_SCHEMA,
-        Iframe: IFRAME_SCHEMA
+        Iframe: IFRAME_SCHEMA,
+        ImageResponse: IMAGE_RESPONSE_SCHEMA
       }
     end
   end

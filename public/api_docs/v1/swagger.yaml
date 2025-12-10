@@ -9952,6 +9952,8 @@ components:
             name:
               type: string
               description: Officer name
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - created_at
@@ -10112,6 +10114,8 @@ components:
           nullable: true
           description: Total number of comments on the proposal
           example: 12
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - created_at
@@ -10212,6 +10216,8 @@ components:
           format: date_time
           description: Timestamp when the investment was last modified
           example: '2024-01-18T14:30:00Z'
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10440,6 +10446,8 @@ components:
             title:
               type: string
               description: Status title
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10768,6 +10776,8 @@ components:
           format: date_time
           description: Timestamp when the argument was last modified
           example: '2024-01-25T10:30:00Z'
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10825,3 +10835,51 @@ components:
       - projekt_phase_id
       - created_at
       - updated_at
+    ImageResponse:
+      type: object
+      nullable: true
+      description: Image associated with the resource
+      properties:
+        id:
+          type: integer
+          description: Image ID
+          example: 1
+        title:
+          type: string
+          nullable: true
+          description: Image title or alt text
+          example: Cover Image
+        credits:
+          type: string
+          nullable: true
+          description: Image attribution or credits
+          example: Photo by John Doe
+        url:
+          type: string
+          description: Full URL to the image
+          example: https://example.com/uploads/image.jpg
+        variants:
+          type: object
+          nullable: true
+          description: Different sized versions of the image
+          properties:
+            large:
+              type: string
+              nullable: true
+              description: URL to large variant
+              example: https://example.com/uploads/large.jpg
+            projekt_image:
+              type: string
+              nullable: true
+              description: URL to projekt-sized variant
+              example: https://example.com/uploads/projekt.jpg
+            thumb:
+              type: string
+              nullable: true
+              description: URL to thumbnail variant
+              example: https://example.com/uploads/thumb.jpg
+            thumb_wider:
+              type: string
+              nullable: true
+              description: URL to wider thumbnail variant
+              example: https://example.com/uploads/thumb_wider.jpg

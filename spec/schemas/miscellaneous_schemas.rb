@@ -56,12 +56,16 @@ module Schemas
         variants: {
           type: :object,
           nullable: true,
-          description: 'Different sized versions of the image',
+          description: 'Different sized versions of the image with width-based keys',
           properties: {
-            large: { type: :string, nullable: true, description: 'URL to large variant', example: 'https://example.com/uploads/large.jpg' },
-            projekt_image: { type: :string, nullable: true, description: 'URL to projekt-sized variant', example: 'https://example.com/uploads/projekt.jpg' },
-            thumb: { type: :string, nullable: true, description: 'URL to thumbnail variant', example: 'https://example.com/uploads/thumb.jpg' },
-            thumb_wider: { type: :string, nullable: true, description: 'URL to wider thumbnail variant', example: 'https://example.com/uploads/thumb_wider.jpg' }
+            "150": { type: :string, nullable: true, description: 'Thumbnail 150px width', example: 'https://example.com/uploads/150.jpg' },
+            "300": { type: :string, nullable: true, description: 'Small 300px width', example: 'https://example.com/uploads/300.jpg' },
+            "450": { type: :string, nullable: true, description: 'Medium 450px width', example: 'https://example.com/uploads/450.jpg' },
+            "600": { type: :string, nullable: true, description: 'Medium-large 600px width', example: 'https://example.com/uploads/600.jpg' },
+            "900": { type: :string, nullable: true, description: 'Large 900px width', example: 'https://example.com/uploads/900.jpg' },
+            "1200": { type: :string, nullable: true, description: 'Extra large 1200px width', example: 'https://example.com/uploads/1200.jpg' },
+            "1920": { type: :string, nullable: true, description: 'Full HD 1920px width', example: 'https://example.com/uploads/1920.jpg' },
+            "original": { type: :string, nullable: true, description: 'Original unmodified image', example: 'https://example.com/uploads/original.jpg' }
           }
         }
       }

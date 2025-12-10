@@ -7516,7 +7516,7 @@ paths:
                       proposals:
                         type: array
                         items:
-                          type: object
+                          "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposals
                   pagination:
@@ -7563,7 +7563,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:
@@ -7888,7 +7888,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:
@@ -7932,7 +7932,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:

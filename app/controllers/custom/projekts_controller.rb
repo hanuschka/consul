@@ -33,7 +33,7 @@ class ProjektsController < ApplicationController
         Projekt.all
       end
 
-    @projekts = base_projekts.regular
+    @projekts = base_projekts.regular.includes(:active_and_visible_projekt_phases)
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all

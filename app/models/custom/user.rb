@@ -1,6 +1,6 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
-class User < ApplicationRecord
+User.class_eval do
   audited only: [:username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
@@ -60,6 +60,8 @@ class User < ApplicationRecord
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+
+  belongs_to :api_client, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
@@ -308,6 +310,16 @@ class User < ApplicationRecord
   #     name
   #   end
   # end
+
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
+    end
+  end
 
   def first_letter_of_name
     (first_name || name)&.chars&.first&.upcase

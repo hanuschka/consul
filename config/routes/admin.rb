@@ -305,6 +305,11 @@ namespace :admin do
   put :update_map, to: "settings#update_map"
   put :update_content_types, to: "settings#update_content_types"
 
+  resources :ai_settings, only: [:index, :update]
+  patch :ai_settings_api_key, to: "ai_settings#update"
+
+  resources :external_api_keys, only: [:index, :show, :edit, :update]
+
   resources :moderators, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
@@ -326,6 +331,12 @@ namespace :admin do
 
   resources :administrators, only: [:index, :create, :destroy, :edit, :update] do
     get :search, on: :collection
+  end
+
+  resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      post :regenerate_token
+    end
   end
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do

@@ -35,6 +35,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_settings, dependent: :destroy
 
   has_many :projekt_phases, dependent: :destroy
+  has_many :active_and_visible_projekt_phases, -> { active.frontend_visible }, class_name: "ProjektPhase"
   has_many :debate_phases, class_name: "ProjektPhase::DebatePhase", dependent: :destroy
   has_many :proposal_phases, class_name: "ProjektPhase::ProposalPhase", dependent: :destroy
   has_many :budget_phases, class_name: "ProjektPhase::BudgetPhase", dependent: :destroy
@@ -75,6 +76,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_manager_assignments, dependent: :destroy
   has_many :projekt_managers, through: :projekt_manager_assignments
   accepts_nested_attributes_for :projekt_manager_assignments
+  accepts_nested_attributes_for :page
 
   has_many :subscriptions, -> { where(projekt_subscriptions: { active: true }) },
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
@@ -118,7 +120,7 @@ class Projekt < ApplicationRecord
       return false
     end
 
-    ApiClient.active_dt? && for_global_overview?
+    InternalApiClient.active_dt? && for_global_overview?
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -356,9 +358,9 @@ class Projekt < ApplicationRecord
   end
 
   def searchable_values
-    { page.title          => "A",
+    { page&.title          => "A",
       title               => "A",
-      page.content        => "C" }
+      page&.content       => "C" }
   end
 
   def projekt_phases_for(resource)

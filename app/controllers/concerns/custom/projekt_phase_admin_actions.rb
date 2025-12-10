@@ -492,7 +492,7 @@ module ProjektPhaseAdminActions
     @assistant_app_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    if ApiClient.active_dt?
+    if InternalApiClient.active_dt?
       dt_api = DtApi::Client.new
 
       @ai_assistant_config_response =

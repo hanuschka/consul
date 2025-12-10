@@ -61,6 +61,8 @@ module Abilities
       can [:search, :create, :index, :destroy], ::Manager
       can [:create, :read, :destroy], ::SDG::Manager
       can [:search, :index], ::User
+      can [:index, :show, :new, :create, :edit, :update, :destroy], ::InternalApiClient
+      can [:index, :show, :new, :create, :edit, :update, :destroy, :regenerate_token], ::ApiClient
 
       can :manage, Dashboard::Action
 

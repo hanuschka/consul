@@ -1,0 +1,69 @@
+  get "/api/docs", to: "docs#api"
+  get "/api/docs_alt", to: "docs#api_alt"
+
+  namespace :api do
+    resources :projekts, shallow: true do
+      member do
+        patch :update_setting
+        patch :update_page
+        patch :update_body
+      end
+
+      resources :projekt_phases do
+        member do
+          patch :update_setting
+        end
+      end
+    end
+
+    resources :projekt_phases, only: [], shallow: true do
+      resources :proposals, controller: "proposals", only: [:index, :create, :show, :update, :destroy] do
+        member do
+          patch :update_image
+        end
+      end
+      resources :debates, only: [:create, :show, :update, :destroy]
+      resources :polls, only: [:index, :create, :show, :update, :destroy]
+      resources :livestreams, only: [:index, :create, :show, :update, :destroy] do
+        resources :questions, only: [:create]
+      end
+      resources :questions, only: [:index, :create, :show, :update, :destroy], shallow: true do
+        resources :question_options, only: [:create, :show, :update, :destroy]
+      end
+      resources :events, only: [:index, :create, :show, :update, :destroy]
+      resources :arguments, only: [:index, :create, :show, :update, :destroy]
+      resources :notifications, only: [:index, :create, :show, :update, :destroy]
+      resources :texts, only: [:index]
+      resources :point_of_interest_pins, only: [:index, :create, :show, :update, :destroy]
+      resources :point_of_interest_categories, only: [:index, :create, :show, :update, :destroy]
+      resources :comments, only: [:index, :create, :show, :destroy]
+      resources :budgets, only: [:index, :create, :show, :update, :destroy]
+      resources :formulars, only: [:index, :create, :show, :update, :destroy]
+      resources :milestones, only: [:index]
+
+      resource :iframe, only: [:show, :update]
+    end
+    # settings are updated via projekt_phases#update_setting
+
+    resources :deficiency_reports, only: [:index, :show, :create, :update]
+    resources :deficiency_report_categories, only: [:index]
+    resources :ideas, only: [:index, :show, :create, :update]
+    resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
+    resources :idea_officers, only: [:index]
+    resources :polls, only: [:index, :show]
+    resources :livestreams, only: [:index, :show]
+    resources :proposals, only: [:index, :show]
+    resources :events, only: [:index, :show]
+    resources :notifications, only: [:index, :show]
+    resources :questions, only: [:index, :show]
+    resources :comments, only: [:index, :show]
+    resources :point_of_interest_pins, only: [:index, :show]
+    resources :point_of_interest_categories, only: [:index, :show]
+    resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
+    resources :budgets, only: [:index, :show], shallow: true do
+      resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
+    end
+    resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
+
+    match '*path', to: 'not_found#index', via: [:get, :post, :patch, :put, :delete]
+  end

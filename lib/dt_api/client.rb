@@ -4,7 +4,7 @@ class DtApi::Client
   base_uri "#{Dt.url}/api"
 
   def initialize(api_token = nil)
-    @api_token = api_token || ApiClient&.dt&.service_api_token
+    @api_token = api_token || InternalApiClient&.dt&.service_api_token
   end
 
   def ai_assistant_configs

@@ -12,6 +12,15 @@
       })
     },
 
+    formatRatingScale: function(element) {
+      const $answersContainer = $(element).find('.rating-scale-answer-container');
+      const $parentContainer = $(element).parent();
+
+      if ($answersContainer.width() > $parentContainer.width()) {
+        $(element).addClass('vertical-rating-scale-answers');
+      }
+    },
+
     initialize: function() {
       App.PollsCustom.showOpenAnswers()
 
@@ -30,6 +39,16 @@
           $questionList.show('fast');
         }
 
+      });
+
+      $(".js-rating-scale:visible").each( function() {
+        App.PollsCustom.formatRatingScale(this)
+      });
+
+      $("body").on("click", ".js-question-wizard-next", function() {
+        $(".js-rating-scale:visible").each( function() {
+          App.PollsCustom.formatRatingScale(this)
+        });
       });
     }
   }

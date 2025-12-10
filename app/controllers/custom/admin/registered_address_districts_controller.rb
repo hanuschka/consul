@@ -6,15 +6,7 @@ class Admin::RegisteredAddressDistrictsController < Admin::BaseController
     @registered_address_districts = RegisteredAddress::District.order(id: :desc)
   end
 
-  def edit
-    unless @registered_address_district.map_location
-      @registered_address_district.build_map_location(
-        longitude: Setting["map.longitude"],
-        latitude: Setting["map.latitude"],
-        zoom: Setting["map.zoom"]
-      )
-    end
-  end
+  def edit; end
 
   def update
     if @registered_address_district.update(district_params)

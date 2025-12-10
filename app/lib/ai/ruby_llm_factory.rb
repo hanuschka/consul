@@ -34,6 +34,10 @@ module Ai::RubyLlmFactory
     end
   end
 
+  def self.llm_model_set?
+    current_llm_model.present?
+  end
+
   def self.openai_api_key
     ExternalApiKey.openai_token
   end

@@ -5,9 +5,8 @@ class ExternalApiKey < ApplicationRecord
     { service: "openai", name: "api_key"}
   ]
 
-  validates :service, presence: true
+  validates :service, presence: true, uniqueness: true
   validates :name, presence: true
-  validates :service, uniqueness: true
 
   def self.service_links
     {

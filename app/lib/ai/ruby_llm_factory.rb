@@ -70,7 +70,11 @@ module Ai::RubyLlmFactory
     if current_llm_provider == "ollama"
       Setting["ai.llm_custom_model"]
     else
-      Setting["ai.llm_model"]
+      if current_llm_provider == "openai" && Setting["ai.llm_model"].blank?
+        "gpt-5-nano"
+      else
+        Setting["ai.llm_model"]
+      end
     end
   end
 

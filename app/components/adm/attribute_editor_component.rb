@@ -53,6 +53,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::ImageComponent
     when :string
       Adm::AttributeEditors::StringComponent
+    when :color
+      Adm::AttributeEditors::ColorComponent
     else
       raise "Unsupported attribute editor kind: #{@kind}"
     end

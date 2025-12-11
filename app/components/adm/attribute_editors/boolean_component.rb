@@ -6,10 +6,9 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
   end
 
   def value_options
-    case @record
-    when Setting, ProjektSetting, ProjektPhaseSetting
+    if SETTING_TYPES.any? { |type| @record.is_a?(type) }
       ["active", ""]
-    when SiteCustomization::Page
+    elsif @record.is_a?(SiteCustomization::Page) && @attribute == :status
       ["published", "draft"]
     else
       [true, false]

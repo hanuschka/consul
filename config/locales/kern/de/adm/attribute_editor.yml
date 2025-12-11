@@ -16,3 +16,26 @@ de:
         landing:
           slug_label: URL der Themenseite
           slug_description: 'Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung“. Die URL darf keine Leer- oder Sonderzeichen enthalten.'
+          landing_site_logo_for_transparent_background_label: Logo auf transparentem Hintergrund
+          landing_site_logo_for_transparent_background_description: "Wird angezeigt, wenn die Top-Navigation noch vor dem Hintergrundbild liegt (z. B. direkt beim Aufrufen der Seite).
+Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es über dem Hintergrundbild angezeigt wird. Optimal ist ein PNG mit transparentem Hintergrund. Sobald Nutzer scrollen, wechselt die Navigation auf weißen Hintergrund – dafür ist das zweite Logo vorgesehen."
+          landing_site_logo_for_white_background_label: Logo auf weißem Hintergrund
+          landing_site_logo_for_white_background_description: "Wird angezeigt, sobald die Seite gescrollt wurde und die Top-Navigation einen weißen Hintergrund hat.<br><br>Dieses Logo sollte in dunkler Farbe vor weißem Hintergrund gut sichtbar sein. Es ersetzt das transparente Logo automatisch, sobald die Navigation fixiert wird. Auch hier empfiehlt sich ein PNG, um scharfe Darstellung auf allen Geräten zu gewährleisten."
+          landing_desktop_header_image_label: Hintergrundbild für Desktop
+          landing_desktop_header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
+          landing_mobile_header_image_label: Hintergrundbild für Mobile
+          landing_mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
+          title_label: Titel der Themenseite
+          title_description: "Der Titel der Themenseite wird prominent über dem Hintergrundbild auf der Startseite angezeigt. Er sollte kurz und prägnant sein, um die Aufmerksamkeit der Besucher zu gewinnen."
+          subtitle_label: Untertitel der Themenseite
+          subtitle_description: "Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt."
+          landing_hide_title_and_subtitle_label: Titel und Untertitel auf der Themenseite ausblenden
+          landing_hide_title_and_subtitle_description: "Blendet den Titel und Untertitel der Themenseite im Frontend aus. Diese Angaben dienen dann ausschließlich der internen Konfiguration und werden nicht über dem Hintergrundbild angezeigt."
+          landing_hide_all_top_nav_links_label: Links in der Top-Navigation ausblenden
+          landing_hide_all_top_nav_links_description: "Blendet sämtliche Links aus, die in der Top-Navigation der Startseite enthalten sind. So bleibt die Themen- oder Gebietsseite übersichtlich und frei von globalen Navigationspunkten."
+          landing_show_projekts_overview_label: Projektübersicht in Hauptnavigation anzeigen
+          landing_show_projekts_overview_description: "Zeigt in der Top-Navigation dieser Themenseite eine Projektübersicht – analog zur Startseite. Wenn deaktiviert, wird die Projektübersicht auf allen zugehörigen Projektseiten dieser Themenseite nicht angezeigt."
+          landing_site_logo_follow_to_landing_page_label: Klick auf Logo führt zu dieser Zielseite
+          landing_site_logo_follow_to_landing_page_description: "Wenn aktiviert, führt ein Klick auf das Logo in der Top-Navigation nicht zur allgemeinen Startseite, sondern zur aktuell konfigurierten Themen- oder Gebietsseite."
+          landing_navigation_link_color_label: Farbe der Links in der Top-Navigation
+          landing_navigation_link_color_description: "Legen Sie die Schriftfarbe der Links in der oberen Navigationsleiste fest. Das ist wichtig, da das Hintergrundbild auf dieser Themenseite von dem auf der Startseite abweichen kann und die Lesbarkeit sichergestellt sein muss."

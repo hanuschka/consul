@@ -1,5 +1,7 @@
 module Adm
   class LandingPagesController < Adm::BaseController
+    include Translatable
+
     def index
       authorize [:adm, :landing_page]
       @breadcrumbs = [
@@ -50,7 +52,14 @@ module Adm
     private
 
       def landing_page_params
-        params.require(:site_customization_page).permit(:status, :slug)
+        params.require(:site_customization_page).permit(
+          :status, :slug,
+          :landing_hide_title_and_subtitle, :landing_hide_all_top_nav_links, :landing_show_projekts_overview,
+          :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
+          :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
+          :landing_desktop_header_image, :landing_mobile_header_image,
+          translation_params(::SiteCustomization::Page)
+        )
       end
   end
 end

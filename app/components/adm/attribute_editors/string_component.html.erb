@@ -2,11 +2,20 @@
   <%= hidden_field_tag :kind, "string" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <%= form.text_field @attribute,
-    label: false,
-    placeholder: @label,
-    class: "kern-form-input__input",
-    data: {"components-adm-attribute-editor-target": "input"} %>
+  <% input_options = {
+        label: false,
+        placeholder: @label,
+        class: "kern-form-input__input",
+        data: {"components-adm-attribute-editor-target": "input" }
+      } %>
+
+  <% if @record.respond_to?(:translated?) && @record.translated?(@attribute) %>
+    <%= form.fields_for :translations do |tf| %>
+      <%= tf.text_field @attribute, **input_options %>
+    <% end %>
+  <% else %>
+    <%= form.text_field @attribute, **input_options %> 
+  <% end %>
 
   <%= helpers.kern_submit_button(icon: "save", autofocus: request.format.turbo_stream?) %>
 <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_19_153128) do
+ActiveRecord::Schema.define(version: 2025_12_11_134001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -178,13 +178,11 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
 
   create_table "api_clients", force: :cascade do |t|
     t.string "name"
-    t.integer "registration_status"
-    t.string "auth_token"
-    t.string "domain"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "service_api_token"
-    t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
+    t.string "access_level"
+    t.string "service_user_email"
+    t.string "access_token"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "apps", force: :cascade do |t|
@@ -922,6 +920,14 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.index ["actionable_type", "actionable_id"], name: "index_email_activities_on_actionable_type_and_actionable_id"
   end
 
+  create_table "external_api_keys", force: :cascade do |t|
+    t.string "service"
+    t.string "name"
+    t.text "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "failed_census_calls", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "document_number"
@@ -1207,6 +1213,17 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "internal_api_clients", force: :cascade do |t|
+    t.string "name"
+    t.integer "registration_status"
+    t.string "auth_token"
+    t.string "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "service_api_token"
+    t.index ["service_api_token"], name: "index_internal_api_clients_on_service_api_token"
   end
 
   create_table "landing_pages_projekts", force: :cascade do |t|
@@ -1508,8 +1525,10 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.integer "rendering_library", null: false
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
+    t.bigint "registered_address_district_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
+    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
   end
 
   create_table "memos", force: :cascade do |t|
@@ -1793,7 +1812,13 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
     t.boolean "answer_mandatory", default: false
+    t.bigint "contextualize_by_poll_question_id"
+    t.bigint "contexted_clone_of_poll_question_id"
+    t.bigint "context_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["context_id"], name: "index_poll_questions_on_context_id"
+    t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
+    t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
@@ -2111,6 +2136,16 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
   end
 
+  create_table "projekt_point_of_interest_pin_translations", force: :cascade do |t|
+    t.bigint "projekt_point_of_interest_pin_id", null: false
+    t.string "locale", null: false
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_projekt_point_of_interest_pin_translations_on_locale"
+    t.index ["projekt_point_of_interest_pin_id"], name: "index_poi_pin_translations_on_poi_pin_id"
+  end
+
   create_table "projekt_point_of_interest_pins", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.integer "projekt_point_of_interest_category_id"
@@ -2236,7 +2271,6 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
-    t.string "frame_access_code"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
@@ -2619,6 +2653,7 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.string "subtitle"
     t.text "content"
     t.text "content_bu"
+    t.string "header_title"
     t.index ["locale"], name: "index_site_customization_page_translations_on_locale"
     t.index ["site_customization_page_id"], name: "index_7fa0f9505738cb31a31f11fb2f4c4531fed7178b"
   end
@@ -2640,6 +2675,7 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.boolean "landing_show_projekts_overview", default: true
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
+    t.string "brand_color"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -2827,6 +2863,7 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.datetime "frame_sign_in_token_valid_until"
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
+    t.integer "api_client_id"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -3040,6 +3077,7 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
+  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"
@@ -3058,6 +3096,9 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"
   add_foreign_key "poll_question_answers", "poll_questions", column: "question_id"
+  add_foreign_key "poll_questions", "poll_question_answers", column: "context_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contexted_clone_of_poll_question_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contextualize_by_poll_question_id"
   add_foreign_key "poll_questions", "polls"
   add_foreign_key "poll_questions", "proposals"
   add_foreign_key "poll_questions", "users", column: "author_id"

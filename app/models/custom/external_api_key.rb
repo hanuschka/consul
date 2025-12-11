@@ -5,9 +5,8 @@ class ExternalApiKey < ApplicationRecord
     { service: "openai", name: "api_key"}
   ]
 
-  validates :service, presence: true
+  validates :service, presence: true, uniqueness: true
   validates :name, presence: true
-  validates :service, uniqueness: true
 
   def self.service_links
     {
@@ -56,6 +55,11 @@ class ExternalApiKey < ApplicationRecord
     )
   end
 
+  def self.ensure_existence_of_api_keys
+    ExternalApiKey::KEYS_DATA.each do |key_data|
+      ExternalApiKey.find_or_create_by(service: key_data[:service], name: key_data[:name])
+    end
+  end
 
   def self.get_api_key_or_default(service, name, default_api_key = nil)
     api_key = find_by(service: service, name: name)&.value

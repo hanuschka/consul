@@ -20,29 +20,29 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def label
+    return @options[:label] if @options[:label].present?
+
     if SETTING_TYPES.any? { |type| @record.is_a?(type) }
       I18n.t("#{@record.class.name.underscore}.#{@record.key}")
     elsif @record.is_a?(SiteCustomization::Image)
-      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@record.name}_label")
+      I18n.t("adm.attribute_editor.#{@record.class.name.underscore}.#{@record.name}_label")
     else
-      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@attribute}_label",
+      I18n.t(["adm.attribute_editor.#{@record.class.name.underscore}", suffix, "#{@attribute}_label"].compact.join("."),
              default: @attribute.to_s.humanize)
     end
   end
 
   def description
+    return @options[:description] if @options[:description].present?
+
     if SETTING_TYPES.any? { |type| @record.is_a?(type) }
       I18n.t("#{@record.class.name.underscore}.#{@record.key}_description")
     elsif @record.is_a?(SiteCustomization::Image)
-      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@record.name}_description")
+      I18n.t("adm.attribute_editor.#{@record.class.name.underscore}.#{@record.name}_description")
     else
-      I18n.t("attribute_editor.#{@record.class.name.underscore}.#{@attribute}_description",
-              default: "attribute_editor.default_description")
+      I18n.t(["adm.attribute_editor.#{@record.class.name.underscore}", suffix, "#{@attribute}_description"].compact.join("."),
+             default: "adm.attribute_editor.default_description")
     end
-  end
-
-  def updated?
-    @options.fetch(:updated, false)
   end
 
   def component_for_type
@@ -55,6 +55,14 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::StringComponent
     else
       raise "Unsupported attribute editor kind: #{@kind}"
+    end
+  end
+
+  def suffix
+    if @record.is_a?(SiteCustomization::Page) && @record.landing?
+      "landing"
+    else
+      nil
     end
   end
 end

@@ -4,7 +4,9 @@ module Adm
       authorize [:adm, Setting], :update?
 
       @setting = Setting.find(params[:id])
-      @setting.update!(setting_params)
+      if @setting.update(setting_params)
+        flash.now[:success] = t(".success")
+      end
     end
 
     def metadata

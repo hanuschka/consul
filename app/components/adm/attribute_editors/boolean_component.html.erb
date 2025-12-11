@@ -5,6 +5,6 @@
   <%= form.hidden_field @attribute, value: alternate_value %>
   <%= form.button "", class: 'toggle-button small',
                   aria: { pressed: toggled_on? },
-                  autofocus: updated? %>
+                  autofocus: request.format.turbo_stream? %>
   <span><%= @label %></span>
 <% end %>

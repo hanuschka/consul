@@ -1,15 +1,4 @@
 .attribute-editor-component {
-  .attribute-form {
-    position: relative;
-
-    .success-message {
-      position: absolute;
-      bottom: -25px;
-      transition: opacity 0.5s ease;
-      opacity: 1;
-    }
-  }
-
   .attribute-form.string {
     form {
       display: flex;

@@ -1,13 +1,18 @@
 de:
-  attribute_editor:
-    default_description: Ohne Beschreibung
-    site_customization/image:
-      header_image_label: Hintergrundbild für Desktop
-      header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
-      mobile_header_image_label: Hintergrundbild für Mobile
-      mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
-    projekt:
-      total_duration_start_label: Startdatum
-      total_duration_start_description: Startdatum
-      total_duration_end_label: Enddatum
-      total_duration_end_description: Enddatum
+  adm:
+    attribute_editor:
+      default_description: Ohne Beschreibung
+      projekt:
+        total_duration_start_label: Startdatum
+        total_duration_start_description: Startdatum
+        total_duration_end_label: Enddatum
+        total_duration_end_description: Enddatum
+      site_customization/image:
+        header_image_label: Hintergrundbild für Desktop
+        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
+        mobile_header_image_label: Hintergrundbild für Mobile
+        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
+      site_customization/page:
+        landing:
+          slug_label: URL der Themenseite
+          slug_description: 'Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung“. Die URL darf keine Leer- oder Sonderzeichen enthalten.'

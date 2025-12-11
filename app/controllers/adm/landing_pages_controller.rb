@@ -28,10 +28,9 @@ module Adm
       @landing_page = ::SiteCustomization::Page.find(params[:id])
       authorize [:adm, @landing_page], policy_class: Adm::LandingPagePolicy
 
-      @attribute = landing_page_params[:attribute]
-      @value = landing_page_params[:value]
-
-      @landing_page.update!(@attribute => @value)
+      if @landing_page.update(landing_page_params)
+        flash.now[:success] = t(".success")
+      end
     end
 
     def toggle_active
@@ -51,7 +50,7 @@ module Adm
     private
 
       def landing_page_params
-        params.require(:site_customization_page).permit(:attribute, :value, :status)
+        params.require(:site_customization_page).permit(:status, :slug)
       end
   end
 end

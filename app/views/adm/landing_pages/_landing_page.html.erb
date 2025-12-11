@@ -5,8 +5,7 @@
     <%= render Adm::AttributeEditors::BooleanComponent.new(
       landing_page,
       :status,
-      path: toggle_active_adm_landing_page_path(landing_page),
-      updated: local_assigns[:updated]
+      path: toggle_active_adm_landing_page_path(landing_page)
     ) %>
   </td>
   <td class="kern-table__cell">

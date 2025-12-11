@@ -1,20 +1,20 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "input", "successMessage" ]
-  static values = { updated: Boolean }
+  static targets = [ "input", "successMessage", "errorMessage" ]
 
   connect() {
-    if (!this.updatedValue) return;
-
     if (this.hasInputTarget) { this.placeCursorAtEnd() }
-    this.fadeOutSuccessMessage();
+    if (this.hasSuccessMessageTarget) { this.fadeOutSuccessMessage() }
   }
 
   placeCursorAtEnd() {
-    const input = this.inputTarget;
-    const length = input.value.length;
-    input.setSelectionRange(length, length);
+    if (this.hasSuccessMessageTarget || this.hasErrorMessageTarget) {
+      const input = this.inputTarget;
+      const length = input.value.length;
+      input.focus();
+      input.setSelectionRange(length, length);
+    }
   }
 
   fadeOutSuccessMessage() {

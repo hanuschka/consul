@@ -5,8 +5,7 @@
     <%= render Adm::AttributeEditors::BooleanComponent.new(
       @content_card,
       :active,
-      path: toggle_active_adm_site_customization_content_card_path(@content_card),
-      updated: @updated
+      path: toggle_active_adm_site_customization_content_card_path(@content_card)
     ) %>
   </td>
   <td class="kern-table__cell">

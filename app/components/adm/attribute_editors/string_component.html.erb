@@ -8,5 +8,5 @@
     class: "kern-form-input__input",
     data: {"components-adm-attribute-editor-target": "input"} %>
 
-  <%= helpers.kern_submit_button(icon: "save", autofocus: updated?) %>
+  <%= helpers.kern_submit_button(icon: "save", autofocus: request.format.turbo_stream?) %>
 <% end %>

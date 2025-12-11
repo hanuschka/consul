@@ -22,9 +22,7 @@ class Admin::ExternalApiKeysController < Admin::BaseController
   private
 
   def ensure_existence_of_api_keys_templates
-    ExternalApiKey::KEYS_DATA.each do |key_data|
-      ExternalApiKey.find_or_create_by(service: key_data[:service], name: key_data[:name])
-    end
+    ExternalApiKey.ensure_existence_of_api_keys
   end
 
   def external_api_key_params

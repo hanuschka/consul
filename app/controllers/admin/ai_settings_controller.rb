@@ -3,8 +3,6 @@ class Admin::AiSettingsController < Admin::BaseController
 
   def index
     @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
-    service = Setting["ai.llm_provider"].to_s.downcase || "openai"
-    @api_key = ExternalApiKey.find_by(name: "api_key", service: service) || ExternalApiKey.openai_token
   end
 
   def update

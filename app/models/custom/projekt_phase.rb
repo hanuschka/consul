@@ -381,6 +381,14 @@ class ProjektPhase < ApplicationRecord
     update_column(:ai_stats, stats)
   end
 
+  def name
+    if type.present? && type != self.class.name
+      becomes(type.constantize).name
+    else
+      super
+    end
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

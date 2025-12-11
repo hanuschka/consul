@@ -28,7 +28,17 @@ module Schemas
           description: 'The associated Projekt page containing content and metadata',
           properties: {
             title: { type: :string, nullable: true, description: 'The page title displayed in the frontend', example: 'Sample Projekt Page' },
-            slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' }
+            slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' },
+            image: {
+              type: :object,
+              nullable: true,
+              description: 'The page header/cover image',
+              properties: {
+                url: { type: :string, nullable: true, description: 'URL to the full-size image', example: 'https://example.com/images/page-image.jpg' },
+                title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
+                credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' }
+              }
+            }
           }
         },
         projekt_settings: {

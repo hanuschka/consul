@@ -39,3 +39,4 @@ group :development, :test do
   gem 'rswag-specs'
 end
 
+gem 'proj4rb'

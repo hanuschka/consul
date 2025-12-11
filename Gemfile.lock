@@ -461,6 +461,8 @@ GEM
       matrix (~> 0.4.2)
       prawn (>= 0.11.1, < 3)
       rexml (>= 3.3.9, < 4)
+    proj4rb (4.1.1)
+      ffi
     pronto (0.11.3)
       gitlab (>= 4.4.0, < 5.0)
       httparty (>= 0.13.7, < 1.0)
@@ -853,6 +855,7 @@ DEPENDENCIES
   pg_search (~> 2.3.6)
   prawn (= 2.5.0)
   prawn-svg (~> 0.37.0)
+  proj4rb
   pronto (~> 0.11.1)
   pronto-erb_lint (~> 0.1.6)
   pronto-eslint (~> 0.11.1)

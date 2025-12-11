@@ -56,7 +56,6 @@ class ExternalApiKey < ApplicationRecord
     )
   end
 
-<<<<<<< HEAD
   def self.gemini_api_key
     get_api_key_or_default(
       "gemini",

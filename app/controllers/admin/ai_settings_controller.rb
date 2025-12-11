@@ -3,8 +3,8 @@ class Admin::AiSettingsController < Admin::BaseController
 
   def index
     @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
-    service = Setting["ai.llm_provider"].to_s.downcase
-    @api_key = ExternalApiKey.find_or_create_by(name: "api_key", service: service)
+    service = Setting["ai.llm_provider"].to_s.downcase || "openai"
+    @api_key = ExternalApiKey.find_by(name: "api_key", service: service) || ExternalApiKey.openai_token
   end
 
   def update
@@ -30,7 +30,7 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def update_api_key
-      api_key = ExternalApiKey.find_or_create_by(name: api_key_params[:name], service: api_key_params[:service])
+      api_key = ExternalApiKey.find_by(name: api_key_params[:name], service: api_key_params[:service])
       api_key.update!(api_key_params)
 
       respond_to do |format|

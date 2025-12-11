@@ -5,6 +5,10 @@ class ExternalApiKey < ApplicationRecord
     { service: "openai", name: "api_key"}
   ]
 
+  validates :service, presence: true
+  validates :name, presence: true
+  validates :service, uniqueness: true
+
   def self.service_links
     {
       matomo: "https://matomo.org",
@@ -16,7 +20,9 @@ class ExternalApiKey < ApplicationRecord
   end
 
   def service_link
-    self.class.service_links[service.to_sym]
+    sym = service&.to_sym
+
+    self.class.service_links[service] || ""
   end
 
   def self.matomo_token

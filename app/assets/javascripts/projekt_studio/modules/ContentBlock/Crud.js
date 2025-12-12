@@ -141,10 +141,12 @@ ProjektStudio.ContentBlock.Crud = {
         }
       })
 
+
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
-    $(contentBlock).foundation();
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+
   },
 
   deleteContentBlock(contentBlockWrapper) {

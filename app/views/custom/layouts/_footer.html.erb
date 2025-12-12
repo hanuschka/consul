@@ -30,6 +30,7 @@
         <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("layouts.footer.api_docs"), api_docs_path, target: "_blank" %>&nbsp;|</li>
         <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
           <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %>&nbsp;|</li>
         <% end %>

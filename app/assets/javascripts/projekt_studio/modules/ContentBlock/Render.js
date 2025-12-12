@@ -6,7 +6,7 @@ ProjektStudio.ContentBlock.Render = {
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = ProjektStudio.utils.parseIframeEventData(event.data);
+      const data = event.data;
       const params = data.params
 
       switch(data.event_type) {

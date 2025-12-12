@@ -17,6 +17,8 @@
       this.setupEventListenersForUpdatingFormInputs();
       this.toggleControlVisibility();
       this.setupEventListenersForUpdatingMapCenter();
+
+      this.placeCenterMarker = this.placeCenterMarker.bind(this)
     }
 
     initializeProperties() {
@@ -111,6 +113,28 @@
 
         instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
+    }
+
+    // Public Interface method for assistant map update and external use
+    // DO NOT DELETE
+    setMarkerTo(lat, lng, shouldScroll) {
+      this.map.panTo(new L.LatLng(lat, lng));
+
+      if (this.editingProjektMap) {
+        this.placeCenterMarker([lat, lng])
+      } else {
+        const marker = L.marker([lat, lng], {
+          icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor)
+        });
+        marker.addTo(this.map);
+        this.map.fire('pm:create', { layer: marker, shape: 'Marker' });
+      }
+
+      if (shouldScroll) {
+        this.map.getContainer().scrollIntoView({
+          block: "center", inline: "nearest"
+        })
+      }
     }
 
     setupExpandControl() {
@@ -337,13 +361,15 @@
           style: function (feature) {
             return {
               weight: 2,
-              color: feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
+              color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
             };
           },
           onEachFeature: function (feature, layer) {
             if (self.editable) {
               self.setupEventListenersForEditableFeature(self.map, layer)
               self.editableLayers.push(layer);
+
+              layer.addTo(self.map);
 
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
@@ -369,7 +395,7 @@
         });
       }
       if (this.editingProjektMap) {
-        this.placeCenterMarker(this.mapCenterLatLng, this);
+        this.placeCenterMarker(this.mapCenterLatLng);
       }
     }
 
@@ -427,15 +453,15 @@
           title: 'Zentrum markieren',
           block: 'custom',
           toggle: true,
-          onClick: function() {
-            const isToggled = !self.map.pm.Toolbar.buttons.centerMarker.toggled();
+          onClick: () => {
+            const isToggled = !this.map.pm.Toolbar.buttons.centerMarker.toggled();
 
             if (isToggled) {
-              self.map.on('click', function(e) {
-                self.placeCenterMarker(e.latlng, self);
+              this.map.on('click', function(e) {
+                self.placeCenterMarker(e.latlng);
               });
             } else {
-              self.map.off('click');
+              this.map.off('click');
             }
           }
         })
@@ -479,9 +505,9 @@
       editToolbar.insertBefore(customDragButtonContainer, editToolbar.firstChild);
     }
 
-    placeCenterMarker(centerLatLng, instance) {
-      if (instance.centerMarker) {
-        instance.map.removeLayer(instance.centerMarker);
+    placeCenterMarker(centerLatLng) {
+      if (this.centerMarker) {
+        this.map.removeLayer(this.centerMarker);
       }
 
       const centerMarker = L.marker(centerLatLng, {
@@ -489,10 +515,10 @@
         icon: App.Utils.getLeafletMarkerHTML()
       })
 
-      instance.centerMarker = centerMarker;
-      instance.map.addLayer(centerMarker);
-      instance.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
-      instance.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
+      this.centerMarker = centerMarker;
+      this.map.addLayer(centerMarker);
+      this.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
+      this.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
     }
 
     setupEventListenersForEditableFeature(map, layer) {
@@ -532,6 +558,7 @@
       });
 
       this.map.on('pm:create', function(e) {
+        console.log("pm:create")
         if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
           self.map.removeLayer(self.editableLayers.pop());
         }

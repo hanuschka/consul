@@ -63,11 +63,10 @@
     },
 
     setMissingHrefs: function() {
-      document.querySelectorAll(".glightbox:not([href])").forEach((glightboxA) => {
-        const img = glightboxA.querySelector("img");
-
+      document.querySelectorAll(".glightbox:not([href]), .glightbox[href='']").forEach((el) => {
+        var img = el.querySelector("img");
         if (img && img.src) {
-          glightboxA.href = img.src;
+          el.href = img.src;
         }
       });
     },

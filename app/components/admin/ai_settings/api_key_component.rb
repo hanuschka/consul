@@ -7,6 +7,6 @@ class Admin::AiSettings::ApiKeyComponent < ApplicationComponent
   end
 
   def api_key
-    @api_key ||= ExternalApiKey.find_or_create_by(name: key_name, service: service)
+    @api_key ||= ExternalApiKey.find_by(name: key_name, service: service)
   end
 end

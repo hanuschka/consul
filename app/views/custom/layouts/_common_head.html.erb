@@ -30,6 +30,7 @@
 <meta name="two-click-iframes" content="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? %>" />
 <meta name="expand-active-projekts" content=<%= Setting["projekts.second_level_projekts_in_active_filter"] %> />
 <meta name="expand-archived-projekts" content=<%= Setting["projekts.second_level_projekts_in_archived_filter"] %> />
+<meta name="google-translate-enabled" content="<%= extended_feature?("general.enable_google_translate") && google_translate_accepted? %>" />
 
 <meta name="turbolinks-cache-control" content="no-cache">
 
@@ -47,31 +48,4 @@
 
   <%= javascript_include_tag "klaro/config.js", defer: true %>
   <%= javascript_include_tag "klaro/klaro.js", defer: true %>
-<% end %>
-
-<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
-  <script>
-    function loadGoogleTranslateScript() {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      document.head.appendChild(script);
-    }
-
-    function googleTranslateElementInit() {
-      if ( $(".hamburger-menu:visible").length ) {
-        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_mobile');
-      } else {
-        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_desktop');
-      }
-    }
-
-    $(document).on('turbolinks:load', function() {
-      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
-				loadGoogleTranslateScript();
-      } else {
-				googleTranslateElementInit();
-      }
-    });
-  </script>
 <% end %>

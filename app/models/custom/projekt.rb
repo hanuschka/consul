@@ -115,12 +115,12 @@ class Projekt < ApplicationRecord
 
   after_destroy :ensure_projekt_order_integrity
 
-  def should_be_exported?
+  def should_be_exported_for_global_overview?
     if  Rails.env.development? && Rails.application.secrets.dt[:disable_sync]
       return false
     end
 
-    InternalApiClient.active_dt? && for_global_overview?
+    InternalApiClient.active_dt? && (on_global_overview? || acceptable_to_be_exported_for_global_overview?)
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -681,16 +681,11 @@ class Projekt < ApplicationRecord
     preview_code.present? && preview_code == code
   end
 
-  def should_be_exported_for_overview?
-    # TODO
-    # Here the conditions to check if projekt exported intially
-    # They should be used here as well in context of individual projekt
-    # Projekt
-    #   .activated
-    #   .with_published_custom_page
-    #   .show_in_overview_page
-    #   .not_in_individual_list
-    #   .regular
+  def acceptable_to_be_exported_for_global_overview?
+    !special &&
+      page&.published? &&
+      projekt_settings.find_by(key: "projekt_feature.main.activate")&.value == "active" &&
+      projekt_settings.find_by(key: "projekt_feature.general.show_in_overview_page")&.value == "active"
   end
 
   def any_phase_subscribers_ids
@@ -825,7 +820,7 @@ class Projekt < ApplicationRecord
         return
       end
 
-      if should_be_exported?
+      if should_be_exported_for_global_overview?
         if hidden_at.present?
           sync_destroy_for_global_overview
         else
@@ -837,7 +832,7 @@ class Projekt < ApplicationRecord
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported?
+      if should_be_exported_for_global_overview?
         Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end
     end

@@ -1,5 +1,5 @@
-ProjektStudio.utils.focusContentEditableElement = function(element) {
-  element.focus()
+ProjektStudio.utils.focusContentEditableElement = function(element, options = {}) {
+  element.focus({ preventScroll: options.preventScroll || true })
 
   const range = document.createRange();
   range.selectNodeContents(element);

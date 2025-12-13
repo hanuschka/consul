@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_02_155437) do
+ActiveRecord::Schema.define(version: 2025_12_12_165432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2246,9 +2246,9 @@ ActiveRecord::Schema.define(version: 2025_12_02_155437) do
     t.tsvector "tsv"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
-    t.boolean "for_global_overview", default: false
+    t.boolean "on_global_overview", default: false
     t.boolean "from_dt", default: false
-    t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
+    t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
@@ -2649,6 +2649,7 @@ ActiveRecord::Schema.define(version: 2025_12_02_155437) do
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
+    t.datetime "published_at"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end

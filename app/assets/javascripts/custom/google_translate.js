@@ -1,6 +1,6 @@
 (function() {
   App.GoogleTranslate = {
-    loadScript: function() {
+    loadScript() {
       // console.log("loadScript")
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -8,13 +8,19 @@
       document.head.appendChild(script);
     },
 
-    initialize: function() {
+    initialize() {
       // console.log("App.GoogleTranslate.initialize")
+      this.cleanExistingGoogleTranslate()
+
       if ($(".hamburger-menu:visible").length) {
         new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_mobile');
       } else {
         new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_desktop');
       }
+    },
+
+    cleanExistingGoogleTranslate() {
+      $(".google_translate_element").empty()
     }
   };
 

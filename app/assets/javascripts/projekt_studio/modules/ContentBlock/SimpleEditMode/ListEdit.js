@@ -55,7 +55,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       baseClass += " -small"
     }
 
-    console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
+    // console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
     if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
       const dragHandleHTML = `
         <button class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">

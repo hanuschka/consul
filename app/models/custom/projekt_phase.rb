@@ -67,6 +67,9 @@ class ProjektPhase < ApplicationRecord
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
 
+  has_many :registered_address_district_projekt_phase, dependent: :destroy
+  has_many :registered_address_districts, through: :registered_address_district_projekt_phase
+
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
@@ -212,7 +215,9 @@ class ProjektPhase < ApplicationRecord
   end
 
   def geozone_restrictions_formatted
-    geozone_restrictions.map(&:name).flatten.join(", ")
+    return geozone_restrictions.map(&:name).flatten.join(", ") if geozone_restrictions.any?
+
+    registered_address_districts.map(&:name).flatten.join(", ")
   end
 
   def street_restrictions_formatted
@@ -388,12 +393,13 @@ class ProjektPhase < ApplicationRecord
       when "only_citizens"
         return :missing_user_data if user.plz.blank?
 
-        :only_citizens if user.not_current_city_citizen?
+        :only_citizens unless user.citizen?
       when "only_geozones"
         if user.plz.blank?
           :missing_user_data
-        elsif !geozone_restrictions.include?(user.geozone)
-          :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
+        elsif (geozone_restrictions.any? && !geozone_restrictions.include?(user.geozone)) ||
+               (registered_address_districts.any? && !registered_address_districts.include?(user.district))
+          :only_specific_geozones
         end
       when "only_streets"
         if user.registered_address_street.blank?

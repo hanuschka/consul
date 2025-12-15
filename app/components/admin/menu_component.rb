@@ -486,7 +486,6 @@ class Admin::MenuComponent < ApplicationComponent
         link_list(
           settings_link,
           tags_link,
-          geozones_link,
           individual_groups_link,
           age_ranges_link,
           images_link,

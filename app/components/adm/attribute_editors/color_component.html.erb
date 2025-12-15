@@ -1,13 +1,12 @@
-<%= form_with model: @record, url: path do |form| %>
-  <%= hidden_field_tag :kind, "string" %>
+<%= form_with model: @record, url: path, data: { controller: "adm-color-picker" } do |form| %>
+  <%= hidden_field_tag :kind, "color" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <%= form.text_field @attribute,
-        type: "color",
+  <div class="color-picker" data-adm-color-picker-target= "picker"></div>
+
+  <%= form.hidden_field @attribute,
         label: false,
-        placeholder: @label,
-        class: "kern-form-input__input",
-        data: {"components-adm-attribute-editor-target": "input" } %>
+        data: { "adm-color-picker-target": "colorInput" } %>
 
   <%= helpers.kern_submit_button(icon: "save", autofocus: request.format.turbo_stream?) %>
 <% end %>

@@ -19,6 +19,9 @@ application.register("sortable", SortableController)
 import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
 application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
 
+import AdmColorPickerController from "./adm/color_picker_controller"
+application.register("adm-color-picker", AdmColorPickerController)
+
 
 import ModeSwitcherController from "./mode_switcher_controller"
 application.register("mode-switcher", ModeSwitcherController)

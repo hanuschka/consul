@@ -380,6 +380,10 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def regular
+    ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

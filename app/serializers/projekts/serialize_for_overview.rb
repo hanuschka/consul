@@ -73,19 +73,19 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_phases
     {
-      phases: @projekt.projekt_phases.map do |phase|
-        phase_json =
-          phase.as_json(
-            only: [
-              :id, :title, :type,
-              :start_date, :end_date,
-              :active, :given_order,
-              :frontend_visibility, :ai_stats
-            ],
-            methods: [:regular]
-          )
-
-        phase_json
+      phases: @projekt.active_and_visible_projekt_phases.map do |phase|
+        {
+          id: phase.id,
+          title: phase.title,
+          type: phase.type,
+          start_date: phase.start_date,
+          end_date: phase.end_date,
+          active: phase.active,
+          regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
+          given_order: phase.given_order,
+          frontend_visibility: phase.frontend_visibility,
+          ai_stats: phase.ai_stats
+        }
       end
     }
   end

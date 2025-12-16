@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_15_142308) do
+ActiveRecord::Schema.define(version: 2025_12_16_142308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2453,6 +2453,14 @@ ActiveRecord::Schema.define(version: 2025_12_15_142308) do
     t.index ["parent_relationable_id", "parent_relationable_type", "child_relationable_id", "child_relationable_type"], name: "unique_parent_child_related_content", unique: true
     t.index ["parent_relationable_type", "parent_relationable_id"], name: "index_related_contents_on_parent_relationable"
     t.index ["related_content_id"], name: "opposite_related_content"
+  end
+
+  create_table "relay_states", force: :cascade do |t|
+    t.string "token"
+    t.jsonb "data", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["token"], name: "index_relay_states_on_token"
   end
 
   create_table "remote_translations", id: :serial, force: :cascade do |t|

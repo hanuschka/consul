@@ -122,12 +122,12 @@ module ProjektsHelper
 
   def get_projekt_phase_restriction_name(projekt_phase, destination=nil, only_name=false)
     restriction_name = projekt_phase.geozone_restricted || "no_restriction"
-    geozone_restrictions = projekt_phase.geozone_restrictions
+    district_restrictions = projekt_phase.registered_address_districts
 
     return restriction_name if only_name
 
-    if geozone_restrictions.exists? && restriction_name == 'only_geozones'
-      return geozone_restrictions.pluck(:name).join(', ')
+    if district_restrictions.exists? && restriction_name == 'only_geozones'
+      return district_restrictions.pluck(:name).join(', ')
     end
 
     if destination == 'projekt_selector'

@@ -73,7 +73,7 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_phases
     {
-      phases: @projekt.projekt_phases.map do |phase|
+      phases: @projekt.active_and_visible_projekt_phases.map do |phase|
         {
           id: phase.id,
           title: phase.title,
@@ -82,7 +82,9 @@ class Projekts::SerializeForOverview < ApplicationService
           end_date: phase.end_date,
           active: phase.active,
           regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
-          given_order: phase.given_order
+          given_order: phase.given_order,
+          frontend_visibility: phase.frontend_visibility,
+          ai_stats: phase.ai_stats
         }
       end
     }

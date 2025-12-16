@@ -52,10 +52,12 @@
           </span>
         </div>
 
-        <div class="hide-on-mobile">
-          <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
-        </div>
+        <% if deficiency_reports_feature?("show_create_report_button") %>
+          <div class="hide-on-mobile">
+            <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+          </div>
+        <% end %>
       <% end %>
 
       <div class="show-on-small-tablet">

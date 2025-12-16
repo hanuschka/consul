@@ -26,8 +26,13 @@
     },
 
     reInitializeMap: function() {
-      App.Map.destroy();
-      App.Map.initialize();
+      const sidebarCard = event.target.closest(".sidebar-card")
+      const $mapContainer = $(sidebarCard).find("*[data-map]:visible");
+
+      if ($mapContainer.length === 0) { return; }
+
+      App.Map.destroyMapForElementId($mapContainer.attr("id"));
+      App.Map.initializeMapForElementId($mapContainer.attr("id"));
     }
   };
 }).call(this);

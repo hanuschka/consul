@@ -130,7 +130,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
-          "feature.resource.show_video_as_link": ""
+          "feature.resource.show_video_as_link": "",
+          "feature.resource.hide_ballots_count": ""
         },
 
         "ProjektPhase::QuestionPhase" => {

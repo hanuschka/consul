@@ -23,8 +23,8 @@
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
 
       <div class="projekt-phase-geo-restriction-selector">
-        <%= f.collection_check_boxes(:geozone_restriction_ids, Geozone.all, :id, :name, {}) do |b| %>
-          <%= b.label(style: "display:inline-block;cursor:pointer;") { b.check_box(style: "margin-top:0;") + b.text } %>
+        <%= f.collection_check_boxes(:registered_address_district_ids, RegisteredAddress::District.all, :id, :name, {}) do |b| %>
+          <%= b.label(style: "cursor:pointer;") { b.check_box(style: "margin-top:0;") + b.text } %>
         <% end %>
       </div>
     </div>

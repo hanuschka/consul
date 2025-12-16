@@ -2,6 +2,9 @@ de:
   custom:
     devise_views:
       users:
+        sessions:
+          new:
+            registration_hint: "Sie haben noch kein Konto? <a href='/users/sign_up'>Hier registrieren</a>."
         registrations:
           new:
             message: Schnell. Einfach. Sicher

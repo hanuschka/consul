@@ -1,6 +1,14 @@
 en:
   activerecord:
     attributes:
+      api_client:
+        name: "Client Name"
+        domain: "Domain"
+        auth_token: "Auth Token"
+        registration_status: "Registration Status"
+        access_level: "Access Level"
+        service_user_email: "Service User Email"
+        service_api_token: "Service API Token"
       tag:
         name: "Type the name of the tag"
   admin:
@@ -25,6 +33,7 @@ en:
         cloud: Tag cloud
     menu:
       proposals_topics: Predefined tags
+      api_clients: API Clients
     tags:
       create: Create tag
       destroy: Delete tag
@@ -41,6 +50,65 @@ en:
         cloud_category: Tag cloud for category
         cloud_subcategory: Tag cloud for subcategory
         custom_tags: User tags
+
+    api_clients:
+      edit_button: "Edit"
+      access_level:
+        public_data: "Public Data"
+        admin: "Admin"
+      index:
+        title: API Clients
+        id: API Client ID
+        no_api_clients: There are no API clients.
+      show:
+        show_token: "Show"
+        hide_token: "Hide"
+        copy_token: "Copy"
+        copied: "Copied!"
+        token_hidden_message: "Token is hidden. Click \"Show\" first to reveal and copy."
+        auth_token_explanation_text: "Include this token in the Authorization header of your API requests. Use it as a Bearer token in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        auth_token_example_title: "HTTP Example:"
+        auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        service_user_title: "Service User"
+        service_user_name: "Name"
+        service_user_login_warning: "Note: You should not login with this service user directly. Use the API authentication methods instead."
+      form:
+        create_title: "Create New API Client"
+        edit_title: "Edit API Client"
+        created: "API Client created successfully"
+        updated: "API Client updated successfully"
+        deleted: "API Client deleted successfully"
+        domain_hint: "optional"
+        service_user_explanation: "This service user is associated with this API client and will be used for API authentication."
+        service_user_form_title: "Update Service User Information"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_message: "%{count} error"
+        service_user_errors_title: "prevented this service user from being saved:"
+        update_service_user: "Update Service User"
+        service_user_email_note: "This email should be unique and different from any other user email already used in API clients."
+        service_user_email_description: "Service user account email. This service user will be created to act as the author when resources (proposals, ideas, deficiency reports) are created through this API client."
+        access_level_public_data: "Read-only access (GET requests only)."
+        access_level_admin: "Full access to retrieve, create, update, and delete resources."
+        access_level_description: |
+          Public Data: Read-only access (GET requests only).
+
+          Admin: Full access to retrieve, create, update, and delete resources.
+        regenerate_token: "Regenerate Token"
+        regenerate_token_explanation: "Creates a new token and invalidates the current one. Use this if the token has been compromised or to rotate credentials regularly."
+        regenerate_token_confirmation: "Are you sure you want to regenerate this token? All existing integrations using the old token will stop working."
+        token_regenerated: "API token regenerated successfully"
+
+    shared:
+      created: "Created"
+      actions: "Actions"
+      show: "Show"
+      edit: "Edit"
+      delete: "Delete"
+      sure: "Are you sure?"
+      details: "Details"
+      timestamps: "Timestamps"
+      created_at: "Created At"
+      updated_at: "Updated At"
 
     legislation:
       processes:

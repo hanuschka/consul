@@ -49,7 +49,6 @@ class Proposal < ApplicationRecord
 
   validates :author, presence: true
   validates :responsible_name, presence: true
-
   validates :responsible_name, length: { in: 6..Proposal.responsible_name_max_length }
   validates :retired_reason, presence: true, inclusion: { in: ->(*) { RETIRE_OPTIONS }}, unless: -> { retired_at.blank? }
 
@@ -125,7 +124,7 @@ class Proposal < ApplicationRecord
 
   def searchable_values
     {
-      author.username       => "B",
+      author&.username      => "B",
       tag_list.join(" ")    => "B",
       geozone&.name         => "B"
     }.merge!(searchable_globalized_values)

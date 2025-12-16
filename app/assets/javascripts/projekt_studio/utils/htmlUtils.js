@@ -1,5 +1,5 @@
-ProjektStudio.utils.focusContentEditableElement = function(element) {
-  element.focus()
+ProjektStudio.utils.focusContentEditableElement = function(element, options = {}) {
+  element.focus({ preventScroll: options.preventScroll || true })
 
   const range = document.createRange();
   range.selectNodeContents(element);
@@ -64,12 +64,11 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
     };
   }
 
-  const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9]+)\b[^>]*>/g) || [];
-  const allTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9]+)/)[1]);
-  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9]+)\s*>/g) || [];
-  const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9]+)/)[1]);
+  const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9-]+)\b[^>]*>/g) || [];
+  const allTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9-]+)/)[1]);
+  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9-]+)\s*>/g) || [];
+  const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9-]+)/)[1]);
 
-  // Filter out all void elements (they don't require closing tags)
   const originalTagNames = allTagNames.filter(tag => !voidElements.includes(tag))
 
   const tagStack = [];

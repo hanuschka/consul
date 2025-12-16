@@ -492,7 +492,7 @@ module ProjektPhaseAdminActions
     @assistant_app_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    if ApiClient.active_dt?
+    if InternalApiClient.active_dt?
       dt_api = DtApi::Client.new
 
       @ai_assistant_config_response =
@@ -558,7 +558,7 @@ module ProjektPhaseAdminActions
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         :lock_on, officing_manager_ids: [],
-        geozone_restriction_ids: [], registered_address_street_ids: [],
+        registered_address_district_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
         settings_attributes: [:id, :value],

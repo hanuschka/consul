@@ -3,6 +3,18 @@ class DtApi::Client
 
   base_uri "#{Dt.url}/api"
 
+  if Rails.application.secrets.web_server_proxy.present?
+    proxy_config = Rails.application.secrets.web_server_proxy
+    if proxy_config[:address].present?
+      http_proxy(
+        proxy_config[:address],
+        proxy_config[:port],
+        proxy_config[:username],
+        proxy_config[:password]
+      )
+    end
+  end
+
   def initialize(api_token = nil)
     @api_token = api_token || InternalApiClient&.dt&.service_api_token
   end

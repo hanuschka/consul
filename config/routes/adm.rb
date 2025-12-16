@@ -9,7 +9,7 @@ namespace :adm do
     patch :toggle_active, on: :member
     patch :reorder, on: :collection
   end
-  resources :documents, only: [:index]
+  resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
 
   resources :settings, only: [:update] do

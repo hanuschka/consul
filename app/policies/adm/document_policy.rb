@@ -3,9 +3,17 @@ class Adm::DocumentPolicy < ApplicationPolicy
     true
   end
 
+  def create?
+    true
+  end
+
+  def destroy?
+    true
+  end
+
   class Scope < Scope
     def resolve
-      scope.all
+      scope.admin
     end
   end
 end

@@ -49,10 +49,12 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     case @kind
     when :boolean
       Adm::AttributeEditors::BooleanComponent
-    when :image
-      Adm::AttributeEditors::ImageComponent
     when :string
       Adm::AttributeEditors::StringComponent
+    when :image
+      Adm::AttributeEditors::ImageComponent
+    when :document
+      Adm::AttributeEditors::DocumentComponent
     when :color
       Adm::AttributeEditors::ColorComponent
     else
@@ -61,7 +63,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def suffix
-    if @record.is_a?(SiteCustomization::Page) && @record.landing?
+    if @record.is_a?(::SiteCustomization::Page) && @record.landing?
       "landing"
     else
       nil

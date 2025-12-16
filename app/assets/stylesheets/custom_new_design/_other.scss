@@ -30,7 +30,7 @@
     }
   }
 
-  .skiptranslate + header {
+  .skiptranslate:not([style*="display: none"]) + header {
     margin-top: 39px;
 
     .top-bar-wrapper.sticky-header {

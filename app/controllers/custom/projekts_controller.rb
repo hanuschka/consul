@@ -58,7 +58,7 @@ class ProjektsController < ApplicationController
     take_only_by_tag_names unless @search_terms.present?
 
     @used_phases = @projekts.flat_map(&:active_and_visible_projekt_phases).map(&:type).uniq.compact
-    @phases = ProjektPhase.where(type: @used_phases).group_by(&:type).map { |type, phases| phases.first }.sort_by { |p| ProjektPhase::PROJEKT_PHASES_TYPES.index(p.type) || 999 }
+    @phases = ProjektPhase.where(type: @used_phases).group_by(&:type).map { |type, phases| phases.first }.reject { |p| p.type == "ProjektPhase::DebatePhase" }.sort_by { |p| ProjektPhase::PROJEKT_PHASES_TYPES.index(p.type) || 999 }
     @selected_phase_type = params[:phase_type] || 'all_phases'
     take_by_phase_type unless @search_terms.present?
 

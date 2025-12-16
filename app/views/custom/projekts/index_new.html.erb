@@ -71,9 +71,9 @@
 
       <%# <%= render Mobile::FiltersComponent.new do %>
         <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(geozones: @geozones, resource_name: @resource_name, selected_affiliated_geozones: @affiliated_geozones) %>
-        <%= render Sidebar::Filters::PhasesCardComponent.new(phases: @phases, selected_phase_type: @selected_phase_type) if @phases.any? %>
         <%= render Sidebar::CategoriesCardComponent.new(categories: @categories) if @categories.any? %>
         <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
+        <%= render Sidebar::Filters::PhasesCardComponent.new(phases: @phases, selected_phase_type: @selected_phase_type) if @phases.any? %>
       <%# <% end %>
     </div>
   </div>

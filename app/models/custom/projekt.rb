@@ -109,8 +109,8 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :sync_update_for_global_overview #, on: :update
-  # after_touch :sync_update_for_global_overview
+  after_update :sync_for_global_overview_if_changed #, on: :update
+  # after_touch :sync_for_global_overview_if_changed
   after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
@@ -707,6 +707,18 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def perform_sync_update_for_global_overview
+    if should_be_exported_for_global_overview?
+      if hidden_at.present?
+        sync_destroy_for_global_overview
+      else
+        Projekts::OverviewProjektUpdatedJob.perform_later(
+          self
+        )
+      end
+    end
+  end
+
   private
 
     def create_corresponding_page
@@ -812,7 +824,7 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def sync_update_for_global_overview
+    def sync_for_global_overview_if_changed
       # Ignore order number update change
       changed_set = previous_changes.except("created_at", "updated_at")
 
@@ -820,15 +832,7 @@ class Projekt < ApplicationRecord
         return
       end
 
-      if should_be_exported_for_global_overview?
-        if hidden_at.present?
-          sync_destroy_for_global_overview
-        else
-          Projekts::OverviewProjektUpdatedJob.perform_later(
-            self
-          )
-        end
-      end
+      perform_sync_update_for_global_overview
     end
 
     def sync_destroy_for_global_overview

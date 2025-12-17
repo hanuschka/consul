@@ -381,11 +381,6 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
-  def generate_ai_stats
-    stats = AiAnalytics::GenerateAllStats.call(self)
-    update_column(:ai_stats, stats)
-  end
-
   def name
     if type.present? && type != self.class.name
       becomes(type.constantize).name
@@ -396,6 +391,11 @@ class ProjektPhase < ApplicationRecord
 
   def regular
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
+  def generate_ai_stats
+    stats = AiAnalytics::GenerateAllStats.call(self)
+    update_column(:ai_stats, stats)
   end
 
   private

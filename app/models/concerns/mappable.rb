@@ -2,6 +2,8 @@ module Mappable
   extend ActiveSupport::Concern
 
   included do
+    delegate :district, to: :map_location, allow_nil: true
+
     has_one :map_location, as: :mappable, dependent: :destroy
 
     accepts_nested_attributes_for :map_location,
@@ -15,5 +17,11 @@ module Mappable
     end
 
     map_layers
+  end
+
+  def intersects_map_location_with?(other)
+    return false unless map_location.present? || other.map_location.present?
+
+    map_location.intersects?(other.map_location)
   end
 end

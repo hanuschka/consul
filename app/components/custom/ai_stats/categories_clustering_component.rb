@@ -36,7 +36,7 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def resource_count(category)
-    binding.pry
+    # binding.pry
     category["subtopics"]&.sum { |s| (s["resource_ids"] || s["proposal_ids"])&.size || 0 } || 0
   end
 

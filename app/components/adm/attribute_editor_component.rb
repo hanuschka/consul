@@ -53,8 +53,6 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::StringComponent
     when :image
       Adm::AttributeEditors::ImageComponent
-    when :document
-      Adm::AttributeEditors::DocumentComponent
     when :color
       Adm::AttributeEditors::ColorComponent
     else

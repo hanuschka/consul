@@ -13,7 +13,7 @@
 .ai-categories-clustering--category-card {
   background: #fff;
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 5px 18px;
   padding-left: 18px;
   padding-bottom: 15px;
   border-left: 7px solid var(--category-color, #6BA3D6);
@@ -33,7 +33,7 @@
 .ai-categories-clustering--subcategories-list {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 5px;
 }
 
 .ai-categories-clustering--subcategory-item {
@@ -96,14 +96,14 @@
 }
 
 .ai-categories-clustering--subcategory-body {
-  padding: 0 1.25rem 1.25rem 1.25rem;
+  padding: 0 1.25rem 1.1rem 1.25rem;
   border-top: 1px solid #e5e7ea;
   background: #fff;
 }
 
 .ai-categories-clustering--resources-list {
   margin: 0;
-  padding: 1rem 0 0 0;
+  padding: 12px 0 0 0;
   list-style: none;
 
   li {

@@ -4,8 +4,8 @@ de:
       back_to_projekt_overview: zurück zur Projektübersicht
       content_block_templates_selector:
         saved_content_blocks:
-          global_explanation: "Gespeicherte Inhaltsblöcke sind wiederverwendbare HTML-Vorlagen. Interne Inhaltsblöcke sind für alle Benutzer sichtbar, eigene Inhaltsblöcke nur für Sie."
-          user_explanation: "Gespeicherte Inhaltsblöcke sind wiederverwendbare HTML-Vorlagen. Eigene Inhaltsblöcke sind nur für Sie sichtbar, interne für alle Benutzer."
+          global_explanation: "Interne Inhaltsblöcke sind wiederverwendbare HTML-Vorlagen, die von allen Benutzern verwendet werden können. Sie können von Administratoren und Projektmanagern bearbeitet werden und stehen projektübergreifend zur Verfügung."
+          user_explanation: "Eigene Inhaltsblöcke sind persönliche HTML-Vorlagen, die nur für Sie sichtbar und verwendbar sind. Sie können diese nach Ihren individuellen Bedürfnissen erstellen und verwalten."
       page:
         breadcrumbs:
           homepage: Startseite

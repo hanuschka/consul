@@ -79,7 +79,7 @@ class PagesController < ApplicationController
       )
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
-          @custom_page.content.include?("</iframe>")
+          @custom_page.content&.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 

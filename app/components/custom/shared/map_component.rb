@@ -98,7 +98,8 @@ class Shared::MapComponent < ApplicationComponent
     def admin_editor?
       return false unless @editable
 
-      @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase) || map_location.default?
+      admin_mappables = [Projekt, ProjektPhase, RegisteredAddress::District]
+      admin_mappables.any? { |klass| @mappable.is_a?(klass) } || map_location.default?
     end
 
     def editing_projekt_map?

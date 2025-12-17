@@ -20,6 +20,6 @@ module Ai::Settings
   end
 
   def self.current_llm_provider
-    Setting["ai.llm_provider"]
+    Setting["ai.llm_provider"].presence || "openai"
   end
 end

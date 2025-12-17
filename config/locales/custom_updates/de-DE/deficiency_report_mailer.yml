@@ -3,8 +3,8 @@ de:
     deficiency_reports:
       mailers:
         closing: Freundliche Grüße
-        signature: Euer Anliegenmanagement
-        contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="mailto:%{email}">%{email}</a>
+        signature: Ihre Stadtverwaltung Rastatt
+        contact_info: Bei inhaltlichen Fragen wenden Sie sich bitte an <a href="mailto:%{email}">%{email}</a> Gerne auch telefonisch unter 07222/972-1103.
         notify_author_about_status_change:
           subject: Statusänderung Ihres Mangels
           hi: Hallo

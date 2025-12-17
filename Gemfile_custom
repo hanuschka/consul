@@ -39,9 +39,4 @@ group :development, :test do
   gem 'rswag-specs'
 end
 
-<<<<<<< HEAD
-=======
-gem 'ruby_llm', '1.8.2'
-
 gem 'proj4rb'
->>>>>>> new-connection

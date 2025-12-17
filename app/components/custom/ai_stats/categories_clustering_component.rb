@@ -12,7 +12,7 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def categories
-    @clustering_data["topics"] || []
+    @clustering_data
   end
 
   def render?

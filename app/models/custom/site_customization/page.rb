@@ -67,11 +67,16 @@ class SiteCustomization::Page < ApplicationRecord
 
   def sanitize_title_and_subtitle
     if title.present?
-      self.title = strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      # strip_tags could be imporant, since we have issue with copied text with rich html
+      self.title = CGI.unescapeHTML(
+        strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      )
     end
 
     if subtitle.present?
-      self.subtitle = sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      self.subtitle = CGI.unescapeHTML(
+        sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      )
     end
   end
 

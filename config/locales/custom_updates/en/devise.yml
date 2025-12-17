@@ -2,6 +2,9 @@ en:
   custom:
     devise_views:
       users:
+        sessions:
+          new:
+            registration_hint: "No account yet? <a href='/users/sign_up'>Sign up here</a>."
         registrations:
           new:
             message: Fast. Simply. Secure

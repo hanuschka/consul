@@ -30,11 +30,10 @@ class ProjektsController < ApplicationController
       if @landing_page.present?
         @landing_page.landing_projekts
       else
-        projekts_with_landing_page = Projekt.joins(:landing_pages).pluck(:id)
-        Projekt.where.not(id: projekts_with_landing_page)
+        Projekt.all
       end
 
-    @projekts = base_projekts.regular
+    @projekts = base_projekts.regular.includes(:active_and_visible_projekt_phases)
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all

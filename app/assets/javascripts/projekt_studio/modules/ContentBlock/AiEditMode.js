@@ -223,8 +223,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
       if (contentBlock) {
         contentBlock.innerHTML = response.content_block_html;
 
-        $(contentBlock).foundation();
-        App.ImageGallery.initialize();
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }
     } else {
       this.showErrorMessage('Ungültige Antwort vom Server');
@@ -234,8 +233,12 @@ ProjektStudio.ContentBlock.AiEditMode = {
   handleErrorResponse(response) {
     let errorMessage = 'Fehler beim Aktualisieren des Inhaltsblocks';
 
-    if (response.responseJSON && response.responseJSON.message) {
-      errorMessage = response.responseJSON.message;
+    if (response.responseJSON) {
+      if (response.responseJSON.status && response.responseJSON.status.message) {
+        errorMessage = response.responseJSON.status.message;
+      } else if (response.responseJSON.message) {
+        errorMessage = response.responseJSON.message;
+      }
     } else if (response.statusText) {
       errorMessage = `${errorMessage}: ${response.statusText}`;
     }

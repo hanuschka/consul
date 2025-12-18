@@ -14,9 +14,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
+    "ProjektPhase::NewsfeedPhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [
@@ -27,6 +25,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
     "ProjektPhase::FormularPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::PointOfInterestPhase"
   ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
@@ -382,6 +382,10 @@ class ProjektPhase < ApplicationRecord
 
   def regular
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
+  def regular?
+    ProjektPhase.regular_phases.include?(self)
   end
 
   def registered_address_grouping_restriction_formatted

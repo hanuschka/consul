@@ -384,6 +384,13 @@ class ProjektPhase < ApplicationRecord
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
   end
 
+  def registered_address_grouping_restriction_formatted
+    [
+      registered_address_grouping_restriction,
+      registered_address_grouping_restrictions[registered_address_grouping_restriction]
+    ].compact.join(": ")
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

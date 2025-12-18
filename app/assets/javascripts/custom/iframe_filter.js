@@ -18,7 +18,7 @@
     initialize: function() {
       var iframeMetaSetting = document.querySelector("meta[name='two-click-iframes']");
 
-      if (iframeMetaSetting && iframeMetaSetting.getAttribute("content") === 'active' ) {
+      if (iframeMetaSetting && iframeMetaSetting.getAttribute("content") === 'true' ) {
         App.IframeFilter.blurIframes();
 
         $("body").on("click", ".js-iframe-consent-button", function(event) {

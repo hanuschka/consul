@@ -2,10 +2,12 @@
   <% if @custom_page&.projekt&.new_content_block_mode? %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
-        <% if @custom_page.projekt.content_blocks.any? %>
-          <% @custom_page.projekt.content_blocks.order(:position).each do |content_block| %>
+        <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
+
+        <% if content_blocks.any? %>
+          <% content_blocks.each do |content_block| %>
             <div class="projekt-content-block js-projekt-content-block" data-id="<%= content_block.id %>">
-              <%= content_block&.body&.html_safe %>
+              <%= process_custom_content_if_needed(content_block&.body)&.html_safe %>
             </div>
           <% end %>
         <% end %>

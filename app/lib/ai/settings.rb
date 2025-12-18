@@ -1,6 +1,6 @@
 module Ai::Settings
   def self.openai_api_key
-    ExternalApiKey.openai_token
+    ExternalApiKey.openai_api_key
   end
 
   def self.current_llm_model

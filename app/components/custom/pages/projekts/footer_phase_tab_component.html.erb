@@ -48,13 +48,23 @@
         <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
       <% end %>
 
-      <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>
-        <span class='geo-restriction-icon'><%= get_projekt_phase_restriction_name(phase) %></span>
-      <% end %>
 
-      <% if phase.age_restriction.present? %>
-        <span class='age-restriction-icon'><%= phase.age_restriction.name %></span>
-      <% end %>
+
+
+      <%= phase_user_status_restriction_name(phase) %>
+      <%= phase_geo_restriction_name(phase) %>
+      <%= phase_extended_geozone_restriction_name(phase) %>
+      <%= phase_age_restriction_name(phase) %>
+      <%= phase_individual_group_value_restriction_name(phase) %>
+
+
+
+
+
+
+
+
+
     </div>
   <% end %>
 

@@ -1,8 +1,8 @@
-<div class="hr-with-text" style="padding-bottom: 22px;">
-  <span><%= t("devise_views.omniauth.oder") %></div>
-</div>
-
 <% if oauth_logins.any? || feature?("bund_id_login") %>
+  <div class="hr-with-text" style="padding-bottom: 22px;">
+    <span><%= t("devise_views.omniauth.oder") %></div>
+  </div>
+
   <div class="row">
     <div class="small-12 column">
       <div class="margin-bottom">
@@ -12,7 +12,7 @@
 
     <% if feature?("bund_id_login") %>
       <div class="small-12 medium-4 large-4 columns">
-        <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId" do %>
+        <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", data: { turbolinks: false } do %>
           <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
         <% end %>
       </div>

@@ -31,6 +31,7 @@ class InternalApiClientsController < ApplicationController
         latitude: Setting["map.latitude"],
         longitude: Setting["map.longitude"],
         zoom: Setting["map.zoom"],
+        consul_env: Rails.env.to_s,
         user_email: current_user.email,
         user_first_name: current_user.first_name,
         user_last_name: current_user.last_name,

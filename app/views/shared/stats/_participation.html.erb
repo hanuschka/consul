@@ -2,7 +2,7 @@
 
   <small><%= t("stats.hint") %></small>
 
-  <% if stats.is_a?(Budget::Stats) %>
+  <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
     <div id="total_investments" class="stats-group">
       <h4><%= t("stats.budgets.total_investments_title") %></h4>
 

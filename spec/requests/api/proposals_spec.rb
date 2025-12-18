@@ -51,7 +51,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposals: { type: :array, items: { type: :object } }
+                     proposals: { type: :array, items: { '$ref' => '#/components/schemas/Proposal' } }
                    },
                    required: ['proposals']
                  },
@@ -116,7 +116,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposals: { type: :array, items: { type: :object } }
+                     proposals: { type: :array, items: { '$ref' => '#/components/schemas/Proposal' } }
                    },
                    required: ['proposals']
                  },
@@ -164,7 +164,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposals: { type: :array, items: { type: :object } }
+                     proposals: { type: :array, items: { '$ref' => '#/components/schemas/Proposal' } }
                    },
                    required: ['proposals']
                  },
@@ -205,7 +205,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposals: { type: :array, items: { type: :object } }
+                     proposals: { type: :array, items: { '$ref' => '#/components/schemas/Proposal' } }
                    },
                    required: ['proposals']
                  },
@@ -247,7 +247,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }
@@ -345,7 +345,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }
@@ -457,7 +457,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }
@@ -538,7 +538,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }
@@ -627,7 +627,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }
@@ -762,7 +762,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                  data: {
                    type: :object,
                    properties: {
-                     proposal: { type: :object }
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
                    },
                    required: ['proposal']
                  }

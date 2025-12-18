@@ -110,7 +110,10 @@ class ProjektPhase < ApplicationRecord
 
   scope :frontend_visible, -> { where(frontend_visibility: true) }
 
-  scope :active, -> { where(active: true) }
+  scope :active, -> {
+    where(active: true).where.not(type: "ProjektPhase::DebatePhase")
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     active
       .where("start_date IS NULL OR start_date <= ?", timestamp)

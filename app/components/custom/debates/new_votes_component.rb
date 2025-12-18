@@ -28,6 +28,7 @@ class Debates::NewVotesComponent < ApplicationComponent
             verify: link_to_verify_account,
             city: Setting["org_name"],
             geozones: @debate_phase&.geozone_restrictions_formatted,
+            registered_address_groupings: @debate_phase&.registered_address_grouping_restriction_formatted,
             age_restriction: @debate_phase&.age_restriction_formatted,
             restricted_streets: @debate_phase&.street_restrictions_formatted,
             individual_group_values: @debate_phase&.individual_group_value_restriction_formatted

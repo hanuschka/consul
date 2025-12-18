@@ -130,4 +130,54 @@ module ProjektPhasesHelper
              individual_group_values: projekt_phase.individual_group_value_restriction_formatted
             ))
   end
+
+  def phase_user_status_restriction_name(projekt_phase)
+    content_tag :span, class: "geo-restriction-icon" do
+      t("custom.admin.projekt_phases.restrictions.user_status.#{projekt_phase.user_status}")
+    end
+  end
+
+  def phase_geo_restriction_name(projekt_phase)
+    return if projekt_phase.geozone_restricted.blank? || projekt_phase.geozone_restricted == "no_restriction"
+
+    extra_info = if projekt_phase.geozone_restricted == "only_geozones"
+                   projekt_phase.registered_address_districts.pluck(:name).join(", ")
+                 elsif projekt_phase.geozone_restricted == "only_streets"
+                   projekt_phase.registered_address_streets.pluck(:name).join(", ")
+                 end
+
+    content_tag :span, class: "geo-restriction-icon" do
+      [
+        t("custom.admin.projekt_phases.restrictions.geo_restrictions.#{projekt_phase.geozone_restricted}"),
+        extra_info
+      ].compact.join(": ").html_safe
+    end
+  end
+
+  def phase_extended_geozone_restriction_name(projekt_phase)
+    return if projekt_phase.registered_address_grouping_restriction.blank? ||
+              projekt_phase.registered_address_grouping_restriction == "no_restriction"
+
+    content_tag :span, class: "geo-restriction-icon" do
+      projekt_phase.registered_address_grouping_restriction_formatted
+    end
+  end
+
+  def phase_age_restriction_name(projekt_phase)
+    return if projekt_phase.age_restriction.blank?
+
+    content_tag :span, class: "age-restriction-icon" do
+      projekt_phase.age_restriction.name
+    end
+  end
+
+  def phase_individual_group_value_restriction_name(projekt_phase)
+    return if projekt_phase.individual_group_values.blank?
+
+    content_tag :span, class: "geo-restriction-icon" do
+      projekt_phase.individual_group_values.group_by(&:individual_group).map do |individual_group, values|
+        "#{individual_group.name}: #{values.pluck(:name).join(", ")}"
+      end.join("; ")
+    end
+  end
 end

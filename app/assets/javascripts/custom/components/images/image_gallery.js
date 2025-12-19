@@ -2,6 +2,7 @@
   "use strict";
   App.ImageGallery = {
     initialize: function() {
+      this.setMissingHrefs()
       this.setupGlighbox()
     },
 
@@ -59,7 +60,15 @@
           stickyHeader.style.paddingRight = "0";
         }
       });
-    }
+    },
 
+    setMissingHrefs: function() {
+      document.querySelectorAll(".glightbox:not([href]), .glightbox[href='']").forEach((el) => {
+        var img = el.querySelector("img");
+        if (img && img.src) {
+          el.href = img.src;
+        }
+      });
+    },
   };
 }).call(this);

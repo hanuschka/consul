@@ -58,12 +58,14 @@
         <% end %>
       <% end %>
 
-      <div class="show-on-small-tablet">
-        <%= render(Mobile::FixedBottomActionComponent.new) do %>
-          <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
-        <% end %>
-      </div>
+      <% if deficiency_reports_feature?("show_create_report_button") %>
+        <div class="show-on-small-tablet">
+          <%= render(Mobile::FixedBottomActionComponent.new) do %>
+            <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+          <% end %>
+        </div>
+      <% end %>
 
       <%= render Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.index.sidebar.categories.title"), icon_name: "th-large") do |c| %>
         <%= render "deficiency_reports/sidebar/categories" %>

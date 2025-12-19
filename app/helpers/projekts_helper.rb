@@ -120,23 +120,6 @@ module ProjektsHelper
     t("custom.geozones.projekt_selector.affiliations.#{affiliation_name}" )
   end
 
-  def get_projekt_phase_restriction_name(projekt_phase, destination=nil, only_name=false)
-    restriction_name = projekt_phase.geozone_restricted || "no_restriction"
-    district_restrictions = projekt_phase.registered_address_districts
-
-    return restriction_name if only_name
-
-    if district_restrictions.exists? && restriction_name == 'only_geozones'
-      return district_restrictions.pluck(:name).join(', ')
-    end
-
-    if destination == 'projekt_selector'
-      t("custom.geozones.projekt_selector.restrictions.#{restriction_name}" )
-    else
-      t("custom.geozones.sidebar_filter.restrictions.#{restriction_name}" )
-    end
-  end
-
   def options_for_projekt_select
     select_options = []
 

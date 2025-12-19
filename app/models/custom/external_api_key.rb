@@ -47,7 +47,7 @@ class ExternalApiKey < ApplicationRecord
   #   )
   # end
 
-  def self.openai_token
+  def self.openai_api_key
     get_api_key_or_default(
       "openai",
       "api_key",

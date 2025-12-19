@@ -1,5 +1,5 @@
 <% if projekt_phase_feature?(proposal.projekt_phase, "resource.quorum_for_proposals") %>
-  <div class="progress small-12 round">
+  <div class="progress round">
     <span class="meter" style="width: <%= progress_bar_percentage(proposal) %>%;"></span>
     <span class="percentage">
       <%= supports_percentage(proposal) %>&nbsp;/&nbsp;<%= t("proposals.proposal.total_percent") %>

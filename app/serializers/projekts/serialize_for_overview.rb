@@ -83,8 +83,7 @@ class Projekts::SerializeForOverview < ApplicationService
           active: phase.active,
           regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
           given_order: phase.given_order,
-          frontend_visibility: phase.frontend_visibility,
-          ai_stats: phase.ai_stats
+          frontend_visibility: phase.frontend_visibility
         }
       end
     }

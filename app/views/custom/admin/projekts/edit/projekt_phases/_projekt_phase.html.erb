@@ -34,22 +34,13 @@
   </td>
 
   <td>
-    <% if projekt_phase.age_restriction.present? %>
-      <span class='age-restriction-icon'>
-        <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.age") %>
-      </span>
-    <% end %>
+    <%= phase_user_status_restriction_name(projekt_phase) if projekt_phase.regular? %>
 
-    <% if projekt_phase.geozone_restricted != "no_restriction" && projekt_phase.geozone_restricted != nil %>
-      <span class='geo-restriction-icon'>
-        <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.geo") %>
-      </span>
-    <% end %>
-
-    <% if projekt_phase.user_status == "verified" %>
-      <span class='verification-restriction-icon'>
-        <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.verification") %>
-      </span>
+    <% if projekt_phase.regular? && projekt_phase.user_status != "guest" %>
+      <%= phase_geo_restriction_name(projekt_phase) %>
+      <%= phase_extended_geozone_restriction_name(projekt_phase) %>
+      <%= phase_age_restriction_name(projekt_phase) %>
+      <%= phase_individual_group_value_restriction_name(projekt_phase) %>
     <% end %>
   </td>
 

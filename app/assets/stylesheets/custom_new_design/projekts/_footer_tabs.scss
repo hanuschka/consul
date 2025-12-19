@@ -7,13 +7,13 @@
     border-radius: 10px 10px 0px 0px;
     margin-right: 10px;
     position: relative;
+    flex: 0 0 auto;
 
     &:hover {
       background-color: $brand-hover;
     }
 
     @media screen and (min-width: $small-tablet-viewport-start) {
-      max-height: 124px;
       min-height: 124px;
     }
 

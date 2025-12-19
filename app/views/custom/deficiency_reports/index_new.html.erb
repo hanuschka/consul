@@ -6,10 +6,8 @@
   <% if Setting["deficiency_reports.intro_text"].present? %>
     <div class="flex-layout">
       <div class="main-column">
-        <div class="hide-on-mobile">
-          <div class="resource-page--intro-text">
-            <%= render_custom_block("deficiency_reports_index_welcome", default_content: t("custom.deficiency_reports.index.welcome_default_text_html")) %>
-          </div>
+        <div class="resource-page--intro-text">
+          <%= render_custom_block("deficiency_reports_index_welcome", default_content: t("custom.deficiency_reports.index.welcome_default_text_html")) %>
         </div>
       </div>
     </div>
@@ -52,18 +50,22 @@
           </span>
         </div>
 
-        <div class="hide-on-mobile">
-          <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
-        </div>
+        <% if deficiency_reports_feature?("show_create_report_button") %>
+          <div class="hide-on-mobile">
+            <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+          </div>
+        <% end %>
       <% end %>
 
-      <div class="show-on-small-tablet">
-        <%= render(Mobile::FixedBottomActionComponent.new) do %>
-          <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
-        <% end %>
-      </div>
+      <% if deficiency_reports_feature?("show_create_report_button") %>
+        <div class="show-on-small-tablet">
+          <%= render(Mobile::FixedBottomActionComponent.new) do %>
+            <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+          <% end %>
+        </div>
+      <% end %>
 
       <%= render Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.index.sidebar.categories.title"), icon_name: "th-large") do |c| %>
         <%= render "deficiency_reports/sidebar/categories" %>

@@ -18,10 +18,6 @@ class ProjektPhase::VotingPhase < ProjektPhase
     4
   end
 
-  def resource_count
-    polls.for_public_render.count
-  end
-
   def admin_nav_bar_items
     %w[duration naming restrictions settings
        poll_questions

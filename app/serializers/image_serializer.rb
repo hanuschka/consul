@@ -29,18 +29,24 @@ class ImageSerializer
 
   def serialize_variants
     {
-      large: variant_url(:large),
-      projekt_image: variant_url(:projekt_image),
-      thumb: variant_url(:thumb),
-      thumb_wider: variant_url(:thumb_wider),
+      "150": variant_url_by_width(150),
+      "300": variant_url_by_width(300),
+      "450": variant_url_by_width(450),
+      "600": variant_url_by_width(600),
+      "900": variant_url_by_width(900),
+      "1200": variant_url_by_width(1200),
+      "1920": variant_url_by_width(1920),
+      "original": rails_blob_url(image.attachment, host: host)
     }
   end
 
-  def variant_url(style)
-    variant = image.variant(style)
-    return nil unless variant
+  def variant_url_by_width(width)
+    return nil unless image.attachment.attached?
 
+    variant = image.attachment.variant(resize_to_limit: [width, nil])
     rails_representation_url(variant, host: host)
+  rescue StandardError
+    nil
   end
 
   def host

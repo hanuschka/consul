@@ -1,4 +1,8 @@
 de:
+  ai:
+    errors:
+      model_not_configured: "Fehler: KI-Modell nicht konfiguriert"
+      generation_failed: "Fehler: Inhaltsblock konnte nicht mit KI generiert werden"
   account:
     show:
       change_credentials_link: Meine Anmeldeinformationen ändern

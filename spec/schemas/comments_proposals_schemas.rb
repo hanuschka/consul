@@ -29,7 +29,8 @@ module Schemas
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the proposal was last modified', example: '2024-01-18T15:45:00Z' },
         projekt_phase_id: { type: :integer, nullable: true, description: 'ID of the projekt phase this proposal belongs to', example: 25 },
         status: { type: :string, nullable: true, description: 'Current status of the proposal (e.g., published, archived)', example: 'published' },
-        comments_count: { type: :integer, nullable: true, description: 'Total number of comments on the proposal', example: 12 }
+        comments_count: { type: :integer, nullable: true, description: 'Total number of comments on the proposal', example: 12 },
+        image: { '$ref' => '#/components/schemas/ImageResponse' }
       },
       required: %w[id created_at updated_at]
     }.freeze

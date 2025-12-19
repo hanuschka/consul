@@ -14,9 +14,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
+    "ProjektPhase::NewsfeedPhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [
@@ -27,6 +25,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
     "ProjektPhase::FormularPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::PointOfInterestPhase"
   ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
@@ -44,8 +44,6 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
-  translates :projekt_selector_hint # needed for globalize fallback, not used otherwise
-  translates :resource_form_title_hint # needed for globalize fallback, not used otherwise
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -69,6 +67,9 @@ class ProjektPhase < ApplicationRecord
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
 
+  has_many :registered_address_district_projekt_phase, dependent: :destroy
+  has_many :registered_address_districts, through: :registered_address_district_projekt_phase
+
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
@@ -90,6 +91,17 @@ class ProjektPhase < ApplicationRecord
   }
 
   validates :projekt, presence: true
+  validate :type_must_be_valid
+
+  def self.find_sti_class(type_name)
+    if PROJEKT_PHASES_TYPES.include?(type_name)
+      super
+    else
+      self
+    end
+  rescue NameError
+    self
+  end
 
   default_scope { order(:given_order, :id) }
 
@@ -98,7 +110,10 @@ class ProjektPhase < ApplicationRecord
 
   scope :frontend_visible, -> { where(frontend_visibility: true) }
 
-  scope :active, -> { where(active: true) }
+  scope :active, -> {
+    where(active: true).where.not(type: "ProjektPhase::DebatePhase")
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     active
       .where("start_date IS NULL OR start_date <= ?", timestamp)
@@ -203,7 +218,9 @@ class ProjektPhase < ApplicationRecord
   end
 
   def geozone_restrictions_formatted
-    geozone_restrictions.map(&:name).flatten.join(", ")
+    return geozone_restrictions.map(&:name).flatten.join(", ") if geozone_restrictions.any?
+
+    registered_address_districts.map(&:name).flatten.join(", ")
   end
 
   def street_restrictions_formatted
@@ -358,6 +375,29 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def name
+    if type.present? && type != self.class.name
+      becomes(type.constantize).name
+    else
+      super
+    end
+  end
+
+  def regular
+    ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
+  def regular?
+    ProjektPhase.regular_phases.include?(self)
+  end
+
+  def registered_address_grouping_restriction_formatted
+    [
+      registered_address_grouping_restriction,
+      registered_address_grouping_restrictions[registered_address_grouping_restriction]
+    ].compact.join(": ")
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
@@ -371,12 +411,13 @@ class ProjektPhase < ApplicationRecord
       when "only_citizens"
         return :missing_user_data if user.plz.blank?
 
-        :only_citizens if user.not_current_city_citizen?
+        :only_citizens unless user.citizen?
       when "only_geozones"
         if user.plz.blank?
           :missing_user_data
-        elsif !geozone_restrictions.include?(user.geozone)
-          :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
+        elsif (geozone_restrictions.any? && !geozone_restrictions.include?(user.geozone)) ||
+               (registered_address_districts.any? && !registered_address_districts.include?(user.district))
+          :only_specific_geozones
         end
       when "only_streets"
         if user.registered_address_street.blank?
@@ -427,6 +468,14 @@ class ProjektPhase < ApplicationRecord
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def type_must_be_valid
+      if type.blank?
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+      elsif !PROJEKT_PHASES_TYPES.include?(type)
+        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
       end
     end
 end

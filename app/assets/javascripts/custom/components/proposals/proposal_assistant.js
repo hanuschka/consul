@@ -31,7 +31,7 @@
 
     handleGlobalMessage: function(event) {
       if (event.data) {
-        const data = parseIframeEventData(event.data);
+        const data = event.data;
         const params = data.params
 
         // console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
@@ -285,10 +285,10 @@
 
     postMessageToDtIframe(eventType, params) {
       this.voiceAssistantIframe.contentWindow.postMessage(
-        JSON.stringify({
+        {
           event_type: eventType,
           params
-        }),
+        },
         '*'
       );
     }
@@ -309,13 +309,5 @@
     dataTransfer.items.add(file);
     fileInput.files = dataTransfer.files;
     fileInput.dispatchEvent(new Event('change'));
-  }
-
-  function parseIframeEventData(eventData) {
-    if (typeof eventData === "string") {
-      return JSON.parse(eventData)
-    } else if (typeof eventData === "object"){
-      return eventData
-    }
   }
 }).call(this);

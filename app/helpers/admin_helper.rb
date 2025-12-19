@@ -48,4 +48,26 @@ module AdminHelper
   def namespace_projekt_phase_path(action: "update", url_params: {})
     url_for(controller: params[:controller], action: action, params: url_params, only_path: true)
   end
+
+  def status_label_class(status)
+    case status
+    when "registration_in_progress"
+      "secondary"
+    when "registered"
+      "success"
+    else
+      "primary"
+    end
+  end
+
+  def access_level_label_class(level)
+    case level
+    when "public_data"
+      "primary"
+    when "admin"
+      "alert"
+    else
+      "secondary"
+    end
+  end
 end

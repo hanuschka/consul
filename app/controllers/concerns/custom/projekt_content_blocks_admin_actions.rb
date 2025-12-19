@@ -1,5 +1,6 @@
 module ProjektContentBlocksAdminActions
   extend ActiveSupport::Concern
+  include AiErrorHandling
 
   included do
     before_action :set_namespace
@@ -66,6 +67,8 @@ module ProjektContentBlocksAdminActions
   def change_with_ai
     authorize!(:update, @content_block.projekt)
 
+    return unless check_ai_model_configured
+
     new_content_block_body =
       Ai::GenerateContentBlock.call(
         params[:instructions],
@@ -75,7 +78,7 @@ module ProjektContentBlocksAdminActions
     if new_content_block_body.present?
       render json: { content_block_html: new_content_block_body, status: { message: "Content block updated" }}
     else
-      render json: { status: { message: "Error generating content block with ai" }}
+      render json: { status: { message: I18n.t("ai.errors.generation_failed") }}
     end
   end
 

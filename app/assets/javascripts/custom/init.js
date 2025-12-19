@@ -22,6 +22,7 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.ProposalAssistant.initialize();
+      App.HiddenTokenWidgetComponent.initialize();
     }
   };
 }).call(this);

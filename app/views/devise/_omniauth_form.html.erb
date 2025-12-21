@@ -1,8 +1,8 @@
-<div class="hr-with-text" style="padding-bottom: 22px;">
-  <span><%= t("devise_views.omniauth.oder") %></div>
-</div>
-
 <% if oauth_logins.any? || feature?("bund_id_login") %>
+  <div class="hr-with-text" style="padding-bottom: 22px;">
+    <span><%= t("devise_views.omniauth.oder") %></div>
+  </div>
+
   <div class="row">
     <div class="small-12 column">
       <div class="margin-bottom">

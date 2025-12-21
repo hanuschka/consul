@@ -8,26 +8,33 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
+  # Ordered list of projekt phases
+  PROJEKT_PHASES_TYPES = [
+    "ProjektPhase::CommentPhase",
+    "ProjektPhase::ProposalPhase",
+    "ProjektPhase::PointOfInterestPhase",
+    "ProjektPhase::QuestionPhase",
+    "ProjektPhase::VotingPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::BudgetPhase",
+    "ProjektPhase::LegislationPhase",
+    "ProjektPhase::FormularPhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
+    "ProjektPhase::NewsfeedPhase"
   ].freeze
-
-  PROJEKT_PHASES_TYPES = [
-    "ProjektPhase::CommentPhase",
-    "ProjektPhase::ProposalPhase",
-    "ProjektPhase::QuestionPhase",
-    "ProjektPhase::VotingPhase",
-    "ProjektPhase::BudgetPhase",
-    "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase",
-  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -110,7 +117,10 @@ class ProjektPhase < ApplicationRecord
 
   scope :frontend_visible, -> { where(frontend_visibility: true) }
 
-  scope :active, -> { where(active: true) }
+  scope :active, -> {
+    where(active: true).where.not(type: "ProjektPhase::DebatePhase")
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     active
       .where("start_date IS NULL OR start_date <= ?", timestamp)
@@ -387,6 +397,17 @@ class ProjektPhase < ApplicationRecord
   def generate_ai_stats
     stats = AiAnalytics::GenerateAllStats.call(self)
     update_column(:ai_stats, stats)
+  end
+
+  def regular?
+    ProjektPhase.regular_phases.include?(self)
+  end
+
+  def registered_address_grouping_restriction_formatted
+    [
+      registered_address_grouping_restriction,
+      registered_address_grouping_restrictions[registered_address_grouping_restriction]
+    ].compact.join(": ")
   end
 
   private

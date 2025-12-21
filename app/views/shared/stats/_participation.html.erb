@@ -1,6 +1,6 @@
 <div id="participation_statistics">
 
-  <% if stats.is_a?(Budget::Stats) %>
+  <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
     <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.key_performance_indicators") %></h3>
     <div class="ai-stats-sections">
       <div class="ai-stats-section">

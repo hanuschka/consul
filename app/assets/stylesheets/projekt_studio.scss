@@ -622,6 +622,16 @@ body.custom-new-design {
   }
 }
 
+.saved-content-blocks-explanation {
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  // font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+}
+
 .custom-content-template--item {
   display: flex;
   justify-content: center;
@@ -663,7 +673,7 @@ body.custom-new-design {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-left: 25px;
+  padding-left: 17px;
 }
 
 .content-block-template-copy-button {

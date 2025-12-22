@@ -3,7 +3,8 @@ de:
     accessibility:
       shared:
         switch-view-button:
-          aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+          to-list: "Zur Listenansicht wechseln"
+          to-tile: "Zur Kachelansicht wechseln"
         missing-image:
           aria-label: "Kein Bild verfügbar"
       search:

@@ -62,7 +62,10 @@
         <div class="resources-list--switch-view-button js-resource-list-switch-view-button"
              role="button"
              tabindex="0"
-             aria-label="<%= t('custom.accessibility.shared.switch-view-button.aria-label') %>"
+             aria-label="<%= switch_view_mode_label %>"
+             title="<%= switch_view_mode_label %>"
+             data-label-to-list="<%= t('custom.accessibility.shared.switch-view-button.to-list') %>"
+             data-label-to-tile="<%= t('custom.accessibility.shared.switch-view-button.to-tile') %>"
              onkeydown="if (event.key === 'Enter') { this.click(); }"
              >
           <i class="fa <%= switch_view_mode_icon %>"></i>

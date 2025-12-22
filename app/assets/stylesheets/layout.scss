@@ -1592,6 +1592,16 @@ table {
   }
 }
 
+.ssb-facebook {
+  @include has-fa-icon(facebook-f, brands);
+  background: #3b5998;
+
+  &:hover,
+  &:focus {
+    color: #354f88;
+  }
+}
+
 .button.button-google {
   @include has-fa-icon(google, brands);
   background: #fcedea;
@@ -1618,7 +1628,7 @@ table {
 
   &:hover,
   &:focus {
-    color: #40a2d1;
+    color: white;
   }
 }
 
@@ -1626,19 +1636,24 @@ table {
   @include has-fa-icon(whatsapp, brands);
   background: #43d854;
 
+  &:before {
+    font-size: 1.8rem !important;
+  }
+
   &:hover,
   &:focus {
-    color: #43d854;
+    color: white !important;
+    background-color: #62d16f !important;
   }
 }
 
-@include breakpoint(medium) {
 
-  .ssb-telegram,
-  .ssb-whatsapp_app {
-    display: none !important;
-  }
-}
+// @include breakpoint(medium) {
+  // .ssb-telegram,
+  // .ssb-whatsapp_app {
+  //   display: none !important;
+  // }
+// }
 
 .share-supported {
   text-align: center;

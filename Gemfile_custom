@@ -34,6 +34,10 @@ group :development, :test do
   gem 'pry', '~> 0.13.0'
   gem 'pry-byebug', '~> 3.9'
   gem 'pry-rails'
+
+  # Improves pry shortcuts
+  gem 'rb-readline', '0.5.5'
+
   gem 'rswag-specs'
 end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_16_142308) do
+ActiveRecord::Schema.define(version: 2025_12_16_155753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2497,6 +2497,8 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_saved_content_blocks_on_user_id"
   end
 
   create_table "sdg_goals", force: :cascade do |t|
@@ -3164,6 +3166,7 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "resource_sentiments", "sentiments"
+  add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

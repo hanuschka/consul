@@ -47,7 +47,7 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link', target: @url_target, 'aria-hidden': true do %>
+    <%= link_to @url, class: 'resource-item--image-link', title: @title, aria: { label: @title }, target: @url_target, 'aria-hidden': true do %>
       <%= render(
         Shared::ResourceImageComponent.new(
           image_url: @image_url,

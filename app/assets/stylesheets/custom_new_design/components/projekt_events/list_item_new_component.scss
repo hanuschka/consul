@@ -2,8 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   border-bottom: 1px solid #dcdcdc;
-  padding-top: 20px;
-  padding-bottom: 25px;
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
   font-size: 16px;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -19,10 +19,12 @@
 
 .projekt-event-item-new-image {
   min-width: 300px;
-  margin-top: 20px;
+  // margin-top: 20px;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
-h3.projekt-event-item-new-body--title {
+h2.projekt-event-item-new-body--title {
   font-size: 20px;
   padding-bottom: 0;
   font-weight: 500;

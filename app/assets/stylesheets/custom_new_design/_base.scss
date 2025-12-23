@@ -33,6 +33,10 @@ body.custom-new-design {
   // }
 }
 
+ul.no-ul-style {
+  margin: 0;
+  list-style-type: none;
+}
 .custom-new-design {
   .no-column-padding {
     .column {
@@ -206,13 +210,20 @@ body.custom-new-design {
 }
 
 .resources--info-count {
-  margin-bottom: 2px;
   display: flex;
   width: 100%;
   font-weight: 500;
   justify-content: space-between;
+  padding: 1px 0;
 
   &:hover {
     color: #4c5967;
+  }
+}
+
+a.resources--info-count {
+  &:hover {
+    text-decoration: underline !important;
+    color: black !important;
   }
 }

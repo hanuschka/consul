@@ -4,7 +4,7 @@
   [type='week'], [type='email'], [type='number'], [type='search'],
   [type='tel'], [type='time'], [type='url'], [type='color'], textarea,
   form [type]:not([type="button"], [type=checkbox], [type=file], [type=radio], [type=submit]) {
-    border: 1px solid $border-color;
+    border: 1px solid $input-border-color;
     background: white;
     border-radius: 5px;
   }

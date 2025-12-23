@@ -5,7 +5,7 @@
   <% end %>
 <% else %>
   <% body = capture do %>
-    <div class="resources-list--inner">
+    <ul class="no-ul-style resources-list--inner">
       <% if @resources.present? %>
         <% @resources.each do |resource| %>
           <%= render resource_component(resource) %>
@@ -15,7 +15,7 @@
           <%= empty_list_text %>
         </h4>
       <% end %>
-    </div>
+    </ul>
   <% end %>
 <% end %>
 
@@ -79,7 +79,7 @@
       </div>
     <% end %>
 
-    <div class="resources-list--body js-resources-list--body">
+    <div class="no-ul-style resources-list--body js-resources-list--body">
       <%= body %>
     </div>
     <% if bottom_content.present? %>

@@ -11,7 +11,9 @@ namespace :adm do
   end
   resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
-  resources :navbar_items, only: [:new, :create, :destroy]
+  resources :navbar_items, only: [:new, :create, :destroy] do
+    patch :reorder, on: :collection
+  end
 
   resources :settings, only: [:update] do
     get :metadata, on: :collection

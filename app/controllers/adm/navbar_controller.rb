@@ -3,7 +3,7 @@ module Adm
     def show
       authorize [:adm, :navbar]
 
-      @navbar_items = NavbarItem.all
+      @navbar_items = NavbarItem.top_level
 
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },

@@ -33,12 +33,34 @@ module Adm
         notice: t("admin.documents.destroy.success_notice")
     end
 
+    def reorder
+      authorize [:adm, NavbarItem], :create?
+
+      ActiveRecord::Base.transaction do
+        reorder_items(params[:tree])
+      end
+      head :ok
+    end
+
     private
 
       def navbar_item_params
         params.require(:navbar_item).permit(
           :kind, :preset, :projekt_id, :external_title, :external_url
         )
+      end
+
+      def reorder_items(nodes, parent_id = nil)
+        nodes.each_with_index do |node, index|
+          item = NavbarItem.find(node[:id])
+
+          item.update!(
+            parent_id: parent_id,
+            position: index + 1
+          )
+
+          reorder_items(node[:children], item.id) if node[:children].present?
+        end
       end
   end
 end

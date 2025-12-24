@@ -9,9 +9,20 @@ class NavbarItem < ApplicationRecord
     ideas: :ideas_path
   }.freeze
 
+  has_many :children, class_name: "NavbarItem",
+                      foreign_key: "parent_id",
+                      dependent: :nullify,
+                      inverse_of: :parent
+  belongs_to :parent, class_name: "NavbarItem",
+                      optional: true,
+                      inverse_of: :children
   belongs_to :projekt, optional: true
 
   enum kind: { presets: 0, projekts: 1, external: 2 }
+
+  validates :kind, presence: true
+
+  scope :top_level, -> { where(parent_id: nil).order(:position) }
 
   def self.presets
     PRESETS

@@ -2,6 +2,9 @@ module Adm
   class NavbarController < Adm::BaseController
     def show
       authorize [:adm, :navbar]
+
+      @navbar_items = NavbarItem.all
+
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },

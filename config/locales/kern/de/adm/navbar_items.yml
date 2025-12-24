@@ -1,0 +1,18 @@
+de:
+  adm:
+    navbar_items:
+      new:
+        title: Navigationsleisten-Element erstellen
+      form:
+        kinds:
+          presets: Systemseiten
+          projekts: Projekte
+          external: Eigener Link
+        external:
+          title_placeholder: Titel des Links
+          url_placeholder: https://example.com
+        kind_label: Welchen Typ von Navigationsleisten-Element möchten Sie erstellen?
+        preset_label: Systemseiten
+        projekt_label: Projekt
+        external_label: Eigener Link
+        create: Navigationsleisten-Element erstellen

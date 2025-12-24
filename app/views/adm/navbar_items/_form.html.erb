@@ -1,0 +1,67 @@
+<div data-controller="components-adm-new-navbar-item">
+  <%= form_with model: [:adm, @navbar_item] do |f| %>
+    <div class="mb-4">
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".kind_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.collection_radio_buttons :kind, NavbarItem.kinds.keys, :to_s, :to_s do |cb| %>
+            <div class="kern-form-check">
+              <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#kindChanged" }) %>
+              <%= cb.label(class: "kern-label") { t(".kinds.#{cb.text }") } %>
+            </div>
+          <% end %>
+        <div>
+      </fieldset>
+    </div>
+  
+    <div class="mb-4" style="display: <%= f.object.kind == "presets" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="presets">
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".preset_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.collection_radio_buttons :preset, NavbarItem.presets, :first, :first do |cb| %>
+            <div class="kern-form-check">
+              <%= cb.radio_button(class: "kern-form-check__radio") %>
+              <%= cb.label(class: "kern-label") { t("navbar.presets.#{cb.text }") } %>
+            </div>
+          <% end %>
+        <div>
+      </fieldset>
+    </div>
+  
+    <div class="mb-4" style="display: <%= f.object.kind == "projekts" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="projekts">
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".projekt_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.collection_radio_buttons :projekt_id, NavbarItem.projekts, :id, :title do |cb| %>
+            <div class="kern-form-check">
+              <%= cb.radio_button(class: "kern-form-check__radio") %>
+              <%= cb.label(class: "kern-label") %>
+            </div>
+          <% end %>
+        <div>
+      </fieldset>
+    </div>
+  
+    <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".external_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.text_field :external_title, class: "mb-3", label: false, placeholder: t(".external.title_placeholder") %>
+          <%= f.text_field :external_url, class: "mb-3", label: false, placeholder: t(".external.url_placeholder") %>
+        <div>
+      </fieldset>
+    </div>
+
+    <div>
+      <%= kern_submit_button(text: t(".create"), autofocus: false) %>
+    </div>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_11_134001) do
+ActiveRecord::Schema.define(version: 2025_12_22_135947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1610,6 +1610,17 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.index ["user_id"], name: "index_moderators_on_user_id"
   end
 
+  create_table "navbar_items", force: :cascade do |t|
+    t.integer "kind"
+    t.string "preset"
+    t.bigint "projekt_id"
+    t.string "external_title"
+    t.string "external_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
+  end
+
   create_table "newsletters", id: :serial, force: :cascade do |t|
     t.string "subject"
     t.string "segment_recipient"
@@ -2273,9 +2284,9 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.tsvector "tsv"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
-    t.boolean "for_global_overview", default: false
+    t.boolean "on_global_overview", default: false
     t.boolean "from_dt", default: false
-    t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
+    t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
@@ -2368,6 +2379,15 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "registered_address_district_projekt_phases", force: :cascade do |t|
+    t.bigint "registered_address_district_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id"], name: "index_rad_projekt_phases_on_projekt_phase_id"
+    t.index ["registered_address_district_id"], name: "index_rad_projekt_phases_on_rad_id"
+  end
+
   create_table "registered_address_districts", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -2446,6 +2466,14 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.index ["related_content_id"], name: "opposite_related_content"
   end
 
+  create_table "relay_states", force: :cascade do |t|
+    t.string "token"
+    t.jsonb "data", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["token"], name: "index_relay_states_on_token"
+  end
+
   create_table "remote_translations", id: :serial, force: :cascade do |t|
     t.string "locale"
     t.integer "remote_translatable_id"
@@ -2480,6 +2508,8 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_saved_content_blocks_on_user_id"
   end
 
   create_table "sdg_goals", force: :cascade do |t|
@@ -2676,6 +2706,7 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
+    t.datetime "published_at"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -3080,6 +3111,7 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
@@ -3136,6 +3168,8 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
+  add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
+  add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
@@ -3144,6 +3178,7 @@ ActiveRecord::Schema.define(version: 2025_12_11_134001) do
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "resource_sentiments", "sentiments"
+  add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

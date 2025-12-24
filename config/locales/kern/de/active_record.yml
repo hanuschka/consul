@@ -5,3 +5,6 @@ de:
     attributes:
       site_customization/content_card/translation:
         title: Titel
+      navbar_item:
+        external_title: Eigentitel
+        external_url: Eigene URL

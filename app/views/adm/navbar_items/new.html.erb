@@ -3,9 +3,5 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container my-5">
-  <%= link_to new_adm_navbar_item_path, class: "kern-link new-table-item" do %>
-    <%= t('.new_item') %>  
-  <% end %>
-
-  <%= render @navbar_items %>
+  <%= render 'form' %>
 </div>

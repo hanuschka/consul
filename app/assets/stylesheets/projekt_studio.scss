@@ -1,4 +1,4 @@
-$small-tablet-viewport-start: 750px;
+@import "custom/1_variables";
 
 @import "projekt_studio/1_colors";
 @import "projekt_studio/image_upload_gallery_dialog";
@@ -811,6 +811,11 @@ body.-preview-mode {
 
   @media(max-width: $small-tablet-viewport-start) {
     top: 20px;
+    right: 50px;
+  }
+
+  @media(max-width: $mobile-viewport-start) {
+    top: 7px;
     right: 50px;
   }
 

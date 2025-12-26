@@ -19,3 +19,9 @@
 
   <%= helpers.kern_submit_button(icon: "save", autofocus: request.format.turbo_stream?) %>
 <% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-components-adm-attribute-editor-target="successMessage">
+    <%= flash[:success] %>
+  </div>
+<% end  %>

@@ -103,3 +103,9 @@
   display: block;
   text-align: right;
 }
+
+.input-success-message {
+  color: var(--kern-color-feedback-success);
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}

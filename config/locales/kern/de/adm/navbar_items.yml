@@ -14,5 +14,6 @@ de:
         kind_label: Welchen Typ von Navigationsleisten-Element möchten Sie erstellen?
         preset_label: Systemseiten
         projekt_label: Projekt
+        projekt_filter_placeholder: Projekt suchen...
         external_label: Eigener Link
         create: Navigationsleisten-Element erstellen

@@ -37,7 +37,7 @@
         <legend class="kern-label mb-3">
           <%= t(".projekt_label") %>
         </legend>
-        <div class="kern-fieldset__body">
+        <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
           <%= f.collection_radio_buttons :projekt_id, NavbarItem.projekts, :id, :title do |cb| %>
             <div class="kern-form-check">
               <%= cb.radio_button(class: "kern-form-check__radio") %>

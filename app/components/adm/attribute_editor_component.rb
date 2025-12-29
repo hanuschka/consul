@@ -1,6 +1,4 @@
 class Adm::AttributeEditorComponent < ApplicationComponent
-  include Turbo::FramesHelper
-
   SETTING_TYPES = [Setting].freeze
 
   def initialize(record, attribute, kind, **options)

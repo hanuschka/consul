@@ -1,4 +1,9 @@
 class ApplicationComponent < ViewComponent::Base
+  include Turbo::FramesHelper
+  delegate :kern_submit_button, to: :helpers
+
+
+
   include SettingsHelper
   delegate :back_link_to, to: :helpers
   delegate :default_form_builder, to: :controller

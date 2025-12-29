@@ -1,3 +1,8 @@
 de:
   shared:
     submit: "Abschicken"
+    delete: "Löschen"
+    confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
+    table:
+      id: "ID"
+      actions: "Aktionen"

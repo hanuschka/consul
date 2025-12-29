@@ -1,7 +1,6 @@
 .dropdown-select-container {
   margin: 0 auto;
   color: #292929;
-  padding: 5px 12px;
   border-radius: 8px;
 
   &:hover {
@@ -26,13 +25,34 @@
   position: relative;
 
   .dropdown-select-menu-toggle {
-    // font-size: 16px;
     padding-right: 20px;
     font-weight: 500;
     cursor: pointer;
     position: relative;
-    transition: all ease-in-out 0.3s;
+    transition: background-color ease-in-out 0.1s;
     user-select: none;
+    background: none;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    text-align: left;
+    padding: 10px 12px;
+    padding-right: 28px;
+
+    &:focus {
+      outline: $input-focus-outline;
+      outline-offset: 1px;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: $input-focus-outline;
+      outline-offset: 1px;
+    }
   }
 
   .dropdown-select-menu--list {
@@ -47,6 +67,9 @@
     background-color: #ffffff;
     z-index: 100;
     user-select: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
     .dropdown-select-menu-item {
       text-decoration: none;
@@ -67,6 +90,11 @@
       }
     }
 
+    .dropdown-select-menu-item--focused {
+      background-color: $dropdown-hover-color;
+      outline: none;
+    }
+
     a {
       color: inherit;
 
@@ -84,7 +112,7 @@
   &::before {
     content: "";
     position: absolute;
-    right: 0;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%) rotate(45deg);
     border: 5px solid;

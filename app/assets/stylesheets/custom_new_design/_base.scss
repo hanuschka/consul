@@ -227,3 +227,7 @@ a.resources--info-count {
     color: black !important;
   }
 }
+
+.custom-page-content a:not(.accordion-title) {
+  text-decoration: underline;
+}

@@ -1,16 +1,28 @@
 <div class="dropdown-select-container js-dropdown-select-menu" data-name="<%= @name %>">
-  <div class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown">
-    <%= selected_option.presence || options.first %>
-  </div>
-  <div
-    class="dropdown-select-menu--list"
-    title="<%= @title %>"
+  <button
+    type="button"
+    class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
+    aria-haspopup="listbox"
+    aria-expanded="false"
     aria-label="<%= @title %>"
   >
-    <% options.each do |option| %>
-      <div class="js-dropdown-select-menu-item dropdown-select-menu-item <%= @item_css_class %>" >
+    <%= selected_option.presence || options.first %>
+  </button>
+  <ul
+    class="dropdown-select-menu--list"
+    role="listbox"
+    aria-label="<%= @title %>"
+    tabindex="-1"
+  >
+    <% options.each_with_index do |option, index| %>
+      <li
+        class="js-dropdown-select-menu-item dropdown-select-menu-item <%= @item_css_class %>"
+        role="option"
+        tabindex="-1"
+        data-index="<%= index %>"
+      >
         <%= option %>
-      </div>
+      </li>
     <% end %>
-  </div>
+  </ul>
 </div>

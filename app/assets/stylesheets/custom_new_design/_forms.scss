@@ -7,6 +7,10 @@
     border: 1px solid $input-border-color;
     background: white;
     border-radius: 5px;
+
+    &:focus-visible {
+      outline: $input-focus-outline;
+    }
   }
 
   input::placeholder, textarea::placeholder, select {

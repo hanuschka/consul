@@ -114,7 +114,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
-        unless current_user&.administrator?
+        unless current_user&.has_pm_permission_to?(:manage, @projekt)
           redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
@@ -125,6 +125,9 @@ class PagesController < ApplicationController
         elsif @projekt_phase.name == "proposal_phase"
           send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
             filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+        elsif @projekt_phase.name == "budget_phase"
+          send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+            filename: "budget_investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
     end

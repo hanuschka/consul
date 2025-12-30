@@ -14,6 +14,12 @@ export default class extends Controller {
     if (this.element.querySelector("[data-select-filter-search]")) return
     if (this.items.length < 6) return
 
+    const rowWrapper = document.createElement("div")
+    rowWrapper.className = "kern-row"
+
+    const colWrapper = document.createElement("div")
+    colWrapper.className = "kern-col-12 kern-col-md-6"
+
     const inputContainer = document.createElement("div")
     inputContainer.className = "kern-form-input"
 
@@ -34,9 +40,11 @@ export default class extends Controller {
       }
     })
 
+    rowWrapper.appendChild(colWrapper)
+    colWrapper.appendChild(inputContainer)
     inputContainer.appendChild(input)
 
-    this.element.prepend(inputContainer)
+    this.element.prepend(rowWrapper)
   }
 
   filter(event) {

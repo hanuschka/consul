@@ -1,5 +1,5 @@
-<div class="<%= navbar_item.parent.present? ? 'mb-2' : 'mb-4' %>" data-sortable-id="<%= navbar_item.id %>" style="border: 1px solid grey; padding: 10px; position: relative; border-radius: 5px;">
-  <span data-sortable-handle class="material-symbols-outlined" style="font-size:32px !important; position:absolute; right:5px;cursor:grab">drag_pan</span>
+<div class="<%= navbar_item.parent.present? ? 'mb-2' : 'mb-4' %> navbar-item" data-sortable-id="<%= navbar_item.id %>">
+  <span data-sortable-handle class="material-symbols-outlined">drag_pan</span>
   <h2><%= navbar_item.title %></h2>
   <% if navbar_item.kind == 'presets' %>
     <span><%= public_send(NavbarItem::PRESETS[navbar_item.preset.to_sym]) %></span>

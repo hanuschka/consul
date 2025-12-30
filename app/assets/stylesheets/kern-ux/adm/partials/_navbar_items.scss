@@ -1,0 +1,20 @@
+.navbar-items {
+  .navbar-item {
+    border: 1px solid #808080;
+    padding: 10px;
+    position: relative;
+    border-radius: 5px;
+    background-color: #eee;
+
+    span[data-sortable-handle] {
+      font-size: 32px !important;
+      position: absolute;
+      right: 5px;
+      cursor: grab;
+    }
+
+    .navbar-item {
+      background-color: #e3e3e3;
+    }
+  }
+}

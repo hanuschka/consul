@@ -219,6 +219,10 @@ ul.no-ul-style {
   &:hover {
     color: #4c5967;
   }
+
+  span:first-child {
+    font-weight: bold;
+  }
 }
 
 a.resources--info-count {

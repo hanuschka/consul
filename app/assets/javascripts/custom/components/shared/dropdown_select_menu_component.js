@@ -74,6 +74,12 @@
         e.preventDefault();
         this.closeDropdown($container);
         $container.find(".js-dropdown-select-menu-toggle").focus();
+      } else if (e.key === "Tab" && isOpen && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        $container.find(".dropdown-select-menu--list").focus();
+        this.focusedIndex = 0;
+        this.updateFocusedItem($container.find(".js-dropdown-select-menu-item"));
       }
     },
 
@@ -120,7 +126,24 @@
           $container.find(".js-dropdown-select-menu-toggle").focus();
           break;
         case "Tab":
-          this.closeDropdown($container);
+          if (e.shiftKey) {
+            if (this.focusedIndex <= 0) {
+              this.closeDropdown($container);
+              $container.find(".js-dropdown-select-menu-toggle").focus();
+            } else {
+              e.preventDefault();
+              this.focusedIndex = this.focusedIndex - 1;
+              this.updateFocusedItem($items);
+            }
+          } else {
+            if (this.focusedIndex >= itemCount - 1) {
+              this.closeDropdown($container);
+            } else {
+              e.preventDefault();
+              this.focusedIndex = this.focusedIndex + 1;
+              this.updateFocusedItem($items);
+            }
+          }
           break;
       }
     },

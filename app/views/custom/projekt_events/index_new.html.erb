@@ -15,7 +15,7 @@
         <% if valid_filters.present? %>
           <%= render(
             Shared::FilterDropdownComponent.new(
-              title: "Filtern nach:",
+              title: "Filtern nach",
               options: valid_filters,
               selected_option: @current_filter,
               i18n_namespace: "custom.projekt_events.filters",

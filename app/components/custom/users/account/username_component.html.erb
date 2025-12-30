@@ -9,15 +9,15 @@
       <%= f.hidden_field :cancel_changes, value: false %>
       <%= f.submit "Save", class: "d-none" %>
 
-      <div class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
+      <button class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
         onclick="$('#user_cancel_changes').val('true');$(this.closest('form')).trigger('submit.rails')">
         <i class="fas fa-times" aria-hidden="true"></i>
-      </div>
+      </button>
 
-      <div class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
+      <button class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
         onclick="$(this.closest('form')).trigger('submit.rails')">
         <i class="fas fa-check" aria-hidden="true"></i>
-      </div>
+      </button>
 
     <% end %>
   <% else %>

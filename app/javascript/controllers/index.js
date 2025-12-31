@@ -25,8 +25,11 @@ application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarIte
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
 
-import KernFilterCheckFilter from "./kern_form_check_filter_controller"
-application.register("kern-form-check-filter", KernFilterCheckFilter)
+import KernFormCheckFilter from "./kern_form_check_filter_controller"
+application.register("kern-form-check-filter", KernFormCheckFilter)
+
+import TableHeaderController from "./components/table/header_controller"
+application.register("table-header", TableHeaderController)
 
 
 import ModeSwitcherController from "./mode_switcher_controller"

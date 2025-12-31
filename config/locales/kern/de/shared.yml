@@ -6,3 +6,10 @@ de:
     table:
       id: "ID"
       actions: "Aktionen"
+      sort:
+        action_label: "Sortieren nach %{column_label}, %{direction}"
+        status_text_sorted: "Sortiert nach %{column_label} in %{direction} Reihenfolge"
+        status_text_unsorted: "Nicht sortiert"
+        directions:
+          asc: "aufsteigend"
+          desc: "absteigend"

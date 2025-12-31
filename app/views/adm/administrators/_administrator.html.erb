@@ -1,0 +1,15 @@
+<tr class="kern-table__row" id=<%= dom_id(administrator) %>>
+  <th scope="row" class="kern-table__header"><%= administrator.id %></th>
+  <td class="kern-table__cell"><%= administrator.name %></td>
+  <td class="kern-table__cell"><%= administrator.email %></td>
+  <td class="kern-table__cell">
+    <% if current_user.id == administrator.user_id %>
+      Cannot delete
+    <% else %>
+      <%= link_to t('shared.delete'),
+                  adm_administrator_path(administrator),
+                  data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                  class: "kern-link" %>
+    <% end %>
+  </td>
+</tr>

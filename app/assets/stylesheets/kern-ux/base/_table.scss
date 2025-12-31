@@ -1,0 +1,19 @@
+.kern-table__header-control {
+  padding: 0 2px;
+  text-decoration: none;
+  color: inherit;
+
+  .material-symbols-outlined {
+    vertical-align: middle;
+  }
+}
+
+.kern-table__header-filter-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}

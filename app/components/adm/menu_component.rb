@@ -47,7 +47,7 @@ class Adm::MenuComponent < ApplicationComponent
         { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
         { label: t("adm.menu.items.projekts"),      icon: "folder_open",      path: adm_projekts_path },
         { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
-        { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#" },
+        { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
         { label: t("adm.menu.items.notifications"), icon: "send",             path: "#" },
         { label: t("adm.menu.items.stats"),         icon: "bar_chart_4_bars", path: "#" },
         { label: t("adm.menu.items.apps"),          icon: "dashboard",        path: "#" }
@@ -62,6 +62,21 @@ class Adm::MenuComponent < ApplicationComponent
         { label: t("adm.menu.items.application_subitems.navbar"),            path: adm_navbar_path },
         { label: t("adm.menu.items.application_subitems.metadata_settings"), path: metadata_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),     path: gdpr_adm_settings_path }
+      ]
+    end
+
+    def profiles_subitems
+      [
+        { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
+        { label: t("adm.menu.items.profiles_subitems.projekt_managers"), path: adm_projekt_managers_path },
+        { label: t("adm.menu.items.profiles_subitems.deficiency_report_managers"), path: adm_deficiency_report_managers_path },
+        { label: t("adm.menu.items.profiles_subitems.deficiency_report_officers"), path: adm_deficiency_report_officers_path },
+        { label: t("adm.menu.items.profiles_subitems.idea_managers"), path: adm_idea_managers_path },
+
+        { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },
+
+        { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path },
+        { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]
     end
     # rubocop:enable Layout/LineLength

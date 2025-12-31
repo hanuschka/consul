@@ -17,6 +17,15 @@ de:
           metadata_settings: Metadaten & Kommunikation
           gdpr_settings: DSGVO
         profiles: Profile
+        profiles_subitems:
+          administrators: Globaler Admin
+          projekt_managers: Projektmanager
+          deficiency_report_managers: Mängelmelder (Admin)
+          deficiency_report_officers: Mängelmelder (Sachbearbeiter)
+          idea_managers: Ideenplattform (Admin)
+          moderators: Globale Moderatoren
+          valuators: Budgetgutachter
+          users: Benutzer
         notifications: Notification
         stats: Statistics
         apps: Apps

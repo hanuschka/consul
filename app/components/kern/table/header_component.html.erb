@@ -1,0 +1,55 @@
+<%= content_tag :th, scope: "col",
+                     class: "kern-table__header",
+                     data: { controller: 'table-header', 'table-header-column-value': @column },
+                     aria: { sort: aria_sort } do %>
+  <div class="d-flex">
+    <span class="flex-grow-1" id="<%= @column %>-label"><%= @label %></span>
+
+    <% if @sort %>
+      <%= link_to target_url,
+                  role: "button",
+                  class: "kern-table__header-control",
+                  aria: { labelledby: "#{@column}-label" },
+                  data: { column: @column } do %>
+        <span class="material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+      <% end %>
+    <% end %>
+
+    <% if @filter_options %>
+      <%= link_to "#",
+                  role: "button",
+                  class: "kern-table__header-control",
+                  aria: { labelledby: "#{@column}-label" },
+                  data: { action: "table-header#toggleFilterMenu" } do %>
+        <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+      <% end %>
+
+      <fieldset class="kern-fieldset kern-table__header-filter-menu p-4 d-none" data-table-header-target="filterMenu">
+        <div class='d-flex justify-content-end w-100'>
+          <button type="button" class="kern-btn kern-btn--tertiary" data-action="table-header#toggleFilterMenu">
+            <span class="material-symbols-outlined">close</span>
+            <span class="sr-only">Schließen</span>
+          </button>
+        </div>
+
+        <div class="kern-fieldset__body">
+          <div class="kern-form-input my-3">
+            <%= text_field_tag :search, params[:search], class: "kern-form-input__input", data: { "table-header-target": "searchInput" } %>
+          </div>
+
+          <% @filter_options.each do |option| %>
+            <div class="kern-form-check">
+              <%= check_box_tag @column, option[0], params[@column]&.include?(option[0].to_s), id: "#{@column}_#{option[0]}", class: "kern-form-check__checkbox", data: { action: "change->table-header#selectFilterOption" } %>
+              <%= label_tag "#{@column}_#{option[0]}", option[1], class: "kern-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <button type="button" class="kern-btn kern-btn--primary my-3" data-action="table-header#applyFilter">
+          <span class="kern-label">Filter anwenden</span>
+        </button>
+      </fieldset>
+
+    <% end %>
+  </div>
+<% end %>

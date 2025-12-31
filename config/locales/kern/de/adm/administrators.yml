@@ -1,0 +1,8 @@
+de:
+  adm:
+    administrators:
+      index:
+        title: Administratoren
+        search: Search user by username or email
+      search:
+        no_results: Keine Benutzer gefunden mit diesen Kriterien.

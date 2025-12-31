@@ -21,6 +21,19 @@ namespace :adm do
   end
   # application
 
+  # profiles
+  resources :administrators, only: [:index, :create, :destroy] do
+    post :search, on: :collection
+  end
+  resources :projekt_managers, only: [:index, :new, :create, :destroy]
+  resources :deficiency_report_managers, only: [:index, :new, :create, :destroy]
+  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy]
+  resources :idea_managers, only: [:index, :new, :create, :destroy]
+  resources :moderators, only: [:index, :new, :create, :destroy]
+  resources :valuators, only: [:index, :new, :create, :destroy]
+  resources :users, only: :index
+  # profiles
+
   namespace :site_customization do
     resources :images, only: [:update]
     resources :content_cards, only: [:edit, :update] do

@@ -1634,7 +1634,7 @@ table {
 
 .ssb-whatsapp_app {
   @include has-fa-icon(whatsapp, brands);
-  background: #43d854;
+  background: #32ad40;
 
   &:before {
     font-size: 34px !important;
@@ -1643,7 +1643,7 @@ table {
   &:hover,
   &:focus {
     color: white !important;
-    background-color: #62d16f !important;
+    background-color: #59bc65 !important;
   }
 }
 

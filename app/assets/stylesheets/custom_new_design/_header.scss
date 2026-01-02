@@ -38,7 +38,6 @@
     // max-width: 1920px;
     margin: auto;
     background-color: white;
-    backdrop-filter: blur(18px);
 
     @media(max-width: $small-tablet-viewport-start) {
       height: $topbar-height-mobile;

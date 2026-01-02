@@ -18,7 +18,6 @@
       $(document).on("click", ".js-dropdown-select-menu-toggle", this.toggleDropdown.bind(this));
       $(document).on("click", ".js-dropdown-select-menu-item", this.selectOption.bind(this));
       $(document).on("click", ".js-dropdown-select-menu-item a", this.selectOption.bind(this));
-      $(document).on("keydown", ".js-dropdown-select-menu-toggle", this.handleToggleKeydown.bind(this));
       $(document).on("keydown", ".js-dropdown-select-menu", this.handleKeydown.bind(this));
 
       this.initialized = true;
@@ -56,72 +55,77 @@
       });
     },
 
-    handleToggleKeydown: function(e) {
-      var $container = $(e.currentTarget).closest(".js-dropdown-select-menu");
-      var isOpen = $container.hasClass("dropdown-open");
-
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        if (isOpen) {
-          this.closeDropdown($container);
-        } else {
-          this.openDropdown($container);
-        }
-      } else if (e.key === "ArrowDown" && !isOpen) {
-        e.preventDefault();
-        this.openDropdown($container);
-      } else if (e.key === "Escape" && isOpen) {
-        e.preventDefault();
-        this.closeDropdown($container);
-        $container.find(".js-dropdown-select-menu-toggle").focus();
-      }
-    },
-
     handleKeydown: function(e) {
       var $container = $(e.currentTarget);
-      if (!$container.hasClass("dropdown-open")) {
-        return;
-      }
-
+      var isOpen = $container.hasClass("dropdown-open");
+      var isOnToggle = $(e.target).hasClass("js-dropdown-select-menu-toggle");
       var $items = $container.find(".js-dropdown-select-menu-item");
       var itemCount = $items.length;
 
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          this.focusedIndex = Math.min(this.focusedIndex + 1, itemCount - 1);
-          this.updateFocusedItem($items);
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
-          this.updateFocusedItem($items);
-          break;
-        case "Home":
-          e.preventDefault();
-          this.focusedIndex = 0;
-          this.updateFocusedItem($items);
-          break;
-        case "End":
-          e.preventDefault();
-          this.focusedIndex = itemCount - 1;
-          this.updateFocusedItem($items);
-          break;
-        case "Enter":
-        case " ":
-          e.preventDefault();
-          if (this.focusedIndex >= 0) {
-            this.selectOptionByIndex($container, this.focusedIndex);
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        if (isOnToggle) {
+          isOpen ? this.closeDropdown($container) : this.openDropdown($container);
+        } else if (this.focusedIndex >= 0) {
+          this.selectOptionByIndex($container, this.focusedIndex);
+        }
+        return;
+      }
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        this.closeDropdown($container);
+        $container.find(".js-dropdown-select-menu-toggle").focus();
+        return;
+      }
+
+      if (e.key === "ArrowDown" && !isOpen) {
+        e.preventDefault();
+        this.openDropdown($container);
+        return;
+      }
+
+      if (!isOpen) return;
+
+      if (e.key === "Tab") {
+        if (e.shiftKey) {
+          if (this.focusedIndex <= 0) {
+            this.closeDropdown($container);
+            $container.find(".js-dropdown-select-menu-toggle").focus();
+          } else {
+            e.preventDefault();
+            this.focusedIndex--;
+            this.updateFocusedItem($items);
           }
-          break;
-        case "Escape":
-          e.preventDefault();
-          this.closeDropdown($container);
-          $container.find(".js-dropdown-select-menu-toggle").focus();
-          break;
-        case "Tab":
-          this.closeDropdown($container);
-          break;
+        } else {
+          if (isOnToggle || this.focusedIndex < itemCount - 1) {
+            e.preventDefault();
+            this.focusedIndex++;
+            this.updateFocusedItem($items);
+            $container.find(".dropdown-select-menu--list").focus();
+          } else {
+            this.closeDropdown($container);
+          }
+        }
+        return;
+      }
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        this.focusedIndex = Math.min(this.focusedIndex + 1, itemCount - 1);
+        this.updateFocusedItem($items);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
+        this.updateFocusedItem($items);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        this.focusedIndex = 0;
+        this.updateFocusedItem($items);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        this.focusedIndex = itemCount - 1;
+        this.updateFocusedItem($items);
       }
     },
 

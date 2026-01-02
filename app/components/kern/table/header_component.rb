@@ -5,12 +5,34 @@ class Kern::Table::HeaderComponent < ApplicationComponent
     @column = column.to_s
     @label = label.to_s
     @sort = options.delete(:sort)
-    @filter_options = options.delete(:filter_options)
-
-    # @search = options.delete(:search)
+    @search = options.delete(:search)
+    @filter_options = options.delete(:filter_options)&.reject { |k, _v| k.nil? } || {}
   end
 
   private
+
+    def show_sort?
+      @sort.present?
+    end
+
+    def show_filter?
+      @search.present? || @filter_options.present?
+    end
+
+    def sorted?
+      return false unless @sort
+
+      params[:sort_by].presence == @column
+    end
+
+    def filtered?
+      params["#{@column}__search"].present? ||
+        params[@column].present?
+    end
+
+    def filter_param_values
+      Array(params[@column]).map(&:to_s)
+    end
 
     def target_url
       params = {}
@@ -24,12 +46,6 @@ class Kern::Table::HeaderComponent < ApplicationComponent
       return "none" unless sorted?
 
       current_direction == "desc" ? "descending" : "ascending"
-    end
-
-    def sorted?
-      return false unless @sort
-
-      params[:sort_by].presence == @column
     end
 
     def icon
@@ -74,6 +90,4 @@ class Kern::Table::HeaderComponent < ApplicationComponent
     def readable_direction(direction)
       t("shared.table.sort.directions.#{direction}")
     end
-
-    # filtering
 end

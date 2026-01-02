@@ -2,18 +2,13 @@ module Adm
   class UsersController < Adm::BaseController
     def index
       authorize [:adm, User]
-      scope = policy_scope([:adm, User])
+      base_scope = UsersQuery.call(policy_scope([:adm, User]), params)
 
-      if params[:sort_by] && params[:sort_direction]
-        scope = scope.order("#{params[:sort_by]} #{params[:sort_direction]}")
-      end
+      @pagy, @users = pagy(base_scope)
 
-      @pagy, @users = pagy(scope)
-
-      @username_header_options = {
-        sort: true,
-        filter_options: @users.pluck(:id, :username).to_h
-      }
+      @username_header_options = { sort: true, search: true }
+      gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).index_by(&:itself)
+      @gender_header_options = { filter_options: gender_options }
 
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },

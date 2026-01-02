@@ -17,21 +17,26 @@ export default class extends Controller {
 
   selectFilterOption(event) {
     const checkbox = event.target;
+    const paramName = `${this.columnValue}[]`;
 
     const selectedOptions = Array.from(
       this.element.querySelectorAll(`input:checked`)
     ).map(input => input.value);
 
-    if (selectedOptions.length > 0) {
-      this.url.searchParams.set(`${this.columnValue}`, selectedOptions.join(","));
-    } else {
-      this.url.searchParams.delete(`${this.columnValue}`);
-    }
+    this.url.searchParams.delete(paramName);
+    selectedOptions.forEach(value => {
+      this.url.searchParams.append(paramName, value);
+    });
   }
 
   applyFilter() {
-    if (this.searchInputTarget.value.trim() !== "") {
-      this.url.searchParams.set("search", this.searchInputTarget.value.trim());
+    if (this.hasSearchInputTarget) {
+      const searchValue = this.searchInputTarget.value.trim();
+      if (searchValue !== "") {
+        this.url.searchParams.set(this.searchInputTarget.name, searchValue);
+      } else {
+        this.url.searchParams.delete(this.searchInputTarget.name);
+      }
     }
 
     window.location.href = this.url.toString();

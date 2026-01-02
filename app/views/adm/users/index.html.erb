@@ -12,6 +12,7 @@
         <tr class="kern-table__row">
           <%= render Kern::Table::HeaderComponent.new(:username, User.human_attribute_name(:username), **@username_header_options) %>
           <%= render Kern::Table::HeaderComponent.new(:gender, User.human_attribute_name(:gender), **@gender_header_options) %>
+          <%= render Kern::Table::HeaderComponent.new(:reverify, User.human_attribute_name(:reverify), **@reverify_header_options) %>
           <th scope="col" class="kern-table__header">Action</th>
         </tr>
       </thead>
@@ -21,6 +22,7 @@
           <tr class="kern-table__row">
             <th scope="row" class="kern-table__header"><%= user.username %></th>
             <td class="kern-table__cell"><%= user.gender %></td>
+            <td class="kern-table__cell"><%= user.reverify %></td>
             <td class="kern-table__cell"></td>
           </tr>
         <% end %>

@@ -9,6 +9,7 @@ module Adm
       @username_header_options = { sort: true, search: true }
       gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).index_by(&:itself)
       @gender_header_options = { filter_options: gender_options }
+      @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") }}
 
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },

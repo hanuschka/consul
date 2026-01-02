@@ -1,5 +1,7 @@
 de:
   shared:
+    "true": "Ja"
+    "false": "Nein"
     submit: "Abschicken"
     delete: "Löschen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"

@@ -1,6 +1,6 @@
 class UsersQuery < ApplicationQuery
   SEARCHABLE_FIELDS = %i[username].freeze
-  FILTERABLE_FIELDS = %i[gender].freeze
+  FILTERABLE_FIELDS = %i[gender reverify].freeze
   SORTABLE_FIELDS = %i[username].freeze
 
   def initialize(base_scope, params = {})

@@ -26,7 +26,7 @@ de:
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
           save_button: "Speichern Schaltfläche. Klicken Sie, um die Änderungen zu speichern."
         notifications:
-          aria-label: "Benachrichtigungsfilter"
+          aria_label: "Benachrichtigungsfilter"
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
       events:

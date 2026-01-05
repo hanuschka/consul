@@ -95,9 +95,7 @@
             <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
 
             <div class="resource-item--description">
-              <%= link_to(@url, target: @url_target, data: { turbolinks: false }) do %>
-                <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
-              <% end %>
+              <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
             </div>
           <% else %>
             <div class="no-link resource-item--title"><%= truncate(@title, length: 72) %></div>

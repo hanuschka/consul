@@ -22,7 +22,10 @@
           <a href="#contentBlockSelectorTab--teasersAndPromotions" >Teaser und Werbeaktionen</a>
         </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a  href="#contentBlockSelectorTab--savedContentBlocks">Eigene Inhaltsblöcke</a>
+          <a  href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
+        </li>
+        <li class="tabs-title projekt-content-block-templates-selector--tab">
+          <a  href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
         </li>
       </ul>
       <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
@@ -58,26 +61,28 @@
             ) %>
           <% end %>
         </div>
-        <div id="contentBlockSelectorTab--savedContentBlocks" class="tabs-panel">
+        <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
+          <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
           <div
               class="add-new-saved-content-block-section js-show-content-block-templates-section"
-              data-editor-name="new-saved-content-block-form"
+              data-editor-name="new-global-content-block-form"
+              data-saved-content-block-type="global"
               >
               <div class="add-new-content-block-section--plus-button-wrapper">
                 <button
-                    title="Neue Inhaltsblockvorlage erstellen"
+                    title="Neue interne Inhaltsblockvorlage erstellen"
                     type="button"
                     class="js-toggle-saved-content-block-form add-new-content-block-button"
                     >
                     <i class="fas fa-plus"></i>
-                    Neuen eigenen Inhaltsblock hinzufügen
+                    Neuen internen Inhaltsblock hinzufügen
                 </button>
               </div>
               <div class="js-saved-content-block-form saved-content-block-form">
-                <h3>Neue Inhaltsblockvorlage erstellen</h3>
+                <h3>Neue interne Inhaltsblockvorlage erstellen</h3>
                 <p><i>HTML Code hier hinzufügen</i></p>
                 <textarea
-                    id="saved-content-block-form--textarea"
+                    id="global-content-block-form--textarea"
                     name="content"
                     class="saved-content-block-form--textarea"
                     ></textarea>
@@ -95,7 +100,52 @@
           </div>
 
           <div class="saved-content-blocks-list js-saved-content-blocks-list">
-            <% saved_content_blocks.each do |saved_content_block| %>
+            <% global_content_blocks.each do |saved_content_block| %>
+              <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
+            <% end %>
+          </div>
+        </div>
+
+        <div id="contentBlockSelectorTab--userContentBlocks" class="tabs-panel">
+          <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_explanation') %></p>
+          <div
+              class="add-new-saved-content-block-section js-show-content-block-templates-section"
+              data-editor-name="new-user-content-block-form"
+              data-saved-content-block-type="user"
+              >
+              <div class="add-new-content-block-section--plus-button-wrapper">
+                <button
+                    title="Neue eigene Inhaltsblockvorlage erstellen"
+                    type="button"
+                    class="js-toggle-saved-content-block-form add-new-content-block-button"
+                    >
+                    <i class="fas fa-plus"></i>
+                    Neuen eigenen Inhaltsblock hinzufügen
+                </button>
+              </div>
+              <div class="js-saved-content-block-form saved-content-block-form">
+                <h3>Neue eigene Inhaltsblockvorlage erstellen</h3>
+                <p><i>HTML Code hier hinzufügen</i></p>
+                <textarea
+                    id="user-content-block-form--textarea"
+                    name="content"
+                    class="saved-content-block-form--textarea"
+                    ></textarea>
+              </div>
+              <div class="saved-content-block-form--controlls d-flex u-gap-10">
+                <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
+                  <i class="fas fa-save"></i>
+                  Speichern
+                </button>
+                <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
+                  <i class="fas fa-xmark"></i>
+                  Abbrechen
+                </button>
+              </div>
+          </div>
+
+          <div class="saved-content-blocks-list js-saved-content-blocks-list">
+            <% user_content_blocks.each do |saved_content_block| %>
               <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
             <% end %>
           </div>

@@ -20,7 +20,6 @@
     },
 
     initialize: function() {
-
       App.AccessibilityFixes.updateMjAccordion();
 
       $('body').on('keyup', '.js-access-label-to-button', function(event) {

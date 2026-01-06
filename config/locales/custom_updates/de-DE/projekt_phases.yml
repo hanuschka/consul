@@ -48,7 +48,7 @@ de:
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-            only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+            only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
           formular_phase:
             past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
             submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
@@ -74,7 +74,7 @@ de:
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-            only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+            only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
         ballot_component:
           budget_phase:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
@@ -96,7 +96,7 @@ de:
             not_enough_available_votes: Nicht genug verfügbare Stimmen
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-            only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+            only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
             not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen."
         commenting:
           shared:
@@ -115,7 +115,7 @@ de:
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-            only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+            only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
           budget_phase:
             investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
             too_late: Zu diesem Zeitpunkt sind keine weiteren Kommentare mehr möglich.
@@ -137,7 +137,7 @@ de:
           poll_not_current: Diese Abstimmung wurde noch nicht gestartet
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-          only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
         legislation_annotations:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
@@ -153,7 +153,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-          only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
         projekt_questions:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
@@ -170,7 +170,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-          only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
         projekt_livestreams:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
@@ -187,7 +187,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-          only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
         iframe:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
@@ -204,7 +204,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
-          only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."
       restrictions:
         hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
         verification:

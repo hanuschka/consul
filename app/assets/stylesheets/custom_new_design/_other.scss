@@ -21,9 +21,9 @@
       margin-right: 30px;
 
       select.goog-te-combo {
-        width: 170px;
+        width: 135px;
 
-        @media (min-width: 640px) {
+        @media (max-width: 640px) {
           width: 82px;
         }
       }

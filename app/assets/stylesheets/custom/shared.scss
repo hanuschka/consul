@@ -408,6 +408,11 @@ span.toggle-arrow {
 .collapse-text-widget--inner-content {
   position: relative;
   overflow: hidden;
+  margin-bottom: 5px;
+
+  p {
+    margin-bottom: 0;
+  }
 
   &::after {
     content: "";
@@ -449,6 +454,7 @@ span.toggle-arrow {
 }
 
 .collapse-text-widget--expand-button {
+  position: relative;
   display: none;
   margin-top: 5px;
   cursor: pointer;
@@ -456,7 +462,15 @@ span.toggle-arrow {
   text-transform: uppercase;
   font-size: 12px;
   font-weight: bold;
-  color: #808080;
+  color: #737373;
+  padding: 7px 10px;
+  border-radius: 5px;
+  margin: 0 auto;
+  transition: 50ms ease background-color;
+
+  &:hover {
+    background-color: #ebebeb;
+  }
 }
 
 // User registration form

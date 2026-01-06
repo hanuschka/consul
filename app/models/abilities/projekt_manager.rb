@@ -52,7 +52,7 @@ module Abilities
       end
 
       can(:update_map, MapLocation) do |p|
-        related_projekt = p.respond_to?(:projekt_phase) && p.projekt_phase.present? ? p.projekt_phase.projekt : p.projekt
+        related_projekt = p.mappable.is_a?(ProjektPhase) ? p.mappable.projekt : p.mappable
         can? :edit, related_projekt
       end
 

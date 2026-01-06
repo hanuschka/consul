@@ -57,6 +57,10 @@ class MapLocation < ApplicationRecord
     MapLocation.find_or_create_by!(default: true)
   end
 
+  def self.awesome_icon_unicode_cache
+    @awesome_icon_unicode_cache ||= AwesomeIcon.pluck(:name, :unicode).to_h
+  end
+
   def available?
     latitude.present? && longitude.present? && zoom.present?
   end
@@ -220,9 +224,10 @@ class MapLocation < ApplicationRecord
     end
 
     def get_feature_icon_unicode(category: nil, projekt_labels: nil)
-      return unless get_feature_icon_name(category: category, projekt_labels: projekt_labels).present?
+      icon_name = get_feature_icon_name(category: category, projekt_labels: projekt_labels)
+      return unless icon_name.present?
 
-      AwesomeIcon.find_by(name: get_feature_icon_name)&.unicode
+      self.class.awesome_icon_unicode_cache[icon_name]
     end
 
     def update_geocoder_data

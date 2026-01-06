@@ -31,6 +31,9 @@ application.register("kern-form-check-filter", KernFormCheckFilter)
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
 
+import TableActionsController from "./components/table/actions_controller"
+application.register("table-actions", TableActionsController)
+
 
 import ModeSwitcherController from "./mode_switcher_controller"
 application.register("mode-switcher", ModeSwitcherController)

@@ -13,7 +13,33 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--kern-custom-white);
   border-radius: 8px;
   border: 1px solid #ccc;
+}
+
+.kern-table__actions-menu {
+  background-color: var(--kern-custom-white);
+  border-radius: var(--kern-8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: var(--kern-8) 0;
+  position: absolute;
+  top: 0;
+  right: 100%;
+
+  &.kern-table__actions-menu--up {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+.kern-table__actions-menu-item {
+  color: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: var(--kern-grey-100);
+    border-radius: var(--kern-4);
+  }
 }

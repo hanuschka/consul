@@ -3,7 +3,7 @@
                      data: { controller: 'table-header', 'table-header-column-value': @column },
                      aria: { sort: aria_sort } do %>
   <div class="d-flex">
-    <span class="flex-grow-1" id="<%= @column %>-label"><%= @label %></span>
+    <span class="mr-3" id="<%= @column %>-label"><%= @label %></span>
 
     <% if show_sort? %>
       <%= link_to target_url,

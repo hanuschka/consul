@@ -1,0 +1,10 @@
+de:
+  adm:
+    users:
+      index:
+        title: Benutzer verwalten
+        table:
+          actions:
+            verify: Verifizieren
+            unverify: Verifizierung aufheben
+            edit: Bearbeiten

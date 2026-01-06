@@ -24,7 +24,7 @@ module Adm
 
     def search
       authorize [:adm, Administrator], :index?
-      @users = User.search(params[:search]).includes(:administrator).limit(4)
+      @users = User.search(params[:search]).where.missing(:administrator).limit(4)
     end
   end
 end

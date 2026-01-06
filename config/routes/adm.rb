@@ -31,7 +31,10 @@ namespace :adm do
   resources :idea_managers, only: [:index, :new, :create, :destroy]
   resources :moderators, only: [:index, :new, :create, :destroy]
   resources :valuators, only: [:index, :new, :create, :destroy]
-  resources :users, only: :index
+  resources :users, only: [:index, :edit, :update] do
+    patch :verify, on: :member
+    patch :unverify, on: :member
+  end
   # profiles
 
   namespace :site_customization do

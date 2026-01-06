@@ -13,7 +13,7 @@
           <%= render Kern::Table::HeaderComponent.new(:username, User.human_attribute_name(:username), **@username_header_options) %>
           <%= render Kern::Table::HeaderComponent.new(:gender, User.human_attribute_name(:gender), **@gender_header_options) %>
           <%= render Kern::Table::HeaderComponent.new(:reverify, User.human_attribute_name(:reverify), **@reverify_header_options) %>
-          <th scope="col" class="kern-table__header">Action</th>
+          <th scope="col" class="kern-table__header"><%= t('shared.table.actions') %></th>
         </tr>
       </thead>
 
@@ -23,7 +23,13 @@
             <th scope="row" class="kern-table__header"><%= user.username %></th>
             <td class="kern-table__cell"><%= user.gender %></td>
             <td class="kern-table__cell"><%= user.reverify %></td>
-            <td class="kern-table__cell"></td>
+            <td class="kern-table__cell">
+              <%= render Kern::Table::ActionsComponent.new() do |c| %>
+                <%= c.with_action  label: t(".table.actions.verify"), url: verify_adm_user_path(user), method: :patch, show: !user.verified?  %>
+                <%= c.with_action  label: t(".table.actions.unverify"), url: unverify_adm_user_path(user), method: :patch, show: user.verified?  %>
+                <%= c.with_action  label: t(".table.actions.edit"), url: edit_adm_user_path(user)  %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>

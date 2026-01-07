@@ -103,6 +103,14 @@ class Shared::ResourcesListComponent < ApplicationComponent
     wide? ? "fa-grip-vertical" : "fa-bars"
   end
 
+  def switch_view_mode_label
+    if wide?
+      t("custom.accessibility.shared.switch-view-button.to-list")
+    else
+      t("custom.accessibility.shared.switch-view-button.to-tile")
+    end
+  end
+
   def proposal_resources_ids
     @resources.select { |r| r.is_a?(Proposal) }.map(&:id)
   end

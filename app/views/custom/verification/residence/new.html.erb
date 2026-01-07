@@ -22,11 +22,11 @@
 
         <div class="">
           <%= f.label :first_name, t("custom.verification.residence.new.first_name") %>
-          <%= f.text_field :first_name, label: false, placeholder: t("custom.verification.residence.new.first_name") %>
+          <%= f.text_field :first_name, autocomplete: "on", label: false, placeholder: t("custom.verification.residence.new.first_name") %>
         </div>
 
         <div class="">
-          <%= f.label :last_name, t("custom.verification.residence.new.last_name") %>
+          <%= f.label :last_name, autocomplete: "on", t("custom.verification.residence.new.last_name") %>
           <%= f.text_field :last_name, label: false, placeholder: t("custom.verification.residence.new.last_name") %>
         </div>
 
@@ -62,7 +62,7 @@
             </div>
             <div class='small-12 medium-6 column'>
               <%= f.label :document_last_digits, t("custom.verification.residence.new.document_last_digits") %>
-              <%= f.text_field :document_last_digits, label: false, placeholder: t("custom.verification.residence.new.document_last_digits") %>
+              <%= f.text_field :document_last_digits, autocomplete: "off", label: false, placeholder: t("custom.verification.residence.new.document_last_digits") %>
             </div>
           </div>
 

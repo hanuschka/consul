@@ -48,7 +48,7 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-    @geozones = Geozone.all
+    @geozones = Geozone.all.order(:name)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?

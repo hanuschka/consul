@@ -12,15 +12,3 @@ ProjektStudio.utils.postMessageToParentFromIframe = function(eventType, params) 
 ProjektStudio.utils.sendMessageToDtParentFrame = function(eventType, params) {
   ProjektStudio.utils.postMessageToParentFromIframe(eventType, params)
 }
-<<<<<<< HEAD
-
-ProjektStudio.utils.parseIframeEventData = function(eventData) {
-  if (typeof eventData === "object"){
-    return eventData
-  }
-  else {
-    return null
-  }
-}
-=======
->>>>>>> new-connection

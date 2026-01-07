@@ -65,4 +65,76 @@ class ProjektPhasesController < ApplicationController
 
     @projekt = @projekt_phase.projekt
   end
+
+  def create_stat_question
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    @stat_question = @projekt_phase.stat_questions.build(
+      question: params[:question],
+      status: :pending
+    )
+
+    if @stat_question.save
+      StatQuestionJob.perform_later(@stat_question.id)
+      render json: {
+        id: @stat_question.id,
+        status: "pending",
+        question: @stat_question.question,
+        status_url: stat_question_status_projekt_phase_path(@projekt_phase, question_id: @stat_question.id)
+      }
+    else
+      render json: { error: @stat_question.errors.full_messages.join(", ") }, status: :unprocessable_entity
+    end
+  end
+
+  def stat_question_status
+    @projekt_phase = ProjektPhase.find(params[:id])
+    @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    render json: {
+      id: @stat_question.id,
+      status: @stat_question.status,
+      answer: @stat_question.answer,
+      created_at: @stat_question.created_at
+    }
+  end
+
+  def download_stat_answer
+    @projekt_phase = ProjektPhase.find(params[:id])
+    @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_format = params[:format] || "txt"
+
+    case download_format
+    when "pdf"
+      pdf = PdfServices::StatQuestionExporter.new(@stat_question).call
+      send_data pdf.render,
+                filename: "stat_answer_#{@stat_question.id}.pdf",
+                type: "application/pdf",
+                disposition: "attachment"
+    else
+      send_data generate_stat_answer_text(@stat_question),
+                filename: "stat_answer_#{@stat_question.id}.txt",
+                type: "text/plain",
+                disposition: "attachment"
+    end
+  end
+
+  private
+
+    def generate_stat_answer_text(stat_question)
+      <<~TEXT
+        AI Question Analysis
+        Date: #{stat_question.created_at.strftime("%d %b %Y %H:%M")}
+
+        Question:
+        #{stat_question.question}
+
+        Answer:
+        #{stat_question.answer}
+      TEXT
+    end
 end

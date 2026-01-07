@@ -17,6 +17,7 @@
   <%= render ParticapationStats::SummaryComponent.new(projekt_phase: @projekt_phase) %>
 
   <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
+    <%= render ParticapationStats::AiQuestionComponent.new(projekt_phase: @projekt_phase) %>
     <%= render "shared/stats/participation", stats: @stats %>
     <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>

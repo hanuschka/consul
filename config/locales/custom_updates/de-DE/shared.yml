@@ -32,6 +32,23 @@ de:
         comments_over_time: Kommentare im Zeitverlauf
       heatmap:
         title: Heatmap
+      ai_question:
+        title: "KI-Assistent - Fragen zu Vorschlägen stellen"
+        placeholder: "Geben Sie Ihre Frage zu den Vorschlägen ein..."
+        submit: "KI fragen"
+        submitting: "Wird gesendet..."
+        history: "Frühere Fragen"
+        in_progress: "Fragen werden bearbeitet"
+        processing_message: "Ich prüfe alle Vorschläge und werde in Kürze eine Antwort geben."
+        download_txt: "TXT herunterladen"
+        download_pdf: "PDF herunterladen"
+        retention_hint: "Laden Sie Antworten für Offline-Zugriff oder Archivierung herunter."
+        no_resources: "Keine Vorschläge gefunden, die analysiert werden können."
+        error: "Bei der Generierung der Antwort ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        pdf_title: "KI-Fragenanalyse"
+        pdf_date: "Datum"
+        pdf_question: "Frage"
+        pdf_answer: "Antwort"
     ai_stats:
       topic_clustering:
         title: KI-Themengruppierung

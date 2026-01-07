@@ -28,6 +28,7 @@
       App.AreaChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.AiStatsRefresh.initialize();
+      App.AiQuestionPolling.initialize();
     }
   };
 }).call(this);

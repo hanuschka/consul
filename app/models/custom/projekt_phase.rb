@@ -85,6 +85,10 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :stat_questions,
+           class_name: "ProjektPhaseStatQuestion",
+           foreign_key: :projekt_phase_id,
+           dependent: :destroy
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments

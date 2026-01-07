@@ -1,0 +1,80 @@
+<% if can_ask_questions? %>
+  <div class="participation-stats-ai-question"
+       data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
+       data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
+    <section class="ai-question-section">
+      <h3 class="ai-question-section--title">
+        <%= t("custom.participation_stats.ai_question.title") %>
+      </h3>
+
+      <div class="ai-question-section--form">
+        <%= form_tag create_stat_question_projekt_phase_path(@projekt_phase),
+                     method: :post,
+                     id: "ai-question-form",
+                     class: "ai-question-form" do %>
+          <%= text_area_tag :question,
+                            nil,
+                            placeholder: t("custom.participation_stats.ai_question.placeholder"),
+                            class: "ai-question-form--input",
+                            id: "ai-question-input",
+                            required: true %>
+          <div class="ai-question-form--actions">
+            <%= button_tag type: "submit",
+                           class: "button ai-question-form--submit",
+                           id: "ai-question-submit" do %>
+              <%= t("custom.participation_stats.ai_question.submit") %>
+            <% end %>
+            <div class="ai-question-form--loading hidden" id="ai-question-loading">
+              <%= render Shared::SpinnerComponent.new(size: :small) %>
+              <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %>" id="ai-questions-pending">
+        <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
+        <div id="ai-questions-pending-list">
+          <% pending_questions.each do |question| %>
+            <div class="ai-question-item ai-question-item--pending"
+                 data-question-id="<%= question.id %>"
+                 data-status-url="<%= stat_question_status_projekt_phase_path(@projekt_phase, question_id: question.id) %>">
+              <%= render Shared::SpinnerComponent.new(size: :medium) %>
+              <p class="ai-question-item--text"><%= truncate(question.question, length: 150) %></p>
+              <p class="ai-question-item--status">
+                <%= t("custom.participation_stats.ai_question.processing_message") %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if completed_questions.any? %>
+        <div class="ai-question-section--history" id="ai-questions-history">
+          <h4><%= t("custom.participation_stats.ai_question.history") %></h4>
+          <% completed_questions.each do |question| %>
+            <div class="ai-question-item ai-question-item--completed">
+              <div class="ai-question-item--header">
+                <span class="ai-question-item--date">
+                  <%= l(question.created_at, format: :short) %>
+                </span>
+                <div class="ai-question-item--actions">
+                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "txt"),
+                              class: "button small" do %>
+                    <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
+                  <% end %>
+                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "pdf"),
+                              class: "button small secondary" do %>
+                    <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
+                  <% end %>
+                </div>
+              </div>
+              <h3 class="ai-question-item--question"><%= question.question %></h3>
+              <div class="ai-question-item--answer"><%= question.answer %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+  </div>
+<% end %>

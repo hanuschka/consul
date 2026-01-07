@@ -12,7 +12,9 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def categories
-    @clustering_data
+    return @clustering_data if @clustering_data.is_a?(Array)
+
+    @clustering_data.values
   end
 
   def render?

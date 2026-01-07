@@ -45,7 +45,7 @@
   .sticky-ballot-progress-bar {
     position: sticky;
     top: 90px;
-    z-index: 1000;
+    z-index: 500;
 
     @media screen and (max-width: $small-tablet-viewport-start) {
       top: 109px;

@@ -1,0 +1,26 @@
+<%= back_link_to admin_external_api_keys_path %>
+
+<h2><%= t("admin.external_api_keys.form.edit_title") %> <%= t("admin.external_api_keys.services.#{@external_api_key.service}", default: @external_api_key.service) %></h2>
+
+<div class="margin-top" style="max-width: 550px;">
+  <div class="callout highlight">
+    <div style="margin-bottom: 0.5em;">
+      <%= t("admin.external_api_keys.services_description.#{@external_api_key.service}", default: "") %>
+    </div>
+    <% if @external_api_key.service_link %>
+      <div>
+        <%= link_to @external_api_key.service_link, @external_api_key.service_link, target: "_blank", rel: "noopener noreferrer", style: "font-size: 0.85em;" %>
+      </div>
+    <% end %>
+  </div>
+  <%= form_for [:admin, @external_api_key] do |f| %>
+    <div class="form-group margin-bottom">
+      <label><%= t("admin.external_api_keys.index.name") %></label>
+      <div style="padding: 0.75em; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 0.25em;">
+        <%= @external_api_key.name %>
+      </div>
+    </div>
+    <%= f.password_field :value, label: t("admin.external_api_keys.form.value"), autocomplete: "api_key" %>
+    <%= f.submit class: "button success" %>
+  <% end %>
+</div>

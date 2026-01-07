@@ -14,16 +14,15 @@ module BundIdServices
       def request_params
         saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
 
-        user_token = if @purpose.present?
-                       Rails.application.message_verifier(:bund_id).generate([
-                         @user_id,
-                         @purpose,
-                         Time.zone.now
-                       ])
-                     end
+        if @purpose.present?
+          state = SecureRandom.hex(16)
+          RelayState.create!(
+            token: state,
+            data: { user_id: @user_id, purpose: @purpose }
+          )
+          relay_state = CGI.escape(state)
 
-        if user_token
-          "SAMLRequest=#{saml_request}&RelayState=#{user_token}"
+          "SAMLRequest=#{saml_request}&RelayState=#{relay_state}"
         else
           "SAMLRequest=#{saml_request}"
         end

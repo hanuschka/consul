@@ -1,21 +1,46 @@
 class Ai::GenerateContentBlock < ApplicationService
-  def self.call(instructions, content_block_html)
-    llm_response = RubyLLM.chat(model: 'gpt-5-nano').ask(
-      <<~TEXT
-        Update the content block html using provided instructions.
-        When needed to add UI elements use Zurb Foundation 6.
-        Instructions: '#{instructions}'.
-        When requested to add images use "https://placehold.co" for src.
-        Dont replace existing images. Don't wrap image blocks with figure element.
-        For instance: "https://placehold.co/275x275".
+  def initialize(instructions, content_block_html)
+    @instructions = instructions
+    @content_block_html = content_block_html
+  end
 
-        Current content block html content:
-        #{content_block_html}
+  def call
+    llm_response =
+      Ai::RubyLlmFactory
+        .chat_with_json_output(output_schema)
+        .ask(
+          <<~TEXT
+            Update the content block HTML strictly following the provided instructions.
 
-        Return just new html.
-      TEXT
-    )
+            Hard rules:
+            - Modify only what the instructions explicitly require. Do not restructure, reorder, remove, or wrap existing elements.
+            - Preserve all existing HTML exactly as it is unless an instruction explicitly requires a change.
+            - When adding UI elements, use Zurb Foundation 6 and inline styles.
+            - When adding images, use "https://placehold.co" as src and DO NOT replace existing images.
+            - DO NOT wrap images in figure elements and DO NOT alter existing figure elements.
+            - Do not optimize, clean up, or reformat the HTML. Keep the original formatting and indentation unless an instruction requires otherwise.
+            - Never infer desired changes. Only apply changes explicitly described in the instructions.
 
-    llm_response.content
+            Instructions: "#{@instructions}"
+
+            Current content block HTML:
+            #{@content_block_html}
+
+            Return ONLY the updated HTML, without explanations.
+          TEXT
+        )
+
+    llm_response.content["html"]
+  end
+
+  def output_schema
+    {
+      type: 'object',
+      properties: {
+        html: { type: 'string' },
+      },
+      required: ['html'],
+      additionalProperties: false
+    }
   end
 end

@@ -1,6 +1,10 @@
 <div class="table-actions">
   <%= content %>
 
+  <% if actions.include?(:show) %>
+    <%= action(:show, **show_options.merge(text: show_text, path: show_path)) %>
+  <% end %>
+
   <% if actions.include?(:edit) %>
     <%= action(:edit, **edit_options.merge(text: edit_text, path: edit_path)) %>
   <% end %>

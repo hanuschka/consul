@@ -35,6 +35,12 @@
   gap: 1rem;
 }
 
+.ai-question-form--actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .ai-question-form--input {
   width: 100%;
   min-height: 100px;
@@ -52,8 +58,16 @@
   box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.2);
 }
 
-.ai-question-form--submit {
-  align-self: flex-start;
+.ai-question-form--loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.ai-question-form--loading.hidden {
+  display: none;
 }
 
 .ai-question-section--pending {
@@ -85,6 +99,7 @@
   background: white;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  background: #dae4f0;
 }
 
 .ai-question-item--pending {
@@ -93,6 +108,10 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 0.75rem;
+
+  .shared-spinner {
+    flex-shrink: 0;
+  }
 }
 
 .ai-question-item--completed {
@@ -120,21 +139,6 @@
 .ai-question-item--actions .button {
   font-size: 0.875rem;
   padding: 0.4rem 0.75rem;
-}
-
-.ai-question-item--spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
-  border-radius: 50%;
-  animation: ai-question-spin 1s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes ai-question-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .ai-question-item--text {

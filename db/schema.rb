@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_06_164534) do
+ActiveRecord::Schema.define(version: 2026_01_07_112939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2047,7 +2047,7 @@ ActiveRecord::Schema.define(version: 2026_01_06_164534) do
     t.bigint "projekt_phase_id", null: false
     t.text "question", null: false
     t.text "answer"
-    t.integer "status", default: 0, null: false
+    t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_phase_id", "created_at"], name: "idx_stat_questions_phase_created"

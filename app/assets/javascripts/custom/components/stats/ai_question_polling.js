@@ -13,19 +13,45 @@
 
     bindFormSubmit: function() {
       const form = document.getElementById("ai-question-form");
-      if (!form) return;
+      const $form = $(form);
 
-      $(form).on("ajax:success", (event, data) => {
-        this.handleSubmitSuccess(data);
-      });
+      $form.on("submit", (e) => {
+        e.preventDefault();
 
-      $(form).on("ajax:error", (event, xhr) => {
-        this.handleSubmitError(xhr);
+        const input = document.getElementById("ai-question-input");
+        const submit = document.getElementById("ai-question-submit");
+        const loading = document.getElementById("ai-question-loading");
+        const questionValue = input.value.trim();
+
+        if (!questionValue) return;
+
+        const formData = new FormData(form);
+
+        input.disabled = true;
+        submit.disabled = true;
+        input.value = "";
+        loading.classList.remove("hidden");
+
+        $.ajax({
+          url: form.action,
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: "json",
+          success: (data) => {
+            loading.classList.add("hidden");
+            this.handleSubmitSuccess(data);
+          },
+          error: (xhr) => {
+            loading.classList.add("hidden");
+            this.handleSubmitError(xhr);
+          }
+        });
       });
     },
 
     handleSubmitSuccess: function(data) {
-      const input = document.getElementById("ai-question-input");
       const container = document.querySelector(".participation-stats-ai-question");
       const pendingSection = document.getElementById("ai-questions-pending");
       const pendingList = document.getElementById("ai-questions-pending-list");
@@ -42,15 +68,13 @@
       pendingItem.dataset.questionId = data.id;
       pendingItem.dataset.statusUrl = data.status_url;
       pendingItem.innerHTML = `
-        <div class="ai-question-item--spinner"></div>
+        <div class="shared-spinner shared-spinner--medium"></div>
         <p class="ai-question-item--text">${this.escapeHtml(questionText)}</p>
         <p class="ai-question-item--status">${processingMessage}</p>
       `;
 
       pendingList.insertBefore(pendingItem, pendingList.firstChild);
       pendingSection.classList.remove("hidden");
-
-      if (input) input.value = "";
 
       this.pollStatus(data.id, data.status_url, pendingItem);
       this.updateFormState();

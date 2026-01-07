@@ -4,7 +4,7 @@ class CreateProjektPhaseStatQuestions < ActiveRecord::Migration[6.1]
       t.references :projekt_phase, null: false, foreign_key: true
       t.text :question, null: false
       t.text :answer
-      t.integer :status, default: 0, null: false
+      t.string :status, default: "pending", null: false
 
       t.timestamps
     end

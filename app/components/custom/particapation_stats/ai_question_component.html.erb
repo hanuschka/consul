@@ -10,21 +10,25 @@
       <div class="ai-question-section--form">
         <%= form_tag create_stat_question_projekt_phase_path(@projekt_phase),
                      method: :post,
-                     remote: true,
                      id: "ai-question-form",
-                     class: "ai-question-form",
-                     data: { type: "json" } do %>
+                     class: "ai-question-form" do %>
           <%= text_area_tag :question,
                             nil,
                             placeholder: t("custom.participation_stats.ai_question.placeholder"),
                             class: "ai-question-form--input",
                             id: "ai-question-input",
                             required: true %>
-          <%= button_tag type: "submit",
-                         class: "button ai-question-form--submit",
-                         id: "ai-question-submit" do %>
-            <%= t("custom.participation_stats.ai_question.submit") %>
-          <% end %>
+          <div class="ai-question-form--actions">
+            <%= button_tag type: "submit",
+                           class: "button ai-question-form--submit",
+                           id: "ai-question-submit" do %>
+              <%= t("custom.participation_stats.ai_question.submit") %>
+            <% end %>
+            <div class="ai-question-form--loading hidden" id="ai-question-loading">
+              <%= render Shared::SpinnerComponent.new(size: :small) %>
+              <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
+            </div>
+          </div>
         <% end %>
       </div>
 
@@ -35,7 +39,7 @@
             <div class="ai-question-item ai-question-item--pending"
                  data-question-id="<%= question.id %>"
                  data-status-url="<%= stat_question_status_projekt_phase_path(@projekt_phase, question_id: question.id) %>">
-              <div class="ai-question-item--spinner"></div>
+              <%= render Shared::SpinnerComponent.new(size: :medium) %>
               <p class="ai-question-item--text"><%= truncate(question.question, length: 150) %></p>
               <p class="ai-question-item--status">
                 <%= t("custom.participation_stats.ai_question.processing_message") %>

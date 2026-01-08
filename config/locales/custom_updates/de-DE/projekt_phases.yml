@@ -3,7 +3,7 @@ de:
     projekt_phases:
       subnav:
         stats: Statistiken
-        full_stats: Vollständige Statistiken
+        full_stats: Statistiken auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge
           comment_phase: Kommentare

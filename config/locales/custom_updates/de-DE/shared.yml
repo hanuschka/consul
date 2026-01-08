@@ -20,8 +20,12 @@ de:
         age: Alter
         area: Gebiet
     participation_stats:
+      sections:
+        key_metrics: Kennzahlen
+        ai_analysis: KI-Auswertung
+        distributions: Verteilungen und Entwicklungen
       key_performance_indicators: Kennzahlen
-      ai_summary_title: KI-Zusammenfassung dieser Phase
+      ai_summary_title: Zusammenfassung der Phase
       tone_of_participation: Ton der Beteiligung
       tone_of_comments: Ton der Kommentare
       further_info: Weitere Informationen
@@ -33,7 +37,8 @@ de:
       heatmap:
         title: Heatmap
       ai_question:
-        title: "KI-Assistent - Fragen zu Vorschlägen stellen"
+        title: "Individuelle Auswertung per Frage"
+        subtitle: "Stellen Sie eigene Fragen zu den eingereichten Vorschlägen und erhalten Sie eine zusammenfassende Auswertung."
         placeholder: "Geben Sie Ihre Frage zu den Vorschlägen ein..."
         submit: "KI fragen"
         submitting: "Wird gesendet..."
@@ -51,7 +56,7 @@ de:
         pdf_answer: "Antwort"
     ai_stats:
       topic_clustering:
-        title: KI-Themengruppierung
+        title: Themengruppen
         subtopics: Unterthemen
         subcategories: Unterkategorien
         proposals: Vorschläge
@@ -60,7 +65,7 @@ de:
         topic_groups: Themengruppen
         category_groups: Themengruppen
       semantic_clustering:
-        title: KI-Semantische Gruppierung
+        title: Semantische Gruppierung
         subcategories: Unterkategorien
         resources: Vorschläge
         in: in

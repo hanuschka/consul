@@ -5,9 +5,14 @@
     <section class="ai-question-section">
       <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
         <% c.with_head do %>
-          <h3 class="ai-question-section--title">
-            <%= t("custom.participation_stats.ai_question.title") %>
-          </h3>
+          <div>
+            <h3 class="ai-question-section--title">
+              <%= t("custom.participation_stats.ai_question.title") %>
+            </h3>
+            <p class="ai-question-section--subtitle">
+              <%= t("custom.participation_stats.ai_question.subtitle") %>
+            </p>
+          </div>
         <% end %>
         <% c.with_body do %>
           <div class="ai-question-section--form">

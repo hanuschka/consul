@@ -1,6 +1,6 @@
 <div class="participation-stats-ai">
-  <section class="ai-stats-section">
-    <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.ai_summary_title") %></h3>
+  <section class="ai-stats-card">
+    <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.ai_summary_title") %></h3>
     <div class="ai-summary-content">
       <% if ai_summary.present? %>
         <%= ai_summary %>
@@ -12,8 +12,8 @@
 
   <% if has_ai_stats? %>
     <div class="d-flex u-gap-10 u-space-between">
-      <section class="ai-stats-section u-max-w-50">
-        <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+      <section class="ai-stats-card u-max-w-50">
+        <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
         <div class="ai-summary-content">
           <% if tone_of_participation.present? %>
             <div class="tone-value"><%= tone_of_participation %></div>
@@ -24,8 +24,8 @@
       </section>
 
       <% if tone_of_comments.present? %>
-        <section class="ai-stats-section u-max-w-50">
-          <h3 class="ai-stats-section--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
+        <section class="ai-stats-card u-max-w-50">
+          <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
           <div class="ai-summary-content">
             <div class="tone-value"><%= tone_of_comments %></div>
           </div>

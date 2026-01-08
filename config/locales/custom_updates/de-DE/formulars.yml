@@ -12,3 +12,7 @@ de:
           minimum: Mindestens %{minimum} Buchstaben
           maximum: Nicht mehr als %{maximum} Buchstaben
         format: Das Format ist falsch
+  formular_answer_documents:
+    errors:
+      messages:
+        in_between: Die Dateigröße muss zwischen %{min} und %{max} liegen

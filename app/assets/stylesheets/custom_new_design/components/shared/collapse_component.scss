@@ -39,19 +39,18 @@
 }
 
 .custom-collapse {
-  .custom-collapse--body {
+  > .custom-collapse--body {
     padding-top: 15px;
     display: none;
-    // height: 0;
     overflow: hidden;
   }
 
   &.-opened {
-    .custom-collapse--body {
+    > .custom-collapse--body {
       display: block;
     }
 
-    .icon-chevron-down {
+    > .custom-collapse--head > .icon-chevron-down {
       transform: rotate(180deg);
     }
   }

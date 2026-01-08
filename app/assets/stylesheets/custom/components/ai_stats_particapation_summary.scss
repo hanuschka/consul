@@ -2,7 +2,7 @@
   margin-bottom: 1.2rem;
 }
 
-.ai-stats-section {
+.ai-stats-card {
   background: #E7ECF2;
   border-radius: 12px;
   padding: 10px 25px 15px;
@@ -25,15 +25,15 @@
   }
 }
 
-.ai-stats-section--title {
+.ai-stats-card--title {
   margin: 0 0 0.5rem 0;
-  font-size: 24px !important;
+  font-size: 22px !important;
   font-weight: 600;
   color: #333;
   margin-bottom: 2px !important;
 }
 
-.ai-stats-section--subtitle {
+.ai-stats-card--subtitle {
   margin: 0 0 0 0;
   font-size: 20px;
   font-weight: 700;

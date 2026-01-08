@@ -1,5 +1,5 @@
-<div class="ai-stats-section ai-clustering">
-  <h3 class="ai-stats-section--title">
+<div class="ai-stats-card ai-clustering">
+  <h3 class="ai-stats-card--title">
     <%= t(title_key + ".title") %>
   </h3>
 
@@ -13,7 +13,7 @@
     <% categories.each_with_index do |category, category_index| %>
       <div class="ai-clustering--item-card" style="--item-color: <%= category_color(category_index) %>">
         <div class="ai-clustering--item-header">
-          <h4 class="ai-stats-section--subtitle"><%= category["name"] %></h4>
+          <h4 class="ai-stats-card--subtitle"><%= category["name"] %></h4>
           <p class="ai-clustering--item-stats">
             <%= subcategory_count(category) %> <%= t(title_key + ".subcategories") %>,
             <%= resource_count(category) %> <%= t(title_key + ".resources") %>

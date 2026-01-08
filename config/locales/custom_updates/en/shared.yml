@@ -20,8 +20,12 @@ en:
         age: Age
         area: Area
     participation_stats:
+      sections:
+        key_metrics: Key Metrics
+        ai_analysis: AI Analysis
+        distributions: Distributions and Developments
       key_performance_indicators: Key Performance Indicators
-      ai_summary_title: AI summary of this phase
+      ai_summary_title: Phase Summary
       tone_of_participation: Tone of Participation
       tone_of_comments: Tone of Comments
       further_info: further info
@@ -33,7 +37,8 @@ en:
       heatmap:
         title: Heatmap
       ai_question:
-        title: "AI Assistant - Ask Questions About Proposals"
+        title: "Individual Analysis by Question"
+        subtitle: "Ask your own questions about the submitted proposals and receive a comprehensive evaluation."
         placeholder: "Enter your question about the proposals..."
         submit: "Ask AI"
         submitting: "Sending..."
@@ -51,7 +56,7 @@ en:
         pdf_answer: "Answer"
     ai_stats:
       topic_clustering:
-        title: AI Topic Clustering
+        title: Topic Groups
         subtopics: subtopics
         subcategories: subcategories
         proposals: proposals
@@ -60,7 +65,7 @@ en:
         topic_groups: topic groups
         category_groups: topic groups
       semantic_clustering:
-        title: AI Semantic Clustering
+        title: Semantic Clustering
         subcategories: subcategories
         resources: proposals
         in: in

@@ -69,8 +69,14 @@
                   <% end %>
                 </div>
               </div>
-              <h3 class="ai-question-item--question"><%= question.question %></h3>
-              <div class="ai-question-item--answer"><%= question.answer %></div>
+              <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
+                <% c.with_head do %>
+                  <h3 class="ai-question-item--question"><%= question.question %></h3>
+                <% end %>
+                <% c.with_body do %>
+                  <div class="ai-question-item--answer"><%= question.answer %></div>
+                <% end %>
+              <% end %>
             </div>
           <% end %>
         </div>

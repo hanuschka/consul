@@ -1,25 +1,21 @@
-<div class="timeline-stats">
-  <div class="timeline-stats--container">
-    <h3 class="timeline-stats--title"><%= t("custom.participation_stats.timeline.title") %></h3>
+<div class="timeline-stats ai-stats-card">
+  <% submissions = submissions_chart_data %>
+  <% if submissions[:labels].any? %>
+    <%= render Shared::AreaChartComponent.new(
+      title: t("custom.participation_stats.timeline.submissions_over_time"),
+      labels: submissions[:labels],
+      values: submissions[:values],
+      total: total_submissions
+    ) %>
+  <% end %>
 
-    <% submissions = submissions_chart_data %>
-    <% if submissions[:labels].any? %>
-      <%= render Shared::AreaChartComponent.new(
-        title: t("custom.participation_stats.timeline.submissions_over_time"),
-        labels: submissions[:labels],
-        values: submissions[:values],
-        total: total_submissions
-      ) %>
-    <% end %>
-
-    <% comments_data = comments_chart_data %>
-    <% if comments_data[:labels].any? %>
-      <%= render Shared::AreaChartComponent.new(
-        title: t("custom.participation_stats.timeline.comments_over_time"),
-        labels: comments_data[:labels],
-        values: comments_data[:values],
-        total: total_comments
-      ) %>
-    <% end %>
-  </div>
+  <% comments_data = comments_chart_data %>
+  <% if comments_data[:labels].any? %>
+    <%= render Shared::AreaChartComponent.new(
+      title: t("custom.participation_stats.timeline.comments_over_time"),
+      labels: comments_data[:labels],
+      values: comments_data[:values],
+      total: total_comments
+    ) %>
+  <% end %>
 </div>

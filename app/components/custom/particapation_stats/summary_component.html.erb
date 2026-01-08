@@ -1,7 +1,7 @@
-<div class="participation-stats-ai u-gap-10">
-  <section class="ai-stats-card u-max-w-50">
+<div class="participation-stats-summary">
+  <section class="ai-stats-card participation-stats-summary--main">
     <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.ai_summary_title") %></h3>
-    <div class="ai-summary-content">
+    <div class="participation-stats-summary--content">
       <% if ai_summary.present? %>
         <%= ai_summary %>
       <% else %>
@@ -10,29 +10,23 @@
     </div>
   </section>
 
-  <div class="u-gap-10 u-max-w-50">
-    <section class="ai-stats-card ">
-      <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
-      <div class="ai-summary-content">
-        <% if tone_of_participation.present? %>
-          <div class="tone-value"><%= tone_of_participation %></div>
-        <% else %>
-          <%= t("custom.participation_stats.no_resources_to_analyze") %>
-        <% end %>
+  <section class="ai-stats-card participation-stats-summary--tone">
+    <h3 class="participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+    <div class="participation-stats-summary--tone-value">
+      <% if tone_of_participation.present? %>
+        <%= tone_of_participation %>
+      <% else %>
+        <%= t("custom.participation_stats.no_resources_to_analyze") %>
+      <% end %>
+    </div>
+  </section>
+
+  <% if tone_of_comments.present? %>
+    <section class="ai-stats-card participation-stats-summary--tone">
+      <h3 class="participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
+      <div class="participation-stats-summary--tone-value">
+        <%= tone_of_comments %>
       </div>
     </section>
-
-    <% if tone_of_comments.present? %>
-      <section class="ai-stats-card">
-        <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
-        <div class="ai-summary-content">
-          <% if tone_of_comments.present? %>
-            <div class="tone-value"><%= tone_of_comments %></div>
-          <% else %>
-            <%= t("custom.participation_stats.no_resources_to_analyze") %>
-          <% end %>
-        </div>
-      </section>
-    <% end %>
-  </div>
+  <% end %>
 </div>

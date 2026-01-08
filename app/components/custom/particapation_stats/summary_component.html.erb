@@ -1,5 +1,5 @@
-<div class="participation-stats-ai">
-  <section class="ai-stats-card">
+<div class="participation-stats-ai u-gap-10">
+  <section class="ai-stats-card u-max-w-50">
     <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.ai_summary_title") %></h3>
     <div class="ai-summary-content">
       <% if ai_summary.present? %>
@@ -10,27 +10,29 @@
     </div>
   </section>
 
-  <% if has_ai_stats? %>
-    <div class="d-flex u-gap-10 u-space-between">
-      <section class="ai-stats-card u-max-w-50">
-        <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+  <div class="u-gap-10 u-max-w-50">
+    <section class="ai-stats-card ">
+      <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+      <div class="ai-summary-content">
+        <% if tone_of_participation.present? %>
+          <div class="tone-value"><%= tone_of_participation %></div>
+        <% else %>
+          <%= t("custom.participation_stats.no_resources_to_analyze") %>
+        <% end %>
+      </div>
+    </section>
+
+    <% if tone_of_comments.present? %>
+      <section class="ai-stats-card">
+        <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
         <div class="ai-summary-content">
-          <% if tone_of_participation.present? %>
-            <div class="tone-value"><%= tone_of_participation %></div>
+          <% if tone_of_comments.present? %>
+            <div class="tone-value"><%= tone_of_comments %></div>
           <% else %>
             <%= t("custom.participation_stats.no_resources_to_analyze") %>
           <% end %>
         </div>
       </section>
-
-      <% if tone_of_comments.present? %>
-        <section class="ai-stats-card u-max-w-50">
-          <h3 class="ai-stats-card--title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
-          <div class="ai-summary-content">
-            <div class="tone-value"><%= tone_of_comments %></div>
-          </div>
-        </section>
-      <% end %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

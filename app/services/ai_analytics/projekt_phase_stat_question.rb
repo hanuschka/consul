@@ -1,12 +1,12 @@
 class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
-  attr_reader :stat_question
+  attr_reader :stat_question, :projekt_phase
 
   def initialize(stat_question)
     @stat_question = stat_question
+    @projekt_phase = stat_question.projekt_phase
   end
 
   def call
-    projekt_phase = stat_question.projekt_phase
     resources = get_resources(projekt_phase)
 
     if resources.empty?
@@ -84,9 +84,11 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def build_prompt(items_text, resources)
       resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
+      projekt_title = projekt_phase.projekt.page.title
+      projekt_subtitle = projekt_phase.projekt.page.subtitle
 
       <<~TEXT
-        You are an assistant helping project managers analyze citizen participation #{resource_type}.
+        You are an assistant helping project managers analyze citizen participation #{resource_type} in #{projekt_title} with subtitle #{projekt_subtitle}
 
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
@@ -100,7 +102,9 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
         - If the question cannot be answered from the #{resource_type}, clearly state that
         - Be specific and reference relevant #{resource_type} when applicable
         - Structure your answer clearly with paragraphs if needed
+        - Use html formating with h2 and p tags
         - Dont use br html tags
+        - Dont be too verbose
       TEXT
     end
 end

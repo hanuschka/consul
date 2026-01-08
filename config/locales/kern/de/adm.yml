@@ -16,6 +16,7 @@ de:
           navbar: Navigationsleiste
           metadata_settings: Metadaten & Kommunikation
           gdpr_settings: DSGVO
+          registration_settings: Registrierung & Verifizierung
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin
@@ -29,20 +30,3 @@ de:
         notifications: Notification
         stats: Statistics
         apps: Apps
-    home:
-      show:
-        title: Home
-    projekts:
-      index:
-        title: Projekte
-    documents:
-      index:
-        title: Eigene Dokumente
-    navbar:
-      show:
-        title: Navigationsleiste
-    settings:
-      metadata:
-        title: Metadaten & Kommunikation
-      gdpr:
-        title: DSGVO

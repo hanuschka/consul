@@ -3,3 +3,9 @@ de:
     settings:
       update:
         success: Einstellung erfolgreich aktualisiert
+      metadata:
+        title: Metadaten & Kommunikation
+      gdpr:
+        title: DSGVO
+      registration:
+        title: Registrierung & Verifizierung

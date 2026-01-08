@@ -18,6 +18,7 @@ namespace :adm do
   resources :settings, only: [:update] do
     get :metadata, on: :collection
     get :gdpr, on: :collection
+    get :registration, on: :collection
   end
   # application
 

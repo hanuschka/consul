@@ -2,6 +2,7 @@ de:
   adm:
     documents:
       index:
+        title: Eigene Dokumente
         new_document: Neues Dokument hinzufügen
         table:
           title: Titel

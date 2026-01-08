@@ -55,6 +55,19 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
         devise_verification_token_validity_days: "Gültigkeit des Verifikationslinks in Tagen"
         devise_verification_token_validity_days_description: "Legen Sie fest, wie viele Tage lang der Link gültig ist, den Nutzer per E-Mail zur Verifizierung ihres Accounts erhalten."
+    extra_fields:
+      registration:
+        extended: Erweiterte Registrierung
+        extended_description: "Aktiviert zusätzliche Eingabefelder in der Registrierungsmaske: Vorname, Nachname, Geschlecht, Straße, Hausnummer, PLZ, Stadt und Geburtsdatum. Diese Daten können für projektbezogene Einschränkungen genutzt werden."
+        check_documents: Dokumentenabfrage in der Registrierung
+        check_documents_description: "Aktiviert ein zusätzliches Feld in der Registrierungsmaske zur Eingabe der letzten vier Ziffern eines gültigen Dokuments (Personalausweis oder Reisepass).\nDiese Information kann für eine spätere manuelle oder automatisierte Verifizierung verwendet werden."
+      verification:
+        check_documents: Dokumentenprüfung in der Verifizierung
+        check_documents_description: "Aktiviert eine Verifizierungsmethode, bei der die bei der Registrierung hinterlegte Dokumentennummer (letzte vier Ziffern von Personalausweis oder Reisepass) mit einer Referenzliste (z. B. aus dem Melderegister) abgeglichen wird.\nHinweis: Diese Prüfung ist unabhängig von der reinen Erfassung des Dokuments in der Registrierungsmaske. Sie setzt voraus, dass eine API-Verbindung zum Melderegister mit Referenzdaten besteht."
+        show_data_completeness_status: Datenvollständigkeit im Nutzerkonto anzeigen
+        show_data_completeness_status_description: Zeigt im Benutzerkonto, ob alle für bestimmte Beteiligungsphasen erforderlichen Profildaten hinterlegt wurden. Nutzer erkennen so, ob sie noch Angaben ergänzen müssen, um teilnehmen zu können.
+        show_verification_status: Verifizierungsstatus im Konto anzeigen
+        show_verification_status_description: Zeigt den aktuellen Verifizierungsstatus des Nutzers direkt im Profilbereich unterhalb des Nutzerbildes an. Dies schafft Transparenz für die Nutzer und erleichtert die Einschätzung, ob eine Teilnahme an verifizierungsbeschränkten Beteiligungsphasen möglich ist.
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
     header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."
@@ -174,18 +187,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #   second_level_projekts_in_archived_filter_description: Zeigt eine zweite Ebene im Projektfilter für archivierte Projekte standardmäßig an
     #   set_default_sorting_to_newest: Standardsortierung auf "Neueste" unstellen
     #   set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
-
-    # extra_fields:
-    #   registration:
-    #     extended: Erweiterte Registrierung
-    #     extended_description: Bei der Registrierung werden zusätzlich "Vorname", "Nachname", "Geschlecht", "Straße", "Hausnummer", "PLZ", "Stadt" und "Geburtsdatum" abgefragt
-    #     check_documents: Dokumentenabfrage
-    #     check_documents_description: Aktiviert die zusätzliche Dokumentenabfrage "Personalausweis" oder "Reisepass" während der Registrierung
-    #   verification:
-    #     check_documents: Dokumentenprüfung
-    #     check_documents_description: Aktiviert die zusätzliche Dokumentenprüfung "Personalausweis" oder "Reisepass"
-    #     show_verification_status: Zeige Verifizierungsstatus im Konto an
-    #     show_verification_status_description: Zeigt den Verifizierungsstatus unterhalb des Nutzerbildes an
 
     # projekt_feature:
     #   main:

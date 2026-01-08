@@ -3,11 +3,14 @@
        data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
        data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
     <section class="ai-question-section">
-      <h3 class="ai-question-section--title">
-        <%= t("custom.participation_stats.ai_question.title") %>
-      </h3>
-
-      <div class="ai-question-section--form">
+      <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
+        <% c.with_head do %>
+          <h3 class="ai-question-section--title">
+            <%= t("custom.participation_stats.ai_question.title") %>
+          </h3>
+        <% end %>
+        <% c.with_body do %>
+          <div class="ai-question-section--form">
         <%= form_tag create_stat_question_projekt_phase_path(@projekt_phase),
                      method: :post,
                      id: "ai-question-form",
@@ -80,6 +83,8 @@
             </div>
           <% end %>
         </div>
+      <% end %>
+        <% end %>
       <% end %>
     </section>
   </div>

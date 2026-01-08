@@ -7,21 +7,22 @@
   width: 100%;
   margin-bottom: 5px;
   z-index: 5;
+  min-height: 30px;
 
-  &:hover {
-    &:before {
-      border-radius: 10px;
-      background-color: #5a5a5a14;
-      content: '';
-      position: absolute;
-      display: block;
-      top: -5px;
-      bottom: -5px;
-      right: -10px;
-      left: -10px;
-      z-index: 1;
-    }
-  }
+  // &:hover {
+  //   &:before {
+  //     border-radius: 10px;
+  //     background-color: #5a5a5a14;
+  //     content: '';
+  //     position: absolute;
+  //     display: block;
+  //     top: -5px;
+  //     bottom: -5px;
+  //     right: -10px;
+  //     left: -10px;
+  //     z-index: 1;
+  //   }
+  // }
 
   h3 {
     margin-bottom: 0;

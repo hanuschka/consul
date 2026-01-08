@@ -73,6 +73,7 @@ de:
         remember_me: Passwort speichern
         submit: Anmelden
         title: Anmelden
+        registration_block_title: Registrieren
     shared:
       links:
         login: Anmelden
@@ -130,3 +131,5 @@ de:
           instructions_2: Nach der Bestätigung können Sie beginnen sich zu beteiligen.
           thank_you: Danke für Ihre Registrierung für diese Website. Sie müssen nun <b>Ihre E-Mail-Adresse bestätigen</b>.
           title: E-Mail-Adresse bestätigen
+    omniauth:
+      oder: ODER

@@ -1,6 +1,6 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
-class User < ApplicationRecord
+User.class_eval do
   audited only: [:username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
+  delegate :district, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -51,6 +52,8 @@ class User < ApplicationRecord
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+
+  belongs_to :api_client, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
@@ -247,16 +250,9 @@ class User < ApplicationRecord
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
-  def current_city_citizen?
-    return false if geozone.nil?
-
-    @geozone_ids ||= Geozone.ids
-
-    @geozone_ids.include?(geozone.id)
-  end
-
-  def not_current_city_citizen?
-    !current_city_citizen?
+  def citizen?
+    (RegisteredAddress::District.any? && district.present?) ||
+      (Geozone.any? && geozone.present?)
   end
 
   def verified?
@@ -305,6 +301,16 @@ class User < ApplicationRecord
       "#{first_name} #{last_name}"
     else
       name
+    end
+  end
+
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
     end
   end
 

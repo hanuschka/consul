@@ -5,9 +5,7 @@
         <div class="custom-page--banner-title-wrapper">
           <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
-              <h1 class="custom-page--banner-title">
-                <%= @custom_page.title %>
-              </h1>
+              <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
           <% else %>
             <h1 class="custom-page--banner-title">
@@ -19,15 +17,11 @@
         <% if @custom_page.subtitle.present? || show_admin_controls_for_projekt?(@custom_page.projekt) %>
           <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
-              <div class="custom-page--banner-description">
-                <%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %>
-              </div>
+              <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
           <% else %>
             <div class="custom-page--banner-description">
-              <p style="font-size:inherit;">
-                <%= sanitize(@custom_page.subtitle, tags: ["br"]) %>
-              </p>
+              <p style="font-size:inherit;"><%= sanitize(@custom_page.subtitle, tags: ["br"]) %> </p>
             </div>
           <% end %>
         <% end %>
@@ -55,7 +49,7 @@
       <% end %>
 
       <% banner_image = capture do %>
-        <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox", role: "button", aria_label: t("custom.accessibility.banner-image.glightbox-aria-label") do %>
+        <%= link_to big_projekt_image_url, aria: { hidden: true }, target: "_blank", class: "glightbox", data: { gallery: "banner-#{@custom_page.id}" }, role: "button", aria_label: t("custom.accessibility.banner-image.glightbox-aria-label") do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>

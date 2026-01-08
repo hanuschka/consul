@@ -20,6 +20,7 @@
         <th class="text-center"><%= t("admin.proposals.index.id") %></th>
         <th><%= t("admin.proposals.index.title") %></th>
         <th><%= t("custom.proposals.index.projekts") %></th>
+        <th>Gebiet</th>
         <th><%= t("admin.proposals.index.author") %></th>
         <th><%= t("admin.proposals.index.milestones") %></th>
       </tr>
@@ -31,6 +32,7 @@
           <td class="text-center"><%= proposal.id %></td>
           <td><%= link_to proposal.title, admin_proposal_path(proposal) %></td>
           <td><%= proposal.projekt_phase.projekt.name if proposal.projekt_phase.projekt %></td>
+          <td><%= proposal.district&.name %></td>
           <td><%= proposal.author.username %></td>
           <td><%= proposal.milestones.count %></td>
         </tr>

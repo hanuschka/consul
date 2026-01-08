@@ -6,7 +6,10 @@ class Ckeditor::Document < Ckeditor::Asset
                            file_size: { less_than: MAX_FILE_SIZE }
 
   def url_content(editor_id: nil)
-    absolute_path?(editor_id) ? rails_blob_url(storage_data, host: Setting["url"]) : rails_blob_path(storage_data, only_path: true)
+    blob = storage_data.blob
+    return "" unless blob
+
+    absolute_path?(editor_id) ? ckeditor_asset_url(blob.key, host: Setting["url"]) : ckeditor_asset_path(blob.key, only_path: true)
   end
 
   def url_thumb(editor_id: nil)

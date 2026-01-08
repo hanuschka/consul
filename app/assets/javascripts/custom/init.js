@@ -15,6 +15,7 @@
       App.CkeEditorPlaceholder.initialize();
       App.QuestionWizard.initialize();
       App.AutosubmitFormElement.initialize();
+      App.AutosubmitFilterInput.initialize();
       App.NewSortable.initialize();
       App.DropdownMenuComponent.initialize();
       App.SidebarFilterComponent.initialize();
@@ -22,6 +23,7 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.ProposalAssistant.initialize();
+      App.HiddenTokenWidgetComponent.initialize();
     }
   };
 }).call(this);

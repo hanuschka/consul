@@ -1,10 +1,10 @@
 class Adm::ProjektPolicy < ApplicationPolicy
   def index?
-    true
+    @user&.administrator?
   end
 
   def show?
-    true
+    @user&.administrator?
   end
 
   class Scope < Scope

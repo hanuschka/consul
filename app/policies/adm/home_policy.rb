@@ -1,5 +1,5 @@
 class Adm::HomePolicy < ApplicationPolicy
   def show?
-    true
+    @user&.administrator?
   end
 end

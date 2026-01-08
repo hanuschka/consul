@@ -1,6 +1,6 @@
 class Adm::DeficiencyReportOfficerPolicy < ApplicationPolicy
   def index?
-    true
+    @user&.administrator?
   end
 
   class Scope < Scope

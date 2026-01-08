@@ -1,14 +1,14 @@
 class Adm::DocumentPolicy < ApplicationPolicy
   def index?
-    true
+    @user&.administrator?
   end
 
   def create?
-    true
+    @user&.administrator?
   end
 
   def destroy?
-    true
+    @user&.administrator?
   end
 
   class Scope < Scope

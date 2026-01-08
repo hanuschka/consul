@@ -1,9 +1,9 @@
 class Adm::NavbarItemPolicy < ApplicationPolicy
   def create?
-    true
+    @user&.administrator?
   end
 
   def destroy?
-    true
+    @user&.administrator?
   end
 end

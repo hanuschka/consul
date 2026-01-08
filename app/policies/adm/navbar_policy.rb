@@ -1,5 +1,5 @@
 class Adm::NavbarPolicy < ApplicationPolicy
   def show?
-    true
+    @user&.administrator?
   end
 end

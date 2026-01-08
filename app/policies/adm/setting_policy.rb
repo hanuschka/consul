@@ -1,5 +1,5 @@
 class Adm::SettingPolicy < ApplicationPolicy
   def update?
-    true
+    @user&.administrator?
   end
 end

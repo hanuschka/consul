@@ -1,10 +1,10 @@
 class Adm::LandingPagePolicy < ApplicationPolicy
   def index?
-    true
+    @user&.administrator?
   end
 
   def update?
-    true
+    @user&.administrator?
   end
 
   class Scope < Scope

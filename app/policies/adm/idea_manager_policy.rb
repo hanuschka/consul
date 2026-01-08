@@ -1,6 +1,6 @@
 class Adm::IdeaManagerPolicy < ApplicationPolicy
   def index?
-    true
+    @user&.administrator?
   end
 
   class Scope < Scope

@@ -48,11 +48,29 @@
   text-transform: lowercase;
 }
 
+.number-stats-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  .ai-stats-card {
+    flex-grow: 1;
+    width: calc(25% - 15px);
+    min-width: 150px;
+
+    @media (max-width: $small-tablet-viewport-start) {
+      width: calc(33% - 15px);
+    }
+    @media (max-width: 420px) {
+      width: 100%;
+    }
+  }
+}
+
 .ai-stats-card {
   background: #E7ECF2;
   border-radius: 12px;
   padding: 10px 25px 15px;
-  flex-grow: 1;
 
   h4 {
     margin: 0 0 1rem 0;

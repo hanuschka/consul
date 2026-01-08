@@ -59,7 +59,6 @@
 
       <% if completed_questions.any? %>
         <div class="ai-question-section--history" id="ai-questions-history">
-          <h4><%= t("custom.participation_stats.ai_question.history") %></h4>
           <% completed_questions.each do |question| %>
             <div class="ai-question-item ai-question-item--completed">
               <div class="ai-question-item--header">

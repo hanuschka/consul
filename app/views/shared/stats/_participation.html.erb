@@ -1,7 +1,7 @@
 <div id="participation_statistics">
 
   <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
-    <div class="ai-stats-cards">
+    <div class="ai-stats-cards margin-bottom">
       <div class="ai-stats-card">
         <h4><%= t("stats.budgets.total_investments") %></h4>
         <div class="number"><%= stats.total_budget_investments %></div>
@@ -42,7 +42,7 @@
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <div class="ai-stats-cards">
+    <div class="number-stats-cards margin-bottom">
       <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.proposals") %></h4>
         <div class="number"><%= stats.total_proposals %></div>

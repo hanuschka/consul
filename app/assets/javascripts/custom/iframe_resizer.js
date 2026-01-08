@@ -2,9 +2,9 @@
   "use strict";
   App.IframeResizer = {
     resize: function(iframe) {
-      // $(iframe).iFrameResize({
-      //   heightCalculationMethod: 'taggedElement'
-      // });
+      $(iframe).iFrameResize({
+        heightCalculationMethod: 'taggedElement'
+      });
     }
   }
 }).call(this);

@@ -4,10 +4,7 @@
 
 <div class="kern-container">
   <div class="kern-table-responsive" tabindex="0">
-    <table class="kern-table" data-controller="table"
-                              data-table-sort-by-value="<%= params[:sort_by] %>"
-                              data-table-sort-direction-value="<%= params[:sort_direction] %>"
-                              >
+    <table class="kern-table">
       <thead class="kern-table__head">
         <tr class="kern-table__row">
           <%= render Kern::Table::HeaderComponent.new(:username, User.human_attribute_name(:username), **@username_header_options) %>

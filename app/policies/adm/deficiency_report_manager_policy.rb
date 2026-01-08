@@ -1,4 +1,4 @@
-class Adm::IdeaManagerPolicy < ApplicationPolicy
+class Adm::DeficiencyReportManagerPolicy < ApplicationPolicy
   def index?
     true
   end

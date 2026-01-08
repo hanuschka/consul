@@ -1,34 +1,3 @@
-<%= turbo_stream.replace "search_results" do %>
-  <div id="search_results">
-    <% if @users.any? %>
-
-      <div class="kern-table-responsive" tabindex="0">
-        <table class="kern-table">
-          <thead class="kern-table__head">
-            <tr class="kern-table__row">
-              <th scope="col" class="kern-table__header"><%= User.human_attribute_name(:name) %></th>
-              <th scope="col" class="kern-table__header"><%= User.human_attribute_name(:email) %></th>
-              <th scope="col" class="kern-table__header"><%= t('shared.table.actions') %></th>
-            </tr>
-          </thead>
-          <tbody class="kern-table__body">
-            <% @users.each do |user| %>
-              <tr class="kern-table__row" id=<%= dom_id(user) %>>
-                <th scope="row" class="kern-table__header"><%= user.username %></th>
-                <td class="kern-table__cell"><%= user.email %></td>
-                <td class="kern-table__cell">
-                  <%= button_to adm_administrators_path(user_id: user.id), class: "kern-btn kern-btn--tertiary" do %>
-                    <span class="kern-label"><%= t('.add_administrator') %></span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-
-    <% else %>
-      <p><%= t('.no_results') %></p>
-    <% end %>
-  </div>
+<%= turbo_stream.update "search_results" do %>
+  <%= render partial: "adm/role_assignments/users", locals: { users: @users, role: :administrator } %>
 <% end %>

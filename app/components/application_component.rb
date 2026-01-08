@@ -1,6 +1,6 @@
 class ApplicationComponent < ViewComponent::Base
   include Turbo::FramesHelper
-  delegate :kern_submit_button, to: :helpers
+  delegate :kern_button, to: :helpers
 
 
 

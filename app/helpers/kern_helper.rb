@@ -1,10 +1,28 @@
 module KernHelper
-  def kern_submit_button(icon: nil, text: nil, autofocus: false)
-    button_tag(type: "submit", class: "kern-btn kern-btn--primary", autofocus: autofocus) do
+  def kern_button(icon: nil, text: nil, autofocus: false, type: :button, style: :primary)
+    button_tag(type: type, class: "kern-btn kern-btn--#{style}", autofocus: autofocus) do
       if icon.present?
         concat(content_tag(:span, icon, class: "kern-label material-symbols-outlined", "aria-hidden": "true"))
       end
       concat(content_tag(:span, text, class: "kern-label")) if text.present?
+    end
+  end
+
+  def kern_link_button(url, icon: nil, text: nil, autofocus: false, style: :primary, **options)
+    classes = ["kern-btn", "kern-btn--#{style}", options.delete(:class)].compact.join(" ")
+
+    link_to url, class: classes, autofocus: autofocus, **options do
+      if icon.present?
+        concat(content_tag(:span, icon, class: "kern-label material-symbols-outlined", "aria-hidden": "true"))
+      end
+
+      concat(content_tag(:span, text, class: "kern-label")) if text.present?
+    end
+  end
+
+  def new_resource_link(url, link_name, **options)
+    content_tag(:div, class: "d-flex justify-content-end mb-4") do
+      kern_link_button(url, text: link_name)
     end
   end
 

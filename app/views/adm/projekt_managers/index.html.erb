@@ -3,13 +3,13 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
-  <%= new_resource_link(new_adm_administrator_path, t('.new_link')) %>
+  <%= new_resource_link(new_adm_projekt_manager_path, t('.new_link')) %>
 
-  <% if @administrators.any? %>
-    <%= render 'adm/role_assignments/roles', roles: @administrators, pagy: @pagy %>
+  <% if @projekt_managers.any? %>
+    <%= render 'adm/role_assignments/roles', roles: @projekt_managers, pagy: @pagy %>
   <% else %>
     <div class="callout primary margin">
-      <%= t(".no_administrators") %>
+      <%= t(".no_projekt_managers") %>
     </div>
   <% end %>
 </div>

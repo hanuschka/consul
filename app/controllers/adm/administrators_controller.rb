@@ -11,9 +11,15 @@ module Adm
       ]
     end
 
-    def create
+    def new
       authorize [:adm, Administrator], :index?
-      @administrator = Administrator.find_or_create_by!(user_id: params[:user_id])
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles_subitems.administrators"), url: adm_administrators_path },
+        { name: t(".title") }
+      ]
     end
 
     def destroy
@@ -24,7 +30,8 @@ module Adm
 
     def search
       authorize [:adm, Administrator], :index?
-      @users = User.search(params[:search]).where.missing(:administrator).limit(4)
+      params[:role] = "administrator"
+      @users = User.search(params[:search]).limit(4)
     end
   end
 end

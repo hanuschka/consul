@@ -1,0 +1,3 @@
+<%= turbo_stream.replace @user do %>
+  <%= render partial: "adm/role_assignments/user", locals: { user: @user } %>
+<% end %>

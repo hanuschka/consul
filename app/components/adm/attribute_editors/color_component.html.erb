@@ -8,5 +8,5 @@
         label: false,
         data: { "adm-color-picker-target": "colorInput" } %>
 
-  <%= helpers.kern_submit_button(icon: "save", autofocus: request.format.turbo_stream?) %>
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
 <% end %>

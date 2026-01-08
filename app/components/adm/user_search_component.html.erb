@@ -1,0 +1,29 @@
+<div class="mb-5">
+  <h2 class="kern-title kern-title--small mb-3"><%= label %></h2>
+
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-4">
+      <p class="kern-body mb-3 mb-md-0"><%= sanitize description %></p>
+    </div>
+
+    <div class="kern-col-12 kern-col-md-6">
+      <div class="attribute-form string">
+        <%= form_tag(url, role: :search) do |f| %>
+          <div class="d-flex gap-2">
+            <div class="kern-form-input">
+              <%= text_field_tag :search, params[:search], class: "kern-form-input__input", placeholder: label, "aria-label": label %>
+            </div>
+
+            <%= kern_button(icon: :save, type: :submit) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="kern-row mb-5">
+  <div class="kern-col">
+    <%= turbo_frame_tag "search_results" %>
+  </div>
+</div>

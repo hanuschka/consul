@@ -4,9 +4,7 @@
 
 <div class="kern-container my-5">
 
-  <%= link_to new_adm_document_path, class: "kern-link new-table-item" do %>
-    <%= t('.new_document') %>
-  <% end %>
+  <%= new_resource_link(new_adm_document_path, t('.new_document')) %>
 
   <div class="kern-table-responsive" tabindex="0">
     <table class="kern-table">

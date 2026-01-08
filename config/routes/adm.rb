@@ -22,15 +22,32 @@ namespace :adm do
   # application
 
   # profiles
-  resources :administrators, only: [:index, :create, :destroy] do
+  resource :role_assignment, only: [] do
+    post :create
+    delete :destroy
+  end
+
+  resources :administrators, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
-  resources :projekt_managers, only: [:index, :new, :create, :destroy]
-  resources :deficiency_report_managers, only: [:index, :new, :create, :destroy]
-  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy]
-  resources :idea_managers, only: [:index, :new, :create, :destroy]
-  resources :moderators, only: [:index, :new, :create, :destroy]
-  resources :valuators, only: [:index, :new, :create, :destroy]
+  resources :projekt_managers, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
+  resources :deficiency_report_managers, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
+  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy] do
+    post :search, on: :collection
+  end
+  resources :idea_managers, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
+  resources :moderators, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
+  resources :valuators, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member

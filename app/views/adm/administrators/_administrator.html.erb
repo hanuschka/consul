@@ -1,10 +1,10 @@
-<tr class="kern-table__row" id=<%= dom_id(administrator) %>>
+<tr class="kern-table__row" id="<%= dom_id(administrator) %>">
   <th scope="row" class="kern-table__header"><%= administrator.id %></th>
   <td class="kern-table__cell"><%= administrator.name %></td>
   <td class="kern-table__cell"><%= administrator.email %></td>
   <td class="kern-table__cell">
     <% if current_user.id == administrator.user_id %>
-      Cannot delete
+      <%= t('.cannot_delete_self') %>
     <% else %>
       <%= link_to t('shared.delete'),
                   adm_administrator_path(administrator),

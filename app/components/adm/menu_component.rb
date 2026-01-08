@@ -70,7 +70,7 @@ class Adm::MenuComponent < ApplicationComponent
         { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
         { label: t("adm.menu.items.profiles_subitems.projekt_managers"), path: adm_projekt_managers_path },
         { label: t("adm.menu.items.profiles_subitems.deficiency_report_managers"), path: adm_deficiency_report_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.deficiency_report_officers"), path: adm_deficiency_report_officers_path },
+        # { label: t("adm.menu.items.profiles_subitems.deficiency_report_officers"), path: adm_deficiency_report_officers_path },
         { label: t("adm.menu.items.profiles_subitems.idea_managers"), path: adm_idea_managers_path },
 
         { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },

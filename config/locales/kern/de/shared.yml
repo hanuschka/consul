@@ -7,6 +7,8 @@ de:
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
     table:
       id: "ID"
+      username: "Benutzername"
+      email: "E-Mail"
       actions: "Aktionen"
       sort:
         action_label: "Sortieren nach %{column_label}, %{direction}"

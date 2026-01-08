@@ -1,5 +1,0 @@
-<%= turbo_stream.append "administrators" do %>
-  <%= render partial: "administrator", locals: { administrator: @administrator } %>
-<% end %>
-
-<%= turbo_stream.remove @administrator.user %>

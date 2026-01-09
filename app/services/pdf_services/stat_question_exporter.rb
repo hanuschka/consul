@@ -5,7 +5,7 @@ module PdfServices
     end
 
     def call
-      Prawn::Document.new(page_size: "A4", margin: 30) do |pdf|
+      Prawn::Document.new(page_size: "A4", margin: 45) do |pdf|
         pdf.text I18n.t("custom.participation_stats.ai_question.pdf_title"), size: 20, style: :bold
         pdf.move_down 10
 

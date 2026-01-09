@@ -120,23 +120,29 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     download_format = params[:format] || "txt"
+    filename = generate_stat_answer_filename(@projekt_phase, @stat_question, download_format)
 
     case download_format
     when "pdf"
       pdf = PdfServices::StatQuestionExporter.new(@stat_question).call
       send_data pdf.render,
-                filename: "stat_answer_#{@stat_question.id}.pdf",
+                filename: filename,
                 type: "application/pdf",
                 disposition: "attachment"
     else
       send_data generate_stat_answer_text(@stat_question),
-                filename: "stat_answer_#{@stat_question.id}.txt",
+                filename: filename,
                 type: "text/plain",
                 disposition: "attachment"
     end
   end
 
   private
+
+    def generate_stat_answer_filename(projekt_phase, stat_question, format)
+      projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")
+      "#{projekt_name}-ai-question-#{stat_question.id}.#{format}"
+    end
 
     def generate_stat_answer_text(stat_question)
       <<~TEXT

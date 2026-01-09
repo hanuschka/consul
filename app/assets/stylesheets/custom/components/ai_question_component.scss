@@ -118,6 +118,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-bottom: 3px;
 }
 
 .ai-question-item--date {
@@ -126,8 +127,6 @@
 
 .ai-question-item--actions {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .ai-question-item--actions .button {
@@ -156,13 +155,12 @@
 }
 
 .ai-question-item--answer {
-  white-space: pre-wrap;
   line-height: 1.6;
   color: #444;
 }
 
-.ai-question-item--answer p {
-  margin-bottom: 0.5rem;
+.ai-question-item--answer h4 {
+  font-size: 1.2rem;
 }
 
 .ai-question-item--answer p:last-child {

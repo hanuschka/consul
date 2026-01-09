@@ -12,15 +12,13 @@
     },
 
     bindFormSubmit: function() {
-      const form = document.getElementById("ai-question-form");
-      const $form = $(form);
-
-      $form.on("submit", (e) => {
+      $(document).on("submit", ".js-ai-question-form", (e) => {
         e.preventDefault();
 
-        const input = document.getElementById("ai-question-input");
-        const submit = document.getElementById("ai-question-submit");
-        const loading = document.getElementById("ai-question-loading");
+        const form = e.currentTarget;
+        const input = document.querySelector(".js-ai-question-input");
+        const submit = document.querySelector(".js-ai-question-submit");
+        const loading = document.querySelector(".js-ai-question-loading");
         const questionValue = input.value.trim();
 
         if (!questionValue) return;
@@ -32,29 +30,29 @@
         input.value = "";
         loading.classList.remove("hidden");
 
-        $.ajax({
-          url: form.action,
-          type: "POST",
-          data: formData,
-          processData: false,
-          contentType: false,
-          dataType: "json",
-          success: (data) => {
-            loading.classList.add("hidden");
-            this.handleSubmitSuccess(data);
-          },
-          error: (xhr) => {
-            loading.classList.add("hidden");
-            this.handleSubmitError(xhr);
+        fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
           }
+        })
+        .then(response => response.json())
+        .then((data) => {
+          loading.classList.add("hidden");
+          this.handleSubmitSuccess(data);
+        })
+        .catch((error) => {
+          loading.classList.add("hidden");
+          this.handleSubmitError({ responseText: JSON.stringify({ error: error.message }) });
         });
       });
     },
 
     handleSubmitSuccess: function(data) {
       const container = document.querySelector(".participation-stats-ai-question");
-      const pendingSection = document.getElementById("ai-questions-pending");
-      const pendingList = document.getElementById("ai-questions-pending-list");
+      const pendingSection = document.querySelector(".js-ai-questions-pending");
+      const pendingList = document.querySelector(".js-ai-questions-pending-list");
 
       if (!container || !pendingSection || !pendingList) return;
 
@@ -105,27 +103,29 @@
 
     pollStatus: function(questionId, statusUrl, element) {
       this.timers[questionId] = setInterval(() => {
-        $.ajax({
-          url: statusUrl,
-          type: "GET",
-          dataType: "json",
-          success: (data) => {
-            if (data.status === "completed" || data.status === "failed") {
-              clearInterval(this.timers[questionId]);
-              delete this.timers[questionId];
-              window.location.reload();
-            }
-          },
-          error: (xhr, status, error) => {
-            console.error("Error polling AI question status:", error);
+        fetch(statusUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
           }
+        })
+        .then(response => response.json())
+        .then((data) => {
+          if (data.status === "completed" || data.status === "failed") {
+            clearInterval(this.timers[questionId]);
+            delete this.timers[questionId];
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          console.error("Error polling AI question status:", error);
         });
       }, this.pollInterval);
     },
 
     updateFormState: function() {
-      const input = document.getElementById("ai-question-input");
-      const submit = document.getElementById("ai-question-submit");
+      const input = document.querySelector(".js-ai-question-input");
+      const submit = document.querySelector(".js-ai-question-submit");
       const hasPending = Object.keys(this.timers).length > 0 ||
                          document.querySelectorAll(".ai-question-item--pending").length > 0;
 

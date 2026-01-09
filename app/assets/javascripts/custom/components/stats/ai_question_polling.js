@@ -6,81 +6,82 @@
     timers: {},
 
     initialize: function() {
-      this.bindFormSubmit();
+      this.setupEventListeners();
       this.startPollingForPendingQuestions();
       this.updateFormState();
     },
 
-    bindFormSubmit: function() {
-      $(document).on("submit", ".js-ai-question-form", (e) => {
-        e.preventDefault();
+    setupEventListeners: function() {
+      $(document).on("submit", ".js-ai-question-form", this.handleFormSubmit.bind(this));
+    },
 
-        const $form = $(e.currentTarget);
-        const $input = $(".js-ai-question-input");
-        const $submit = $(".js-ai-question-submit");
-        const $loading = $(".js-ai-question-loading");
-        const questionValue = $input.val().trim();
+    handleFormSubmit(e) {
+      e.preventDefault();
 
-        if (!questionValue) return;
+      const $form = $(e.currentTarget);
+      const $input = $(".js-ai-question-input");
+      const questionValue = $input.val().trim();
 
-        const formData = $form.serialize();
+      if (!questionValue) return;
 
-        $input.prop("disabled", true);
-        $submit.prop("disabled", true);
-        $input.val("");
-        $loading.removeClass("hidden");
+      const formData = $form.serialize();
 
-        $.ajax({
-          url: $form.attr("action"),
-          method: "POST",
-          data: formData,
-          dataType: "json",
-          headers: {
-            "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
-          }
-        })
+      $input
+        .add(".js-ai-question-submit")
+        .prop("disabled", true);
+
+      $input.val("");
+
+      $(".js-ai-question-loading").removeClass("hidden");
+
+      $.ajax({
+        url: $form.attr("action"),
+        method: "POST",
+        data: formData,
+        dataType: "json",
+        headers: {
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
+        }
+      })
         .then((data) => {
-          $loading.addClass("hidden");
+          $(".js-ai-question-loading").addClass("hidden");
           this.handleSubmitSuccess(data);
         })
         .catch((xhr) => {
-          $loading.addClass("hidden");
+          $(".js-ai-question-loading").addClass("hidden");
           this.handleSubmitError(xhr);
         });
-      });
     },
 
     handleSubmitSuccess: function(data) {
-      const container = document.querySelector(".participation-stats-ai-question");
-      const pendingSection = document.querySelector(".js-ai-questions-pending");
-      const pendingList = document.querySelector(".js-ai-questions-pending-list");
+      const $container = $(".participation-stats-ai-question");
+      const $pendingList = $(".js-ai-questions-pending-list");
 
-      if (!container || !pendingSection || !pendingList) return;
+      if (!$container.length || !$pendingList.length) return;
 
-      const processingMessage = container.dataset.processingMessage;
       const questionText = data.question.length > 150
         ? data.question.substring(0, 150) + "..."
         : data.question;
 
-      const pendingItem = document.createElement("div");
-      pendingItem.className = "ai-question-item ai-question-item--pending";
-      pendingItem.dataset.questionId = data.id;
-      pendingItem.dataset.statusUrl = data.status_url;
-      pendingItem.innerHTML = `
-        <div class="shared-spinner shared-spinner--medium"></div>
-        <p class="ai-question-item--text">${this.escapeHtml(questionText)}</p>
-        <p class="ai-question-item--status">${processingMessage}</p>
-      `;
+      const $pendingItem = $(`
+        <div class="ai-question-item ai-question-item--pending"
+             data-question-id="${data.id}"
+             data-status-url="${data.status_url}">
+          <div class="shared-spinner shared-spinner--medium"></div>
+          <p class="ai-question-item--text">${$("<div>").text(questionText).html()}</p>
+          <p class="ai-question-item--status">${$container.data("processing-message")}</p>
+        </div>
+      `);
 
-      pendingList.insertBefore(pendingItem, pendingList.firstChild);
-      pendingSection.classList.remove("hidden");
+      $pendingList.prepend($pendingItem);
+      $(".js-ai-questions-pending").removeClass("hidden");
 
-      this.pollStatus(data.id, data.status_url, pendingItem);
+      this.pollStatus(data.id, data.status_url, $pendingItem);
       this.updateFormState();
     },
 
     handleSubmitError: function(xhr) {
-      let message = "Error creating question";
+      let message = "Fehler beim Erstellen der Frage";
       try {
         const response = JSON.parse(xhr.responseText);
         if (response.error) message = response.error;
@@ -90,19 +91,18 @@
     },
 
     startPollingForPendingQuestions: function() {
-      const pendingItems = document.querySelectorAll(".ai-question-item--pending");
-
-      pendingItems.forEach((item) => {
-        const questionId = item.dataset.questionId;
-        const statusUrl = item.dataset.statusUrl;
+      $(".ai-question-item--pending").each((_, item) => {
+        const $item = $(item);
+        const questionId = $item.data("question-id");
+        const statusUrl = $item.data("status-url");
 
         if (questionId && statusUrl && !this.timers[questionId]) {
-          this.pollStatus(questionId, statusUrl, item);
+          this.pollStatus(questionId, statusUrl, $item);
         }
       });
     },
 
-    pollStatus: function(questionId, statusUrl, element) {
+    pollStatus: function(questionId, statusUrl, $element) {
       this.timers[questionId] = setInterval(() => {
         $.ajax({
           url: statusUrl,
@@ -111,13 +111,11 @@
         })
         .then((data) => {
           if (data.status === "completed") {
-            clearInterval(this.timers[questionId]);
-            delete this.timers[questionId];
-            this.handleQuestionCompleted(data, element);
+            this.clearTimer(questionId);
+            this.handleQuestionCompleted(data, $element);
           } else if (data.status === "failed") {
-            clearInterval(this.timers[questionId]);
-            delete this.timers[questionId];
-            element.remove();
+            this.clearTimer(questionId);
+            $element.remove();
             this.updatePendingSection();
             this.updateFormState();
           }
@@ -128,41 +126,39 @@
       }, this.pollInterval);
     },
 
-    handleQuestionCompleted: function(data, pendingElement) {
-      const historySection = document.querySelector(".js-ai-questions-history");
+    clearTimer: function(questionId) {
+      clearInterval(this.timers[questionId]);
+      delete this.timers[questionId];
+    },
 
-      if (data.html && historySection) {
-        historySection.classList.remove("hidden");
-        historySection.insertAdjacentHTML("afterbegin", data.html);
+    handleQuestionCompleted: function(data, $pendingElement) {
+      const $historySection = $(".js-ai-questions-history");
+
+      if (data.html && $historySection.length) {
+        $historySection
+          .removeClass("hidden")
+          .prepend(data.html);
       }
 
-      pendingElement.remove();
+      $pendingElement.remove();
       this.updatePendingSection();
       this.updateFormState();
     },
 
     updatePendingSection: function() {
-      const pendingSection = document.querySelector(".js-ai-questions-pending");
-      const pendingList = document.querySelector(".js-ai-questions-pending-list");
+      const $pendingList = $(".js-ai-questions-pending-list");
 
-      if (pendingList.children.length === 0) {
-        pendingSection.classList.add("hidden");
+      if ($pendingList.children().length === 0) {
+        $(".js-ai-questions-pending").addClass("hidden");
       }
     },
 
     updateFormState: function() {
       const hasPending =
         Object.keys(this.timers).length > 0 ||
-          $(".ai-question-item--pending").length > 0;
+        $(".ai-question-item--pending").length > 0;
 
-      $(".js-ai-question-input").prop("disabled", hasPending)
-      $(".js-ai-question-submit").prop("disabled", hasPending)
-    },
-
-    escapeHtml: function(text) {
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
+      $(".js-ai-question-input, .js-ai-question-submit").prop("disabled", hasPending);
     }
   };
 }).call(this);

@@ -106,12 +106,22 @@ class ProjektPhasesController < ApplicationController
     @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    render json: {
+    response_data = {
       id: @stat_question.id,
       status: @stat_question.status,
       answer: @stat_question.answer,
       created_at: @stat_question.created_at
     }
+
+    if @stat_question.status == "completed"
+      response_data[:html] = render_to_string(
+        partial: "custom/particapation_stats/completed_question_item",
+        locals: { question: @stat_question, projekt_phase: @projekt_phase },
+        layout: false
+      )
+    end
+
+    render json: response_data
   end
 
   def download_stat_answer

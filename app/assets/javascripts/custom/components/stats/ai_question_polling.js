@@ -15,36 +15,37 @@
       $(document).on("submit", ".js-ai-question-form", (e) => {
         e.preventDefault();
 
-        const form = e.currentTarget;
-        const input = document.querySelector(".js-ai-question-input");
-        const submit = document.querySelector(".js-ai-question-submit");
-        const loading = document.querySelector(".js-ai-question-loading");
-        const questionValue = input.value.trim();
+        const $form = $(e.currentTarget);
+        const $input = $(".js-ai-question-input");
+        const $submit = $(".js-ai-question-submit");
+        const $loading = $(".js-ai-question-loading");
+        const questionValue = $input.val().trim();
 
         if (!questionValue) return;
 
-        const formData = new FormData(form);
+        const formData = $form.serialize();
 
-        input.disabled = true;
-        submit.disabled = true;
-        input.value = "";
-        loading.classList.remove("hidden");
+        $input.prop("disabled", true);
+        $submit.prop("disabled", true);
+        $input.val("");
+        $loading.removeClass("hidden");
 
-        fetch(form.action, {
+        $.ajax({
+          url: $form.attr("action"),
           method: "POST",
-          body: formData,
+          data: formData,
+          dataType: "json",
           headers: {
-            "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
           }
         })
-        .then(response => response.json())
         .then((data) => {
-          loading.classList.add("hidden");
+          $loading.addClass("hidden");
           this.handleSubmitSuccess(data);
         })
-        .catch((error) => {
-          loading.classList.add("hidden");
-          this.handleSubmitError({ responseText: JSON.stringify({ error: error.message }) });
+        .catch((xhr) => {
+          $loading.addClass("hidden");
+          this.handleSubmitError(xhr);
         });
       });
     },
@@ -103,18 +104,22 @@
 
     pollStatus: function(questionId, statusUrl, element) {
       this.timers[questionId] = setInterval(() => {
-        fetch(statusUrl, {
+        $.ajax({
+          url: statusUrl,
           method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          }
+          dataType: "json"
         })
-        .then(response => response.json())
         .then((data) => {
-          if (data.status === "completed" || data.status === "failed") {
+          if (data.status === "completed") {
             clearInterval(this.timers[questionId]);
             delete this.timers[questionId];
-            window.location.reload();
+            this.handleQuestionCompleted(data, element);
+          } else if (data.status === "failed") {
+            clearInterval(this.timers[questionId]);
+            delete this.timers[questionId];
+            element.remove();
+            this.updatePendingSection();
+            this.updateFormState();
           }
         })
         .catch((error) => {
@@ -123,14 +128,35 @@
       }, this.pollInterval);
     },
 
-    updateFormState: function() {
-      const input = document.querySelector(".js-ai-question-input");
-      const submit = document.querySelector(".js-ai-question-submit");
-      const hasPending = Object.keys(this.timers).length > 0 ||
-                         document.querySelectorAll(".ai-question-item--pending").length > 0;
+    handleQuestionCompleted: function(data, pendingElement) {
+      const historySection = document.querySelector(".js-ai-questions-history");
 
-      if (input) input.disabled = hasPending;
-      if (submit) submit.disabled = hasPending;
+      if (data.html && historySection) {
+        historySection.classList.remove("hidden");
+        historySection.insertAdjacentHTML("afterbegin", data.html);
+      }
+
+      pendingElement.remove();
+      this.updatePendingSection();
+      this.updateFormState();
+    },
+
+    updatePendingSection: function() {
+      const pendingSection = document.querySelector(".js-ai-questions-pending");
+      const pendingList = document.querySelector(".js-ai-questions-pending-list");
+
+      if (pendingList.children.length === 0) {
+        pendingSection.classList.add("hidden");
+      }
+    },
+
+    updateFormState: function() {
+      const hasPending =
+        Object.keys(this.timers).length > 0 ||
+          $(".ai-question-item--pending").length > 0;
+
+      $(".js-ai-question-input").prop("disabled", hasPending)
+      $(".js-ai-question-submit").prop("disabled", hasPending)
     },
 
     escapeHtml: function(text) {

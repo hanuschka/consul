@@ -38,8 +38,8 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    # sleep 10
-    @projekt_phase.generate_ai_stats
+    @projekt_phase.update(ai_stats_refresh_status: :pending)
+    AiStatsRefreshJob.perform_later(@projekt_phase.id)
 
     respond_to do |format|
       format.html do
@@ -47,8 +47,21 @@ class ProjektPhasesController < ApplicationController
                               projekt_phase_id: @projekt_phase.id,
                               section: "stats")
       end
-      format.js { head :ok }
+      format.js do
+        render json: {
+          status_url: ai_stats_status_projekt_phase_path(@projekt_phase)
+        }
+      end
     end
+  end
+
+  def ai_stats_status
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    render json: {
+      status: @projekt_phase.ai_stats_refresh_status || "pending"
+    }
   end
 
   def stats

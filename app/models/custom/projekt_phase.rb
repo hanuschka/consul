@@ -101,6 +101,13 @@ class ProjektPhase < ApplicationRecord
     verified: 2
   }
 
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
+
   validates :projekt, presence: true
   validate :type_must_be_valid
 

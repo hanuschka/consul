@@ -9,6 +9,10 @@
   z-index: 5;
   min-height: 30px;
 
+  &:active:focus {
+    outline: none;
+  }
+
   // &:hover {
   //   &:before {
   //     border-radius: 10px;

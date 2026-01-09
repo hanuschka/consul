@@ -7,17 +7,19 @@
     },
 
     attachEventListeners: function() {
-      $(document).on("ajax:beforeSend", "form[action*='refresh_ai_stats']", (event) => {
+      const $document = $(document);
+
+      $document.on("ajax:beforeSend", ".js-ai-stats-refresh-form", (event) => {
         this.showLoadingModal();
       });
 
-      $(document).on("ajax:success", "form[action*='refresh_ai_stats']", (event, data) => {
+      $document.on("ajax:success", ".js-ai-stats-refresh-form", (event, data) => {
         const form = event.currentTarget;
         const statusUrl = data.status_url || form.action.replace("refresh_ai_stats", "ai_stats_status");
         this.startPolling(statusUrl);
       });
 
-      $(document).on("ajax:error", "form[action*='refresh_ai_stats']", (event) => {
+      $document.on("ajax:error", ".js-ai-stats-refresh-form", (event) => {
         this.hideLoadingModal();
         alert("Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
       });

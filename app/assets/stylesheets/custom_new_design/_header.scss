@@ -147,13 +147,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     margin-top: 0.65rem;
 
     label {
-      color: $dark
+      color: $dark;
     }
 
     .locale-switcher {
 
       &:focus {
-        outline: 3px solid #ffbf47 !important
+        outline: 3px solid #ffbf47 !important;
       }
     }
   }

@@ -1,12 +1,12 @@
 class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
-  attr_reader :stat_question
+  attr_reader :stat_question, :projekt_phase
 
   def initialize(stat_question)
     @stat_question = stat_question
+    @projekt_phase = stat_question.projekt_phase
   end
 
   def call
-    projekt_phase = stat_question.projekt_phase
     resources = get_resources(projekt_phase)
 
     if resources.empty?
@@ -84,9 +84,11 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def build_prompt(items_text, resources)
       resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
+      projekt_title = projekt_phase.projekt.page.title
+      projekt_subtitle = projekt_phase.projekt.page.subtitle
 
       <<~TEXT
-        You are an assistant helping project managers analyze citizen participation #{resource_type}.
+        You are an assistant helping project managers analyze citizen participation #{resource_type} in #{projekt_title} with subtitle #{projekt_subtitle}.
 
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
@@ -95,12 +97,19 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
         #{items_text}
 
         Instructions:
-        - Provide a comprehensive, factual answer in #{target_language}
+        - Provide a synthesized, analytical answer in #{target_language}
         - Base your answer only on the provided #{resource_type}
         - If the question cannot be answered from the #{resource_type}, clearly state that
-        - Be specific and reference relevant #{resource_type} when applicable
-        - Structure your answer clearly with paragraphs if needed
+        - Focus on patterns, trends, and dominant themes across the #{resource_type}
+        - Do NOT list or enumerate all #{resource_type}
+        - Mention individual #{resource_type} only as illustrative examples when necessary
+        - Write in narrative, prosaic style (similar to an executive summary)
+        - Use semantic HTML structure (e.g. <h3>, <p>, <ul>, <li>) where helpful
+        - Use lists only to summarize key insights, not individual entries
+        - Structure your answer clearly with paragraphs
         - Dont use br html tags
+
+        Your goal is to produce a synthesized, human-readable analysis, not a raw data dump.
       TEXT
     end
 end

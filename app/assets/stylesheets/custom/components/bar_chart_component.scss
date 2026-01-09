@@ -1,27 +1,13 @@
 .proposal-phase-stats-charts {
   display: flex;
-  gap: 1.5rem;
+  gap: 15px;
   // margin: 2rem 0;
   flex-wrap: wrap;
 
-  .bar-chart-card {
+  .ai-stats-card {
     flex: 1;
     min-width: 300px;
   }
-}
-
-.bar-chart-card {
-  background: #E7ECF2;
-  border-radius: 12px;
-  padding: 10px 25px;
-}
-
-.bar-chart-title {
-  margin: 0 0 1rem 0;
-  font-size: 22px;
-  margin-bottom: 10px !important;
-  font-weight: 600;
-  color: #333;
 }
 
 .bar-chart-container {

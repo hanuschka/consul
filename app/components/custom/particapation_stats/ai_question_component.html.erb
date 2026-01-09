@@ -2,11 +2,11 @@
   <div class="participation-stats-ai-question"
        data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
        data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
-    <section class="ai-question-section">
+    <section class="ai-stats-card">
       <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
         <% c.with_head do %>
           <div>
-            <h3 class="ai-question-section--title">
+            <h3 class="ai-stats-card--title">
               <%= t("custom.participation_stats.ai_question.title") %>
             </h3>
             <p class="ai-question-section--subtitle">
@@ -59,23 +59,12 @@
 
       <% if completed_questions.any? %>
         <div class="ai-question-section--history" id="ai-questions-history">
-          <h4><%= t("custom.participation_stats.ai_question.history") %></h4>
           <% completed_questions.each do |question| %>
             <div class="ai-question-item ai-question-item--completed">
               <div class="ai-question-item--header">
                 <span class="ai-question-item--date">
                   <%= l(question.created_at, format: :short) %>
                 </span>
-                <div class="ai-question-item--actions">
-                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "txt"),
-                              class: "button small" do %>
-                    <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
-                  <% end %>
-                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "pdf"),
-                              class: "button small secondary" do %>
-                    <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
-                  <% end %>
-                </div>
               </div>
               <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
                 <% c.with_head do %>
@@ -85,6 +74,16 @@
                   <div class="ai-question-item--answer"><%= question.answer %></div>
                 <% end %>
               <% end %>
+              <div class="ai-question-item--actions">
+                <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "txt"),
+                            class: "button small" do %>
+                  <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
+                <% end %>
+                <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "pdf"),
+                            class: "button small secondary" do %>
+                  <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
+                <% end %>
+              </div>
             </div>
           <% end %>
         </div>

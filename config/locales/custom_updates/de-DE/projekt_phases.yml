@@ -14,6 +14,7 @@ de:
         refresh_stats_button: "Statistiken aktualisieren"
         refresh_ai_stats_button: "AI-Statistiken aktualisieren"
         refresh_ai_stats_loading: "Bitte warten, AI-Statistiken werden aktualisiert..."
+        refresh_ai_stats_loading_note: "Die Aktualisierung kann je nach Anzahl der Ressourcen und Kommentare einige Minuten dauern."
         refresh_ai_stats_error: "Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut."
         generate_ai_summary_button: "AI-Summary generieren"
         ai_summary_generated: "AI Summary wurde erfolgreich generiert"

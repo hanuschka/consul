@@ -2,19 +2,6 @@
   margin-bottom: 1rem;
 }
 
-.ai-question-section {
-  background: #E7ECF2;
-  border-radius: 12px;
-  padding: 20px 25px;
-}
-
-.ai-question-section--title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-}
-
 .ai-question-section--subtitle {
   margin: 0.5rem 0 0 0;
   font-size: 14px;
@@ -100,13 +87,12 @@
 }
 
 .ai-question-item {
-  padding: 1rem 2rem;
-  padding-top: 0;
+  padding: 0.5rem 2rem;
   margin-bottom: 1rem;
   background: white;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
-  background: #dae4f0;
+  background: white;
 }
 
 .ai-question-item--pending {

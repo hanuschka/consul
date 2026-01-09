@@ -4,7 +4,7 @@
   <% if gender? %>
     <div class="user-segments-stats--gender-cards">
       <% gender_cards.each do |card| %>
-        <div class="user-segments-stats--gender-card">
+        <div class="ai-stats-card user-segments-stats--gender-card">
           <h4 class="user-segments-stats--gender-card-title"><%= t("custom.shared.user_segments.#{card[:key]}") %></h4>
           <div class="user-segments-stats--gender-card-number"><%= card[:count] %></div>
           <% if percentage_diff(card[:percentage]) %>

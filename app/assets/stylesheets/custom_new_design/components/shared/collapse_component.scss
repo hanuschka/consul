@@ -9,6 +9,15 @@
   z-index: 5;
   min-height: 30px;
 
+  &:active:focus {
+    outline: none;
+  }
+
+  // &:focus {
+  //   outline: 3px solid #ffbf47 !important;
+  //   outline-style: inset;
+  // }
+
   // &:hover {
   //   &:before {
   //     border-radius: 10px;

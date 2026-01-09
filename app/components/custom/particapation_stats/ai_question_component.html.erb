@@ -18,21 +18,18 @@
           <div class="ai-question-section--form">
         <%= form_tag create_stat_question_projekt_phase_path(@projekt_phase),
                      method: :post,
-                     id: "ai-question-form",
-                     class: "ai-question-form" do %>
+                     class: "ai-question-form js-ai-question-form" do %>
           <%= text_area_tag :question,
                             nil,
                             placeholder: t("custom.participation_stats.ai_question.placeholder"),
-                            class: "ai-question-form--input",
-                            id: "ai-question-input",
+                            class: "ai-question-form--input js-ai-question-input",
                             required: true %>
           <div class="ai-question-form--actions">
             <%= button_tag type: "submit",
-                           class: "button ai-question-form--submit",
-                           id: "ai-question-submit" do %>
+                           class: "button ai-question-form--submit js-ai-question-submit" do %>
               <%= t("custom.participation_stats.ai_question.submit") %>
             <% end %>
-            <div class="ai-question-form--loading hidden" id="ai-question-loading">
+            <div class="ai-question-form--loading hidden js-ai-question-loading">
               <%= render Shared::SpinnerComponent.new(size: :small) %>
               <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
             </div>
@@ -40,9 +37,9 @@
         <% end %>
       </div>
 
-      <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %>" id="ai-questions-pending">
+      <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %> js-ai-questions-pending">
         <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
-        <div id="ai-questions-pending-list">
+        <div class="js-ai-questions-pending-list">
           <% pending_questions.each do |question| %>
             <div class="ai-question-item ai-question-item--pending"
                  data-question-id="<%= question.id %>"
@@ -61,11 +58,6 @@
         <div class="ai-question-section--history" id="ai-questions-history">
           <% completed_questions.each do |question| %>
             <div class="ai-question-item ai-question-item--completed">
-              <div class="ai-question-item--header">
-                <span class="ai-question-item--date">
-                  <%= l(question.created_at, format: :short) %>
-                </span>
-              </div>
               <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
                 <% c.with_head do %>
                   <h3 class="ai-question-item--question"><%= question.question %></h3>
@@ -76,15 +68,22 @@
                   </div>
                 <% end %>
               <% end %>
-              <div class="ai-question-item--actions">
-                <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "txt"),
-                            class: "button small" do %>
-                  <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
-                <% end %>
-                <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "pdf"),
-                            class: "button small secondary" do %>
-                  <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
-                <% end %>
+              <div class="ai-question-item--actions u-flex u-justify-between u-items-center">
+                <div class="u-flex u-gap-10">
+
+                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "txt"),
+                    class: "button small" do %>
+                    <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
+                  <% end %>
+                  <%= link_to download_stat_answer_projekt_phase_path(@projekt_phase, question_id: question.id, format: "pdf"),
+                    class: "button small secondary" do %>
+                    <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
+                  <% end %>
+                </div>
+
+                <span class="ai-question-item--date">
+                  <%= l(question.created_at, format: :short) %>
+                </span>
               </div>
             </div>
           <% end %>

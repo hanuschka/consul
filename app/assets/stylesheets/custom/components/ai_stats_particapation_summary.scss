@@ -41,7 +41,7 @@
 }
 
 .participation-stats-summary--tone-value {
-  font-size: 32px;
+  font-size: 25px;
   font-weight: 700;
   color: #000;
   line-height: 1.2;
@@ -72,14 +72,6 @@
   border-radius: 12px;
   padding: 10px 25px 15px;
 
-  h4 {
-    margin: 0 0 1rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 5px !important;
-    color: #333;
-  }
-
   .number {
     font-size: 2.7rem;
     font-weight: bold;
@@ -88,10 +80,18 @@
   }
 }
 
+.ai-stats-card--subtitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  // margin-bottom: 2px !important;
+  color: #333;
+}
+
 .ai-stats-card--title {
   margin: 0 0 0.5rem 0;
   font-size: 24px !important;
-  font-weight: 600;
+  font-weight: bold;
   color: #333;
   margin-bottom: 10px !important;
 }

@@ -1,7 +1,9 @@
 <% if can?(:refresh_stats, @projekt_phase) %>
-  <div class="margin-bottom">
-    <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
-    <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary", form_class: "js-ai-stats-refresh-form", remote: true, data: { disable_with: false }) %>
+  <div class="u-flex u-gap-10 margin-bottom u-full-width u-justify-between">
+    <div class="u-flex u-gap-10">
+      <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
+      <%= button_to(t("custom.projekt_phases.stats.refresh_ai_stats_button"), refresh_ai_stats_projekt_phase_path(@projekt_phase), class: "button secondary", form_class: "js-ai-stats-refresh-form", remote: true, data: { disable_with: false }) %>
+    </div>
 
     <% unless local_assigns[:hide_stats_link] %>
       <%= link_to stats_projekt_phase_path(@projekt_phase), data: { turbolinks: false }, class: "button with-icon" do %>

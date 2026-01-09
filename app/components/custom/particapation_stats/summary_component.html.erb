@@ -11,7 +11,7 @@
   </section>
 
   <section class="ai-stats-card participation-stats-summary--tone">
-    <h3 class="participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
+    <h3 class="ai-stats-card--title participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
     <div class="participation-stats-summary--tone-value">
       <% if tone_of_participation.present? %>
         <%= tone_of_participation %>
@@ -23,7 +23,7 @@
 
   <% if tone_of_comments.present? %>
     <section class="ai-stats-card participation-stats-summary--tone">
-      <h3 class="participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
+      <h3 class="ai-stats-card--title participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
       <div class="participation-stats-summary--tone-value">
         <%= tone_of_comments %>
       </div>

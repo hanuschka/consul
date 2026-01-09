@@ -145,6 +145,8 @@ class ProjektPhasesController < ApplicationController
     end
 
     def generate_stat_answer_text(stat_question)
+      plain_answer = helpers.strip_tags(stat_question.answer.to_s)
+
       <<~TEXT
         AI Question Analysis
         Date: #{stat_question.created_at.strftime("%d %b %Y %H:%M")}
@@ -153,7 +155,7 @@ class ProjektPhasesController < ApplicationController
         #{stat_question.question}
 
         Answer:
-        #{stat_question.answer}
+        #{plain_answer}
       TEXT
     end
 end

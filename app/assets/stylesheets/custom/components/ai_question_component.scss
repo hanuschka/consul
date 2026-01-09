@@ -87,7 +87,7 @@
 }
 
 .ai-question-item {
-  padding: 0.5rem 2rem;
+  padding: 15px 2rem 17px;
   margin-bottom: 1rem;
   background: white;
   border-radius: 8px;
@@ -127,6 +127,7 @@
 
 .ai-question-item--actions {
   display: flex;
+  margin-top: 10px;
 }
 
 .ai-question-item--actions .button {
@@ -149,9 +150,9 @@
 }
 
 .ai-question-item--question {
-  margin-bottom: 0;
-  font-size: 1rem;
-  color: #333;
+  margin-bottom: 0 !important;
+  font-size: 24px !important;
+  text-align: left !important;
 }
 
 .ai-question-item--answer {

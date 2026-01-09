@@ -71,7 +71,9 @@
                   <h3 class="ai-question-item--question"><%= question.question %></h3>
                 <% end %>
                 <% c.with_body do %>
-                  <div class="ai-question-item--answer"><%= question.answer %></div>
+                  <div class="ai-question-item--answer">
+                    <%= sanitize(question.answer, tags: %w[h3 p ul li]) %>
+                  </div>
                 <% end %>
               <% end %>
               <div class="ai-question-item--actions">

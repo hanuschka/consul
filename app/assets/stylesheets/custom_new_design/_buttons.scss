@@ -28,6 +28,11 @@ button {
       color: white;
     }
 
+    &.-no-margin {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
     &.-round-icon-button {
       padding: 0 !important;
       border-radius: 50%;
@@ -158,6 +163,10 @@ button {
           color: #cc4b37;
         }
       }
+    }
+
+    &.-compact {
+      padding: 6px 10px !important;
     }
 
     &.full-width {

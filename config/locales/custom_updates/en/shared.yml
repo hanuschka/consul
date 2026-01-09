@@ -51,6 +51,8 @@ en:
         no_resources: "No proposals found to analyze."
         error: "An error occurred while generating the answer. Please try again."
         pdf_title: "AI Question Analysis"
+        pdf_projekt: "Project"
+        pdf_phase: "Phase"
         pdf_date: "Date"
         pdf_question: "Question"
         pdf_answer: "Answer"

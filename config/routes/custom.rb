@@ -1,4 +1,5 @@
-get "ckeditor/assets", to: "ckeditor/assets#index"
+get "ckeditor/assets",      to: "ckeditor/assets#index"
+get "ckeditor/assets/:key", to: "ckeditor/assets#show", as: :ckeditor_asset
 
 namespace :ckeditor do
   resources :pictures, only: [:create, :update, :destroy] do

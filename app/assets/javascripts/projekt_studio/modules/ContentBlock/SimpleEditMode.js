@@ -123,11 +123,14 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
         a.outerHTML = a.outerHTML
       })
 
-      $contentBlock.find("a.glightbox").addClass("glightbox-disabled")
-      $contentBlock.find("a.glightbox").removeClass("glightbox")
+      $contentBlock.find("a.glightbox")
+        .addClass("glightbox-disabled glightbox-link")
+        .removeClass("glightbox")
     } else {
-      $contentBlock.find("a.glightbox-disabled").addClass("glightbox")
-      $contentBlock.find("a.glightbox-disabled").removeClass("glightbox-disabled")
+      $contentBlock
+        .find("a.glightbox-disabled")
+        .addClass("glightbox")
+        .removeClass("glightbox-disabled")
 
       setTimeout(() => {
         App.ImageGallery.initialize();

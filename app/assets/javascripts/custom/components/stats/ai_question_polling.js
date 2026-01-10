@@ -13,9 +13,10 @@
 
     setupEventListeners: function() {
       $(document).on("submit", ".js-ai-question-form", this.handleFormSubmit.bind(this));
+      $(document).on("click", ".js-delete-stat-question", this.handleDelete.bind(this));
     },
 
-    handleFormSubmit(e) {
+    handleFormSubmit: function(e) {
       e.preventDefault();
 
       const $form = $(e.currentTarget);
@@ -159,6 +160,30 @@
         $(".ai-question-item--pending").length > 0;
 
       $(".js-ai-question-input, .js-ai-question-submit").prop("disabled", hasPending);
+    },
+
+    handleDelete: function(e) {
+      const $button = $(e.target).closest(".js-delete-stat-question");
+      const confirmMessage = $button.data("confirm-message");
+
+      if (!confirm(confirmMessage)) return;
+
+      const $questionItem = $button.closest(".ai-question-item--completed");
+
+      $questionItem.remove();
+
+      $.ajax({
+        url: $button.data("url"),
+        method: "DELETE",
+        dataType: "json",
+        headers: {
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
+        }
+      })
+      .then(() => { })
+      .catch(() => {
+        alert("Fehler beim Löschen der Frage");
+      });
     }
   };
 }).call(this);

@@ -147,6 +147,16 @@ class ProjektPhasesController < ApplicationController
     end
   end
 
+  def delete_stat_question
+    @projekt_phase = ProjektPhase.find(params[:id])
+    @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    @stat_question.destroy
+
+    render json: { success: true }
+  end
+
   private
 
     def generate_stat_answer_filename(projekt_phase, stat_question, format)

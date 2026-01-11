@@ -6,7 +6,11 @@ class AiStatsRefreshJob < ApplicationJob
     projekt_phase.update(ai_stats_refresh_status: :processing)
 
     stats = AiAnalytics::GenerateAllStats.call(projekt_phase)
-    projekt_phase.update(ai_stats: stats, ai_stats_refresh_status: :completed)
+    projekt_phase.update(
+      ai_stats: stats,
+      ai_stats_refresh_status: :completed,
+      ai_stats_refreshed_at: Time.current
+    )
   rescue => e
     projekt_phase.update(ai_stats_refresh_status: :failed)
     raise e

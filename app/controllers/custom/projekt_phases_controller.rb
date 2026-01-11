@@ -28,10 +28,15 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     @projekt_phase.stats_version&.destroy!
+    @projekt_phase.update(stats_refreshed_at: Time.current)
 
-    redirect_to page_path(@projekt_phase.projekt.page.slug,
-                          projekt_phase_id: @projekt_phase.id,
-                          section: "stats")
+    redirect_back(
+      fallback_location: page_path(
+        @projekt_phase.projekt.page.slug,
+        projekt_phase_id: @projekt_phase.id,
+        section: "stats"
+      )
+    )
   end
 
   def refresh_ai_stats

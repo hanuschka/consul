@@ -35,14 +35,11 @@
 
       $(".js-ai-question-loading").removeClass("hidden");
 
-      $.ajax({
+      App.Ajax.request({
         url: $form.attr("action"),
         method: "POST",
         data: formData,
-        dataType: "json",
-        headers: {
-          "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
-        }
+        dataType: "json"
       })
         .then((data) => {
           $(".js-ai-question-loading").addClass("hidden");
@@ -105,7 +102,7 @@
 
     pollStatus: function(questionId, statusUrl, $element) {
       this.timers[questionId] = setInterval(() => {
-        $.ajax({
+        App.Ajax.request({
           url: statusUrl,
           method: "GET",
           dataType: "json"
@@ -172,13 +169,10 @@
 
       $questionItem.remove();
 
-      $.ajax({
+      App.Ajax.request({
         url: $button.data("url"),
         method: "DELETE",
-        dataType: "json",
-        headers: {
-          "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
-        }
+        dataType: "json"
       })
       .then(() => { })
       .catch(() => {

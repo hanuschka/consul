@@ -2,6 +2,10 @@ resources :polls, only: [:show, :index] do
   member do
     get :stats
     get :results
+    get :evaluation
+    get :report
+    post :refresh_ai_stats
+    get :ai_stats_status
   end
 
   resources :questions, controller: "polls/questions", shallow: true do

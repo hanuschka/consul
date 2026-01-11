@@ -45,6 +45,8 @@ en:
         info_menu: Poll
         stats_menu: Stats
         results_menu: Results
+        evaluation_menu: Evaluation
+        report_menu: Report
         vote_counted: Your vote was counted!
         vote_uncounted: Your vote was withdrawn
         results:
@@ -55,6 +57,16 @@ en:
           <p>Thank you for participation.</p>
           <p>You have the opportunity to edit your answers until the participation deadline expires.
           Your information will then be transmitted to the system automatically and anonymously.</p>
+      evaluation:
+        title: AI Evaluation
+      report:
+        title: AI Report
+      ai_stats:
+        refresh_button: Refresh AI Analysis
+        last_updated: "AI analysis last updated: %{time}"
+        loading: Generating AI analysis...
+        loading_note: This may take a few moments. Please wait.
+        processing: AI analysis is being generated...
   polls:
     index:
       filters:

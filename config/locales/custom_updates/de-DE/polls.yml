@@ -46,6 +46,8 @@ de:
         info_menu: Abstimmung
         stats_menu: Statistik
         results_menu: Ergebnis
+        evaluation_menu: Bewertung
+        report_menu: Report
         vote_counted: Ihre Stimme wurde gezählt!
         vote_uncounted: Ihre Stimme wurde entfernt
         results:
@@ -56,6 +58,16 @@ de:
           <p>Vielen Dank für Ihre Beteiligung.</p>
           <p>Bis zum Ablauf der Teilnahmefrist haben Sie die Möglichkeit, Ihre Antworten zu bearbeiten.
           Danach werden Ihre Angaben automatisch und anonym an das System übermittelt.</p>
+      evaluation:
+        title: AI Bewertung
+      report:
+        title: AI Report
+      ai_stats:
+        refresh_button: AI-Analyse aktualisieren
+        last_updated: "AI-Analyse zuletzt aktualisiert: %{time}"
+        loading: AI-Analyse wird generiert...
+        loading_note: Dies kann einen Moment dauern. Bitte warten.
+        processing: AI-Analyse wird generiert...
   polls:
     index:
       filters:

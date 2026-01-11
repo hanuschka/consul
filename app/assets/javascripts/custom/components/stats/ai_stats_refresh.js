@@ -62,19 +62,11 @@
     },
 
     showLoadingModal: function() {
-      const modal = document.getElementById("ai-stats-loading-modal");
-      if (modal) {
-        modal.style.display = "flex";
-        document.body.style.overflow = "hidden";
-      }
+      App.SharedModal.open("ai-stats-loading-modal");
     },
 
     hideLoadingModal: function() {
-      const modal = document.getElementById("ai-stats-loading-modal");
-      if (modal) {
-        modal.style.display = "none";
-        document.body.style.overflow = "";
-      }
+      App.SharedModal.closeById("ai-stats-loading-modal");
     }
   };
 }).call(this);

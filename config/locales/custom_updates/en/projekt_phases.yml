@@ -12,7 +12,9 @@ en:
         banner_title: "Stats for %{phase_title}"
         back_to_phase: Back to projekt
         refresh_stats_button: "Refresh statistics"
+        refresh_stats_last_updated: "Statistics last updated: %{time}"
         refresh_ai_stats_button: "Refresh AI statistics"
+        refresh_ai_stats_last_updated: "AI statistics last updated: %{time}"
         refresh_ai_stats_loading: "Please wait, AI statistics are being updated..."
         refresh_ai_stats_loading_note: "This may take a couple of minutes depending on the amount of resources and comments."
         refresh_ai_stats_error: "Error updating AI statistics. Please try again."

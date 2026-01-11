@@ -56,8 +56,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #666;
-  font-size: 0.875rem;
+  color: #333;
 }
 
 .ai-question-form--loading.hidden {
@@ -69,17 +68,6 @@
 }
 
 .ai-question-section--pending h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.ai-question-section--history {
-  margin-top: 1.5rem;
-}
-
-.ai-question-section--history h4 {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1rem;

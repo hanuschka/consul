@@ -13,14 +13,26 @@
     <% end %>
   </div>
 
-  <div id="ai-stats-loading-modal" class="ai-stats-loading-modal" style="display: none;">
-    <div class="ai-stats-loading-modal--overlay"></div>
-    <div class="ai-stats-loading-modal--content">
-      <div class="ai-stats-loading-modal--spinner"></div>
-      <p class="ai-stats-loading-modal--message"><%= t("custom.projekt_phases.stats.refresh_ai_stats_loading") %></p>
-      <p class="ai-stats-loading-modal--note"><%= t("custom.projekt_phases.stats.refresh_ai_stats_loading_note") %></p>
+  <% if @projekt_phase.stats_refreshed_at.present? || @projekt_phase.ai_stats_refreshed_at.present? %>
+    <div class="stats-last-updated-container">
+      <% if @projekt_phase.stats_refreshed_at.present? %>
+        <p class="stats-last-updated-item">
+          <%= t("custom.projekt_phases.stats.refresh_stats_last_updated", time: l(@projekt_phase.stats_refreshed_at, format: :short)) %>
+        </p>
+      <% end %>
+      <% if @projekt_phase.ai_stats_refreshed_at.present? %>
+        <p class="stats-last-updated-item">
+          <%= t("custom.projekt_phases.stats.refresh_ai_stats_last_updated", time: l(@projekt_phase.ai_stats_refreshed_at, format: :short)) %>
+        </p>
+      <% end %>
     </div>
-  </div>
+  <% end %>
+
+  <%= render Shared::LoadingModalComponent.new(
+    id: "ai-stats-loading-modal",
+    message: t("custom.projekt_phases.stats.refresh_ai_stats_loading"),
+    note: t("custom.projekt_phases.stats.refresh_ai_stats_loading_note")
+  ) %>
 <% end %>
 
 <div class='participation-stats'>

@@ -105,6 +105,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
         - Mention individual #{resource_type} only as illustrative examples when necessary
         - Write in narrative, prosaic style (similar to an executive summary)
         - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful
+        - Dont add spaces before <li> items.
         - Use lists only to summarize key insights, not individual entries
         - Structure your answer clearly with paragraphs
         - Dont use br html tags

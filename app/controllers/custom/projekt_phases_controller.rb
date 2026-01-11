@@ -28,10 +28,15 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     @projekt_phase.stats_version&.destroy!
+    @projekt_phase.update(stats_refreshed_at: Time.current)
 
-    redirect_to page_path(@projekt_phase.projekt.page.slug,
-                          projekt_phase_id: @projekt_phase.id,
-                          section: "stats")
+    redirect_back(
+      fallback_location: page_path(
+        @projekt_phase.projekt.page.slug,
+        projekt_phase_id: @projekt_phase.id,
+        section: "stats"
+      )
+    )
   end
 
   def refresh_ai_stats
@@ -106,12 +111,22 @@ class ProjektPhasesController < ApplicationController
     @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    render json: {
+    response_data = {
       id: @stat_question.id,
       status: @stat_question.status,
       answer: @stat_question.answer,
       created_at: @stat_question.created_at
     }
+
+    if @stat_question.status == "completed"
+      response_data[:html] = render_to_string(
+        partial: "custom/particapation_stats/completed_question_item",
+        locals: { question: @stat_question, projekt_phase: @projekt_phase },
+        layout: false
+      )
+    end
+
+    render json: response_data
   end
 
   def download_stat_answer
@@ -120,25 +135,43 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     download_format = params[:format] || "txt"
+    filename = generate_stat_answer_filename(@projekt_phase, @stat_question, download_format)
 
     case download_format
     when "pdf"
       pdf = PdfServices::StatQuestionExporter.new(@stat_question).call
       send_data pdf.render,
-                filename: "stat_answer_#{@stat_question.id}.pdf",
+                filename: filename,
                 type: "application/pdf",
                 disposition: "attachment"
     else
       send_data generate_stat_answer_text(@stat_question),
-                filename: "stat_answer_#{@stat_question.id}.txt",
+                filename: filename,
                 type: "text/plain",
                 disposition: "attachment"
     end
   end
 
+  def delete_stat_question
+    @projekt_phase = ProjektPhase.find(params[:id])
+    @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    @stat_question.destroy
+
+    render json: { success: true }
+  end
+
   private
 
+    def generate_stat_answer_filename(projekt_phase, stat_question, format)
+      projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")
+      "#{projekt_name}-ai-question-#{stat_question.id}.#{format}"
+    end
+
     def generate_stat_answer_text(stat_question)
+      plain_answer = helpers.strip_tags(stat_question.answer.to_s)
+
       <<~TEXT
         AI Question Analysis
         Date: #{stat_question.created_at.strftime("%d %b %Y %H:%M")}
@@ -147,7 +180,7 @@ class ProjektPhasesController < ApplicationController
         #{stat_question.question}
 
         Answer:
-        #{stat_question.answer}
+        #{plain_answer}
       TEXT
     end
 end

@@ -1,0 +1,7 @@
+<%= render Shared::ModalComponent.new(id: id, closeable: false) do %>
+  <div class="shared-loading-modal--spinner"></div>
+  <p class="shared-loading-modal--message"><%= message %></p>
+  <% if note.present? %>
+    <p class="shared-loading-modal--note"><%= note %></p>
+  <% end %>
+<% end %>

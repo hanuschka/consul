@@ -47,15 +47,20 @@ en:
         processing_message: "I am reviewing all proposals and will provide an answer shortly."
         download_txt: "Download TXT"
         download_pdf: "Download PDF"
+        download_all_txt: "Download All Questions as TXT"
+        download_all_pdf: "Download All Questions as PDF"
         retention_hint: "Download answers for offline access or archiving."
         no_resources: "No proposals found to analyze."
         error: "An error occurred while generating the answer. Please try again."
         pdf_title: "AI Question Analysis"
+        pdf_all_questions_title: "AI Question Analysis - All Questions"
         pdf_projekt: "Project"
         pdf_phase: "Phase"
         pdf_date: "Date"
+        pdf_exported_at: "Exported"
         pdf_question: "Question"
         pdf_answer: "Answer"
+        pdf_no_questions: "No answered questions available."
     ai_stats:
       topic_clustering:
         title: Topic Groups

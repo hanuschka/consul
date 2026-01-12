@@ -33,61 +33,7 @@ button {
       margin-bottom: 0;
     }
 
-    &.-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      transition: 50ms ease background-color;
-      background-color: $light-gray-2;
-      margin-bottom: 0;
-      margin-top: 0;
 
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: darken($light-gray-2, 2);
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
-    }
-
-    &.-transparent-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      width: 1.7em;
-      height: 1.7em;
-      transition: 50ms ease background-color;
-      background: transparent;
-
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: #ededed;
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
-    }
-    &.-transparent-round-icon-button-black {
-      @extend .-transparent-round-icon-button;
-      color: black;
-
-      &:hover {
-        background-color: #00000012;
-      }
-
-      &:active {
-        background-color: #00000012;
-      }
-    }
     &.-round {
       border-radius: 38px !important;
     }
@@ -266,4 +212,64 @@ button {
   width: 35px;
   height: 35px;
   font-size: 20px;
+}
+
+.round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: #919dab;
+  transition: 50ms ease background-color;
+  background-color: $light-gray-2;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: darken($light-gray-2, 2);
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: #919dab;
+  width: 1.7em;
+  height: 1.7em;
+  transition: 50ms ease background-color;
+  background: transparent;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: #ededed;
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button-black {
+  @extend .transparent-round-icon-button;
+  color: black;
+
+  &:hover {
+    background-color: #00000012;
+  }
+
+  &:active {
+    background-color: #00000012;
+  }
 }

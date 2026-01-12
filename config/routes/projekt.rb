@@ -34,6 +34,7 @@ resources :projekt_phases, only: [] do
     get :stat_question_status
     get :download_stat_answer
     delete :delete_stat_question
+    get :download_all_stat_answers
   end
 end
 

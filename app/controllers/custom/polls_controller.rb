@@ -184,6 +184,66 @@ class PollsController < ApplicationController
     render json: response
   end
 
+  def download_evaluation_section
+    section_index = params[:section_index].to_i
+    content = @poll.ai_stats&.dig("evaluation")
+
+    if content.is_a?(Hash) && content["reports"].present? && content["reports"][section_index].present?
+      report = content["reports"][section_index]
+      download_format = params[:format] || "txt"
+      filename = generate_evaluation_section_filename(@poll, section_index, download_format)
+
+      case download_format
+      when "pdf"
+        pdf = PdfServices::PollEvaluationSectionExporter.new(@poll, report).call
+        send_data(
+          pdf.render,
+          filename: filename,
+          type: "application/pdf",
+          disposition: "attachment"
+        )
+      else
+        send_data(
+          generate_evaluation_section_text(report),
+          filename: filename,
+          type: "text/plain",
+          disposition: "attachment"
+        )
+      end
+    else
+      head :not_found
+    end
+  end
+
+  def download_all_evaluation_sections
+    content = @poll.ai_stats&.dig("evaluation")
+
+    if content.is_a?(Hash) && content["reports"].present?
+      download_format = params[:format] || "txt"
+      filename = generate_all_evaluation_sections_filename(@poll, download_format)
+
+      case download_format
+      when "pdf"
+        pdf = PdfServices::PollAllEvaluationSectionsExporter.new(@poll, content["reports"]).call
+        send_data(
+          pdf.render,
+          filename: filename,
+          type: "application/pdf",
+          disposition: "attachment"
+        )
+      else
+        send_data(
+          generate_all_evaluation_sections_text(content["reports"]),
+          filename: filename,
+          type: "text/plain",
+          disposition: "attachment"
+        )
+      end
+    else
+      head :not_found
+    end
+  end
+
   def render_ai_stats_sections(section)
     section ||= "evaluation"
     content = @poll.ai_stats&.dig(section)
@@ -191,7 +251,7 @@ class PollsController < ApplicationController
 
     render_to_string(
       partial: "custom/polls/ai_stats_sections",
-      locals: { content: content, title: title }
+      locals: { content: content, title: title, poll: @poll }
     )
   end
 
@@ -219,6 +279,33 @@ class PollsController < ApplicationController
   end
 
   private
+
+    def generate_evaluation_section_filename(poll, section_index, format)
+      poll_name = poll.name.parameterize(separator: "-")
+      "#{poll_name}-evaluation-section-#{section_index + 1}.#{format}"
+    end
+
+    def generate_evaluation_section_text(report)
+      plain_content = helpers.strip_tags(report["content"].to_s)
+
+      <<~TEXT
+        #{report["title"]}
+
+        #{plain_content}
+      TEXT
+    end
+
+    def generate_all_evaluation_sections_filename(poll, format)
+      poll_name = poll.name.parameterize(separator: "-")
+      "#{poll_name}-evaluation-all.#{format}"
+    end
+
+    def generate_all_evaluation_sections_text(reports)
+      reports.map do |report|
+        plain_content = helpers.strip_tags(report["content"].to_s)
+        "#{report["title"]}\n\n#{plain_content}"
+      end.join("\n\n#{'-' * 80}\n\n")
+    end
 
     def remove_answers_to_open_questions_with_blank_body
       questions = @poll.questions.each do |question|

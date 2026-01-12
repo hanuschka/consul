@@ -64,6 +64,8 @@ de:
           Danach werden Ihre Angaben automatisch und anonym an das System übermittelt.</p>
       evaluation:
         title: AI Bewertung
+        download_all_txt: Alle Abschnitte herunterladen (TXT)
+        download_all_pdf: Alle Abschnitte herunterladen (PDF)
       report:
         title: AI Report
       ai_stats:

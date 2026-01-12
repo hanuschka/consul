@@ -26,7 +26,7 @@
         <%= l(question.created_at, format: :short) %>
       </span>
       <button type="button"
-              class="button -round-icon-button alert js-delete-stat-question"
+              class="round-icon-button alert js-delete-stat-question"
               data-url="<%= delete_stat_question_projekt_phase_path(projekt_phase, question_id: question.id) %>"
               data-confirm-message="<%= t('custom.shared.destroy_confirmation') %>">
         <i class="fa fa-trash"></i>

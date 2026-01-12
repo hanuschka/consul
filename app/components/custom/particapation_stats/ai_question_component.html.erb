@@ -58,6 +58,17 @@
         <% completed_questions.each do |question| %>
           <%= render "custom/particapation_stats/completed_question_item", question: question, projekt_phase: @projekt_phase %>
         <% end %>
+
+        <% if completed_questions.any? %>
+          <div class="ai-question-section--download-all">
+            <a href="<%= download_all_stat_answers_projekt_phase_path(@projekt_phase, format: 'pdf') %>" class="button hollow with-icon">
+              <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_all_pdf") %>
+            </a>
+            <a href="<%= download_all_stat_answers_projekt_phase_path(@projekt_phase, format: 'txt') %>" class="button hollow with-icon">
+              <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_all_txt") %>
+            </a>
+          </div>
+        <% end %>
       </div>
         <% end %>
       <% end %>

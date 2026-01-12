@@ -1,8 +1,8 @@
 require 'json'
 
 class Ai::GeneratePollWithData
-  NUM_QUESTIONS = 10
-  NUM_VOTERS = 20
+  NUM_QUESTIONS = 7
+  NUM_VOTERS = 15
 
   def self.call(projekt_phase_id)
     new(projekt_phase_id).call
@@ -242,7 +242,7 @@ class Ai::GeneratePollWithData
       This user voted:
       #{votes_summary}
 
-      Based on their voting pattern, generate ONE comment (#{rand(1..7)} sentences) that reflects their opinions.
+      Based on their voting pattern, generate ONE comment (#{rand(1..3)} sentences) that reflects their opinions.
       The comment should be consistent with how they voted - if they voted positively, comment should be supportive; if negatively, comment should be critical.
       Write in English, realistic citizen tone. Vary the length naturally.
 

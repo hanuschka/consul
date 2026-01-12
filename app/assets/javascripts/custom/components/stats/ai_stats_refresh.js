@@ -26,7 +26,7 @@
           })
           .then((data) => {
             const finalStatusUrl = data.status_url || statusUrl;
-            this.startPolling(finalStatusUrl);
+            // this.startPolling(finalStatusUrl);
           })
           .catch(() => {
             $(".js-ai-stats-refresh-button").removeClass("u-hidden");
@@ -42,55 +42,55 @@
       if ($status.length && !$status.hasClass("u-hidden")) {
         const statusUrl = $status.data("status-url");
         if (statusUrl) {
-          this.startPolling(statusUrl);
+          // this.startPolling(statusUrl);
         }
       }
     },
 
-    startPolling: function(statusUrl) {
-      const maxAttempts = 300;
-      let attempts = 0;
+    // startPolling: function(statusUrl) {
+    //   const maxAttempts = 300;
+    //   let attempts = 0;
 
-      const poll = () => {
-        if (attempts >= maxAttempts) {
-          alert("Timeout beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
-          return;
-        }
+    //   const poll = () => {
+    //     if (attempts >= maxAttempts) {
+    //       alert("Timeout beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
+    //       return;
+    //     }
 
-        attempts++;
+    //     attempts++;
 
-        App.Ajax
-          .request({
-            url: statusUrl,
-            method: "GET",
-            dataType: "json"
-          })
-          .then((response) => {
-            if (response.status === "completed") {
-              this.finishPolling(response);
-            } else if (response.status === "failed") {
-              this.resetButton();
-              alert("Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
-            } else {
-              setTimeout(poll, 2000);
-            }
-          })
-          .catch(() => {
-            setTimeout(poll, 5000);
-          });
-      };
+    //     App.Ajax
+    //       .request({
+    //         url: statusUrl,
+    //         method: "GET",
+    //         dataType: "json"
+    //       })
+    //       .then((response) => {
+    //         if (response.status === "completed") {
+    //           this.finishPolling(response);
+    //         } else if (response.status === "failed") {
+    //           this.resetButton();
+    //           alert("Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
+    //         } else {
+    //           setTimeout(poll, 2000);
+    //         }
+    //       })
+    //       .catch(() => {
+    //         setTimeout(poll, 5000);
+    //       });
+    //   };
 
-      poll();
-    },
+    //   poll();
+    // },
 
-    finishPolling: function(response) {
-      $(".js-ai-stats-refresh-button").removeClass("u-hidden");
-      $(".js-ai-stats-status").addClass("u-hidden");
+    // finishPolling: function(response) {
+    //   $(".js-ai-stats-refresh-button").removeClass("u-hidden");
+    //   $(".js-ai-stats-status").addClass("u-hidden");
 
-      if (response.last_updated_at) {
-        this.updateTimestamp(response.last_updated_at);
-      }
-    },
+    //   if (response.last_updated_at) {
+    //     this.updateTimestamp(response.last_updated_at);
+    //   }
+    // },
 
     updateTimestamp: function(timestamp) {
       $(".js-stat-last-updated-time").text(timestamp);

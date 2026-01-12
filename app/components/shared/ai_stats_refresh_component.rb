@@ -1,10 +1,11 @@
 class Shared::AiStatsRefreshComponent < ApplicationComponent
-  attr_reader :resource, :refresh_path, :status_path
+  attr_reader :resource, :refresh_path, :status_path, :section
 
-  def initialize(resource:, refresh_path:, status_path:)
+  def initialize(resource:, refresh_path:, status_path:, section: nil)
     @resource = resource
     @refresh_path = refresh_path
     @status_path = status_path
+    @section = section
   end
 
   def processing?

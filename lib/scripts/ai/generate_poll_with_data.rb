@@ -246,7 +246,7 @@ class Ai::GeneratePollWithData
       This user voted:
       #{votes_summary}
 
-      Based on their voting pattern, generate ONE comment (#{rand(1..2)} sentences) that reflects their opinions.
+      Based on their voting pattern, generate ONE comment (1 sentence) that reflects their opinions.
       The comment should be consistent with how they voted - if they voted positively, comment should be supportive; if negatively, comment should be critical.
       Write in English, realistic citizen tone. Vary the length naturally.
 

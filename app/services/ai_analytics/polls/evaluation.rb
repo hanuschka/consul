@@ -6,10 +6,39 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
   end
 
   def call
-    AiAnalytics::Polls::Base.call(@poll, prompt: prompt, stat_key: STAT_KEY)
+    AiAnalytics::Polls::Base.call(
+      @poll,
+      prompt: prompt,
+      stat_key: STAT_KEY,
+      output_schema: output_schema
+    )
   end
 
   private
+
+  def output_schema
+    {
+      type: "object",
+      properties: {
+        reports: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              content: { type: "string" }
+            },
+            required: ["title", "content"],
+            additionalProperties: false
+          },
+          minItems: 3,
+          maxItems: 3
+        }
+      },
+      required: ["reports"],
+      additionalProperties: false
+    }
+  end
 
   def prompt
     <<~TEXT
@@ -156,6 +185,9 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
 
       ### Output length
       - Approximately **350–500 words**.
+
+      ### Output
+      - Return 3 separated report sections as json array.
 
       This appendix should support internal reflection and strategic preparation while preserving transparency and analytical discipline.
     TEXT

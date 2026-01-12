@@ -175,11 +175,24 @@ class PollsController < ApplicationController
     authorize!(:ai_stats_status, @poll)
 
     response = { status: @poll.ai_stats_refresh_status || "pending" }
+
     if @poll.ai_stats_refresh_completed? && @poll.ai_stats_refreshed_at
       response[:last_updated_at] = l(@poll.ai_stats_refreshed_at, format: :short)
+      response[:sections_html] = render_ai_stats_sections(params[:section])
     end
 
     render json: response
+  end
+
+  def render_ai_stats_sections(section)
+    section ||= "evaluation"
+    content = @poll.ai_stats&.dig(section)
+    title = t("custom.polls.#{section}.title")
+
+    render_to_string(
+      partial: "custom/polls/ai_stats_sections",
+      locals: { content: content, title: title }
+    )
   end
 
   def set_geo_limitations

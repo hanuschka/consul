@@ -1,0 +1,24 @@
+<% if content.is_a?(Hash) && content["reports"].present? %>
+  <% content["reports"].each do |report| %>
+    <section class="ai-stats-card margin-bottom">
+      <h3 class="ai-stats-card--title"><%= report["title"] %></h3>
+      <div class="ai-stats-card--content">
+        <%= sanitize(report["content"], tags: %w[h4 p ul li strong em]) %>
+      </div>
+    </section>
+  <% end %>
+<% elsif content.present? %>
+  <section class="ai-stats-card margin-bottom">
+    <h3 class="ai-stats-card--title"><%= title %></h3>
+    <div class="ai-stats-card--content">
+      <%= sanitize(content, tags: %w[h4 p ul li strong em]) %>
+    </div>
+  </section>
+<% else %>
+  <section class="ai-stats-card margin-bottom">
+    <h3 class="ai-stats-card--title"><%= title %></h3>
+    <div class="ai-stats-card--content">
+      <%= t("custom.participation_stats.no_resources_to_analyze") %>
+    </div>
+  </section>
+<% end %>

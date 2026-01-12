@@ -1,4 +1,4 @@
-class AiAnalytics::Poll::Base < ApplicationService
+class AiAnalytics::Polls::Base < ApplicationService
   def initialize(poll, prompt:, stat_key:)
     @poll = poll
     @prompt = prompt
@@ -8,12 +8,12 @@ class AiAnalytics::Poll::Base < ApplicationService
   def call
     return {} if detailed_questions_data.empty?
 
-    Rails.logger.info("[AI Analytics] Poll::Base: Starting #{@stat_key} for poll ##{@poll.id}")
+    Rails.logger.info("[AI Analytics] Polls::Base: Starting #{@stat_key} for poll ##{@poll.id}")
 
     result = generate_analysis
     store_result(result)
 
-    Rails.logger.info("[AI Analytics] Poll::Base: Completed #{@stat_key} for poll ##{@poll.id}")
+    Rails.logger.info("[AI Analytics] Polls::Base: Completed #{@stat_key} for poll ##{@poll.id}")
     result
   end
 

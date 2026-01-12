@@ -9,8 +9,8 @@ module AiAnalytics
       # Simulate ai processing
       # sleep 20
 
-      AiAnalytics::Poll::Evaluation.call(poll)
-      AiAnalytics::Poll::Report.call(poll)
+      AiAnalytics::Polls::Evaluation.call(poll)
+      AiAnalytics::Polls::Report.call(poll)
 
       poll.update(
         ai_stats_refresh_status: "completed",

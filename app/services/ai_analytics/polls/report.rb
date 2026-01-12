@@ -1,4 +1,4 @@
-class AiAnalytics::Poll::Report < ApplicationService
+class AiAnalytics::Polls::Report < ApplicationService
   STAT_KEY = "report"
 
   def initialize(poll)
@@ -6,7 +6,7 @@ class AiAnalytics::Poll::Report < ApplicationService
   end
 
   def call
-    AiAnalytics::Poll::Base.call(@poll, prompt: prompt, stat_key: STAT_KEY)
+    AiAnalytics::Polls::Base.call(@poll, prompt: prompt, stat_key: STAT_KEY)
   end
 
   private

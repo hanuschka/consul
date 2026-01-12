@@ -46,6 +46,7 @@ class Ai::GeneratePollWithData
 
   def generate_poll
     context_text = extract_context_text
+    existing_polls = @projekt_phase.polls.pluck(:name).join(", ")
 
     prompt = <<~TEXT
       Generate a realistic poll for a civic participation project.
@@ -55,7 +56,10 @@ class Ai::GeneratePollWithData
       Description: #{@projekt_phase.description}
       Additional Context: #{context_text}
 
+      Existing polls in this phase: #{existing_polls.presence || "None"}
+
       Generate a poll with name and summary in English. The poll should be directly relevant to the project title.
+      Make sure the poll name is unique and different from existing polls in this phase.
       Keep it concise - name should be 3-6 words, summary 1-2 sentences.
 
       Return ONLY valid JSON:
@@ -242,7 +246,7 @@ class Ai::GeneratePollWithData
       This user voted:
       #{votes_summary}
 
-      Based on their voting pattern, generate ONE comment (#{rand(1..3)} sentences) that reflects their opinions.
+      Based on their voting pattern, generate ONE comment (#{rand(1..2)} sentences) that reflects their opinions.
       The comment should be consistent with how they voted - if they voted positively, comment should be supportive; if negatively, comment should be critical.
       Write in English, realistic citizen tone. Vary the length naturally.
 

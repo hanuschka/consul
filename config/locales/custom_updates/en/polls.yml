@@ -1,5 +1,9 @@
 en:
   custom:
+    ai_stats:
+      refresh_button: Refresh AI Analysis
+      processing: AI analysis is being generated...
+      last_updated: "AI analysis last updated:"
     polls:
       index:
         projekts: Projects
@@ -63,7 +67,7 @@ en:
         title: AI Report
       ai_stats:
         refresh_button: Refresh AI Analysis
-        last_updated: "AI analysis last updated: %{time}"
+        last_updated: "AI analysis last updated:"
         loading: Generating AI analysis...
         loading_note: This may take a few moments. Please wait.
         processing: AI analysis is being generated...

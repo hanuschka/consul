@@ -15,7 +15,7 @@
         const url = button.dataset.url;
         const statusUrl = button.dataset.statusUrl;
 
-        button.disabled = true;
+        $(".js-ai-stats-refresh-button").addClass("u-hidden");
         $(".js-ai-stats-status").removeClass("u-hidden");
 
         App.Ajax
@@ -29,7 +29,7 @@
             this.startPolling(finalStatusUrl);
           })
           .catch(() => {
-            button.disabled = false;
+            $(".js-ai-stats-refresh-button").removeClass("u-hidden");
             $(".js-ai-stats-status").addClass("u-hidden");
             alert("Error refreshing AI stats. Please try again.");
           });
@@ -38,6 +38,7 @@
 
     checkInitialStatus: function() {
       const $status = $(".js-ai-stats-status");
+
       if ($status.length && !$status.hasClass("u-hidden")) {
         const statusUrl = $status.data("status-url");
         if (statusUrl) {
@@ -83,11 +84,8 @@
     },
 
     finishPolling: function(response) {
-      const $button = $(".js-ai-stats-refresh-button");
-      const $status = $(".js-ai-stats-status");
-
-      $button.prop("disabled", false);
-      $status.addClass("u-hidden");
+      $(".js-ai-stats-refresh-button").removeClass("u-hidden");
+      $(".js-ai-stats-status").addClass("u-hidden");
 
       if (response.last_updated_at) {
         this.updateTimestamp(response.last_updated_at);
@@ -95,20 +93,12 @@
     },
 
     updateTimestamp: function(timestamp) {
-      const $timestampContainer = $(".stats-last-updated-container");
-      if ($timestampContainer.length) {
-        $timestampContainer.find(".stats-last-updated-item").text(
-          "AI analysis last updated: " + timestamp
-        );
-      }
+      $(".js-stat-last-updated-time").text(timestamp);
     },
 
     resetButton: function() {
-      const $button = $(".js-ai-stats-refresh-button");
-      const $status = $(".js-ai-stats-status");
-
-      $button.prop("disabled", false);
-      $status.addClass("u-hidden");
+      $(".js-ai-stats-refresh-button").removeClass("u-hidden");
+      $(".js-ai-stats-status").addClass("u-hidden");
     }
   };
 }).call(this);

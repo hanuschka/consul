@@ -12,9 +12,9 @@ de:
         banner_title: "Statistiken für %{phase_title}"
         back_to_phase: Zurück zum Projekt
         refresh_stats_button: "Statistiken aktualisieren"
-        refresh_stats_last_updated: "Statistiken zuletzt aktualisiert: %{time}"
+        refresh_stats_last_updated: "Aktualisiert: %{time}"
         refresh_ai_stats_button: "AI-Statistiken aktualisieren"
-        refresh_ai_stats_last_updated: "AI-Statistiken zuletzt aktualisiert: %{time}"
+        refresh_ai_stats_last_updated: "Aktualisiert: %{time}"
         refresh_ai_stats_loading: "Bitte warten, AI-Statistiken werden aktualisiert..."
         refresh_ai_stats_loading_note: "Die Aktualisierung kann je nach Anzahl der Ressourcen und Kommentare einige Minuten dauern."
         refresh_ai_stats_error: "Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut."

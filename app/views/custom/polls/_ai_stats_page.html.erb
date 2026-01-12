@@ -22,11 +22,13 @@
         <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <% if can?(:refresh_ai_stats, @poll) %>
-          <%= render Shared::AiStatsRefreshComponent.new(
-            resource: @poll,
-            refresh_path: refresh_ai_stats_poll_path(@poll),
-            status_path: ai_stats_status_poll_path(@poll)
-          ) %>
+          <div class="margin-bottom">
+            <%= render Shared::AiStatsRefreshComponent.new(
+              resource: @poll,
+              refresh_path: refresh_ai_stats_poll_path(@poll),
+              status_path: ai_stats_status_poll_path(@poll)
+            ) %>
+          </div>
         <% end %>
 
         <div class="participation-stats">

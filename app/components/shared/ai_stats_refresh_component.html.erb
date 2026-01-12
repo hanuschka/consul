@@ -1,28 +1,34 @@
-<div class="margin-bottom-half u-flex u-gap-10 u-align-center">
-  <button
-    class="button secondary js-ai-stats-refresh-button"
-    data-url="<%= refresh_path %>"
-    data-status-url="<%= status_path %>"
-    <%= 'disabled' if processing? %>
-  >
-    <%= t("custom.polls.ai_stats.refresh_button") %>
-  </button>
+<div class="u-flex u-gap-10">
+  <div class="u-flex u-flex-column u-align-center">
+    <div
+      class=" js-ai-stats-button-container stats-button-container"
+      >
+      <button
+        class="button secondary js-ai-stats-refresh-button <%= 'u-hidden' if processing? %>"
+        data-url="<%= refresh_path %>"
+        data-status-url="<%= status_path %>"
+        >
+        <%= t("custom.ai_stats.refresh_button") %>
+      </button>
 
-  <div
-    class="js-ai-stats-status <%= 'u-hidden' unless processing? %>"
-    data-status-url="<%= status_path %>"
-  >
-    <%= render Shared::LoadingSpinnerComponent.new(
-      message: t("custom.polls.ai_stats.processing"),
-      size: "small"
-    ) %>
+      <div
+          class="js-ai-stats-status ai-stats-status <%= 'u-hidden' unless processing? %>"
+          data-status-url="<%= status_path %>"
+          >
+          <%= render Shared::LoadingSpinnerComponent.new(
+            message: t("custom.ai_stats.processing"),
+            size: "small"
+          ) %>
+      </div>
+    </div>
+
+    <% if last_updated_at.present? %>
+      <div class="stats-last-updated-container">
+        <p class="stats-last-updated-item">
+          <%= t("custom.ai_stats.last_updated") %>
+          <span class="js-stat-last-updated-time"><%= l(last_updated_at, format: :short) %></span>
+        </p>
+      </div>
+    <% end %>
   </div>
 </div>
-
-<% if last_updated_at.present? %>
-  <div class="stats-last-updated-container margin-bottom">
-    <p class="stats-last-updated-item">
-      <%= t("custom.polls.ai_stats.last_updated", time: l(last_updated_at, format: :short)) %>
-    </p>
-  </div>
-<% end %>

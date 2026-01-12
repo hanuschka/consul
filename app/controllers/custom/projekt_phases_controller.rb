@@ -44,7 +44,7 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     @projekt_phase.update(ai_stats_refresh_status: :pending)
-    AiStatsRefreshJob.perform_later(@projekt_phase.id)
+    AiAnalytics::ProjektPhaseStatsRefresh.perform_later(@projekt_phase.id)
 
     respond_to do |format|
       format.html do
@@ -64,9 +64,12 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    render json: {
-      status: @projekt_phase.ai_stats_refresh_status || "pending"
-    }
+    response = { status: @projekt_phase.ai_stats_refresh_status || "pending" }
+    if @projekt_phase.ai_stats_refresh_completed? && @projekt_phase.ai_stats_refreshed_at
+      response[:last_updated_at] = l(@projekt_phase.ai_stats_refreshed_at, format: :short)
+    end
+
+    render json: response
   end
 
   def stats
@@ -94,7 +97,7 @@ class ProjektPhasesController < ApplicationController
     )
 
     if @stat_question.save
-      StatQuestionJob.perform_later(@stat_question.id)
+      AiAnalytics::StatQuestionRefresh.perform_later(@stat_question.id)
       render json: {
         id: @stat_question.id,
         status: "pending",

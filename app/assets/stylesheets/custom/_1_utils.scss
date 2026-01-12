@@ -2,6 +2,10 @@
   display: none;
 }
 
+.u-flex-column {
+  flex-direction: column;
+}
+
 .mb-5 {
   margin-bottom: 5px;
 }
@@ -40,6 +44,10 @@
 
 .items-center, .u-items-center, .u-align-center {
   align-items: center;
+}
+
+.u-align-start {
+  align-items: flex-start;
 }
 
 .u-justify-center {

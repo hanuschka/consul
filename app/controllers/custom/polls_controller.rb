@@ -143,8 +143,6 @@ class PollsController < ApplicationController
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "custom/pages/forbidden", layout: false
-    elsif Setting.new_design_enabled?
-      render :evaluation_new
     else
       render :evaluation
     end
@@ -156,8 +154,6 @@ class PollsController < ApplicationController
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "custom/pages/forbidden", layout: false
-    elsif Setting.new_design_enabled?
-      render :report_new
     else
       render :report
     end
@@ -167,7 +163,7 @@ class PollsController < ApplicationController
     authorize!(:refresh_ai_stats, @poll)
 
     @poll.update(ai_stats_refresh_status: "pending")
-    PollAiStatsRefreshJob.perform_later(@poll.id)
+    AiAnalytics::PollStatsRefresh.perform_later(@poll.id)
 
     respond_to do |format|
       format.html { redirect_to evaluation_poll_path(@poll) }

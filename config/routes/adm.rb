@@ -20,6 +20,7 @@ namespace :adm do
     get :gdpr, on: :collection
     get :registration, on: :collection
   end
+  resources :registered_addresses, only: [:index]
   # application
 
   # profiles

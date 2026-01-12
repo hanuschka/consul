@@ -17,6 +17,7 @@ de:
           metadata_settings: Metadaten & Kommunikation
           gdpr_settings: DSGVO
           registration_settings: Registrierung & Verifizierung
+          registered_addresses: Registrierte Adressen
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin

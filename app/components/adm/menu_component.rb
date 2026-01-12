@@ -62,7 +62,8 @@ class Adm::MenuComponent < ApplicationComponent
         { label: t("adm.menu.items.application_subitems.navbar"),                path: adm_navbar_path },
         { label: t("adm.menu.items.application_subitems.metadata_settings"),     path: metadata_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
-        { label: t("adm.menu.items.application_subitems.registration_settings"), path: registration_adm_settings_path }
+        { label: t("adm.menu.items.application_subitems.registration_settings"), path: registration_adm_settings_path },
+        { label: t("adm.menu.items.application_subitems.registered_addresses"),  path: adm_registered_addresses_path }
       ]
     end
 

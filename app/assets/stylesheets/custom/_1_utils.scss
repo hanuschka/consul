@@ -1,3 +1,11 @@
+.u-hidden {
+  display: none;
+}
+
+.u-flex-column {
+  flex-direction: column;
+}
+
 .mb-5 {
   margin-bottom: 5px;
 }
@@ -36,6 +44,10 @@
 
 .items-center, .u-items-center, .u-align-center {
   align-items: center;
+}
+
+.u-align-start {
+  align-items: flex-start;
 }
 
 .u-justify-center {
@@ -117,11 +129,11 @@
   gap: 5px;
 }
 
-.d-flex-start {
+.d-flex-start, .u-flex-start {
   justify-content: flex-start;
 }
 
-.d-flex-align-center {
+.d-flex-align-center, .u-flex-align-center {
   align-items: center;
 }
 

@@ -115,3 +115,21 @@
     margin-bottom: 1rem;
   }
 }
+
+.stats-last-updated-item {
+  font-size: 14px;
+  color: #333;
+  margin: 0 0 5px 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.stats-button-container {
+  height: 50px;
+}
+
+.ai-stats-status {
+  margin-top: 16px;
+}

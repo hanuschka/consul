@@ -7,7 +7,7 @@ class PollsController < ApplicationController
   include Takeable
   include GuestUsers
 
-  before_action :set_geo_limitations, only: [:show, :results, :stats]
+  before_action :set_geo_limitations, only: [:show, :results, :stats, :evaluation, :report]
 
   helper_method :resource_model, :resource_name
   has_filters %w[all current expired]
@@ -135,6 +135,51 @@ class PollsController < ApplicationController
     else
       render :results
     end
+  end
+
+  def evaluation
+    @projekt_phase = @poll.projekt_phase
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    else
+      render :evaluation
+    end
+  end
+
+  def report
+    @projekt_phase = @poll.projekt_phase
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    else
+      render :report
+    end
+  end
+
+  def refresh_ai_stats
+    authorize!(:refresh_ai_stats, @poll)
+
+    @poll.update(ai_stats_refresh_status: "pending")
+    AiAnalytics::PollStatsRefresh.perform_later(@poll.id)
+
+    respond_to do |format|
+      format.html { redirect_to evaluation_poll_path(@poll) }
+      format.js { render json: { status_url: ai_stats_status_poll_path(@poll) } }
+    end
+  end
+
+  def ai_stats_status
+    authorize!(:ai_stats_status, @poll)
+
+    response = { status: @poll.ai_stats_refresh_status || "pending" }
+    if @poll.ai_stats_refresh_completed? && @poll.ai_stats_refreshed_at
+      response[:last_updated_at] = l(@poll.ai_stats_refreshed_at, format: :short)
+    end
+
+    render json: response
   end
 
   def set_geo_limitations

@@ -2,7 +2,11 @@
   <%= hidden_field_tag :kind, "color" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <div class="color-picker" data-adm-color-picker-target= "picker"></div>
+  <%= tag.div class: "color-picker",
+              role: "application",
+              tabindex: "0",
+              data: { "adm-color-picker-target": "picker" },
+              aria: aria_attributes %>
 
   <%= form.hidden_field @attribute,
         label: false,

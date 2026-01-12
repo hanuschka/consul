@@ -22,4 +22,11 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
   def alternate_value
     @alternate_value ||= toggled_on? ? value_options.last : value_options.first
   end
+
+  def aria_attributes
+    attrs = { checked: toggled_on? }
+    attrs[:labelledby] = @options[:labelledby] if @options[:labelledby].present?
+    attrs[:describedby] = @options[:describedby] if @options[:describedby].present?
+    attrs
+  end
 end

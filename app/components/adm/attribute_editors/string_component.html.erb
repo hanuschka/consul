@@ -6,7 +6,8 @@
         label: false,
         placeholder: label,
         class: "kern-form-input__input",
-        data: {"components-adm-attribute-editor-target": "input" }
+        data: {"components-adm-attribute-editor-target": "input" },
+        aria: aria_attributes
       } %>
 
   <% if @record.respond_to?(:translated?) && @record.translated?(@attribute) %>

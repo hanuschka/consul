@@ -4,9 +4,12 @@
 
   <%= form.hidden_field @attribute, value: alternate_value %>
   <%= form.button "", class: 'toggle-button small',
-                  aria: { pressed: toggled_on? },
-                  autofocus: request.format.turbo_stream? %>
-  <span><%= label %></span>
+    role: 'switch',
+    aria: aria_attributes,
+    autofocus: request.format.turbo_stream? %>
+  <% if @options[:labelledby].present? %>
+    <span aria-hidden=true><%= label %></span>
+  <% end %>
 <% end %>
 
 <% if flash[:success].present? %>

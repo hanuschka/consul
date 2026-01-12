@@ -65,4 +65,11 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       nil
     end
   end
+
+  def aria_options
+    {
+      labelledby: "#{dom_id(@record)}_#{@attribute}_label",
+      describedby: "#{dom_id(@record)}_#{@attribute}_description"
+    }
+  end
 end

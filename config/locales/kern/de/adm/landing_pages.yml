@@ -16,3 +16,5 @@ de:
         title: Themenseite bearbeiten
         slug_label: URL der Themenseite
         slug_hint: Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung“. Die URL darf keine Leer- oder Sonderzeichen enthalten.
+      update:
+        success: Der Wert wurde erfolgreich aktualisiert.

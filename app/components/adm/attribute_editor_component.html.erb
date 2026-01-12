@@ -1,14 +1,22 @@
 <%= turbo_frame_tag dom_id(@record, @attribute) do %>
-  <div class="attribute-editor-component mb-5" data-controller="components-adm-attribute-editor">
-    <h2 class="kern-title kern-title--small mb-3"><%= label %></h2>
+  <div class="attribute-editor-component mb-5"
+       data-controller="components-adm-attribute-editor"
+       role="group"
+       aria-labelledby="<%= aria_options[:labelledby] %>"
+       aria-describedby="<%= aria_options[:describedby] %>">
+    <div
+      id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
+      class="kern-title kern-title--small mb-3">
+      <%= label %>
+    </div>
 
     <div class="kern-row">
       <div class="kern-col-12 kern-col-md-4">
-        <p class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
+        <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
       </div>
       <div class="kern-col-12 kern-col-md-6">
         <div class="attribute-form <%= @kind %>">
-          <%= render component_for_type.new(@record, @attribute, **@options) %>
+          <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
         </div>
       </div>
     </div>

@@ -4,4 +4,11 @@ class Adm::AttributeEditors::StringComponent < Adm::AttributeEditorComponent
     @attribute = attribute
     @options = options
   end
+
+  def aria_attributes
+    attrs = {}
+    attrs[:labelledby] = @options[:labelledby] if @options[:labelledby].present?
+    attrs[:describedby] = @options[:describedby] if @options[:describedby].present?
+    attrs
+  end
 end

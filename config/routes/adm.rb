@@ -21,6 +21,7 @@ namespace :adm do
     get :registration, on: :collection
   end
   resources :registered_addresses, only: [:index]
+  resource :default_map_location, controller: "default_map_location", only: [:show, :update]
   # application
 
   # profiles

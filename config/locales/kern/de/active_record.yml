@@ -8,3 +8,10 @@ de:
       navbar_item:
         external_title: Eigentitel
         external_url: Eigene URL
+      map_location:
+        rendering_library: Rendering-Bibliothek
+        show_admin_shape: Admin-Form anzeigen
+        rendering_libraries:
+          leaflet: Leaflet
+          mapbox: Mapbox
+          virtualcity: Virtual City Map

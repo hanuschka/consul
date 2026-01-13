@@ -34,9 +34,94 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def check_box(field, options = {}, checked_value = "1", unchecked_value = "0")
+    field_errors = field_errors(field)
+    label_text = options.delete(:label)
+
+    options[:class] = checkbox_input_classes(options[:class], field_errors)
+
+    checkbox_group(field, field_errors, label_text) do
+      super(field, options, checked_value, unchecked_value)
+    end
+  end
+
+  def collection_radio_buttons(field, collection, value_method, text_method, options = {}, html_options = {}, &block)
+    field_errors = field_errors(field)
+    legend_text = options.delete(:legend)
+
+    if block_given?
+      super
+    else
+      radio_buttons = super(field, collection, value_method, text_method, options, html_options) do |b|
+        @template.content_tag(:div, class: "kern-form-check") do
+          @template.safe_join([
+            b.radio_button(class: radio_input_classes(nil, field_errors)),
+            b.label(class: "kern-label")
+          ])
+        end
+      end
+
+      fieldset_group(field, field_errors, legend_text, radio_buttons)
+    end
+  end
+
+  def collection_check_boxes(field, collection, value_method, text_method, options = {}, html_options = {}, &block)
+    field_errors = field_errors(field)
+    legend_text = options.delete(:legend)
+
+    if block_given?
+      super
+    else
+      check_boxes = super(field, collection, value_method, text_method, options, html_options) do |b|
+        @template.content_tag(:div, class: "kern-form-check") do
+          @template.safe_join([
+            b.check_box(class: checkbox_input_classes(nil, field_errors)),
+            b.label(class: "kern-label")
+          ])
+        end
+      end
+
+      fieldset_group(field, field_errors, legend_text, check_boxes)
+    end
+  end
+
   private
 
     ## Structure
+
+    def fieldset_group(field, field_errors, legend_text, inputs)
+      fieldset_class = merge_css_classes(
+        "kern-fieldset",
+        ("kern-fieldset--error" if field_errors.any?)
+      )
+
+      @template.content_tag(:fieldset, class: fieldset_class) do
+        @template.safe_join(
+          [
+            (@template.content_tag(:legend, legend_text, class: "kern-label") if legend_text.present?),
+            @template.content_tag(:div, inputs, class: "kern-fieldset__body"),
+            error_html(field, field_errors)
+          ].compact
+        )
+      end
+    end
+
+    def checkbox_group(field, field_errors, label_text)
+      wrapper_class = merge_css_classes(
+        "kern-form-check",
+        ("kern-form-check--error" if field_errors.any?)
+      )
+
+      @template.content_tag(:div, class: wrapper_class) do
+        @template.safe_join(
+          [
+            yield,
+            build_checkbox_label(field, label_text),
+            error_html(field, field_errors)
+          ].compact
+        )
+      end
+    end
 
     def form_group(field, field_errors, options, hint_text)
       wrapper_class = merge_css_classes(
@@ -63,6 +148,13 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       return if label_option == false
 
       text = label_option.is_a?(String) ? label_option : nil
+      label(field, text, class: "kern-label")
+    end
+
+    def build_checkbox_label(field, label_text)
+      return if label_text == false
+
+      text = label_text.is_a?(String) ? label_text : nil
       label(field, text, class: "kern-label")
     end
 
@@ -114,6 +206,22 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
         "kern-form-input__input",
         existing,
         ("kern-form-input__input--error" if field_errors.any?)
+      )
+    end
+
+    def checkbox_input_classes(existing, field_errors)
+      merge_css_classes(
+        "kern-form-check__checkbox",
+        existing,
+        ("kern-form-check__checkbox--error" if field_errors.any?)
+      )
+    end
+
+    def radio_input_classes(existing, field_errors)
+      merge_css_classes(
+        "kern-form-check__radio",
+        existing,
+        ("kern-form-check__radio--error" if field_errors.any?)
       )
     end
 

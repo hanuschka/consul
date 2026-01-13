@@ -1,0 +1,41 @@
+<%= tag.div data: controller_data_attributes do %>
+  <div id="<%= container_id %>"
+       class="map_location map <%= map_location.rendering_library %>"
+       style="<%= container_style %>"
+       data-map-target="container">
+  </div>
+
+  <% if form && editable %>
+    <%= form.hidden_field :latitude, data: { map_target: "latitude" } %>
+    <%= form.hidden_field :longitude, data: { map_target: "longitude" } %>
+    <%= form.hidden_field :altitude, data: { map_target: "altitude" } %>
+    <%= form.hidden_field :zoom, data: { map_target: "zoom" } %>
+    <%= form.hidden_field :features, value: features_json, data: { map_target: "features" } %>
+  <% end %>
+
+  <% if form && admin_editor %>
+    <div class="mb-3">
+      <%= form.check_box :show_admin_shape %>
+    </div>
+
+    <div class="mb-3">
+      <div class="kern-title kern-title--small mb-3">
+        <%= t('components.kern.map_component.rendering_library_label') %>
+      </div>
+
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body mb-3 mb-md-0">
+            <%= t('components.kern.map_component.rendering_library_description') %>
+          </p>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
+              {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= content %>
+<% end %>

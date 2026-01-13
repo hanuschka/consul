@@ -73,12 +73,16 @@ module ProjektContentBlocksAdminActions
 
     return unless check_ai_model_configured
 
+    use_full_projekt_context = ActiveModel::Type::Boolean.new.cast(params[:use_full_projekt_context])
+
     new_content_block_body =
       Ai::GenerateContentBlock.call(
         params[:instructions],
         params[:content_block_html],
         @content_block.projekt.page&.title,
-        @content_block.projekt.page&.subtitle
+        @content_block.projekt.page&.subtitle,
+        projekt: @content_block.projekt,
+        use_full_projekt_context: use_full_projekt_context
       )
 
     if new_content_block_body.present?

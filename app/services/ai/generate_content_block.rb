@@ -1,7 +1,9 @@
 class Ai::GenerateContentBlock < ApplicationService
-  def initialize(instructions, content_block_html)
+  def initialize(instructions, content_block_html, title = nil, subtitle = nil)
     @instructions = instructions
     @content_block_html = content_block_html
+    @title = title
+    @subtitle = subtitle
   end
 
   def call
@@ -20,6 +22,9 @@ class Ai::GenerateContentBlock < ApplicationService
             - DO NOT wrap images in figure elements and DO NOT alter existing figure elements.
             - Do not optimize, clean up, or reformat the HTML. Keep the original formatting and indentation unless an instruction requires otherwise.
             - Never infer desired changes. Only apply changes explicitly described in the instructions.
+
+            Additional context of content block:
+            It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
 
             Instructions: "#{@instructions}"
 

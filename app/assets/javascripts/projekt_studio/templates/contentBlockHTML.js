@@ -76,7 +76,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </button>
               </div>
 
-              <div class="d-flex u-gap-5">
+              <div class="d-flex u-gap-5 align-items-center">
+                <label class="content-block-margin-checkbox-label d-flex align-items-center u-gap-5">
+                  <input
+                    type="checkbox"
+                    class="js-content-block-margin-bottom-checkbox"
+                  >
+                  <span>Abstand unten</span>
+                </label>
                 <button type="button" disabled class="projekt-content-block-edit--button -transparent js-content-block-add-link">
                   <i class="fas fa-link"></i>
                   Link hinzufügen

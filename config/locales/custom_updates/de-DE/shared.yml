@@ -46,15 +46,20 @@ de:
         processing_message: "Ich prüfe alle Vorschläge und werde in Kürze eine Antwort geben."
         download_txt: "TXT herunterladen"
         download_pdf: "PDF herunterladen"
+        download_all_txt: "Alle Fragen als TXT herunterladen"
+        download_all_pdf: "Alle Fragen als PDF herunterladen"
         retention_hint: "Laden Sie Antworten für Offline-Zugriff oder Archivierung herunter."
         no_resources: "Keine Vorschläge gefunden, die analysiert werden können."
         error: "Bei der Generierung der Antwort ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
         pdf_title: "Fragenanalyse"
+        pdf_all_questions_title: "Fragenanalyse - Alle Fragen"
         pdf_projekt: "Projekt"
         pdf_phase: "Phase"
         pdf_date: "Datum"
+        pdf_exported_at: "Exportiert"
         pdf_question: "Frage"
         pdf_answer: "Antwort"
+        pdf_no_questions: "Keine beantworteten Fragen vorhanden."
     ai_stats:
       topic_clustering:
         title: Themengruppen

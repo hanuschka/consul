@@ -63,6 +63,8 @@ en:
           Your information will then be transmitted to the system automatically and anonymously.</p>
       evaluation:
         title: AI Evaluation
+        download_all_txt: Download All Sections (TXT)
+        download_all_pdf: Download All Sections (PDF)
       report:
         title: AI Report
       ai_stats:

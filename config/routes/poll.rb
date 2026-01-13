@@ -6,6 +6,8 @@ resources :polls, only: [:show, :index] do
     get :report
     post :refresh_ai_stats
     get :ai_stats_status
+    get :download_evaluation_section
+    get :download_all_evaluation_sections
   end
 
   resources :questions, controller: "polls/questions", shallow: true do

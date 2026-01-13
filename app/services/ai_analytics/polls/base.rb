@@ -1,8 +1,9 @@
 class AiAnalytics::Polls::Base < ApplicationService
-  def initialize(poll, prompt:, stat_key:)
+  def initialize(poll, prompt:, stat_key:, output_schema: nil)
     @poll = poll
     @prompt = prompt
     @stat_key = stat_key
+    @output_schema = output_schema
   end
 
   def call
@@ -20,8 +21,14 @@ class AiAnalytics::Polls::Base < ApplicationService
   private
 
   def generate_analysis
-    response = Ai::RubyLlmFactory.chat.ask(full_prompt)
-    response.content.strip
+    chat = Ai::RubyLlmFactory.chat
+
+    if @output_schema.present?
+      chat = chat.with_schema(@output_schema)
+    end
+
+    response = chat.ask(full_prompt)
+    @output_schema.present? ? response.content : response.content.strip
   end
 
   def full_prompt

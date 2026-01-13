@@ -26,22 +26,14 @@
             <%= render Shared::AiStatsRefreshComponent.new(
               resource: @poll,
               refresh_path: refresh_ai_stats_poll_path(@poll),
-              status_path: ai_stats_status_poll_path(@poll)
+              status_path: ai_stats_status_poll_path(@poll),
+              section: local_assigns[:section]
             ) %>
           </div>
         <% end %>
 
-        <div class="participation-stats">
-          <section class="ai-stats-card">
-            <h3 class="ai-stats-card--title"><%= title %></h3>
-            <div class="ai-stats-card--content">
-              <% if content.present? %>
-                <%= sanitize(content, tags: %w[h4 p ul li strong em]) %>
-              <% else %>
-                <%= t("custom.participation_stats.no_resources_to_analyze") %>
-              <% end %>
-            </div>
-          </section>
+        <div class="participation-stats js-poll-participation-stats">
+          <%= render "ai_stats_sections", content: content, title: title, poll: @poll %>
         </div>
 
       </div>

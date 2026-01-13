@@ -67,9 +67,18 @@ class ProjektPhasesController < ApplicationController
     response = { status: @projekt_phase.ai_stats_refresh_status || "pending" }
     if @projekt_phase.ai_stats_refresh_completed? && @projekt_phase.ai_stats_refreshed_at
       response[:last_updated_at] = l(@projekt_phase.ai_stats_refreshed_at, format: :short)
+      response[:sections_html] = render_participation_stats_sections
     end
 
     render json: response
+  end
+
+  def render_participation_stats_sections
+    @stats = ProjektPhase::Stats.new(@projekt_phase)
+    render_to_string(
+      partial: "custom/pages/projekt_footer_new/participation_stats_sections",
+      locals: { projekt_phase: @projekt_phase, stats: @stats }
+    )
   end
 
   def stats
@@ -165,6 +174,28 @@ class ProjektPhasesController < ApplicationController
     render json: { success: true }
   end
 
+  def download_all_stat_answers
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_format = params[:format] || "pdf"
+    filename = generate_all_stat_answers_filename(@projekt_phase, download_format)
+
+    case download_format
+    when "pdf"
+      pdf = PdfServices::AllStatQuestionsExporter.new(@projekt_phase).call
+      send_data pdf.render,
+                filename: filename,
+                type: "application/pdf",
+                disposition: "attachment"
+    else
+      send_data generate_all_stat_answers_text(@projekt_phase),
+                filename: filename,
+                type: "text/plain",
+                disposition: "attachment"
+    end
+  end
+
   private
 
     def generate_stat_answer_filename(projekt_phase, stat_question, format)
@@ -185,5 +216,39 @@ class ProjektPhasesController < ApplicationController
         Answer:
         #{plain_answer}
       TEXT
+    end
+
+    def generate_all_stat_answers_filename(projekt_phase, format)
+      projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")
+      phase_name = projekt_phase.title.parameterize(separator: "-")
+      "#{projekt_name}-#{phase_name}-ai-questions.#{format}"
+    end
+
+    def generate_all_stat_answers_text(projekt_phase)
+      stat_questions = projekt_phase.stat_questions.answered.by_newest
+      text_parts = [
+        "AI Questions Analysis",
+        "Project: #{projekt_phase.projekt.title}",
+        "Phase: #{projekt_phase.title}",
+        "Exported: #{Time.current.strftime('%d %b %Y %H:%M')}",
+        "",
+        ""
+      ]
+
+      stat_questions.each_with_index do |stat_question, index|
+        plain_answer = helpers.strip_tags(stat_question.answer.to_s)
+        text_parts << "Question #{index + 1}:"
+        text_parts << stat_question.question
+        text_parts << ""
+        text_parts << "Answer:"
+        text_parts << plain_answer
+        text_parts << ""
+        text_parts << "Date: #{stat_question.created_at.strftime('%d %b %Y %H:%M')}"
+        text_parts << ""
+        text_parts << "-" * 80
+        text_parts << ""
+      end
+
+      text_parts.join("\n")
     end
 end

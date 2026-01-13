@@ -15,6 +15,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.enterAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
+    $document.on("change", ".js-content-block-margin-bottom-checkbox", this.handleMarginBottomCheckbox.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
 
@@ -36,6 +37,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
     $accordionLinks.off("keydown")
 
+    this.updateMarginBottomCheckboxState(contentBlockWrapper)
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
@@ -50,18 +52,18 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
     if (contentBlockWrapper.classList.contains("-simple-edit-mode")) {
       contentBlockWrapper.classList.remove("-simple-edit-mode")
-        this.toggleSimpleEditModeFor(contentBlock, false, () => {
-          const content =
-            contentBlock
-            .innerHTML
-            .trim()
-            .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+      this.toggleSimpleEditModeFor(contentBlock, false, () => {
+        const content =
+          contentBlock
+          .innerHTML
+          .trim()
+          .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
-          ProjektStudio.ContentBlock.Crud.updateContentBlock(
-            contentBlock,
-            content,
-            { resetFoundationState: true }
-          )
+        ProjektStudio.ContentBlock.Crud.updateContentBlock(
+          contentBlock,
+          content,
+          { resetFoundationState: true }
+        )
       });
     }
   },
@@ -182,5 +184,34 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
   disableLinkClick(e) {
     e.preventDefault()
+  },
+
+  handleMarginBottomCheckbox(e) {
+    const checkbox = e.currentTarget;
+    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(checkbox);
+    const contentBlockId = contentBlock.dataset.id;
+
+    if (checkbox.checked) {
+      contentBlock.classList.add("-margin-bottom")
+    } else {
+      contentBlock.classList.remove("-margin-bottom")
+    }
+
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      method: "PATCH",
+      data: {
+        margin_bottom: checkbox.checked
+      }
+    })
+  },
+
+  updateMarginBottomCheckboxState(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const checkbox = contentBlockWrapper.querySelector(".js-content-block-margin-bottom-checkbox");
+
+    if (checkbox) {
+      checkbox.checked = contentBlock.classList.contains("-margin-bottom")
+    }
   }
 }

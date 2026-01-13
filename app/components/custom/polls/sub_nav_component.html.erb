@@ -13,9 +13,13 @@
                 data: { turbolinks: false } %>
   <% end %>
 
-  <%= link_to t("custom.polls.show.evaluation_menu"), evaluation_poll_path(id: poll.id),
-              class: ("is-active" if evaluation_menu?) %>
+  <% if poll.evaluation_enabled? || can?(:edit, poll.projekt) || current_user&.administrator? %>
+    <%= link_to t("custom.polls.show.evaluation_menu"), evaluation_poll_path(id: poll.id),
+                class: ("is-active" if evaluation_menu?) %>
+  <% end %>
 
-  <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
-              class: ("is-active" if report_menu?) %>
+  <% if can?(:edit, poll.projekt) || current_user&.administrator? %>
+    <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
+                class: ("is-active" if report_menu?) %>
+  <% end %>
 </div>

@@ -140,7 +140,10 @@ class PollsController < ApplicationController
   def evaluation
     @projekt_phase = @poll.projekt_phase
 
-    if !@poll.projekt.visible_for?(current_user)
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    can_view_evaluation = is_admin_or_manager || (@poll.evaluation_enabled? && @poll.projekt.visible_for?(current_user))
+
+    if !can_view_evaluation
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "custom/pages/forbidden", layout: false
     else
@@ -151,7 +154,9 @@ class PollsController < ApplicationController
   def report
     @projekt_phase = @poll.projekt_phase
 
-    if !@poll.projekt.visible_for?(current_user)
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+
+    if !is_admin_or_manager
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "custom/pages/forbidden", layout: false
     else

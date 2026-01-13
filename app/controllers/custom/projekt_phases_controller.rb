@@ -67,9 +67,18 @@ class ProjektPhasesController < ApplicationController
     response = { status: @projekt_phase.ai_stats_refresh_status || "pending" }
     if @projekt_phase.ai_stats_refresh_completed? && @projekt_phase.ai_stats_refreshed_at
       response[:last_updated_at] = l(@projekt_phase.ai_stats_refreshed_at, format: :short)
+      response[:sections_html] = render_participation_stats_sections
     end
 
     render json: response
+  end
+
+  def render_participation_stats_sections
+    @stats = ProjektPhase::Stats.new(@projekt_phase)
+    render_to_string(
+      partial: "custom/pages/projekt_footer_new/participation_stats_sections",
+      locals: { projekt_phase: @projekt_phase, stats: @stats }
+    )
   end
 
   def stats

@@ -31,26 +31,6 @@
 
 <% end %>
 
-<div class='participation-stats'>
-  <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
-    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.key_metrics") %></h2>
-    <%= render "shared/stats/participation", stats: @stats %>
-    <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
-
-    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.ai_analysis") %></h2>
-    <%= render ParticapationStats::SummaryComponent.new(projekt_phase: @projekt_phase) %>
-
-    <%= render ParticapationStats::AiQuestionComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>
-
-    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.distributions") %></h2>
-    <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::UserSegmentsComponent.new(stats: @stats) %>
-  <% elsif @projekt_phase.is_a?(ProjektPhase::CommentPhase) %>
-    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.ai_analysis") %></h2>
-    <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: @projekt_phase) %>
-  <% end %>
+<div class='participation-stats js-poll-participation-stats'>
+  <%= render "custom/pages/projekt_footer_new/participation_stats_sections", projekt_phase: @projekt_phase, stats: @stats %>
 </div>

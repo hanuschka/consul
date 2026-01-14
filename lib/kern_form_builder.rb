@@ -37,10 +37,11 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   def check_box(field, options = {}, checked_value = "1", unchecked_value = "0")
     field_errors = field_errors(field)
     label_text = options.delete(:label)
+    hint_text = options.delete(:hint)
 
     options[:class] = checkbox_input_classes(options[:class], field_errors)
 
-    checkbox_group(field, field_errors, label_text) do
+    checkbox_group(field, field_errors, label_text, hint_text) do
       super(field, options, checked_value, unchecked_value)
     end
   end
@@ -106,7 +107,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
 
-    def checkbox_group(field, field_errors, label_text)
+    def checkbox_group(field, field_errors, label_text, hint_text)
       wrapper_class = merge_css_classes(
         "kern-form-check",
         ("kern-form-check--error" if field_errors.any?)
@@ -117,6 +118,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
           [
             yield,
             build_checkbox_label(field, label_text),
+            checkbox_hint_html(hint_text),
             error_html(field, field_errors)
           ].compact
         )
@@ -164,6 +166,14 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       return if hint_text.blank?
 
       @template.content_tag(:div, hint_text, class: "kern-hint", id: hint_id(field))
+    end
+
+    def checkbox_hint_html(hint_text)
+      return if hint_text.blank?
+
+      @template.content_tag(:span, hint_text,
+                            class: "kern-body kern-body--small",
+                            style: "grid-column: 2; margin-top: -12px;")
     end
 
     ## Errors

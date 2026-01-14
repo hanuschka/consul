@@ -6,3 +6,4 @@ de:
         rendering_library_description: >
           Wählen Sie den Kartentyp, der in Consul standardmäßig verwendet werden soll.
           Zur Auswahl stehen Leaflet (mit WMS-Layern), Mapbox (mit 3D-Gebäudeumrissen) und die 3D-Karten von Virtual City Systems, die im App Store aktiviert werden müssen.
+        show_admin_shape_hint: Wenn aktiviert, wird der blaue Karten-Pin (Mittelpunkt) auf der Projektübersichtsseite angezeigt. Auf der Projektseite selbst wird der Pin nicht dargestellt und dient dort nur zur Zentrierung der Karte; sichtbar sind ausschließlich die roten Karten-Elemente.

@@ -10,7 +10,7 @@ de:
         external_url: Eigene URL
       map_location:
         rendering_library: Rendering-Bibliothek
-        show_admin_shape: Admin-Form anzeigen
+        show_admin_shape: Mittelpunkt der Karte als Pin auf Projektübersicht anzeigen
         rendering_libraries:
           leaflet: Leaflet
           mapbox: Mapbox

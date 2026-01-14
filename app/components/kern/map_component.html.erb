@@ -1,6 +1,6 @@
 <%= tag.div data: controller_data_attributes do %>
   <div id="<%= container_id %>"
-       class="map_location map <%= map_location.rendering_library %>"
+       class="map_location map <%= map_location.rendering_library %> mb-4"
        style="<%= container_style %>"
        data-map-target="container">
   </div>
@@ -14,9 +14,11 @@
   <% end %>
 
   <% if form && admin_editor %>
-    <div class="my-3">
-      <%= form.check_box :show_admin_shape %>
-    </div>
+    <% if map_location.mappable_type == 'Projekt' %>
+      <div class="mb-4">
+        <%= form.check_box :show_admin_shape, hint: t('.show_admin_shape_hint') %>
+      </div>
+    <% end %>
 
     <div class="mb-3">
       <div class="kern-title kern-title--small mb-3">

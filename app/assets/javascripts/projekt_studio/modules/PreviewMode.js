@@ -71,6 +71,7 @@ ProjektStudio.PreviewMode = {
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
     $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+    $(".js-content-block-ai-edit-popup").toggle(!previewModeEnabled)
 
     console.log("anyCheckedSDG", anyCheckedSDG)
     console.log("anyCheckedCategory", anyCheckedCategory)

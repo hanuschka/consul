@@ -32,7 +32,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   enterHtmlEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-html-edit-mode", "-in-edit-mode")
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper)
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     contentBlock.innerHTML = `
@@ -53,7 +52,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   enterCodeEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-code-edit-mode", "-in-edit-mode")
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper)
 
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 

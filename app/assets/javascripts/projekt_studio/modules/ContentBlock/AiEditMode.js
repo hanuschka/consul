@@ -56,7 +56,6 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
   showAiEditModeControls(contentBlockWrapper) {
     contentBlockWrapper.classList.add('-ai-edit-mode', '-in-edit-mode');
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper);
 
     const loader = contentBlockWrapper.querySelector('.ai-edit-mode--loader');
     if (loader) {

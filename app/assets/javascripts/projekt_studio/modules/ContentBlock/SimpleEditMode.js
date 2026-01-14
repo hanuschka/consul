@@ -37,7 +37,6 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
     $accordionLinks.off("keydown")
 
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper)
     this.updateMarginBottomInputState(contentBlockWrapper)
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
@@ -209,7 +208,8 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
     if (input) {
       const marginBottom = contentBlockWrapper.style.marginBottom || '0px';
-      input.value = parseInt(marginBottom) || 35;
+      const parsedValue = parseInt(marginBottom);
+      input.value = isNaN(parsedValue) ? 35 : parsedValue;
     }
   }
 }

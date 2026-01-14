@@ -109,7 +109,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
 
     def checkbox_group(field, field_errors, label_text, hint_text)
       wrapper_class = merge_css_classes(
-        "kern-form-check",
+        "kern-form-check mb-3",
         ("kern-form-check--error" if field_errors.any?)
       )
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_24_102208) do
+ActiveRecord::Schema.define(version: 2026_01_14_145259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1501,7 +1501,7 @@ ActiveRecord::Schema.define(version: 2025_12_24_102208) do
     t.datetime "updated_at", null: false
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
-    t.integer "protocol", default: 0
+    t.integer "protocol", default: 1
     t.string "layer_defs"
     t.string "mappable_type"
     t.bigint "mappable_id"

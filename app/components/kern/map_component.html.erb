@@ -20,23 +20,13 @@
       </div>
     <% end %>
 
-    <div class="mb-3">
-      <div class="kern-title kern-title--small mb-3">
-        <%= t('components.kern.map_component.rendering_library_label') %>
-      </div>
-
-      <div class="kern-row">
-        <div class="kern-col-12 kern-col-md-6">
-          <p class="kern-body mb-3 mb-md-0">
-            <%= t('components.kern.map_component.rendering_library_description') %>
-          </p>
-        </div>
-        <div class="kern-col-12 kern-col-md-6">
-          <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
-              {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
-        </div>
-      </div>
-    </div>
+    <%= render Kern::FormFieldComponent.new(
+      label: t('components.kern.map_component.rendering_library_label'),
+      hint: t('components.kern.map_component.rendering_library_description')
+    ) do %>
+      <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
+          {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
+    <% end %>
   <% end %>
 
   <%= content %>

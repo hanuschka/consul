@@ -15,3 +15,11 @@ de:
           leaflet: Leaflet
           mapbox: Mapbox
           virtualcity: Virtual City Map
+      map_layer:
+        provider: URL des Kartenanbieters
+        attribution: Quellenhinweis der Karte
+        layer_names: Layername (WMS)
+        base: Als Basiskarte verwenden
+        show_by_default: Beim Laden der Karte standardmäßig anzeigen
+        transparent: Ebene ist transparent
+        opacity: Transparenz

@@ -36,6 +36,14 @@ class MapLocation < ApplicationRecord
     latitude.present? && longitude.present? && zoom.present?
   end
 
+  def map_layers
+    if mappable.respond_to?(:map_layers)
+      mappable.map_layers
+    else
+      MapLayer.general
+    end
+  end
+
   def json_data
     {
       "type" => "FeatureCollection",

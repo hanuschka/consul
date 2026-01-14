@@ -17,4 +17,6 @@
     map_location: @default_map_location,
     path: adm_default_map_location_path
   ) %>
+
+  <%= render "adm/map_layers/map_layers", map_layers: @default_map_location.map_layers %>
 </div>

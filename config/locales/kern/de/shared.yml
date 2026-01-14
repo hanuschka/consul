@@ -2,7 +2,7 @@ de:
   shared:
     "true": "Ja"
     "false": "Nein"
-    submit: "Abschicken"
+    submit: "Speichern"
     delete: "Löschen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
     table:

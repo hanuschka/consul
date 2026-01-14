@@ -20,6 +20,7 @@ de:
           registered_addresses: Registrierte Adressen
           default_map_location: Karten
           tags: Tags
+          individual_groups: Individuelle Gruppen
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin

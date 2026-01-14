@@ -65,7 +65,8 @@ class Adm::MenuComponent < ApplicationComponent
         { label: t("adm.menu.items.application_subitems.registration_settings"), path: registration_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.registered_addresses"),  path: adm_registered_addresses_path },
         { label: t("adm.menu.items.application_subitems.default_map_location"),  path: adm_default_map_location_path },
-        { label: t("adm.menu.items.application_subitems.tags"),                  path: adm_tags_path }
+        { label: t("adm.menu.items.application_subitems.tags"),                  path: adm_tags_path },
+        { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path }
       ]
     end
 

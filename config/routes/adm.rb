@@ -24,6 +24,7 @@ namespace :adm do
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :individual_groups, only: [:index, :new, :create, :edit, :update, :destroy]
   # application
 
   # profiles

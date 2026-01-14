@@ -25,3 +25,5 @@ de:
         opacity: Transparenz
       tag:
         name: Name des Tags
+      individual_group:
+        visible: Sichtbar

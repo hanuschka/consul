@@ -29,7 +29,8 @@ export default class extends Controller {
     adminFeatures: { type: Object, default: {} },
     layers: { type: Array, default: [] },
     mapboxPublicToken: { type: String, default: "" },
-    mapboxStyleId: { type: String, default: "" }
+    mapboxStyleId: { type: String, default: "" },
+    vcMapModuleUrl: { type: String, default: "" }
   }
 
   async connect() {
@@ -87,7 +88,8 @@ export default class extends Controller {
       editable: this.editableValue,
       adminEditor: this.adminEditorValue,
       mapboxPublicToken: this.mapboxPublicTokenValue,
-      mapboxStyleId: this.mapboxStyleIdValue
+      mapboxStyleId: this.mapboxStyleIdValue,
+      vcMapModuleUrl: this.vcMapModuleUrlValue
     }
   }
 

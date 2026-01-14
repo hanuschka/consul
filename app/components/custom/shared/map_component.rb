@@ -50,7 +50,8 @@ class Shared::MapComponent < ApplicationComponent
         options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
         options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
-        options[:map_center_altitude] = map_location&.altitude 
+        options[:map_center_altitude] = map_location&.altitude
+        options[:vc_map_module_url] = Rails.application.secrets.vc_map_module
       end
 
       options

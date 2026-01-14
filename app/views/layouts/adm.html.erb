@@ -9,6 +9,8 @@
 
     <%= csrf_meta_tags %>
     <%= favicon_link_tag "favicon.ico" %>
+    <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
+    <%= yield :vc_maps %>
 
     <%= stylesheet_link_tag "application.adm" %>
     <%= javascript_include_tag "application-kern", "data-turbo-track": "reload", type: "module" %>

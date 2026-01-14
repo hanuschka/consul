@@ -4,6 +4,7 @@
 <title><%= content_for?(:title) ? yield(:title) : default_title %></title>
 <%= csrf_meta_tags %>
 <%= favicon_link_tag "favicon.ico" %>
+<script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
 <%= stylesheet_link_tag "application" %>

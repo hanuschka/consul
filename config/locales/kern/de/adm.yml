@@ -19,6 +19,7 @@ de:
           registration_settings: Registrierung & Verifizierung
           registered_addresses: Registrierte Adressen
           default_map_location: Karten
+          tags: Tags
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin

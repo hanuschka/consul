@@ -23,3 +23,5 @@ de:
         show_by_default: Beim Laden der Karte standardmäßig anzeigen
         transparent: Ebene ist transparent
         opacity: Transparenz
+      tag:
+        name: Name des Tags

@@ -358,18 +358,6 @@ body.custom-new-design {
     margin-bottom: 0px;
     position: relative;
     z-index: 2;
-
-    &.-margin-bottom {
-      margin-bottom: 35px;
-    }
-  }
-
-  .projekt-content-block.-margin-bottom {
-    margin-bottom: 0;
-  }
-
-  &:has(.projekt-content-block.-margin-bottom) {
-    margin-bottom: 35px;
   }
 
   .image-gallery-with-ligthbox {
@@ -1501,20 +1489,38 @@ body:not(.-ai-enabled) {
   }
 }
 
+.content-block-edit-toolbar {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+  padding-bottom: 5px;
+}
+
+.content-block-margin-input {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+
+  span {
+    color: #878787;
+  }
+
+  input[type="number"] {
+    margin-bottom: 0;
+    padding: 0;
+    padding-left: 10px;
+    height: 32px;
+    width: 70px;
+  }
+}
+
 .content-block-margin-checkbox-label {
   display: flex;
   align-items: center;
+  flex-direction: column;
   cursor: pointer;
   user-select: none;
-  padding: 2px 7px;
-  border-radius: 7px;
-  transition:  50ms background-color ease;
-  color: #004a83;
-  font-size: 17px;
-
-  &:hover {
-    background-color: #d6e7f6;
-  }
 
   input[type="checkbox"] {
     width: 18px;

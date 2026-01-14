@@ -15,7 +15,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.enterAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
-    $document.on("change", ".js-content-block-margin-bottom-checkbox", this.handleMarginBottomCheckbox.bind(this));
+    $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
 
@@ -33,11 +33,12 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
 
     contentBlockWrapper.classList.remove("-highlight-changed")
-    contentBlockWrapper.classList.add("-simple-edit-mode")
+    contentBlockWrapper.classList.add("-simple-edit-mode", "-in-edit-mode")
     const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
     $accordionLinks.off("keydown")
 
-    this.updateMarginBottomCheckboxState(contentBlockWrapper)
+    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper)
+    this.updateMarginBottomInputState(contentBlockWrapper)
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
@@ -51,7 +52,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     if (contentBlockWrapper.classList.contains("-simple-edit-mode")) {
-      contentBlockWrapper.classList.remove("-simple-edit-mode")
+      contentBlockWrapper.classList.remove("-simple-edit-mode", "-in-edit-mode")
       this.toggleSimpleEditModeFor(contentBlock, false, () => {
         const content =
           contentBlock
@@ -71,7 +72,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   cancelSimpleEditMode(e) {
     const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    contentBlockWrapper.classList.remove("-simple-edit-mode")
+    contentBlockWrapper.classList.remove("-simple-edit-mode", "-in-edit-mode")
     ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
 
     this.toggleSimpleEditModeFor(contentBlock, false);
@@ -186,32 +187,29 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     e.preventDefault()
   },
 
-  handleMarginBottomCheckbox(e) {
-    const checkbox = e.currentTarget;
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(checkbox);
-    const contentBlockId = contentBlock.dataset.id;
+  handleMarginBottomInput(e) {
+    const input = e.currentTarget;
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(input);
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    const marginValue = parseInt(input.value) || 0;
 
-    if (checkbox.checked) {
-      contentBlock.classList.add("-margin-bottom")
-    } else {
-      contentBlock.classList.remove("-margin-bottom")
-    }
+    contentBlockWrapper.style.marginBottom = `${marginValue}px`;
 
     $.ajax({
       url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
       method: "PATCH",
       data: {
-        margin_bottom: checkbox.checked
+        margin_bottom: marginValue
       }
     })
   },
 
-  updateMarginBottomCheckboxState(contentBlockWrapper) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-    const checkbox = contentBlockWrapper.querySelector(".js-content-block-margin-bottom-checkbox");
+  updateMarginBottomInputState(contentBlockWrapper) {
+    const input = contentBlockWrapper.querySelector(".js-content-block-margin-bottom-input");
 
-    if (checkbox) {
-      checkbox.checked = contentBlock.classList.contains("-margin-bottom")
+    if (input) {
+      const marginBottom = contentBlockWrapper.style.marginBottom || '0px';
+      input.value = parseInt(marginBottom) || 35;
     }
   }
 }

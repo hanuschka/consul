@@ -26,6 +26,30 @@ ProjektStudio.ContentBlock.Render = {
     }
   },
 
+  wrapContentBlock(contentBlock, projektId) {
+    const marginBottom = contentBlock.style.marginBottom;
+
+    const wrappedHtml = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
+      contentBlock.innerHTML,
+      {
+        projektId,
+        contentBlockId: contentBlock.dataset.id
+      }
+    );
+
+    if (marginBottom) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = wrappedHtml;
+      const wrapper = tempDiv.querySelector('.projekt-content-block-wrapper');
+      if (wrapper) {
+        wrapper.style.marginBottom = marginBottom;
+      }
+      return tempDiv.innerHTML;
+    }
+
+    return wrappedHtml;
+  },
+
   renderContentBlocks() {
     const projektPageContent =  document.querySelector(".js-custom-page-content--inner");
 
@@ -41,15 +65,9 @@ ProjektStudio.ContentBlock.Render = {
     const projektId = ProjektStudio.getCurrentProjektId()
 
     if (contentBlocks.length > 0) {
-      wrappedContentBlocksHtml = Array.from(contentBlocks).map((contentBlock) => {
-        return ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
-          contentBlock.innerHTML,
-          {
-            projektId,
-            contentBlockId: contentBlock.dataset.id
-          }
-        );
-      }).join("")
+      wrappedContentBlocksHtml = Array.from(contentBlocks)
+        .map((contentBlock) => this.wrapContentBlock(contentBlock, projektId))
+        .join("")
     }
 
     const newHtml =

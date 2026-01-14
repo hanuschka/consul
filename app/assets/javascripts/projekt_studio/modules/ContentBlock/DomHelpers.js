@@ -46,5 +46,16 @@ ProjektStudio.ContentBlock.DomHelpers = {
 
   isSliderItem(element) {
     return element.classList.contains("orbit-slide")
+  },
+
+  moveMarginToWrapper(contentBlockWrapper) {
+    const contentBlock = this.getContentBlock(contentBlockWrapper);
+    if (!contentBlock || !contentBlockWrapper) return;
+
+    const marginBottom = contentBlock.style.marginBottom;
+    if (marginBottom && !contentBlockWrapper.style.marginBottom) {
+      contentBlockWrapper.style.marginBottom = marginBottom;
+      contentBlock.style.marginBottom = '';
+    }
   }
 };

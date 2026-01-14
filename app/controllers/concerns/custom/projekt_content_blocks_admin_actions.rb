@@ -37,7 +37,11 @@ module ProjektContentBlocksAdminActions
   def update
     authorize!(:update, @content_block.projekt)
 
-    if @content_block.update(body: params[:html])
+    update_params = {}
+    update_params[:body] = params[:html] if params.key?(:html)
+    update_params[:margin_bottom] = params[:margin_bottom] if params.key?(:margin_bottom)
+
+    if @content_block.update(update_params)
       render json: { status: { message: "Content block updated" }}
     else
       render json: { message: "Error updating content block" }
@@ -69,10 +73,16 @@ module ProjektContentBlocksAdminActions
 
     return unless check_ai_model_configured
 
+    use_full_projekt_context = ActiveModel::Type::Boolean.new.cast(params[:use_full_projekt_context])
+
     new_content_block_body =
       Ai::GenerateContentBlock.call(
         params[:instructions],
-        params[:content_block_html]
+        params[:content_block_html],
+        @content_block.projekt.page&.title,
+        @content_block.projekt.page&.subtitle,
+        projekt: @content_block.projekt,
+        use_full_projekt_context: use_full_projekt_context
       )
 
     if new_content_block_body.present?

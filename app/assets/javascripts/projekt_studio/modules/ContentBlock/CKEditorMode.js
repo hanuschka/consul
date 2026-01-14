@@ -31,7 +31,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   enterHtmlEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
-    contentBlockWrapper.classList.add("-html-edit-mode")
+    contentBlockWrapper.classList.add("-html-edit-mode", "-in-edit-mode")
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     contentBlock.innerHTML = `
@@ -51,7 +51,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   enterCodeEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
-    contentBlockWrapper.classList.add("-code-edit-mode")
+    contentBlockWrapper.classList.add("-code-edit-mode", "-in-edit-mode")
 
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
@@ -93,7 +93,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   saveFromCkeditor(contentBlockWrapper, contentBlock) {
     if (contentBlockWrapper.classList.contains("-html-edit-mode")) {
-      contentBlockWrapper.classList.remove("-html-edit-mode")
+      contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
 
       const editorId = this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)
 
@@ -107,7 +107,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   },
 
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {
-    contentBlockWrapper.classList.remove("-html-edit-mode")
+    contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
     ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
   }
 };

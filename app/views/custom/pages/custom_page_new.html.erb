@@ -139,7 +139,11 @@
 
   <% additional_main_class = show_admin_controls_for_projekt?(@projekt) ? "projekt-studio" : "" %>
 
-  <main class="projekt-page <%= additional_main_class %> js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
+  <main
+    class="projekt-page <%= additional_main_class %> js-projekt-page"
+    data-projekt-id="<%= @custom_page.projekt&.id %>"
+    data-default-margin-bottom="<%= SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>"
+  >
     <% if @custom_page.projekt.present? %>
       <div class="custom-fixed-tabs margin-bottom">
         <div class="custom-fixed-tabs--content">

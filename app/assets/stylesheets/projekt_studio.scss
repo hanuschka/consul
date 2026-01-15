@@ -1513,6 +1513,10 @@ body:not(.-ai-enabled) {
     padding-left: 10px;
     height: 32px;
     width: 70px;
+
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+      height: 32px;
+    }
   }
 }
 

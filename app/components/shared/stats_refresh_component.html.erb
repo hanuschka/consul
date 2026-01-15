@@ -7,7 +7,7 @@
         data-status-check-url="<%= status_path %>"
         data-section="<%= section %>"
         >
-        <%= t("custom.ai_stats.refresh_button") %>
+        <%= t(button_text) %>
       </button>
 
       <div
@@ -16,19 +16,21 @@
           data-section="<%= section %>"
           >
           <%= render Shared::LoadingSpinnerComponent.new(
-            message: t("custom.ai_stats.processing"),
+            message: t(processing_text),
             size: "small"
           ) %>
       </div>
     </div>
 
-    <% if last_updated_at.present? %>
-      <div class="stats-last-updated-container">
-        <p class="stats-last-updated-item">
-          <%= t("custom.ai_stats.last_updated") %>
-          <span class="js-stat-last-updated-time"><%= l(last_updated_at, format: :short) %></span>
-        </p>
-      </div>
-    <% end %>
+    <div class="stats-last-updated-container">
+      <p class="stats-last-updated-item">
+        <%= t(last_updated_text) %>
+        <span class="js-stat-last-updated-time">
+          <% if last_updated_at.present? %>
+            <%= l(last_updated_at, format: :short) %>
+          <% end %>
+        </span>
+      </p>
+    </div>
   </div>
 </div>

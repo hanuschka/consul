@@ -145,13 +145,8 @@
       $container.find(".js-stats-refresh-button").removeClass("u-hidden");
       $container.find(".js-stats-status").addClass("u-hidden");
 
-      if (response.last_updated_at) {
-        this.updateTimestamp(response.last_updated_at);
-      }
-
-      if (response.sections_html) {
-        this.updateSections(response.sections_html);
-      }
+      this.updateTimestamp(response.last_updated_at);
+      this.updateSections(response.sections_html);
     },
 
     updateTimestamp: function(timestamp) {

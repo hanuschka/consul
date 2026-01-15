@@ -24,10 +24,11 @@
         <% if can?(:refresh_ai_stats, @poll) %>
           <div class="margin-bottom">
             <%= render Shared::StatsRefreshComponent.new(
-              resource: @poll,
               refresh_path: refresh_ai_stats_poll_path(@poll),
               status_path: ai_stats_status_poll_path(@poll),
-              section: local_assigns[:section]
+              section: local_assigns[:section],
+              last_updated_at: @poll.ai_stats_refreshed_at,
+              processing: @poll.ai_stats_refresh_processing? || @poll.ai_stats_refresh_pending?
             ) %>
           </div>
         <% end %>

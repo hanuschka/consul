@@ -1,4 +1,4 @@
-class Shared::AiStatsRefreshComponent < ApplicationComponent
+class Shared::StatsRefreshComponent < ApplicationComponent
   attr_reader :resource, :refresh_path, :status_path, :section
 
   def initialize(resource:, refresh_path:, status_path:, section: nil)

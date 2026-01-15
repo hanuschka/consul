@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  App.AiStatsRefresh = {
+  App.StatsRefresh = {
     statusCheckTimeout: 7000,
     statusCheckActive: false,
 

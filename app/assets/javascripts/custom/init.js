@@ -28,7 +28,7 @@
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
       App.HeatmapComponent.initialize();
-      App.AiStatsRefresh.initialize();
+      App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
     }
   };

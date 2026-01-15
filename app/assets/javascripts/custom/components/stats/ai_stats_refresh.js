@@ -2,8 +2,8 @@
   "use strict";
 
   App.AiStatsRefresh = {
-    poolingTimeout: 7000,
-    pollingActive: false,
+    statusCheckTimeout: 7000,
+    statusCheckActive: false,
 
     initialize: function() {
       this.attachEventListeners();
@@ -11,33 +11,26 @@
       this.checkInitialStatus();
     },
 
-    getRefreshButton: function() {
-      return $(".js-ai-stats-refresh-button");
-    },
-
-    getStatusDisplay: function() {
-      return $(".js-ai-stats-status");
-    },
-
     getLastUpdatedTime: function() {
       return $(".js-stat-last-updated-time");
     },
 
     getParticipationStats: function() {
-      return $(".js-poll-participation-stats");
+      return $(".js-participation-stats");
     },
 
     attachEventListeners: function() {
       const $document = $(document);
 
-      $document.on("click", ".js-ai-stats-refresh-button", (event) => {
-        const button = event.currentTarget;
-        const url = button.dataset.url;
-        const statusUrl = button.dataset.statusUrl;
-        const section = button.dataset.section;
+      $document.on("click", ".js-stats-refresh-button", (event) => {
+        const $button = $(event.currentTarget);
+        const $container = $button.closest(".js-stats-button-container");
+        const url = $button.data("url");
+        const statusCheckUrl = $button.data("status-check-url");
+        const section = $button.data("section");
 
-        this.getRefreshButton().addClass("u-hidden");
-        this.getStatusDisplay().removeClass("u-hidden");
+        $button.addClass("u-hidden");
+        $container.find(".js-stats-status").removeClass("u-hidden");
 
         App.Ajax
           .request({
@@ -45,14 +38,27 @@
             method: "POST",
             dataType: "json"
           })
-          .then((data) => {
-            const finalStatusUrl = data.status_url || statusUrl;
-            this.startPolling(finalStatusUrl, section);
+          .then((response) => {
+            if (statusCheckUrl) {
+              const finalStatusCheckUrl = response.status_url || statusCheckUrl;
+              this.startStatusCheck(finalStatusCheckUrl, section, $container);
+            } else {
+              $button.removeClass("u-hidden");
+              $container.find(".js-stats-status").addClass("u-hidden");
+
+              if (response.last_updated_at) {
+                this.updateTimestamp(response.last_updated_at);
+              }
+
+              if (response.sections_html) {
+                this.updateSections(response.sections_html);
+              }
+            }
           })
           .catch(() => {
-            this.getRefreshButton().removeClass("u-hidden");
-            this.getStatusDisplay().addClass("u-hidden");
-            alert("Error refreshing AI stats. Please try again.");
+            $button.removeClass("u-hidden");
+            $container.find(".js-stats-status").addClass("u-hidden");
+            alert("Fehler beim Aktualisieren der Statistiken. Bitte versuchen Sie es erneut.");
           });
       });
     },
@@ -61,36 +67,38 @@
       const $document = $(document);
 
       $document.on("turbolinks:before-visit", () => {
-        this.stopPolling();
+        this.stopStatusCheck();
       });
     },
 
     checkInitialStatus: function() {
-      const $statusDisplay = this.getStatusDisplay();
-
-      if ($statusDisplay.length && !$statusDisplay.hasClass("u-hidden")) {
-        const statusUrl = $statusDisplay.data("status-url");
-        const section = $statusDisplay.data("section");
-        if (statusUrl) {
-          this.startPolling(statusUrl, section);
+      $(".js-stats-status").each((index, element) => {
+        const $statusDisplay = $(element);
+        if (!$statusDisplay.hasClass("u-hidden")) {
+          const statusCheckUrl = $statusDisplay.data("status-check-url");
+          const section = $statusDisplay.data("section");
+          const $container = $statusDisplay.closest(".js-stats-button-container");
+          if (statusCheckUrl) {
+            this.startStatusCheck(statusCheckUrl, section, $container);
+          }
         }
-      }
+      });
     },
 
-    startPolling: function(statusUrl, section) {
-      this.pollingActive = true;
+    startStatusCheck: function(statusUrl, section, $container) {
+      this.statusCheckActive = true;
       const maxAttempts = 300;
       let attempts = 0;
 
       const urlWithSection = section ? `${statusUrl}?section=${section}` : statusUrl;
 
       const poll = () => {
-        if (!this.pollingActive) {
+        if (!this.statusCheckActive) {
           return;
         }
 
         if (attempts >= maxAttempts) {
-          this.pollingActive = false;
+          this.statusCheckActive = false;
           alert("Timeout beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
           return;
         }
@@ -104,24 +112,24 @@
             dataType: "json"
           })
           .then((response) => {
-            if (!this.pollingActive) {
+            if (!this.statusCheckActive) {
               return;
             }
 
             if (response.status === "completed") {
-              this.pollingActive = false;
-              this.finishPolling(response);
+              this.statusCheckActive = false;
+              this.finishStatusCheck(response, $container);
             } else if (response.status === "failed") {
-              this.pollingActive = false;
-              this.resetButton();
+              this.statusCheckActive = false;
+              this.resetButton($container);
               alert("Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut.");
             } else {
-              setTimeout(poll, this.poolingTimeout);
+              setTimeout(poll, this.statusCheckTimeout);
             }
           })
           .catch(() => {
-            if (this.pollingActive) {
-              setTimeout(poll, this.poolingTimeout);
+            if (this.statusCheckActive) {
+              setTimeout(poll, this.statusCheckTimeout);
             }
           });
       };
@@ -129,13 +137,13 @@
       poll();
     },
 
-    stopPolling: function() {
-      this.pollingActive = false;
+    stopStatusCheck: function() {
+      this.statusCheckActive = false;
     },
 
-    finishPolling: function(response) {
-      this.getRefreshButton().removeClass("u-hidden");
-      this.getStatusDisplay().addClass("u-hidden");
+    finishStatusCheck: function(response, $container) {
+      $container.find(".js-stats-refresh-button").removeClass("u-hidden");
+      $container.find(".js-stats-status").addClass("u-hidden");
 
       if (response.last_updated_at) {
         this.updateTimestamp(response.last_updated_at);
@@ -154,9 +162,9 @@
       this.getParticipationStats().html(html);
     },
 
-    resetButton: function() {
-      this.getRefreshButton().removeClass("u-hidden");
-      this.getStatusDisplay().addClass("u-hidden");
+    resetButton: function($container) {
+      $container.find(".js-stats-refresh-button").removeClass("u-hidden");
+      $container.find(".js-stats-status").addClass("u-hidden");
     }
   };
 }).call(this);

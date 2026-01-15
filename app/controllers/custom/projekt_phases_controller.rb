@@ -30,13 +30,23 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase.stats_version&.destroy!
     @projekt_phase.update(stats_refreshed_at: Time.current)
 
-    redirect_back(
-      fallback_location: page_path(
-        @projekt_phase.projekt.page.slug,
-        projekt_phase_id: @projekt_phase.id,
-        section: "stats"
-      )
-    )
+    respond_to do |format|
+      format.html do
+        redirect_back(
+          fallback_location: page_path(
+            @projekt_phase.projekt.page.slug,
+            projekt_phase_id: @projekt_phase.id,
+            section: "stats"
+          )
+        )
+      end
+      format.js do
+        render json: {
+          last_updated_at: l(@projekt_phase.stats_refreshed_at, format: :short),
+          sections_html: render_participation_stats_sections
+        }
+      end
+    end
   end
 
   def refresh_ai_stats
@@ -74,7 +84,15 @@ class ProjektPhasesController < ApplicationController
   end
 
   def render_participation_stats_sections
-    @stats = ProjektPhase::Stats.new(@projekt_phase)
+    case @projekt_phase
+    when ProjektPhase::ProposalPhase
+      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+    when ProjektPhase::BudgetPhase
+      @budget = @projekt_phase.budget
+      @stats = Budget::Stats.new(@budget) if @budget
+    else
+      @stats = ProjektPhase::Stats.new(@projekt_phase)
+    end
     render_to_string(
       partial: "custom/pages/projekt_footer_new/participation_stats_sections",
       locals: { projekt_phase: @projekt_phase, stats: @stats }

@@ -2,13 +2,26 @@
   <div class="u-flex margin-bottom u-full-width u-justify-between u-align-start">
     <div class="u-flex u-gap-15">
       <div class="u-flex u-flex-column u-align-center">
-        <div class="stats-button-container">
-          <%= button_to(t("custom.projekt_phases.stats.refresh_stats_button"), refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
+        <div class="js-stats-button-container stats-button-container stats-button-container--regular">
+          <button
+            class="button js-stats-refresh-button"
+            data-url="<%= refresh_stats_projekt_phase_path(@projekt_phase) %>"
+          >
+            <%= t("custom.projekt_phases.stats.refresh_stats_button") %>
+          </button>
+
+          <div class="js-stats-status stats-button-status u-hidden">
+            <%= render Shared::LoadingSpinnerComponent.new(
+              message: t("custom.projekt_phases.stats.processing_stats"),
+              size: "small"
+            ) %>
+          </div>
         </div>
         <% if @projekt_phase.stats_refreshed_at.present? %>
           <div class="stats-last-updated-container">
             <p class="stats-last-updated-item">
-              <%= t("custom.projekt_phases.stats.refresh_stats_last_updated", time: l(@projekt_phase.stats_refreshed_at, format: :short)) %>
+              <%= t("custom.projekt_phases.stats.refresh_stats_last_updated", time: "") %>
+              <span class="js-stat-last-updated-time"><%= l(@projekt_phase.stats_refreshed_at, format: :short) %></span>
             </p>
           </div>
         <% end %>
@@ -31,6 +44,6 @@
 
 <% end %>
 
-<div class='participation-stats js-poll-participation-stats'>
+<div class='participation-stats js-participation-stats'>
   <%= render "custom/pages/projekt_footer_new/participation_stats_sections", projekt_phase: @projekt_phase, stats: @stats %>
 </div>

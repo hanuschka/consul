@@ -1,6 +1,6 @@
 class ProjektPhase::VotingPhase < ProjektPhase
   has_many :polls, foreign_key: :projekt_phase_id,
-    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+    dependent: :destroy, inverse_of: :projekt_phase
 
   accepts_nested_attributes_for :polls
 

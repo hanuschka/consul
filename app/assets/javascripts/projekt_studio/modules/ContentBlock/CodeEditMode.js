@@ -29,11 +29,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   showCodeEditModeControls(contentBlockWrapper) {
-    contentBlockWrapper.classList.add('-code-edit-mode');
+    contentBlockWrapper.classList.add('-code-edit-mode', '-in-edit-mode');
   },
 
   hideCodeEditModeControls(contentBlockWrapper) {
-    contentBlockWrapper.classList.remove('-code-edit-mode');
+    contentBlockWrapper.classList.remove('-code-edit-mode', '-in-edit-mode');
   },
 
   getEditorContainer(contentBlockWrapper) {

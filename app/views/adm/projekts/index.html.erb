@@ -10,19 +10,13 @@
           <th scope="col" class="kern-table__header"><%= Projekt.model_name.human %></th>
           <th scope="col" class="kern-table__header"><%= Projekt.human_attribute_name("total_duration_start") %></th>
           <th scope="col" class="kern-table__header"><%= Projekt.human_attribute_name("total_duration_end") %></th>
-          <th scope="col" class="kern-table__header">Status</th>
-          <th scope="col" class="kern-table__header">Action</th>
+          <th scope="col" class="kern-table__header"><%= t(".table.status") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
         </tr>
       </thead>
       <tbody class="kern-table__body">
         <% @projekts.each do |projekt| %>
-          <tr class="kern-table__row">
-            <th scope="row" class="kern-table__header"><%= link_to projekt.title, adm_projekt_path(projekt), class: "link strong" %></th>
-            <td class="kern-table__cell"><%= projekt.total_duration_start %></td>
-            <td class="kern-table__cell"><%= projekt.total_duration_end %></td>
-            <td class="kern-table__cell"><%= projekt.activated? %></td>
-            <td class="kern-table__cell"></td>
-          </tr>
+          <%= render "projekt", projekt: projekt %>
         <% end %>
       </tbody>
     </table>

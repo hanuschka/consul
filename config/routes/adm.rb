@@ -1,7 +1,9 @@
 namespace :adm do
   root to: "home#show"
 
-  resources :projekts, only: [:index, :show]
+  resources :projekts, only: [:index, :show, :edit, :update, :destroy] do
+    patch :toggle_activated, on: :member
+  end
 
   # application
   resource :homepage, controller: "homepage", only: [:show]

@@ -3,3 +3,18 @@ de:
     projekts:
       index:
         title: Projekte
+        table:
+          status: Status
+          actions: Aktionen
+      projekt:
+        top_level_projekt: Top-Level-Projekt
+        edit: Bearbeiten
+        delete: Löschen
+        delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
+      edit:
+        title: Projekt bearbeiten
+        submit: Speichern
+      update:
+        success: Projekt erfolgreich aktualisiert.
+      destroy:
+        success: Projekt erfolgreich gelöscht.

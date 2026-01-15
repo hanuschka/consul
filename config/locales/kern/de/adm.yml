@@ -21,6 +21,7 @@ de:
           default_map_location: Karten
           tags: Tags
           individual_groups: Individuelle Gruppen
+          age_ranges: Altersgruppen
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin

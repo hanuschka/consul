@@ -25,6 +25,9 @@ namespace :adm do
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :individual_groups, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :age_ranges, only: [:index, :new, :create, :edit, :update, :destroy] do
+    patch :reorder, on: :collection
+  end
   # application
 
   # profiles

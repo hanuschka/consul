@@ -1,20 +1,18 @@
 <div class="u-flex u-gap-10">
   <div class="u-flex u-flex-column u-align-center">
-    <div
-      class=" js-ai-stats-button-container stats-button-container"
-      >
+    <div class="js-stats-button-container stats-button-container">
       <button
-        class="button secondary js-ai-stats-refresh-button <%= 'u-hidden' if processing? %>"
+        class="button secondary js-stats-refresh-button <%= 'u-hidden' if processing? %>"
         data-url="<%= refresh_path %>"
-        data-status-url="<%= status_path %>"
+        data-status-check-url="<%= status_path %>"
         data-section="<%= section %>"
         >
         <%= t("custom.ai_stats.refresh_button") %>
       </button>
 
       <div
-          class="js-ai-stats-status ai-stats-status <%= 'u-hidden' unless processing? %>"
-          data-status-url="<%= status_path %>"
+          class="js-stats-status stats-button-status <%= 'u-hidden' unless processing? %>"
+          data-status-check-url="<%= status_path %>"
           data-section="<%= section %>"
           >
           <%= render Shared::LoadingSpinnerComponent.new(

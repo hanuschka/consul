@@ -30,7 +30,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
   showCodeEditModeControls(contentBlockWrapper) {
     contentBlockWrapper.classList.add('-code-edit-mode', '-in-edit-mode');
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(contentBlockWrapper);
   },
 
   hideCodeEditModeControls(contentBlockWrapper) {

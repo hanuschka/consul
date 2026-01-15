@@ -13,6 +13,7 @@ de:
         back_to_phase: Zurück zum Projekt
         refresh_stats_button: "Statistiken aktualisieren"
         refresh_stats_last_updated: "Aktualisiert: %{time}"
+        processing_stats: "Wird verarbeitet..."
         refresh_ai_stats_button: "AI-Statistiken aktualisieren"
         refresh_ai_stats_last_updated: "Aktualisiert: %{time}"
         refresh_ai_stats_loading: "Bitte warten, AI-Statistiken werden aktualisiert..."

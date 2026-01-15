@@ -23,7 +23,7 @@
 
         <% if can?(:refresh_ai_stats, @poll) %>
           <div class="margin-bottom">
-            <%= render Shared::AiStatsRefreshComponent.new(
+            <%= render Shared::StatsRefreshComponent.new(
               resource: @poll,
               refresh_path: refresh_ai_stats_poll_path(@poll),
               status_path: ai_stats_status_poll_path(@poll),

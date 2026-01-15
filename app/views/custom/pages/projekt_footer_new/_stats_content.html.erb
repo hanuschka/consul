@@ -27,7 +27,7 @@
         <% end %>
       </div>
 
-      <%= render Shared::AiStatsRefreshComponent.new(
+      <%= render Shared::StatsRefreshComponent.new(
         resource: @projekt_phase,
         refresh_path: refresh_ai_stats_projekt_phase_path(@projekt_phase),
         status_path: ai_stats_status_projekt_phase_path(@projekt_phase)

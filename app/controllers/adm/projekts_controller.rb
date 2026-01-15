@@ -1,18 +1,24 @@
 module Adm
   class ProjektsController < Adm::BaseController
-    before_action :find_projekt, only: [:show, :edit, :update, :destroy, :toggle_activated]
+    before_action :find_projekt, only: [:details, :edit, :update, :destroy, :toggle_activated]
 
     def index
       authorize [:adm, Projekt]
-      @pagy, @projekts = pagy(policy_scope([:adm, Projekt]), limit: 10)
+      base_scope = ProjektsQuery.call(policy_scope([:adm, Projekt]), params)
+      @pagy, @projekts = pagy(base_scope, limit: 10)
+
+      @name_header_options = { sort: true, search: true }
+      @start_date_header_options = { sort: true }
+      @end_date_header_options = { sort: true }
+
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts") }
       ]
     end
 
-    def show
-      authorize [:adm, @projekt]
+    def details
+      authorize [:adm, @projekt], :show?
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
@@ -25,7 +31,7 @@ module Adm
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
-        { name: @projekt.name, url: adm_projekt_path(@projekt) },
+        { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t("adm.projekts.edit.title") }
       ]
     end
@@ -34,7 +40,7 @@ module Adm
       authorize [:adm, @projekt]
 
       if @projekt.update(projekt_params)
-        redirect_to adm_projekt_path(@projekt), notice: t("adm.projekts.update.success")
+        redirect_to details_adm_projekt_path(@projekt), notice: t("adm.projekts.update.success")
       else
         render :edit, status: :unprocessable_entity
       end

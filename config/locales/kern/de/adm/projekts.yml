@@ -8,9 +8,17 @@ de:
           actions: Aktionen
       projekt:
         top_level_projekt: Top-Level-Projekt
+        details: Details
         edit: Bearbeiten
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
+      details:
+        status: Status
+        activated: Aktiviert
+        not_activated: Nicht aktiviert
+        parent_projekt: Übergeordnetes Projekt
+        edit: Bearbeiten
+        back: Zurück zur Liste
       edit:
         title: Projekt bearbeiten
         submit: Speichern

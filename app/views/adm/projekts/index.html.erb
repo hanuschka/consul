@@ -7,9 +7,9 @@
     <table class="kern-table">
       <thead class="kern-table__head">
         <tr class="kern-table__row">
-          <th scope="col" class="kern-table__header"><%= Projekt.model_name.human %></th>
-          <th scope="col" class="kern-table__header"><%= Projekt.human_attribute_name("total_duration_start") %></th>
-          <th scope="col" class="kern-table__header"><%= Projekt.human_attribute_name("total_duration_end") %></th>
+          <%= render Kern::Table::HeaderComponent.new(:name, Projekt.model_name.human, **@name_header_options) %>
+          <%= render Kern::Table::HeaderComponent.new(:total_duration_start, Projekt.human_attribute_name("total_duration_start"), **@start_date_header_options) %>
+          <%= render Kern::Table::HeaderComponent.new(:total_duration_end, Projekt.human_attribute_name("total_duration_end"), **@end_date_header_options) %>
           <th scope="col" class="kern-table__header"><%= t(".table.status") %></th>
           <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
         </tr>

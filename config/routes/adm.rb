@@ -1,7 +1,8 @@
 namespace :adm do
   root to: "home#show"
 
-  resources :projekts, only: [:index, :show, :edit, :update, :destroy] do
+  resources :projekts, only: [:index, :edit, :update, :destroy] do
+    get :details, on: :member
     patch :toggle_activated, on: :member
   end
 
@@ -67,6 +68,7 @@ namespace :adm do
 
   namespace :site_customization do
     resources :images, only: [:update]
+    resources :pages, only: [:update]
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection

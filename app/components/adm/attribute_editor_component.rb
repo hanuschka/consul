@@ -13,6 +13,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
 
     return adm_setting_path(@record) if @record.is_a?(Setting)
     return adm_site_customization_image_path(@record) if @record.is_a?(SiteCustomization::Image)
+    return adm_site_customization_page_path(@record) if @record.is_a?(SiteCustomization::Page)
 
     raise "No path provided for attribute editor"
   end
@@ -59,8 +60,9 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def suffix
-    if @record.is_a?(::SiteCustomization::Page) && @record.landing?
-      "landing"
+    if @record.is_a?(::SiteCustomization::Page)
+      return "projekt" if @record.projekt.present?
+      return "landing" if @record.landing?
     else
       nil
     end

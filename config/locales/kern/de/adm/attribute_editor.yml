@@ -13,6 +13,9 @@ de:
         mobile_header_image_label: Hintergrundbild für Mobile
         mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
       site_customization/page:
+        projekt:
+          title_label: Titel der Startseite
+          title_description: "Der Titel der Startseite wird prominent über dem Hintergrundbild auf der Startseite angezeigt. Er sollte kurz und prägnant sein, um die Aufmerksamkeit der Besucher zu gewinnen."
         landing:
           slug_label: URL der Themenseite
           slug_description: 'Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung“. Die URL darf keine Leer- oder Sonderzeichen enthalten.'

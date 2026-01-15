@@ -21,7 +21,7 @@ class Adm::ProjektPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.all
+      scope.includes([:projekt_settings, :parent, [page: :translations]])
     end
   end
 end

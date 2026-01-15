@@ -47,6 +47,7 @@ class ProposalsController
 
     @resources =
       @resources
+        .where(admin_accepted: true)
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -162,6 +163,11 @@ class ProposalsController
   def show
     super
     @projekt = @proposal.projekt_phase.projekt
+
+    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+      head :not_found, content_type: "text/html" and return
+    end
+
     # @notifications = @proposal.notifications
     @notifications = @proposal.notifications.not_moderated
     @milestones = @proposal.milestones

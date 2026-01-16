@@ -29,6 +29,12 @@ resources :projekt_phases, only: [] do
     post :toggle_subscription
     post :refresh_stats
     post :refresh_ai_stats
+    get :ai_stats_status
+    post :create_stat_question
+    get :stat_question_status
+    get :download_stat_answer
+    delete :delete_stat_question
+    get :download_all_stat_answers
   end
 end
 

@@ -6,3 +6,7 @@ en:
         second_level: 'Second level'
         third_level: 'Third level'
         fourth_level: 'Fourth level'
+      sidebar_filter:
+        phases:
+          title: 'Phases'
+          all_phases: 'All phases'

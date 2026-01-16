@@ -13,14 +13,16 @@
 }
 
 .area-chart-card--title {
-  font-size: 18px;
+  // font-size: 18px;
+  font-size: 22px !important;
+  margin-bottom: 0 !important;
   font-weight: 600;
   color: #333;
   margin: 0;
 }
 
 .area-chart-card--total {
-  font-size: 42px;
+  font-size: 38px;
   font-weight: 700;
   color: #333;
   margin-bottom: 15px;
@@ -40,5 +42,7 @@
 
 .timeline-stats {
   margin-top: 20px;
+  gap: 30px;
+  display: flex;
+  flex-direction: column;
 }
-

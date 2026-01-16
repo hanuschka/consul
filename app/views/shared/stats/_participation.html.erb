@@ -1,86 +1,84 @@
 <div id="participation_statistics">
 
-  <% if stats.is_a?(Budget::Stats) %>
-    <h3><%= t("custom.participation_stats.key_performance_indicators") %></h3>
-    <div class="participation-stat-number-cards">
-      <div class="participation-stat-number-card">
+  <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
+    <div class="ai-stats-cards margin-bottom">
+      <div class="ai-stats-card">
         <h4><%= t("stats.budgets.total_investments") %></h4>
         <div class="number"><%= stats.total_budget_investments %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("stats.total_participants") %></h4>
         <div class="number"><%= stats.total_participants %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("stats.supports") %></h4>
         <div class="number"><%= stats.total_supports %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("stats.budgets.total_votes") %></h4>
         <div class="number"><%= stats.total_votes %></div>
       </div>
 
       <% unless params[:stats_section] == "accepting" %>
-        <div class="participation-stat-number-card">
+        <div class="ai-stats-card">
           <h4><%= t("stats.budgets.total_feasible_investments") %></h4>
           <div class="number"><%= stats.total_feasible_investments %></div>
         </div>
 
-        <div class="participation-stat-number-card">
+        <div class="ai-stats-card">
           <h4><%= t("stats.budgets.total_unfeasible_investments") %></h4>
           <div class="number"><%= stats.total_unfeasible_investments %></div>
         </div>
       <% end %>
 
       <% if @budget.valuating_or_later? %>
-        <div class="participation-stat-number-card">
+        <div class="ai-stats-card">
           <h4><%= t("stats.budgets.total_selected_investments") %></h4>
           <div class="number"><%= stats.total_selected_investments %></div>
         </div>
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <h3><%= t("custom.participation_stats.key_performance_indicators") %></h3>
-    <div class="participation-stat-number-cards">
-      <div class="participation-stat-number-card">
+    <div class="number-stats-cards margin-bottom">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.proposals") %></h4>
         <div class="number"><%= stats.total_proposals %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.authors") %></h4>
         <div class="number"><%= stats.total_authors %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.participants") %></h4>
         <div class="number"><%= stats.total_participants %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.supports") %></h4>
         <div class="number"><%= stats.total_supports %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.weighted_score") %></h4>
         <div class="number"><%= stats.total_supports_weight %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.comments") %></h4>
         <div class="number"><%= stats.total_comments %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.hidden") %></h4>
         <div class="number"><%= stats.total_hidden %></div>
       </div>
 
-      <div class="participation-stat-number-card">
+      <div class="ai-stats-card">
         <h4><%= t("custom.projekt_phases.stats.proposal_phase.reported") %></h4>
         <div class="number"><%= stats.total_reported %></div>
       </div>

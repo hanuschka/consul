@@ -1,6 +1,4 @@
-<div class="timeline-stats">
-  <h3 class="participation-stats--section-title"><%= t("custom.participation_stats.timeline.title") %></h3>
-
+<div class="timeline-stats ai-stats-card">
   <% submissions = submissions_chart_data %>
   <% if submissions[:labels].any? %>
     <%= render Shared::AreaChartComponent.new(

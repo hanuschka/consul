@@ -3,7 +3,7 @@
 
   App.BarChartComponent = {
     initialize: function() {
-      var charts = document.querySelectorAll("[data-bar-chart]");
+      const charts = document.querySelectorAll("[data-bar-chart]");
       charts.forEach(this.initChart.bind(this));
     },
 
@@ -12,31 +12,41 @@
         return;
       }
 
-      var canvas = container.querySelector("canvas");
+      const canvas = container.querySelector("canvas");
       if (!canvas) {
         return;
       }
 
-      var labels = JSON.parse(container.dataset.chartLabels || "[]");
-      var values = JSON.parse(container.dataset.chartValues || "[]");
-      var orientation = container.dataset.chartOrientation || "vertical";
-      var colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
-      var usePercentage = container.dataset.chartUsePercentage === "true";
+      const chartData = this.getChartData(container);
+      this.adjustContainerHeight(container, chartData);
 
-      var isHorizontal = orientation === "horizontal";
-      var backgroundColor = colors || "#6BA3D6";
-      var borderColor = colors || "#6BA3D6";
+      const ctx = canvas.getContext("2d");
+      const chartConfig = this.createChartConfig(chartData);
 
-      if (isHorizontal) {
-        var barHeight = 35;
-        var barSpacing = 12;
-        var paddingTop = 10;
-        var paddingBottom = 30;
-        var calculatedHeight = (labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
-        container.style.height = calculatedHeight + "px";
-      }
+      new Chart(ctx, chartConfig);
+      container.dataset.chartInitialized = "true";
+    },
 
-      var valueAxisConfig = {
+    getChartData: function(container) {
+      const labels = JSON.parse(container.dataset.chartLabels || "[]");
+      const values = JSON.parse(container.dataset.chartValues || "[]");
+      const orientation = container.dataset.chartOrientation || "vertical";
+      const colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
+      const usePercentage = container.dataset.chartUsePercentage === "true";
+
+      return {
+        labels: labels,
+        values: values,
+        isHorizontal: orientation === "horizontal",
+        backgroundColor: colors || "#6BA3D6",
+        borderColor: colors || "#6BA3D6",
+        usePercentage: usePercentage,
+        maxValue: Math.max.apply(null, values)
+      };
+    },
+
+    createValueAxisConfig: function(chartData) {
+      const config = {
         grid: {
           display: true,
           color: "#e0e0e0"
@@ -46,23 +56,40 @@
           font: {
             size: 15,
             weight: 400
+          },
+          stepSize: 1,
+          callback: function(value) {
+            if (Number.isInteger(value)) {
+              return value;
+            }
+            return null;
           }
         },
         border: {
           display: false
         },
-        beginAtZero: true
+        beginAtZero: true,
+        suggestedMax: chartData.maxValue
       };
 
-      if (usePercentage) {
-        valueAxisConfig.min = 0;
-        valueAxisConfig.max = 100;
-        valueAxisConfig.ticks.callback = function(value) {
-          return value + "%";
+      if (chartData.usePercentage) {
+        config.min = 0;
+        config.max = 100;
+        config.suggestedMax = undefined;
+        config.ticks.stepSize = undefined;
+        config.ticks.callback = function(value) {
+          if (Number.isInteger(value)) {
+            return value + "%";
+          }
+          return null;
         };
       }
 
-      var labelAxisConfig = {
+      return config;
+    },
+
+    createLabelAxisConfig: function() {
+      return {
         grid: {
           display: false,
           color: "#e0e0e0"
@@ -79,60 +106,77 @@
           display: false
         }
       };
+    },
 
-      var ctx = canvas.getContext("2d");
+    createTooltipConfig: function(chartData) {
+      return {
+        backgroundColor: "#333",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        cornerRadius: 4,
+        padding: 10,
+        titleFont: {
+          size: 14
+        },
+        bodyFont: {
+          size: 14
+        },
+        callbacks: {
+          label: (context) => {
+            const value = chartData.isHorizontal ? context.parsed.x : context.parsed.y;
+            const roundedValue = Math.round(value);
+            return chartData.usePercentage ? roundedValue + "%" : roundedValue;
+          }
+        }
+      };
+    },
 
-      var tooltipCallbacks = {};
-      if (usePercentage) {
-        tooltipCallbacks.label = function(context) {
-          return context.parsed.x + "%";
-        };
-      }
+    createChartConfig: function(chartData) {
+      const valueAxisConfig = this.createValueAxisConfig(chartData);
+      const labelAxisConfig = this.createLabelAxisConfig();
 
-      new Chart(ctx, {
+      return {
         type: "bar",
         data: {
-          labels: labels,
+          labels: chartData.labels,
           datasets: [{
-            data: values,
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
+            data: chartData.values,
+            backgroundColor: chartData.backgroundColor,
+            borderColor: chartData.borderColor,
             borderWidth: 0,
             borderRadius: 4,
-            barThickness: isHorizontal ? 35 : 40
+            barThickness: chartData.isHorizontal ? 35 : 40
           }]
         },
         options: {
-          indexAxis: isHorizontal ? "y" : "x",
+          indexAxis: chartData.isHorizontal ? "y" : "x",
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
               display: false
             },
-            tooltip: {
-              backgroundColor: "#333",
-              titleColor: "#fff",
-              bodyColor: "#fff",
-              cornerRadius: 4,
-              padding: 10,
-              titleFont: {
-                size: 14
-              },
-              bodyFont: {
-                size: 14
-              },
-              callbacks: tooltipCallbacks
-            }
+            tooltip: this.createTooltipConfig(chartData)
           },
           scales: {
-            x: isHorizontal ? valueAxisConfig : labelAxisConfig,
-            y: isHorizontal ? labelAxisConfig : valueAxisConfig
+            x: chartData.isHorizontal ? valueAxisConfig : labelAxisConfig,
+            y: chartData.isHorizontal ? labelAxisConfig : valueAxisConfig
           }
         }
-      });
+      };
+    },
 
-      container.dataset.chartInitialized = "true";
+    adjustContainerHeight: function(container, chartData) {
+      if (!chartData.isHorizontal) {
+        return;
+      }
+
+      const barHeight = 35;
+      const barSpacing = 12;
+      const paddingTop = 10;
+      const paddingBottom = 30;
+      const calculatedHeight = (chartData.labels.length * (barHeight + barSpacing)) + paddingTop + paddingBottom;
+      container.style.height = calculatedHeight + "px";
     }
   };
 }).call(this);

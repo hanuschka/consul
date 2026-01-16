@@ -1,9 +1,37 @@
 .custom-collapse--head {
+  position: relative;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  margin-bottom: 20px;
   align-items: center;
+  width: 100%;
+  margin-bottom: 5px;
+  z-index: 5;
+  min-height: 30px;
+
+  &:active:focus {
+    outline: none;
+  }
+
+  // &:focus {
+  //   outline: 3px solid #ffbf47 !important;
+  //   outline-style: inset;
+  // }
+
+  // &:hover {
+  //   &:before {
+  //     border-radius: 10px;
+  //     background-color: #5a5a5a14;
+  //     content: '';
+  //     position: absolute;
+  //     display: block;
+  //     top: -5px;
+  //     bottom: -5px;
+  //     right: -10px;
+  //     left: -10px;
+  //     z-index: 1;
+  //   }
+  // }
 
   h3 {
     margin-bottom: 0;
@@ -14,24 +42,24 @@
 
   .icon-chevron-down {
     margin-left: 20px;
-    font-size: 28px;
-    height: 20px;
+    margin-right: 10px;
+    font-size: 25px;
   }
 }
 
 .custom-collapse {
-  .custom-collapse--body {
+  > .custom-collapse--body {
+    padding-top: 15px;
     display: none;
-    // height: 0;
     overflow: hidden;
   }
 
   &.-opened {
-    .custom-collapse--body {
+    > .custom-collapse--body {
       display: block;
     }
 
-    .icon-chevron-down {
+    > .custom-collapse--head > .icon-chevron-down {
       transform: rotate(180deg);
     }
   }

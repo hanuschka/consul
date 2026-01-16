@@ -52,7 +52,6 @@ class ParticapationStats::TimelineComponent < ApplicationComponent
     def build_timeline_data(records, date_field)
       return { labels: [], values: [] } unless records.exists?
 
-      # binding.pry if records.first.class == Comment
       grouped = records.group_by_day(date_field).count
 
       {

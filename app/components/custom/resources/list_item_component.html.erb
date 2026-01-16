@@ -32,7 +32,7 @@
   <% end %>
 <% end %>
 
-<div class="resource-item <%= component_class_name %>">
+<li class="resource-item <%= component_class_name %>">
   <% if header.present? %>
     <div class="resource-item--header <%= header_class %>" style="<%= @header_style %>">
       <%= header %>
@@ -47,7 +47,7 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link', target: @url_target, 'aria-hidden': true do %>
+    <%= link_to @url, class: 'resource-item--image-link', title: @title, aria: { label: @title }, target: @url_target, 'aria-hidden': true do %>
       <%= render(
         Shared::ResourceImageComponent.new(
           image_url: @image_url,
@@ -95,9 +95,7 @@
             <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
 
             <div class="resource-item--description">
-              <%= link_to(@url, target: @url_target, data: { turbolinks: false }) do %>
-                <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
-              <% end %>
+              <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
             </div>
           <% else %>
             <div class="no-link resource-item--title"><%= truncate(@title, length: 72) %></div>
@@ -130,4 +128,4 @@
       <% end %>
     </div>
   </div>
-</div>
+</li>

@@ -37,6 +37,23 @@ en:
       projekt_notification:
         one: Projektbenachrichtigung
         other: Projektbenachrichtigungen
+      projekt_phase: Project phase
+      projekt_phase/comment_phase: Comments
+      projekt_phase/debate_phase: Discussions
+      projekt_phase/proposal_phase: Proposals
+      projekt_phase/voting_phase: Poll
+      projekt_phase/budget_phase: Budget
+      projekt_phase/event_phase: Events
+      projekt_phase/argument_phase: Votes
+      projekt_phase/milestone_phase: Milestones
+      projekt_phase/question_phase: Short survey
+      projekt_phase/livestream_phase: Livestream
+      projekt_phase/projekt_notification_phase: Notifications
+      projekt_phase/legislation_phase: Text editing
+      projekt_phase/newsfeed_phase: Newsfeed
+      projekt_phase/formular_phase: Form
+      projekt_phase/iframe_phase: Iframe
+      projekt_phase/point_of_interest_phase: Points of interest
       officing_manager:
         one: Poll manager
         other: Poll managers

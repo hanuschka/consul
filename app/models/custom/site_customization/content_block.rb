@@ -2,6 +2,9 @@ require_dependency Rails.root.join("app", "models", "site_customization", "conte
 
 class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze
+  DEFAULT_MARGIN_BOTTOM = 30
+
+  attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
   belongs_to :projekt, optional: true

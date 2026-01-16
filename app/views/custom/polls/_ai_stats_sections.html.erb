@@ -1,0 +1,55 @@
+<% if content.is_a?(Hash) && content["reports"].present? %>
+  <% content["reports"].each_with_index do |report, index| %>
+    <section class="ai-stats-card margin-bottom">
+      <%= render Shared::CollapseComponent.new(opened_by_default: index == 0) do |c| %>
+        <% c.with_head do %>
+          <h3 class="ai-stats-card--title"><%= report["title"] %></h3>
+        <% end %>
+        <% c.with_body do %>
+          <div class="ai-stats-card--content">
+            <%= sanitize(report["content"], tags: %w[h4 p ul li strong em]) %>
+          </div>
+        <% end %>
+      <% end %>
+      <% if local_assigns[:poll].present? %>
+        <div class="ai-stats-card--actions u-flex u-gap-10">
+          <%= link_to download_evaluation_section_poll_path(poll, section_index: index, format: "txt"),
+            class: "button hollow -compact -no-margin" do %>
+            <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
+          <% end %>
+          <%= link_to download_evaluation_section_poll_path(poll, section_index: index, format: "pdf"),
+            class: "button hollow -compact -no-margin" do %>
+            <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if local_assigns[:poll].present? %>
+    <div class="u-flex u-gap-10 margin-top">
+      <%= link_to download_all_evaluation_sections_poll_path(poll, format: "txt"),
+        class: "button hollow -compact" do %>
+        <i class="fa fa-file-alt"></i> <%= t("custom.polls.evaluation.download_all_txt") %>
+      <% end %>
+      <%= link_to download_all_evaluation_sections_poll_path(poll, format: "pdf"),
+        class: "button hollow -compact" do %>
+        <i class="fa fa-file-pdf"></i> <%= t("custom.polls.evaluation.download_all_pdf") %>
+      <% end %>
+    </div>
+  <% end %>
+<% elsif content.present? %>
+  <section class="ai-stats-card margin-bottom">
+    <h3 class="ai-stats-card--title"><%= title %></h3>
+    <div class="ai-stats-card--content">
+      <%= sanitize(content, tags: %w[h4 p ul li strong em]) %>
+    </div>
+  </section>
+<% else %>
+  <section class="ai-stats-card margin-bottom">
+    <h3 class="ai-stats-card--title"><%= title %></h3>
+    <div class="ai-stats-card--content">
+      <%= t("custom.participation_stats.no_resources_to_analyze") %>
+    </div>
+  </section>
+<% end %>

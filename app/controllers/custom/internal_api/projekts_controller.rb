@@ -19,16 +19,16 @@ class InternalApi::ProjektsController < InternalApi::BaseController
         .regular
 
     current_visible_projekts
-      .where(for_global_overview: false)
-      .update_all(for_global_overview: true)
+      .where(on_global_overview: false)
+      .update_all(on_global_overview: true)
 
-    overview_projekts =
+    projekts_on_global_overview =
       Projekt
-        .where(for_global_overview: true)
+        .where(on_global_overview: true)
         .includes(:page, :projekt_phases, :map_location)
 
     render json: {
-      projekts: overview_projekts.map do |projekt|
+      projekts: projekts_on_global_overview.map do |projekt|
         Projekts::SerializeForOverview.call(projekt)
       end
     }

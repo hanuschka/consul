@@ -12,7 +12,9 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def categories
-    @clustering_data["topics"] || []
+    return @clustering_data if @clustering_data.is_a?(Array)
+
+    @clustering_data.values
   end
 
   def render?
@@ -36,6 +38,7 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
   end
 
   def resource_count(category)
+    # binding.pry
     category["subtopics"]&.sum { |s| (s["resource_ids"] || s["proposal_ids"])&.size || 0 } || 0
   end
 

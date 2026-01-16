@@ -5,7 +5,7 @@
 <div class="kern-container mb-5">
   <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
+  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description'), turbo_frame_id: dom_id(@projekt, :duration)) do %>
     <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
       <div class="mb-4">
         <%= f.date_field :total_duration_start, class: 'mb-3' %>
@@ -19,7 +19,7 @@
     <% end %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
+  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description'), turbo_frame_id: dom_id(@projekt, :landing_pages)) do %>
     <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
       <div class="mb-4">
         <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) %>
@@ -28,7 +28,7 @@
     <% end %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
+  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description'), turbo_frame_id: dom_id(@projekt, :geo_restriction)) do %>
     <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
       <div class="kern-fieldset__body mb-4" data-controller="related-options">
         <% geozone_options = [["no_affiliation", t(".geozone_affiliated_no_affiliation")],

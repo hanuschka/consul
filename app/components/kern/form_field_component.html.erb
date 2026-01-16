@@ -1,3 +1,4 @@
+<%= turbo_frame_tag(turbo_frame_id) if turbo_frame_id %>
 <div class="kern-form-field mb-5">
   <div class="kern-title kern-title--small mb-3"><%= label %></div>
   <div class="kern-row">
@@ -15,3 +16,4 @@
     <hr class="kern-divider mb-5" aria-hidden="true" />
   </div>
 </div>
+<%= "</turbo-frame>".html_safe if turbo_frame_id %>

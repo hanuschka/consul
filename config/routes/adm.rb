@@ -1,6 +1,8 @@
 namespace :adm do
   root to: "home#show"
 
+  patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute, constraints: { record_type: %r{[^/]+(/[^/]+)?} }
+
   resources :projekts, only: [:index, :edit, :update, :destroy] do
     get :details, on: :member
     patch :toggle_activated, on: :member
@@ -18,7 +20,7 @@ namespace :adm do
     patch :reorder, on: :collection
   end
 
-  resources :settings, only: [:update] do
+  resources :settings, only: [] do
     get :metadata, on: :collection
     get :gdpr, on: :collection
     get :registration, on: :collection
@@ -67,8 +69,6 @@ namespace :adm do
   # profiles
 
   namespace :site_customization do
-    resources :images, only: [:update]
-    resources :pages, only: [:update]
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection

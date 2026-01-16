@@ -11,37 +11,15 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def path
     return @options[:path] if @options[:path].present?
 
-    return adm_setting_path(@record) if @record.is_a?(Setting)
-    return adm_site_customization_image_path(@record) if @record.is_a?(SiteCustomization::Image)
-    return adm_site_customization_page_path(@record) if @record.is_a?(SiteCustomization::Page)
-
-    raise "No path provided for attribute editor"
+    adm_attribute_path(record_type: record_type_key, id: @record.id)
   end
 
   def label
-    return @options[:label] if @options[:label].present?
-
-    if SETTING_TYPES.any? { |type| @record.is_a?(type) }
-      I18n.t("#{@record.class.name.underscore}.#{@record.key}")
-    elsif @record.is_a?(SiteCustomization::Image)
-      I18n.t("adm.attribute_editor.#{@record.class.name.underscore}.#{@record.name}_label")
-    else
-      I18n.t(["adm.attribute_editor.#{@record.class.name.underscore}", suffix, "#{@attribute}_label"].compact.join("."),
-             default: @attribute.to_s.humanize)
-    end
+    @options[:label].presence || I18n.t(i18n_key(:label), default: @attribute.to_s.humanize)
   end
 
   def description
-    return @options[:description] if @options[:description].present?
-
-    if SETTING_TYPES.any? { |type| @record.is_a?(type) }
-      I18n.t("#{@record.class.name.underscore}.#{@record.key}_description")
-    elsif @record.is_a?(SiteCustomization::Image)
-      I18n.t("adm.attribute_editor.#{@record.class.name.underscore}.#{@record.name}_description")
-    else
-      I18n.t(["adm.attribute_editor.#{@record.class.name.underscore}", suffix, "#{@attribute}_description"].compact.join("."),
-             default: "adm.attribute_editor.default_description")
-    end
+    @options[:description].presence || I18n.t(i18n_key(:description), default: nil)
   end
 
   def component_for_type
@@ -59,19 +37,37 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     end
   end
 
-  def suffix
-    if @record.is_a?(::SiteCustomization::Page)
-      return "projekt" if @record.projekt.present?
-      return "landing" if @record.landing?
-    else
-      nil
-    end
-  end
-
   def aria_options
     {
       labelledby: "#{dom_id(@record)}_#{@attribute}_label",
       describedby: "#{dom_id(@record)}_#{@attribute}_description"
     }
   end
+
+  private
+
+    def i18n_key(type)
+      if setting_type?
+        "setting.#{@record.key}#{'_description' if type == :description}"
+      elsif @record.is_a?(SiteCustomization::Image)
+        "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
+      else
+        ["adm.attribute_editor", record_type_key, suffix, "#{@attribute}_#{type}"].compact.join(".")
+      end
+    end
+
+    def record_type_key
+      @record_type_key ||= @record.class.name.underscore
+    end
+
+    def suffix
+      return unless @record.is_a?(::SiteCustomization::Page)
+
+      return "projekt" if @record.projekt.present?
+      return "landing" if @record.landing?
+    end
+
+    def setting_type?
+      SETTING_TYPES.any? { |type| @record.is_a?(type) }
+    end
 end

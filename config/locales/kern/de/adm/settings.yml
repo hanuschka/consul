@@ -1,8 +1,6 @@
 de:
   adm:
     settings:
-      update:
-        success: Einstellung erfolgreich aktualisiert
       metadata:
         title: Metadaten & Kommunikation
       gdpr:

@@ -3,5 +3,5 @@
 <%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
-  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string, path: adm_site_customization_page_path(@projekt.page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
 </div>

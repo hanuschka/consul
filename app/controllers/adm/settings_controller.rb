@@ -1,14 +1,5 @@
 module Adm
   class SettingsController < Adm::BaseController
-    def update
-      authorize [:adm, Setting], :update?
-
-      @setting = Setting.find(params[:id])
-      if @setting.update(setting_params)
-        flash.now[:success] = t(".success")
-      end
-    end
-
     def metadata
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
@@ -35,11 +26,5 @@ module Adm
         { name: t(".title") }
       ]
     end
-
-    private
-
-      def setting_params
-        params.require(:setting).permit(:value)
-      end
   end
 end

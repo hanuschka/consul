@@ -75,7 +75,10 @@ module Adm
       def projekt_params
         params.require(:projekt).permit(
           :name, :total_duration_start, :total_duration_end,
-          :show_start_date_in_frontend, :show_end_date_in_frontend
+          :show_start_date_in_frontend, :show_end_date_in_frontend,
+          :geozone_affiliated,
+          landing_page_ids: [],
+          geozone_affiliation_ids: []
         )
       end
   end

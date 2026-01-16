@@ -15,6 +15,13 @@ de:
       details:
         duration_label: Projektlaufzeit
         duration_description: Definiert den Zeitraum, in dem das Projekt online ist – auch außerhalb aktiver Beteiligungsphasen.
+        landing_pages_label: Zuordnung zu Themenseiten
+        landing_pages_description: Ordnet das Projekt optional einer oder mehreren Gebiets- oder Themenseiten zu.
+        geo_restriction_label: Gebietszuordnung
+        geo_restriction_description: Legt fest, ob das Projekt einem bestimmten Gebiet zugeordnet ist.
+        geozone_affiliated_no_affiliation: Keine Gebietszuordnung
+        geozone_affiliated_entire_city: Stadtweit
+        geozone_affiliated_only_geozones: Zuordnung zu Stadtteil
       edit:
         title: Projekt bearbeiten
         submit: Speichern

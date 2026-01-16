@@ -40,3 +40,6 @@ application.register("mode-switcher", ModeSwitcherController)
 
 import MapController from "./map_controller"
 application.register("map", MapController)
+
+import RelatedOptionsController from "./related_options_controller"
+application.register("related-options", RelatedOptionsController)

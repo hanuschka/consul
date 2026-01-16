@@ -18,4 +18,33 @@
       <%= form_submit_button %>
     <% end %>
   <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
+    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
+      <div class="mb-4">
+        <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) %>
+      </div>
+      <%= form_submit_button %>
+    <% end %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
+    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
+      <div class="kern-fieldset__body mb-4" data-controller="related-options">
+        <% geozone_options = [["no_affiliation", t(".geozone_affiliated_no_affiliation")],
+                              ["entire_city", t(".geozone_affiliated_entire_city")],
+                              ["only_geozones", t(".geozone_affiliated_only_geozones")]] %>
+        <%= f.collection_radio_buttons(:geozone_affiliated, geozone_options, :first, :last) do |b| %>
+          <div class="kern-form-check">
+            <%= b.radio_button(class: "kern-form-check__radio", data: { action: "related-options#toggle", related_options_target: b.value == "only_geozones" ? "trigger" : nil }) %>
+            <%= b.label(class: "kern-label") %>
+          </div>
+        <% end %>
+        <div class="options-group mt-3" data-related-options-target="content">
+          <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) %>
+        </div>
+      </div>
+      <%= form_submit_button %>
+    <% end %>
+  <% end %>
 </div>

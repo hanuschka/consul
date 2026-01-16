@@ -26,7 +26,7 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
       ServiceResult.failure(error: "KI konnte keine Struktur erstellen")
     end
   rescue => e
-    binding.pry
+    # binding.pry
     # ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
   end
 

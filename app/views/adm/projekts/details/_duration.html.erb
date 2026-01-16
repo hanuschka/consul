@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "details__duration" do %>
+  <%= form_with model: projekt, url: adm_projekt_path(projekt) do |f| %>
+    <div class="mb-4">
+      <%= f.date_field :total_duration_start, class: 'mb-3' %>
+      <%= f.check_box :show_start_date_in_frontend %>
+    </div>
+    <div class="mb-4">
+      <%= f.date_field :total_duration_end, class: 'mb-3' %>
+      <%= f.check_box :show_end_date_in_frontend %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

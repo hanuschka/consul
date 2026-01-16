@@ -5,47 +5,16 @@
 <div class="kern-container mb-5">
   <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description'), turbo_frame_id: dom_id(@projekt, :duration)) do %>
-    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
-      <div class="mb-4">
-        <%= f.date_field :total_duration_start, class: 'mb-3' %>
-        <%= f.check_box :show_start_date_in_frontend %>
-      </div>
-      <div class="mb-4">
-        <%= f.date_field :total_duration_end, class: 'mb-3' %>
-        <%= f.check_box :show_end_date_in_frontend %>
-      </div>
-      <%= form_submit_button %>
-    <% end %>
+  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
+    <%= render 'adm/projekts/details/duration', projekt: @projekt %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description'), turbo_frame_id: dom_id(@projekt, :landing_pages)) do %>
-    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
-      <div class="mb-4">
-        <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) %>
-      </div>
-      <%= form_submit_button %>
-    <% end %>
+  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
+    <%= render 'adm/projekts/details/landing_pages', projekt: @projekt %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description'), turbo_frame_id: dom_id(@projekt, :geo_restriction)) do %>
-    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
-      <div class="kern-fieldset__body mb-4" data-controller="related-options">
-        <% geozone_options = [["no_affiliation", t(".geozone_affiliated_no_affiliation")],
-                              ["entire_city", t(".geozone_affiliated_entire_city")],
-                              ["only_geozones", t(".geozone_affiliated_only_geozones")]] %>
-        <%= f.collection_radio_buttons(:geozone_affiliated, geozone_options, :first, :last) do |b| %>
-          <div class="kern-form-check">
-            <%= b.radio_button(class: "kern-form-check__radio", data: { action: "related-options#toggle", related_options_target: b.value == "only_geozones" ? "trigger" : nil }) %>
-            <%= b.label(class: "kern-label") %>
-          </div>
-        <% end %>
-        <div class="options-group mt-3" data-related-options-target="content">
-          <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) %>
-        </div>
-      </div>
-      <%= form_submit_button %>
-    <% end %>
+  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
+    <%= render 'adm/projekts/details/geo_restriction', projekt: @projekt %>
   <% end %>
 
   <%= render Adm::AttributeEditorComponent.new(@projekt.page, :slug, :string) %>

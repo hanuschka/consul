@@ -22,7 +22,7 @@
 <% end %>
 
 <% if flash[:success].present? %>
-  <div class="input-success-message mt-2" data-components-adm-attribute-editor-target="successMessage">
+  <div class="input-success-message mt-2" data-controller="auto-remove">
     <%= flash[:success] %>
   </div>
-<% end  %>
+<% end %>

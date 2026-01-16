@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "details__landing_pages" do %>
+  <%= form_with model: projekt, url: adm_projekt_path(projekt) do |f| %>
+    <div class="mb-4">
+      <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

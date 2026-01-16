@@ -43,3 +43,6 @@ application.register("map", MapController)
 
 import RelatedOptionsController from "./related_options_controller"
 application.register("related-options", RelatedOptionsController)
+
+import AutoRemoveController from "./auto_remove_controller"
+application.register("auto-remove", AutoRemoveController)

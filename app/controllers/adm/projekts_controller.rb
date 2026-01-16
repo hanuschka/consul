@@ -40,10 +40,14 @@ module Adm
       authorize [:adm, @projekt]
 
       if @projekt.update(projekt_params)
-        redirect_to details_adm_projekt_path(@projekt), notice: t("adm.projekts.update.success")
-      else
-        render :edit, status: :unprocessable_entity
+        flash.now[:success] = t("adm.attribute.update.success")
       end
+
+      render turbo_stream: turbo_stream.replace(
+        turbo_frame_request_id,
+        partial: "adm/projekts/#{frame_partial_path}",
+        locals: { projekt: @projekt }
+      )
     end
 
     def destroy
@@ -70,6 +74,10 @@ module Adm
 
       def find_projekt
         @projekt = Projekt.find(params[:id])
+      end
+
+      def frame_partial_path
+        turbo_frame_request_id&.gsub("__", "/")
       end
 
       def projekt_params

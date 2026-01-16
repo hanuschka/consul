@@ -1,13 +1,18 @@
-window.ProjektStudio.Sidebar = {
+ProjektStudio.Sidebar = {
   initialized: false,
   initialize() {
     if (this.initialized) {
       return
     }
 
-    console.log("Sidebar initialized")
-    $(document).on("change", ".js-update-projekt-form input", ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000));
-    $(document).on("click", ".js-sidebar-section-toggle-visibility", this.toggleSidebarSectionVisibility.bind(this));
+    const $document = $(document);
+
+    $document.on("change", ".js-update-projekt-form input",
+      ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000)
+    );
+    $document.on("click", ".js-sidebar-section-toggle-visibility",
+      this.toggleSidebarSectionVisibility.bind(this)
+    );
 
     this.initialized = true;
   },
@@ -15,19 +20,15 @@ window.ProjektStudio.Sidebar = {
   handleUpdateProjekt(e) {
     e.preventDefault()
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame(
-        "updateProjekt",
-        formElementToUrlParams(e.currentTarget.form)
-      )
-    } else {
       $.ajax({
         url: `/admin/projekts/${ProjektStudio.getCurrentProjektId()}`,
         type: "PATCH",
         dataType: "json",
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        },
         data: ProjektStudio.utils.formElementToUrlParams(e.currentTarget.form)
       })
-    }
   },
 
   toggleSidebarSectionVisibility(e) {
@@ -42,26 +43,21 @@ window.ProjektStudio.Sidebar = {
     iconClassList.toggle("fa-eye-slash", !sectionDeactivatedNew);
     iconClassList.toggle("fa-eye", sectionDeactivatedNew);
 
-    const settingKey = sectionWrapper.dataset.projektSettingKey;
+    // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
     const settingValue = sectionDeactivatedNew  ? "" : "active"
     const projektId = ProjektStudio.getCurrentProjektId();
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektSetting", {
-        key: settingKey, value: settingValue
-      })
-    } else {
-      $.ajax({
-        url: `/admin/projekts/${settingId}/settings/${projektId}`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          "projekt_setting[value]": settingValue
-        }
-      })
-    }
+    $.ajax({
+      url: `/admin/projekts/${settingId}/settings/${projektId}`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        "projekt_setting[value]": settingValue
+      }
+    })
   }
 };
-
-console.log("After sidebar define")

@@ -1,6 +1,6 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
-class User < ApplicationRecord
+User.class_eval do
   audited only: [:username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
+  delegate :district, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -51,6 +52,8 @@ class User < ApplicationRecord
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+
+  belongs_to :api_client, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
@@ -239,16 +242,9 @@ class User < ApplicationRecord
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
-  def current_city_citizen?
-    return false if geozone.nil?
-
-    @geozone_ids ||= Geozone.ids
-
-    @geozone_ids.include?(geozone.id)
-  end
-
-  def not_current_city_citizen?
-    !current_city_citizen?
+  def citizen?
+    (RegisteredAddress::District.any? && district.present?) ||
+      (Geozone.any? && geozone.present?)
   end
 
   def verified?
@@ -297,6 +293,16 @@ class User < ApplicationRecord
       "#{first_name} #{last_name}"
     else
       name
+    end
+  end
+
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
     end
   end
 
@@ -365,6 +371,7 @@ class User < ApplicationRecord
 
     def attempt_verification
       return false if organization?
+      return false if erased?
       return false unless residency_valid?
 
       verify!
@@ -375,6 +382,7 @@ class User < ApplicationRecord
                                last_name: last_name,
                                street_name: registered_address&.registered_address_street&.name.presence || street_name,
                                street_number: registered_address&.street_number.presence || street_number,
+                               street_number_extension: registered_address&.street_number_extension.presence || street_number_extension,
                                plz: registered_address&.registered_address_street&.plz.presence || plz,
                                city_name: registered_address&.registered_address_city&.name.presence || city_name,
                                date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),

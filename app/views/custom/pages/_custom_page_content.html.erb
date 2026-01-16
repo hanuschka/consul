@@ -1,23 +1,33 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
-    <div class="js-content-block-templates-load-container">
-    </div>
-
-    <div class="custom-page-content-inner">
+    <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
-        <% if @custom_page.projekt.content_blocks.any? %>
-          <% @custom_page.projekt.content_blocks.order(:position).each do |content_block| %>
-            <div class="projekt-content-block " data-id="<%= content_block.id %>">
-              <%= content_block&.body&.html_safe %>
+        <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
+
+        <% if content_blocks.any? %>
+          <% content_blocks.each do |content_block| %>
+            <div
+              class="projekt-content-block js-projekt-content-block"
+              data-id="<%= content_block.id %>"
+              <% if content_block.margin_bottom.present? && content_block.margin_bottom > 0 %>
+                style="margin-bottom: <%= content_block.margin_bottom %>px;"
+              <% end %>
+            >
+              <%= process_custom_content_if_needed(content_block&.body)&.html_safe %>
             </div>
           <% end %>
         <% end %>
       </div>
     </div>
+
   <% else %>
     <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
   <% end %>
 </div>
+
+<% if show_admin_controls_for_projekt?(@custom_page&.projekt)  %>
+  <%= render("pages/projekt_studio/image_managment") %>
+<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

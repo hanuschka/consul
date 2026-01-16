@@ -7,7 +7,7 @@ class PollsController < ApplicationController
   include Takeable
   include GuestUsers
 
-  before_action :set_geo_limitations, only: [:show, :results, :stats]
+  before_action :set_geo_limitations, only: [:show, :results, :stats, :evaluation, :report]
 
   helper_method :resource_model, :resource_name
   has_filters %w[all current expired]
@@ -72,7 +72,9 @@ class PollsController < ApplicationController
     auto_sign_in_guest_for(@poll.projekt_phase)
 
     @projekt_phase = @poll.projekt_phase
-    @questions = @poll.questions.for_render.root_questions.sort_for_list
+    @questions = @poll.questions.root_questions
+                                .includes(:context, :translations, :votation_type, :question_answers, nested_questions: [:poll, :votation_type, :translations, :question_answers])
+                                .order(given_order: :asc, id: :asc)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
     @answers_by_question_id = {}
@@ -135,6 +137,129 @@ class PollsController < ApplicationController
     end
   end
 
+  def evaluation
+    @projekt_phase = @poll.projekt_phase
+
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    can_view_evaluation = is_admin_or_manager || (@poll.evaluation_enabled? && @poll.projekt.visible_for?(current_user))
+
+    if !can_view_evaluation
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    else
+      render :evaluation
+    end
+  end
+
+  def report
+    @projekt_phase = @poll.projekt_phase
+
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+
+    if !is_admin_or_manager
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    else
+      render :report
+    end
+  end
+
+  def refresh_ai_stats
+    authorize!(:refresh_ai_stats, @poll)
+
+    @poll.update(ai_stats_refresh_status: "pending")
+    AiAnalytics::PollStatsRefresh.perform_later(@poll.id)
+
+    respond_to do |format|
+      format.html { redirect_to evaluation_poll_path(@poll) }
+      format.js { render json: { status_url: ai_stats_status_poll_path(@poll) } }
+    end
+  end
+
+  def ai_stats_status
+    authorize!(:ai_stats_status, @poll)
+
+    response = { status: @poll.ai_stats_refresh_status || "pending" }
+
+    if @poll.ai_stats_refresh_completed? && @poll.ai_stats_refreshed_at
+      response[:last_updated_at] = l(@poll.ai_stats_refreshed_at, format: :short)
+      response[:sections_html] = render_ai_stats_sections(params[:section])
+    end
+
+    render json: response
+  end
+
+  def download_evaluation_section
+    section_index = params[:section_index].to_i
+    content = @poll.ai_stats&.dig("evaluation")
+
+    if content.is_a?(Hash) && content["reports"].present? && content["reports"][section_index].present?
+      report = content["reports"][section_index]
+      download_format = params[:format] || "txt"
+      filename = generate_evaluation_section_filename(@poll, section_index, download_format)
+
+      case download_format
+      when "pdf"
+        pdf = PdfServices::PollEvaluationSectionExporter.new(@poll, report).call
+        send_data(
+          pdf.render,
+          filename: filename,
+          type: "application/pdf",
+          disposition: "attachment"
+        )
+      else
+        send_data(
+          generate_evaluation_section_text(report),
+          filename: filename,
+          type: "text/plain",
+          disposition: "attachment"
+        )
+      end
+    else
+      head :not_found
+    end
+  end
+
+  def download_all_evaluation_sections
+    content = @poll.ai_stats&.dig("evaluation")
+
+    if content.is_a?(Hash) && content["reports"].present?
+      download_format = params[:format] || "txt"
+      filename = generate_all_evaluation_sections_filename(@poll, download_format)
+
+      case download_format
+      when "pdf"
+        pdf = PdfServices::PollAllEvaluationSectionsExporter.new(@poll, content["reports"]).call
+        send_data(
+          pdf.render,
+          filename: filename,
+          type: "application/pdf",
+          disposition: "attachment"
+        )
+      else
+        send_data(
+          generate_all_evaluation_sections_text(content["reports"]),
+          filename: filename,
+          type: "text/plain",
+          disposition: "attachment"
+        )
+      end
+    else
+      head :not_found
+    end
+  end
+
+  def render_ai_stats_sections(section)
+    section ||= "evaluation"
+    content = @poll.ai_stats&.dig(section)
+    title = t("custom.polls.#{section}.title")
+
+    render_to_string(
+      partial: "custom/polls/ai_stats_sections",
+      locals: { content: content, title: title, poll: @poll }
+    )
+  end
+
   def set_geo_limitations
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
@@ -159,6 +284,33 @@ class PollsController < ApplicationController
   end
 
   private
+
+    def generate_evaluation_section_filename(poll, section_index, format)
+      poll_name = poll.name.parameterize(separator: "-")
+      "#{poll_name}-evaluation-section-#{section_index + 1}.#{format}"
+    end
+
+    def generate_evaluation_section_text(report)
+      plain_content = helpers.strip_tags(report["content"].to_s)
+
+      <<~TEXT
+        #{report["title"]}
+
+        #{plain_content}
+      TEXT
+    end
+
+    def generate_all_evaluation_sections_filename(poll, format)
+      poll_name = poll.name.parameterize(separator: "-")
+      "#{poll_name}-evaluation-all.#{format}"
+    end
+
+    def generate_all_evaluation_sections_text(reports)
+      reports.map do |report|
+        plain_content = helpers.strip_tags(report["content"].to_s)
+        "#{report["title"]}\n\n#{plain_content}"
+      end.join("\n\n#{'-' * 80}\n\n")
+    end
 
     def remove_answers_to_open_questions_with_blank_body
       questions = @poll.questions.each do |question|

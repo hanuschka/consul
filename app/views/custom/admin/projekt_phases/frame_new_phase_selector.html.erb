@@ -1,5 +1,5 @@
 <% content_for :admin_frame_top_navigation do %>
-  <%= link_to @projekt.frame_url, class: "back", data: { turbolinks: false } do %>
+  <%= link_to @projekt.url, class: "back", data: { turbolinks: false } do %>
     <span class="icon-angle-left"></span>Zurück zum Projekt
   <% end %>
 <% end %>
@@ -23,7 +23,7 @@
         ) do |f| %>
         <%= f.hidden_field :projekt_id, value: @projekt.id %>
         <%= f.hidden_field :type, value: type %>
-        <button type="submit" class="button -transparent-round-icon-button frame-select-new-phase-button">
+        <button type="submit" class="transparent-round-icon-button frame-select-new-phase-button">
           <i class="fas fa-arrow-right">
           </i>
         </button>

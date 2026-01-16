@@ -35,7 +35,7 @@ module NotificationServices
       end
 
       def projekt_phase_subscribers
-        return [] unless @proposal.projekt_phase.present?
+        return [] if @proposal.projekt_phase.blank? || !@proposal.admin_accepted?
 
         @proposal.projekt_phase.subscribers.to_a
       end

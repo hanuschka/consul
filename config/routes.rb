@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  # mount Rswag::Ui::Engine => '/api-docs'
+  # mount Rswag::Api::Engine => '/api-docs'
 
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   draw :adm
   draw :account
   draw :admin
@@ -31,6 +33,8 @@ Rails.application.routes.draw do
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management
+  draw :internal_api
+  draw :api
   draw :custom
 
   root "welcome#index"

@@ -4,7 +4,7 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
-      get :frame_new_phase_selector
+      # get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -85,6 +85,8 @@ namespace :projekt_management do
     end
     resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
     resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
+
+    resources :saved_content_blocks, only: [:create, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 
@@ -92,6 +94,8 @@ namespace :projekt_management do
     member do
       patch :update_standard_phase
       get :frame_new_phase_selector
+      patch :update_page
+      patch :update_title_image
       patch :update_map
       post :notify_reviewers
     end
@@ -105,6 +109,15 @@ namespace :projekt_management do
         post :order_phases
         patch :update_position
       end
+    end
+
+    resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+      patch :change_with_ai
     end
   end
 

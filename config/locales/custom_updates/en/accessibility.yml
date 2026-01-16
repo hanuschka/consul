@@ -3,7 +3,8 @@ en:
     accessibility:
       shared:
         switch-view-button:
-          aria-label: "Switch view button"
+          to-list: "Switch to list view"
+          to-tile: "Switch to tile view"
         missing-image:
           aria-label: "Image not available"
       search:

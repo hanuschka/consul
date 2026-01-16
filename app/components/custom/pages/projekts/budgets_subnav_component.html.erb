@@ -1,5 +1,14 @@
 <div class='budget-subnav'>
-  <% budget_subnav_items_for(budget).each do |item| %>
-    <%= link_to item[:text], item[:url], class: "budget-subnav-item #{'is-active' if item[:active] }", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
-  <% end %>
+  <div class='budget-subnav--items'>
+    <% budget_subnav_items_for(budget).each do |item| %>
+      <%= link_to item[:text], item[:url], class: "budget-subnav-item #{'is-active' if item[:active] }", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
+    <% end %>
+  </div>
+
+  <div class='budget-subnav--actions'>
+    <%= link_to stats_projekt_phase_path(projekt_phase), class: "button with-icon" do %>
+      <i class="fas fa-chart-bar"></i>
+      <%= t("custom.projekt_phases.subnav.full_stats") %>
+    <% end %>
+  </div>
 </div>

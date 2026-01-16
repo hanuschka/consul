@@ -20,6 +20,8 @@ class Setting < ApplicationRecord
       key.rpartition(".").first
     elsif %w[extra_fields].include? prefix
       key.rpartition(".").first
+    elsif %w[ai].include? prefix
+      "ai"
     else
       "configuration"
     end
@@ -175,6 +177,10 @@ class Setting < ApplicationRecord
         "machine_learning.comments_summary": false,
         "machine_learning.related_content": false,
         "machine_learning.tags": false,
+        "ai.llm_provider": nil,
+        "ai.llm_model": nil,
+        "ai.llm_api_endpoint": nil,
+        "ai.llm_custom_model": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",
@@ -197,6 +203,12 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
+        "welcomepage.usage_stats": true,
+        "welcomepage.platform_activity": true,
+        "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
+        "welcomepage.share_buttons": "",
+
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
@@ -215,6 +227,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
+        "deficiency_reports.show_create_report_button": "active",
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,

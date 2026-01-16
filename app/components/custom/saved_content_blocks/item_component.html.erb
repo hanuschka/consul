@@ -3,13 +3,20 @@
   data-editor-name='<%= "saved-content-block-form-#{@saved_content_block.id}" %>'
   class="saved-content-block-item js-saved-content-block-item"
 >
-  <div class="custom-content-template--item js-add-new-content-block">
-    <div class="custom-content-template--item-overlay">
-    </div>
-    <div class="content-block-template">
-      <div class="js-content-block-template-content">
-        <%= @saved_content_block.content.html_safe %>
+  <div class="custom-content-template--item">
+    <div class="js-add-new-content-block custom-content-template--item-inner">
+      <div class="custom-content-template--item-overlay">
       </div>
+      <div class="content-block-template">
+        <div class="js-content-block-template-content">
+          <%= @saved_content_block.content.html_safe %>
+        </div>
+      </div>
+    </div>
+    <div class="custom-content-template--item-actions">
+      <button class="content-block-template-copy-button js-copy-content-block-template" type="button" title="Template in Zwischenablage kopieren">
+        <i class="fa fas fa-copy"></i>
+      </button>
     </div>
   </div>
 
@@ -27,13 +34,13 @@
       <i class="fas fa-edit">
       </i>
     </button>
-    <button type="button" title="Inhaltsblock löschen" class="projekt-frame-icon-button js-delete-saved-content-block">
+    <button type="button" title="Inhaltsblock löschen" class="projekt-frame-icon-button -delete js-delete-saved-content-block">
       <i class="fas fa-trash-alt">
       </i>
     </button>
   </div>
 
-  <div class="saved-content-block-form--controlls saved-content-block-form--edit-controlls">
+  <div class="saved-content-block-form--controlls saved-content-block-form--edit-controlls d-flex u-gap-10">
     <button type="button" class="projekt-content-block-edit--button -green js-update-saved-content-block">
       <i class="fas fa-save"></i>
       Speichern

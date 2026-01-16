@@ -37,6 +37,10 @@ module Abilities
         poll.related&.author&.id == user.id
       end
 
+      can [:evaluation, :download_evaluation_section, :download_all_evaluation_sections], Poll do |poll|
+        poll.evaluation_enabled? && poll.projekt&.visible_for?(user)
+      end
+
       can [:retire_form, :retire], Proposal, author_id: user.id
 
       can :read, Legislation::Proposal
@@ -110,8 +114,8 @@ module Abilities
         votable_type: "Budget::Investment",
         votable: { budget: { id: Budget.selecting.pluck(:id) }}
 
-      can [:show, :create], Budget::Ballot,          budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.poll_officer?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
-      can [:create, :destroy], Budget::Ballot::Line, budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.poll_officer?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
+      can [:show, :create], Budget::Ballot,          budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.officing_manager?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
+      can [:create, :destroy], Budget::Ballot::Line, budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.officing_manager?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
 
       if user.level_two_or_three_verified?
         can :vote, Legislation::Proposal

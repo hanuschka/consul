@@ -28,7 +28,7 @@
             <% f.object.build_image %>
           <% end %>
           <%= f.fields_for :image do |image_builder| %>
-            <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true) do |c| %>
+            <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true, variant: :medium) do |c| %>
               <% c.with_placeholder do %>
                 <div class="users-profile-banner--avatar-placeholder" aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>">
                   <%= @user.first_letter_of_name %>
@@ -57,12 +57,12 @@
     <div class="users-profile-banner--name">
       <%= render Users::Account::UsernameComponent.new(user: @user, edit_mode: @edit_mode) %>
     </div>
-    <div class="users-profile-banner--info-line">
+    <p class="users-profile-banner--info-line">
       <%= t("custom.users.banner.registered_at", date: l(@user.created_at, format: :date_only)) %>
-    </div>
+    </p>
 
     <% if Setting["extra_fields.verification.show_data_completeness_status"].present? %>
-      <div class="users-profile-banner--info-line">
+      <p class="users-profile-banner--info-line">
         <% if @user.data_complete? %>
           <span class="icon-check"></span>
           <%= t("custom.account.show.data_complete") %>
@@ -70,11 +70,11 @@
           <span class="icon-x"></span>
           <%= t("custom.account.show.data_missing") %>
         <% end %>
-      </div>
+      </p>
     <% end %>
 
     <% if Setting["extra_fields.verification.show_verification_status"].present? %>
-      <div class="users-profile-banner--info-line">
+      <p class="users-profile-banner--info-line">
         <% if @user.level_three_verified? %>
           <span class="icon-check"></span>
           <%= t("account.show.verified_account") %>
@@ -82,7 +82,7 @@
           <span class="icon-x"></span>
           <%= t("custom.account.show.not_verified_account") %>
         <% end %>
-      </div>
+      </p>
     <% end %>
 
     <%= render Shared::OfficialPositionBadgeComponent.new(user: @user) %>

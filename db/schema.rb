@@ -1936,6 +1936,9 @@ ActiveRecord::Schema.define(version: 2026_01_14_145259) do
     t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
     t.boolean "wizard_mode", default: false
+    t.jsonb "ai_stats", default: {}
+    t.string "ai_stats_refresh_status"
+    t.datetime "ai_stats_refreshed_at"
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -2085,6 +2088,17 @@ ActiveRecord::Schema.define(version: 2026_01_14_145259) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_settings_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_stat_questions", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "question", null: false
+    t.text "answer"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "created_at"], name: "idx_stat_questions_phase_created"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_stat_questions_on_projekt_phase_id"
+  end
+
   create_table "projekt_phase_subscriptions", force: :cascade do |t|
     t.bigint "projekt_phase_id"
     t.bigint "user_id"
@@ -2134,6 +2148,10 @@ ActiveRecord::Schema.define(version: 2026_01_14_145259) do
     t.integer "user_status", default: 1
     t.date "lock_on"
     t.boolean "frontend_visibility", default: true, null: false
+    t.jsonb "ai_stats", default: {}, null: false
+    t.string "ai_stats_refresh_status"
+    t.datetime "ai_stats_refreshed_at"
+    t.datetime "stats_refreshed_at"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2642,6 +2660,7 @@ ActiveRecord::Schema.define(version: 2026_01_14_145259) do
     t.string "key"
     t.integer "projekt_id"
     t.integer "position"
+    t.integer "margin_bottom"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
@@ -3159,6 +3178,7 @@ ActiveRecord::Schema.define(version: 2026_01_14_145259) do
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phase_settings", "projekt_phases"
+  add_foreign_key "projekt_phase_stat_questions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "users"
   add_foreign_key "projekt_phases", "age_ranges"

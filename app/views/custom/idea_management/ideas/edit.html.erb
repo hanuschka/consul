@@ -1,6 +1,6 @@
 <%= render "custom/idea_management/ideas/subnav", idea: @idea %>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 large-8 columns">
     <%= translatable_form_for @idea, url: idea_management_idea_path(@idea) do |f| %>
       <%= render "shared/errors", resource: @idea %>
@@ -58,7 +58,7 @@
               <i class="fas fa-map"></i>
               <%= t("custom.user_resources.form.map_location_label") %>
               <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
-              <span class="small"><%= t("custom.user_resources.form.map_location_instructions_mandatory") %></span>
+              <span class="small"><%= t("custom.user_resources.form.map_location_instructions_optional") %></span>
             </h2>
 
             <%= select_tag :idea_district, options_for_select(RegisteredAddress::District.joins(:map_location).order(id: :asc).all.map { |district|

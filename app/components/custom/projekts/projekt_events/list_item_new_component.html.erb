@@ -1,4 +1,4 @@
-<div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
+<li id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
 
   <div class="projekt-event-item-new-calendar-column" aria-hidden="true">
     <div class="projekt-event-item-new-calendar">
@@ -25,13 +25,13 @@
   </div>
 
   <div class="projekt-event-item-new-body">
-    <h3 class="projekt-event-item-new-body--title">
+    <h2 class="projekt-event-item-new-body--title">
       <% if @show_projekt_link && projekt_event.projekt.published? %>
         <%= link_to(projekt_event.title, projekt_event.projekt.page.url) %>
       <% else %>
         <%= projekt_event.title %>
       <% end %>
-    </h3>
+    </h2>
     <% if projekt_event.description.present? %>
       <div class="projekt-event-item-new--description-text-wrapper">
         <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>
@@ -75,4 +75,4 @@
       <%= image_tag projekt_event.image.variant(:projekt_event_thumb) %>
     </div>
   <% end %>
-</div>
+</li>

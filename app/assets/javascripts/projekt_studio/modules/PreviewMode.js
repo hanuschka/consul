@@ -15,7 +15,7 @@ ProjektStudio.PreviewMode = {
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = ProjektStudio.utils.parseIframeEventData(event.data);
+      const data = event.data;
       const params = data.params
 
       switch(data.event_type) {
@@ -30,6 +30,10 @@ ProjektStudio.PreviewMode = {
     const button = e.currentTarget;
     button.classList.toggle("-enabled")
     const previewModeEnabled = button.classList.contains("-enabled");
+
+    const textElement = button.querySelector(".js-projekt-studio-preview-button-text")
+    const text = previewModeEnabled ? "Vorschaumodus aktiv" : "Vorschaumodus"
+    textElement.innerText = text
 
     this.togglePreviewMode(previewModeEnabled)
   },
@@ -66,25 +70,26 @@ ProjektStudio.PreviewMode = {
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
+    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+    $(".js-content-block-ai-edit-popup").toggle(!previewModeEnabled)
+
+    console.log("anyCheckedSDG", anyCheckedSDG)
+    console.log("anyCheckedCategory", anyCheckedCategory)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {
-        sdgSidebarCard.style = "display: none"
+        $(sdgSidebarCard).hide()
       }
       if (!anyCheckedCategory) {
-        categoriesSidebarCard.style = "display: none"
+        $(categoriesSidebarCard).hide()
       }
 
-      deactivatedPhases.forEach((element) => {
-        element.style.display = "none"
-      })
+      $(deactivatedPhases).hide()
     } else {
-      sdgSidebarCard.style = "display: block"
-      categoriesSidebarCard.style = "display: block"
+      $(sdgSidebarCard).show()
+      $(categoriesSidebarCard).show()
 
-      deactivatedPhases.forEach((element) => {
-        element.style.display = "block"
-      })
+      $(deactivatedPhases).show()
     }
   },
 

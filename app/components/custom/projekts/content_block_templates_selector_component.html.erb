@@ -1,96 +1,93 @@
-<template class="projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
+<div data-reveal id="contentBlockTemplatesModal" class="reveal modern-modal projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
   <div class="projekt-content-block-templates-selector">
+    <div class="d-flex">
+      <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
+      <button class="close-button round-icon-button" data-close aria-label="Close Accessible Modal" type="button">
+        <i class="fa fa-xmark">
+        </i>
+      </button>
+    </div>
     <div class="projekt-content-block-templates-selector--inner">
-      <ul class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
+      <ul id="contentBlockSelectorTabs" class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
-          <a href="" aria-selected="true">Projektbeschreibung</a>
+          <a href="#contentBlockSelectorTab--basicContent" aria-selected="true">Basisinhalte</a>
         </li>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-          <a href="" aria-selected="true">Accordions</a>
-        </li>
-        <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Media</a>
+          <a href="#contentBlockSelectorTab--satatusAndNotes" >Status & Hinweise</a>
         </li>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-          <a href="" aria-selected="true">Zitate</a>
+          <a href="#contentBlockSelectorTab--mediaAndResources" >Medien & Ressourcen</a>
+        </li>
+        <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
+          <a href="#contentBlockSelectorTab--teasersAndPromotions" >Teaser und Werbeaktionen</a>
         </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Eigene Inhaltsblöcke</a>
+          <a  href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
+        </li>
+        <li class="tabs-title projekt-content-block-templates-selector--tab">
+          <a  href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
         </li>
       </ul>
-      <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
-        <div class="tabs-panel is-active">
-          <% description_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
-              </div>
-            </div>
+      <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
+        <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
+          <% basic_content_templates.each do |template_name| %>
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/basic_content"
+            ) %>
           <% end %>
         </div>
-        <div class="tabs-panel">
-          <% accordions_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
-                  <%= render "projekts/content_block_templates/accordions/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+        <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
+          <% status_and_notes_templates.each do |template_name| %>
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/status_and_notes"
+            ) %>
           <% end %>
         </div>
-        <div class="tabs-panel">
-          <% media_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
-                  <%= render "custom/projekts/content_block_templates/media/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+        <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
+          <% teasers_and_promotions.each do |template_name| %>
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/teasers_and_promotions"
+            ) %>
           <% end %>
         </div>
-        <div class="tabs-panel">
-          <% quotes_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <%= render "projekts/content_block_templates/quotes/#{template_name}" %>
-              </div>
-            </div>
+        <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
+          <% media_and_resources_templates.each do |template_name| %>
+            <%= render Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "custom/projekts/content_block_templates/media_and_resources"
+            ) %>
           <% end %>
         </div>
-        <div class="tabs-panel">
+        <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
+          <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
           <div
               class="add-new-saved-content-block-section js-show-content-block-templates-section"
-              data-editor-name="new-saved-content-block-form"
+              data-editor-name="new-global-content-block-form"
+              data-saved-content-block-type="global"
               >
               <div class="add-new-content-block-section--plus-button-wrapper">
                 <button
-                    title="Neue Inhaltsblockvorlage erstellen"
+                    title="Neue interne Inhaltsblockvorlage erstellen"
                     type="button"
-                    class="-transparent-round-icon-button js-toggle-saved-content-block-form add-new-saved-content-block-button"
+                    class="js-toggle-saved-content-block-form add-new-content-block-button"
                     >
                     <i class="fas fa-plus"></i>
+                    Neuen internen Inhaltsblock hinzufügen
                 </button>
               </div>
               <div class="js-saved-content-block-form saved-content-block-form">
-                <h3>Neue Inhaltsblockvorlage erstellen</h3>
-                <p><i>Put html code here</i></p>
+                <h3>Neue interne Inhaltsblockvorlage erstellen</h3>
+                <p><i>HTML Code hier hinzufügen</i></p>
                 <textarea
-                    id="saved-content-block-form--textarea"
+                    id="global-content-block-form--textarea"
                     name="content"
                     class="saved-content-block-form--textarea"
                     ></textarea>
               </div>
-              <div class="saved-content-block-form--controlls">
+              <div class="saved-content-block-form--controlls d-flex u-gap-10">
                 <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
                   <i class="fas fa-save"></i>
                   Speichern
@@ -103,7 +100,52 @@
           </div>
 
           <div class="saved-content-blocks-list js-saved-content-blocks-list">
-            <% saved_content_blocks.each do |saved_content_block| %>
+            <% global_content_blocks.each do |saved_content_block| %>
+              <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
+            <% end %>
+          </div>
+        </div>
+
+        <div id="contentBlockSelectorTab--userContentBlocks" class="tabs-panel">
+          <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_explanation') %></p>
+          <div
+              class="add-new-saved-content-block-section js-show-content-block-templates-section"
+              data-editor-name="new-user-content-block-form"
+              data-saved-content-block-type="user"
+              >
+              <div class="add-new-content-block-section--plus-button-wrapper">
+                <button
+                    title="Neue eigene Inhaltsblockvorlage erstellen"
+                    type="button"
+                    class="js-toggle-saved-content-block-form add-new-content-block-button"
+                    >
+                    <i class="fas fa-plus"></i>
+                    Neuen eigenen Inhaltsblock hinzufügen
+                </button>
+              </div>
+              <div class="js-saved-content-block-form saved-content-block-form">
+                <h3>Neue eigene Inhaltsblockvorlage erstellen</h3>
+                <p><i>HTML Code hier hinzufügen</i></p>
+                <textarea
+                    id="user-content-block-form--textarea"
+                    name="content"
+                    class="saved-content-block-form--textarea"
+                    ></textarea>
+              </div>
+              <div class="saved-content-block-form--controlls d-flex u-gap-10">
+                <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
+                  <i class="fas fa-save"></i>
+                  Speichern
+                </button>
+                <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
+                  <i class="fas fa-xmark"></i>
+                  Abbrechen
+                </button>
+              </div>
+          </div>
+
+          <div class="saved-content-blocks-list js-saved-content-blocks-list">
+            <% user_content_blocks.each do |saved_content_block| %>
               <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
             <% end %>
           </div>
@@ -111,4 +153,4 @@
       </div>
     </div>
   </div>
-</template>
+</div>

@@ -1,5 +1,7 @@
 class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
-  delegate :format_date, :format_date_range, :get_projekt_phase_restriction_name, :current_user, :projekt_feature?, to: :helpers
+  delegate :format_date, :format_date_range, :current_user, :projekt_feature?,
+           :phase_user_status_restriction_name, :phase_geo_restriction_name, :phase_age_restriction_name,
+           :phase_extended_geozone_restriction_name, :phase_individual_group_value_restriction_name, to: :helpers
   attr_reader :phase, :default_projekt_phase, :resource_count
 
   def initialize(phase, default_projekt_phase, namespace: nil)
@@ -14,10 +16,6 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
 
     def tab_url
       additional_params = {}
-
-      if embedded_and_frame_access_code_valid?(phase.projekt)
-        additional_params = { frame_code: params[:frame_code] }
-      end
 
       projekt_phase_footer_tab_page_path(@projekt.page, phase, **additional_params)
     end

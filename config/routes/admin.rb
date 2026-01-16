@@ -305,6 +305,11 @@ namespace :admin do
   put :update_map, to: "settings#update_map"
   put :update_content_types, to: "settings#update_content_types"
 
+  resources :ai_settings, only: [:index, :update]
+  patch :ai_settings_api_key, to: "ai_settings#update"
+
+  resources :external_api_keys, only: [:index, :show, :edit, :update]
+
   resources :moderators, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
@@ -328,6 +333,12 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      post :regenerate_token
+    end
+  end
+
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
@@ -340,6 +351,7 @@ namespace :admin do
       get :booth_assignments, on: :collection
       patch :add_question, on: :member
       post :send_notifications, on: :member
+      post :regenerate_contexted_clones, on: :member
 
       resources :booth_assignments, only: [:index, :show, :create, :destroy] do
         get :search_booths, on: :collection
@@ -517,6 +529,7 @@ namespace :admin do
   resources :projekt_content_blocks, only: [:destroy, :update] do
     member do
       patch :update_position
+      patch :change_with_ai
     end
   end
 

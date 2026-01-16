@@ -7,6 +7,7 @@ class ProposalsController
   include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
+  include CustomHelper
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -46,6 +47,7 @@ class ProposalsController
 
     @resources =
       @resources
+        .where(admin_accepted: true)
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -161,6 +163,11 @@ class ProposalsController
   def show
     super
     @projekt = @proposal.projekt_phase.projekt
+
+    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+      head :not_found, content_type: "text/html" and return
+    end
+
     # @notifications = @proposal.notifications
     @notifications = @proposal.notifications.not_moderated
     @milestones = @proposal.milestones
@@ -190,6 +197,7 @@ class ProposalsController
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?
+      @proposal.description = process_oembeds(@proposal.description)
       render :show_new
 
     else

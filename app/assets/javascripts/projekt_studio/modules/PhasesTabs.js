@@ -1,5 +1,3 @@
-// import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
-
 ProjektStudio.PhasesTabs = {
   initialized: false,
   initialize() {
@@ -13,10 +11,12 @@ ProjektStudio.PhasesTabs = {
   },
 
   initEventListeners() {
-    $(document).on("click", ".js-toggle-projekt-phase-visibility-button", this.toggleProjektPhaseActiveState.bind(this));
-    $(document).on("click", ".js-toggle-projekt-phase-default", this.toggleProjektPhaseDefaultState.bind(this));
-    $(document).on("click", ".js-delete-projekt-phase", this.deleteProjektPhase.bind(this));
-    $(document).on("click", ".js-send-notifications-for-projekt-phase", this.sendNotificationsForProjektPhase.bind(this));
+    const $document = $(document);
+
+    $document.on("click", ".js-toggle-projekt-phase-visibility-button", this.toggleProjektPhaseActiveState.bind(this));
+    $document.on("click", ".js-toggle-projekt-phase-default", this.toggleProjektPhaseDefaultState.bind(this));
+    $document.on("click", ".js-delete-projekt-phase", this.deleteProjektPhase.bind(this));
+    $document.on("click", ".js-send-notifications-for-projekt-phase", this.sendNotificationsForProjektPhase.bind(this));
   },
 
   initUI() {
@@ -40,18 +40,17 @@ ProjektStudio.PhasesTabs = {
     });
     const projektId = ProjektStudio.getCurrentProjektId();
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("reorderProjektPhases", { ordered_list })
-    } else {
-      $.ajax({
-        url: `/admin/projekts/${projektId}/projekt_phases/order_phases`,
-        type: "POST",
-        dataType: "json",
-        data: {
-          ordered_list
-        }
-      })
-    }
+    $.ajax({
+      url: `/admin/projekts/${projektId}/projekt_phases/order_phases`,
+      type: "POST",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        ordered_list
+      }
+    })
   },
 
   async toggleProjektPhaseActiveState(e) {
@@ -69,22 +68,21 @@ ProjektStudio.PhasesTabs = {
     const dataset = e.currentTarget.dataset;
     e.currentTarget.title = active ? dataset.hideTitle : dataset.showTitle;
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("toggleProjektPhaseActiveState", { projekt_phase_id: tab.dataset.projektPhaseId, active })
-    } else {
-      $.ajax({
-        url: `/admin/projekts/${projektId}/projekt_phases/${projektPhaseId}/toggle_active_status`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          projekt:  {
-            phase_attributes: {
-              active: active
-            }
+    $.ajax({
+      url: `/admin/projekts/${projektId}/projekt_phases/${projektPhaseId}/toggle_active_status`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        projekt:  {
+          phase_attributes: {
+            active: active
           }
         }
-      })
-    }
+      }
+    })
   },
 
 
@@ -109,46 +107,38 @@ ProjektStudio.PhasesTabs = {
     const dataset = e.currentTarget.dataset;
     e.currentTarget.title = isDefault ? dataset.makeDefaultTitle : dataset.unsetDefaultTitle;
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame(
-        "toggleProjektPhaseDefaultState",
-        { projekt_phase_id: phaseId, is_default: isDefault }
-      )
-    } else {
-      $.ajax({
-        url: `/admin/projekts/${projektId}/update_standard_phase`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          default_footer_tab: {
-            id: phaseId
-          }
+    $.ajax({
+      url: `/admin/projekts/${projektId}/update_standard_phase`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        default_footer_tab: {
+          id: phaseId
         }
-      })
-    }
+      }
+    })
   },
 
   deleteProjektPhase(e) {
     const tab = e.currentTarget.closest(".js-projekt-phase-tab");
-    const phaseName = tab.querySelector("h4").innerText;
+    const phaseName = tab.querySelector(".js-projekt-phase-title").innerText;
     const deleteConfirmed = confirm(`Möchten Sie die Phase ${phaseName} wirklich löschen?`)
 
     if (deleteConfirmed) {
       const phaseId = tab.dataset.projektPhaseId
       tab.remove()
 
-      if (ProjektStudio.isEmbedded) {
-        ProjektStudio.utils.sendMessageToDtParentFrame(
-          "deleteProjektPhase",
-          { projekt_phase_id: phaseId }
-        )
-      } else {
-        $.ajax({
-          url: `/admin/projekt_phases/${phaseId}`,
-          type: "DELETE",
-          dataType: "json"
-        })
-      }
+      $.ajax({
+        url: `/admin/projekt_phases/${phaseId}`,
+        type: "DELETE",
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        },
+        dataType: "json"
+      })
     }
   },
 
@@ -159,23 +149,17 @@ ProjektStudio.PhasesTabs = {
 
     if (sendConfirmed) {
       const phaseId = tab.dataset.projektPhaseId
-      const resource_type = e.currentTarget.dataset.resourceType
-      const resource_id = e.currentTarget.dataset.resourceId
+      // const resource_type = e.currentTarget.dataset.resourceType
+      // const resource_id = e.currentTarget.dataset.resourceId
 
-      if (ProjektStudio.isEmbedded) {
-        ProjektStudio.utils.sendMessageToDtParentFrame(
-          "sendNotificationsForProjektPhase",
-          {
-            projekt_phase_id: phaseId, resource_type, resource_id
-          }
-        )
-      } else {
-        $.ajax({
-          url: `/admin/projekt_phases/${phaseId}/send_notifications`,
-          type: "POST",
-          dataType: "json"
-        })
-      }
+      $.ajax({
+        url: `/admin/projekt_phases/${phaseId}/send_notifications`,
+        type: "POST",
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        },
+        dataType: "json"
+      })
     }
   },
 };

@@ -2,6 +2,8 @@ window.ProjektStudio = {
   modules: {},
   templateFunctions: {},
   utils: {},
+  ContentBlock: {},
+  config: {},
 
   initialized: false,
 
@@ -9,11 +11,28 @@ window.ProjektStudio = {
     if (this.initialized) return
 
     if (window.parent) {
+      this.loadConfig();
       ProjektStudio.Sidebar.initialize()
       ProjektStudio.PhasesTabs.initialize()
       ProjektStudio.Banner.initialize()
-      ProjektStudio.ContentBlocks.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.initialize()
+
+      // Initialize ContentBlock submodules
+      ProjektStudio.ContentBlockTemplateSelector.initialize()
+      ProjektStudio.ContentBlock.Render.initialize()
+      ProjektStudio.ContentBlock.DragDrop.initialize()
+      ProjektStudio.ContentBlock.Crud.initialize()
+      ProjektStudio.ContentBlock.ChangeHistory.initialize()
+      ProjektStudio.ContentBlock.CKEditorMode.initialize()
+      ProjektStudio.ContentBlock.DtAiEditMode.initialize()
+
+      ProjektStudio.ContentBlock.SimpleEditMode.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
+      ProjektStudio.ContentBlock.AiEditMode.initialize()
+      ProjektStudio.ContentBlock.CodeEditMode.initialize()
+      ProjektStudio.ContentBlock.Copy.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()
@@ -23,7 +42,12 @@ window.ProjektStudio = {
   },
 
   get isEmbedded() {
-    return window.parent !== window.top
+    return window.self !== window.top;
+  },
+
+  loadConfig() {
+    const projektPage = document.querySelector(".js-projekt-page");
+    this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);
   },
 
   getCurrentProjektId() {
@@ -31,20 +55,8 @@ window.ProjektStudio = {
   },
 
   reinitializeUI() {
-    console.log("reinitialize ProjektStudio")
-
-    // ContentBlocks.initUI()
-    // PhasesTabs.initUI()
-    // ExplainWithAi.initUI()
+    // console.log("reinitialize ProjektStudio")
   },
-
-  // requestLoadContentBlockTemplates() {
-  //   if (this.isProjektPage()) {
-  //     sendMessageToDtParentFrame(
-  //       "Dt.ProjektStudio.loadContentBlockTemplates"
-  //     )
-  //   }
-  // },
 
   isProjektPage() {
     return !!document.querySelector(".js-projekt-page")

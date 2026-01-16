@@ -43,7 +43,7 @@ module ProjektPhaseAdminActions
         )
       elsif embedded?
         redirect_to(
-          @projekt_phase.projekt.frame_url,
+          @projekt_phase.projekt.url,
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end
@@ -489,22 +489,22 @@ module ProjektPhaseAdminActions
   def ai_settings
     authorize!(:ai_settings, @projekt_phase)
 
-    @assistant_codename = @projekt_phase.voice_assistant_codename
+    @assistant_app_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    dt_api = DtApi::Client.new
+    if InternalApiClient.active_dt?
+      dt_api = DtApi::Client.new
 
-    ai_assistant_config_response =
-      dt_api
-        .ai_assistant_configs
-        .get(
-          codename: @assistant_codename,
-          consul_projekt_phase_id: @projekt_phase.id
-        )
+      @ai_assistant_config_response =
+        dt_api
+          .ai_assistant_configs
+          .get(
+            codename: @assistant_app_codename,
+            consul_projekt_phase_id: @projekt_phase.id
+          )
 
-    @ai_assistant_config =
-      ai_assistant_config_response
-        .fetch("client_ai_assistant_config")
+      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+    end
 
     render "custom/admin/projekt_phases/ai_settings"
   end
@@ -558,7 +558,7 @@ module ProjektPhaseAdminActions
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         :lock_on, officing_manager_ids: [],
-        geozone_restriction_ids: [], registered_address_street_ids: [],
+        registered_address_district_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
         settings_attributes: [:id, :value],

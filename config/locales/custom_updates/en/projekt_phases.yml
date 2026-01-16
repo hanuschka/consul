@@ -3,18 +3,33 @@ en:
     projekt_phases:
       subnav:
         stats: Statistics
+        full_stats: Full Statistics
         overview:
           proposal_phase: Proposals
+          comment_phase: Comments
       stats:
+        title: Statistics
+        banner_title: "Stats for %{phase_title}"
+        back_to_phase: Back to projekt
+        refresh_stats_button: "Refresh statistics"
+        refresh_stats_last_updated: "Statistics last updated: %{time}"
+        processing_stats: "Processing..."
+        refresh_ai_stats_button: "Refresh AI statistics"
+        refresh_ai_stats_last_updated: "AI statistics last updated: %{time}"
+        refresh_ai_stats_loading: "Please wait, AI statistics are being updated..."
+        refresh_ai_stats_loading_note: "This may take a couple of minutes depending on the amount of resources and comments."
+        refresh_ai_stats_error: "Error updating AI statistics. Please try again."
+        generate_ai_summary_button: "Generate AI summary"
+        ai_summary_generated: "AI summary was successfully generated"
         proposal_phase:
-          total_proposals_title: Proposals
-          total_proposals: "Total proposals"
-          total_authors_title: "Authors"
-          total_authors: "Autoren"
-          total_supports_title: "Unterstützungen"
-          total_supports: "Gesamtzahl der Unterstützungen"
-          total_supports_weight_title: "Unterstützungsgewicht"
-          total_supports_weight: "Gesamtunterstützungsgewicht"
+          proposals: Proposals
+          authors: Authors
+          participants: Participants
+          supports: Supports
+          weighted_score: Weighted Score
+          comments: Comments
+          hidden: Hidden
+          reported: Reported
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht

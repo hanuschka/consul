@@ -14,6 +14,10 @@ class MapLocation < ApplicationRecord
   enum rendering_library: { leaflet: 0, mapbox: 1, virtualcity: 2 }
 
   belongs_to :mappable, polymorphic: true, touch: true
+  belongs_to :district, class_name: "RegisteredAddress::District",
+                        foreign_key: "registered_address_district_id",
+                        optional: true,
+                        inverse_of: :contained_map_locations
   has_one_attached :screenshot
 
   validates :longitude, :latitude, :zoom, presence: true, numericality: true
@@ -21,8 +25,29 @@ class MapLocation < ApplicationRecord
   after_initialize :set_default_values
   before_save :parse_features_string
   after_save :update_geocoder_data
+  after_save :update_district
 
   reverse_geocoded_by :latitude, :longitude
+
+  scope :with_deficiency_report_associations, -> {
+    includes(mappable: [:category, :sentiment])
+      .where(mappable_type: "DeficiencyReport")
+  }
+
+  scope :with_idea_associations, -> {
+    includes(mappable: :category)
+      .where(mappable_type: "Idea")
+  }
+
+  scope :with_proposal_associations, -> {
+    includes(mappable: :projekt_labels)
+      .where(mappable_type: "Proposal")
+  }
+
+  scope :with_investment_associations, -> {
+    includes(mappable: [:sentiment, :projekt_labels])
+      .where(mappable_type: "Budget::Investment")
+  }
 
   audited associated_with: :deficiency_report,
     only: %i[features latitude longitude],
@@ -30,6 +55,10 @@ class MapLocation < ApplicationRecord
 
   def self.default
     MapLocation.find_or_create_by!(default: true)
+  end
+
+  def self.awesome_icon_unicode_cache
+    @awesome_icon_unicode_cache ||= AwesomeIcon.pluck(:name, :unicode).to_h
   end
 
   def available?
@@ -41,6 +70,18 @@ class MapLocation < ApplicationRecord
       mappable.map_layers
     else
       MapLayer.general
+    end
+  end
+
+  def to_geo_json
+    @geo_json ||= begin
+      if features.present? && features["type"] == "FeatureCollection"
+        features
+      elsif features.present? && features["type"] == "Feature"
+        { "type" => "FeatureCollection", "features" => [features] }
+      else
+        { "type" => "FeatureCollection", "features" => [] }
+      end
     end
   end
 
@@ -65,12 +106,6 @@ class MapLocation < ApplicationRecord
   end
 
   def features_json_data
-    if features.is_a?(String)
-      Sentry.capture_message("MapLocation #{id} features is a String")
-    end
-
-    return {} if features == {} || features.is_a?(String)
-
     extra_properties = {
       "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       "id" => mappable_id,
@@ -79,38 +114,32 @@ class MapLocation < ApplicationRecord
       "feature_icon_unicode" => get_feature_icon_unicode
     }.reject { |_k, v| v.in?([nil, ""]) }
 
-    if features["type"] == "FeatureCollection"
-      features["features"].each do |feature|
-        feature["properties"].merge!(extra_properties)
-      end
-    elsif features["type"] == "Feature"
-      features["properties"].merge!(extra_properties)
-    else
-      Sentry.capture_message("MapLocation #{id} features is not a FeatureCollection or Feature")
-      return {}
+    enriched_geojson = to_geo_json
+
+    enriched_geojson["features"].each do |feature|
+      feature["properties"].merge!(extra_properties)
     end
 
-    features
+    enriched_geojson
   end
 
-  def get_district
-    return unless latitude.present? && longitude.present?
+  def get_district_id
+    RegisteredAddress::District.joins(:map_location).find_each do |district|
+      if district.map_location.intersects?(self)
+        return district.id
+      end
+    end
 
-    geo_data = Geocoder.search([latitude, longitude]).first&.data
+    nil
+  end
 
-    matching_address_query = {
-      street_number: geo_data["address"]["house_number"]&.match(/\A\d+/).to_s,
-      street_number_extension: geo_data["address"]["house_number"]&.match(/[a-zA-Z]+\z/).to_s.downcase.presence,
-      registered_address_street: {
-        name: geo_data["address"]["road"],
-        plz: geo_data["address"]["postcode"]
-      },
-      registered_address_city: {
-        name: geo_data["address"]["city"] || geo_data["address"]["town"]
-      }
-    }.reject { |_k, v| v.in?(["", nil]) }
+  def intersects?(other_map_location)
+    factory = RGeo::Geos.factory
 
-    RegisteredAddress.joins(:registered_address_street, :registered_address_city).find_by(matching_address_query)&.district
+    geom1 =  RGeo::GeoJSON.decode(to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
+    geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
+
+    geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
   end
 
   private
@@ -135,7 +164,7 @@ class MapLocation < ApplicationRecord
         self.features          ||= mappable.parent.map_location.features
         self.rendering_library ||= mappable.parent.map_location.rendering_library
 
-      elsif mappable.is_a?(Projekt)
+      elsif mappable.is_a?(Projekt) || mappable.is_a?(RegisteredAddress::District)
         self.latitude          ||= MapLocation.default.latitude
         self.longitude         ||= MapLocation.default.longitude
         self.zoom              ||= MapLocation.default.zoom
@@ -178,36 +207,44 @@ class MapLocation < ApplicationRecord
       "#{street_address}, #{geocoder_data["address"]["postcode"]} #{locality}"
     end
 
-    def get_feature_color
-      if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.sentiment.present?
-        mappable.sentiment.color
-      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
-        mappable.category.color
-      elsif mappable.is_a?(Projekt)
-        "#ff0000"
+    def get_feature_color(category: nil, sentiment: nil)
+      sentiment ||= mappable.sentiment if mappable.respond_to?(:sentiment)
+      category ||= mappable.category if mappable.respond_to?(:category)
+
+      if (mappable_type == "DeficiencyReport" || mappable.is_a?(Budget::Investment)) && sentiment.present?
+        sentiment.color
+      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+        category.color
       end
     end
 
-    def get_feature_icon_name
+    def get_feature_icon_name(category: nil, projekt_labels: nil)
       @icon_name ||= begin
-        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.projekt_labels.any?
-          mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
-          mappable.category.icon
+        projekt_labels ||= mappable.projekt_labels if mappable.respond_to?(:projekt_labels)
+        category ||= mappable.category if mappable.respond_to?(:category)
+
+        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && projekt_labels&.any?
+          projekt_labels.size == 1 ? projekt_labels.first.icon : "tags"
+        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+          category.icon
         end
       end
     end
 
-    def get_feature_icon_unicode
-      return unless get_feature_icon_name.present?
+    def get_feature_icon_unicode(category: nil, projekt_labels: nil)
+      icon_name = get_feature_icon_name(category: category, projekt_labels: projekt_labels)
+      return unless icon_name.present?
 
-      AwesomeIcon.find_by(name: get_feature_icon_name)&.unicode
+      self.class.awesome_icon_unicode_cache[icon_name]
     end
 
     def update_geocoder_data
-      return unless latitude.present? && longitude.present?
+      return if to_geo_json["features"].first.blank?
 
-      update_column(:geocoder_data, Geocoder.search([latitude, longitude]).first&.data)
+      lat = to_geo_json["features"].first["geometry"]["coordinates"][1]
+      lon = to_geo_json["features"].first["geometry"]["coordinates"][0]
+
+      update_column(:geocoder_data, Geocoder.search([lat, lon]).first&.data)
       update_column(:approximated_address, get_approximated_address)
     rescue StandardError => e
       Sentry.capture_exception(e)
@@ -226,9 +263,17 @@ class MapLocation < ApplicationRecord
           self.features = JSON.parse(features)
         rescue JSON::ParserError => e
           Sentry.capture_exception(e)
-          self.features = {}
-          self.features_bu = features
+          self.features = { "type" => "FeatureCollection", "features" => [] }
         end
       end
+    end
+
+    def update_district
+      return if mappable.is_a?(RegisteredAddress::District)
+
+      district_id = get_district_id
+      return if registered_address_district_id == district_id
+
+      update_column(:registered_address_district_id, district_id)
     end
 end

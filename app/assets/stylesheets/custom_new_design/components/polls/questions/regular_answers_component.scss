@@ -61,7 +61,6 @@
     .button_to {
       width: unset;
       margin-right: 0.8rem;
-      word-break: break-all;
       line-height: 1.2;
     }
 
@@ -97,6 +96,7 @@
 
     .answer-weight-selector {
       width: 58px;
+      min-width: 58px;
       padding: 0;
       text-align: center;
       margin-right: 5px;

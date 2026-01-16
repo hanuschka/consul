@@ -2,14 +2,6 @@
 
 <% unless embedded? %>
   <div class='row'>
-    <div id="formular-sidebar" class="small-12 medium-3 column">
-      <aside class="margin-bottom">
-        <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
-          <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
-        <% end %>
-      </aside>
-    </div>
-
     <div id="formular" class='spinner-placeholder small-12 medium-9 column'>
       <% permission_problem_key = @projekt_phase.permission_problem(current_user) %>
 
@@ -37,12 +29,19 @@
            )
         ) %>
 
-    <% elsif @formular_fields.present? %>
-      <div class="column medium-6">
-        <%= render "custom/formular_answers/form", formular_answer: @formular_answer, formular_fields: @formular_fields %>
-      </div>
+      <% elsif @formular_fields.present? %>
+        <div class="column medium-6">
+          <%= render "custom/formular_answers/form", formular_answer: @formular_answer, formular_fields: @formular_fields %>
+        </div>
+      <% end %>
+    </div>
 
-    <% end %>
+    <div id="formular-sidebar" class="small-12 medium-3 column">
+      <aside class="margin-bottom">
+        <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
+          <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+        <% end %>
+      </aside>
     </div>
   </div>
 <% end %>

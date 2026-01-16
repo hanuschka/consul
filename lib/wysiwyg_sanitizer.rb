@@ -4,6 +4,7 @@ class WYSIWYGSanitizer
     table caption thead tr th tbody td abbr
     i
     figure
+    iframe
   ]
   end
 
@@ -11,6 +12,7 @@ class WYSIWYGSanitizer
     %w[
       href style target class id name alt src align border cellpadding cellspacing summary scope title
       allowfullscreen frameborder height width
+      data-src
     ]
   end
 

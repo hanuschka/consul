@@ -74,6 +74,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           responsible_name: Sachbearbeiter*in
           only_hidden: Nur gelöschte Meldungen anzeigen
@@ -209,6 +210,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           officer_name: Sachbearbeiter*in
           actions: Aktionen
@@ -304,7 +306,7 @@ de:
           success: Gebiet erfolgreich aktualisiert
         attributes:
           name: Name
-          coordinates: Koordinaten
+          boundaries: Grenzen
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -405,6 +407,9 @@ de:
           send_notifications: Benachrichtigungen senden
           notifications_sent: Benachrichtigungen wurden erfolgreich gesendet
           send_notifications_confirm: Sind Sie sicher?
+          regenerate_contexted_clones: Kontextbezogene Fragen erneuern
+          regenerate_contexted_clones_confirm: Sind Sie sicher?
+          contexted_clones_regenerated: Kontextbezogene Fragen wurden erfolgreich renoviert
         questions:
           show:
             description: Bezeichnung

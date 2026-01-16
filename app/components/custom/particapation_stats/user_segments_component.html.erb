@@ -1,0 +1,57 @@
+<div class="user-segments-stats">
+  <h3 class="user-segments-stats--title"><%= t("custom.shared.user_segments.title") %></h3>
+
+  <% if gender? %>
+    <div class="user-segments-stats--gender-cards">
+      <% gender_cards.each do |card| %>
+        <div class="ai-stats-card user-segments-stats--gender-card">
+          <h4 class="user-segments-stats--gender-card-title"><%= t("custom.shared.user_segments.#{card[:key]}") %></h4>
+          <div class="user-segments-stats--gender-card-number"><%= card[:count] %></div>
+          <% if percentage_diff(card[:percentage]) %>
+            <div class="user-segments-stats--gender-card-diff"><%= percentage_diff(card[:percentage]) %> <%= t("custom.shared.user_segments.to_average") %></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if age? %>
+    <% age_data = age_chart_data %>
+    <% if age_data[:labels].any? %>
+      <%= render Shared::BarChartComponent.new(
+        title: t("custom.shared.user_segments.age"),
+        labels: age_data[:labels],
+        values: age_data[:values],
+        orientation: "horizontal",
+        use_percentage: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <% if geozone? %>
+    <% geozone_data = geozone_chart_data %>
+    <% if geozone_data[:labels].any? %>
+      <%= render Shared::BarChartComponent.new(
+        title: t("custom.shared.user_segments.area"),
+        labels: geozone_data[:labels],
+        values: geozone_data[:values],
+        orientation: "horizontal",
+        use_percentage: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <% if individual_group? %>
+    <% individual_groups_data.each do |group_data| %>
+      <% if group_data[:labels].any? %>
+        <%= render Shared::BarChartComponent.new(
+          title: group_data[:name],
+          labels: group_data[:labels],
+          values: group_data[:values],
+          orientation: "horizontal",
+          use_percentage: true
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

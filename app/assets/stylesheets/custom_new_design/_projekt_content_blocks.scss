@@ -1,6 +1,8 @@
 .image-gallery-with-ligthbox {
+  list-style: none;
   margin-bottom: 25px;
   max-width: 100%;
+  margin-left: 0;
 
   img {
     max-width: 100%;
@@ -11,14 +13,16 @@
     object-fit:cover
     /* margin-bottom: 5px; */
   }
+
+  &.-single-image {
+    img {
+      border-radius: 10px;
+    }
+  }
 }
 
 .accordion-title {
   border-radius: 5px;
-}
-
-.projekt-content-block {
-  margin-bottom: 35px;
 }
 
 .gfadeIn {

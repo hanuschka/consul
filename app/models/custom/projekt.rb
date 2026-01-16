@@ -14,12 +14,12 @@ class Projekt < ApplicationRecord
   include SDG::Relatable
   include Taggable
   include Searchable
+  include Notifiable
 
   translates :description
   include Globalizable
 
   has_secure_token :preview_code
-  has_secure_token :frame_access_code
 
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
@@ -35,6 +35,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_settings, dependent: :destroy
 
   has_many :projekt_phases, dependent: :destroy
+  has_many :active_and_visible_projekt_phases, -> { active.frontend_visible }, class_name: "ProjektPhase"
   has_many :debate_phases, class_name: "ProjektPhase::DebatePhase", dependent: :destroy
   has_many :proposal_phases, class_name: "ProjektPhase::ProposalPhase", dependent: :destroy
   has_many :budget_phases, class_name: "ProjektPhase::BudgetPhase", dependent: :destroy
@@ -56,8 +57,8 @@ class Projekt < ApplicationRecord
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
 
-  has_many :debates, through: :debate_phases
-  has_many :proposals, through: :proposal_phases
+  has_many :debates, through: :debate_phases, source: :resources
+  has_many :proposals, through: :proposal_phases, source: :resources
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -75,6 +76,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_manager_assignments, dependent: :destroy
   has_many :projekt_managers, through: :projekt_manager_assignments
   accepts_nested_attributes_for :projekt_manager_assignments
+  accepts_nested_attributes_for :page
 
   has_many :subscriptions, -> { where(projekt_subscriptions: { active: true }) },
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
@@ -93,6 +95,7 @@ class Projekt < ApplicationRecord
     association_foreign_key: 'site_customization_page_id'
 
   delegate :image, to: :page, allow_nil: true
+  delegate :url, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
@@ -106,18 +109,18 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :sync_update_for_global_overview #, on: :update
-  # after_touch :sync_update_for_global_overview
+  after_update :sync_for_global_overview_if_changed #, on: :update
+  # after_touch :sync_for_global_overview_if_changed
   after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
 
-  def should_be_exported?
+  def should_be_exported_for_global_overview?
     if  Rails.env.development? && Rails.application.secrets.dt[:disable_sync]
       return false
     end
 
-    ApiClient.active_dt? && for_global_overview?
+    InternalApiClient.active_dt? && (on_global_overview? || acceptable_to_be_exported_for_global_overview?)
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -247,7 +250,7 @@ class Projekt < ApplicationRecord
                                     )
                                     .select(:id)
 
-      permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
+      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
 
       arel = Projekt.arel_table
 
@@ -278,6 +281,14 @@ class Projekt < ApplicationRecord
       .joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
       .sort_by_order_number
+  }
+
+  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
+    if landing_page_id.blank?
+      joins(:landing_pages).distinct
+    else
+      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
+    end
   }
 
   ##################
@@ -317,11 +328,15 @@ class Projekt < ApplicationRecord
     )
   end
 
-  def self.with_pm_permission_to(permission, projekt_manager)
+  def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
+    return Projekt.none if permissions.blank?
 
-    joins(:projekt_manager_assignments)
-      .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
+    joins(:projekt_manager_assignments).where(
+      "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
+      projekt_manager.id,
+      Array(permissions)
+    )
   end
 
   def self.selectable_in_selector(controller_name, current_user, resource = nil)
@@ -343,9 +358,9 @@ class Projekt < ApplicationRecord
   end
 
   def searchable_values
-    { page.title          => "A",
+    { page&.title          => "A",
       title               => "A",
-      page.content        => "C" }
+      page&.content       => "C" }
   end
 
   def projekt_phases_for(resource)
@@ -615,7 +630,6 @@ class Projekt < ApplicationRecord
       name: name,
       total_duration_start: total_duration_start,
       total_duration_end: total_duration_end,
-      frame_access_code: frame_access_code,
       preview_code: preview_code,
       show_map: feature?("show_map"),
       show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
@@ -653,17 +667,6 @@ class Projekt < ApplicationRecord
     save!
   end
 
-  def generate_frame_access_code_if_nedded!
-    return if frame_access_code.present?
-
-    regenerate_frame_access_code
-    save!
-  end
-
-  def frame_url
-    gen_projekt_url(embedded: true, frame_code: frame_access_code)
-  end
-
   def gen_projekt_url(url_params = {})
     uri = URI.parse(page.url)
 
@@ -678,20 +681,11 @@ class Projekt < ApplicationRecord
     preview_code.present? && preview_code == code
   end
 
-  def frame_access_code_valid?(code)
-    frame_access_code.present? && frame_access_code == code
-  end
-
-  def should_be_exported_for_overview?
-    # TODO
-    # Here the conditions to check if projekt exported intially
-    # They should be used here as well in context of individual projekt
-    # Projekt
-    #   .activated
-    #   .with_published_custom_page
-    #   .show_in_overview_page
-    #   .not_in_individual_list
-    #   .regular
+  def acceptable_to_be_exported_for_global_overview?
+    !special &&
+      page&.published? &&
+      projekt_settings.find_by(key: "projekt_feature.main.activate")&.value == "active" &&
+      projekt_settings.find_by(key: "projekt_feature.general.show_in_overview_page")&.value == "active"
   end
 
   def any_phase_subscribers_ids
@@ -710,6 +704,18 @@ class Projekt < ApplicationRecord
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else
       page.content
+    end
+  end
+
+  def perform_sync_update_for_global_overview
+    if should_be_exported_for_global_overview?
+      if hidden_at.present?
+        sync_destroy_for_global_overview
+      else
+        Projekts::OverviewProjektUpdatedJob.perform_later(
+          self
+        )
+      end
     end
   end
 
@@ -818,7 +824,7 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def sync_update_for_global_overview
+    def sync_for_global_overview_if_changed
       # Ignore order number update change
       changed_set = previous_changes.except("created_at", "updated_at")
 
@@ -826,19 +832,11 @@ class Projekt < ApplicationRecord
         return
       end
 
-      if should_be_exported?
-        if hidden_at.present?
-          sync_destroy_for_global_overview
-        else
-          Projekts::OverviewProjektUpdatedJob.perform_later(
-            self
-          )
-        end
-      end
+      perform_sync_update_for_global_overview
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported?
+      if should_be_exported_for_global_overview?
         Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end
     end

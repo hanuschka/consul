@@ -1,4 +1,4 @@
-<div class="sidebar">
+<aside class="sidebar">
   <div class="hide-on-small-tablet">
     <% if render_custom_content_block?('home_page_sidebar') %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle") do |c| %>
@@ -108,4 +108,15 @@
       <% end %>
     <% end %>
   <% end %>
-</div>
+
+  <% if setting["welcomepage.share_buttons"].present? %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.share.title"), icon_name: "share-alt") do |c| %>
+      <%= render "shared/social_share",
+        title: Setting["meta_title"],
+        url: root_url,
+        description: Setting["meta_description"].to_s.truncate(200),
+        mobile: Setting["meta_title"]
+      %>
+    <% end %>
+  <% end %>
+</aside>

@@ -61,6 +61,8 @@ module Abilities
       can [:search, :create, :index, :destroy], ::Manager
       can [:create, :read, :destroy], ::SDG::Manager
       can [:search, :index], ::User
+      can [:index, :show, :new, :create, :edit, :update, :destroy], ::InternalApiClient
+      can [:index, :show, :new, :create, :edit, :update, :destroy, :regenerate_token], ::ApiClient
 
       can :manage, Dashboard::Action
 
@@ -89,7 +91,7 @@ module Abilities
 
       can [:index, :create, :update, :destroy], Geozone
 
-      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications], Poll
+      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications, :evaluation, :report, :refresh_ai_stats, :ai_stats_status, :download_evaluation_section, :download_all_evaluation_sections], Poll
       can [:read, :create, :update, :destroy, :available], Poll::Booth
       can [:search, :create, :index, :destroy], ::Poll::Officer
       can [:create, :destroy, :manage], ::Poll::BoothAssignment
@@ -150,7 +152,7 @@ module Abilities
       can [:manage], ::Idea::Category
       can [:manage], Idea
 
-      can [:csv_answers_votes], Poll
+      can [:csv_answers_votes, :regenerate_contexted_clones], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User
 

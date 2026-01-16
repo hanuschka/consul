@@ -15,3 +15,5 @@
 //= link projekt_studio.css
 
 //= link_tree ../builds
+
+//= link packs/projekt_studio.js

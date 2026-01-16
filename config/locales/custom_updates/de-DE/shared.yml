@@ -11,6 +11,79 @@ de:
       enter_missing_user_data: zusätzliche Daten zu Ihrem Konto bereit
       save_form: Speichern
       destroy_confirmation: Sind Sie sicher?
+      user_segments:
+        title: Nutzersegmente
+        men: Männer
+        women: Frauen
+        divers: Divers
+        to_average: zum Durchschnitt
+        age: Alter
+        area: Gebiet
+    participation_stats:
+      sections:
+        key_metrics: Kennzahlen
+        ai_analysis: KI-Auswertung
+        distributions: Verteilungen und Entwicklungen
+      key_performance_indicators: Kennzahlen
+      ai_summary_title: Zusammenfassung der Phase
+      tone_of_participation: Ton der Beteiligung
+      tone_of_comments: Ton der Kommentare
+      further_info: Weitere Informationen
+      no_resources_to_analyze: Keine Ressourcen zur Analyse verfügbar. Bitte fügen Sie Vorschläge oder Investitionen hinzu, um KI-Statistiken zu generieren.
+      timeline:
+        title: Zeitverlauf
+        submissions_over_time: Einreichungen im Zeitverlauf
+        comments_over_time: Kommentare im Zeitverlauf
+      heatmap:
+        title: Heatmap
+      ai_question:
+        title: "Individuelle Auswertung per Frage"
+        subtitle: "Stellen Sie eigene Fragen zu den eingereichten Vorschlägen und erhalten Sie eine zusammenfassende Auswertung."
+        placeholder: "Geben Sie Ihre Frage zu den Vorschlägen ein..."
+        submit: "Frage stellen"
+        submitting: "Wird gesendet..."
+        in_progress: "Fragen werden bearbeitet"
+        processing_message: "Ich prüfe alle Vorschläge und werde in Kürze eine Antwort geben."
+        download_txt: "TXT herunterladen"
+        download_pdf: "PDF herunterladen"
+        download_all_txt: "Alle Fragen als TXT herunterladen"
+        download_all_pdf: "Alle Fragen als PDF herunterladen"
+        retention_hint: "Laden Sie Antworten für Offline-Zugriff oder Archivierung herunter."
+        no_resources: "Keine Vorschläge gefunden, die analysiert werden können."
+        error: "Bei der Generierung der Antwort ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        pdf_title: "Fragenanalyse"
+        pdf_all_questions_title: "Fragenanalyse - Alle Fragen"
+        pdf_projekt: "Projekt"
+        pdf_phase: "Phase"
+        pdf_date: "Datum"
+        pdf_exported_at: "Exportiert"
+        pdf_question: "Frage"
+        pdf_answer: "Antwort"
+        pdf_no_questions: "Keine beantworteten Fragen vorhanden."
+    ai_stats:
+      topic_clustering:
+        title: Themengruppen
+        subtopics: Unterthemen
+        subcategories: Unterkategorien
+        proposals: Vorschläge
+        resources: Vorschläge
+        in: in
+        topic_groups: Themengruppen
+        category_groups: Themengruppen
+      semantic_clustering:
+        title: Semantische Gruppierung
+        subcategories: Unterkategorien
+        resources: Vorschläge
+        in: in
+        category_groups: Kategoriegruppen
+      user_segments:
+        title: Nutzersegmente
+        men: Männer
+        women: Frauen
+        divers: Divers
+        to_average: zum Durchschnitt
+        age: Alter
+        area: Gebiet
     resource_page:
       banner_component:
         comments: Kommentare

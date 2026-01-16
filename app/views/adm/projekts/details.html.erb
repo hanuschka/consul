@@ -47,4 +47,6 @@
       <%= form_submit_button %>
     <% end %>
   <% end %>
+
+  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :slug, :string) %>
 </div>

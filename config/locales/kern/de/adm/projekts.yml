@@ -13,12 +13,8 @@ de:
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
       details:
-        status: Status
-        activated: Aktiviert
-        not_activated: Nicht aktiviert
-        parent_projekt: Übergeordnetes Projekt
-        edit: Bearbeiten
-        back: Zurück zur Liste
+        duration_label: Projektlaufzeit
+        duration_description: Definiert den Zeitraum, in dem das Projekt online ist – auch außerhalb aktiver Beteiligungsphasen.
       edit:
         title: Projekt bearbeiten
         submit: Speichern

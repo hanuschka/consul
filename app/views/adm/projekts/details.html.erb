@@ -4,4 +4,18 @@
 
 <div class="kern-container mb-5">
   <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
+    <%= form_with model: @projekt, url: adm_projekt_path(@projekt) do |f| %>
+      <div class="mb-4">
+        <%= f.date_field :total_duration_start, class: 'mb-3' %>
+        <%= f.check_box :show_start_date_in_frontend %>
+      </div>
+      <div class="mb-4">
+        <%= f.date_field :total_duration_end, class: 'mb-3' %>
+        <%= f.check_box :show_end_date_in_frontend %>
+      </div>
+      <%= form_submit_button %>
+    <% end %>
+  <% end %>
 </div>

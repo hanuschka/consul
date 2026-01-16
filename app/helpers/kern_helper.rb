@@ -27,10 +27,8 @@ module KernHelper
   end
 
   def form_submit_button(text: I18n.t("shared.submit"), icon: "save", **options)
-    content_tag(:div, class: "kern-row") do
-      content_tag(:div, class: "kern-col-12 kern-col-md-10 d-flex justify-content-end") do
-        kern_button(text: text, icon: icon, type: "submit", **options)
-      end
+    content_tag(:div, class: "d-flex justify-content-end mb-4") do
+      kern_button(text: text, icon: icon, type: "submit", **options)
     end
   end
 

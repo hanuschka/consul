@@ -23,6 +23,9 @@ de:
         show_by_default: Beim Laden der Karte standardmäßig anzeigen
         transparent: Ebene ist transparent
         opacity: Transparenz
+      projekt:
+        show_start_date_in_frontend: Startdatum in der Seitenleiste des Projektes anzeigen
+        show_end_date_in_frontend: Enddatum in der Seitenleiste des Projektes anzeigen
       tag:
         name: Name des Tags
       individual_group:

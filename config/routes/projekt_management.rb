@@ -111,7 +111,12 @@ namespace :projekt_management do
       end
     end
 
-    resources :projekt_content_blocks, only: [:create]
+    resources :projekt_content_blocks, only: [:create] do
+      collection do
+        post :import_document
+        delete :destroy_all
+      end
+    end
   end
 
   resources :projekt_content_blocks, only: [:destroy, :update] do

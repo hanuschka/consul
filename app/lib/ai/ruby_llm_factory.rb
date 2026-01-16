@@ -67,11 +67,15 @@ module Ai::RubyLlmFactory
   end
 
   def self.current_llm_model
+    RubyLLM.models.refresh!
+
     if current_llm_provider == "ollama"
       Setting["ai.llm_custom_model"]
     else
       if current_llm_provider == "openai" && Setting["ai.llm_model"].blank?
-        "gpt-5-nano"
+        # "gpt-5-nano"
+        # "gpt-5.1-codex"
+        "gpt-5.2"
       else
         Setting["ai.llm_model"]
       end

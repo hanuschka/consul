@@ -770,6 +770,15 @@ body.-preview-mode {
   margin-top: -2px;
 }
 
+.ai-edit-success-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #00830e;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
 .categories--simple-selector {
    .tags a {
      opacity: 0.5;

@@ -227,7 +227,10 @@ ProjektStudio.ContentBlock.AiEditMode = {
       if (contentBlock) {
         contentBlock.innerHTML = response.content_block_html;
 
-        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+
+        const contentBlockWrapper = contentBlock.closest('.js-projekt-content-block-wrapper');
+        this.showAiEditSuccessIndicator(contentBlockWrapper);
       }
     } else {
       this.showErrorMessage('Ungültige Antwort vom Server');
@@ -283,6 +286,20 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
   showErrorMessage(message) {
     alert(message);
+  },
+
+  showAiEditSuccessIndicator(contentBlockWrapper) {
+    const popup = this.getPopup(contentBlockWrapper);
+    if (!popup) return;
+
+    const successIndicator = popup.querySelector('.js-ai-edit-success-indicator');
+    if (!successIndicator) return;
+
+    successIndicator.style.display = 'inline-flex';
+
+    setTimeout(() => {
+      successIndicator.style.display = 'none';
+    }, 3000);
   },
 
   setButtonState(button, state) {

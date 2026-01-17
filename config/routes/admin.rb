@@ -113,6 +113,7 @@ namespace :admin do
     resources :projekt_content_blocks, only: [:create] do
       collection do
         post :import_document
+        get :import_status
         delete :destroy_all
       end
     end

@@ -1,6 +1,8 @@
 ProjektStudio.FileImport = {
   maxFileSize: 10485760,
   allowedExtensions: ['pdf', 'docx', 'odt'],
+  statusCheckTimeout: 7000,
+  statusCheckActive: false,
 
   initialize() {
     const $document = $(document);
@@ -14,6 +16,9 @@ ProjektStudio.FileImport = {
       ".js-projekt-file-import-input",
       this.handleFileSelect.bind(this)
     );
+    $document.on("turbolinks:before-visit", () => {
+      this.stopStatusCheck();
+    });
   },
 
   handleButtonClick(e) {
@@ -62,23 +67,23 @@ ProjektStudio.FileImport = {
     const formData = new FormData();
     formData.append('file', file);
 
-    App.Ajax.request({
-      url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/import_document`,
-      type: "POST",
-      dataType: "json",
-      contentType: false,
-      processData: false,
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
-      data: formData
-    })
+    App.Ajax
+      .request({
+        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/import_document`,
+        type: "POST",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        data: formData
+      })
       .then((data) => {
-        this.hideLoader();
-
         if (data.error) {
+          this.hideLoader();
           this.handleError(data.error);
+        } else if (data.status_url) {
+          this.startStatusCheck(data.status_url);
         } else {
+          this.hideLoader();
           location.reload();
         }
       })
@@ -88,48 +93,82 @@ ProjektStudio.FileImport = {
       });
   },
 
-  handleError(error) {
-    if (error.fallback_text) {
-      this.createFallbackContentBlock(error.fallback_text, error.message);
-    } else {
-      alert(error.message);
-    }
+  startStatusCheck(statusUrl) {
+    this.statusCheckActive = true;
+    this.statusCheckAttempts = 0;
+    this.poll(statusUrl);
   },
 
-  createFallbackContentBlock(rawText, errorMessage) {
-    const fallbackConfirmed = confirm(
-      `${errorMessage}\n\nMöchten Sie den Rohtext als einzelnen Inhaltsblock erstellen?`
-    );
-
-    if (!fallbackConfirmed) {
+  poll(statusUrl) {
+    if (!this.statusCheckActive) {
       return;
     }
 
-    const projektId = ProjektStudio.getCurrentProjektId();
-    const escapedText = this.escapeHtml(rawText);
-    const html = `<div class="imported-raw-text"><pre>${escapedText}</pre></div>`;
+    if (this.statusCheckAttempts >= 300) {
+      this.handleStatusCheckTimeout();
+      return;
+    }
 
-    $.ajax({
-      url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
-      type: "POST",
-      dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
-      data: { html: html }
-    })
-      .then(() => {
-        location.reload();
+    this.statusCheckAttempts++;
+
+    App.Ajax
+      .request({
+        url: statusUrl,
+        method: "GET",
+        dataType: "json"
       })
-      .catch(() => {
-        alert("Fehler beim Erstellen des Fallback-Inhaltsblocks");
-      });
+      .then((response) => this.handleStatusResponse(response, statusUrl))
+      .catch(() => this.handleStatusCheckError(statusUrl));
   },
 
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  handleStatusCheckTimeout() {
+    this.statusCheckActive = false;
+    this.hideLoader();
+    alert("Timeout beim Importieren des Dokuments. Bitte versuchen Sie es erneut.");
+  },
+
+  handleStatusResponse(response, statusUrl) {
+    if (!this.statusCheckActive) {
+      return;
+    }
+
+    if (response.status === "completed") {
+      this.statusCheckActive = false;
+      this.finishStatusCheck(response);
+    } else if (response.status === "failed") {
+      this.handleStatusCheckFailure(response);
+    } else {
+      setTimeout(() => this.poll(statusUrl), this.statusCheckTimeout);
+    }
+  },
+
+  handleStatusCheckFailure(response) {
+    this.statusCheckActive = false;
+    this.hideLoader();
+    if (response.error) {
+      this.handleError(response.error);
+    } else {
+      alert("Fehler beim Importieren des Dokuments. Bitte versuchen Sie es erneut.");
+    }
+  },
+
+  handleStatusCheckError(statusUrl) {
+    if (this.statusCheckActive) {
+      setTimeout(() => this.poll(statusUrl), this.statusCheckTimeout);
+    }
+  },
+
+  stopStatusCheck() {
+    this.statusCheckActive = false;
+  },
+
+  finishStatusCheck(response) {
+    this.hideLoader();
+    location.reload();
+  },
+
+  handleError(error) {
+    alert(error.message);
   },
 
   showLoader() {

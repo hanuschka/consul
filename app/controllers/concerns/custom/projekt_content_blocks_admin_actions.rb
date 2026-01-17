@@ -4,7 +4,7 @@ module ProjektContentBlocksAdminActions
 
   included do
     before_action :set_namespace
-    before_action :find_projekt, only: [:create, :import_document, :destroy_all]
+    before_action :find_projekt, only: [:create, :import_document, :import_status, :destroy_all]
     before_action :find_content_block, only: [
       :destroy, :update, :update_position, :change_with_ai
     ]
@@ -102,29 +102,28 @@ module ProjektContentBlocksAdminActions
       )
     end
 
-    file = params[:file]
+    Projekts::DispatchDocumentImport.call(projekt: @projekt, file: params[:file])
 
-    result = Projekts::BuildFromDocument.call(
-      projekt: @projekt,
-      file: file
-    )
+    status_url =
+      case @namespace
+      when :admin
+        import_status_admin_projekt_projekt_content_blocks_path(@projekt)
+      when :projekt_management
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      else
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      end
 
-    if result.success?
-      render json: {
-        content_blocks: result.content_blocks_data,
-        status: { message: "Dokument erfolgreich importiert" }
-      }
-    else
-      render(
-        json: {
-          error: {
-            message: result.error,
-            fallback_text: result.fallback_text
-          }
-        },
-        status: :unprocessable_entity
-      )
-    end
+    render json: { status_url: status_url }
+  end
+
+  def import_status
+    authorize!(:update, @projekt)
+
+    response_data = @projekt.build_file_import_data || {}
+    response_data = response_data.merge(status: @projekt.build_file_import_status || "pending")
+
+    render json: response_data
   end
 
   def destroy_all

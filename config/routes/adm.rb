@@ -3,8 +3,9 @@ namespace :adm do
 
   patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute, constraints: { record_type: %r{[^/]+(/[^/]+)?} }
 
-  resources :projekts, only: [:index, :edit, :update, :destroy] do
+  resources :projekts, only: [:index, :update, :destroy] do
     get :details, on: :member
+    get :visibility, on: :member
     patch :toggle_activated, on: :member
   end
 

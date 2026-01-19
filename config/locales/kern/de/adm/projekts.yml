@@ -8,8 +8,8 @@ de:
           actions: Aktionen
       projekt:
         top_level_projekt: Top-Level-Projekt
-        details: Details
-        edit: Bearbeiten
+        details: Projektdetails
+        visibility: Sichtbarkeit & Darstellung
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
       details:
@@ -23,9 +23,10 @@ de:
           geozone_affiliated_no_affiliation: Keine Gebietszuordnung
           geozone_affiliated_entire_city: Stadtweit
           geozone_affiliated_only_geozones: Zuordnung zu Stadtteil
-      edit:
-        title: Projekt bearbeiten
-        submit: Speichern
+      visibility:
+        title: Sichtbarkeit & Darstellung
+        individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken
+        individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter “Starke Gruppen” angelegt wurden.
       update:
         success: Projekt erfolgreich aktualisiert.
       destroy:

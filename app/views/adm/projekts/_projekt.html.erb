@@ -27,7 +27,7 @@
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% actions.with_action(label: t(".details"), url: details_adm_projekt_path(projekt)) %>
-      <% actions.with_action(label: t(".edit"), url: edit_adm_projekt_path(projekt)) %>
+      <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekt_path(projekt)) %>
       <% actions.with_action(
         label: t(".delete"),
         url: adm_projekt_path(projekt),

@@ -1,6 +1,6 @@
 module Adm
   class ProjektsController < Adm::BaseController
-    before_action :find_projekt, only: [:details, :edit, :update, :destroy, :toggle_activated]
+    before_action :find_projekt, only: [:details, :visibility, :update, :destroy, :toggle_activated]
 
     def index
       authorize [:adm, Projekt]
@@ -26,13 +26,14 @@ module Adm
       ]
     end
 
-    def edit
-      authorize [:adm, @projekt]
+    def visibility
+      authorize [:adm, @projekt], :show?
+      @individual_groups = IndividualGroup.hard.visible
       @breadcrumbs = [
         { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
-        { name: t("adm.projekts.edit.title") }
+        { name: t("adm.projekts.visibility.title") }
       ]
     end
 
@@ -86,7 +87,8 @@ module Adm
           :show_start_date_in_frontend, :show_end_date_in_frontend,
           :geozone_affiliated,
           landing_page_ids: [],
-          geozone_affiliation_ids: []
+          geozone_affiliation_ids: [],
+          individual_group_value_ids: []
         )
       end
   end

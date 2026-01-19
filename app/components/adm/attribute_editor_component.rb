@@ -1,5 +1,5 @@
 class Adm::AttributeEditorComponent < ApplicationComponent
-  SETTING_TYPES = [Setting].freeze
+  SETTING_TYPES = [Setting, ProjektSetting].freeze
 
   def initialize(record, attribute, kind, **options)
     @record = record

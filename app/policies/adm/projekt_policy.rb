@@ -7,10 +7,6 @@ class Adm::ProjektPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
-  def edit?
-    @user&.administrator?
-  end
-
   def update?
     @user&.administrator?
   end

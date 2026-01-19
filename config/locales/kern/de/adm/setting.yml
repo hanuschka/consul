@@ -68,6 +68,16 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         show_data_completeness_status_description: Zeigt im Benutzerkonto, ob alle für bestimmte Beteiligungsphasen erforderlichen Profildaten hinterlegt wurden. Nutzer erkennen so, ob sie noch Angaben ergänzen müssen, um teilnehmen zu können.
         show_verification_status: Verifizierungsstatus im Konto anzeigen
         show_verification_status_description: Zeigt den aktuellen Verifizierungsstatus des Nutzers direkt im Profilbereich unterhalb des Nutzerbildes an. Dies schafft Transparenz für die Nutzer und erleichtert die Einschätzung, ob eine Teilnahme an verifizierungsbeschränkten Beteiligungsphasen möglich ist.
+    projekt_feature:
+      general:
+        show_in_overview_page: Projekt auf Projektübersichtsseite anzeigen
+        show_in_overview_page_description: Zeigt das Projekt auf der allgemeinen Projektübersichtsseite an.
+        show_in_homepage: Projekt auf der Startseite anzeigen
+        show_in_homepage_description: Blendet das Projekt unter den weiterführenden Ressourcen auf der Startseite ein - wie z.B. aktuelle Projekte
+        show_in_individual_list: Projekt in individueller Liste anzeigen
+        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer individuellen Liste an. Es erscheint nicht in anderen automatischen Listen wie “Laufende Projekte”.
+        allow_indexing: Projektseite für Suchmaschinen freigeben
+        allow_indexing_description: Erlaubt die Indexierung der Projektseite durch Google und andere Suchmaschinen.
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
     header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."
@@ -195,14 +205,8 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #   general:
     #     show_in_navigation: Projekt in Navigation hervorheben
     #     show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
-    #     show_in_overview_page: Projekt in Übersichtsseite anzeigen
-    #     show_in_overview_page_description: Zeigt das Projekt in der Projektübersichtsseite an
     #     show_in_overview_page_navigation: Projekt in Dropdown-Navigation anzeigen
     #     show_in_overview_page_navigation_description: Zeigt das Projekt in einer Dropdownliste im Navigationsmenü
-    #     show_in_homepage: Projekt auf Homepage anzeigen
-    #     show_in_homepage_description: Zeigt das Projekt auf der Homepage an
-    #     show_in_individual_list: Projekt in individueller Liste anzeigen
-    #     show_in_individual_list_description: Zeigt das Projekt in einer individuellen Liste an
     #     allow_downvoting_comments: Downvotes in Kommentaren aktivieren
     #     allow_downvoting_comments_description: Aktivieren Sie den "Daumen nach unten"-Button in den Kommentaren
     #     set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
@@ -213,8 +217,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #     vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
     #     consider_underway: Projekt als aktive Beteiligung betrachten
     #     consider_underway_description: Sortiert dieses Projekt in der Projektübersicht immer unter “Aktive Beteiligung”.
-    #     allow_indexing: Projektseite soll von Suchmaschinen indexiert werden
-    #     allow_indexing_description: Die Projektseite wird von Google und anderen Suchmaschinen indexiert
     #   sidebar:
     #     show_notification_subscription_toggler: Benachrichtigungen
     #     show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste

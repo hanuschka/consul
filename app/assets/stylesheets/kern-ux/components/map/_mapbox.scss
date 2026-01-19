@@ -17,10 +17,11 @@
   height: 35px !important;
 }
 
-// Expand, layers, and select mode control buttons
+// Expand, layers, select mode, and set center control buttons
 .mapboxgl-ctrl-group button.mapbox-expand-control-button,
 .mapboxgl-ctrl-group button.mapbox-layer-control-button,
-.mapboxgl-ctrl-group button.mapbox-switch-to-simple-select-control-button {
+.mapboxgl-ctrl-group button.mapbox-switch-to-simple-select-control-button,
+.mapboxgl-ctrl-group button.mapbox-set-center-control-button {
   display: flex !important;
   align-items: center;
   justify-content: center;

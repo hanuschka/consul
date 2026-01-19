@@ -214,6 +214,14 @@ export default class BaseAdapter {
   }
 
   /**
+   * Add set center control (for precise positioning of map center)
+   * When active, clicking on the map sets the center coordinates
+   */
+  addSetCenterControl() {
+    // Optional - subclasses can implement if needed
+  }
+
+  /**
    * Set up event listeners for editable features (click to edit, etc.)
    * @param {Object} layer - The feature layer
    */

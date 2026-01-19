@@ -7,7 +7,9 @@ namespace :adm do
     get :details, on: :member
     get :visibility, on: :member
     get :projekt_managers, on: :member
+    get :map, on: :member
     patch :toggle_activated, on: :member
+    resource :map_location, controller: "projekt_map_locations", only: [:update]
   end
 
   resources :projekt_manager_assignments, only: [:update]

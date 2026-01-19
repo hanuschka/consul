@@ -25,6 +25,7 @@ export default class extends Controller {
     altitude: { type: Number, default: 0 },
     editable: { type: Boolean, default: true },
     adminEditor: { type: Boolean, default: false },
+    enableSetCenter: { type: Boolean, default: false },
     features: { type: Object, default: {} },
     adminFeatures: { type: Object, default: {} },
     layers: { type: Array, default: [] },
@@ -46,6 +47,10 @@ export default class extends Controller {
     // Enable editing first so draw controls exist before adding features
     if (this.editableValue) {
       this.adapter.enableEditing()
+    }
+
+    if (this.enableSetCenterValue) {
+      this.adapter.addSetCenterControl()
     }
 
     if (this.featuresValue && Object.keys(this.featuresValue).length > 0) {
@@ -87,6 +92,7 @@ export default class extends Controller {
       altitude: this.altitudeValue,
       editable: this.editableValue,
       adminEditor: this.adminEditorValue,
+      enableSetCenter: this.enableSetCenterValue,
       mapboxPublicToken: this.mapboxPublicTokenValue,
       mapboxStyleId: this.mapboxStyleIdValue,
       vcMapModuleUrl: this.vcMapModuleUrlValue
@@ -211,6 +217,10 @@ export default class extends Controller {
     // Enable editing first so draw controls exist before adding features
     if (this.editableValue) {
       this.adapter.enableEditing()
+    }
+
+    if (this.enableSetCenterValue) {
+      this.adapter.addSetCenterControl()
     }
 
     // Restore features

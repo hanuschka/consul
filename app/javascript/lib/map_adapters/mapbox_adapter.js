@@ -815,6 +815,119 @@ export default class MapboxAdapter extends BaseAdapter {
     // Mapbox Draw has built-in trash control
   }
 
+  addSetCenterControl() {
+    const mapboxgl = window.mapboxgl
+    const instance = this
+
+    // Render initial center marker at current map center
+    this.mapLoaded.then(() => {
+      const center = this.map.getCenter()
+      const markerData = {
+        type: "FeatureCollection",
+        features: [{
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [center.lng, center.lat] }
+        }]
+      }
+
+      this.map.addSource("set-center-marker", { type: "geojson", data: markerData })
+      this.map.addLayer({
+        id: "set-center-marker-circle",
+        type: "circle",
+        source: "set-center-marker",
+        paint: {
+          "circle-radius": 16,
+          "circle-color": getBrandColor(),
+          "circle-opacity": 0.75
+        }
+      })
+    })
+
+    class SetCenterControl {
+      onAdd(map) {
+        this._map = map
+        this._container = document.createElement("div")
+        this._container.className = "mapboxgl-ctrl mapboxgl-ctrl-group"
+
+        const button = document.createElement("button")
+        button.type = "button"
+        button.className = "mapbox-set-center-control-button"
+        button.innerHTML = '<span class="material-symbols-outlined">my_location</span>'
+        button.title = "Kartenmitte per Klick setzen"
+
+        this._container.appendChild(button)
+
+        instance.setCenterMode = false
+
+        button.addEventListener("click", () => {
+          instance.setCenterMode = !instance.setCenterMode
+
+          if (instance.setCenterMode) {
+            button.classList.add("active")
+            map.getCanvas().style.cursor = "crosshair"
+            // Disable drawing mode to prevent marker creation
+            if (instance.draw) {
+              instance.draw.changeMode("simple_select")
+            }
+          } else {
+            button.classList.remove("active")
+            map.getCanvas().style.cursor = ""
+          }
+        })
+
+        map.on("click", (e) => {
+          if (!instance.setCenterMode) return
+
+          const { lat, lng } = e.lngLat
+
+          // Update or create marker using source/layer
+          const markerData = {
+            type: "FeatureCollection",
+            features: [{
+              type: "Feature",
+              geometry: { type: "Point", coordinates: [lng, lat] }
+            }]
+          }
+
+          if (map.getSource("set-center-marker")) {
+            map.getSource("set-center-marker").setData(markerData)
+          } else {
+            map.addSource("set-center-marker", { type: "geojson", data: markerData })
+            map.addLayer({
+              id: "set-center-marker-circle",
+              type: "circle",
+              source: "set-center-marker",
+              paint: {
+                "circle-radius": 16,
+                "circle-color": getBrandColor(),
+                "circle-opacity": 0.75
+              }
+            })
+          }
+
+          // Pan map to new center with animation
+          map.easeTo({ center: [lng, lat], duration: 500 })
+
+          // Update form inputs via callback (triggered by move event)
+
+          // Exit set center mode
+          instance.setCenterMode = false
+          button.classList.remove("active")
+          map.getCanvas().style.cursor = ""
+        })
+
+        return this._container
+      }
+
+      onRemove() {
+        this._container.parentNode.removeChild(this._container)
+        this._map = undefined
+      }
+    }
+
+    this.map.addControl(new SetCenterControl(), "top-right")
+  }
+
   rearrangeEditingControls() {
     const pointControl = this.container.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point")
     const lineControl = this.container.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line")

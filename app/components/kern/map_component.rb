@@ -43,6 +43,7 @@ class Kern::MapComponent < ApplicationComponent
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,
       map_admin_editor_value: admin_editor,
+      map_enable_set_center_value: mappable.is_a?(Projekt),
       map_features_value: features_json,
       map_admin_features_value: admin_features_json,
       map_layers_value: layers_json,

@@ -540,6 +540,86 @@ export default class LeafletAdapter extends BaseAdapter {
     }
   }
 
+  addSetCenterControl() {
+    const L = window.L
+    const map = this.map
+    const instance = this
+
+    // Render initial center marker at current map center
+    const initialCenter = map.getCenter()
+    instance.setCenterMarker = L.marker([initialCenter.lat, initialCenter.lng], {
+      icon: instance.createMarkerIcon(getBrandColor())
+    }).addTo(map)
+
+    const SetCenterControl = L.Control.extend({
+      options: { position: "topright" },
+
+      onAdd(map) {
+        const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-set-center-control")
+        const button = L.DomUtil.create("a", "leaflet-control-set-center", container)
+        button.innerHTML = '<span class="material-symbols-outlined">my_location</span>'
+        button.href = "#"
+        button.title = "Kartenmitte per Klick setzen"
+        button.role = "button"
+
+        instance.setCenterMode = false
+
+        L.DomEvent.disableClickPropagation(container)
+        L.DomEvent.on(button, "click", L.DomEvent.preventDefault)
+        L.DomEvent.on(button, "click", () => {
+          instance.setCenterMode = !instance.setCenterMode
+
+          if (instance.setCenterMode) {
+            button.classList.add("active")
+            map.getContainer().style.cursor = "crosshair"
+            // Disable drawing mode to prevent marker creation
+            map.pm.disableDraw()
+          } else {
+            button.classList.remove("active")
+            map.getContainer().style.cursor = ""
+          }
+        })
+
+        map.on("click", (e) => {
+          if (!instance.setCenterMode) return
+
+          const { lat, lng } = e.latlng
+
+          // Update or create marker
+          if (instance.setCenterMarker) {
+            instance.setCenterMarker.setLatLng([lat, lng])
+          } else {
+            instance.setCenterMarker = L.marker([lat, lng], {
+              icon: instance.createMarkerIcon(getBrandColor())
+            }).addTo(map)
+          }
+
+          // Pan map to new center with animation
+          map.panTo([lat, lng], { animate: true, duration: 0.5 })
+
+          // Update form inputs via callback (triggered by panTo's move event)
+
+          // Exit set center mode
+          instance.setCenterMode = false
+          button.classList.remove("active")
+          map.getContainer().style.cursor = ""
+        })
+
+        return container
+      }
+    })
+
+    const control = new SetCenterControl()
+    control.addTo(this.map)
+
+    // Move the set center control right after the expand control
+    const expandControl = this.container.querySelector(".leaflet-control-expand")?.parentElement
+    const setCenterControl = this.container.querySelector(".leaflet-set-center-control")
+    if (expandControl && setCenterControl) {
+      expandControl.after(setCenterControl)
+    }
+  }
+
   setupEditableFeatureListeners(layer) {
     const L = window.L
 

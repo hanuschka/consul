@@ -11,6 +11,7 @@ de:
         details: Projektdetails
         visibility: Sichtbarkeit & Darstellung
         projekt_managers: Projektmanager*innen
+        map: Karte
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
       details:
@@ -40,6 +41,8 @@ de:
             get_notifications: Benachrichtigungen erhalten
             access_graphql: GraphQL-Zugriff erhalten
             review: Offline Stimmen hinzufügen
+      map:
+        title: Karte
       update:
         success: Projekt erfolgreich aktualisiert.
       destroy:

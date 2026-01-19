@@ -17,7 +17,7 @@ module Adm
       authorize [:adm, @map_layer]
 
       if @map_layer.save
-        redirect_to adm_default_map_location_path, notice: t(".success")
+        redirect_to redirect_path_for(@map_layer), notice: t(".success")
       else
         render :new, status: :unprocessable_entity
       end
@@ -40,7 +40,7 @@ module Adm
       authorize [:adm, @map_layer]
 
       if @map_layer.update(map_layer_params)
-        redirect_to adm_default_map_location_path, notice: t(".success")
+        redirect_to redirect_path_for(@map_layer), notice: t(".success")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -50,8 +50,9 @@ module Adm
       @map_layer = MapLayer.find(params[:id])
       authorize [:adm, @map_layer]
 
+      redirect_path = redirect_path_for(@map_layer)
       @map_layer.destroy!
-      redirect_to adm_default_map_location_path, notice: t(".success")
+      redirect_to redirect_path, notice: t(".success")
     end
 
     private
@@ -61,6 +62,14 @@ module Adm
           :name, :layer_names, :base, :show_by_default,
           :provider, :attribution, :protocol, :transparent, :opacity
         )
+      end
+
+      def redirect_path_for(map_layer)
+        if map_layer.mappable.is_a?(Projekt)
+          map_adm_projekt_path(map_layer.mappable)
+        else
+          adm_default_map_location_path
+        end
       end
   end
 end

@@ -1,6 +1,6 @@
 module Adm
   class ProjektsController < Adm::BaseController
-    before_action :find_projekt, only: [:details, :visibility, :update, :destroy, :toggle_activated]
+    before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :update, :destroy, :toggle_activated]
 
     def index
       authorize [:adm, Projekt]
@@ -34,6 +34,16 @@ module Adm
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t("adm.projekts.visibility.title") }
+      ]
+    end
+
+    def projekt_managers
+      authorize [:adm, @projekt], :show?
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
+        { name: t("adm.projekts.projekt_managers.title") }
       ]
     end
 

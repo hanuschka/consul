@@ -6,8 +6,11 @@ namespace :adm do
   resources :projekts, only: [:index, :update, :destroy] do
     get :details, on: :member
     get :visibility, on: :member
+    get :projekt_managers, on: :member
     patch :toggle_activated, on: :member
   end
+
+  resources :projekt_manager_assignments, only: [:update]
 
   # application
   resource :homepage, controller: "homepage", only: [:show]

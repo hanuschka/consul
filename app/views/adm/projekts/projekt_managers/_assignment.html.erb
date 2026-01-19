@@ -1,0 +1,17 @@
+<%= turbo_frame_tag dom_id(assignment) do %>
+  <%= render Kern::FormFieldComponent.new(label: assignment.projekt_manager.user.username, hint: t('.hint')) do %>
+    <%= form_with model: assignment, url: adm_projekt_manager_assignment_path(assignment), namespace: dom_id(assignment) do |f| %>
+      <%= f.collection_check_boxes :permissions, ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS, :to_s, :to_s do |cb| %>
+        <div class="kern-form-check mb-3">
+          <%= cb.check_box(class: "kern-form-check__checkbox") %>
+          <%= cb.label(class: "kern-label") { t(".permissions.#{cb.value}") } %>
+        </div>
+      <% end %>
+      <%= form_submit_button %>
+    <% end %>
+
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+    <% end %>
+  <% end %>
+<% end %>

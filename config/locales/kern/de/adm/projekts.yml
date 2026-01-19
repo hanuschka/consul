@@ -10,6 +10,7 @@ de:
         top_level_projekt: Top-Level-Projekt
         details: Projektdetails
         visibility: Sichtbarkeit & Darstellung
+        projekt_managers: Projektmanager*innen
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
       details:
@@ -26,7 +27,19 @@ de:
       visibility:
         title: Sichtbarkeit & Darstellung
         individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken
-        individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter “Starke Gruppen” angelegt wurden.
+        individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter "Starke Gruppen" angelegt wurden.
+      projekt_managers:
+        title: Projektmanager*innen
+        no_assignments: Diesem Projekt sind keine Projektmanager*innen zugewiesen.
+        assignment:
+          hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
+          permissions:
+            manage: Projekt administrieren
+            moderate: Inhalte moderieren
+            create_on_behalf_of: Beiträge im Namen anderer erstellen
+            get_notifications: Benachrichtigungen erhalten
+            access_graphql: GraphQL-Zugriff erhalten
+            review: Offline Stimmen hinzufügen
       update:
         success: Projekt erfolgreich aktualisiert.
       destroy:

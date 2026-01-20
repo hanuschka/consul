@@ -3,8 +3,11 @@
 <% unless embedded? %>
   <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
-  <% if params[:section] == "stats" && can?(:read_stats, @projekt_phase) %>
-    <%= render "custom/pages/projekt_footer_new/stats_content" %>
+  <% if params[:section] == "key_metrics" && can?(:read_stats, @projekt_phase) %>
+    <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+
+  <% elsif params[:section] == "analysis" && can?(:read_stats, @projekt_phase) %>
+    <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
 
   <% else %>
     <div class="flex justify-between items-center">

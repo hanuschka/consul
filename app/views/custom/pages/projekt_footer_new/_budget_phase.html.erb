@@ -22,8 +22,10 @@
   <% if @budget.present? %>
     <% if params[:section] == "results" && can?(:read_results, @budget) %>
       <%= render "pages/projekt_footer_new/budget/results" %>
-    <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>
-      <%= render "pages/projekt_footer_new/budget/stats" %>
+    <% elsif params[:section] == "key_metrics" && can?(:read_stats, @budget) %>
+      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+    <% elsif params[:section] == "analysis" && can?(:read_stats, @budget) %>
+      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
     <% else %>
     <% if @budget.current_phase.kind == 'informing' %>
       <div class="flex-layout">

@@ -4,7 +4,7 @@ module ProjektContentBlocksAdminActions
 
   included do
     before_action :set_namespace
-    before_action :find_projekt, only: [:create]
+    before_action :find_projekt, only: [:create, :import_document, :import_status, :destroy_all]
     before_action :find_content_block, only: [
       :destroy, :update, :update_position, :change_with_ai
     ]
@@ -90,6 +90,51 @@ module ProjektContentBlocksAdminActions
     else
       render json: { status: { message: I18n.t("ai.errors.generation_failed") }}
     end
+  end
+
+  def import_document
+    authorize!(:update, @projekt)
+
+    unless params[:file].present?
+      return render(
+        json: { error: { message: "Keine Datei hochgeladen" }},
+        status: :unprocessable_entity
+      )
+    end
+
+    Projekts::DispatchDocumentImport.call(projekt: @projekt, file: params[:file])
+
+    status_url =
+      case @namespace
+      when :admin
+        import_status_admin_projekt_projekt_content_blocks_path(@projekt)
+      when :projekt_management
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      else
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      end
+
+    render json: { status_url: status_url }
+  end
+
+  def import_status
+    authorize!(:update, @projekt)
+
+    response_data = @projekt.build_file_import_data || {}
+    response_data = response_data.merge(status: @projekt.build_file_import_status || "pending")
+
+    render json: response_data
+  end
+
+  def destroy_all
+    authorize!(:update, @projekt)
+
+    @projekt.content_blocks.destroy_all
+
+    redirect_back(
+      fallback_location: root_path,
+      notice: "Alle Inhaltsblöcke gelöscht"
+    )
   end
 
   private

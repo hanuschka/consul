@@ -3,6 +3,8 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.projekts.index.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
+  <%= new_resource_link(new_adm_projekt_path, t(".new_projekt")) %>
+
   <div class="kern-table-responsive" tabindex="0">
     <table class="kern-table">
       <thead class="kern-table__head">

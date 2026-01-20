@@ -3,9 +3,21 @@ de:
     projekts:
       index:
         title: Projekte
+        new_projekt: Neues Projekt erstellen
         table:
           status: Status
           actions: Aktionen
+      new:
+        title: Neues Projekt erstellen
+        intro_title: Projektname eingeben
+        intro_text: |
+          <p>Geben Sie einen Namen für das neue Projekt ein. Nach der Erstellung können Sie weitere Details wie Laufzeit, Sichtbarkeit und Beteiligungsphasen konfigurieren.</p>
+        name_label: Projektname
+        name_hint: Der Name wird im Frontend und in der Übersicht angezeigt.
+        name_placeholder: z.B. Bürgerbeteiligung Stadtentwicklung 2026
+        create_projekt: Projekt erstellen
+      create:
+        success: Das Projekt wurde erfolgreich erstellt.
       projekt:
         top_level_projekt: Top-Level-Projekt
         details: Projektdetails

@@ -17,6 +17,27 @@ module Adm
       ]
     end
 
+    def new
+      authorize [:adm, Projekt], :create?
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: t(".title") }
+      ]
+    end
+
+    def create
+      authorize [:adm, Projekt], :create?
+      @projekt = Projekt.new(create_params.merge(author: current_user))
+
+      if @projekt.save
+        redirect_to details_adm_projekt_path(@projekt), notice: t(".success")
+      else
+        redirect_to new_adm_projekt_path, alert: @projekt.errors.full_messages.join(", ")
+      end
+    end
+
     def details
       authorize [:adm, @projekt], :show?
       @breadcrumbs = [
@@ -121,6 +142,10 @@ module Adm
           geozone_affiliation_ids: [],
           individual_group_value_ids: []
         )
+      end
+
+      def create_params
+        params.require(:projekt).permit(:name)
       end
   end
 end

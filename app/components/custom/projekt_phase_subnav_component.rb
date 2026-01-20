@@ -13,7 +13,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
     [
       {
         text: t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
-        url: url_to_footer_tab(section: nil, remote: true),
+        url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview"
       },
       {

@@ -10,7 +10,7 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
   private
 
     def budget_subnav_items_for(budget)
-      {
+      items = {
         results:    t("budgets.results.link"),
         stats:      t("stats.budgets.link")
       }.select { |section, _| can?(:"read_#{section}", budget) }.map do |section, text|
@@ -19,13 +19,15 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
           url:  url_to_footer_tab(section: section, remote: true),
           active: params[:section] == section.to_s
         }
-      end.push(overview_item)
+      end
+
+      [overview_item] + items
     end
 
     def overview_item
       {
         text: t("custom.projekts.page.footer.budget.investments_subtab"),
-        url: url_to_footer_tab(section: "overview", remote: true),
+        url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview"
       }
     end

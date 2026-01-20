@@ -1,5 +1,7 @@
 module Ai::Settings
   def self.ai_available?
+    return false unless Rails.application.secrets.dig(:ai, :enabled) == true
+
     case current_llm_provider
     when "openai"
       openai_api_key.present?

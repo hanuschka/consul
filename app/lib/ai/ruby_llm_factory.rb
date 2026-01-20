@@ -1,6 +1,6 @@
 module Ai::RubyLlmFactory
   def self.chat
-    init.chat(model: current_llm_model)
+    init.chat(model: Ai::Settings.current_llm_model)
   end
 
   def self.chat_with_json_output(output_schema)
@@ -24,7 +24,7 @@ module Ai::RubyLlmFactory
 
   def self.openai_context
     RubyLLM.context do |config|
-      config.openai_api_key = openai_api_key
+      config.openai_api_key = Ai::Settings.openai_api_key
 
       if Setting["ai.llm_api_endpoint"].present?
         config.openai_api_base = Setting["ai.llm_api_endpoint"]
@@ -56,33 +56,5 @@ module Ai::RubyLlmFactory
         config.gpustack_api_base = Setting["ai.llm_api_endpoint"]
       end
     end
-  end
-
-  def self.llm_model_set?
-    current_llm_model.present?
-  end
-
-  def self.openai_api_key
-    ExternalApiKey.openai_api_key
-  end
-
-  def self.current_llm_model
-    RubyLLM.models.refresh!
-
-    if current_llm_provider == "ollama"
-      Setting["ai.llm_custom_model"]
-    else
-      if current_llm_provider == "openai" && Setting["ai.llm_model"].blank?
-        # "gpt-5-nano"
-        # "gpt-5.1-codex"
-        "gpt-5.2"
-      else
-        Setting["ai.llm_model"]
-      end
-    end
-  end
-
-  def self.current_llm_provider
-    Setting["ai.llm_provider"].presence || "openai"
   end
 end

@@ -1,7 +1,7 @@
 module Adm
   class ProjektPhasesController < Adm::BaseController
-    before_action :find_projekt
-    before_action :find_projekt_phase, only: [:update]
+    before_action :find_projekt, except: [:duration, :update]
+    before_action :find_projekt_phase, only: [:update, :duration]
 
     def index
       authorize [:adm, @projekt], :show?
@@ -46,7 +46,28 @@ module Adm
 
     def update
       authorize [:adm, @projekt_phase], policy_class: Adm::ProjektPhasePolicy
-      @projekt_phase.update(projekt_phase_params)
+
+      if @projekt_phase.update(projekt_phase_params)
+        flash.now[:success] = t("adm.attribute.update.success")
+      end
+
+      render turbo_stream: turbo_stream.replace(
+        turbo_frame_request_id,
+        partial: "adm/projekt_phases/#{frame_partial_path}",
+        locals: { projekt_phase: @projekt_phase }
+      )
+    end
+
+    def duration
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
+        { name: t(".title") }
+      ]
     end
 
     private
@@ -55,13 +76,21 @@ module Adm
         @projekt = Projekt.find(params[:projekt_id])
       end
 
+      def frame_partial_path
+        turbo_frame_request_id&.gsub("__", "/")
+      end
+
       def find_projekt_phase
-        @projekt_phase = @projekt.projekt_phases.find(params[:id])
+        if @projekt
+          @projekt_phase = @projekt.projekt_phases.find(params[:id])
+        else
+          @projekt_phase = ProjektPhase.find(params[:id])
+        end
       end
 
       def projekt_phase_params
         param_key = @projekt_phase.model_name.param_key
-        params.require(param_key).permit(:active, :frontend_visibility)
+        params.require(param_key).permit(:active, :frontend_visibility, :start_date, :end_date)
       end
 
       def create_params

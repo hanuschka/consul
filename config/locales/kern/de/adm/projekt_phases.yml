@@ -30,6 +30,7 @@ de:
           default: Standard
           active: Aktiv
           visible: Sichtbar
+          actions: Aktionen
       new:
         title: Neue Beteiligungsphase erstellen
         intro_title: Beteiligungsmodul auswählen
@@ -41,7 +42,14 @@ de:
         create_phase: Phase erstellen
       create:
         success: Die Beteiligungsphase wurde erfolgreich erstellt.
+      update:
+        success: Die Beteiligungsphase wurde erfolgreich aktualisiert.
+      duration:
+        title: Laufzeit
+        dates_label: Laufzeit der Phase
+        dates_description: Wann soll die Phase beginnen und enden?
       projekt_phase:
+        duration: Laufzeit
         restrictions:
           user_status:
             guest: Gäste

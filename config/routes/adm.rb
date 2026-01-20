@@ -14,6 +14,10 @@ namespace :adm do
     patch :update_default_phase, on: :member
   end
 
+  resources :projekt_phases, only: [:update] do
+    get :duration, on: :member
+  end
+
   resources :projekt_manager_assignments, only: [:update]
 
   # application

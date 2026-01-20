@@ -1,6 +1,11 @@
 module AdmHelper
   include Pagy::Frontend
 
+  def intro_section(title:, text:)
+    content_tag(:h2, title, class: "kern-title kern-title--small") +
+      content_tag(:div, sanitize(text), class: "kern-body mb-5 mb-md-0")
+  end
+
   def restriction_label_for(projekt_phase)
     restrictions = []
     restrictions << I18n.t("adm.projekt_phases.projekt_phase.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?

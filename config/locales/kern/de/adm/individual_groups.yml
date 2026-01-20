@@ -4,8 +4,9 @@ de:
       index:
         title: Individuelle Gruppen
         intro_title: Hinweis zu den Tags
-        intro_text_p1: Tags dienen der thematischen Verbindung einzelner Projekte auf globaler Plattformebene. Sie können auf der Projektübersichtsseite als Filter verwendet werden und ermöglichen so eine gezielte Suche nach Themenbereichen.
-        intro_text_p2: Im Unterschied dazu stehen die Kategorien in den Beteiligungsphasen „Vorschläge“ und „Budget“. Diese Kategorien sind ausschließlich innerhalb der jeweiligen Beteiligungsphase gültig und haben keinen globalen Bezug zu anderen Projekten.
+        intro_text: |
+          <p>Tags dienen der thematischen Verbindung einzelner Projekte auf globaler Plattformebene. Sie können auf der Projektübersichtsseite als Filter verwendet werden und ermöglichen so eine gezielte Suche nach Themenbereichen.</p>
+          <p>Im Unterschied dazu stehen die Kategorien in den Beteiligungsphasen „Vorschläge" und „Budget". Diese Kategorien sind ausschließlich innerhalb der jeweiligen Beteiligungsphase gültig und haben keinen globalen Bezug zu anderen Projekten.</p>
         new_individual_group: Neue Gruppe erstellen
         table:
           name: Name der Gruppe

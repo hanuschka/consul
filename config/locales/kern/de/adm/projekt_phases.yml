@@ -3,8 +3,8 @@ de:
     projekt_phases:
       index:
         intro_title: Hinweis zu den Beteiligungsphasen
-        intro_text_p1: |
-          In der nachfolgenden Tabelle verwalten Sie die einzelnen Beteiligungsphasen eines Projekts. Jede Phase ist einem eigenen Tab in der Fußzeile des Projekts zugeordnet und kann individuell ein- oder ausgeblendet werden. Drei zentrale Schieberegler helfen dabei, das Verhalten und die Sichtbarkeit der Phasen zu steuern:
+        intro_text: |
+          <p>In der nachfolgenden Tabelle verwalten Sie die einzelnen Beteiligungsphasen eines Projekts. Jede Phase ist einem eigenen Tab in der Fußzeile des Projekts zugeordnet und kann individuell ein- oder ausgeblendet werden. Drei zentrale Schieberegler helfen dabei, das Verhalten und die Sichtbarkeit der Phasen zu steuern:</p>
           <dl class="kern-description-list kern-description-list--col">
             <div class="kern-description-list-item">
               <dt class="kern-description-list-item__key">Standard</dt>
@@ -16,10 +16,10 @@ de:
             </div>
             <div class="kern-description-list-item">
               <dt class="kern-description-list-item__key">Sichtbarkeit im Projekt</dt>
-              <dd class="kern-description-list-item__value">Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.</dd>
+              <dd class="kern-description-list-item__value">Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.</dd>
             </div>
           </dl>
-        intro_text_p2: Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.
+          <p>Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.</p>
         title: Beteiligungsphasen
         table:
           phase_tab_name: Beteiligungsphasen

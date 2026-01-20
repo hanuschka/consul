@@ -7,6 +7,10 @@ class Adm::ProjektPhasePolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def create?
+    @user&.administrator?
+  end
+
   def update?
     @user&.administrator?
   end

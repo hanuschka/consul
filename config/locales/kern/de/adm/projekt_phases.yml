@@ -21,6 +21,7 @@ de:
           </dl>
           <p>Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.</p>
         title: Beteiligungsphasen
+        new_phase: Neue Phase erstellen
         table:
           phase_tab_name: Beteiligungsphasen
           start_date: Start
@@ -29,6 +30,17 @@ de:
           default: Standard
           active: Aktiv
           visible: Sichtbar
+      new:
+        title: Neue Beteiligungsphase erstellen
+        intro_title: Beteiligungsmodul auswählen
+        intro_text: |
+          <p>Wählen Sie ein Beteiligungsmodul aus, um eine neue Phase für dieses Projekt zu erstellen. Jedes Modul bietet unterschiedliche Funktionen für die Bürgerbeteiligung.</p>
+        phase_type_label: Beteiligungsmodul
+        phase_type_hint: Wählen Sie das gewünschte Modul für die neue Beteiligungsphase aus.
+        select_phase_type: Bitte wählen...
+        create_phase: Phase erstellen
+      create:
+        success: Die Beteiligungsphase wurde erfolgreich erstellt.
       projekt_phase:
         restrictions:
           user_status:

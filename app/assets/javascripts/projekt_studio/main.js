@@ -3,6 +3,7 @@ window.ProjektStudio = {
   templateFunctions: {},
   utils: {},
   ContentBlock: {},
+  config: {},
 
   initialized: false,
 
@@ -10,6 +11,7 @@ window.ProjektStudio = {
     if (this.initialized) return
 
     if (window.parent) {
+      this.loadConfig();
       ProjektStudio.Sidebar.initialize()
       ProjektStudio.PhasesTabs.initialize()
       ProjektStudio.Banner.initialize()
@@ -33,6 +35,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.Copy.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
+      ProjektStudio.FileImport.initialize()
       // ExplainWithAi.initialize()
 
       this.initialized = true;
@@ -41,6 +44,11 @@ window.ProjektStudio = {
 
   get isEmbedded() {
     return window.self !== window.top;
+  },
+
+  loadConfig() {
+    const projektPage = document.querySelector(".js-projekt-page");
+    this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);
   },
 
   getCurrentProjektId() {

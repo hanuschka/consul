@@ -1,0 +1,36 @@
+<div class="ai-question-item ai-question-item--completed">
+  <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
+    <% c.with_head do %>
+      <h3 class="ai-question-item--question"><%= question.question %></h3>
+    <% end %>
+    <% c.with_body do %>
+      <div class="ai-question-item--answer">
+        <%= sanitize(question.answer, tags: %w[h4 p ul li]) %>
+      </div>
+    <% end %>
+  <% end %>
+  <div class="ai-question-item--actions u-flex u-justify-between u-items-center">
+    <div class="u-flex u-gap-10">
+      <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: question.id, format: "txt"),
+        class: "button hollow -compact -no-margin" do %>
+        <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
+      <% end %>
+      <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: question.id, format: "pdf"),
+        class: "button hollow -compact -no-margin" do %>
+        <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
+      <% end %>
+    </div>
+
+    <div class="u-flex u-gap-10 u-items-center">
+      <span class="ai-question-item--date">
+        <%= l(question.created_at, format: :short) %>
+      </span>
+      <button type="button"
+              class="round-icon-button alert js-delete-stat-question"
+              data-url="<%= delete_stat_question_projekt_phase_path(projekt_phase, question_id: question.id) %>"
+              data-confirm-message="<%= t('custom.shared.destroy_confirmation') %>">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,18 +1,69 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
+    <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
+
+    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.empty? %>
+      <div class="projekt-file-import-section js-projekt-file-import-section">
+        <div class="projekt-file-import-wrapper">
+          <button
+            type="button"
+            class="button projekt-file-import-button js-projekt-file-import-trigger"
+            title="Dokument importieren"
+          >
+            <i class="fas fa-file-import"></i>
+
+            Dokument importieren (PDF, DOCX, ODT)
+          </button>
+          <input
+            type="file"
+            class="js-projekt-file-import-input"
+            accept=".pdf,.docx,.odt"
+            style="display: none;"
+          >
+          <div
+            class="projekt-file-import-loader js-projekt-file-import-loader"
+            style="display: none;"
+          >
+            <div class="bars-scale-loader"></div>
+            <span>Dokument wird verarbeitet...</span>
+          </div>
+        </div>
+      </div>
+    <% end %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
-        <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
-
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
-            <div class="projekt-content-block js-projekt-content-block" data-id="<%= content_block.id %>">
+            <div
+              class="projekt-content-block js-projekt-content-block"
+              data-id="<%= content_block.id %>"
+              <% if content_block.margin_bottom.present? && content_block.margin_bottom > 0 %>
+                style="margin-bottom: <%= content_block.margin_bottom %>px;"
+              <% end %>
+            >
               <%= process_custom_content_if_needed(content_block&.body)&.html_safe %>
             </div>
           <% end %>
         <% end %>
       </div>
     </div>
+
+    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.any? %>
+      <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
+      <div class="projekt-content-blocks-delete-section">
+        <%= button_to(
+          [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
+          method: :delete,
+          class: "button alert",
+          title: "Alle Inhaltsblöcke löschen",
+          form: { data: { turbolinks: false } },
+          data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
+        ) do %>
+          <i class="fas fa-trash"></i>
+          Alle Inhaltsblöcke löschen
+        <% end %>
+      </div>
+    <% end %>
 
   <% else %>
     <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>

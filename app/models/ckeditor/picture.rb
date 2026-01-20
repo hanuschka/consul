@@ -33,7 +33,8 @@ class Ckeditor::Picture < Ckeditor::Asset
     else
       rails_representation_url(
         storage_data.variant(
-          coalesce: true, gravity: "center",
+          coalesce: true,
+          gravity: "center",
           resize_to_fit: [width, height],
           saver: { quality: 88 } ,
           loader: { page: nil }
@@ -44,9 +45,19 @@ class Ckeditor::Picture < Ckeditor::Asset
   end
 
   def gallery_thumb_url
-    custom_thumb_url(
-      width: 300,
-      height: nil
+    # custom_thumb_url(
+    #   width: 205,
+    #   height: 180
+    # )
+    rails_representation_url(
+      storage_data.variant(
+        coalesce: true,
+        gravity: "center",
+        resize_to_fill: [210, nil],
+        saver: { quality: 90 } ,
+        loader: { page: nil }
+      ),
+      only_path: true
     )
   end
 

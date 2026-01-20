@@ -5,8 +5,9 @@ class Shared::DropdownSelectMenuComponent < ApplicationComponent
 
   attr_reader :selected_option
 
-  def initialize(name: nil, item_css_class: nil, selected_option: nil)
+  def initialize(name: nil, title: nil, item_css_class: nil, selected_option: nil)
     @name = name
+    @title = title
     @item_css_class = item_css_class
     @selected_option = selected_option
   end

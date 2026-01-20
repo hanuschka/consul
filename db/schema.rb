@@ -223,6 +223,31 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.index ["name"], name: "index_awesome_icons_on_name", unique: true
   end
 
+  create_table "bam_street_polls", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "poll_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_polls_on_bam_street_id"
+    t.index ["poll_id"], name: "index_bam_street_polls_on_poll_id"
+  end
+
+  create_table "bam_street_projekt_phases", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
+    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "bam_streets", force: :cascade do |t|
+    t.string "name"
+    t.integer "plz"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "banner_sections", id: :serial, force: :cascade do |t|
     t.integer "banner_id"
     t.integer "web_section_id"
@@ -506,8 +531,8 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
-    t.bigint "projekt_id"
     t.boolean "hide_money", default: false
+    t.bigint "projekt_id"
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
@@ -955,7 +980,6 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
 
   create_table "formular_answer_images", force: :cascade do |t|
     t.bigint "formular_answer_id"
-    t.string "formular_field_key"
     t.string "title", limit: 80
     t.string "attachment_file_name"
     t.string "attachment_content_type"
@@ -963,6 +987,7 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "formular_field_key"
     t.index ["formular_answer_id"], name: "index_formular_answer_images_on_formular_answer_id"
   end
 
@@ -1476,7 +1501,8 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.datetime "updated_at", null: false
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
-    t.integer "protocol", default: 0
+    t.integer "protocol", default: 1
+    t.string "layer_defs"
     t.string "mappable_type"
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
@@ -1582,6 +1608,20 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
   create_table "moderators", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.index ["user_id"], name: "index_moderators_on_user_id"
+  end
+
+  create_table "navbar_items", force: :cascade do |t|
+    t.integer "kind"
+    t.string "preset"
+    t.bigint "projekt_id"
+    t.string "external_title"
+    t.string "external_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "parent_id"
+    t.integer "position", default: 0, null: false
+    t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
+    t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
   end
 
   create_table "newsletters", id: :serial, force: :cascade do |t|
@@ -1892,6 +1932,8 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.boolean "show_summary_instead_of_questions", default: false
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
+    t.boolean "bam_street_restricted", default: false
+    t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
     t.boolean "wizard_mode", default: false
     t.jsonb "ai_stats", default: {}
@@ -2845,28 +2887,39 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.integer "plz"
     t.string "city_name"
     t.string "unique_stamp"
+    t.boolean "custom_newsletter", default: false
+    t.string "location"
+    t.integer "bam_letter_verification_code"
+    t.string "house_number"
+    t.datetime "bam_letter_verification_code_sent_at"
+    t.string "bam_unique_stamp"
+    t.bigint "bam_street_id"
+    t.string "keycloak_link"
     t.boolean "adm_email_on_new_comment", default: false
     t.boolean "adm_email_on_new_proposal", default: false
     t.boolean "adm_email_on_new_debate", default: false
     t.boolean "adm_email_on_new_deficiency_report", default: false
     t.bigint "city_street_id"
     t.boolean "adm_email_on_new_manual_verification", default: false
+    t.text "keycloak_id_token", default: ""
     t.bigint "registered_address_id"
     t.string "street_number_extension"
+    t.boolean "reverify", default: true
+    t.string "auth_image_link"
     t.boolean "prefer_wide_resources_list_view_mode"
     t.boolean "guest", default: false
     t.boolean "show_in_users_overview", default: true
     t.boolean "adm_email_on_new_topic", default: false
+    t.string "auth_redirect_path", default: ""
+    t.string "last_stork_level"
     t.string "temporary_auth_token"
     t.datetime "temporary_auth_token_valid_until"
-    t.string "auth_image_link"
-    t.string "last_stork_level"
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
-    t.boolean "reverify", default: true
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3018,6 +3071,10 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
   add_foreign_key "administrators", "users"
   add_foreign_key "age_range_projekt_phases", "age_ranges"
   add_foreign_key "age_range_projekt_phases", "projekt_phases"
+  add_foreign_key "bam_street_polls", "bam_streets"
+  add_foreign_key "bam_street_polls", "polls"
+  add_foreign_key "bam_street_projekt_phases", "bam_streets"
+  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
@@ -3078,6 +3135,8 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
+  add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
@@ -3151,6 +3210,7 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
+  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "users", "registered_addresses"

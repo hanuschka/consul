@@ -3,10 +3,24 @@ module Ai::Settings
     case current_llm_provider
     when "openai"
       openai_api_key.present?
+    when "anthropic"
+      anthropic_api_key.present?
     when "gemini"
       gemini_api_key.present?
+    when "deepseek"
+      deepseek_api_key.present?
+    when "mistral"
+      mistral_api_key.present?
+    when "openrouter"
+      openrouter_api_key.present?
+    when "perplexity"
+      perplexity_api_key.present?
     when "gpustack"
       gpustack_api_key.present?
+    when "bedrock"
+      bedrock_access_key_id.present? && bedrock_secret_access_key.present?
+    when "vertex_ai"
+      vertex_ai_project.present?
     when "ollama"
       true
     else
@@ -22,12 +36,52 @@ module Ai::Settings
     ExternalApiKey.openai_api_key
   end
 
+  def self.anthropic_api_key
+    ExternalApiKey.anthropic_api_key
+  end
+
   def self.gemini_api_key
     ExternalApiKey.gemini_api_key
   end
 
+  def self.deepseek_api_key
+    ExternalApiKey.deepseek_api_key
+  end
+
+  def self.mistral_api_key
+    ExternalApiKey.mistral_api_key
+  end
+
+  def self.openrouter_api_key
+    ExternalApiKey.openrouter_api_key
+  end
+
+  def self.perplexity_api_key
+    ExternalApiKey.perplexity_api_key
+  end
+
   def self.gpustack_api_key
     ExternalApiKey.gpustack_api_key
+  end
+
+  def self.bedrock_access_key_id
+    ExternalApiKey.bedrock_access_key_id
+  end
+
+  def self.bedrock_secret_access_key
+    ExternalApiKey.bedrock_secret_access_key
+  end
+
+  def self.bedrock_region
+    ExternalApiKey.bedrock_region
+  end
+
+  def self.vertex_ai_project
+    ExternalApiKey.vertex_ai_project
+  end
+
+  def self.vertex_ai_credentials
+    ExternalApiKey.vertex_ai_credentials
   end
 
   def self.current_llm_model

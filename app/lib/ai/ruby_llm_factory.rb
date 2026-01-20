@@ -11,12 +11,26 @@ module Ai::RubyLlmFactory
     case Ai::Settings.current_llm_provider
     when "openai"
       openai_context
-    when "ollama"
-      ollama_context
+    when "anthropic"
+      anthropic_context
     when "gemini"
       gemini_context
+    when "deepseek"
+      deepseek_context
+    when "mistral"
+      mistral_context
+    when "openrouter"
+      openrouter_context
+    when "perplexity"
+      perplexity_context
     when "gpustack"
-      gemini_context
+      gpustack_context
+    when "bedrock"
+      bedrock_context
+    when "vertex_ai"
+      vertex_ai_context
+    when "ollama"
+      ollama_context
     else
       RubyLLM
     end
@@ -32,9 +46,9 @@ module Ai::RubyLlmFactory
     end
   end
 
-  def self.ollama_context
+  def self.anthropic_context
     RubyLLM.context do |config|
-      config.ollama_api_base = Setting["ai.llm_api_endpoint"].presence || "http://127.0.0.1:11434/v1"
+      config.anthropic_api_key = Ai::Settings.anthropic_api_key
     end
   end
 
@@ -48,6 +62,30 @@ module Ai::RubyLlmFactory
     end
   end
 
+  def self.deepseek_context
+    RubyLLM.context do |config|
+      config.deepseek_api_key = Ai::Settings.deepseek_api_key
+    end
+  end
+
+  def self.mistral_context
+    RubyLLM.context do |config|
+      config.mistral_api_key = Ai::Settings.mistral_api_key
+    end
+  end
+
+  def self.openrouter_context
+    RubyLLM.context do |config|
+      config.openrouter_api_key = Ai::Settings.openrouter_api_key
+    end
+  end
+
+  def self.perplexity_context
+    RubyLLM.context do |config|
+      config.perplexity_api_key = Ai::Settings.perplexity_api_key
+    end
+  end
+
   def self.gpustack_context
     RubyLLM.context do |config|
       config.gpustack_api_key = Ai::Settings.gpustack_api_key
@@ -55,6 +93,30 @@ module Ai::RubyLlmFactory
       if Setting["ai.llm_api_endpoint"].present?
         config.gpustack_api_base = Setting["ai.llm_api_endpoint"]
       end
+    end
+  end
+
+  def self.bedrock_context
+    RubyLLM.context do |config|
+      config.aws_access_key_id = Ai::Settings.bedrock_access_key_id
+      config.aws_secret_access_key = Ai::Settings.bedrock_secret_access_key
+      config.aws_region = Ai::Settings.bedrock_region if Ai::Settings.bedrock_region.present?
+    end
+  end
+
+  def self.vertex_ai_context
+    RubyLLM.context do |config|
+      config.vertex_project = Ai::Settings.vertex_ai_project
+
+      if Ai::Settings.vertex_ai_credentials.present?
+        config.vertex_credentials = JSON.parse(Ai::Settings.vertex_ai_credentials)
+      end
+    end
+  end
+
+  def self.ollama_context
+    RubyLLM.context do |config|
+      config.ollama_api_base = Setting["ai.llm_api_endpoint"].presence || "http://127.0.0.1:11434/v1"
     end
   end
 end

@@ -16,7 +16,6 @@ class ExternalApiKey < ApplicationRecord
       openai: "https://platform.openai.com",
       anthropic: "https://console.anthropic.com",
       gemini: "https://aistudio.google.com",
-      deepseek: "https://platform.deepseek.com",
       mistral: "https://console.mistral.ai",
       openrouter: "https://openrouter.ai",
       perplexity: "https://www.perplexity.ai",

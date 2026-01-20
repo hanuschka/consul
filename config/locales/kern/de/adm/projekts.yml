@@ -12,6 +12,7 @@ de:
         visibility: Sichtbarkeit & Darstellung
         projekt_managers: Projektmanager*innen
         map: Karte
+        projekt_phases: Beteiligungsphasen
         delete: Löschen
         delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
       details:

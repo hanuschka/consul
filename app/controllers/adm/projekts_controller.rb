@@ -1,6 +1,6 @@
 module Adm
   class ProjektsController < Adm::BaseController
-    before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :update, :destroy, :toggle_activated]
+    before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :update, :destroy, :toggle_activated, :update_default_phase]
 
     def index
       authorize [:adm, Projekt]
@@ -89,6 +89,17 @@ module Adm
       setting = @projekt.projekt_settings.find_by(key: "projekt_feature.main.activate")
       new_value = ActiveModel::Type::Boolean.new.cast(params[:projekt][:activated]) ? "active" : ""
       setting.update!(value: new_value)
+    end
+
+    def update_default_phase
+      authorize [:adm, @projekt], :update?
+
+      @projekt_phase = @projekt.projekt_phases.find(params[:projekt_phase_id])
+      param_key = @projekt_phase.model_name.param_key
+      @projekt_phase.default_phase = params[param_key][:default_phase]
+      @projekt_phases = @projekt.projekt_phases.regular_phases
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
     end
 
     private

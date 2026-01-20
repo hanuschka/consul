@@ -8,7 +8,7 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
   def value_options
     if SETTING_TYPES.any? { |type| @record.is_a?(type) }
       ["active", ""]
-    elsif @record.is_a?(SiteCustomization::Page) && @attribute == :status
+    elsif @record.is_a?(::SiteCustomization::Page) && @attribute == :status
       ["published", "draft"]
     else
       [true, false]

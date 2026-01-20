@@ -10,6 +10,8 @@ namespace :adm do
     get :map, on: :member
     patch :toggle_activated, on: :member
     resource :map_location, controller: "projekt_map_locations", only: [:update]
+    resources :projekt_phases, controller: "projekt_phases", only: [:index, :update]
+    patch :update_default_phase, on: :member
   end
 
   resources :projekt_manager_assignments, only: [:update]

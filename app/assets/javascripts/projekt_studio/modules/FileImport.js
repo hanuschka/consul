@@ -19,6 +19,7 @@ ProjektStudio.FileImport = {
     $document.on("turbolinks:before-visit", () => {
       this.stopStatusCheck();
     });
+    this.checkAndShowFlashMessage();
   },
 
   handleButtonClick(e) {
@@ -164,6 +165,15 @@ ProjektStudio.FileImport = {
 
   finishStatusCheck(response) {
     this.hideLoader();
+
+    const successData = {
+      message: 'Dokument wurde erfolgreich importiert',
+      categories: response.categories || [],
+      sdg_codes: response.sdg_codes || []
+    };
+
+    sessionStorage.setItem('projektFileImportSuccess', JSON.stringify(successData));
+    window.location.href = window.location.pathname + '#page-content';
     location.reload();
   },
 
@@ -180,5 +190,83 @@ ProjektStudio.FileImport = {
     $(".js-projekt-file-import-trigger").prop("disabled", false).show();
     $(".js-projekt-file-import-loader").hide();
     $(".js-projekt-file-import-input").val('');
+  },
+
+  checkAndShowFlashMessage() {
+    const successData = sessionStorage.getItem('projektFileImportSuccess');
+    if (successData) {
+      sessionStorage.removeItem('projektFileImportSuccess');
+      try {
+        const data = JSON.parse(successData);
+        this.showImportSuccessMessage(data);
+      } catch (e) {
+        this.showFlashMessage(successData, 'success');
+      }
+    }
+  },
+
+  showImportSuccessMessage(data) {
+    let detailsHtml = '';
+
+    if (data.categories && data.categories.length > 0) {
+      const categoriesList = data.categories.map(cat => `<span class="label secondary">${cat}</span>`).join(' ');
+      detailsHtml += `<div style="margin-top: 10px;"><strong>Kategorien:</strong> ${categoriesList}</div>`;
+    }
+
+    if (data.sdg_codes && data.sdg_codes.length > 0) {
+      const sdgList = data.sdg_codes.map(code => `<span class="label primary">SDG ${code}</span>`).join(' ');
+      detailsHtml += `<div style="margin-top: 10px;"><strong>SDG-Ziele:</strong> ${sdgList}</div>`;
+    }
+
+    const flashHtml = `
+      <div id="success" data-alert class="notice-container callout-slide" data-closable>
+        <div class="callout notice success">
+          <button class="close-button" aria-label="Schließen" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="notice-text" role="alert" tabindex="-1" autofocus>
+            ${data.message}
+            ${detailsHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('body').prepend(flashHtml);
+
+    const $flashElement = $('#success');
+    $flashElement.find('[data-close]').on('click', function() {
+      $flashElement.remove();
+    });
+
+    setTimeout(() => {
+      $flashElement.remove();
+    }, 8000);
+  },
+
+  showFlashMessage(message, type) {
+    const flashHtml = `
+      <div id="${type}" data-alert class="notice-container callout-slide" data-closable>
+        <div class="callout notice ${type}">
+          <button class="close-button" aria-label="Schließen" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="notice-text" role="alert" tabindex="-1" autofocus>
+            ${message}
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('body').prepend(flashHtml);
+
+    const $flashElement = $(`#${type}`);
+    $flashElement.find('[data-close]').on('click', function() {
+      $flashElement.remove();
+    });
+
+    setTimeout(() => {
+      $flashElement.remove();
+    }, 5000);
   }
 };

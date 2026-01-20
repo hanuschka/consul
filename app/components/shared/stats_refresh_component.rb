@@ -7,7 +7,7 @@ class Shared::StatsRefreshComponent < ApplicationComponent
     @section = section
     @button_text = button_text || "custom.ai_stats.refresh_button"
     @processing_text = processing_text || "custom.ai_stats.processing"
-    @last_updated_text = last_updated_text || "custom.ai_stats.last_updated"
+    @last_updated_text = "custom.ai_stats.last_updated"
     @last_updated_at = last_updated_at
     @processing = processing
   end

@@ -18,8 +18,6 @@ class ProjektContentBlocks::DocumentTextExtractor < ApplicationService
     else
       ServiceResult.failure(error: "Nicht unterstütztes Dateiformat: #{extension}")
     end
-  rescue => e
-    ServiceResult.failure(error: "Fehler beim Extrahieren des Textes: #{e.message}")
   end
 
   private

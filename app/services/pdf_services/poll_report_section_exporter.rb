@@ -1,13 +1,13 @@
 module PdfServices
-  class PollAllEvaluationSectionsExporter
-    def initialize(poll, reports)
+  class PollReportSectionExporter
+    def initialize(poll, report)
       @poll = poll
-      @reports = reports
+      @report = report
     end
 
     def call
       Prawn::Document.new(page_size: "A4", margin: 45) do |pdf|
-        pdf.text I18n.t("custom.polls.evaluation.title"), size: 20, style: :bold
+        pdf.text I18n.t("custom.polls.report.title"), size: 20, style: :bold
         pdf.move_down 10
 
         pdf.formatted_text [
@@ -20,15 +20,11 @@ module PdfServices
           { text: "#{I18n.t('custom.participation_stats.ai_question.pdf_date')}: ", styles: [:bold], size: 10 },
           { text: Time.zone.now.strftime("%d %b %Y %H:%M"), size: 10 }
         ]
-        pdf.move_down 20
 
-        @reports.each_with_index do |report, index|
-          pdf.start_new_page if index > 0
-
-          pdf.text report["title"], size: 14, style: :bold
-          pdf.move_down 10
-          render_html_content(pdf, report["content"].to_s)
-        end
+        pdf.move_down 15
+        pdf.text @report["title"], size: 14, style: :bold
+        pdf.move_down 5
+        render_html_content(pdf, @report["content"].to_s)
       end
     end
 

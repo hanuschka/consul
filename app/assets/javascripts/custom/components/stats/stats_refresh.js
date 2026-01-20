@@ -15,7 +15,12 @@
       return $(".js-stat-last-updated-time");
     },
 
-    getParticipationStats: function() {
+    getParticipationStats: function(section) {
+      if (section === "key_metrics") {
+        return $(".js-participation-stats-key-metrics");
+      } else if (section === "analysis") {
+        return $(".js-participation-stats-analysis");
+      }
       return $(".js-participation-stats");
     },
 
@@ -36,7 +41,8 @@
           .request({
             url: url,
             method: "POST",
-            dataType: "json"
+            dataType: "json",
+            data: section ? { section: section } : {}
           })
           .then((response) => {
             if (statusCheckUrl) {
@@ -51,7 +57,7 @@
               }
 
               if (response.sections_html) {
-                this.updateSections(response.sections_html);
+                this.updateSections(response.sections_html, section);
               }
             }
           })
@@ -118,7 +124,7 @@
 
             if (response.status === "completed") {
               this.statusCheckActive = false;
-              this.finishStatusCheck(response, $container);
+              this.finishStatusCheck(response, $container, section);
             } else if (response.status === "failed") {
               this.statusCheckActive = false;
               this.resetButton($container);
@@ -141,20 +147,22 @@
       this.statusCheckActive = false;
     },
 
-    finishStatusCheck: function(response, $container) {
+    finishStatusCheck: function(response, $container, section) {
       $container.find(".js-stats-refresh-button").removeClass("u-hidden");
       $container.find(".js-stats-status").addClass("u-hidden");
 
       this.updateTimestamp(response.last_updated_at);
-      this.updateSections(response.sections_html);
+      this.updateSections(response.sections_html, section);
     },
 
     updateTimestamp: function(timestamp) {
-      this.getLastUpdatedTime().text(timestamp);
+      const $timeElement = this.getLastUpdatedTime();
+      $timeElement.text(timestamp);
+      $timeElement.closest(".stats-last-updated-item").removeClass("u-hidden");
     },
 
-    updateSections: function(html) {
-      this.getParticipationStats().html(html);
+    updateSections: function(html, section) {
+      this.getParticipationStats(section).html(html);
     },
 
     resetButton: function($container) {

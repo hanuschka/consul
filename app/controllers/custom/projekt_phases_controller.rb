@@ -93,8 +93,17 @@ class ProjektPhasesController < ApplicationController
     else
       @stats = ProjektPhase::Stats.new(@projekt_phase)
     end
+
+    partial = if params[:section] == "analysis"
+                "custom/pages/projekt_footer_new/ai_analysis_sections"
+              elsif params[:section] == "key_metrics"
+                "custom/pages/projekt_footer_new/kpi_stats_sections"
+              else
+                "custom/pages/projekt_footer_new/participation_stats_sections"
+              end
+
     render_to_string(
-      partial: "custom/pages/projekt_footer_new/participation_stats_sections",
+      partial: partial,
       locals: { projekt_phase: @projekt_phase, stats: @stats }
     )
   end

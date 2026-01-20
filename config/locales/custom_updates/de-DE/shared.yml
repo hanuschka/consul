@@ -71,7 +71,7 @@ de:
         topic_groups: Themengruppen
         category_groups: Themengruppen
       semantic_clustering:
-        title: Semantische Gruppierung
+        title: Sentimentanalyse
         subcategories: Unterkategorien
         resources: Vorschläge
         in: in

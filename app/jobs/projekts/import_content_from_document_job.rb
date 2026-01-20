@@ -12,11 +12,17 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
 
       if result.success?
         update_projekt_dates(projekt, result.projekt_start_date, result.projekt_end_date)
+        update_projekt_categories(projekt, result.categories)
+        valid_sdg_codes = update_projekt_sdgs(projekt, result.sdg_codes)
         content_blocks_data = create_content_blocks(projekt, result.blocks)
 
         projekt.update_columns(
           build_file_import_status: "completed",
-          build_file_import_data: { content_blocks: content_blocks_data }
+          build_file_import_data: {
+            content_blocks: content_blocks_data,
+            categories: result.categories,
+            sdg_codes: valid_sdg_codes
+          }
         )
       else
         projekt.update_columns(
@@ -53,6 +59,40 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
     end
 
     projekt.update(updates) if updates.any?
+  end
+
+  def update_projekt_categories(projekt, categories)
+    return if categories.blank?
+
+    projekt.tag_list.add(categories)
+    projekt.save
+  rescue => e
+    Rails.logger.error("Failed to update projekt categories: #{e.message}")
+  end
+
+  def update_projekt_sdgs(projekt, sdg_codes)
+    return [] if sdg_codes.blank?
+
+    valid_codes = validate_sdg_codes(sdg_codes)
+    return [] if valid_codes.blank?
+
+    projekt.related_sdg_list = valid_codes.join(", ")
+    projekt.save
+
+    valid_codes
+  rescue => e
+    Rails.logger.error("Failed to update projekt SDGs: #{e.message}")
+    []
+  end
+
+  def validate_sdg_codes(codes)
+    codes.select do |code|
+      if code.include?(".")
+        SDG::Target.exists?(code: code) || SDG::LocalTarget.exists?(code: code)
+      else
+        SDG::Goal.exists?(code: code.to_i)
+      end
+    end
   end
 
   def create_content_blocks(projekt, blocks)

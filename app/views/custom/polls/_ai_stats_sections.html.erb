@@ -13,11 +13,11 @@
       <% end %>
       <% if local_assigns[:poll].present? %>
         <div class="ai-stats-card--actions u-flex u-gap-10">
-          <%= link_to download_evaluation_section_poll_path(poll, section_index: index, format: "txt"),
+          <%= link_to download_report_section_poll_path(poll, section_index: index, format: "txt"),
             class: "button hollow -compact -no-margin" do %>
             <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_txt") %>
           <% end %>
-          <%= link_to download_evaluation_section_poll_path(poll, section_index: index, format: "pdf"),
+          <%= link_to download_report_section_poll_path(poll, section_index: index, format: "pdf"),
             class: "button hollow -compact -no-margin" do %>
             <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_pdf") %>
           <% end %>
@@ -28,13 +28,13 @@
 
   <% if local_assigns[:poll].present? %>
     <div class="u-flex u-gap-10 margin-top">
-      <%= link_to download_all_evaluation_sections_poll_path(poll, format: "txt"),
+      <%= link_to download_all_report_sections_poll_path(poll, format: "txt"),
         class: "button hollow -compact" do %>
-        <i class="fa fa-file-alt"></i> <%= t("custom.polls.evaluation.download_all_txt") %>
+        <i class="fa fa-file-alt"></i> <%= t("custom.polls.report.download_all_txt") %>
       <% end %>
-      <%= link_to download_all_evaluation_sections_poll_path(poll, format: "pdf"),
+      <%= link_to download_all_report_sections_poll_path(poll, format: "pdf"),
         class: "button hollow -compact" do %>
-        <i class="fa fa-file-pdf"></i> <%= t("custom.polls.evaluation.download_all_pdf") %>
+        <i class="fa fa-file-pdf"></i> <%= t("custom.polls.report.download_all_pdf") %>
       <% end %>
     </div>
   <% end %>

@@ -163,6 +163,27 @@
 
     updateSections: function(html, section) {
       this.getParticipationStats(section).html(html);
+      this.reinitializeComponents();
+    },
+
+    reinitializeComponents: function() {
+      this.resetInitializedFlags();
+
+      if (App.BarChartComponent) {
+        App.BarChartComponent.initialize();
+      }
+      if (App.AreaChartComponent) {
+        App.AreaChartComponent.initialize();
+      }
+      if (App.HeatmapComponent) {
+        App.HeatmapComponent.initialize();
+      }
+    },
+
+    resetInitializedFlags: function() {
+      $("[data-bar-chart]").removeAttr("data-chart-initialized");
+      $("[data-area-chart]").removeAttr("data-chart-initialized");
+      $("[data-heatmap]").removeAttr("data-heatmap-initialized");
     },
 
     resetButton: function($container) {

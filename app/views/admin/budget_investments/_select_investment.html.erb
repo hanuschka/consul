@@ -46,6 +46,10 @@
   <%= investment.total_ballot_votes %>
 </td>
 
+<td class="text-center" data-field="district">
+  <%= investment.district&.name %>
+</td>
+
 <td class="text-center" data-field="winner">
   <%= investment.winner? ? t("shared.yes") : t("shared.no") %>
 </td>

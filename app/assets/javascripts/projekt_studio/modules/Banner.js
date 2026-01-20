@@ -28,7 +28,7 @@ ProjektStudio.Banner = {
     container.classList.add("-text-edit-mode")
     container.dataset.originalFieldHtml = field.innerHTML.trim();
 
-    field.firstElementChild.contentEditable = true
+    field.firstElementChild.contentEditable = "plaintext-only"
     ProjektStudio.utils.focusContentEditableElement(field.firstElementChild)
   },
 

@@ -117,9 +117,10 @@ class IdeasController < ApplicationController
     def all_idea_map_locations(ideas_for_map)
       ids = ideas_for_map.except(:limit, :offset, :order).ids.uniq
 
-      MapLocation.where(mappable_id: ids, mappable_type: "Idea").map do |map_location|
-        map_location.features_json_data
-      end
+      MapLocation
+        .with_idea_associations
+        .where(mappable_id: ids)
+        .map(&:features_json_data)
     end
 
     def set_idea

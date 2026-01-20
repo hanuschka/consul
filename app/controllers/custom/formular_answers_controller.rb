@@ -85,6 +85,8 @@ class FormularAnswersController < ApplicationController
     def validate_for_presence(formular_answer, formular_field)
       if formular_field.kind == "image"
         return if formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key }.present?
+      elsif formular_field.kind == "document"
+        return if formular_answer.formular_answer_documents.find { |doc| doc.formular_field_key == formular_field.key }.present?
       else
         return if formular_answer.answers[formular_field.key].present?
       end

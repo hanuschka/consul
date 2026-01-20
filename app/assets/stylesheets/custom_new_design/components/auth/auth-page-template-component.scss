@@ -137,6 +137,13 @@
     @media(max-width: $small-tablet-viewport-start) {
       font-size: 20px;
     }
+
+    .custom-content-block-body p {
+      line-height: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      margin-bottom: inherit;
+    }
   }
 
   .auth-page-template--form-section {
@@ -215,6 +222,11 @@
     background-color: #e5e5e5;
     margin-bottom: 25px;
     margin-top: 25px;
+  }
+
+
+  .auth-page-template--body a {
+    text-decoration: underline;
   }
 }
 

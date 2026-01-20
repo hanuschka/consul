@@ -6,7 +6,7 @@ ProjektStudio.ContentBlock.Render = {
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = ProjektStudio.utils.parseIframeEventData(event.data);
+      const data = event.data;
       const params = data.params
 
       switch(data.event_type) {
@@ -26,6 +26,16 @@ ProjektStudio.ContentBlock.Render = {
     }
   },
 
+  wrapContentBlock(contentBlock, projektId) {
+    return ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
+      contentBlock.innerHTML,
+      {
+        projektId,
+        contentBlockId: contentBlock.dataset.id
+      }
+    );
+  },
+
   renderContentBlocks() {
     const projektPageContent =  document.querySelector(".js-custom-page-content--inner");
 
@@ -42,13 +52,20 @@ ProjektStudio.ContentBlock.Render = {
 
     if (contentBlocks.length > 0) {
       wrappedContentBlocksHtml = Array.from(contentBlocks).map((contentBlock) => {
-        return ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
-          contentBlock.innerHTML,
-          {
-            projektId,
-            contentBlockId: contentBlock.dataset.id
+        const marginBottom = contentBlock.style.marginBottom;
+        const wrappedHtml = this.wrapContentBlock(contentBlock, projektId);
+
+        if (marginBottom) {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = wrappedHtml;
+          const wrapper = tempDiv.querySelector('.projekt-content-block-wrapper');
+          if (wrapper) {
+            wrapper.style.marginBottom = marginBottom;
           }
-        );
+          return tempDiv.innerHTML;
+        }
+
+        return wrappedHtml;
       }).join("")
     }
 

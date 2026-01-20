@@ -33,6 +33,10 @@ body.custom-new-design {
   // }
 }
 
+ul.no-ul-style {
+  margin: 0;
+  list-style-type: none;
+}
 .custom-new-design {
   .no-column-padding {
     .column {
@@ -108,7 +112,7 @@ body.custom-new-design {
 
   h3 {
     // font-size: 38px;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 500;
     line-height: 1.2;
     margin-bottom: 1rem;
@@ -206,13 +210,28 @@ body.custom-new-design {
 }
 
 .resources--info-count {
-  margin-bottom: 2px;
   display: flex;
   width: 100%;
   font-weight: 500;
   justify-content: space-between;
+  padding: 1px 0;
 
   &:hover {
     color: #4c5967;
   }
+
+  span:first-child {
+    font-weight: bold;
+  }
+}
+
+a.resources--info-count {
+  &:hover {
+    text-decoration: underline !important;
+    color: black !important;
+  }
+}
+
+.custom-page-content a:not(.accordion-title) {
+  text-decoration: underline;
 }

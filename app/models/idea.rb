@@ -33,6 +33,7 @@ class Idea < ApplicationRecord
   validates_translation :title, presence: true
   validates_translation :description, presence: true
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
+  validates :author, presence: true
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }
 
@@ -63,7 +64,7 @@ class Idea < ApplicationRecord
   def searchable_values
     {
       id.to_s               => "A",
-      author.username       => "B"
+      author&.username      => "B"
     }.merge!(searchable_globalized_values)
   end
 

@@ -79,7 +79,7 @@ class PagesController < ApplicationController
       )
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
-          @custom_page.content.include?("</iframe>")
+          @custom_page.content&.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
@@ -114,7 +114,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
-        unless current_user&.administrator?
+        unless current_user&.has_pm_permission_to?(:manage, @projekt)
           redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
@@ -125,6 +125,9 @@ class PagesController < ApplicationController
         elsif @projekt_phase.name == "proposal_phase"
           send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
             filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+        elsif @projekt_phase.name == "budget_phase"
+          send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+            filename: "budget_investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
     end
@@ -183,7 +186,7 @@ class PagesController < ApplicationController
                                .base_selection
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
       @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
       if params[:search].present?
@@ -275,7 +278,7 @@ class PagesController < ApplicationController
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
-    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"&& !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
 
@@ -306,7 +309,7 @@ class PagesController < ApplicationController
 
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
-    elsif params[:section] == "stats" && can?(:read_stats, @budget)
+    elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
       params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
       params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
       params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]

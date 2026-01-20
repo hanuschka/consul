@@ -11,7 +11,7 @@ button {
   color: #004a83;
 }
 
-.custom-new-design {
+// .custom-new-design {
   // .button:not(div#page-content .button) {
   .button {
     background-color: $brand;
@@ -28,61 +28,12 @@ button {
       color: white;
     }
 
-    &.-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      transition: 50ms ease background-color;
-      background-color: $light-gray-2;
-      margin-bottom: 0;
+    &.-no-margin {
       margin-top: 0;
-
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: darken($light-gray-2, 2);
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
+      margin-bottom: 0;
     }
 
-    &.-transparent-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      width: 1.7em;
-      height: 1.7em;
-      transition: 50ms ease background-color;
-      background: transparent;
 
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: #ededed;
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
-    }
-    &.-transparent-round-icon-button-black {
-      @extend .-transparent-round-icon-button;
-      color: black;
-
-      &:hover {
-        background-color: #00000012;
-      }
-
-      &:active {
-        background-color: #00000012;
-      }
-    }
     &.-round {
       border-radius: 38px !important;
     }
@@ -160,6 +111,10 @@ button {
       }
     }
 
+    &.-compact {
+      padding: 6px 10px !important;
+    }
+
     &.full-width {
       text-align: center;
       display: block;
@@ -180,6 +135,7 @@ button {
 
     &.with-icon {
       i {
+        font-size: 1.2em;
         width: 25px;
         text-align: center;
       }
@@ -239,7 +195,7 @@ button {
   .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
     background-color: $brand;
   }
-}
+// }
 
 .square-back-button {
   border-radius: 5px;
@@ -256,4 +212,64 @@ button {
   width: 35px;
   height: 35px;
   font-size: 20px;
+}
+
+.round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: #919dab;
+  transition: 50ms ease background-color;
+  background-color: $light-gray-2;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: darken($light-gray-2, 2);
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: #919dab;
+  width: 1.7em;
+  height: 1.7em;
+  transition: 50ms ease background-color;
+  background: transparent;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: #ededed;
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button-black {
+  @extend .transparent-round-icon-button;
+  color: black;
+
+  &:hover {
+    background-color: #00000012;
+  }
+
+  &:active {
+    background-color: #00000012;
+  }
 }

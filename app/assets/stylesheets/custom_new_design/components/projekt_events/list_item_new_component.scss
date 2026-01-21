@@ -14,13 +14,18 @@
   flex-direction: column;
   align-items: flex-start;
   flex-direction: row;
+
+  @media(max-width: $big-tablet-viewport-start) {
+    flex-direction: column;
+  }
 }
 
 .projekt-event-item-new--column {
   width: 100%;
-  // @media screen and (max-width: $small-tablet-viewport-start) {
-  //   flex-direction: row;
-  // }
+
+  @media(max-width: $small-tablet-viewport-start) {
+    flex-direction: column;
+  }
 }
 
 .projekt-event-item-new-body {
@@ -79,7 +84,7 @@ h2.projekt-event-item-new-body--title {
 }
 
 .projekt-event-item-new--description-text-wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .projekt-event-item-new-body--details {

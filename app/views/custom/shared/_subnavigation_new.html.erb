@@ -28,7 +28,7 @@
             <%= "tabindex=0" if placement == "desktop" %>
             aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'>
           <div class='flyout-item-name projekt-name'>
-            <%= prepare_projekt_name(active_projekt, placement) %>
+            <%= prepare_projekt_name(active_projekt, placement, landing_page: @ui_landing_page.slug) %>
           </div>
         </li>
       <% end %>

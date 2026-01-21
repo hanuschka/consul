@@ -48,11 +48,11 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      if params[:page_ref].present?
+      if params[:landing_page].present?
         @landing_page =
           @projekt
             .landing_pages
-            .find_by(slug: params[:page_ref])
+            .find_by(slug: params[:landing_page])
 
         set_landing_page_topbar_ui_variables(@landing_page)
       end

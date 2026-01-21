@@ -2,8 +2,12 @@ module AdmHelper
   include Pagy::Frontend
 
   def intro_section(title:, text:)
-    content_tag(:h2, title, class: "kern-title kern-title--small") +
-      content_tag(:div, sanitize(text), class: "kern-body mb-5 mb-md-0")
+    content_tag(:div, class: "kern-row") do
+      content_tag(:div, class: "kern-col-12 kern-col-md-9") do
+        content_tag(:h2, title, class: "kern-title kern-title--small") +
+          content_tag(:div, sanitize(text), class: "kern-body mb-5 mb-md-0")
+      end
+    end
   end
 
   def restriction_label_for(projekt_phase)

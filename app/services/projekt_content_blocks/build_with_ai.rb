@@ -30,8 +30,8 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
     else
       ServiceResult.failure(error: "KI konnte keine Struktur erstellen")
     end
-  rescue => e
-    ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
+  # rescue => e
+  #   ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
   end
 
   def fetch_base_prompt
@@ -39,6 +39,10 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
       DtApi::Client.new
         .consul_ai_prompts
         .get(:projekt_import)
+
+    unless response.success?
+      raise "DT API error: #{response.code} - #{response.message}"
+    end
 
     response.dig('consul_ai_prompt', "prompt")
   end

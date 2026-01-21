@@ -35,6 +35,7 @@
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% actions.with_action(label: t(".duration"), url: duration_adm_projekt_phase_path(projekt_phase)) %>
+      <% actions.with_action(label: t(".naming"), url: naming_adm_projekt_phase_path(projekt_phase)) %>
     <% end %>
   </td>
 </tr>

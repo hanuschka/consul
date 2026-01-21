@@ -16,6 +16,7 @@ namespace :adm do
 
   resources :projekt_phases, only: [:update] do
     get :duration, on: :member
+    get :naming, on: :member
   end
 
   resources :projekt_manager_assignments, only: [:update]

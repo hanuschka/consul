@@ -10,13 +10,7 @@
         aria: aria_attributes
       } %>
 
-  <% if @record.respond_to?(:translated?) && @record.translated?(@attribute) %>
-    <%= form.fields_for :translations do |tf| %>
-      <%= tf.text_field @attribute, **input_options %>
-    <% end %>
-  <% else %>
-    <%= form.text_field @attribute, **input_options %> 
-  <% end %>
+  <%= form.text_field @attribute, **input_options %>
 
   <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
 <% end %>

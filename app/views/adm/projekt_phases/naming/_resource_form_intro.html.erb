@@ -1,0 +1,14 @@
+<%= turbo_frame_tag "naming__resource_form_intro" do %>
+  <%= form_with model: projekt_phase, url: adm_projekt_phase_path(projekt_phase), scope: projekt_phase.model_name.param_key do |f| %>
+    <div class="mb-4">
+      <%= f.text_area :resource_form_intro,
+        value: AdminWYSIWYGSanitizer.new.sanitize(projekt_phase.resource_form_intro),
+        data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

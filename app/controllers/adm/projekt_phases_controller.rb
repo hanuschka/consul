@@ -1,7 +1,7 @@
 module Adm
   class ProjektPhasesController < Adm::BaseController
-    before_action :find_projekt, except: [:duration, :update]
-    before_action :find_projekt_phase, only: [:update, :duration]
+    before_action :find_projekt, except: [:duration, :naming, :update]
+    before_action :find_projekt_phase, only: [:update, :duration, :naming]
 
     def index
       authorize [:adm, @projekt], :show?
@@ -70,6 +70,18 @@ module Adm
       ]
     end
 
+    def naming
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
+        { name: t(".title") }
+      ]
+    end
+
     private
 
       def find_projekt
@@ -90,7 +102,15 @@ module Adm
 
       def projekt_phase_params
         param_key = @projekt_phase.model_name.param_key
-        params.require(param_key).permit(:active, :frontend_visibility, :start_date, :end_date)
+        params.require(param_key).permit(
+          :active, :frontend_visibility, :start_date, :end_date,
+          :phase_tab_name, :cta_button_name,
+          :resource_form_intro, :resource_form_title, :resource_form_title_placeholder,
+          :resource_form_description_placeholder, :welcome_text_in_show,
+          :labels_name, :sentiments_name,
+          :comment_form_title, :comment_form_button,
+          :support_button_text, :description
+        )
       end
 
       def create_params

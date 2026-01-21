@@ -46,3 +46,6 @@ application.register("related-options", RelatedOptionsController)
 
 import AutoRemoveController from "./auto_remove_controller"
 application.register("auto-remove", AutoRemoveController)
+
+import CkeditorController from "./ckeditor_controller"
+application.register("ckeditor", CkeditorController)

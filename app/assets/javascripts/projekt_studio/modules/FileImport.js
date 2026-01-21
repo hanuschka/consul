@@ -249,12 +249,13 @@ ProjektStudio.FileImport = {
   },
 
   showLoader() {
-    $(".js-projekt-file-import-trigger").prop("disabled", true).hide();
+    $(".js-projekt-file-import-wrapper").hide();
     $(".js-projekt-file-import-loader").show();
   },
 
   hideLoader() {
     $(".js-projekt-file-import-loader").hide();
+    $(".js-projekt-file-import-wrapper").show();
     this.resetFileSelection();
   },
 

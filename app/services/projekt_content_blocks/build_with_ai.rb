@@ -1,9 +1,10 @@
 class ProjektContentBlocks::BuildWithAi < ApplicationService
-  attr_reader :projekt
+  attr_reader :projekt, :user_prompt
 
-  def initialize(text:, projekt:)
+  def initialize(text:, projekt:, user_prompt: nil)
     @text = text
     @projekt = projekt
+    @user_prompt = user_prompt
   end
 
   def call
@@ -12,7 +13,7 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(build_prompt(base_prompt, @text))
+        .ask(build_prompt(base_prompt, @text, @user_prompt))
 
     content_blocks_data = response.content
 
@@ -49,16 +50,18 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
 
   private
 
-  def build_prompt(base_prompt, document_text)
+  def build_prompt(base_prompt, document_text, user_prompt)
     categories_examples = fetch_categories_examples
     sdg_goals_reference = fetch_sdg_goals_reference
     sdg_targets_info = fetch_sdg_targets_info
+
+    user_instructions = user_prompt.present? ? "\nAdditional user instructions: #{user_prompt}\n" : ""
 
     <<~PROMPT
       #{base_prompt}
       For each logical section of the document, create an separated HTML content block that properly represents the content.
       If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
-
+      #{user_instructions}
       Additionally, analyze the document content and identify:
 
       1. Categories (tags): Concise German words describing the project topic/theme (max 3-5 categories).

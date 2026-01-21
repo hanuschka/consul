@@ -3,12 +3,17 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
 
   def perform(projekt_id)
     projekt = Projekt.find(projekt_id)
-    text = projekt.build_file_import_data&.dig("text")
+    text = projekt.import_file_data&.dig("text")
+    user_prompt = projekt.import_file_data&.dig("user_prompt")
 
     begin
-      projekt.update_column(:build_file_import_status, "processing")
+      projekt.update_column(:import_file_status, "processing")
 
-      result = ProjektContentBlocks::BuildWithAi.call(text: text, projekt: projekt)
+      result = ProjektContentBlocks::BuildWithAi.call(
+        text: text,
+        projekt: projekt,
+        user_prompt: user_prompt
+      )
 
       if result.success?
         update_projekt_dates(projekt, result.projekt_start_date, result.projekt_end_date)
@@ -17,8 +22,8 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
         content_blocks_data = create_content_blocks(projekt, result.blocks)
 
         projekt.update_columns(
-          build_file_import_status: "completed",
-          build_file_import_data: {
+          import_file_status: "completed",
+          import_file_data: {
             content_blocks: content_blocks_data,
             categories: result.categories,
             sdg_codes: valid_sdg_codes
@@ -26,14 +31,14 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
         )
       else
         projekt.update_columns(
-          build_file_import_status: "failed",
-          build_file_import_data: { error: { message: result.error } }
+          import_file_status: "failed",
+          import_file_data: { error: { message: result.error } }
         )
       end
     rescue => e
       projekt.update_columns(
-        build_file_import_status: "failed",
-        build_file_import_data: { error: { message: "Unerwarteter Fehler beim Import: #{e.message}" } }
+        import_file_status: "failed",
+        import_file_data: { error: { message: "Unerwarteter Fehler beim Import: #{e.message}" } }
       )
       raise e
     end

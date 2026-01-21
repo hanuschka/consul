@@ -1,4 +1,4 @@
-class Projekts::BuildFromDocument < ApplicationService
+class Projekts::ImportFromFile < ApplicationService
   attr_reader :projekt, :file
 
   def initialize(projekt:, file:)
@@ -7,12 +7,12 @@ class Projekts::BuildFromDocument < ApplicationService
   end
 
   def call
-    Rails.logger.info("[BuildFromDocument] Starting document import for Projekt ##{projekt.id}")
+    Rails.logger.info("[ImportFromFile] Starting document import for Projekt ##{projekt.id}")
 
     extraction_result = ProjektContentBlocks::DocumentTextExtractor.call(file: file)
 
     unless extraction_result.success?
-      Rails.logger.error("[BuildFromDocument] Text extraction failed for Projekt ##{projekt.id}: #{extraction_result.error}")
+      Rails.logger.error("[ImportFromFile] Text extraction failed for Projekt ##{projekt.id}: #{extraction_result.error}")
       return ServiceResult.failure(
         error: extraction_result.error,
         fallback_text: nil
@@ -20,7 +20,7 @@ class Projekts::BuildFromDocument < ApplicationService
     end
 
     text = extraction_result.text
-    Rails.logger.info("[BuildFromDocument] Text extracted successfully for Projekt ##{projekt.id}, length: #{text.length} characters")
+    Rails.logger.info("[ImportFromFile] Text extracted successfully for Projekt ##{projekt.id}, length: #{text.length} characters")
 
     parsing_result = ProjektContentBlocks::ImportWithAi.call(
       text: text,
@@ -28,25 +28,25 @@ class Projekts::BuildFromDocument < ApplicationService
     )
 
     if parsing_result.success?
-      Rails.logger.info("[BuildFromDocument] AI parsing successful for Projekt ##{projekt.id}")
+      Rails.logger.info("[ImportFromFile] AI parsing successful for Projekt ##{projekt.id}")
       update_projekt_dates(
         parsing_result.projekt_start_date,
         parsing_result.projekt_end_date
       )
-      Rails.logger.info("[BuildFromDocument] Projekt dates updated for Projekt ##{projekt.id}")
+      Rails.logger.info("[ImportFromFile] Projekt dates updated for Projekt ##{projekt.id}")
 
       result = create_content_blocks_from_structure(parsing_result.blocks)
-      Rails.logger.info("[BuildFromDocument] Content blocks created for Projekt ##{projekt.id}")
+      Rails.logger.info("[ImportFromFile] Content blocks created for Projekt ##{projekt.id}")
       result
     else
-      Rails.logger.error("[BuildFromDocument] AI parsing failed for Projekt ##{projekt.id}: #{parsing_result.error}")
+      Rails.logger.error("[ImportFromFile] AI parsing failed for Projekt ##{projekt.id}: #{parsing_result.error}")
       ServiceResult.failure(
         error: parsing_result.error,
         fallback_text: text
       )
     end
   rescue => e
-    Rails.logger.error("[BuildFromDocument] Unexpected error for Projekt ##{projekt.id}: #{e.message}")
+    Rails.logger.error("[ImportFromFile] Unexpected error for Projekt ##{projekt.id}: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n"))
     ServiceResult.failure(
       error: "Unerwarteter Fehler: #{e.message}",

@@ -3,6 +3,7 @@ ProjektStudio.FileImport = {
   allowedExtensions: ['pdf', 'docx', 'odt'],
   statusCheckTimeout: 7000,
   statusCheckActive: false,
+  selectedFile: null,
 
   initialize() {
     const $document = $(document);
@@ -15,6 +16,21 @@ ProjektStudio.FileImport = {
       "change",
       ".js-projekt-file-import-input",
       this.handleFileSelect.bind(this)
+    );
+    $document.on(
+      "click",
+      ".js-projekt-file-import-submit",
+      this.handleSubmit.bind(this)
+    );
+    $document.on(
+      "click",
+      ".js-projekt-file-import-cancel",
+      this.handleCancel.bind(this)
+    );
+    $document.on(
+      "click",
+      ".js-projekt-file-import-select-other",
+      this.handleSelectOther.bind(this)
     );
     $document.on("turbolinks:before-visit", () => {
       this.stopStatusCheck();
@@ -38,7 +54,55 @@ ProjektStudio.FileImport = {
       return;
     }
 
-    this.uploadFile(file);
+    this.selectedFile = file;
+    this.showFilePreview(file);
+  },
+
+  showFilePreview(file) {
+    const extension = file.name.split('.').pop().toLowerCase();
+    const iconClass = this.getFileIconClass(extension);
+
+    $(".js-projekt-file-import-filename").text(file.name);
+    $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
+    $(".js-projekt-file-import-trigger").hide();
+    $(".js-projekt-file-import-preview").show();
+    $(".js-projekt-file-import-user-prompt").focus();
+  },
+
+  getFileIconClass(extension) {
+    const iconMap = {
+      pdf: 'fa-file-pdf',
+      docx: 'fa-file-word',
+      odt: 'fa-file-alt'
+    };
+    return iconMap[extension] || 'fa-file';
+  },
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (!this.selectedFile) return;
+
+    const userPrompt = $(".js-projekt-file-import-user-prompt").val().trim();
+    this.uploadFile(this.selectedFile, userPrompt);
+  },
+
+  handleCancel(e) {
+    e.preventDefault();
+    this.resetFileSelection();
+  },
+
+  handleSelectOther(e) {
+    e.preventDefault();
+    $(".js-projekt-file-import-input").val('');
+    $(".js-projekt-file-import-input").click();
+  },
+
+  resetFileSelection() {
+    this.selectedFile = null;
+    $(".js-projekt-file-import-input").val('');
+    $(".js-projekt-file-import-user-prompt").val('');
+    $(".js-projekt-file-import-preview").hide();
+    $(".js-projekt-file-import-trigger").show();
   },
 
   validateFile(file) {
@@ -61,12 +125,15 @@ ProjektStudio.FileImport = {
     return { valid: true };
   },
 
-  uploadFile(file) {
+  uploadFile(file, userPrompt) {
     this.showLoader();
 
     const projektId = ProjektStudio.getCurrentProjektId();
     const formData = new FormData();
     formData.append('file', file);
+    if (userPrompt) {
+      formData.append('user_prompt', userPrompt);
+    }
 
     App.Ajax
       .request({
@@ -187,9 +254,8 @@ ProjektStudio.FileImport = {
   },
 
   hideLoader() {
-    $(".js-projekt-file-import-trigger").prop("disabled", false).show();
     $(".js-projekt-file-import-loader").hide();
-    $(".js-projekt-file-import-input").val('');
+    this.resetFileSelection();
   },
 
   checkAndShowFlashMessage() {

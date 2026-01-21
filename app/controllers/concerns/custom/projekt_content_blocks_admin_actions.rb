@@ -102,7 +102,11 @@ module ProjektContentBlocksAdminActions
       )
     end
 
-    Projekts::DispatchDocumentImport.call(projekt: @projekt, file: params[:file])
+    Projekts::DispatchImportFromFile.call(
+      projekt: @projekt,
+      file: params[:file],
+      user_prompt: params[:user_prompt]
+    )
 
     status_url =
       case @namespace
@@ -120,8 +124,8 @@ module ProjektContentBlocksAdminActions
   def import_status
     authorize!(:update, @projekt)
 
-    response_data = @projekt.build_file_import_data || {}
-    response_data = response_data.merge(status: @projekt.build_file_import_status || "pending")
+    response_data = @projekt.import_file_data || {}
+    response_data = response_data.merge(status: @projekt.import_file_status || "pending")
 
     render json: response_data
   end

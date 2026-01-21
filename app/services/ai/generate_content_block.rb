@@ -35,6 +35,9 @@ class Ai::GenerateContentBlock < ApplicationService
             - Do not optimize, clean up, or reformat the HTML. Keep the original formatting and indentation unless an instruction requires otherwise.
             - Never infer desired changes. Only apply changes explicitly described in the instructions.
 
+            Technical note:
+            - If asked to use "brand color" use "var(--brand-color)" css variable.
+
             Additional context of content block:
             It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
 

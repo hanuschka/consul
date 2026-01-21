@@ -1,16 +1,26 @@
 .projekt-event-item-new {
   display: flex;
+}
+
+.projekt-event-item-new--inner {
+  display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid #dcdcdc;
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
+  // padding-top: 25px !important;
+  padding-top: 5px !important;
+  // border-bottom: 1px solid #dcdcdc;
+  // padding-bottom: 25px !important;
   font-size: 16px;
   flex-wrap: nowrap;
   flex-direction: column;
+  align-items: flex-start;
+  flex-direction: row;
+}
 
-  @media screen and (min-width: 40em) {
-    flex-direction: row;
-  }
+.projekt-event-item-new--column {
+  width: 100%;
+  // @media screen and (max-width: $small-tablet-viewport-start) {
+  //   flex-direction: row;
+  // }
 }
 
 .projekt-event-item-new-body {

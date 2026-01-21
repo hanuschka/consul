@@ -81,11 +81,10 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
   end
 
   def fetch_categories_examples
-    existing_tags = Tag.order('taggings_count DESC NULLS LAST').limit(15).pluck(:name)
+    existing_tags = Tag.order('taggings_count DESC NULLS LAST').pluck(:name)
+
     if existing_tags.any?
       "Examples from existing categories: #{existing_tags.map { |t| "\"#{t}\"" }.join(', ')}"
-    else
-      "Examples: \"Bildung\", \"Umwelt\", \"Infrastruktur\", \"Gesundheit\", \"Mobilität\", \"Soziales\""
     end
   end
 
@@ -93,8 +92,6 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
     goals = SDG::Goal.order(:code).map { |goal| "#{goal.code} = #{goal.title}" }
     if goals.any?
       "Available SDG Goals:\n         #{goals.join(",\n         ")}"
-    else
-      "SDG Goals: 1-17"
     end
   end
 
@@ -103,61 +100,8 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
     if targets_count > 0
       sample_targets = SDG::Target.order(:code).limit(5).pluck(:code).join(', ')
       "Available targets include codes like: #{sample_targets}, etc. (#{targets_count} total targets)"
-    else
-      "Targets follow format: X.Y (e.g., 4.1, 11.2)"
     end
   end
-
-  #def prompt
-  #  # You are an assistant for structuring document content into HTML blocks.
-  #    # - Make it more Visually appealing: clear visual hierarchy, cards/boxes, subtle shadows, rounded corners, and clearly recognizable calls to action
-
-  #    # - Recognize the natural structure of the document
-  #    # - Maintain hierarchical order
-  #    # - Group related content together logically
-  #    # - Only output valid HTML
-  #    # - Escape special characters properly
-  #    # - Keep formatting clean and semantic
-  #    # - Each block should be a complete, self-contained HTML snippet
-  #    # - Use only Foundation 6 classes for layout (e.g. `grid-container`, `grid-x`, `cell`, `callout`)
-
-  #  <<~PROMPT
-
-
-  #    Rules:
-
-  #    # Consul HTML Block Creator
-
-  #    Task: You need to Analyze the following document text and generate a list of HTML content blocks.
-  #    You are a project manager of a citizen participation platform built with Consul. Your job is to turn project information into clear, citizen-friendly, visually appealing content that can be embedded directly into Consul pages.
-
-  #    For each logical section of the document, create an HTML content block that properly represents the content.
-
-  #    ## Requirements (very important)
-  #    - Use semantic HTML to represent the document structure
-  #    - Use inline styles only (no `<style>` tag, no external CSS files)
-  #    - No JavaScript
-  #    - Mobile-optimized: on small screens (smartphones), the layout must be single-column, easy to read, with generous spacing and touch-friendly buttons
-  #    - Do not use H1 headings
-  #    - Use H3 and/or H4 headings only for all headlines
-  #    - Use <p> tags for paragraphs
-  #    - Use <ul> and <li> tags for bulleted lists
-  #    - Use <ol> and <li> tags for numbered lists
-  #    - Avoid duplicate or semantically redundant heading levels
-  #    - Use FontAwesome icons if available in Consul; otherwise use simple Unicode alternatives (→, ✓, •)
-  #    - Images must be placeholders only (e.g. `https://placehold.co/1200x500`). Do not invent real image sources
-  #    - Never create form inputs or feedback forms.
-
-  #    ## Date Extraction
-  #    - If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`
-  #    - Dates must be in ISO 8601 format (YYYY-MM-DD)
-  #    - Look for phrases like "Projektlaufzeit", "Zeitraum", "von ... bis", "Start", "Ende", "Beginn", "Abschluss", etc.
-  #    - If dates are unclear or not mentioned, set them to null
-
-  #    Document text:
-  #    #{text}
-  #  PROMPT
-  #end
 
   def output_schema
     {

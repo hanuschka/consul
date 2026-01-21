@@ -17,11 +17,22 @@ class EventSerializer < BaseSerializer
         :location,
         :weblink,
         :open_ended,
+        :language,
         :projekt_phase_id,
         :created_at,
         :updated_at
       ]
     )
+
+    event_data[:accessibility] = {
+      wheelchair_accessible: projekt_event.wheelchair_accessible,
+      accessible_toilet: projekt_event.accessible_toilet,
+      disabled_parking_nearby: projekt_event.disabled_parking_nearby,
+      tactile_guidance_systems: projekt_event.tactile_guidance_systems,
+      induction_loop_available: projekt_event.induction_loop_available,
+      assistance_dogs_welcome: projekt_event.assistance_dogs_welcome,
+      sign_language_interpreter: projekt_event.sign_language_interpreter
+    }
 
     if projekt_event.projekt_phase.present?
       event_data[:projekt_phase] = {

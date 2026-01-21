@@ -5,11 +5,19 @@ export default class extends Controller {
 
   connect() {
     this.close = this.close.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
     document.addEventListener("table-actions:close-all", this.close);
   }
 
   disconnect() {
     document.removeEventListener("table-actions:close-all", this.close);
+    document.removeEventListener("click", this.handleClickOutside);
+  }
+
+  handleClickOutside(event) {
+    if (!this.element.contains(event.target)) {
+      this.close();
+    }
   }
 
   toggleMenu(event) {
@@ -28,6 +36,7 @@ export default class extends Controller {
   open() {
     this.menuTarget.classList.remove("d-none");
     this.buttonTarget.setAttribute("aria-expanded", "true");
+    document.addEventListener("click", this.handleClickOutside);
 
     requestAnimationFrame(() => {
       this.positionMenu()
@@ -39,6 +48,7 @@ export default class extends Controller {
 
     this.menuTarget.classList.add("d-none");
     this.buttonTarget.setAttribute("aria-expanded", "false");
+    document.removeEventListener("click", this.handleClickOutside);
   }
 
   positionMenu() {

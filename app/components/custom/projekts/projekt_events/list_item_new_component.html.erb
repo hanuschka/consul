@@ -67,6 +67,29 @@
       <% if projekt_event.weblink.present? %>
         <div class="projekt-event-item-new-body--details-row"><i class="fa fa-globe"></i><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></div>
       <% end %>
+      <% if projekt_event.language.present? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-language"></i><%= projekt_event.language %>
+        </div>
+      <% end %>
+      <% accessibility_features = [] %>
+      <% accessibility_features << { icon: 'fa-wheelchair', label: ProjektEvent.human_attribute_name(:wheelchair_accessible) } if projekt_event.wheelchair_accessible? %>
+      <% accessibility_features << { icon: 'fa-toilet', label: ProjektEvent.human_attribute_name(:accessible_toilet) } if projekt_event.accessible_toilet? %>
+      <% accessibility_features << { icon: 'fa-parking', label: ProjektEvent.human_attribute_name(:disabled_parking_nearby) } if projekt_event.disabled_parking_nearby? %>
+      <% accessibility_features << { icon: 'fa-walking', label: ProjektEvent.human_attribute_name(:tactile_guidance_systems) } if projekt_event.tactile_guidance_systems? %>
+      <% accessibility_features << { icon: 'fa-volume-up', label: ProjektEvent.human_attribute_name(:induction_loop_available) } if projekt_event.induction_loop_available? %>
+      <% accessibility_features << { icon: 'fa-dog', label: ProjektEvent.human_attribute_name(:assistance_dogs_welcome) } if projekt_event.assistance_dogs_welcome? %>
+      <% accessibility_features << { icon: 'fa-sign-language', label: ProjektEvent.human_attribute_name(:sign_language_interpreter) } if projekt_event.sign_language_interpreter? %>
+      <% if accessibility_features.any? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-universal-access"></i>
+          <span>
+            <% accessibility_features.each_with_index do |feature, index| %>
+              <i class="fa <%= feature[:icon] %>" title="<%= feature[:label] %>"></i><%= feature[:label] %><%= ', ' unless index == accessibility_features.size - 1 %>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
     </div>
   </div>
 

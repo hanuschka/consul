@@ -2,11 +2,11 @@
   "use strict";
 
   App.CkeditorInlineStylesWorkarounds = {
-    initialize: function() {
+    initialize() {
       this.applyBoxShadows();
     },
 
-    applyBoxShadows: function() {
+    applyBoxShadows() {
       document.querySelectorAll('[data-box-shadow]').forEach(element => {
         element.style.boxShadow = element.getAttribute('data-box-shadow');
       });

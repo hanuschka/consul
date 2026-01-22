@@ -1,36 +1,25 @@
 class ProjektContentBlocks::ImportWithAi < ApplicationService
-  attr_reader :projekt
+  attr_reader :projekt, :user_prompt
 
-  def initialize(text:, projekt:)
+  def initialize(text:, projekt:, user_prompt: nil)
     @text = text
     @projekt = projekt
+    @user_prompt = user_prompt
   end
 
   def call
-    Rails.logger.info("[ImportWithAi] Starting AI import for Projekt ##{projekt.id}")
-
     base_prompt = fetch_base_prompt
-    Rails.logger.info("[ImportWithAi] Base prompt fetched for Projekt ##{projekt.id}")
 
-    Rails.logger.info("[ImportWithAi] Calling AI with text length: #{@text.length} characters for Projekt ##{projekt.id}")
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(build_prompt(base_prompt, @text))
+        .ask(build_prompt(base_prompt, @text, @user_prompt))
 
-    Rails.logger.info("[ImportWithAi] AI response received for Projekt ##{projekt.id}")
     content_blocks_data = response.content
 
     if content_blocks_data.present? && content_blocks_data['content_blocks'].present?
       categories = Array(content_blocks_data['categories']).compact
       sdg_codes = Array(content_blocks_data['sdg_codes']).compact
-
-      Rails.logger.info(
-        "[ImportWithAi] AI import successful for Projekt ##{projekt.id}: " \
-        "#{content_blocks_data['content_blocks'].count} blocks, " \
-        "#{categories.count} categories, " \
-        "#{sdg_codes.count} SDG codes"
-      )
 
       ServiceResult.success(
         blocks: content_blocks_data['content_blocks'],
@@ -40,27 +29,20 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
         sdg_codes: sdg_codes
       )
     else
-      Rails.logger.error("[ImportWithAi] AI returned empty or invalid structure for Projekt ##{projekt.id}")
       ServiceResult.failure(error: "KI konnte keine Struktur erstellen")
     end
-  rescue => e
-    Rails.logger.error("[ImportWithAi] Error during AI processing for Projekt ##{projekt.id}: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
-    ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
+  # rescue => e
+  #   ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
   end
 
   def fetch_base_prompt
-    Rails.logger.info("[ImportWithAi] Fetching base prompt from DT API for Projekt ##{projekt.id}")
-
     response =
       DtApi::Client.new
         .consul_ai_prompts
         .get(:projekt_import)
 
     unless response.success?
-      error_msg = "DT API error: #{response.code} - #{response.message}"
-      Rails.logger.error("[ImportWithAi] #{error_msg} for Projekt ##{projekt.id}")
-      raise error_msg
+      raise "DT API error: #{response.code} - #{response.message}"
     end
 
     response.dig('consul_ai_prompt', "prompt")
@@ -68,16 +50,18 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
 
   private
 
-  def build_prompt(base_prompt, document_text)
+  def build_prompt(base_prompt, document_text, user_prompt)
     categories_examples = fetch_categories_examples
     sdg_goals_reference = fetch_sdg_goals_reference
     sdg_targets_info = fetch_sdg_targets_info
+
+    user_instructions = user_prompt.present? ? "\nAdditional user instructions: #{user_prompt}\n" : ""
 
     <<~PROMPT
       #{base_prompt}
       For each logical section of the document, create an separated HTML content block that properly represents the content.
       If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
-
+      #{user_instructions}
       Additionally, analyze the document content and identify:
 
       1. Categories (tags): Concise German words describing the project topic/theme (max 3-5 categories).

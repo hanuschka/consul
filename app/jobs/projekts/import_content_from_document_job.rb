@@ -9,7 +9,7 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
     begin
       projekt.update_column(:import_file_status, "processing")
 
-      result = ProjektContentBlocks::BuildWithAi.call(
+      result = ProjektContentBlocks::ImportWithAi.call(
         text: text,
         projekt: projekt,
         user_prompt: user_prompt

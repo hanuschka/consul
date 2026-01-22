@@ -8,7 +8,7 @@ class Projekts::DispatchImportFromFile < ApplicationService
   end
 
   def call
-    extraction_result = ProjektContentBlocks::DocumentTextExtractor.call(file: file)
+    extraction_result = DocumentTextExtractor.call(file: file)
 
     unless extraction_result.success?
       projekt.update_columns(

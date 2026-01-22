@@ -4,7 +4,7 @@ module Adm
 
     def update
       @record = find_record
-      authorize [:adm, @record]
+      authorize [:adm, @record], :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
       if @record.update(permitted_params)
@@ -24,21 +24,16 @@ module Adm
         record_class.find(params[:id])
       end
 
-      def permitted_params
-        param_key = params[:record_type].tr("/", "_").to_sym
-        record_class = params[:record_type].classify.constantize
-        attribute = params[:attribute].to_sym
-
-        if translated_attribute?(record_class, attribute)
-          params.require(param_key).permit(translation_params(record_class))
-        else
-          params.require(param_key).permit(attribute)
-        end
+      def policy_class_for(record)
+        base_class = record.class.base_class
+        "Adm::#{base_class.name}Policy".constantize
       end
 
-      def translated_attribute?(record_class, attribute)
-        record_class.respond_to?(:translated_attribute_names) &&
-          record_class.translated_attribute_names.include?(attribute)
+      def permitted_params
+        param_key = @record.model_name.param_key.to_sym
+        attribute = params[:attribute].to_sym
+
+        params.require(param_key).permit(attribute)
       end
   end
 end

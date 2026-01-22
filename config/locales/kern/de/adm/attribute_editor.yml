@@ -2,6 +2,23 @@ de:
   adm:
     attribute_editor:
       default_description: Ohne Beschreibung
+      projekt_phase:
+        phase_tab_name_label: Tab-Bezeichnung
+        phase_tab_name_description: Wie soll der Tab für diese Phase im Frontend angezeigt werden?
+        cta_button_name_label: Button-Beschriftung auf der Projektseite
+        cta_button_name_description: Legt fest, welcher Text im Beteiligungs-Button auf der Projektseite angezeigt wird.
+        resource_form_intro_label: Hinweistext beim Start der Beitragserstellung
+        resource_form_intro_description: Wird oberhalb des Eingabebereichs angezeigt, um Nutzern Hinweise oder Erläuterungen zum Ausfüllen zu geben.
+        resource_form_title_label: Überschrift oberhalb des Eingabebereichs
+        resource_form_title_description: Wird als einleitende Überschrift ganz oben im Bereich zur Beitragserstellung angezeigt (z. B. ‚Neuen Vorschlag erstellen').
+        resource_form_title_placeholder_label: Platzhaltertext für den Titel
+        resource_form_title_placeholder_description: Wird im Eingabefeld für den Titel als Platzhalter angezeigt – z. B. "Geben Sie Ihrem Vorschlag einen aussagekräftigen Titel!"
+        resource_form_description_placeholder_label: Platzhaltertext für die Beschreibung
+        resource_form_description_placeholder_description: Wird im Eingabefeld für die Beschreibung als Platzhalter angezeigt – z. B. "Beschreiben Sie Ihr Anliegen möglichst konkret."
+        labels_name_label: Bezeichnung für Labels
+        labels_name_description: Legt fest, wie der Begriff "Labels" im Frontend angezeigt wird – z. B. "Kategorien" oder "Themenbereiche"
+        sentiments_name_label: Bezeichnung für Sentimente
+        sentiments_name_description: Legt fest, wie der Begriff "Sentimente" im Frontend angezeigt wird – z. B. "Stimmung" oder "Gefühlslage". Sentimente drücken aus, ob ein Vorschlag positiv, neutral oder negativ bewertet wird."
       projekt:
         total_duration_start_label: Startdatum
         total_duration_start_description: Startdatum

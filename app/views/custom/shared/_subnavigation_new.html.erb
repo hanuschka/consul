@@ -7,7 +7,8 @@
 
     <% unless @ui_hide_topbar_links %>
       <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) ||
-            (@custom_page&.landing? && @custom_page&.landing_show_projekts_overview?) %>
+            (@custom_page&.landing? && @custom_page&.landing_show_projekts_overview?) ||
+            (@ui_landing_page.present? && @ui_show_projekts_overview) %>
         <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
       <% end %>
       <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
@@ -28,7 +29,7 @@
             <%= "tabindex=0" if placement == "desktop" %>
             aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'>
           <div class='flyout-item-name projekt-name'>
-            <%= prepare_projekt_name(active_projekt, placement) %>
+            <%= prepare_projekt_name(active_projekt, placement, landing_page: @ui_landing_page.slug) %>
           </div>
         </li>
       <% end %>

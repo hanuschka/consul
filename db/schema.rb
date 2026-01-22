@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_16_185236) do
+ActiveRecord::Schema.define(version: 2026_01_20_155939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1951,6 +1951,14 @@ ActiveRecord::Schema.define(version: 2026_01_16_185236) do
     t.string "summary"
     t.bigint "projekt_phase_id"
     t.boolean "open_ended", default: false
+    t.string "language"
+    t.boolean "wheelchair_accessible", default: false
+    t.boolean "accessible_toilet", default: false
+    t.boolean "disabled_parking_nearby", default: false
+    t.boolean "tactile_guidance_systems", default: false
+    t.boolean "induction_loop_available", default: false
+    t.boolean "assistance_dogs_welcome", default: false
+    t.boolean "sign_language_interpreter", default: false
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

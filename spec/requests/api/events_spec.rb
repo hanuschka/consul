@@ -67,7 +67,15 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
               end_datetime: { type: :string, format: :date_time, nullable: true },
               location: { type: :string, nullable: true },
               weblink: { type: :string, nullable: true },
-              open_ended: { type: :boolean, nullable: true }
+              open_ended: { type: :boolean, nullable: true },
+              language: { type: :string, nullable: true },
+              wheelchair_accessible: { type: :boolean, nullable: true },
+              accessible_toilet: { type: :boolean, nullable: true },
+              disabled_parking_nearby: { type: :boolean, nullable: true },
+              tactile_guidance_systems: { type: :boolean, nullable: true },
+              induction_loop_available: { type: :boolean, nullable: true },
+              assistance_dogs_welcome: { type: :boolean, nullable: true },
+              sign_language_interpreter: { type: :boolean, nullable: true }
             },
             required: ['title']
           }
@@ -184,7 +192,15 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
               end_datetime: { type: :string, format: :date_time, nullable: true },
               location: { type: :string, nullable: true },
               weblink: { type: :string, nullable: true },
-              open_ended: { type: :boolean, nullable: true }
+              open_ended: { type: :boolean, nullable: true },
+              language: { type: :string, nullable: true },
+              wheelchair_accessible: { type: :boolean, nullable: true },
+              accessible_toilet: { type: :boolean, nullable: true },
+              disabled_parking_nearby: { type: :boolean, nullable: true },
+              tactile_guidance_systems: { type: :boolean, nullable: true },
+              induction_loop_available: { type: :boolean, nullable: true },
+              assistance_dogs_welcome: { type: :boolean, nullable: true },
+              sign_language_interpreter: { type: :boolean, nullable: true }
             }
           }
         }

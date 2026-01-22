@@ -104,7 +104,7 @@ class Users::LatestActivityComponent < ApplicationComponent
         filters: valid_filters,
         remote_url: "latest_activity",
         filter_param: "filter",
-        resource_link_additional_url_params: (@custom_page.present? ? { page_ref: @custom_page&.slug } : nil),
+        resource_link_additional_url_params: (@custom_page.present? ? { landing_page: @custom_page&.slug } : nil),
         filter_i18n_namespace: "custom.welcome.latest_activity"
       }
 

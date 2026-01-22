@@ -1,6 +1,6 @@
 .shared-spinner {
   border: 3px solid transparent;
-  border-top-color: var(--brand);
+  border-top-color: var(--brand-color);
   border-radius: 50%;
   animation: shared-spinner-spin 1s linear infinite;
 }

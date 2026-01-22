@@ -25,13 +25,14 @@ class Polls::ListItemComponent < ApplicationComponent
   private
 
     def poll_path
-      base_url = helpers.poll_path(poll.id)
-
-      if @additional_url_params.present?
-        base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+      if @additional_url_params.present? && @additional_url_params[:landing_page].present?
+        helpers.landing_page_poll_path(
+          landing_page_slug: @additional_url_params[:landing_page],
+          id: poll.id
+        )
+      else
+        helpers.poll_path(poll.id)
       end
-
-      base_url
     end
 
     def button_text

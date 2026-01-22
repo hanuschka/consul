@@ -1,4 +1,4 @@
-class ProjektContentBlocks::BuildWithAi < ApplicationService
+class ProjektContentBlocks::ImportWithAi < ApplicationService
   attr_reader :projekt
 
   def initialize(text:, projekt:)
@@ -7,18 +7,30 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
   end
 
   def call
-    base_prompt = fetch_base_prompt
+    Rails.logger.info("[ImportWithAi] Starting AI import for Projekt ##{projekt.id}")
 
+    base_prompt = fetch_base_prompt
+    Rails.logger.info("[ImportWithAi] Base prompt fetched for Projekt ##{projekt.id}")
+
+    Rails.logger.info("[ImportWithAi] Calling AI with text length: #{@text.length} characters for Projekt ##{projekt.id}")
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
         .ask(build_prompt(base_prompt, @text))
 
+    Rails.logger.info("[ImportWithAi] AI response received for Projekt ##{projekt.id}")
     content_blocks_data = response.content
 
     if content_blocks_data.present? && content_blocks_data['content_blocks'].present?
       categories = Array(content_blocks_data['categories']).compact
       sdg_codes = Array(content_blocks_data['sdg_codes']).compact
+
+      Rails.logger.info(
+        "[ImportWithAi] AI import successful for Projekt ##{projekt.id}: " \
+        "#{content_blocks_data['content_blocks'].count} blocks, " \
+        "#{categories.count} categories, " \
+        "#{sdg_codes.count} SDG codes"
+      )
 
       ServiceResult.success(
         blocks: content_blocks_data['content_blocks'],
@@ -28,20 +40,27 @@ class ProjektContentBlocks::BuildWithAi < ApplicationService
         sdg_codes: sdg_codes
       )
     else
+      Rails.logger.error("[ImportWithAi] AI returned empty or invalid structure for Projekt ##{projekt.id}")
       ServiceResult.failure(error: "KI konnte keine Struktur erstellen")
     end
-  # rescue => e
-  #   ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
+  rescue => e
+    Rails.logger.error("[ImportWithAi] Error during AI processing for Projekt ##{projekt.id}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
   end
 
   def fetch_base_prompt
+    Rails.logger.info("[ImportWithAi] Fetching base prompt from DT API for Projekt ##{projekt.id}")
+
     response =
       DtApi::Client.new
         .consul_ai_prompts
         .get(:projekt_import)
 
     unless response.success?
-      raise "DT API error: #{response.code} - #{response.message}"
+      error_msg = "DT API error: #{response.code} - #{response.message}"
+      Rails.logger.error("[ImportWithAi] #{error_msg} for Projekt ##{projekt.id}")
+      raise error_msg
     end
 
     response.dig('consul_ai_prompt', "prompt")

@@ -30,6 +30,7 @@
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
+      App.BoxShadowWorkaround.initialize();
     }
   };
 }).call(this);

@@ -24,4 +24,14 @@ class SiteCustomization::ContentBlock < ApplicationRecord
       find(record_id).update_column(:position, (order + 1))
     end
   end
+
+  before_validation :repair_html_body
+
+  private
+
+  def repair_html_body
+    return if body.blank?
+
+    self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
+  end
 end

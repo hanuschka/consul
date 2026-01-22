@@ -28,9 +28,9 @@ module ProjektContentBlocksAdminActions
         @content_block.move_to_top
       end
 
-      render json: { content_block: {id: @content_block.id}, status: { message: "Content block created" }}
+      render json: { content_block: {id: @content_block.id}, status: { message: I18n.t("custom.projekt_content_blocks.create.success") }}
     else
-      render json: { message: "Error creating content block" }
+      render json: { message: I18n.t("custom.projekt_content_blocks.create.error") }
     end
   end
 
@@ -42,9 +42,9 @@ module ProjektContentBlocksAdminActions
     update_params[:margin_bottom] = params[:margin_bottom] if params.key?(:margin_bottom)
 
     if @content_block.update(update_params)
-      render json: { status: { message: "Content block updated" }}
+      render json: { status: { message: I18n.t("custom.projekt_content_blocks.update.success") }}
     else
-      render json: { message: "Error updating content block" }
+      render json: { message: I18n.t("custom.projekt_content_blocks.update.error") }
     end
   end
 
@@ -52,9 +52,9 @@ module ProjektContentBlocksAdminActions
     authorize!(:update, @content_block.projekt)
 
     if @content_block.destroy
-      render json: { status: { message: "Content block destroyed" }}
+      render json: { status: { message: I18n.t("custom.projekt_content_blocks.destroy.success") }}
     else
-      render json: { message: "Error destroying content_block" }
+      render json: { message: I18n.t("custom.projekt_content_blocks.destroy.error") }
     end
   end
 
@@ -62,9 +62,9 @@ module ProjektContentBlocksAdminActions
     authorize!(:update, @content_block.projekt)
 
     if @content_block.insert_at(params[:position].to_i)
-      render json: { status: { message: "Content block position updated" }}
+      render json: { status: { message: I18n.t("custom.projekt_content_blocks.update_position.success") }}
     else
-      render json: { message: "Error updating content block position" }
+      render json: { message: I18n.t("custom.projekt_content_blocks.update_position.error") }
     end
   end
 
@@ -86,7 +86,7 @@ module ProjektContentBlocksAdminActions
       )
 
     if new_content_block_body.present?
-      render json: { content_block_html: new_content_block_body, status: { message: "Content block updated" }}
+      render json: { content_block_html: new_content_block_body, status: { message: I18n.t("custom.projekt_content_blocks.change_with_ai.success") }}
     else
       render json: { status: { message: I18n.t("ai.errors.generation_failed") }}
     end
@@ -97,7 +97,7 @@ module ProjektContentBlocksAdminActions
 
     unless params[:file].present?
       return render(
-        json: { error: { message: "Keine Datei hochgeladen" }},
+        json: { error: { message: I18n.t("custom.projekt_content_blocks.import.no_file") }},
         status: :unprocessable_entity
       )
     end
@@ -124,8 +124,14 @@ module ProjektContentBlocksAdminActions
   def import_status
     authorize!(:update, @projekt)
 
+    status = @projekt.import_file_status || "pending"
     response_data = @projekt.import_file_data || {}
-    response_data = response_data.merge(status: @projekt.import_file_status || "pending")
+    response_data = response_data.merge(status: status)
+
+    if status == "completed"
+      flash[:notice] = I18n.t("custom.projekt_content_blocks.import.success")
+      response_data[:redirect_url] = projekt_redirect_url
+    end
 
     render json: response_data
   end
@@ -137,11 +143,22 @@ module ProjektContentBlocksAdminActions
 
     redirect_back(
       fallback_location: root_path,
-      notice: "Alle Inhaltsblöcke gelöscht"
+      notice: I18n.t("custom.projekt_content_blocks.destroy_all.success")
     )
   end
 
   private
+
+  def projekt_redirect_url
+    case @namespace
+    when :admin
+      admin_projekt_path(@projekt, anchor: "page-content")
+    when :projekt_management
+      edit_projekt_management_projekt_path(@projekt, anchor: "page-content")
+    else
+      edit_projekt_management_projekt_path(@projekt, anchor: "page-content")
+    end
+  end
 
   def find_projekt
     if params[:projekt_id].present?

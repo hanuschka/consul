@@ -28,6 +28,12 @@ button {
       color: white;
     }
 
+    i {
+      margin-right: 5px;
+      font-size: 1.1em;
+      margin-right: 5px;
+    }
+
     &.-no-margin {
       margin-top: 0;
       margin-bottom: 0;
@@ -126,18 +132,12 @@ button {
     &.left-aligned {
       text-align: start;
       padding-left: 0.5em;
-
-      i {
-        width: 25px;
-        text-align: center;
-      }
     }
 
     &.with-icon {
       i {
-        font-size: 1.2em;
-        width: 25px;
-        text-align: center;
+        font-size: 1.1em;
+        margin-right: 5px;
       }
     }
   }

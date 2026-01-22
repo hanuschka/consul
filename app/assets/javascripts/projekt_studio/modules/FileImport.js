@@ -63,6 +63,7 @@ ProjektStudio.FileImport = {
 
     $(".js-projekt-file-import-filename").text(file.name);
     $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
+    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`);
     $(".js-projekt-file-import-trigger").hide();
     $(".js-projekt-file-import-preview").show();
     $(".js-projekt-file-import-user-prompt").focus();
@@ -100,6 +101,7 @@ ProjektStudio.FileImport = {
     this.selectedFile = null;
     $(".js-projekt-file-import-input").val('');
     $(".js-projekt-file-import-user-prompt").val('');
+    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt");
     $(".js-projekt-file-import-preview").hide();
     $(".js-projekt-file-import-trigger").show();
   },

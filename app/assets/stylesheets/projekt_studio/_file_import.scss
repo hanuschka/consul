@@ -49,7 +49,7 @@
   width: 100%;
   min-width: 480px;
   max-width: 480px;
-  padding: 25px 0;
+  padding: 45px 0;
 }
 
 .projekt-file-import-preview-header {
@@ -63,26 +63,33 @@
 }
 
 .projekt-file-import-preview-info {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: #f0f0f0;
   font-weight: 500;
+  font-size: 18px;
+  text-align: start;
 
   i {
-    font-size: 20px;
-    color: #7e7e7e;
+    font-size: 18px;
+  }
 
-    &.fa-file-pdf {
-      color: #dc3545;
-    }
+  &.-pdf {
+    background-color: rgba(220, 53, 69, 0.16);
+    color: #dc3545;
+  }
 
-    &.fa-file-word {
-      color: #2b579a;
-    }
+  &.-docx {
+    background-color: rgba(43,87,154, 0.16);
+    color: #2b579a;
+  }
 
-    &.fa-file-alt {
-      color: #0066cc;
-    }
+  &.-odt {
+    color: #0066cc;
+    background-color: rgba(0, 102, 204, 0.16);
   }
 }
 
@@ -93,7 +100,7 @@
 }
 
 .projekt-file-import-preview-prompt {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
   label {
     display: block;

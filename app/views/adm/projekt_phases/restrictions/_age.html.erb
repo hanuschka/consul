@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "restrictions__age" do %>
+  <%= form_with model: projekt_phase, url: adm_projekt_phase_path(projekt_phase), method: :patch do |f| %>
+    <% disabled = projekt_phase.user_status == "guest" %>
+    <% age_range_options = [["", t("adm.projekt_phases.restrictions.age.no_restriction")]] +
+                           AgeRange.for_restrictions.map { |ar| [ar.id, ar.name] } %>
+    <div class="kern-fieldset__body mb-4">
+      <%= f.collection_radio_buttons(:age_range_id, age_range_options, :first, :last) do |b| %>
+        <div class="kern-form-check">
+          <%= b.radio_button(class: "kern-form-check__radio", disabled: disabled) %>
+          <%= b.label(class: "kern-label") %>
+        </div>
+      <% end %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

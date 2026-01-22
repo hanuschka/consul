@@ -8,6 +8,11 @@ export default class extends Controller {
   }
 
   toggle() {
-    this.contentTarget.style.display = this.triggerTarget.checked ? "block" : "none"
+    this.triggerTargets.forEach((trigger, index) => {
+      const content = this.contentTargets[index]
+      if (content) {
+        content.style.display = trigger.checked ? "block" : "none"
+      }
+    })
   }
 }

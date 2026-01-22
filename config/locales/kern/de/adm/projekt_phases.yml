@@ -50,12 +50,36 @@ de:
         dates_description: Wann soll die Phase beginnen und enden?
       naming:
         title: Benennung
+      restrictions:
+        title: Beteiligungsbeschränkung
+        intro_title: Hinweis zur Beteiligungsbeschränkung
+        intro_text: |
+          <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
+          <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
+        user_status_label: Teilnahme nach Nutzerstatus
+        user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+        geozone_label: Gebietsbeschränkung der Teilnahme
+        geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+        age_label: Altersbeschränkung der Teilnahme
+        age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden.“
+        individual_groups_label: Beschränkung auf starke Gruppen
+        individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+        user_status:
+          guest: Gäste (keine Registrierung erforderlich)
+          registered: Registrierte Nutzer
+          verified: Verifizierte Nutzer
+        geozone:
+          no_restriction: Keine Einschränkung
+          only_citizens: Nur Bürger
+          only_geozones: Nur bestimmte Bezirke
+          only_streets: Nur bestimmte Straßen
+          search_street: Straße suchen...
+        extended_geozone:
+          no_restriction: Keine Einschränkung
+        age:
+          no_restriction: Keine Einschränkung
 
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
-        restrictions:
-          user_status:
-            guest: Gäste
-            registered: Registriert
-            verified: Verifiziert
+        restrictions: Beteiligungsbeschränkung

@@ -179,7 +179,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     ## Errors
 
     def field_errors(field)
-      object.errors[field] || []
+      object&.errors&.[](field) || []
     end
 
     def error_html(field, field_errors)

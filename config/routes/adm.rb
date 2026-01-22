@@ -17,6 +17,7 @@ namespace :adm do
   resources :projekt_phases, only: [:update] do
     get :duration, on: :member
     get :naming, on: :member
+    get :restrictions, on: :member
   end
 
   resources :projekt_manager_assignments, only: [:update]
@@ -39,6 +40,9 @@ namespace :adm do
     get :registration, on: :collection
   end
   resources :registered_addresses, only: [:index]
+  resources :registered_address_streets, only: [] do
+    get :search, on: :collection
+  end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]

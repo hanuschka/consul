@@ -1,7 +1,7 @@
 module Adm
   class ProjektPhasesController < Adm::BaseController
-    before_action :find_projekt, except: [:duration, :naming, :update]
-    before_action :find_projekt_phase, only: [:update, :duration, :naming]
+    before_action :find_projekt, except: [:duration, :naming, :restrictions, :update]
+    before_action :find_projekt_phase, only: [:update, :duration, :naming, :restrictions]
 
     def index
       authorize [:adm, @projekt], :show?
@@ -82,6 +82,18 @@ module Adm
       ]
     end
 
+    def restrictions
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
+        { name: t(".title") }
+      ]
+    end
+
     private
 
       def find_projekt
@@ -101,6 +113,8 @@ module Adm
       end
 
       def projekt_phase_params
+        filter_empty_registered_address_grouping_restrictions if params.dig(:projekt_phase, :registered_address_grouping_restrictions)
+
         param_key = @projekt_phase.model_name.param_key
         params.require(param_key).permit(
           :active, :frontend_visibility, :start_date, :end_date,
@@ -109,8 +123,31 @@ module Adm
           :resource_form_description_placeholder, :welcome_text_in_show,
           :labels_name, :sentiments_name,
           :comment_form_title, :comment_form_button,
-          :support_button_text, :description
+          :support_button_text, :description,
+          :user_status, :age_range_id,
+          :geozone_restricted, :registered_address_grouping_restriction,
+          registered_address_district_ids: [], registered_address_street_ids: [],
+          individual_group_value_ids: [],
+          registered_address_grouping_restrictions: registered_address_grouping_restrictions_params
         )
+      end
+
+      def registered_address_grouping_restrictions_params
+        ::RegisteredAddress::Grouping.pluck(:key).each_with_object({}) do |key, hash|
+          hash[key.to_sym] = []
+        end
+      end
+
+      def filter_empty_registered_address_grouping_restrictions
+        grouping_restrictions = params[:projekt_phase][:registered_address_grouping_restrictions]
+        return if grouping_restrictions.blank?
+
+        filtered = grouping_restrictions
+          .reject { |_, v| v == [""] }
+          .as_json
+          .each { |_, v| v.reject!(&:blank?) }
+
+        params[:projekt_phase][:registered_address_grouping_restrictions] = filtered
       end
 
       def create_params

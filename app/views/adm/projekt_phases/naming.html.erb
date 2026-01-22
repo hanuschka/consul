@@ -4,72 +4,32 @@
 
 <div class="kern-container mb-5">
   <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :phase_tab_name, :string) %>
-</div>
 
-<% if @projekt_phase.name.in?(%w[debate_phase proposal_phase budget_phase voting_phase question_phase formular_phase legislation_phase comment_phase livestream_phase point_of_interest_phase]) %>
-  <div class="kern-container mb-5">
+  <% if @projekt_phase.name.in?(%w[debate_phase proposal_phase budget_phase voting_phase question_phase formular_phase legislation_phase comment_phase livestream_phase point_of_interest_phase]) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :cta_button_name, :string) %>
-  </div>
-<% end %>
+  <% end %>
 
-<% if @projekt_phase.name.in?(%w[proposal_phase budget_phase]) %>
-  <div class="kern-container mb-5">
-    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_intro, :string) %>
-  </div>
-
-  <div class="kern-container mb-5">
+  <% if @projekt_phase.name.in?(%w[proposal_phase budget_phase]) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_intro, :rich_text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title, :string) %>
-  </div>
-
-  <div class="kern-container mb-5">
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title_placeholder, :string) %>
-  </div>
-
-  <div class="kern-container mb-5">
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_description_placeholder, :string) %>
-  </div>
-
-  <div class="kern-container mb-5">
-    <%= render Kern::FormFieldComponent.new(label: t('.welcome_text_in_show_label'), hint: t('.welcome_text_in_show_description')) do %>
-      <%= render 'adm/projekt_phases/naming/welcome_text_in_show', projekt_phase: @projekt_phase %>
-    <% end %>
-  </div>
-
-  <div class="kern-container mb-5">
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :welcome_text_in_show, :rich_text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :labels_name, :string) %>
-  </div>
-
-  <div class="kern-container mb-5">
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :sentiments_name, :string) %>
-  </div>
-<% end %>
+  <% end %>
 
-<% if @projekt_phase.name == "voting_phase" %>
-  <div class="kern-container mb-5">
-    <%= render Kern::FormFieldComponent.new(label: t('.description_label'), hint: t('.description_description')) do %>
-      <%= render 'adm/projekt_phases/naming/description', projekt_phase: @projekt_phase %>
-    <% end %>
-  </div>
-<% end %>
+  <% if @projekt_phase.name == "proposal_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :support_button_text, :string) %>
+  <% end %>
 
-<% if @projekt_phase.name == "comment_phase" %>
-  <div class="kern-container mb-5">
-    <%= render Kern::FormFieldComponent.new(label: t('.comment_form_title_label'), hint: t('.comment_form_title_description')) do %>
-      <%= render 'adm/projekt_phases/naming/comment_form_title', projekt_phase: @projekt_phase %>
-    <% end %>
-  </div>
+  <% if @projekt_phase.name == "voting_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :description, :rich_text) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase.poll, :closing_note, :rich_text) %>
+  <% end %>
 
-  <div class="kern-container mb-5">
-    <%= render Kern::FormFieldComponent.new(label: t('.comment_form_button_label'), hint: t('.comment_form_button_description')) do %>
-      <%= render 'adm/projekt_phases/naming/comment_form_button', projekt_phase: @projekt_phase %>
-    <% end %>
-  </div>
-<% end %>
-
-<% if @projekt_phase.name == "proposal_phase" %>
-  <div class="kern-container mb-5">
-    <%= render Kern::FormFieldComponent.new(label: t('.support_button_text_label'), hint: t('.support_button_text_description')) do %>
-      <%= render 'adm/projekt_phases/naming/support_button_text', projekt_phase: @projekt_phase %>
-    <% end %>
-  </div>
-<% end %>
+  <% if @projekt_phase.name == "comment_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :comment_form_title, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :comment_form_button, :string) %>
+  <% end %>
+</div>

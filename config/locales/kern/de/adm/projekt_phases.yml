@@ -50,17 +50,7 @@ de:
         dates_description: Wann soll die Phase beginnen und enden?
       naming:
         title: Benennung
-        welcome_text_in_show_label: Einleitungstext oberhalb der eingereichten Vorschlägen
-        welcome_text_in_show_description: Wird oberhalb der veröffentlichten Vorschläge angezeigt und dient zur inhaltlichen Einführung oder Erläuterung.
-        support_button_text_label: Text des Unterstützungsbuttons
-        support_button_text_description: Legt fest, welcher Text im Button zur Unterstützung eines Vorschlags angezeigt wird – z. B. “Unterstützen” oder “Ich bin dafür”
 
-        description_label: Description Label 11
-        description_description: Description Description
-        comment_form_title_label: Comment Form Title Label 12
-        comment_form_title_description: Comment Form Title Description
-        comment_form_button_label: Comment Form Button Label 13
-        comment_form_button_description: Comment Form Button Description
       projekt_phase:
         duration: Laufzeit
         naming: Benennung

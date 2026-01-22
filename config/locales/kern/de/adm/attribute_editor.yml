@@ -19,6 +19,19 @@ de:
         labels_name_description: Legt fest, wie der Begriff "Labels" im Frontend angezeigt wird – z. B. "Kategorien" oder "Themenbereiche"
         sentiments_name_label: Bezeichnung für Sentimente
         sentiments_name_description: Legt fest, wie der Begriff "Sentimente" im Frontend angezeigt wird – z. B. "Stimmung" oder "Gefühlslage". Sentimente drücken aus, ob ein Vorschlag positiv, neutral oder negativ bewertet wird."
+        welcome_text_in_show_label: Einleitungstext oberhalb der eingereichten Vorschlägen
+        welcome_text_in_show_description: Wird oberhalb der veröffentlichten Vorschläge angezeigt und dient zur inhaltlichen Einführung oder Erläuterung.
+        support_button_text_label: Text des Unterstützungsbuttons
+        support_button_text_description: Legt fest, welcher Text im Button zur Unterstützung eines Vorschlags angezeigt wird – z. B. "Unterstützen" oder "Ich bin dafür"
+        description_label: Description Label 11
+        description_description: Description Description
+        comment_form_title_label: Titel des Kommentarformulars
+        comment_form_title_description: Titel des Kommentarformulars Beschreibung
+        comment_form_button_label: Kommentarformular Button
+        comment_form_button_description: Kommentarformular Button Beschreibung
+      poll:
+        closing_note_label: Text der Abschlussseite
+        closing_note_description: Wird auf der Abschlussseite der Umfrage angezeigt, nachdem die Nutzer ihre Antworten eingereicht haben.
       projekt:
         total_duration_start_label: Startdatum
         total_duration_start_description: Startdatum

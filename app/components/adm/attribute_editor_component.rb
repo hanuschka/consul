@@ -28,6 +28,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::BooleanComponent
     when :string
       Adm::AttributeEditors::StringComponent
+    when :rich_text
+      Adm::AttributeEditors::RichTextComponent
     when :image
       Adm::AttributeEditors::ImageComponent
     when :color

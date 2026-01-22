@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  App.BoxShadowWorkaround = {
+  App.CkeditorInlineStylesWorkarounds = {
     initialize: function() {
       this.applyBoxShadows();
     },

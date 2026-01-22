@@ -33,8 +33,11 @@ module ProjektsHelper
     classes = []
     # classes.push("draft-projekt") unless projekt.activated?
 
-    url = projekt.page.url
-    url = UrlUtils.add_params_to_url(url, { landing_page: landing_page }) if landing_page.present?
+    url = if landing_page.present?
+      landing_page_projekt_page_path(landing_page_slug: landing_page, id: projekt.page.slug)
+    else
+      projekt.page.url
+    end
 
     if projekt.page.published? && placement == "desktop"
       link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }

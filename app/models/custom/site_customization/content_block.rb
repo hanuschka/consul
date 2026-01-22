@@ -10,6 +10,8 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   belongs_to :projekt, optional: true
   acts_as_list scope: :projekt
 
+  before_validation :repair_html_body
+
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale
     find_or_create_by(name: 'custom', locale: locale, key: key)
@@ -24,8 +26,6 @@ class SiteCustomization::ContentBlock < ApplicationRecord
       find(record_id).update_column(:position, (order + 1))
     end
   end
-
-  before_validation :repair_html_body
 
   private
 

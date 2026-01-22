@@ -30,6 +30,7 @@
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
+      App.CkeditorInlineStylesWorkarounds.initialize();
     }
   };
 }).call(this);

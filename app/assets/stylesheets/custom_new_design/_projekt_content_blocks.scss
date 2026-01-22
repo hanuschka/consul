@@ -32,3 +32,7 @@
 .gfadeOut {
   animation-duration: .25s;
 }
+
+div[data-box-shadow] {
+  box-shadow: attr(data-box-shadow);
+}

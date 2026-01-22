@@ -91,15 +91,18 @@ class PollsController < ApplicationController
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
-    if params[:landing_page].present?
+    landing_page_slug = params[:landing_page_slug]
+    if landing_page_slug.present?
       @landing_page =
         @projekt_phase
           .projekt
           .landing_pages
-          .find_by(slug: params[:landing_page])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.present?
         set_landing_page_topbar_ui_variables(@landing_page)
+      else
+        redirect_to poll_path(@poll) and return
       end
     end
 

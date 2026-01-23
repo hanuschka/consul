@@ -1,35 +1,41 @@
 class ProjektContentBlocks::ImportWithAi < ApplicationService
   attr_reader :projekt
 
-  def initialize(text:, projekt:)
-    @text = text
+  def initialize(projekt:)
     @projekt = projekt
   end
 
   def call
-    Rails.logger.info("[ImportWithAi] Starting AI import for Projekt ##{projekt.id}")
+    text = projekt.import_file_data&.dig("text")
+    user_prompt = projekt.import_file_data&.dig("user_prompt")
+
+    projekt.update_column(:import_file_status, "processing")
 
     base_prompt = fetch_base_prompt
-    Rails.logger.info("[ImportWithAi] Base prompt fetched for Projekt ##{projekt.id}")
 
-    Rails.logger.info("[ImportWithAi] Calling AI with text length: #{@text.length} characters for Projekt ##{projekt.id}")
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(build_prompt(base_prompt, @text))
+        .ask(build_prompt(base_prompt, text, user_prompt))
 
-    Rails.logger.info("[ImportWithAi] AI response received for Projekt ##{projekt.id}")
     content_blocks_data = response.content
 
     if content_blocks_data.present? && content_blocks_data['content_blocks'].present?
       categories = Array(content_blocks_data['categories']).compact
       sdg_codes = Array(content_blocks_data['sdg_codes']).compact
 
-      Rails.logger.info(
-        "[ImportWithAi] AI import successful for Projekt ##{projekt.id}: " \
-        "#{content_blocks_data['content_blocks'].count} blocks, " \
-        "#{categories.count} categories, " \
-        "#{sdg_codes.count} SDG codes"
+      update_projekt_dates(content_blocks_data['projekt_start_date'], content_blocks_data['projekt_end_date'])
+      update_projekt_categories(categories)
+      valid_sdg_codes = update_projekt_sdgs(sdg_codes)
+      content_blocks_data_result = create_content_blocks(content_blocks_data['content_blocks'])
+
+      projekt.update_columns(
+        import_file_status: "completed",
+        import_file_data: {
+          content_blocks: content_blocks_data_result,
+          categories: categories,
+          sdg_codes: valid_sdg_codes
+        }
       )
 
       ServiceResult.success(
@@ -40,27 +46,22 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
         sdg_codes: sdg_codes
       )
     else
-      Rails.logger.error("[ImportWithAi] AI returned empty or invalid structure for Projekt ##{projekt.id}")
+      projekt.update_columns(
+        import_file_status: "failed",
+        import_file_data: { error: { message: "KI konnte keine Struktur erstellen" } }
+      )
       ServiceResult.failure(error: "KI konnte keine Struktur erstellen")
     end
-  rescue => e
-    Rails.logger.error("[ImportWithAi] Error during AI processing for Projekt ##{projekt.id}: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
-    ServiceResult.failure(error: "Fehler bei der KI-Verarbeitung: #{e.message}")
   end
 
   def fetch_base_prompt
-    Rails.logger.info("[ImportWithAi] Fetching base prompt from DT API for Projekt ##{projekt.id}")
-
     response =
       DtApi::Client.new
         .consul_ai_prompts
         .get(:projekt_import)
 
     unless response.success?
-      error_msg = "DT API error: #{response.code} - #{response.message}"
-      Rails.logger.error("[ImportWithAi] #{error_msg} for Projekt ##{projekt.id}")
-      raise error_msg
+      raise "DT API error: #{response.code} - #{response.message}"
     end
 
     response.dig('consul_ai_prompt', "prompt")
@@ -68,15 +69,90 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
 
   private
 
-  def build_prompt(base_prompt, document_text)
+  def update_projekt_dates(start_date_str, end_date_str)
+    updates = {}
+
+    if start_date_str.present?
+      begin
+        updates[:total_duration_start] = Date.parse(start_date_str)
+      rescue ArgumentError
+      end
+    end
+
+    if end_date_str.present?
+      begin
+        updates[:total_duration_end] = Date.parse(end_date_str)
+      rescue ArgumentError
+      end
+    end
+
+    projekt.update(updates) if updates.any?
+  end
+
+  def update_projekt_categories(categories)
+    return if categories.blank?
+
+    projekt.tag_list.add(categories)
+    projekt.save
+  rescue => e
+    Rails.logger.error("Failed to update projekt categories: #{e.message}")
+  end
+
+  def update_projekt_sdgs(sdg_codes)
+    return [] if sdg_codes.blank?
+
+    valid_codes = validate_sdg_codes(sdg_codes)
+    return [] if valid_codes.blank?
+
+    projekt.related_sdg_list = valid_codes.join(", ")
+    projekt.save
+
+    valid_codes
+  rescue => e
+    Rails.logger.error("Failed to update projekt SDGs: #{e.message}")
+    []
+  end
+
+  def validate_sdg_codes(codes)
+    codes.select do |code|
+      if code.include?(".")
+        SDG::Target.exists?(code: code) || SDG::LocalTarget.exists?(code: code)
+      else
+        SDG::Goal.exists?(code: code.to_i)
+      end
+    end
+  end
+
+  def create_content_blocks(blocks)
+    blocks.map do |block_data|
+      html = block_data['html']
+      content_block = projekt.content_blocks.create!(
+        name: "custom",
+        body: html,
+        key: "projekt_content_block_#{projekt.id}_#{projekt.content_blocks.count + 1}_#{DateTime.now.to_i}",
+        locale: "de",
+        margin_bottom: SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
+      )
+      { id: content_block.id, html: html }
+    end
+  end
+
+  def build_prompt(base_prompt, document_text, user_prompt)
     categories_examples = fetch_categories_examples
     sdg_goals_reference = fetch_sdg_goals_reference
     sdg_targets_info = fetch_sdg_targets_info
+
+    user_instructions = user_prompt.present? ? "\nAdditional user instructions: #{user_prompt}\n" : ""
 
     <<~PROMPT
       #{base_prompt}
       For each logical section of the document, create an separated HTML content block that properly represents the content.
       If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
+
+      There also some user instructions, use them to modify generated content blocks html, but only for that, don't allow them impact general output structure:
+      ```user_instructions
+      #{user_instructions}
+      ```
 
       Additionally, analyze the document content and identify:
 

@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 170px;
-  margin-bottom: 20px;
+  min-height: 170px;
+  margin-bottom: 30px;
   background-color: #f8f9fa;
   border-radius: 8px;
   text-align: center;
@@ -16,32 +16,101 @@
   gap: 15px;
 }
 
-.projekt-file-import-button {
+.custom-new-design {
+  .projekt-file-import-button {
+    padding: 12px 25px !important;
+    font-size: 17px;
+    border-radius: 8px;
+
+    // &:hover:not(:disabled) {
+    //   background-color: $dt-base-hover;
+    // }
+
+    &:disabled {
+      background-color: #a8b3d6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.projekt-file-import-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 15px 0;
+  padding-top: 50px;
+}
+
+.projekt-file-import-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-direction: column;
+}
+
+.projekt-file-import-preview-info {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 15px 30px !important;
-  font-size: 16px;
-  font-weight: 500;
-  color: white;
-  // background-color: $dt-base;
-  font-size: 17px;
-  border: none;
+  gap: 8px;
+  padding: 8px 16px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: #f0f0f0;
+  font-weight: 500;
+  font-size: 17px;
+  text-align: start;
 
   i {
-    margin-right: 8px;
+    font-size: 20px;
   }
 
-  // &:hover:not(:disabled) {
-  //   background-color: $dt-base-hover;
-  // }
+  &.-pdf {
+    background-color: rgba(220, 53, 69, 0.16);
+    color: #dc3545;
+  }
 
-  &:disabled {
-    background-color: #a8b3d6;
-    cursor: not-allowed;
+  &.-docx {
+    background-color: rgba(43,87,154, 0.16);
+    color: #2b579a;
+  }
+
+  &.-odt {
+    color: #0066cc;
+    background-color: rgba(0, 102, 204, 0.16);
+  }
+}
+
+.projekt-file-import-preview-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.projekt-file-import-preview-prompt {
+  margin-bottom: 15px;
+  min-width: 480px;
+  max-width: 480px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  textarea {
+    padding: 15px;
+    border-radius: 4px;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: #7e7e7e;
+    }
   }
 }
 

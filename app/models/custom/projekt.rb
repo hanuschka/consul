@@ -129,7 +129,7 @@ class Projekt < ApplicationRecord
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
 
-  enum build_file_import_status: {
+  enum import_file_status: {
     never_run: "never_run",
     pending: "pending",
     processing: "processing",

@@ -1,5 +1,27 @@
 en:
   custom:
+    projekt_content_blocks:
+      create:
+        success: Content block created
+        error: Error creating content block
+      update:
+        success: Content block updated
+        error: Error updating content block
+      destroy:
+        success: Content block destroyed
+        error: Error destroying content block
+      update_position:
+        success: Content block position updated
+        error: Error updating content block position
+      change_with_ai:
+        success: Content block updated
+      import:
+        success: Document has been successfully imported
+        categories: Categories
+        sdg_goals: SDG Goals
+        no_file: No file uploaded
+      destroy_all:
+        success: All content blocks deleted
     projekts:
       new:
         first_level: 'First level'

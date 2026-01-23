@@ -12,6 +12,28 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    projekt_content_blocks:
+      create:
+        success: Inhaltsblock erstellt
+        error: Fehler beim Erstellen des Inhaltsblocks
+      update:
+        success: Inhaltsblock aktualisiert
+        error: Fehler beim Aktualisieren des Inhaltsblocks
+      destroy:
+        success: Inhaltsblock gelöscht
+        error: Fehler beim Löschen des Inhaltsblocks
+      update_position:
+        success: Position des Inhaltsblocks aktualisiert
+        error: Fehler beim Aktualisieren der Position des Inhaltsblocks
+      change_with_ai:
+        success: Inhaltsblock aktualisiert
+      import:
+        success: Dokument wurde erfolgreich importiert
+        categories: Kategorien
+        sdg_goals: SDG-Ziele
+        no_file: Keine Datei hochgeladen
+      destroy_all:
+        success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:
       my_posts:
         title: 'Meine Beiträge'

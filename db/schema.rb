@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_20_155939) do
+ActiveRecord::Schema.define(version: 2026_01_21_180000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2273,8 +2273,8 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.string "preview_code"
     t.boolean "on_global_overview", default: false
     t.boolean "from_dt", default: false
-    t.string "build_file_import_status"
-    t.jsonb "build_file_import_data"
+    t.string "import_file_status"
+    t.jsonb "import_file_data"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin

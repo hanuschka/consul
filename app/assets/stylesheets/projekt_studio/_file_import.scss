@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 170px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   background-color: #f8f9fa;
   border-radius: 8px;
   text-align: center;
@@ -16,40 +16,31 @@
   gap: 15px;
 }
 
-.projekt-file-import-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 30px !important;
-  font-size: 16px;
-  font-weight: 500;
-  color: white;
-  // background-color: $dt-base;
-  font-size: 17px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.custom-new-design {
+  .projekt-file-import-button {
+    padding: 12px 25px !important;
+    font-size: 17px;
+    border-radius: 8px;
 
-  i {
-    margin-right: 8px;
-  }
+    // &:hover:not(:disabled) {
+    //   background-color: $dt-base-hover;
+    // }
 
-  // &:hover:not(:disabled) {
-  //   background-color: $dt-base-hover;
-  // }
-
-  &:disabled {
-    background-color: #a8b3d6;
-    cursor: not-allowed;
+    &:disabled {
+      background-color: #a8b3d6;
+      cursor: not-allowed;
+    }
   }
 }
 
 .projekt-file-import-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  min-width: 480px;
-  max-width: 480px;
-  padding: 45px 0;
+  padding: 15px 0;
+  padding-top: 50px;
 }
 
 .projekt-file-import-preview-header {
@@ -65,16 +56,16 @@
 .projekt-file-import-preview-info {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 8px 16px;
   border-radius: 8px;
   background-color: #f0f0f0;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 17px;
   text-align: start;
 
   i {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   &.-pdf {
@@ -101,6 +92,8 @@
 
 .projekt-file-import-preview-prompt {
   margin-bottom: 15px;
+  min-width: 480px;
+  max-width: 480px;
 
   label {
     display: block;
@@ -110,14 +103,9 @@
   }
 
   textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #d0d0d0;
+    padding: 15px;
     border-radius: 4px;
-    font-size: 14px;
-    font-family: inherit;
     resize: vertical;
-    transition: border-color 0.2s ease;
 
     &:focus {
       outline: none;

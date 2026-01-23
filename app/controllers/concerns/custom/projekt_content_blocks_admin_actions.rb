@@ -130,7 +130,6 @@ module ProjektContentBlocksAdminActions
 
     if status == "completed"
       flash[:notice] = I18n.t("custom.projekt_content_blocks.import.success")
-      response_data[:redirect_url] = projekt_redirect_url
     end
 
     render json: response_data

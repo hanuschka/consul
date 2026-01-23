@@ -7,34 +7,13 @@ ProjektStudio.FileImport = {
 
   initialize() {
     const $document = $(document);
-    $document.on(
-      "click",
-      ".js-projekt-file-import-trigger",
-      this.handleButtonClick.bind(this)
-    );
-    $document.on(
-      "change",
-      ".js-projekt-file-import-input",
-      this.handleFileSelect.bind(this)
-    );
-    $document.on(
-      "click",
-      ".js-projekt-file-import-submit",
-      this.handleSubmit.bind(this)
-    );
-    $document.on(
-      "click",
-      ".js-projekt-file-import-cancel",
-      this.handleCancel.bind(this)
-    );
-    $document.on(
-      "click",
-      ".js-projekt-file-import-select-other",
-      this.handleSelectOther.bind(this)
-    );
-    $document.on("turbolinks:before-visit", () => {
-      this.stopStatusCheck();
-    });
+
+    $document.on("click", ".js-projekt-file-import-trigger", this.handleButtonClick.bind(this));
+    $document.on("change", ".js-projekt-file-import-input", this.handleFileSelect.bind(this));
+    $document.on("click", ".js-projekt-file-import-submit", this.handleSubmit.bind(this));
+    $document.on("click", ".js-projekt-file-import-cancel", this.handleCancel.bind(this));
+    $document.on("click", ".js-projekt-file-import-select-other", this.handleSelectOther.bind(this));
+    $document.on("turbolinks:before-visit", () => { this.stopStatusCheck(); });
   },
 
   handleButtonClick(e) {
@@ -60,8 +39,9 @@ ProjektStudio.FileImport = {
   showFilePreview(file) {
     const extension = file.name.split('.').pop().toLowerCase();
     const iconClass = this.getFileIconClass(extension);
+    const displayName = file.name
 
-    $(".js-projekt-file-import-filename").text(file.name);
+    $(".js-projekt-file-import-filename").text(displayName);
     $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
     $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`);
     $(".js-projekt-file-import-trigger").hide();
@@ -203,7 +183,7 @@ ProjektStudio.FileImport = {
 
     if (response.status === "completed") {
       this.statusCheckActive = false;
-      this.finishStatusCheck(response);
+      window.location.reload()
     } else if (response.status === "failed") {
       this.handleStatusCheckFailure(response);
     } else {
@@ -229,10 +209,6 @@ ProjektStudio.FileImport = {
 
   stopStatusCheck() {
     this.statusCheckActive = false;
-  },
-
-  finishStatusCheck(response) {
-    window.location.href = response.redirect_url;
   },
 
   handleError(error) {

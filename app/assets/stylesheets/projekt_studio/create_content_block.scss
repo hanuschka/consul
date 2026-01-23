@@ -58,6 +58,22 @@
     margin-bottom: 15px;
     color: var(--brand-color);
   }
+
+  &:nth-child(1) i {
+    color: #2e7d32;
+  }
+
+  &:nth-child(2) i {
+    color: #f19639;
+  }
+
+  &:nth-child(3) i {
+    color: #757575;
+  }
+
+  &:nth-child(4) i {
+    color: #7c3aed;
+  }
 }
 
 .projekt-content-start-button--content {
@@ -67,21 +83,67 @@
 .projekt-content-start-button--title {
   font-size: 18px;
   font-weight: 600;
-  color: var(--brand-color);
   margin-bottom: 8px;
+  color: var(--brand-color);
 }
 
 .projekt-content-start-button--description {
   font-size: 14px;
-  color: color-mix(in srgb, var(--brand-color) 80%, transparent);
   line-height: 1.4;
   margin-bottom: 12px;
+  color: color-mix(in srgb, var(--brand-color) 70%, transparent);
 }
 
 .projekt-content-start-button--action {
   font-size: 15px;
   font-weight: 600;
   color: var(--brand-color);
+}
+
+.projekt-content-start-buttons {
+  .projekt-content-start-button:nth-child(1) {
+    .projekt-content-start-button--title,
+    .projekt-content-start-button--action {
+      color: #2e7d32;
+    }
+
+    .projekt-content-start-button--description {
+      color: color-mix(in srgb, #2e7d32 70%, transparent);
+    }
+  }
+
+  .projekt-content-start-button:nth-child(2) {
+    .projekt-content-start-button--title,
+    .projekt-content-start-button--action {
+      color: #f57c00;
+    }
+
+    .projekt-content-start-button--description {
+      color: color-mix(in srgb, #f57c00 70%, transparent);
+    }
+  }
+
+  .projekt-content-start-button:nth-child(3) {
+    .projekt-content-start-button--title,
+    .projekt-content-start-button--action {
+      color: #757575;
+    }
+
+    .projekt-content-start-button--description {
+      color: color-mix(in srgb, #757575 70%, transparent);
+    }
+  }
+
+  .projekt-content-start-button:nth-child(4) {
+    .projekt-content-start-button--title,
+    .projekt-content-start-button--action {
+      color: #7c3aed;
+    }
+
+    .projekt-content-start-button--description {
+      color: color-mix(in srgb, #7c3aed 70%, transparent);
+    }
+  }
 }
 
 .projekt-file-import-wrapper {

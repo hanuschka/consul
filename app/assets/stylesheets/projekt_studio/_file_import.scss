@@ -67,33 +67,32 @@
   i {
     font-size: 20px;
   }
+  background-color: color-mix(in srgb, #2b579a 16%, transparent);
+  color: #2b579a;
 
-  &.-pdf {
-    background-color: rgba(220, 53, 69, 0.16);
-    color: #dc3545;
-  }
+  // &.-pdf {
+  //   color: #dc3545;
+  // }
 
-  &.-docx {
-    background-color: rgba(43,87,154, 0.16);
-    color: #2b579a;
-  }
+  // &.-docx {
+  //   color: #2b579a;
+  // }
 
-  &.-odt {
-    color: #0066cc;
-    background-color: rgba(0, 102, 204, 0.16);
-  }
+  // &.-odt {
+  //   color: #0066cc;
+  // }
 }
 
 .projekt-file-import-preview-actions {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .projekt-file-import-preview-prompt {
   margin-bottom: 15px;
-  min-width: 480px;
-  max-width: 480px;
+  min-width: 590px;
+  max-width: 590px;
 
   label {
     display: block;
@@ -103,9 +102,10 @@
   }
 
   textarea {
-    padding: 15px;
-    border-radius: 4px;
+    padding: 20px;
+    border-radius: 8px;
     resize: vertical;
+    min-height: 150px;
   }
 }
 

@@ -20,6 +20,12 @@ en:
         categories: Categories
         sdg_goals: SDG Goals
         no_file: No file uploaded
+        user_prompt_placeholder: |
+          "Formulate section XY in a more comprehensible way for the public."
+          "Additionally create a separate content block in plain language."
+          "Shorten the introduction and make the beginning more understandable."
+          "Summarize long sections in bullet points."
+          "Rearrange the content logically if the order in the document is unclear."
       destroy_all:
         success: All content blocks deleted
     projekts:

@@ -25,10 +25,6 @@
             style="display: none;"
           >
             <div class="projekt-file-import-preview-header">
-              <div class="projekt-file-import-preview-info">
-                <i class="fas fa-file js-projekt-file-import-icon"></i>
-                <span class="js-projekt-file-import-filename"></span>
-              </div>
               <div class="projekt-file-import-preview-actions">
                 <button
                   type="button"
@@ -45,6 +41,11 @@
                   Abbrechen
                 </button>
               </div>
+
+              <div class="projekt-file-import-preview-info">
+                <i class="fas fa-file js-projekt-file-import-icon"></i>
+                <span class="js-projekt-file-import-filename"></span>
+              </div>
             </div>
             <div class="projekt-file-import-preview-prompt">
               <label for="projekt-file-import-user-prompt">
@@ -54,7 +55,7 @@
                 id="projekt-file-import-user-prompt"
                 class="js-projekt-file-import-user-prompt"
                 rows="4"
-                placeholder="z.B. 'Fokussiere auf die technischen Details' oder 'Erstelle eine kurze Zusammenfassung'"
+                placeholder="<%= t('custom.projekt_content_blocks.import.user_prompt_placeholder') %>"
               ></textarea>
             </div>
             <button

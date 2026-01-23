@@ -32,6 +32,12 @@ de:
         categories: Kategorien
         sdg_goals: SDG-Ziele
         no_file: Keine Datei hochgeladen
+        user_prompt_placeholder: |
+          „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
+          „Erstelle zusätzlich einen eigenen Inhaltsblock in leichter Sprache."
+          „Kürze die Einleitung und mache den Einstieg verständlicher."
+          „Fasse lange Abschnitte in Stichpunkten zusammen."
+          „Ordne die Inhalte logisch neu, falls die Reihenfolge im Dokument unklar ist."
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:

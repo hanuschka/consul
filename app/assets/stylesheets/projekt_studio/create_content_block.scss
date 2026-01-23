@@ -1,3 +1,10 @@
+:root {
+  --content-start-btn-color-1: #2e7d32;
+  --content-start-btn-color-2: #f19639;
+  --content-start-btn-color-3: #1e88e5;
+  --content-start-btn-color-4: #7c3aed;
+}
+
 .projekt-content-start-section {
   display: flex;
   justify-content: center;
@@ -60,19 +67,19 @@
   }
 
   &:nth-child(1) i {
-    color: #2e7d32;
+    color: var(--content-start-btn-color-1);
   }
 
   &:nth-child(2) i {
-    color: #f19639;
+    color: var(--content-start-btn-color-2);
   }
 
   &:nth-child(3) i {
-    color: #757575;
+    color: var(--content-start-btn-color-3);
   }
 
   &:nth-child(4) i {
-    color: #7c3aed;
+    color: var(--content-start-btn-color-4);
   }
 }
 
@@ -84,14 +91,12 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: var(--brand-color);
 }
 
 .projekt-content-start-button--description {
   font-size: 14px;
   line-height: 1.4;
   margin-bottom: 12px;
-  color: color-mix(in srgb, var(--brand-color) 70%, transparent);
 }
 
 .projekt-content-start-button--action {
@@ -102,46 +107,82 @@
 
 .projekt-content-start-buttons {
   .projekt-content-start-button:nth-child(1) {
-    .projekt-content-start-button--title,
-    .projekt-content-start-button--action {
-      color: #2e7d32;
+    background-color: color-mix(in srgb, var(--content-start-btn-color-1) 10%, transparent);
+    border-color: color-mix(in srgb, var(--content-start-btn-color-1) 24%, transparent);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--content-start-btn-color-1) 48%, transparent);
+      background-color: color-mix(in srgb, var(--content-start-btn-color-1) 20%, transparent);
     }
 
-    .projekt-content-start-button--description {
-      color: color-mix(in srgb, #2e7d32 70%, transparent);
+    &:active,
+    &.-active {
+      background-color: color-mix(in srgb, var(--content-start-btn-color-1) 36%, transparent);
+      border-color: color-mix(in srgb, var(--content-start-btn-color-1) 60%, transparent);
+    }
+
+    .projekt-content-start-button--action {
+      color: var(--content-start-btn-color-1);
     }
   }
 
   .projekt-content-start-button:nth-child(2) {
-    .projekt-content-start-button--title,
-    .projekt-content-start-button--action {
-      color: #f57c00;
+    background-color: color-mix(in srgb, var(--content-start-btn-color-2) 10%, transparent);
+    border-color: color-mix(in srgb, var(--content-start-btn-color-2) 24%, transparent);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--content-start-btn-color-2) 48%, transparent);
+      background-color: color-mix(in srgb, var(--content-start-btn-color-2) 20%, transparent);
     }
 
-    .projekt-content-start-button--description {
-      color: color-mix(in srgb, #f57c00 70%, transparent);
+    &:active,
+    &.-active {
+      background-color: color-mix(in srgb, var(--content-start-btn-color-2) 36%, transparent);
+      border-color: color-mix(in srgb, var(--content-start-btn-color-2) 60%, transparent);
+    }
+
+    .projekt-content-start-button--action {
+      color: var(--content-start-btn-color-2);
     }
   }
 
   .projekt-content-start-button:nth-child(3) {
-    .projekt-content-start-button--title,
-    .projekt-content-start-button--action {
-      color: #757575;
+    background-color: color-mix(in srgb, var(--content-start-btn-color-3) 10%, transparent);
+    border-color: color-mix(in srgb, var(--content-start-btn-color-3) 24%, transparent);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--content-start-btn-color-3) 48%, transparent);
+      background-color: color-mix(in srgb, var(--content-start-btn-color-3) 20%, transparent);
     }
 
-    .projekt-content-start-button--description {
-      color: color-mix(in srgb, #757575 70%, transparent);
+    &:active,
+    &.-active {
+      background-color: color-mix(in srgb, var(--content-start-btn-color-3) 36%, transparent);
+      border-color: color-mix(in srgb, var(--content-start-btn-color-3) 60%, transparent);
+    }
+
+    .projekt-content-start-button--action {
+      color: var(--content-start-btn-color-3);
     }
   }
 
   .projekt-content-start-button:nth-child(4) {
-    .projekt-content-start-button--title,
-    .projekt-content-start-button--action {
-      color: #7c3aed;
+    background-color: color-mix(in srgb, var(--content-start-btn-color-4) 10%, transparent);
+    border-color: color-mix(in srgb, var(--content-start-btn-color-4) 24%, transparent);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--content-start-btn-color-4) 48%, transparent);
+      background-color: color-mix(in srgb, var(--content-start-btn-color-4) 20%, transparent);
     }
 
-    .projekt-content-start-button--description {
-      color: color-mix(in srgb, #7c3aed 70%, transparent);
+    &:active,
+    &.-active {
+      background-color: color-mix(in srgb, var(--content-start-btn-color-4) 36%, transparent);
+      border-color: color-mix(in srgb, var(--content-start-btn-color-4) 60%, transparent);
+    }
+
+    .projekt-content-start-button--action {
+      color: var(--content-start-btn-color-4);
     }
   }
 }

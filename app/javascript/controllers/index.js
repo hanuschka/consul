@@ -49,3 +49,6 @@ application.register("auto-remove", AutoRemoveController)
 
 import CkeditorController from "./ckeditor_controller"
 application.register("ckeditor", CkeditorController)
+
+import StreetSelectorController from "./street_selector_controller"
+application.register("street-selector", StreetSelectorController)

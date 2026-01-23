@@ -54,3 +54,7 @@
   background-color: var(--kern-grey-700);
   flex-shrink: 0;
 }
+
+.cursor {
+  &-pointer { cursor: pointer; }
+}

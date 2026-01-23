@@ -7,13 +7,13 @@
     <%= render "adm/projekt_phases/restrictions/user_status", projekt_phase: @projekt_phase %>
   <% end %>
 
-  <%#= render Kern::FormFieldComponent.new(label: t('.geozone_label'), hint: t('.geozone_hint')) do %>
-    <%#= render "adm/projekt_phases/restrictions/geozone", projekt_phase: @projekt_phase %>
-  <%# end %>
+  <%= render Kern::FormFieldComponent.new(label: t('.geozone_label'), hint: t('.geozone_hint')) do %>
+    <%= render "adm/projekt_phases/restrictions/geozone", projekt_phase: @projekt_phase %>
+  <% end %>
 
-  <%#= render Kern::FormFieldComponent.new(label: t('.extended_geozone_label'), hint: t('.extended_geozone_hint')) do %>
-    <%#= render "adm/projekt_phases/restrictions/extended_geozone", projekt_phase: @projekt_phase %>
-  <%# end %>
+  <%= render Kern::FormFieldComponent.new(label: t('.extended_geozone_label'), hint: t('.extended_geozone_hint')) do %>
+    <%= render "adm/projekt_phases/restrictions/extended_geozone", projekt_phase: @projekt_phase %>
+  <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t('.age_label'), hint: t('.age_hint')) do %>
     <%= render "adm/projekt_phases/restrictions/age", projekt_phase: @projekt_phase %>

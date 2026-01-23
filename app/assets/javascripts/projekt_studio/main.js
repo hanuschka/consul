@@ -36,6 +36,7 @@ window.ProjektStudio = {
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       ProjektStudio.FileImport.initialize()
+      ProjektStudio.PromptGenerator.initialize()
       // ExplainWithAi.initialize()
 
       this.initialized = true;

@@ -3,77 +3,7 @@
     <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
 
     <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.empty? %>
-      <div class="projekt-file-import-section js-projekt-file-import-section">
-        <div class="projekt-file-import-wrapper js-projekt-file-import-wrapper">
-          <button
-            type="button"
-            class="button projekt-file-import-button js-projekt-file-import-trigger"
-            title="Dokument importieren"
-          >
-            <i class="fas fa-file-import"></i>
-
-            Dokument importieren (PDF, DOCX, ODT)
-          </button>
-          <input
-            type="file"
-            class="js-projekt-file-import-input"
-            accept=".pdf,.docx,.odt"
-            style="display: none;"
-          >
-          <div
-            class="projekt-file-import-preview js-projekt-file-import-preview"
-            style="display: none;"
-          >
-            <div class="projekt-file-import-preview-header">
-              <div class="projekt-file-import-preview-info">
-                <i class="fas fa-file js-projekt-file-import-icon"></i>
-                <span class="js-projekt-file-import-filename"></span>
-              </div>
-              <div class="projekt-file-import-preview-actions">
-                <button
-                  type="button"
-                  class="button secondary hollow small js-projekt-file-import-select-other"
-                >
-                  <i class="fas fa-folder-open"></i>
-                  Andere Datei wählen
-                </button>
-                <button
-                  type="button"
-                  class="button secondary small hollow js-projekt-file-import-cancel"
-                >
-                  <i class="fas fa-times"></i>
-                  Abbrechen
-                </button>
-              </div>
-            </div>
-            <div class="projekt-file-import-preview-prompt">
-              <label for="projekt-file-import-user-prompt">
-                Zusätzliche Anweisungen für die KI (optional):
-              </label>
-              <textarea
-                id="projekt-file-import-user-prompt"
-                class="js-projekt-file-import-user-prompt"
-                rows="4"
-                placeholder="z.B. 'Fokussiere auf die technischen Details' oder 'Erstelle eine kurze Zusammenfassung'"
-              ></textarea>
-            </div>
-            <button
-              type="button"
-              class="button projekt-file-import-button js-projekt-file-import-submit"
-            >
-              <i class="fas fa-upload"></i>
-              Dokument importieren
-            </button>
-          </div>
-        </div>
-        <div
-          class="projekt-file-import-loader js-projekt-file-import-loader"
-          style="display: none;"
-        >
-          <div class="bars-scale-loader"></div>
-          <span>Dokument wird verarbeitet...</span>
-        </div>
-      </div>
+      <%= render Projekts::ContentStartSectionComponent.new(@custom_page.projekt) %>
     <% end %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">

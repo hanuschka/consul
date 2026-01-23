@@ -1,0 +1,151 @@
+<div class="projekt-content-start-section js-projekt-content-start-section">
+  <div class="projekt-content-start-buttons js-projekt-content-start-buttons">
+    <button
+      type="button"
+      class="projekt-content-start-button js-projekt-file-import-trigger"
+      title="Dokument hochladen"
+    >
+      <i class="fas fa-file-upload"></i>
+      <div class="projekt-content-start-button--content">
+        <div class="projekt-content-start-button--title">Datei importieren</div>
+        <div class="projekt-content-start-button--description">Dokument hochladen (PDF, DOCX, ODT)</div>
+        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+      </div>
+    </button>
+
+    <button
+      type="button"
+      class="projekt-content-start-button js-projekt-prompt-trigger"
+      title="Prompt eingeben"
+    >
+      <i class="fas fa-pen"></i>
+      <div class="projekt-content-start-button--content">
+        <div class="projekt-content-start-button--title">Prompt eingeben</div>
+        <div class="projekt-content-start-button--description">Projekt beschreiben und Inhalte erzeugen</div>
+        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+      </div>
+    </button>
+
+    <button
+      type="button"
+      class="projekt-content-start-button js-projekt-template-trigger"
+      title="Vorlage wählen"
+    >
+      <i class="fas fa-th-large"></i>
+      <div class="projekt-content-start-button--content">
+        <div class="projekt-content-start-button--title">Vorlage wählen</div>
+        <div class="projekt-content-start-button--description">Inhaltsblock aus Vorlage erstellen</div>
+        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+      </div>
+    </button>
+
+    <button
+      type="button"
+      class="projekt-content-start-button js-projekt-empty-block-trigger"
+      title="Leerer Block"
+    >
+      <i class="fas fa-plus"></i>
+      <div class="projekt-content-start-button--content">
+        <div class="projekt-content-start-button--title">+ Leerer Block</div>
+        <div class="projekt-content-start-button--description">Leeren Inhaltsblock erstellen</div>
+        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+      </div>
+    </button>
+  </div>
+
+  <input
+    type="file"
+    class="js-projekt-file-import-input"
+    accept=".pdf,.docx,.odt"
+    style="display: none;"
+  >
+
+  <div
+    class="projekt-file-import-preview js-projekt-file-import-preview"
+    style="display: none;"
+  >
+    <div class="projekt-file-import-preview-header">
+      <div class="projekt-file-import-preview-actions">
+        <button
+          type="button"
+          class="button secondary hollow small js-projekt-file-import-select-other"
+        >
+          <i class="fas fa-folder-open"></i>
+          Andere Datei wählen
+        </button>
+        <button
+          type="button"
+          class="button secondary small hollow js-projekt-file-import-cancel"
+        >
+          <i class="fas fa-times"></i>
+          Abbrechen
+        </button>
+      </div>
+
+      <div class="projekt-file-import-preview-info">
+        <i class="fas fa-file js-projekt-file-import-icon"></i>
+        <span class="js-projekt-file-import-filename"></span>
+      </div>
+    </div>
+    <div class="projekt-file-import-preview-prompt">
+      <label for="projekt-file-import-user-prompt">
+        Zusätzliche Anweisungen für die KI (optional):
+      </label>
+      <textarea
+        id="projekt-file-import-user-prompt"
+        class="js-projekt-file-import-user-prompt"
+        rows="4"
+        placeholder="<%= t('custom.projekt_content_blocks.import.user_prompt_placeholder') %>"
+      ></textarea>
+    </div>
+    <button
+      type="button"
+      class="button projekt-file-import-button js-projekt-file-import-submit"
+    >
+      <i class="fas fa-upload"></i>
+      Dokument importieren
+    </button>
+  </div>
+
+  <div
+    class="projekt-prompt-form js-projekt-prompt-form"
+    style="display: none;"
+  >
+    <div class="projekt-prompt-form-header">
+      <h3>Prompt eingeben</h3>
+      <button
+        type="button"
+        class="button secondary small hollow js-projekt-prompt-cancel"
+      >
+        <i class="fas fa-times"></i>
+        Abbrechen
+      </button>
+    </div>
+    <div class="projekt-prompt-form-content">
+      <label for="projekt-prompt-input">
+        Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:
+      </label>
+      <textarea
+        id="projekt-prompt-input"
+        class="js-projekt-prompt-input"
+        rows="6"
+        placeholder="Z.B. Erstelle eine Projektbeschreibung für einen neuen Spielplatz mit Informationen zu Standort, Ausstattung und Zeitplan..."
+      ></textarea>
+    </div>
+    <button
+      type="button"
+      class="button projekt-file-import-button js-projekt-prompt-submit"
+    >
+      <i class="fas fa-magic"></i>
+      Inhalte generieren
+    </button>
+  </div>
+
+  <div
+    class="projekt-file-import-loader js-projekt-file-import-loader"
+    style="display: none;"
+  >
+    <div class="bars-scale-loader"></div>
+    <span class="js-projekt-loader-message">Dokument wird verarbeitet...</span>
+  </div>
+</div>

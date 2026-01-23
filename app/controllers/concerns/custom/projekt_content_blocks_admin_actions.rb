@@ -4,7 +4,7 @@ module ProjektContentBlocksAdminActions
 
   included do
     before_action :set_namespace
-    before_action :find_projekt, only: [:create, :import_document, :import_status, :destroy_all]
+    before_action :find_projekt, only: [:create, :import_document, :generate_from_prompt, :import_status, :destroy_all]
     before_action :find_content_block, only: [
       :destroy, :update, :update_position, :change_with_ai
     ]
@@ -106,6 +106,34 @@ module ProjektContentBlocksAdminActions
       projekt: @projekt,
       file: params[:file],
       user_prompt: params[:user_prompt]
+    )
+
+    status_url =
+      case @namespace
+      when :admin
+        import_status_admin_projekt_projekt_content_blocks_path(@projekt)
+      when :projekt_management
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      else
+        import_status_projekt_management_projekt_projekt_content_blocks_path(@projekt)
+      end
+
+    render json: { status_url: status_url }
+  end
+
+  def generate_from_prompt
+    authorize!(:update, @projekt)
+
+    unless params[:prompt].present?
+      return render(
+        json: { error: { message: I18n.t("custom.projekt_content_blocks.generate_from_prompt.no_prompt") }},
+        status: :unprocessable_entity
+      )
+    end
+
+    Projekts::DispatchGenerateFromPrompt.call(
+      projekt: @projekt,
+      prompt: params[:prompt]
     )
 
     status_url =

@@ -48,13 +48,18 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      if params[:page_ref].present?
+      landing_page_slug = params[:landing_page_slug]
+      if landing_page_slug.present?
         @landing_page =
           @projekt
             .landing_pages
-            .find_by(slug: params[:page_ref])
+            .find_by(slug: landing_page_slug)
 
-        set_landing_page_topbar_ui_variables(@landing_page)
+        if @landing_page.present?
+          set_landing_page_topbar_ui_variables(@landing_page)
+        else
+          redirect_to page_path(@custom_page.slug) and return
+        end
       end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")

@@ -46,11 +46,14 @@ class Projekts::ListItemComponent < ApplicationComponent
   def projekt_url
     base_url = projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
 
-    if @additional_url_params.present?
-      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
+      helpers.landing_page_projekt_page_path(
+        landing_page_slug: @additional_url_params[:landing_page],
+        id: projekt.page.slug
+      )
+    else
+      base_url
     end
-
-    base_url
   end
 
   def url_target

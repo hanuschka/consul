@@ -12,7 +12,7 @@
               class: "kern-form-check__radio",
               disabled: disabled,
               data: value.in?(["only_geozones", "only_streets"]) ? { related_options_target: "trigger" } : {} %>
-          <%= f.label "geozone_restricted_#{value}", label, class: "kern-label" %>
+          <%= f.label :geozone_restricted, label, value: value, class: "kern-label" %>
         </div>
 
         <% if value == "only_geozones" %>

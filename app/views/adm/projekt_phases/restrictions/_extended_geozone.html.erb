@@ -1,0 +1,47 @@
+<%= turbo_frame_tag "restrictions__extended_geozone" do %>
+  <%= form_with model: projekt_phase, url: adm_projekt_phase_path(projekt_phase), method: :patch do |f| %>
+    <% disabled = projekt_phase.user_status == "guest" %>
+    <% current_restriction = projekt_phase.registered_address_grouping_restriction %>
+
+    <div class="kern-fieldset__body mb-4" data-controller="related-options" data-action="input->related-options#toggle">
+      <div class="kern-form-check">
+        <%= f.radio_button :registered_address_grouping_restriction, "no_restriction",
+            class: "kern-form-check__radio",
+            disabled: disabled,
+            checked: (current_restriction.blank? || current_restriction == "no_restriction") %>
+        <%= f.label :registered_address_grouping_restriction, t("adm.projekt_phases.restrictions.extended_geozone.no_restriction"), value: "no_restriction", class: "kern-label" %>
+      </div>
+
+      <% RegisteredAddress::Grouping.all.each do |grouping| %>
+        <div class="kern-form-check">
+          <%= f.radio_button :registered_address_grouping_restriction, grouping.key,
+              class: "kern-form-check__radio",
+              disabled: disabled,
+              data: { related_options_target: "trigger" } %>
+          <%= f.label :registered_address_grouping_restriction, "#{grouping.name} (#{grouping.key})", value: grouping.key, class: "kern-label" %>
+        </div>
+
+        <div class="options-group my-2" style="<%= 'display: none;' unless current_restriction == grouping.key %>" data-related-options-target="content">
+          <%= f.fields_for :registered_address_grouping_restrictions do |ff| %>
+            <%= ff.collection_check_boxes grouping.key, grouping.restriction_options, :to_s, :to_s do |b| %>
+              <div class="kern-form-check mb-2">
+                <%= b.check_box(
+                  class: "kern-form-check__checkbox",
+                  checked: b.text.in?(projekt_phase.registered_address_grouping_restrictions[grouping.key] || []),
+                  disabled: disabled
+                ) %>
+                <%= b.label(class: "kern-label") %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

@@ -38,6 +38,9 @@ de:
           „Kürze die Einleitung und mache den Einstieg verständlicher."
           „Fasse lange Abschnitte in Stichpunkten zusammen."
           „Ordne die Inhalte logisch neu, falls die Reihenfolge im Dokument unklar ist."
+      generate_from_prompt:
+        success: Inhalte wurden erfolgreich generiert
+        no_prompt: Bitte geben Sie einen Prompt ein
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:

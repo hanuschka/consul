@@ -26,6 +26,9 @@ en:
           "Shorten the introduction and make the beginning more understandable."
           "Summarize long sections in bullet points."
           "Rearrange the content logically if the order in the document is unclear."
+      generate_from_prompt:
+        success: Content has been successfully generated
+        no_prompt: Please enter a prompt
       destroy_all:
         success: All content blocks deleted
     projekts:

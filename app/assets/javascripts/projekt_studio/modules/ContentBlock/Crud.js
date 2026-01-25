@@ -45,6 +45,8 @@ ProjektStudio.ContentBlock.Crud = {
       }
     }
 
+    $(".js-projekt-content-start-section").hide();
+
     setTimeout(() => {
       newContentBlock.scrollIntoView({ block: "center" })
       $(newContentBlock).find('.projekt-content-block').foundation();

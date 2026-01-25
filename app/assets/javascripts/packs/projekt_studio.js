@@ -33,4 +33,5 @@
 //= require ../projekt_studio/modules/SavedContentBlocks
 //= require ../projekt_studio/modules/PreviewMode
 //= require ../projekt_studio/modules/FileImport
-//= require ../projekt_studio/modules/PromptGenerator
+//= require ../projekt_studio/modules/ProjektStart
+//= require ../projekt_studio/modules/BuildWithPrompt

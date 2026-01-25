@@ -1,5 +1,44 @@
 de:
   custom:
+    projekts:
+      sidebar_section:
+        show: 'Bereich anzeigen'
+        hide: 'Bereich ausblenden'
+      content_start_section:
+        title: "Projekt-Inhalte erstellen mit:"
+        file_import_button:
+          title: Dokument hochladen
+          button_title: Datei importieren
+          description: Dokument hochladen (PDF, DOCX, ODT)
+          action: Jetzt starten →
+        prompt_button:
+          title: Prompt eingeben
+          button_title: Prompt eingeben
+          description: Projekt beschreiben und Inhalte erzeugen
+          action: Jetzt starten →
+        template_button:
+          title: Vorlage wählen
+          button_title: Vorlage wählen
+          description: Inhaltsblock aus Vorlage erstellen
+          action: Jetzt starten →
+        empty_block_button:
+          title: Leerer Block
+          button_title: Leerer Block
+          description: Leeren Inhaltsblock erstellen
+          action: Jetzt starten →
+        file_import_preview:
+          select_other_file: Andere Datei wählen
+          cancel: Abbrechen
+          additional_instructions: "Zusätzliche Anweisungen für die KI (optional):"
+          submit: Dokument importieren
+        prompt_form:
+          header: Prompt eingeben
+          label: "Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:"
+          placeholder: "Z.B. Erstelle eine Projektbeschreibung für einen neuen Spielplatz mit Informationen zu Standort, Ausstattung und Zeitplan..."
+          cancel: Abbrechen
+          submit: Inhalte generieren
+        loader:
+          message: Dokument wird verarbeitet...
     projekt:
       back_to_projekt_overview: zurück zur Projektübersicht
       content_block_templates_selector:

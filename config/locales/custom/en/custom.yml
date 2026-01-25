@@ -37,7 +37,45 @@ en:
         second_level: 'Second level'
         third_level: 'Third level'
         fourth_level: 'Fourth level'
+      content_start_section:
+        title: "Create projekt content with:"
+        file_import_button:
+          title: Upload document
+          button_title: Import file
+          description: Upload document (PDF, DOCX, ODT)
+          action: Get started →
+        prompt_button:
+          title: Enter prompt
+          button_title: Enter prompt
+          description: Describe the project and generate content
+          action: Get started →
+        template_button:
+          title: Choose template
+          button_title: Choose template
+          description: Create content block from template
+          action: Get started →
+        empty_block_button:
+          title: Empty block
+          button_title: Empty block
+          description: Create empty content block
+          action: Get started →
+        file_import_preview:
+          select_other_file: Choose another file
+          cancel: Cancel
+          additional_instructions: "Additional instructions for the AI (optional):"
+          submit: Import document
+        prompt_form:
+          header: Enter prompt
+          label: "Describe the project and what content should be created:"
+          placeholder: "E.g. Create a project description for a new playground with information about location, facilities and schedule..."
+          cancel: Cancel
+          submit: Generate content
+        loader:
+          message: Processing document...
       sidebar_filter:
         phases:
           title: 'Phases'
           all_phases: 'All phases'
+      sidebar_section:
+        show: 'Show section'
+        hide: 'Hide section'

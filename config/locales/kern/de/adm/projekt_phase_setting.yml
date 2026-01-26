@@ -28,6 +28,25 @@ de:
           show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
           voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+        resource:
+          users_can_create_investment_proposals: Vorschläge einreichen
+          users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen
+          show_report_button_in_sidebar: Melden
+          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
+          show_follow_button_in_sidebar: Folgen
+          show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
+          show_community_button_in_sidebar: Arbeitskreise
+          show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Arbeitskreise” für Investitionsvorschläge
+          show_related_content: Verwandte Inhalte
+          show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+          conditional_balloting: Vereinfachte Stimmabgabe
+          conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
+          show_video_as_link: Videos als Link
+          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          hide_ballots_count: Stimmenanzahl ausblenden
+          hide_ballots_count_description: Aktuelle Stimmenanzahl wird während der Abstimmungsphase nicht angezeigt um Beeinflussung zu vermeiden
       option:
         form:
           map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
@@ -72,12 +91,40 @@ de:
           anonimize_authors_description: Autorenkacheln werden im Frontend nicht angezeigt.
           voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
           voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+        resource:
+          show_video_as_link: Videos als Link
+          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          enable_proposal_notifications_tab: Benachrichtigungen
+          enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+          enable_proposal_milestones_tab: Meilensteine
+          enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+          users_can_create_proposals: Vorschläge einreichen
+          users_can_create_proposals_description: Nutzer können Vorschläge erstellen
+          allow_voting: Unterstützung
+          allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
+          quorum_for_proposals: Quorum
+          quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
+          enable_up_and_down_voting: Daumen hoch | runter
+          enable_up_and_down_voting_description: Aktivieren Sie Daumen hoch | runter
+          show_report_button_in_sidebar: Melden
+          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
+          show_follow_button_in_proposal_sidebar: Folgen
+          show_follow_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Vorschlag folgen"
+          show_community_button_in_proposal_sidebar: Arbeitskreise
+          show_community_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Arbeitskreise" für Vorschläge
+          show_related_content: Verwandte Inhalte
+          show_related_content_description: Aktivieren Sie die Funktion "Verwandte Inhalte" für Vorschläge
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
       option:
         form:
           map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
           map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
           description_max_length: Maximale Zeichenlänge der Beschreibung
           description_max_length_description: Legt die maximale Anzahl der Zeichen für die Beschreibung fest.
+        resource:
+          votes_for_proposal_success: Anzahl der notwendigen Stimmen
+          votes_for_proposal_success_description: Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr unterstützt werden und gilt als erfolgreich
       selectable_setting:
         general:
           default_order: Standardsortierung

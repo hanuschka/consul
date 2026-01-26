@@ -83,9 +83,12 @@ de:
         title: Allgemeine Einstellungen
       form_author:
         title: Formular & Autor
+      user_functions:
+        title: Nutzerfunktionen
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
         restrictions: Beteiligungsbeschränkung
         general_settings: Allgemeine Einstellungen
         form_author: Formular & Autor
+        user_functions: Nutzerfunktionen

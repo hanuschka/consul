@@ -26,6 +26,8 @@ module Measurable
   private
 
     def description_sanitized
+      return "" if description.nil?
+
       stripped = ActionController::Base.helpers.strip_tags(description)
 
       sanitized_description = stripped
@@ -33,7 +35,7 @@ module Measurable
         .gsub(/^$\n/, "")
         .gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
 
-      max_length = (projekt_phase.option("form.description_max_length").presence || "6000").to_i
+      max_length = (projekt_phase&.option("form.description_max_length").presence || "6000").to_i
 
       errors.add(:description, :too_long) if
         sanitized_description.length > max_length

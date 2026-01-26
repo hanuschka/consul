@@ -171,6 +171,7 @@ en:
         starts_in_days:
           one: Starts in 1 day
           other: Starts in %{count} days
+        no_dates: Ongoing
       form:
         projekt_assignment: Project
         star_message: All Fields marked with a (*) are required

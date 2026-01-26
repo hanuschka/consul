@@ -13,6 +13,7 @@
     },
 
     toggleCollapse: function(e) {
+      e.stopPropagation();
       var parentElement = e.currentTarget.parentElement;
       parentElement.classList.toggle("-opened");
 

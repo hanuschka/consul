@@ -7,9 +7,8 @@
     <%= projekt_phase_view_permission_problem_message(permission_problem, @projekt_phase) %>
   </div>
 <% else %>
-
   <% content = capture do %>
-    <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0"></iframe>
+    <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" onload="App.IframeResizer.resize(this)" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0"></iframe>
   <% end %>
 
   <% if extended_feature?("gdpr.two_click_iframe_solution") %>

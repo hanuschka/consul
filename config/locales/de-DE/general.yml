@@ -211,6 +211,7 @@ de:
       open_source_url: http://www.gnu.org/licenses/agpl-3.0.html
       participation_text: Gestalten Sie die Stadt, in der Sie leben möchten.
       participation_title: Teilnahme
+      api_docs: API-Docs
       privacy: Datenschutzbestimmungen
     header:
       administration_menu: Admin

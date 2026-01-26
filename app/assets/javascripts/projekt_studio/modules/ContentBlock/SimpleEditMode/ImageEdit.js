@@ -58,8 +58,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
-    const showCropButton = true;
-
     const cropButton = `
       <button
         type="button"
@@ -71,15 +69,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
       <div class="content-block-image-height-control">
-        <button type="button" class="js-content-block-image-height-decrease">−</button>
+        <button type="button" class="js-content-block-image-height-decrease"><i class="fa fas fa-minus"></i></button>
         <input
           type="number"
           class="js-content-block-image-height-input"
-          min="200"
+          min="30"
           max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
-        <button type="button" class="js-content-block-image-height-increase">+</button>
+        <button type="button" class="js-content-block-image-height-increase"><i class="fa fas fa-plus"></i></button>
       </div>
     `
 
@@ -116,6 +114,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   openaImageGallery(e) {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
     const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
@@ -132,8 +134,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   toggleCropImage(e) {
-    e.preventDefault()
+    e.stopImmediatePropagation()
     e.stopPropagation()
+    e.preventDefault()
 
     const button = e.currentTarget;
     const wrapper = this.getImageWrapper(button);
@@ -271,6 +274,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   handleHeightInputChange(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const input = e.currentTarget;
     const wrapper = input.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -283,6 +290,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   decreaseHeight(e) {
+    e.stopPropagation()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -299,6 +308,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   increaseHeight(e) {
+    e.stopPropagation()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");

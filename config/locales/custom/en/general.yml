@@ -1,4 +1,11 @@
 en:
+  ai:
+    errors:
+      model_not_configured: "Error: AI model not configured"
+      generation_failed: "Error: Failed to generate content block with AI"
+    default_context_hint: "By default, projekt page title, subtitle, and content block content are sent as context"
+    use_full_projekt_context: "Use full projekt context"
+    use_full_projekt_context_hint: "Includes all content blocks, projekt dates, SDGs, categories, and phases in the AI prompt (may be slower)"
   shared:
     suggest:
       deficiency_report:

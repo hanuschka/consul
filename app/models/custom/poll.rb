@@ -15,6 +15,13 @@ class Poll < ApplicationRecord
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
+
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
 
   scope :for_public_render, -> {
@@ -82,6 +89,10 @@ class Poll < ApplicationRecord
 
   def advanced_stats_enabled?
     projekt_phase.feature?("resource.advanced_stats_enabled")
+  end
+
+  def evaluation_enabled?
+    projekt_phase.feature?("resource.evaluation_enabled")
   end
 
   def show_open_answer_author_name?

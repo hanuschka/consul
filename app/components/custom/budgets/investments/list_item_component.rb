@@ -24,13 +24,15 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
   end
 
   def budget_investment_path
-    base_url = helpers.url_for(budget_investment)
-
-    if @additional_url_params.present?
-      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
+      helpers.landing_page_budget_investment_path(
+        landing_page_slug: @additional_url_params[:landing_page],
+        budget_id: budget_investment.budget_id,
+        id: budget_investment.id
+      )
+    else
+      helpers.url_for(budget_investment)
     end
-
-    base_url
   end
 
   def investment_status_callout

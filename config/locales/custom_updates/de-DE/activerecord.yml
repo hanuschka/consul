@@ -279,6 +279,14 @@ de:
         end_datetime: Endtermin
         open_ended: Offenes Ende
         weblink: Weblink
+        language: Sprache
+        wheelchair_accessible: Zugänglichkeit mit dem Rollstuhl möglich
+        accessible_toilet: Behindertengerechte Toilette vorhanden
+        disabled_parking_nearby: Parkplätze für Menschen mit Behinderung in der Nähe vorhanden
+        tactile_guidance_systems: Taktile Leitsysteme oder Orientierungshilfen für sehbehinderte Menschen vorhanden
+        induction_loop_available: Induktionsanlage vorhanden
+        assistance_dogs_welcome: Assistenzhunde willkommen
+        sign_language_interpreter: Gebärdensprachdolmetscher:in vorhanden
       projekt_notification:
         title: Titel
         body: Nachricht

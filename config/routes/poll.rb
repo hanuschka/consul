@@ -2,12 +2,12 @@ resources :polls, only: [:show, :index] do
   member do
     get :stats
     get :results
-    get :evaluation
     get :report
+    get :evaluation
     post :refresh_ai_stats
     get :ai_stats_status
-    get :download_evaluation_section
-    get :download_all_evaluation_sections
+    get :download_report_section
+    get :download_all_report_sections
   end
 
   resources :questions, controller: "polls/questions", shallow: true do

@@ -72,7 +72,7 @@ en:
         topic_groups: topic groups
         category_groups: topic groups
       semantic_clustering:
-        title: Semantic Clustering
+        title: Sentiment Analysis
         subcategories: subcategories
         resources: proposals
         in: in

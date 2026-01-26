@@ -10,6 +10,8 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   belongs_to :projekt, optional: true
   acts_as_list scope: :projekt
 
+  before_validation :repair_html_body
+
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale
     find_or_create_by(name: 'custom', locale: locale, key: key)
@@ -23,5 +25,13 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     ordered_array.each_with_index do |record_id, order|
       find(record_id).update_column(:position, (order + 1))
     end
+  end
+
+  private
+
+  def repair_html_body
+    return if body.blank?
+
+    self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
   end
 end

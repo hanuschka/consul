@@ -42,7 +42,7 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
 
   def prompt
     <<~TEXT
-      ## 2.1 REPORT – Executive Briefing (Internal)
+      ## 2.1 Evaluation – Executive Briefing (Internal)
       You are an AI analyst supporting internal reporting for public administrations.
       Your task is to create a concise executive briefing that summarizes poll and voting results for senior stakeholders and decision-makers.
 

@@ -19,6 +19,10 @@ $main-text-color-hover: #c7d5e2;
 $dropdown-hover-color: #ededed;
 $dropdown-active-color: darken($dropdown-hover-color, 4%);
 
+$dt-base: #004a83;
+$dt-base-hover: lighten($dt-base, 10%);
+$dt-base-secondary: lighten($dt-base, 70%);
+
 :root {
   --medium-gray-3: #{$medium-gray-3};
 }

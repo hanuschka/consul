@@ -129,6 +129,10 @@
   }
 }
 
+.stats-last-updated-container {
+  margin: auto;
+}
+
 .stats-last-updated-item {
   font-size: 14px;
   color: #333;
@@ -141,6 +145,11 @@
 
 .stats-button-container {
   height: 50px;
+  justify-content: center;
+}
+
+.shared-loading-spinner-container {
+  margin: auto;
 }
 
 .stats-button-container--regular {
@@ -148,5 +157,4 @@
 }
 
 .stats-button-status {
-  margin-top: 16px;
 }

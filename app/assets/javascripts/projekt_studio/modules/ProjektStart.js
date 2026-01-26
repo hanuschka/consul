@@ -20,13 +20,7 @@
     },
 
     createEmptyBlock() {
-      const container = document.querySelector(".js-projekt-content-start-section");
-      const emptyHtml = '<div class="row"><div class="small-12 columns"><p>Neuer Inhaltsblock</p></div></div>';
-      const contentTemplateElement = document.createElement("div");
-      contentTemplateElement.innerHTML = emptyHtml;
-
-      ProjektStudio.ContentBlock.Crud.addContentBlockAfter = container;
-      ProjektStudio.ContentBlock.Crud.createContentBlock(container, contentTemplateElement);
+      ProjektStudio.ContentBlock.Crud.addInitialEmptyContentBlock()
     },
 
     openTemplateSelector() {

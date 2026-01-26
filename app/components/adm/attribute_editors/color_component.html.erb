@@ -2,15 +2,16 @@
   <%= hidden_field_tag :kind, "color" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <%= tag.div class: "color-picker",
+  <%= tag.div class: "color-picker #{'disabled' if disabled?}",
               role: "application",
-              tabindex: "0",
+              tabindex: disabled? ? "-1" : "0",
               data: { "adm-color-picker-target": "picker" },
-              aria: aria_attributes %>
+              aria: aria_attributes.merge(disabled: disabled?) %>
 
   <%= form.hidden_field @attribute,
         label: false,
+        disabled: disabled?,
         data: { "adm-color-picker-target": "colorInput" } %>
 
-  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
 <% end %>

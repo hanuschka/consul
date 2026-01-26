@@ -3,9 +3,9 @@
   <%= hidden_field_tag :attribute, @attribute %>
   <%= hidden_field_tag :select_options, @select_options.to_json %>
 
-  <%= form.select @attribute, translated_select_options, {}, { label: false } %>
+  <%= form.select @attribute, translated_select_options, {}, { label: false, disabled: disabled? } %>
 
-  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
 <% end %>
 
 <% if flash[:success].present? %>

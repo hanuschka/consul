@@ -7,6 +7,7 @@
                           label: false,
                           accept: SiteCustomization::Image::VALID_FORMATS.join(','),
                           class: 'kern-form-input__input js-file-input',
+                          disabled: disabled?,
                           autofocus: (helpers.turbo_frame_request? && !show_preview?),
                           onchange: "this.form.requestSubmit();",
                           aria: aria_attributes %>
@@ -21,6 +22,7 @@
     <%= tag.button type: 'button',
             class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
             style: "float: right;",
+            disabled: disabled?,
             onclick: "this.form.querySelector('.js-file-input').click(); return false;",
             aria: aria_attributes do %>
       <span class="kern-label">

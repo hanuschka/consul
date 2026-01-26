@@ -3,8 +3,9 @@
   <%= hidden_field_tag :attribute, @attribute %>
 
   <%= form.hidden_field @attribute, value: alternate_value %>
-  <%= form.button "", class: 'toggle-button small',
+  <%= form.button "", class: "toggle-button small #{'disabled' if disabled?}",
     role: 'switch',
+    disabled: disabled?,
     aria: aria_attributes,
     autofocus: request.format.turbo_stream? %>
   <% if @options[:labelledby].present? %>

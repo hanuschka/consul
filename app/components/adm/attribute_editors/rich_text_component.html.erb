@@ -2,15 +2,16 @@
   <%= hidden_field_tag :kind, "rich_text" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <div class="mb-3">
+  <div class="mb-3 <%= 'disabled' if disabled? %>">
     <%= form.text_area @attribute,
       value: sanitized_value,
       label: false,
+      disabled: disabled?,
       aria: aria_attributes,
       data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
   </div>
 
-  <%= form_submit_button(autofocus: request.format.turbo_stream?) %>
+  <%= form_submit_button(autofocus: request.format.turbo_stream?, disabled: disabled?) %>
 <% end %>
 
 <% if flash[:success].present? %>

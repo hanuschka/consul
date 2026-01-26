@@ -1,6 +1,6 @@
 module KernHelper
-  def kern_button(icon: nil, text: nil, autofocus: false, type: :button, style: :primary)
-    button_tag(type: type, class: "kern-btn kern-btn--#{style}", autofocus: autofocus) do
+  def kern_button(icon: nil, text: nil, autofocus: false, type: :button, style: :primary, disabled: false)
+    button_tag(type: type, class: "kern-btn kern-btn--#{style}", autofocus: autofocus, disabled: disabled) do
       if icon.present?
         concat(content_tag(:span, icon, class: "kern-label material-symbols-outlined", "aria-hidden": "true"))
       end
@@ -26,9 +26,9 @@ module KernHelper
     end
   end
 
-  def form_submit_button(text: I18n.t("shared.submit"), icon: "save", **options)
+  def form_submit_button(text: I18n.t("shared.submit"), icon: "save", disabled: false, **options)
     content_tag(:div, class: "d-flex justify-content-start mb-4") do
-      kern_button(text: text, icon: icon, type: "submit", **options)
+      kern_button(text: text, icon: icon, type: "submit", disabled: disabled, **options)
     end
   end
 

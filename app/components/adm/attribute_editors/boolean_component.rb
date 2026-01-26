@@ -24,7 +24,7 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
   end
 
   def aria_attributes
-    attrs = { checked: toggled_on? }
+    attrs = { checked: toggled_on?, disabled: disabled? }
     attrs[:labelledby] = @options[:labelledby] if @options[:labelledby].present?
     attrs[:describedby] = @options[:describedby] if @options[:describedby].present?
     attrs

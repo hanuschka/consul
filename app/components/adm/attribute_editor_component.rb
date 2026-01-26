@@ -48,6 +48,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     }
   end
 
+  def disabled?
+    @options[:disabled] == true
+  end
+
   private
 
     def i18n_key(type)

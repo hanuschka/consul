@@ -3,7 +3,8 @@
        data-controller="components-adm-attribute-editor"
        role="group"
        aria-labelledby="<%= aria_options[:labelledby] %>"
-       aria-describedby="<%= aria_options[:describedby] %>">
+       aria-describedby="<%= aria_options[:describedby] %>"
+       aria-disabled="<%= disabled? %>">
     <div
       id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
       class="kern-title kern-title--small mb-3">

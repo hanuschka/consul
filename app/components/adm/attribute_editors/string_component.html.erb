@@ -6,13 +6,14 @@
         label: false,
         placeholder: label,
         class: "kern-form-input__input",
+        disabled: disabled?,
         data: {"components-adm-attribute-editor-target": "input" },
         aria: aria_attributes
       } %>
 
   <%= form.text_field @attribute, **input_options %>
 
-  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
 <% end %>
 
 <% if flash[:success].present? %>

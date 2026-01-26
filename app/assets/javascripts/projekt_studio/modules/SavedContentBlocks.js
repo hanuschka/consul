@@ -97,7 +97,7 @@ ProjektStudio.SavedContentBlocks = {
     const templateContentElement = container.querySelector(".js-content-block-template-content")
     templateContentElement.innerHTML = content
 
-    // this.turnOffEditModeForItem(container)
+    this.turnOffEditModeForItem(container)
 
     $.ajax({
       url: `/admin/saved_content_blocks/${savedContentBlockId}`,

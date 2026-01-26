@@ -1,6 +1,7 @@
 $orange-button-color: #FFA42D;
 $grey-button-color: #cfd9e2;
 $green-button-color: #00AA0B;
+$red-button-color: #cc4b37;
 
 button {
   cursor: pointer;
@@ -11,7 +12,7 @@ button {
   color: #004a83;
 }
 
-// .custom-new-design {
+.custom-new-design {
   // .button:not(div#page-content .button) {
   .button {
     background-color: $brand;
@@ -88,6 +89,18 @@ button {
 
       &:hover, &:focus {
         background-color: #dad2f0;
+      }
+    }
+
+    &.-red {
+      background-color: $red-button-color;
+
+      &:hover, &:focus {
+        background-color: lighten($red-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($red-button-color, 7%)
       }
     }
 
@@ -195,7 +208,7 @@ button {
   .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
     background-color: $brand;
   }
-// }
+}
 
 .square-back-button {
   border-radius: 5px;

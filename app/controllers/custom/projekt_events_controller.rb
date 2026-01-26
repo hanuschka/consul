@@ -4,7 +4,7 @@ class ProjektEventsController < ApplicationController
   include ProjektControllerHelper
 
   skip_authorization_check
-  has_filters %w[incoming past], only: [:index]
+  has_filters %w[incoming all past], only: [:index]
 
   def index
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first

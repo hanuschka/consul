@@ -2683,6 +2683,30 @@ paths:
                     open_ended:
                       type: boolean
                       nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
+                      type: boolean
+                      nullable: true
                   required:
                   - title
               required:
@@ -2800,6 +2824,30 @@ paths:
                       type: string
                       nullable: true
                     open_ended:
+                      type: boolean
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
                       type: boolean
                       nullable: true
         description: Attributes to update on the event
@@ -6345,19 +6393,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type. Required
                         for creation.
                     start_date:
@@ -6631,19 +6679,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type.
                     start_date:
                       type: string
@@ -9383,19 +9431,19 @@ components:
           enum:
           - ProjektPhase::CommentPhase
           - ProjektPhase::ProposalPhase
+          - ProjektPhase::PointOfInterestPhase
           - ProjektPhase::QuestionPhase
           - ProjektPhase::VotingPhase
+          - ProjektPhase::IframePhase
           - ProjektPhase::BudgetPhase
           - ProjektPhase::LegislationPhase
           - ProjektPhase::FormularPhase
-          - ProjektPhase::LivestreamPhase
+          - ProjektPhase::EventPhase
           - ProjektPhase::MilestonePhase
           - ProjektPhase::ProjektNotificationPhase
-          - ProjektPhase::EventPhase
+          - ProjektPhase::LivestreamPhase
           - ProjektPhase::ArgumentPhase
           - ProjektPhase::NewsfeedPhase
-          - ProjektPhase::IframePhase
-          - ProjektPhase::PointOfInterestPhase
           description: 'The type of projekt phase that determines what kind of participation
             or content is available. Regular phases: CommentPhase (discussion/feedback),
             ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),

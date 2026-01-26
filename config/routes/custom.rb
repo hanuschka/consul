@@ -50,6 +50,10 @@ end
 
 
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
+get "/:landing_page_slug/projekts/:id", to: "pages#show", as: :landing_page_projekt_page
+get "/:landing_page_slug/polls/:id", to: "polls#show", as: :landing_page_poll
+get "/:landing_page_slug/proposals/:id", to: "proposals#show", as: :landing_page_proposal
+get "/:landing_page_slug/budgets/:budget_id/investments/:id", to: "budgets/investments#show", as: :landing_page_budget_investment
 
 post "iframe_sessions", to: "iframe_sessions#create"
 

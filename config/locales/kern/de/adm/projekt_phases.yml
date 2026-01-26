@@ -81,8 +81,11 @@ de:
 
       general_settings:
         title: Allgemeine Einstellungen
+      form_author:
+        title: Formular & Autor
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
         restrictions: Beteiligungsbeschränkung
         general_settings: Allgemeine Einstellungen
+        form_author: Formular & Autor

@@ -118,9 +118,20 @@ module Adm
       ]
     end
 
+    def form_author
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title, url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
+        { name: t(".title") }
+      ]
+    end
+
     # Stub actions - to be implemented
     def settings; end
-    def form_author; end
     def user_functions; end
     def proposals; end
     def budget_phases; end

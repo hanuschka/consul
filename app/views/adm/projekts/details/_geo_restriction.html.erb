@@ -10,7 +10,7 @@
           <%= b.label(class: "kern-label") %>
         </div>
       <% end %>
-      <div class="options-group mt-3" data-related-options-target="content">
+      <div class="options-group mt-3 pl-3" data-related-options-target="content">
         <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) %>
       </div>
     </div>

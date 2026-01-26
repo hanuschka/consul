@@ -21,7 +21,7 @@
           <%= f.label :registered_address_grouping_restriction, "#{grouping.name} (#{grouping.key})", value: grouping.key, class: "kern-label" %>
         </div>
 
-        <div class="options-group my-2" style="<%= 'display: none;' unless current_restriction == grouping.key %>" data-related-options-target="content">
+        <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless current_restriction == grouping.key %>" data-related-options-target="content">
           <%= f.fields_for :registered_address_grouping_restrictions do |ff| %>
             <%= ff.collection_check_boxes grouping.key, grouping.restriction_options, :to_s, :to_s do |b| %>
               <div class="kern-form-check mb-2">

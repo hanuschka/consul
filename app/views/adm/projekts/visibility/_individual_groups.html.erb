@@ -3,7 +3,7 @@
   <%= form_with model: projekt, url: adm_projekt_path(projekt) do |f| %>
     <div class="kern-fieldset__body mb-4">
       <% individual_groups.each do |individual_group| %>
-        <div class="options-group mb-3">
+        <div class="options-group mb-3 pl-3">
           <div class="kern-label mb-2"><%= individual_group.name %></div>
           <%= f.collection_check_boxes(:individual_group_value_ids, individual_group.individual_group_values, :id, :name) %>
         </div>

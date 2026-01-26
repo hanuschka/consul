@@ -1,0 +1,15 @@
+<%= form_with model: @record, url: path do |form| %>
+  <%= hidden_field_tag :kind, "select" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :select_options, @select_options.to_json %>
+
+  <%= form.select @attribute, translated_select_options, {}, { label: false } %>
+
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit") %>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-controller="auto-remove">
+    <%= flash[:success] %>
+  </div>
+<% end %>

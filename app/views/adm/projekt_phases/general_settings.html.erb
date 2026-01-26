@@ -1,0 +1,7 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container mb-5">
+  <%= render "adm/projekt_phases/general_settings/#{@projekt_phase.name}", projekt_phase: @projekt_phase %>
+</div>

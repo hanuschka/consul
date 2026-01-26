@@ -15,11 +15,57 @@ namespace :adm do
   end
 
   resources :projekt_phases, only: [:update] do
-    get :duration, on: :member
-    get :naming, on: :member
-    get :restrictions, on: :member
-    patch :toggle_active, on: :member
-    patch :toggle_frontend_visibility, on: :member
+    member do
+      # Phase configuration
+      get :duration
+      get :naming
+      get :restrictions
+      get :general_settings
+      get :settings
+      get :form_author
+      get :user_functions
+
+      # Content management
+      get :proposals
+      get :budget_phases
+      get :budget_edit
+      get :budget_investments
+      get :poll_questions
+      get :formular
+      get :formular_answers
+      get :milestones
+      get :progress_bars
+      get :legislation_process_draft_versions
+
+      # Map & location
+      get :map
+      get :projekt_point_of_interest_categories
+      get :projekt_point_of_interest_pins
+      get :map_resources_overview
+
+      # Labels & sentiments
+      get :projekt_labels
+      get :sentiments
+
+      # Users & permissions
+      get :officing_managers
+      get :officing_manager_audits
+      get :age_ranges_for_stats
+
+      # AI
+      get :ai_settings
+
+      # Dynamic resources (from resources_name)
+      get :projekt_notifications
+      get :projekt_events
+      get :projekt_livestreams
+      get :projekt_questions
+      get :projekt_arguments
+
+      # Toggle actions
+      patch :toggle_active
+      patch :toggle_frontend_visibility
+    end
   end
 
   resources :projekt_manager_assignments, only: [:update]

@@ -1,5 +1,5 @@
 class Adm::AttributeEditorComponent < ApplicationComponent
-  SETTING_TYPES = [Setting, ProjektSetting].freeze
+  SETTING_TYPES = [Setting, ProjektSetting, ProjektPhaseSetting].freeze
 
   def initialize(record, attribute, kind, **options)
     @record = record
@@ -34,6 +34,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::ImageComponent
     when :color
       Adm::AttributeEditors::ColorComponent
+    when :select
+      Adm::AttributeEditors::SelectComponent
     else
       raise "Unsupported attribute editor kind: #{@kind}"
     end
@@ -49,7 +51,9 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   private
 
     def i18n_key(type)
-      if setting_type?
+      if @record.is_a?(ProjektPhaseSetting)
+        "projekt_phase_setting.#{@record.projekt_phase.name}.#{@record.key}#{'_description' if type == :description}"
+      elsif setting_type?
         "setting.#{@record.key}#{'_description' if type == :description}"
       elsif @record.is_a?(SiteCustomization::Image)
         "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"

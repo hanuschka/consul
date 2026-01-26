@@ -1,7 +1,7 @@
 module Adm
   class ProjektPhasesController < Adm::BaseController
-    before_action :find_projekt, except: [:duration, :naming, :restrictions, :update, :toggle_active, :toggle_frontend_visibility]
-    before_action :find_projekt_phase, only: [:update, :duration, :naming, :restrictions, :toggle_active, :toggle_frontend_visibility]
+    before_action :find_projekt, only: [:index, :new, :create]
+    before_action :find_projekt_phase, except: [:index, :new, :create]
 
     def index
       authorize [:adm, @projekt], :show?
@@ -105,6 +105,48 @@ module Adm
 
       @projekt_phase.update(frontend_visibility: !@projekt_phase.frontend_visibility)
     end
+
+    def general_settings
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
+        { name: t(".title") }
+      ]
+    end
+
+    # Stub actions - to be implemented
+    def settings; end
+    def form_author; end
+    def user_functions; end
+    def proposals; end
+    def budget_phases; end
+    def budget_edit; end
+    def budget_investments; end
+    def poll_questions; end
+    def formular; end
+    def formular_answers; end
+    def milestones; end
+    def progress_bars; end
+    def legislation_process_draft_versions; end
+    def map; end
+    def projekt_point_of_interest_categories; end
+    def projekt_point_of_interest_pins; end
+    def map_resources_overview; end
+    def projekt_labels; end
+    def sentiments; end
+    def officing_managers; end
+    def officing_manager_audits; end
+    def age_ranges_for_stats; end
+    def ai_settings; end
+    def projekt_notifications; end
+    def projekt_events; end
+    def projekt_livestreams; end
+    def projekt_questions; end
+    def projekt_arguments; end
 
     private
 

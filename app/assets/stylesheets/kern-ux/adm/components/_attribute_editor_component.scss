@@ -13,6 +13,13 @@
   .attribute-form.boolean {
   }
 
+  .attribute-form.select {
+    form {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
   .attribute-form.image {
     .kern-form-input .form-error {
       display: none;

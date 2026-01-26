@@ -13,7 +13,7 @@ module Adm
 
       render turbo_stream: turbo_stream.replace(
         helpers.dom_id(@record, params[:attribute]),
-        Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind])
+        Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind], **component_options)
       )
     end
 
@@ -34,6 +34,12 @@ module Adm
         attribute = params[:attribute].to_sym
 
         params.require(param_key).permit(attribute)
+      end
+
+      def component_options
+        options = {}
+        options[:select_options] = JSON.parse(params[:select_options]) if params[:select_options].present?
+        options
       end
   end
 end

@@ -17,4 +17,13 @@ module AdmHelper
     restrictions << projekt_phase.age_restriction_formatted if projekt_phase.age_restriction.present?
     restrictions.compact_blank.join(", ").presence || "-"
   end
+
+  def projekt_phase_table_actions(projekt_phase)
+    projekt_phase.admin_nav_bar_items.map do |action|
+      {
+        label: I18n.t("adm.projekt_phases.projekt_phase.#{action}"),
+        url: send("#{action}_adm_projekt_phase_path", projekt_phase)
+      }
+    end
+  end
 end

@@ -23,14 +23,8 @@
   border-radius: var(--kern-8);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: var(--kern-8) 0;
-  position: absolute;
-  top: 0;
-  right: 100%;
-
-  &.kern-table__actions-menu--up {
-    top: auto;
-    bottom: 0;
-  }
+  position: fixed;
+  z-index: 1050;
 }
 
 .kern-table__actions-menu-item {

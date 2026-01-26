@@ -6,18 +6,24 @@ export default class extends Controller {
   connect() {
     this.close = this.close.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleWindowScroll = this.handleWindowScroll.bind(this);
     document.addEventListener("table-actions:close-all", this.close);
   }
 
   disconnect() {
     document.removeEventListener("table-actions:close-all", this.close);
     document.removeEventListener("click", this.handleClickOutside);
+    window.removeEventListener("scroll", this.handleWindowScroll);
   }
 
   handleClickOutside(event) {
     if (!this.element.contains(event.target)) {
       this.close();
     }
+  }
+
+  handleWindowScroll() {
+    this.close();
   }
 
   toggleMenu(event) {
@@ -37,6 +43,7 @@ export default class extends Controller {
     this.menuTarget.classList.remove("d-none");
     this.buttonTarget.setAttribute("aria-expanded", "true");
     document.addEventListener("click", this.handleClickOutside);
+    window.addEventListener("scroll", this.handleWindowScroll);
 
     requestAnimationFrame(() => {
       this.positionMenu()
@@ -49,17 +56,34 @@ export default class extends Controller {
     this.menuTarget.classList.add("d-none");
     this.buttonTarget.setAttribute("aria-expanded", "false");
     document.removeEventListener("click", this.handleClickOutside);
+    window.removeEventListener("scroll", this.handleWindowScroll);
   }
 
   positionMenu() {
     const menu = this.menuTarget;
-    menu.classList.remove("kern-table__actions-menu--up");
+    const button = this.buttonTarget;
+    const buttonRect = button.getBoundingClientRect();
 
-    const rect = menu.getBoundingClientRect();
-    const tableRect = this.element.closest("table").getBoundingClientRect();
+    menu.style.top = "";
+    menu.style.bottom = "";
+    menu.style.left = "";
+    menu.style.right = "";
 
-    if (rect.bottom > tableRect.bottom) {
-      menu.classList.add("kern-table__actions-menu--up");
+    menu.style.left = `${buttonRect.left}px`;
+    menu.style.top = `${buttonRect.bottom}px`;
+
+    const menuRect = menu.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    if (menuRect.bottom > viewportHeight) {
+      menu.style.top = "";
+      menu.style.bottom = `${viewportHeight - buttonRect.top}px`;
+    }
+
+    if (menuRect.right > viewportWidth) {
+      menu.style.left = "";
+      menu.style.right = `${viewportWidth - buttonRect.right}px`;
     }
   }
 }

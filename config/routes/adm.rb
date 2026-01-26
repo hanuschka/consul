@@ -18,6 +18,8 @@ namespace :adm do
     get :duration, on: :member
     get :naming, on: :member
     get :restrictions, on: :member
+    patch :toggle_active, on: :member
+    patch :toggle_frontend_visibility, on: :member
   end
 
   resources :projekt_manager_assignments, only: [:update]

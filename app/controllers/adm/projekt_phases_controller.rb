@@ -1,7 +1,7 @@
 module Adm
   class ProjektPhasesController < Adm::BaseController
-    before_action :find_projekt, except: [:duration, :naming, :restrictions, :update]
-    before_action :find_projekt_phase, only: [:update, :duration, :naming, :restrictions]
+    before_action :find_projekt, except: [:duration, :naming, :restrictions, :update, :toggle_active, :toggle_frontend_visibility]
+    before_action :find_projekt_phase, only: [:update, :duration, :naming, :restrictions, :toggle_active, :toggle_frontend_visibility]
 
     def index
       authorize [:adm, @projekt], :show?
@@ -92,6 +92,18 @@ module Adm
         { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt_phase.projekt) },
         { name: t(".title") }
       ]
+    end
+
+    def toggle_active
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @projekt_phase.update(active: !@projekt_phase.active)
+    end
+
+    def toggle_frontend_visibility
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @projekt_phase.update(frontend_visibility: !@projekt_phase.frontend_visibility)
     end
 
     private

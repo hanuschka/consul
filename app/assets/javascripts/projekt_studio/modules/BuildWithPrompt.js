@@ -13,7 +13,7 @@
     handlePromptTrigger(e) {
       e.preventDefault();
       $(".js-projekt-content-start-buttons").hide();
-      $(".js-projekt-prompt-form").show();
+      $(".js-projekt-start-with-prompt-form").show();
       $(".js-projekt-prompt-input").focus();
     },
 
@@ -130,7 +130,7 @@
 
     resetForm() {
       $(".js-projekt-prompt-input").val('');
-      $(".js-projekt-prompt-form").hide();
+      $(".js-projekt-start-with-prompt-form").hide();
       $(".js-projekt-content-start-buttons").show();
     },
 

@@ -217,7 +217,7 @@ ProjektStudio.FileImport = {
 
   showLoader(message = "Dokument wird verarbeitet...") {
     $(".js-projekt-file-import-preview").hide();
-    $(".js-projekt-prompt-form").hide();
+    $(".js-projekt-start-with-prompt-form").hide();
     $(".js-projekt-content-start-buttons").hide();
     $(".js-projekt-loader-message").text(message);
     $(".js-projekt-file-import-loader").show();

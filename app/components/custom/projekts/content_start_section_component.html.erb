@@ -1,11 +1,14 @@
 <div class="projekt-content-start-section js-projekt-content-start-section js-projekt-studio-hide-on-preview">
-  <h3 class="margin-bottom"><%= t('custom.projekts.content_start_section.title') %></h3>
+  <h3 class="projekt-content-start-section--title js-projekt-content-start-section--title"><%= t('custom.projekts.content_start_section.title') %></h3>
   <div class="projekt-content-start-buttons js-projekt-content-start-buttons">
     <button
       type="button"
       class="projekt-content-start-button js-projekt-file-import-trigger"
       title="<%= t('custom.projekts.content_start_section.file_import_button.title') %>"
     >
+      <span class="projekt-content-start-button--ki-badge">
+        KI
+      </span>
       <i class="fas fa-file-upload"></i>
       <div class="projekt-content-start-button--content">
         <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.file_import_button.button_title') %></div>
@@ -19,6 +22,9 @@
       class="projekt-content-start-button js-projekt-prompt-trigger"
       title="<%= t('custom.projekts.content_start_section.prompt_button.title') %>"
     >
+      <span class="projekt-content-start-button--ki-badge">
+        KI
+      </span>
       <i class="fas fa-pen"></i>
       <div class="projekt-content-start-button--content">
         <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.prompt_button.button_title') %></div>
@@ -109,10 +115,10 @@
   </div>
 
   <div
-    class="projekt-prompt-form js-projekt-prompt-form"
+    class="projekt-start-with-prompt-form js-projekt-start-with-prompt-form"
     style="display: none;"
   >
-    <div class="projekt-prompt-form-header">
+    <div class="projekt-start-with-prompt-form-header">
       <h3><%= t('custom.projekts.content_start_section.prompt_form.header') %></h3>
       <button
         type="button"
@@ -122,7 +128,7 @@
         <%= t('custom.projekts.content_start_section.prompt_form.cancel') %>
       </button>
     </div>
-    <div class="projekt-prompt-form-content">
+    <div class="projekt-start-with-prompt-form-content">
       <label for="projekt-prompt-input">
         <%= t('custom.projekts.content_start_section.prompt_form.label') %>
       </label>

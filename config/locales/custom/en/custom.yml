@@ -38,26 +38,26 @@ en:
         third_level: 'Third level'
         fourth_level: 'Fourth level'
       content_start_section:
-        title: "Create projekt content with:"
+        title: "Start your project with one of the following options"
         file_import_button:
           title: Upload document
           button_title: Import file
-          description: Upload document (PDF, DOCX, ODT)
+          description: Create a visually appealing project page by automatically structuring content from a PDF or Word file.
           action: Get started →
         prompt_button:
           title: Enter prompt
           button_title: Enter prompt
-          description: Describe the project and generate content
+          description: Create a visually appealing project page by describing the project and generating content using AI.
           action: Get started →
         template_button:
           title: Choose template
           button_title: Choose template
-          description: Create content block from template
+          description: Create a single content block by selecting a template and adapting it specifically to your project.
           action: Get started →
         empty_block_button:
           title: Empty block
           button_title: Empty block
-          description: Create empty content block
+          description: Create a single content block and design the content and structure completely according to your own specifications.
           action: Get started →
         file_import_preview:
           select_other_file: Choose another file

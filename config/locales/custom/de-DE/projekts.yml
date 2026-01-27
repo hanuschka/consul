@@ -5,26 +5,26 @@ de:
         show: 'Bereich anzeigen'
         hide: 'Bereich ausblenden'
       content_start_section:
-        title: "Projekt-Inhalte erstellen mit:"
+        title: "Starten Sie Ihr Projekt mit einer der folgenden Optionen"
         file_import_button:
           title: Dokument hochladen
           button_title: Datei importieren
-          description: Dokument hochladen (PDF, DOCX, ODT)
+          description: Erstellen Sie eine visuell ansprechende Projektseite, indem Inhalte aus einer PDF- oder Word-Datei automatisch strukturiert werden.
           action: Jetzt starten →
         prompt_button:
           title: Prompt eingeben
           button_title: Prompt eingeben
-          description: Projekt beschreiben und Inhalte erzeugen
+          description: Erstellen Sie eine visuell ansprechende Projektseite, indem Sie das Projekt beschreiben und Inhalte mithilfe von KI generieren lassen.
           action: Jetzt starten →
         template_button:
           title: Vorlage wählen
           button_title: Vorlage wählen
-          description: Inhaltsblock aus Vorlage erstellen
+          description: Erstellen Sie einen einzelnen Inhaltsblock, indem Sie eine Vorlage auswählen und diese gezielt an Ihr Projekt anpassen.
           action: Jetzt starten →
         empty_block_button:
           title: Leerer Block
           button_title: Leerer Block
-          description: Leeren Inhaltsblock erstellen
+          description: Erstellen Sie einen einzelnen Inhaltsblock und gestalten Sie Inhalte und Struktur vollständig nach Ihren eigenen Vorgaben.
           action: Jetzt starten →
         file_import_preview:
           select_other_file: Andere Datei wählen

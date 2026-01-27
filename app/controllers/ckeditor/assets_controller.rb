@@ -3,6 +3,8 @@
 class Ckeditor::AssetsController < ApplicationController
   include Search
 
+  skip_authorization_check only: :show
+
   def index
     authorize! :index, Ckeditor::Asset
     @assets = Ckeditor::Asset.joins(:storage_data_attachment)
@@ -20,6 +22,16 @@ class Ckeditor::AssetsController < ApplicationController
       format.html { render layout: false }
       format.json { render json: json }
     end
+  end
+
+  def show
+    blob = ActiveStorage::Blob.find_by!(key: params[:key])
+
+    send_file(
+      blob.service.send(:path_for, blob.key),
+      type: blob.content_type,
+      disposition: "inline"
+    )
   end
 
   private

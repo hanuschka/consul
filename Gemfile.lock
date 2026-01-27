@@ -6,7 +6,7 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    Ascii85 (1.1.0)
+    Ascii85 (2.0.1)
     actioncable (6.1.7.6)
       actionpack (= 6.1.7.6)
       activesupport (= 6.1.7.6)
@@ -202,6 +202,9 @@ GEM
       devise (>= 4.3.0)
     diff-lcs (1.5.1)
     docile (1.4.0)
+    docx (0.10.0)
+      nokogiri (~> 1.13, >= 1.13.0)
+      rubyzip (>= 2.0, < 4)
     e2mmap (0.1.0)
     email_spec (2.2.2)
       htmlentities (~> 4.3.3)
@@ -472,9 +475,9 @@ GEM
       ast (~> 2.4.1)
       racc
     pdf-core (0.10.0)
-    pdf-reader (2.13.0)
+    pdf-reader (2.15.1)
       Ascii85 (>= 1.0, < 3.0, != 2.0.0)
-      afm (~> 0.2.1)
+      afm (>= 0.2.1, < 2)
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
@@ -582,6 +585,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rb-readline (0.5.5)
     rbs (2.8.4)
     rbtree3 (0.7.1)
     recipient_interceptor (0.3.1)
@@ -663,7 +667,7 @@ GEM
       rexml
     ruby-vips (2.2.0)
       ffi (~> 1.12)
-    ruby_llm (1.8.2)
+    ruby_llm (1.9.1)
       base64
       event_stream_parser (~> 1)
       faraday (>= 1.10.0)
@@ -671,7 +675,9 @@ GEM
       faraday-net_http (>= 1)
       faraday-retry (>= 1)
       marcel (~> 1.0)
+      ruby_llm-schema (~> 0.2.1)
       zeitwerk (~> 2)
+    ruby_llm-schema (0.2.5)
     rubyzip (2.3.2)
     rugged (1.7.1)
     rvm1-capistrano3 (1.4.0)
@@ -863,6 +869,7 @@ DEPENDENCIES
   delayed_job_active_record (~> 4.1.7)
   devise (~> 4.9.2)
   devise-security (~> 0.18.0)
+  docx (= 0.10.0)
   email_spec (~> 2.2.2)
   erb_lint (~> 0.5.0)
   exiftool_vendored (~> 12.60.0)
@@ -898,7 +905,7 @@ DEPENDENCIES
   omniauth-twitter (~> 1.4.0)
   omniauth_openid_connect (~> 0.8.0)
   paranoia (~> 2.6.2)
-  pdf-reader
+  pdf-reader (= 2.15.1)
   pg (~> 1.4.3)
   pg_search (~> 2.3.6)
   prawn (= 2.5.0)
@@ -917,6 +924,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (= 6.1.7.6)
   rails-assets-markdown-it (~> 9.0.1)!
+  rb-readline (= 0.5.5)
   recipient_interceptor (~> 0.3.1)
   redcarpet (~> 3.6.0)
   responders (~> 3.1.0)
@@ -933,7 +941,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.21.2)
   rubocop-rspec (~> 2.24.1)
   ruby-saml (~> 1.16)
-  ruby_llm (= 1.8.2)
+  ruby_llm (= 1.9.1)
   rvm1-capistrano3 (~> 1.4.0)
   sassc-rails (~> 2.1.2)
   savon (~> 2.14.0)

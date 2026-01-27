@@ -1,5 +1,7 @@
 <div class='projekt-phase-subnav'>
-  <% projekt_phase_subnav_items.each do |item| %>
-    <%= link_to item[:text], item[:url], class: "projekt-phase-subnav-item #{"is-active" if item[:active]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
-  <% end %>
+  <div class='projekt-phase-subnav--items'>
+    <% projekt_phase_subnav_items.each do |item| %>
+      <%= link_to item[:text], item[:url], class: "projekt-phase-subnav-item #{"is-active" if item[:active]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
+    <% end %>
+  </div>
 </div>

@@ -11,6 +11,7 @@
     color: $main-text-color;
     font-size: 14px;
     border: 1px solid $border-color;
+    position: relative;
 
     a, .no-link {
       color: $main-text-color;
@@ -75,6 +76,8 @@
   .resource-item--additional-body-section {
     padding: 10px 25px;
     border-top: 1px solid #d9d9d9;
+    position: relative;
+    z-index: 1;
   }
 
   .resource-item--image-container {
@@ -146,6 +149,15 @@
     &:nth-child(n+3) {
       width: 100%;
     }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 
   .resource-item--description {
@@ -169,6 +181,8 @@
   .resource-item--tag {
     font-size: 11px;
     text-transform: uppercase;
+    position: relative;
+    z-index: 1;
   }
 
   .resource-item--tag::before {
@@ -205,6 +219,8 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    position: relative;
+    z-index: 1;
 
     .button {
       margin-top: 0 !important;
@@ -421,6 +437,8 @@
     align-items: center;
     padding: 10px 25px;
     border-top: 1px solid #d9d9d9;
+    position: relative;
+    z-index: 1;
 
     .label {
       border-radius: 5px;
@@ -523,6 +541,8 @@
     justify-content: space-between;
     margin-bottom: 8px;
     text-transform: uppercase;
+    position: relative;
+    z-index: 1;
   }
 
   .resource-item--image-placeholder {
@@ -558,6 +578,8 @@
     color: white;
     font-size: 15px;
     margin-bottom: 0;
+    position: relative;
+    z-index: 1;
 
     &.-narrow {
       padding-right: 10px;

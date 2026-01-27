@@ -27,13 +27,14 @@ class Proposals::ListItemComponent < ApplicationComponent
   end
 
   def proposal_path
-    base_url = helpers.proposal_path(proposal)
-
-    if @additional_url_params.present?
-      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
+      helpers.landing_page_proposal_path(
+        landing_page_slug: @additional_url_params[:landing_page],
+        id: proposal.id
+      )
+    else
+      helpers.proposal_path(proposal)
     end
-
-    base_url
   end
 
   def date_formated

@@ -96,7 +96,11 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     )
   end
 
-  def saved_content_blocks
-    SavedContentBlock.all.order(:created_at)
+  def global_content_blocks
+    SavedContentBlock.global.order(:created_at)
+  end
+
+  def user_content_blocks
+    SavedContentBlock.for_user(helpers.current_user).order(:created_at)
   end
 end

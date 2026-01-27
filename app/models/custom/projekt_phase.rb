@@ -8,6 +8,25 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
+  # Ordered list of projekt phases
+  PROJEKT_PHASES_TYPES = [
+    "ProjektPhase::CommentPhase",
+    "ProjektPhase::ProposalPhase",
+    "ProjektPhase::PointOfInterestPhase",
+    "ProjektPhase::QuestionPhase",
+    "ProjektPhase::VotingPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::BudgetPhase",
+    "ProjektPhase::LegislationPhase",
+    "ProjektPhase::FormularPhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
@@ -16,18 +35,6 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ArgumentPhase",
     "ProjektPhase::NewsfeedPhase"
   ].freeze
-
-  PROJEKT_PHASES_TYPES = [
-    "ProjektPhase::CommentPhase",
-    "ProjektPhase::ProposalPhase",
-    "ProjektPhase::QuestionPhase",
-    "ProjektPhase::VotingPhase",
-    "ProjektPhase::BudgetPhase",
-    "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
-  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -78,6 +85,10 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :stat_questions,
+           class_name: "ProjektPhaseStatQuestion",
+           foreign_key: :projekt_phase_id,
+           dependent: :destroy
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
@@ -89,6 +100,13 @@ class ProjektPhase < ApplicationRecord
     registered: 1,
     verified: 2
   }
+
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
 
   validates :projekt, presence: true
   validate :type_must_be_valid
@@ -385,6 +403,11 @@ class ProjektPhase < ApplicationRecord
 
   def regular
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
+  def generate_ai_stats
+    stats = AiAnalytics::GenerateAllStats.call(self)
+    update_column(:ai_stats, stats)
   end
 
   def regular?

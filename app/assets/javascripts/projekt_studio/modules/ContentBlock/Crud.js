@@ -33,6 +33,8 @@ ProjektStudio.ContentBlock.Crud = {
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
 
+    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlock);
+
     if (previousContentBlockWrapper) {
       if ($(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0) {
         previousContentBlockWrapper.after(newContentBlock)

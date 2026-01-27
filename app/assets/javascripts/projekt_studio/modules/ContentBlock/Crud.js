@@ -21,6 +21,14 @@ ProjektStudio.ContentBlock.Crud = {
     $(".js-projekt-content-start-section").toggle(show)
   },
 
+  toggleAddFirstContentBlock(show) {
+    $(".js-add-first-content-block-wrapper").toggle(show)
+  },
+
+  toggleDeleteAllButton(show) {
+    $(".js-delete-all-content-blocks").toggle(show)
+  },
+
   generateDraftIndex() {
     return Date.now();
   },
@@ -81,6 +89,9 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
+    this.toggleAddFirstContentBlock(true)
+    this.toggleDeleteAllButton(true)
+
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       $(newContentBlockContainer).find('.projekt-content-block').foundation();
@@ -190,6 +201,13 @@ ProjektStudio.ContentBlock.Crud = {
     const scrollTo = nextContentBlockSection || prevContentBlockSection;
 
     contentBlockWrapper.remove()
+
+    const remainingContentBlocks = document.querySelectorAll('.js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)').length;
+    if (remainingContentBlocks === 0) {
+      this.toggleAddFirstContentBlock(false)
+      this.toggleDeleteAllButton(false)
+      this.toggleStartSection(true)
+    }
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});

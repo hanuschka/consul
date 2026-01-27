@@ -4,19 +4,22 @@ const html = (strings, ...values) => {
 
 ProjektStudio.templateFunctions.emptyContentBlockHtml = '<div><p></p></div>';
 
-ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocksHtml, projektId) {
+ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocks, projektId) {
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
       class="js-content-blocks-container content-blocks-container"
     >
-      <div class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
+      <div
+        class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper"
+        style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
+      >
         <div class="js-projekt-add-new-content-block--top-button">
           ${showContentBlockTemplatesButton()}
         </div>
       </div>
 
-      ${contentBlocksHtml}
+      ${contentBlocks && contentBlocks.join("")}
     </div>
   `
 }

@@ -85,6 +85,22 @@ de:
         title: Formular & Autor
       user_functions:
         title: Nutzerfunktionen
+      projekt_labels:
+        title: Labels
+        create_button: Neues Label erstellen
+        no_labels: Keine Labels vorhanden.
+        table:
+          icon: Icon
+          name: Name
+          actions: Aktionen
+      sentiments:
+        title: Sentimente
+        create_button: Neues Sentiment erstellen
+        no_sentiments: Keine Sentimente vorhanden.
+        table:
+          color: Farbe
+          name: Name
+          actions: Aktionen
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
@@ -92,3 +108,5 @@ de:
         general_settings: Allgemeine Einstellungen
         form_author: Formular & Autor
         user_functions: Nutzerfunktionen
+        projekt_labels: Labels
+        sentiments: Stimmungen

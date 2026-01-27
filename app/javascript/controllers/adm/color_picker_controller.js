@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import Pickr from '@simonwep/pickr';
+import { getBrandColor } from '../../lib/map_adapters/map_utils';
 
 export default class extends Controller {
   static targets = [ 'picker', 'colorInput' ];
@@ -11,7 +12,7 @@ export default class extends Controller {
       theme: 'nano',
       lockOpacity: true,
       comparison: false,
-      default: this.colorInputTarget.value || App.Utils.getBrandColor(),
+      default: this.colorInputTarget.value || getBrandColor(),
       position: 'bottom-end',
       components: {
         palette: true,

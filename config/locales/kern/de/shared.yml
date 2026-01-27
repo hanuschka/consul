@@ -3,6 +3,7 @@ de:
     "true": "Ja"
     "false": "Nein"
     submit: "Speichern"
+    edit: "Bearbeiten"
     delete: "Löschen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
     table:

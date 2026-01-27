@@ -158,8 +158,33 @@ module Adm
     def projekt_point_of_interest_categories; end
     def projekt_point_of_interest_pins; end
     def map_resources_overview; end
-    def projekt_labels; end
-    def sentiments; end
+
+    def projekt_labels
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+      @projekt_labels = @projekt_phase.projekt_labels
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title },
+        { name: t(".title") }
+      ]
+    end
+
+    def sentiments
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+      @sentiments = @projekt_phase.sentiments
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title },
+        { name: t(".title") }
+      ]
+    end
+
     def officing_managers; end
     def officing_manager_audits; end
     def age_ranges_for_stats; end

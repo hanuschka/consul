@@ -66,6 +66,9 @@ namespace :adm do
       patch :toggle_active
       patch :toggle_frontend_visibility
     end
+
+    resources :projekt_labels, except: %i[index show]
+    resources :sentiments, except: %i[index show]
   end
 
   resources :projekt_manager_assignments, only: [:update]

@@ -1,26 +1,33 @@
 :root {
-  --content-start-btn-color-1: #2e7d32;
-  --content-start-btn-color-2: #f19639;
-  --content-start-btn-color-3: #1e88e5;
-  --content-start-btn-color-4: #7c3aed;
+  --content-start-btn-color-1: #7aa97c;
+  --content-start-btn-color-2: #d5791c;
+  --content-start-btn-color-3: #1964a6;
+  // --content-start-btn-color-4: #865ecb;
+  --content-start-btn-color-4: #d2a131;
 }
 
 .projekt-content-start-section {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 170px;
   margin-bottom: 30px;
-  padding: 30px;
+  padding: 30px 35px;
   background-color: #f8f9fa;
   border-radius: 8px;
   text-align: center;
 }
 
+.projekt-content-start-section--title {
+  margin-top: 0 !important;
+  margin-bottom: 2rem !important;
+}
+
 .projekt-content-start-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 17px;
   width: 100%;
   max-width: 1200px;
 
@@ -38,19 +45,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 25px 20px;
+  padding: 15px 20px;
   background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
   border: 2px solid color-mix(in srgb, var(--brand-color) 24%, transparent);
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   text-align: center;
-  min-height: 200px;
+  min-height: 210px;
+  position: relative;
+
+  i {
+    // min-height: 50px;
+  }
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-color: color-mix(in srgb, var(--brand-color) 48%, transparent);
     background-color: color-mix(in srgb, var(--brand-color) 20%, transparent);
+    // transform: scale(1.01);
   }
 
   &:active,
@@ -83,8 +96,27 @@
   }
 }
 
+.projekt-content-start-button--ki-badge {
+  position: absolute;
+  top: 8px;
+  right: -28px;
+  transform: rotate(45deg);
+  background: #6b46c1;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 28px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .projekt-content-start-button--content {
   width: 100%;
+  min-height: 190px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .projekt-content-start-button--title {
@@ -113,12 +145,14 @@
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-color-1) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-color-1) 20%, transparent);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--content-start-btn-color-1) 20%, transparent);
     }
 
     &:active,
     &.-active {
       background-color: color-mix(in srgb, var(--content-start-btn-color-1) 36%, transparent);
       border-color: color-mix(in srgb, var(--content-start-btn-color-1) 60%, transparent);
+      box-shadow: inset 0 2px 4px color-mix(in srgb, var(--content-start-btn-color-1) 30%, transparent);
     }
 
     .projekt-content-start-button--action {
@@ -133,12 +167,14 @@
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-color-2) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-color-2) 20%, transparent);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--content-start-btn-color-2) 20%, transparent);
     }
 
     &:active,
     &.-active {
       background-color: color-mix(in srgb, var(--content-start-btn-color-2) 36%, transparent);
       border-color: color-mix(in srgb, var(--content-start-btn-color-2) 60%, transparent);
+      box-shadow: inset 0 2px 4px color-mix(in srgb, var(--content-start-btn-color-2) 30%, transparent);
     }
 
     .projekt-content-start-button--action {
@@ -153,12 +189,14 @@
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-color-3) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-color-3) 20%, transparent);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--content-start-btn-color-3) 20%, transparent);
     }
 
     &:active,
     &.-active {
       background-color: color-mix(in srgb, var(--content-start-btn-color-3) 36%, transparent);
       border-color: color-mix(in srgb, var(--content-start-btn-color-3) 60%, transparent);
+      box-shadow: inset 0 2px 4px color-mix(in srgb, var(--content-start-btn-color-3) 30%, transparent);
     }
 
     .projekt-content-start-button--action {
@@ -173,12 +211,14 @@
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-color-4) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-color-4) 20%, transparent);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--content-start-btn-color-4) 20%, transparent);
     }
 
     &:active,
     &.-active {
       background-color: color-mix(in srgb, var(--content-start-btn-color-4) 36%, transparent);
       border-color: color-mix(in srgb, var(--content-start-btn-color-4) 60%, transparent);
+      box-shadow: inset 0 2px 4px color-mix(in srgb, var(--content-start-btn-color-4) 30%, transparent);
     }
 
     .projekt-content-start-button--action {
@@ -287,17 +327,16 @@
   }
 }
 
-.projekt-prompt-form {
+.projekt-start-with-prompt-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   padding: 15px 0;
-  padding-top: 30px;
 }
 
-.projekt-prompt-form-header {
+.projekt-start-with-prompt-form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -315,7 +354,7 @@
   }
 }
 
-.projekt-prompt-form-content {
+.projekt-start-with-prompt-form-content {
   margin-bottom: 15px;
   min-width: 590px;
   max-width: 590px;
@@ -381,4 +420,8 @@
   i {
     margin-right: 8px;
   }
+}
+
+.projekt-add-new-content-block--top-button {
+
 }

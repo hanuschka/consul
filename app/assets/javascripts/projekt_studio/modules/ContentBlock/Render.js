@@ -66,7 +66,7 @@ ProjektStudio.ContentBlock.Render = {
         }
 
         return wrappedHtml;
-      }).join("")
+      })
     }
 
     const newHtml =

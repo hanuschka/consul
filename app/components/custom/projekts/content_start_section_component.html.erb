@@ -1,54 +1,69 @@
-<div class="projekt-content-start-section js-projekt-content-start-section">
+<div class="projekt-content-start-section js-projekt-content-start-section js-projekt-studio-hide-on-preview">
+  <h3 class="projekt-content-start-section--title js-projekt-content-start-section--title"><%= t('custom.projekts.content_start_section.title') %></h3>
   <div class="projekt-content-start-buttons js-projekt-content-start-buttons">
     <button
       type="button"
       class="projekt-content-start-button js-projekt-file-import-trigger"
-      title="Dokument hochladen"
+      title="<%= t('custom.projekts.content_start_section.file_import_button.title') %>"
     >
+      <span class="projekt-content-start-button--ki-badge">
+        KI
+      </span>
       <i class="fas fa-file-upload"></i>
       <div class="projekt-content-start-button--content">
-        <div class="projekt-content-start-button--title">Datei importieren</div>
-        <div class="projekt-content-start-button--description">Dokument hochladen (PDF, DOCX, ODT)</div>
-        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+        <div>
+          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.file_import_button.button_title') %></div>
+          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.file_import_button.description') %></div>
+        </div>
+        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.file_import_button.action') %></div>
       </div>
     </button>
 
     <button
       type="button"
       class="projekt-content-start-button js-projekt-prompt-trigger"
-      title="Prompt eingeben"
+      title="<%= t('custom.projekts.content_start_section.prompt_button.title') %>"
     >
+      <span class="projekt-content-start-button--ki-badge">
+        KI
+      </span>
       <i class="fas fa-pen"></i>
       <div class="projekt-content-start-button--content">
-        <div class="projekt-content-start-button--title">Prompt eingeben</div>
-        <div class="projekt-content-start-button--description">Projekt beschreiben und Inhalte erzeugen</div>
-        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+        <div>
+          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.prompt_button.button_title') %></div>
+          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.prompt_button.description') %></div>
+        </div>
+        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.prompt_button.action') %></div>
       </div>
     </button>
 
     <button
       type="button"
       class="projekt-content-start-button js-projekt-template-trigger"
-      title="Vorlage wählen"
+      title="<%= t('custom.projekts.content_start_section.template_button.title') %>"
     >
       <i class="fas fa-th-large"></i>
       <div class="projekt-content-start-button--content">
-        <div class="projekt-content-start-button--title">Vorlage wählen</div>
-        <div class="projekt-content-start-button--description">Inhaltsblock aus Vorlage erstellen</div>
-        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+        <div>
+          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.template_button.button_title') %></div>
+          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.template_button.description') %></div>
+        </div>
+        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.template_button.action') %></div>
       </div>
     </button>
 
     <button
       type="button"
       class="projekt-content-start-button js-projekt-empty-block-trigger"
-      title="Leerer Block"
+      title="<%= t('custom.projekts.content_start_section.empty_block_button.title') %>"
     >
       <i class="fas fa-plus"></i>
       <div class="projekt-content-start-button--content">
-        <div class="projekt-content-start-button--title">Leerer Block</div>
-        <div class="projekt-content-start-button--description">Leeren Inhaltsblock erstellen</div>
-        <div class="projekt-content-start-button--action">Jetzt starten →</div>
+        <div>
+          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.empty_block_button.button_title') %></div>
+          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.empty_block_button.description') %></div>
+        </div>
+        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.empty_block_button.action') %></div>
       </div>
     </button>
   </div>
@@ -71,14 +86,14 @@
           class="button secondary hollow small js-projekt-file-import-select-other"
         >
           <i class="fas fa-folder-open"></i>
-          Andere Datei wählen
+          <%= t('custom.projekts.content_start_section.file_import_preview.select_other_file') %>
         </button>
         <button
           type="button"
           class="button secondary small hollow js-projekt-file-import-cancel"
         >
           <i class="fas fa-times"></i>
-          Abbrechen
+          <%= t('custom.projekts.content_start_section.file_import_preview.cancel') %>
         </button>
       </div>
 
@@ -89,7 +104,7 @@
     </div>
     <div class="projekt-file-import-preview-prompt">
       <label for="projekt-file-import-user-prompt">
-        Zusätzliche Anweisungen für die KI (optional):
+        <%= t('custom.projekts.content_start_section.file_import_preview.additional_instructions') %>
       </label>
       <textarea
         id="projekt-file-import-user-prompt"
@@ -103,33 +118,33 @@
       class="button projekt-file-import-button js-projekt-file-import-submit"
     >
       <i class="fas fa-upload"></i>
-      Dokument importieren
+      <%= t('custom.projekts.content_start_section.file_import_preview.submit') %>
     </button>
   </div>
 
   <div
-    class="projekt-prompt-form js-projekt-prompt-form"
+    class="projekt-start-with-prompt-form js-projekt-start-with-prompt-form"
     style="display: none;"
   >
-    <div class="projekt-prompt-form-header">
-      <h3>Prompt eingeben</h3>
+    <div class="projekt-start-with-prompt-form-header">
+      <h3><%= t('custom.projekts.content_start_section.prompt_form.header') %></h3>
       <button
         type="button"
         class="button secondary small hollow js-projekt-prompt-cancel"
       >
         <i class="fas fa-times"></i>
-        Abbrechen
+        <%= t('custom.projekts.content_start_section.prompt_form.cancel') %>
       </button>
     </div>
-    <div class="projekt-prompt-form-content">
+    <div class="projekt-start-with-prompt-form-content">
       <label for="projekt-prompt-input">
-        Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:
+        <%= t('custom.projekts.content_start_section.prompt_form.label') %>
       </label>
       <textarea
         id="projekt-prompt-input"
         class="js-projekt-prompt-input"
         rows="6"
-        placeholder="Z.B. Erstelle eine Projektbeschreibung für einen neuen Spielplatz mit Informationen zu Standort, Ausstattung und Zeitplan..."
+        placeholder="<%= t('custom.projekts.content_start_section.prompt_form.placeholder') %>"
       ></textarea>
     </div>
     <button
@@ -137,7 +152,7 @@
       class="button projekt-file-import-button js-projekt-prompt-submit"
     >
       <i class="fas fa-magic"></i>
-      Inhalte generieren
+      <%= t('custom.projekts.content_start_section.prompt_form.submit') %>
     </button>
   </div>
 
@@ -146,6 +161,6 @@
     style="display: none;"
   >
     <div class="bars-scale-loader"></div>
-    <span class="js-projekt-loader-message">Dokument wird verarbeitet...</span>
+    <span class="js-projekt-loader-message"><%= t('custom.projekts.content_start_section.loader.message') %></span>
   </div>
 </div>

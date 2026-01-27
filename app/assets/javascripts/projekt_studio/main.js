@@ -16,6 +16,9 @@ window.ProjektStudio = {
       ProjektStudio.PhasesTabs.initialize()
       ProjektStudio.Banner.initialize()
 
+      ProjektStudio.ProjektStart.initialize()
+      ProjektStudio.BuildWithPrompt.initialize()
+
       // Initialize ContentBlock submodules
       ProjektStudio.ContentBlockTemplateSelector.initialize()
       ProjektStudio.ContentBlock.Render.initialize()
@@ -36,7 +39,6 @@ window.ProjektStudio = {
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       ProjektStudio.FileImport.initialize()
-      ProjektStudio.PromptGenerator.initialize()
       // ExplainWithAi.initialize()
 
       this.initialized = true;

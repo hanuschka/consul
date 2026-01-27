@@ -2,38 +2,35 @@ const html = (strings, ...values) => {
   return String.raw(strings, ...values);
 };
 
-ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocksHtml, projektId) {
+ProjektStudio.templateFunctions.emptyContentBlockHtml = '<div><p></p></div>';
+
+ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocks, projektId) {
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
       class="js-content-blocks-container content-blocks-container"
     >
-      <div class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
-        <div class="projekt-content-block--additional">
-          <div class="add-new-content-block-section js-show-content-block-templates-section">
-            <button
-              type="button"
-              class="js-show-content-block-templates add-new-content-block-button"
-              title="Neuen Inhaltsblock hinzufügen"
-            >
-              <i class="fas fa-plus"></i>
-              Neuen Inhaltsblock hinzufügen
-            </button>
-          </div>
+      <div
+        class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper"
+        style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
+      >
+        <div class="js-projekt-add-new-content-block--top-button">
+          ${showContentBlockTemplatesButton()}
         </div>
       </div>
 
-      ${contentBlocksHtml}
+      ${contentBlocks && contentBlocks.join("")}
     </div>
   `
 }
 
-ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex}) {
+ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex} = {}) {
   return `
     <div
-      class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper"
+      class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper ${draftContentBlockIndex ? ' -draft' : ''}"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
+      data-draft="${draftContentBlockIndex ? true : false}"
       >
       <div class="relative">
         <div class="projekt-content-block js-projekt-content-block">
@@ -221,16 +218,23 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         </button>
       </div>
 
-      <div class="add-new-content-block-section js-show-content-block-templates-section">
-        <button
-          type="button"
-          class="js-show-content-block-templates add-new-content-block-button"
-          title="Neuen Inhaltsblock hinzufügen"
-        >
-          <i class="fas fa-plus"></i>
-          Neuen Inhaltsblock hinzufügen
-        </button>
-      </div>
+      ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}
     </div>
   `.trim()
+}
+
+function showContentBlockTemplatesButton(isDraft = false) {
+  return `
+    <div class="add-new-content-block-section js-show-content-block-templates-section">
+      <button
+        type="button"
+        class="js-show-content-block-templates add-new-content-block-button"
+        title="Neuen Inhaltsblock hinzufügen"
+        ${isDraft ? "disabled" : ''}
+      >
+        <i class="fas fa-plus"></i>
+        Neuen Inhaltsblock hinzufügen
+      </button>
+    </div>
+  `
 }

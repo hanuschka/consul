@@ -54,7 +54,8 @@ h1.no-narrative-line {
 
 .custom-new-design {
   h1:not(.logo):not(.no-narrative-line),
-  h2:not(.logo):not(.no-narrative-line) {
+  h2:not(.logo):not(.no-narrative-line),
+  h3:not(.logo):not(.no-narrative-line) {
     margin-bottom: 2rem;
 
     &::after {

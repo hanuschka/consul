@@ -251,6 +251,9 @@ de:
         title_active: 'Aktive Projekte'
         title_archived: 'Abgelaufene Projekte'
         filter_button: Nach Projekte filtern
+        phases:
+          title: 'Phasen'
+          all_phases: 'Alle Phasen'
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
       backlink: Zur Projektübersicht

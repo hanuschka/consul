@@ -69,7 +69,7 @@
     }
 
     .notification::before {
-      content: "\43";
+      content: "\43" / "";
       background: none;
       color: #dee0e3;
     }

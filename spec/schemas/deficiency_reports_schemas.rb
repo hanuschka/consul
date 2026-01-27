@@ -31,7 +31,8 @@ module Schemas
             id: { type: :integer, description: 'Status ID' },
             title: { type: :string, description: 'Status title' }
           }
-        }
+        },
+        image: { '$ref' => '#/components/schemas/ImageResponse' }
       },
       required: %w[id title created_at updated_at]
     }.freeze

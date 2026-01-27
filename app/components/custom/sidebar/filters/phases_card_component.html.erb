@@ -1,0 +1,23 @@
+<%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.sidebar_filter.phases.title"), icon_name: "clock") do |c| %>
+  <div id='phase_filter' class='sidebar-radio-filter'>
+    <ul>
+      <li <%= "class=label-selected" if @selected_phase_type == 'all_phases' %> >
+        <%= label_tag 'phase_type_all_phases', class: 'label_class' do %>
+          <%= radio_button_tag :phase_type, 'all_phases', @selected_phase_type == 'all_phases', { class: 'js-autosubmit-filter-input' } %>
+          <%= t('custom.projekts.sidebar_filter.phases.all_phases') %>
+          <span class="checkmark"></span>
+        <% end %>
+      </li>
+
+      <% @phases.each do |phase| %>
+        <li <%= "class=label-selected" if @selected_phase_type == phase.type %> >
+          <%= label_tag nil, class: 'label_class' do %>
+            <%= radio_button_tag :phase_type, phase.type, @selected_phase_type == phase.type, { class: 'js-autosubmit-filter-input' } %>
+            <%= phase.model_name.human %>
+            <span class="checkmark"></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

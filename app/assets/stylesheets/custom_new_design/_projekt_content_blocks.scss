@@ -25,14 +25,14 @@
   border-radius: 5px;
 }
 
-.projekt-content-block {
-  margin-bottom: 35px;
-}
-
 .gfadeIn {
   animation-duration: .25s;
 }
 
 .gfadeOut {
   animation-duration: .25s;
+}
+
+div[data-box-shadow] {
+  box-shadow: attr(data-box-shadow);
 }

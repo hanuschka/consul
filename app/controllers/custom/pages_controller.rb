@@ -48,13 +48,18 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      if params[:page_ref].present?
+      landing_page_slug = params[:landing_page_slug]
+      if landing_page_slug.present?
         @landing_page =
           @projekt
             .landing_pages
-            .find_by(slug: params[:page_ref])
+            .find_by(slug: landing_page_slug)
 
-        set_landing_page_topbar_ui_variables(@landing_page)
+        if @landing_page.present?
+          set_landing_page_topbar_ui_variables(@landing_page)
+        else
+          redirect_to page_path(@custom_page.slug) and return
+        end
       end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
@@ -118,7 +123,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
-        unless current_user&.administrator?
+        unless current_user&.has_pm_permission_to?(:manage, @projekt)
           redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
@@ -129,6 +134,9 @@ class PagesController < ApplicationController
         elsif @projekt_phase.name == "proposal_phase"
           send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
             filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+        elsif @projekt_phase.name == "budget_phase"
+          send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+            filename: "budget_investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
     end
@@ -187,7 +195,7 @@ class PagesController < ApplicationController
                                .base_selection
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
       @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
       if params[:search].present?
@@ -310,7 +318,7 @@ class PagesController < ApplicationController
 
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
-    elsif params[:section] == "stats" && can?(:read_stats, @budget)
+    elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
       params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
       params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
       params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]

@@ -558,7 +558,7 @@ module ProjektPhaseAdminActions
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         :lock_on, officing_manager_ids: [],
-        geozone_restriction_ids: [], registered_address_street_ids: [],
+        registered_address_district_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
         settings_attributes: [:id, :value],

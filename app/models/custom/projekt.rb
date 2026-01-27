@@ -109,18 +109,18 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :sync_update_for_global_overview #, on: :update
-  # after_touch :sync_update_for_global_overview
+  after_update :sync_for_global_overview_if_changed #, on: :update
+  # after_touch :sync_for_global_overview_if_changed
   after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
 
-  def should_be_exported?
+  def should_be_exported_for_global_overview?
     if  Rails.env.development? && Rails.application.secrets.dt[:disable_sync]
       return false
     end
 
-    InternalApiClient.active_dt? && for_global_overview?
+    InternalApiClient.active_dt? && (on_global_overview? || acceptable_to_be_exported_for_global_overview?)
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -128,6 +128,14 @@ class Projekt < ApplicationRecord
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+
+  enum build_file_import_status: {
+    never_run: "never_run",
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: true, _default: "never_run"
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -681,16 +689,11 @@ class Projekt < ApplicationRecord
     preview_code.present? && preview_code == code
   end
 
-  def should_be_exported_for_overview?
-    # TODO
-    # Here the conditions to check if projekt exported intially
-    # They should be used here as well in context of individual projekt
-    # Projekt
-    #   .activated
-    #   .with_published_custom_page
-    #   .show_in_overview_page
-    #   .not_in_individual_list
-    #   .regular
+  def acceptable_to_be_exported_for_global_overview?
+    !special &&
+      page&.published? &&
+      projekt_settings.find_by(key: "projekt_feature.main.activate")&.value == "active" &&
+      projekt_settings.find_by(key: "projekt_feature.general.show_in_overview_page")&.value == "active"
   end
 
   def any_phase_subscribers_ids
@@ -709,6 +712,18 @@ class Projekt < ApplicationRecord
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else
       page.content
+    end
+  end
+
+  def perform_sync_update_for_global_overview
+    if should_be_exported_for_global_overview?
+      if hidden_at.present?
+        sync_destroy_for_global_overview
+      else
+        Projekts::OverviewProjektUpdatedJob.perform_later(
+          self
+        )
+      end
     end
   end
 
@@ -817,7 +832,7 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def sync_update_for_global_overview
+    def sync_for_global_overview_if_changed
       # Ignore order number update change
       changed_set = previous_changes.except("created_at", "updated_at")
 
@@ -825,19 +840,11 @@ class Projekt < ApplicationRecord
         return
       end
 
-      if should_be_exported?
-        if hidden_at.present?
-          sync_destroy_for_global_overview
-        else
-          Projekts::OverviewProjektUpdatedJob.perform_later(
-            self
-          )
-        end
-      end
+      perform_sync_update_for_global_overview
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported?
+      if should_be_exported_for_global_overview?
         Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end
     end

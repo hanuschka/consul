@@ -1,5 +1,5 @@
 class ProjektPhase::FormularPhase < ProjektPhase
-  has_one :formular, foreign_key: :projekt_phase_id, dependent: :restrict_with_exception,
+  has_one :formular, foreign_key: :projekt_phase_id, dependent: :destroy,
     inverse_of: :projekt_phase
 
   after_create :create_formular

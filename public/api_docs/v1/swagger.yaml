@@ -2683,6 +2683,30 @@ paths:
                     open_ended:
                       type: boolean
                       nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
+                      type: boolean
+                      nullable: true
                   required:
                   - title
               required:
@@ -2800,6 +2824,30 @@ paths:
                       type: string
                       nullable: true
                     open_ended:
+                      type: boolean
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
                       type: boolean
                       nullable: true
         description: Attributes to update on the event
@@ -6345,19 +6393,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type. Required
                         for creation.
                     start_date:
@@ -6631,19 +6679,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type.
                     start_date:
                       type: string
@@ -7516,7 +7564,7 @@ paths:
                       proposals:
                         type: array
                         items:
-                          type: object
+                          "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposals
                   pagination:
@@ -7563,7 +7611,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:
@@ -7888,7 +7936,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:
@@ -7932,7 +7980,7 @@ paths:
                     type: object
                     properties:
                       proposal:
-                        type: object
+                        "$ref": "#/components/schemas/Proposal"
                     required:
                     - proposal
                 required:
@@ -8980,6 +9028,26 @@ components:
               nullable: true
               description: URL-friendly identifier for the page
               example: sample-projekt
+            image:
+              type: object
+              nullable: true
+              description: The page header/cover image
+              properties:
+                url:
+                  type: string
+                  nullable: true
+                  description: URL to the full-size image
+                  example: https://example.com/images/page-image.jpg
+                title:
+                  type: string
+                  nullable: true
+                  description: Image title or alt text
+                  example: Cover Image
+                credits:
+                  type: string
+                  nullable: true
+                  description: Image attribution or credits
+                  example: Photo by John Doe
         projekt_settings:
           type: array
           description: Configuration settings for the projekt as key-value pairs
@@ -9363,19 +9431,19 @@ components:
           enum:
           - ProjektPhase::CommentPhase
           - ProjektPhase::ProposalPhase
+          - ProjektPhase::PointOfInterestPhase
           - ProjektPhase::QuestionPhase
           - ProjektPhase::VotingPhase
+          - ProjektPhase::IframePhase
           - ProjektPhase::BudgetPhase
           - ProjektPhase::LegislationPhase
           - ProjektPhase::FormularPhase
-          - ProjektPhase::LivestreamPhase
+          - ProjektPhase::EventPhase
           - ProjektPhase::MilestonePhase
           - ProjektPhase::ProjektNotificationPhase
-          - ProjektPhase::EventPhase
+          - ProjektPhase::LivestreamPhase
           - ProjektPhase::ArgumentPhase
           - ProjektPhase::NewsfeedPhase
-          - ProjektPhase::IframePhase
-          - ProjektPhase::PointOfInterestPhase
           description: 'The type of projekt phase that determines what kind of participation
             or content is available. Regular phases: CommentPhase (discussion/feedback),
             ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),
@@ -9932,6 +10000,8 @@ components:
             name:
               type: string
               description: Officer name
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - created_at
@@ -10092,6 +10162,8 @@ components:
           nullable: true
           description: Total number of comments on the proposal
           example: 12
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - created_at
@@ -10192,6 +10264,8 @@ components:
           format: date_time
           description: Timestamp when the investment was last modified
           example: '2024-01-18T14:30:00Z'
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10420,6 +10494,8 @@ components:
             title:
               type: string
               description: Status title
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10748,6 +10824,8 @@ components:
           format: date_time
           description: Timestamp when the argument was last modified
           example: '2024-01-25T10:30:00Z'
+        image:
+          "$ref": "#/components/schemas/ImageResponse"
       required:
       - id
       - title
@@ -10805,3 +10883,71 @@ components:
       - projekt_phase_id
       - created_at
       - updated_at
+    ImageResponse:
+      type: object
+      nullable: true
+      description: Image associated with the resource
+      properties:
+        id:
+          type: integer
+          description: Image ID
+          example: 1
+        title:
+          type: string
+          nullable: true
+          description: Image title or alt text
+          example: Cover Image
+        credits:
+          type: string
+          nullable: true
+          description: Image attribution or credits
+          example: Photo by John Doe
+        url:
+          type: string
+          description: Full URL to the image
+          example: https://example.com/uploads/image.jpg
+        variants:
+          type: object
+          nullable: true
+          description: Different sized versions of the image with width-based keys
+          properties:
+            '150':
+              type: string
+              nullable: true
+              description: Thumbnail 150px width
+              example: https://example.com/uploads/150.jpg
+            '300':
+              type: string
+              nullable: true
+              description: Small 300px width
+              example: https://example.com/uploads/300.jpg
+            '450':
+              type: string
+              nullable: true
+              description: Medium 450px width
+              example: https://example.com/uploads/450.jpg
+            '600':
+              type: string
+              nullable: true
+              description: Medium-large 600px width
+              example: https://example.com/uploads/600.jpg
+            '900':
+              type: string
+              nullable: true
+              description: Large 900px width
+              example: https://example.com/uploads/900.jpg
+            '1200':
+              type: string
+              nullable: true
+              description: Extra large 1200px width
+              example: https://example.com/uploads/1200.jpg
+            '1920':
+              type: string
+              nullable: true
+              description: Full HD 1920px width
+              example: https://example.com/uploads/1920.jpg
+            original:
+              type: string
+              nullable: true
+              description: Original unmodified image
+              example: https://example.com/uploads/original.jpg

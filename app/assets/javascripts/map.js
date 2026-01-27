@@ -74,7 +74,7 @@
     // Public Interface method for assistant map update and external use
     // DO NOT DELETE
     setMarkerTo(lat, lng, shouldScroll) {
-      if (App.Map.anyMapInitialized()) {
+      if (App.Map.maps.length > 0) {
         App.Map.maps[0].setMarkerTo(lat, lng, shouldScroll);
       }
     },

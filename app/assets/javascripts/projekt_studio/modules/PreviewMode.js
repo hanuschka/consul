@@ -15,7 +15,7 @@ ProjektStudio.PreviewMode = {
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = ProjektStudio.utils.parseIframeEventData(event.data);
+      const data = event.data;
       const params = data.params
 
       switch(data.event_type) {
@@ -66,14 +66,16 @@ ProjektStudio.PreviewMode = {
     const categoriesSidebarCard = categoriesList.closest(".js-sidebar-card")
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
 
+    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
-    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+    $(".js-content-block-ai-edit-popup").toggle(!previewModeEnabled)
 
-    console.log("anyCheckedSDG", anyCheckedSDG)
-    console.log("anyCheckedCategory", anyCheckedCategory)
+    // console.log("anyCheckedSDG", anyCheckedSDG)
+    // console.log("anyCheckedCategory", anyCheckedCategory)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {

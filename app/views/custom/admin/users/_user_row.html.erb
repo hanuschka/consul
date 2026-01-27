@@ -3,7 +3,7 @@
     <td><%= link_to user.id, user_path(user), target: "_blank" %></td>
     <td><%= user.erase_reason %></td>
     <td><%= user.unique_stamp %></td>
-    <td><%= user.geozone&.name %></td>
+    <td><%= user.district&.name %></td>
     <td><%= l(user.verified_at, format: "%d %b %Y") if user.verified_at %></td>
 
   <% elsif @current_filter == "outside_bam" %>
@@ -25,7 +25,7 @@
     <td><%= user.city_name %></td>
     <td class="<%= "bold-on-hover" if user.registered_address.present? %>"><%= user.formatted_address %></td>
     <td><%= user.plz %></td>
-    <td><%= user.geozone&.name %></td>
+    <td><%= user.district&.name %></td>
     <td><%= user.document_type %></td>
     <td><%= user.document_number %></td>
     <td><%= t("custom.devise_views.users.gender.#{user.gender}") if user.gender.present? %></td>

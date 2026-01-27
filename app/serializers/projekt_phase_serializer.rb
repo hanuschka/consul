@@ -53,7 +53,7 @@ class ProjektPhaseSerializer < BaseSerializer
     phase_data.merge!(
       settings: projekt_phase_settings,
       individual_group_values: individual_group_values,
-      geozone_restrictions: geozone_restrictions
+      registered_address_districts: registered_address_districts
     )
 
     # Add resources based on phase type (only if nested fields are requested)
@@ -73,8 +73,8 @@ class ProjektPhaseSerializer < BaseSerializer
     projekt_phase.individual_group_values.as_json(only: [:id, :name])
   end
 
-  def geozone_restrictions
-    projekt_phase.geozone_restrictions.as_json(only: [:id, :name])
+  def registered_address_districts
+    projekt_phase.registered_address_districts.as_json(only: [:id, :name])
   end
 
   def phase_resources

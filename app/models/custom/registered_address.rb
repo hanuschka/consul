@@ -9,7 +9,7 @@ class RegisteredAddress < ApplicationRecord
 
   def self.import(file_path)
     fixed_attribute_keys = %w[street_number street_number_extension]
-    restricted_key_names = %w[city street_name plz] + fixed_attribute_keys
+    restricted_key_names = %w[city street_name plz district] + fixed_attribute_keys
 
     grouping_keys = CSV.read(file_path, headers: true).headers
       .map(&:strip)

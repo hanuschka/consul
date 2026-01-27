@@ -70,13 +70,13 @@ de:
       projekt_phase/argument_phase: Stimmen
       projekt_phase/milestone_phase: Meilensteine
       projekt_phase/question_phase: Kurzumfrage
-      projekt_phase/livestream_phase: Livestreams
+      projekt_phase/livestream_phase: Livestream
       projekt_phase/projekt_notification_phase: Benachrichtigungen
       projekt_phase/legislation_phase: Textbearbeitung
-      projekt_phase/newsfeed_phase: News-Feed
+      projekt_phase/newsfeed_phase: Newsfeed
       projekt_phase/formular_phase: Formular
       projekt_phase/iframe_phase: Iframe
-      projekt_phase/point_of_interest_phase: Ort von Interesse
+      projekt_phase/point_of_interest_phase: Orte von Interesse
       formular_field: Formularfeld
       officing_manager:
         one: Abstimmungshelfer*innen
@@ -308,6 +308,14 @@ de:
         end_datetime: Endtermin
         open_ended: Offenes Ende
         weblink: Weblink
+        language: Sprache
+        wheelchair_accessible: Zugänglichkeit mit dem Rollstuhl möglich
+        accessible_toilet: Behindertengerechte Toilette vorhanden
+        disabled_parking_nearby: Parkplätze für Menschen mit Behinderung in der Nähe vorhanden
+        tactile_guidance_systems: Taktile Leitsysteme oder Orientierungshilfen für sehbehinderte Menschen vorhanden
+        induction_loop_available: Induktionsanlage vorhanden
+        assistance_dogs_welcome: Assistenzhunde willkommen
+        sign_language_interpreter: Gebärdensprachdolmetscher:in vorhanden
       projekt_notification:
         title: Titel
         body: Nachricht

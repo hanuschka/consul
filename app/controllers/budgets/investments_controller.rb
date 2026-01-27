@@ -12,7 +12,7 @@ module Budgets
 
     PER_PAGE = 10
 
-    before_action :authenticate_user!, except: [:index, :show, :json_data], unless: -> { current_user&.guest? }
+    before_action :authenticate_user!, except: [:index, :show, :json_data, :read_stats], unless: -> { current_user&.guest? }
     before_action :load_budget, except: :json_data
 
     authorize_resource :budget, except: :json_data
@@ -73,15 +73,18 @@ module Budgets
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)
 
-      if params[:page_ref].present?
+      landing_page_slug = params[:landing_page_slug]
+      if landing_page_slug.present?
         @landing_page =
           @investment
           .projekt
           .landing_pages
-          .find_by(slug: params[:page_ref])
+          .find_by(slug: landing_page_slug)
 
         if @landing_page.present?
           set_landing_page_topbar_ui_variables(@landing_page)
+        else
+          redirect_to budget_investment_path(@budget, @investment) and return
         end
       end
 

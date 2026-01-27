@@ -18,6 +18,7 @@ User.class_eval do
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
+  delegate :district, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -250,16 +251,9 @@ User.class_eval do
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
-  def current_city_citizen?
-    return false if geozone.nil?
-
-    @geozone_ids ||= Geozone.ids
-
-    @geozone_ids.include?(geozone.id)
-  end
-
-  def not_current_city_citizen?
-    !current_city_citizen?
+  def citizen?
+    (RegisteredAddress::District.any? && district.present?) ||
+      (Geozone.any? && geozone.present?)
   end
 
   def verified?

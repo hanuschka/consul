@@ -44,7 +44,8 @@ ProjektStudio.FileImport = {
     $(".js-projekt-file-import-filename").text(displayName);
     $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
     $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`);
-    $(".js-projekt-content-start-section").hide();
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
     $(".js-projekt-file-import-preview").show();
     $(".js-projekt-file-import-user-prompt").focus();
   },
@@ -83,7 +84,8 @@ ProjektStudio.FileImport = {
     $(".js-projekt-file-import-user-prompt").val('');
     $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt");
     $(".js-projekt-file-import-preview").hide();
-    $(".js-projekt-content-start-section").show();
+    $(".js-projekt-content-start-buttons").show();
+    $(".js-projekt-content-start-section--title").show();
   },
 
   validateFile(file) {
@@ -218,7 +220,8 @@ ProjektStudio.FileImport = {
   showLoader(message = "Dokument wird verarbeitet...") {
     $(".js-projekt-file-import-preview").hide();
     $(".js-projekt-start-with-prompt-form").hide();
-    $(".js-projekt-content-start-section").hide();
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
     $(".js-projekt-loader-message").text(message);
     $(".js-projekt-file-import-loader").show();
   },

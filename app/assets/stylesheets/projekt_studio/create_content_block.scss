@@ -113,6 +113,10 @@
 
 .projekt-content-start-button--content {
   width: 100%;
+  min-height: 190px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .projekt-content-start-button--title {

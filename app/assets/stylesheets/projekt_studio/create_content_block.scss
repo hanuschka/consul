@@ -55,6 +55,10 @@
   min-height: 210px;
   position: relative;
 
+  i {
+    // min-height: 50px;
+  }
+
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-color: color-mix(in srgb, var(--brand-color) 48%, transparent);

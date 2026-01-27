@@ -62,6 +62,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_with :wordpress_login, :wordpress_oauth2
   end
 
+  def bochum_id
+    sign_in_with :bochum_id_login, :bochum_id
+  end
+
   def after_sign_in_path_for(resource)
     if resource.registering_with_oauth
       finish_signup_path

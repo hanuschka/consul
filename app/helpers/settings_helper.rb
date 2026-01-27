@@ -4,7 +4,8 @@ module SettingsHelper
       (:twitter if feature?(:twitter_login)),
       (:facebook if feature?(:facebook_login)),
       (:google_oauth2 if feature?(:google_login)),
-      (:wordpress_oauth2 if feature?(:wordpress_login))
+      (:wordpress_oauth2 if feature?(:wordpress_login)),
+      (:bochum_id if feature?(:bochum_id_login))
     ].compact
   end
 

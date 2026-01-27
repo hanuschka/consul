@@ -258,6 +258,16 @@ Devise.setup do |config|
                   Rails.application.secrets.wordpress_oauth2_secret,
                   strategy_class: OmniAuth::Strategies::Wordpress,
                   client_options: { site: Rails.application.secrets.wordpress_oauth2_site }
+  config.omniauth :openid_connect, {
+    name: :bochum_id,
+    issuer: Rails.application.secrets.bochum_id_login[:issuer],
+    discovery: true,
+    client_options: {
+      identifier: Rails.application.secrets.bochum_id_login[:client_id],
+      secret: Rails.application.secrets.bochum_id_login[:client_secret],
+      redirect_uri: Rails.application.secrets.bochum_id_login[:redirect_uri]
+    }
+  }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

@@ -258,7 +258,6 @@
   align-items: center;
   width: 100%;
   padding: 15px 0;
-  padding-top: 50px;
 }
 
 .projekt-file-import-preview-header {
@@ -351,6 +350,8 @@
     font-size: 20px;
     font-weight: 600;
     color: #333;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
   }
 }
 

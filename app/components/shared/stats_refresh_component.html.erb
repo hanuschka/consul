@@ -2,10 +2,15 @@
   <div class="u-flex u-flex-column u-align-center stats-button-wrapper">
     <div class="js-stats-button-container u-flex u-align-center stats-button-container">
       <button
-          class="button js-stats-refresh-button <%= 'u-hidden' if processing? %>"
+          class="button js-stats-refresh-button <%= 'u-hidden' if processing? %> <%= 'ai-feature-disabled' if ai_disabled? %>"
           data-url="<%= refresh_path %>"
           data-status-check-url="<%= status_path %>"
           data-section="<%= section %>"
+          <%= 'disabled' if ai_disabled? %>
+          <% if ai_disabled? %>
+          data-tooltip
+          title="<%= t('ai.disabled_tooltip') %>"
+          <% end %>
           >
           <%= t(button_text) %>
       </button>

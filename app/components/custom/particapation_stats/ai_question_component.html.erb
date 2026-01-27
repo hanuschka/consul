@@ -1,7 +1,13 @@
 <% if can_ask_questions? %>
-  <div class="participation-stats-ai-question"
-       data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
-       data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
+  <div
+    class="participation-stats-ai-question <%= 'ai-feature-disabled' if ai_disabled? %>"
+    data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
+    data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>"
+    <% if ai_disabled? %>
+    data-tooltip
+    title="<%= t('ai.disabled_tooltip') %>"
+    <% end %>
+  >
     <section class="ai-stats-card">
       <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
         <% c.with_head do %>
@@ -23,10 +29,12 @@
                             nil,
                             placeholder: t("custom.participation_stats.ai_question.placeholder"),
                             class: "ai-question-form--input js-ai-question-input",
-                            required: true %>
+                            required: true,
+                            disabled: ai_disabled? %>
           <div class="ai-question-form--actions">
             <%= button_tag type: "submit",
-                           class: "button ai-question-form--submit js-ai-question-submit" do %>
+                           class: "button ai-question-form--submit js-ai-question-submit",
+                           disabled: ai_disabled? do %>
               <%= t("custom.participation_stats.ai_question.submit") %>
             <% end %>
             <div class="ai-question-form--loading hidden js-ai-question-loading">

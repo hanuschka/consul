@@ -21,4 +21,8 @@ class ParticapationStats::AiQuestionComponent < ApplicationComponent
   def has_pending?
     pending_questions.any?
   end
+
+  def ai_disabled?
+    !Ai::Settings.ai_available?
+  end
 end

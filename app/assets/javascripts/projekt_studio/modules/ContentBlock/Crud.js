@@ -33,6 +33,8 @@ ProjektStudio.ContentBlock.Crud = {
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
 
+    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlock);
+
     if (previousContentBlockWrapper) {
       if ($(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0) {
         previousContentBlockWrapper.after(newContentBlock)
@@ -141,10 +143,12 @@ ProjektStudio.ContentBlock.Crud = {
         }
       })
 
+
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
-    $(contentBlock).foundation();
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+
   },
 
   deleteContentBlock(contentBlockWrapper) {

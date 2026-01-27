@@ -29,6 +29,6 @@ class ProjektManagement::SiteCustomization::ContentBlocksController < ProjektMan
     end
 
     def allowed_params
-      [:name, :locale, :body]
+      [:name, :locale, :body, :margin_bottom]
     end
 end

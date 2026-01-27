@@ -7,7 +7,7 @@ class ContentCard::CurrentProjektsComponent < ApplicationComponent
     @custom_page = custom_page
     @projekts =
       if custom_page.present?
-        custom_page.landing_projekts
+        custom_page.landing_projekts.show_in_homepage
       else
         Projekt.show_in_homepage
       end

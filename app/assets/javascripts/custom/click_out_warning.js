@@ -3,17 +3,20 @@
   App.ClickOutWarning = {
     initialize: function() {
       $("body").on("click", "a", function(event) {
-        if (document.querySelector("meta[name='external-links']").getAttribute("content") === 'active' ) {
+        if (document.querySelector("meta[name='external-links']").getAttribute("content") === 'true' ) {
           var showWarning = true;
         }
 
-        if ( showWarning && this.hostname.length && location.hostname !== this.hostname ) {
+        if (event.currentTarget.classList.contains("glightbox-link")) {
+          return
+        }
 
+        if (showWarning && event.currentTarget.hostname.length && location.hostname !== event.currentTarget.hostname) {
           var answer = window.confirm("Mit Bestätigung stimmen Sie zu, die Webseite zu verlassen.");
-          if ( !answer ) {
+
+          if (!answer) {
             event.preventDefault()
           }
-
         }
       });
     }

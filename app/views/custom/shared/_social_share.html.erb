@@ -10,9 +10,11 @@
 
 <div class="social-share-full">
   <div class='social-share-button'>
-    <%= link_to "whatsapp://send?text=#{ title } #{ url }", class: 'ssb-icon ssb-whatsapp', data: {site: "whatsapp"}, title: t('social_share_button.share_to_whatsup_title')  do %>
-      <span class="show-for-sr">whatsapp</span>
-    <% end %>
+    <%= link_to('', "whatsapp://send?text=#{ title }#{ url }",
+      class: 'ssb-icon ssb-whatsapp_app',
+      data: {site: "whatsapp"},
+      title: t('social_share_button.share_to_whatsup_title'))
+     %>
   </div>
   <%= social_share_button_tag("#{title} #{setting["twitter_hashtag"]} #{setting["twitter_handle"]}",
                               url: local_assigns[:url],

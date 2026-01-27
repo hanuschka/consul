@@ -7,6 +7,7 @@ class ProjektSetting < ApplicationRecord
   default_scope { order(id: :asc) }
 
   after_update :sync_related_projekt_children_active_setting, if: Proc.new { |setting| setting.key == "projekt_feature.main.activate" }
+  after_update :trigger_sync_for_global_overview_related_projekt
 
   def prefix
     key.split(".").first
@@ -92,5 +93,9 @@ class ProjektSetting < ApplicationRecord
       child_projekt.projekt_settings.find_by( key: 'projekt_feature.main.activate' ).
         update(value: self.value)
     end
+  end
+
+  def trigger_sync_for_global_overview_related_projekt
+    projekt.perform_sync_update_for_global_overview
   end
 end

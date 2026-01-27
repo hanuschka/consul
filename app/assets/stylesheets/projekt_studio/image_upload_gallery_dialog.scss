@@ -54,8 +54,8 @@
 
 .custom-new-design {
   .image-upload-gallery--select-image-btn {
-    font-size: 20px !important;
-    padding: 10px 35px !important;
+    font-size: 18px !important;
+    padding: 8px 32px !important;
   }
 }
 
@@ -146,7 +146,7 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #666;
+  color: #665;
   padding: 0;
   width: 21px;
   height: 21px;
@@ -245,7 +245,7 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: #665;
   font-size: 22px;
   padding-top: 120px;
 }
@@ -383,14 +383,15 @@
     }
     li a, li.current {
       border: 1px solid #d9d9d9;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      font-size: 18px;
-      min-width: 42px;
-      min-height: 42px;
+      font-size: 17px;
+      min-width: 40px;
+      min-height: 38px;
+      text-decoration: none !important;
     }
   }
 }

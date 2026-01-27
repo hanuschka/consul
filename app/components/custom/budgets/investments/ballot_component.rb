@@ -16,8 +16,8 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
   private
 
     def user
-      if current_user&.administrator? &&
-          controller_name == "offline_ballots" &&
+      if (current_user&.administrator? || current_user&.officing_manager?) &&
+          controller_path.in?(["officing/budgets", "budgets/ballot/lines"]) &&
           params[:offline_user_id]
         User.find(params[:offline_user_id])
       else
@@ -52,6 +52,7 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
           enter_missing_user_data: link_to_enter_missing_user_data,
           city: Setting["org_name"],
           geozones: @investment.budget.projekt_phase.geozone_restrictions_formatted,
+          registered_address_groupings: @investment.budget.projekt_phase.registered_address_grouping_restriction_formatted,
           age_restriction: @investment.budget.projekt_phase.age_restriction_formatted,
           restricted_streets: @investment.budget.projekt_phase.street_restrictions_formatted,
           individual_group_values: @investment.budget.projekt_phase.individual_group_value_restriction_formatted

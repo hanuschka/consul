@@ -18,7 +18,15 @@ ProjektStudio.FileImport = {
 
   handleButtonClick(e) {
     e.preventDefault();
-    $(".js-projekt-file-import-input").click();
+    this.showFileImportForm();
+  },
+
+  showFileImportForm() {
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
+    $(".projekt-file-import-preview-info").hide();
+    $(".js-projekt-file-import-submit").prop("disabled", true);
+    $(".js-projekt-file-import-preview").show();
   },
 
   handleFileSelect(e) {
@@ -43,7 +51,8 @@ ProjektStudio.FileImport = {
 
     $(".js-projekt-file-import-filename").text(displayName);
     $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
-    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`);
+    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`).show();
+    $(".js-projekt-file-import-submit").prop("disabled", false);
     $(".js-projekt-content-start-buttons").hide();
     $(".js-projekt-content-start-section--title").hide();
     $(".js-projekt-file-import-preview").show();

@@ -224,10 +224,37 @@ button {
   font-size: 20px;
 }
 
+.custom-close-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: $blue-gray-1;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  transition: 50ms ease background-color;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 0;
+  margin-top: 0;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: $light-gray-2;
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
 .round-icon-button {
   padding: 0 !important;
   border-radius: 50%;
-  color: #919dab;
+  color: $blue-gray-1;
   transition: 50ms ease background-color;
   background-color: $light-gray-2;
   margin-bottom: 0;
@@ -252,7 +279,7 @@ button {
 .transparent-round-icon-button {
   padding: 0 !important;
   border-radius: 50%;
-  color: #919dab;
+  color: $blue-gray-1;
   width: 1.7em;
   height: 1.7em;
   transition: 50ms ease background-color;
@@ -263,7 +290,7 @@ button {
   }
 
   &:hover {
-    background-color: #ededed;
+    background-color: $light-gray-2;
   }
 
   &:active {

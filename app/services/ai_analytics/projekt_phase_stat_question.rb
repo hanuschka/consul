@@ -87,30 +87,28 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       projekt_title = projekt_phase.projekt.page.title
       projekt_subtitle = projekt_phase.projekt.page.subtitle
 
-      <<~TEXT
-        You are an assistant helping project managers analyze citizen participation #{resource_type} in #{projekt_title} with subtitle #{projekt_subtitle}.
+      fetched_prompt = fetch_prompt
 
+      <<~TEXT
+        #{fetched_prompt}
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
 
         #{resource_type.capitalize}:
         #{items_text}
-
-        Instructions:
-        - Provide a synthesized, analytical answer in #{target_language}
-        - Base your answer only on the provided #{resource_type}
-        - If the question cannot be answered from the #{resource_type}, clearly state that
-        - Focus on patterns, trends, and dominant themes across the #{resource_type}
-        - Do NOT list or enumerate all #{resource_type}
-        - Mention individual #{resource_type} only as illustrative examples when necessary
-        - Write in narrative, prosaic style (similar to an executive summary)
-        - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful
-        - Dont add spaces before <li> items.
-        - Use lists only to summarize key insights, not individual entries
-        - Structure your answer clearly with paragraphs
-        - Dont use br html tags
-
-        Your goal is to produce a synthesized, human-readable analysis, not a raw data dump.
       TEXT
+    end
+
+    def fetch_prompt
+      response = DtApi::Client.new.consul_ai_prompts.get(
+        :ai_analytics_projekt_phase_question,
+        resource_type: "projekt_phase"
+      )
+
+      unless response.success?
+        raise "DT API error: #{response.code} - #{response.message}"
+      end
+
+      response.dig("consul_ai_prompt", "prompt")
     end
 end

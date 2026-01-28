@@ -48,24 +48,17 @@
       <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %> js-ai-questions-pending">
         <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
         <div class="js-ai-questions-pending-list">
-          <% pending_questions.each do |question| %>
-            <div class="ai-question-item ai-question-item--pending"
-                 data-question-id="<%= question.id %>"
-                 data-status-url="<%= stat_question_status_projekt_phase_path(@projekt_phase, question_id: question.id) %>">
-              <%= render Shared::SpinnerComponent.new(size: :medium) %>
-              <p class="ai-question-item--text"><%= truncate(question.question, length: 150) %></p>
-              <p class="ai-question-item--status">
-                <%= t("custom.participation_stats.ai_question.processing_message") %>
-              </p>
-            </div>
-          <% end %>
+          <%= render partial: "custom/particapation_stats/pending_question_item",
+                     collection: pending_questions,
+                     locals: { projekt_phase: @projekt_phase } %>
         </div>
       </div>
 
       <div class="ai-question-section--history js-ai-questions-history<%= ' hidden' if completed_questions.empty? %>">
-        <% completed_questions.each do |question| %>
-          <%= render "custom/particapation_stats/completed_question_item", question: question, projekt_phase: @projekt_phase %>
-        <% end %>
+        <%= render partial: "custom/particapation_stats/completed_question_item",
+                   collection: completed_questions,
+                   as: :question,
+                   locals: { projekt_phase: @projekt_phase } %>
 
         <% if completed_questions.any? %>
           <div class="ai-question-section--download-all">

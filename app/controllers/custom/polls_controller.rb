@@ -170,6 +170,14 @@ class PollsController < ApplicationController
   def refresh_ai_stats
     authorize!(:refresh_ai_stats, @poll)
 
+    unless Ai::Settings.ai_available?
+      respond_to do |format|
+        format.html { redirect_back(fallback_location: report_poll_path(@poll)) }
+        format.js { render json: { error: "AI features unavailable" }, status: :forbidden }
+      end
+      return
+    end
+
     @poll.update(ai_stats_refresh_status: "pending")
     AiAnalytics::PollStatsRefresh.perform_later(@poll.id)
 

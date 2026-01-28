@@ -1,4 +1,4 @@
-class ParticapationStats::AiQuestionComponent < ApplicationComponent
+class ParticapationStats::AiQuestionSectionComponent < ApplicationComponent
   include ActionView::Helpers::TranslationHelper
 
   def initialize(projekt_phase:)

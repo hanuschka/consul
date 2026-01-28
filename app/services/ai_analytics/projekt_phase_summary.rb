@@ -149,4 +149,17 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
       response = Ai::RubyLlmFactory.chat.ask(prompt)
       response.content.strip
     end
+
+    def fetch_prompt
+      response = DtApi::Client.new.consul_ai_prompts.get(
+        :ai_analytics_projekt_phase_summary,
+        resource_type: "projekt_phase"
+      )
+
+      unless response.success?
+        raise "DT API error: #{response.code} - #{response.message}"
+      end
+
+      response.dig("consul_ai_prompt", "prompt")
+    end
 end

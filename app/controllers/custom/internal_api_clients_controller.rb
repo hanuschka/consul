@@ -24,7 +24,7 @@ class InternalApiClientsController < ApplicationController
       end
 
     dt_response =
-      DtApi.new.connect(
+      DtApi::Client.new.clients.connect(
         name: Setting["org_name"],
         platform_url: Setting["url"],
         auth_token: api_client.auth_token,

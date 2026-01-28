@@ -11,11 +11,8 @@
       $("#nested-documents").on("cocoon:after-insert", function(e, nested_document) {
         var input;
         input = $(nested_document).find(".js-document-attachment");
-        input.lockUpload = $(nested_document).closest("#nested-documents").find(".document:visible").length >= $("#nested-documents").data("max-documents-allowed");
         App.Documentable.initializeDirectUploadInput(input);
-        if (input.lockUpload) {
-          App.Documentable.lockUploads();
-        }
+        App.Documentable.lockUploads();
       });
       App.Documentable.initializeRemoveCachedDocumentLinks();
     },
@@ -29,6 +26,8 @@
           var upload_data;
           upload_data = App.Documentable.buildData(data, e.target);
           App.Documentable.clearProgressBar(upload_data);
+          App.Documentable.clearInputErrors(upload_data);
+          $(upload_data.addAttachmentLabel).removeClass("error");
           App.Documentable.setProgressBar(upload_data, "uploading");
           upload_data.submit();
         },
@@ -56,9 +55,6 @@
           $(data.addAttachmentLabel).removeClass("error");
           destroyAttachmentLink = $(data.result.destroy_link);
           $(data.destroyAttachmentLinkContainer).html(destroyAttachmentLink);
-          if (input.lockUpload) {
-            App.Documentable.showNotice();
-          }
         },
         progress: function(e, data) {
           var progress;
@@ -96,7 +92,8 @@
       $(data.progressBar).find(".loading-bar").addClass(klass);
     },
     setTitleFromFile: function(data, title) {
-      if ($(data.titleField).val() === "") {
+      var currentTitle = $(data.titleField).val();
+      if (currentTitle === "" || currentTitle === undefined) {
         $(data.titleField).val(title);
       }
     },

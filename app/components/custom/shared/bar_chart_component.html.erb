@@ -1,0 +1,13 @@
+<div class="ai-stats-card">
+  <h3 class="ai-stats-card--title"><%= @title %></h3>
+  <div class="bar-chart-container"
+       data-bar-chart
+       data-chart-labels="<%= labels_json %>"
+       data-chart-values="<%= values_json %>"
+       data-chart-orientation="<%= @orientation %>"
+       <% if colors_json %>data-chart-colors="<%= colors_json %>"<% end %>
+       <% if use_percentage? %>data-chart-use-percentage="true"<% end %>>
+    <canvas></canvas>
+  </div>
+</div>
+

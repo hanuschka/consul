@@ -1,0 +1,77 @@
+<% if can_ask_questions? %>
+  <div class="participation-stats-ai-question"
+       data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
+       data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
+    <section class="ai-stats-card">
+      <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
+        <% c.with_head do %>
+          <div>
+            <h3 class="ai-stats-card--title">
+              <%= t("custom.participation_stats.ai_question.title") %>
+            </h3>
+            <p class="ai-question-section--subtitle">
+              <%= t("custom.participation_stats.ai_question.subtitle") %>
+            </p>
+          </div>
+        <% end %>
+        <% c.with_body do %>
+          <div class="ai-question-section--form">
+        <%= form_tag create_stat_question_projekt_phase_path(@projekt_phase),
+                     method: :post,
+                     class: "ai-question-form js-ai-question-form" do %>
+          <%= text_area_tag :question,
+                            nil,
+                            placeholder: t("custom.participation_stats.ai_question.placeholder"),
+                            class: "ai-question-form--input js-ai-question-input",
+                            required: true %>
+          <div class="ai-question-form--actions">
+            <%= button_tag type: "submit",
+                           class: "button ai-question-form--submit js-ai-question-submit" do %>
+              <%= t("custom.participation_stats.ai_question.submit") %>
+            <% end %>
+            <div class="ai-question-form--loading hidden js-ai-question-loading">
+              <%= render Shared::SpinnerComponent.new(size: :small) %>
+              <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %> js-ai-questions-pending">
+        <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
+        <div class="js-ai-questions-pending-list">
+          <% pending_questions.each do |question| %>
+            <div class="ai-question-item ai-question-item--pending"
+                 data-question-id="<%= question.id %>"
+                 data-status-url="<%= stat_question_status_projekt_phase_path(@projekt_phase, question_id: question.id) %>">
+              <%= render Shared::SpinnerComponent.new(size: :medium) %>
+              <p class="ai-question-item--text"><%= truncate(question.question, length: 150) %></p>
+              <p class="ai-question-item--status">
+                <%= t("custom.participation_stats.ai_question.processing_message") %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="ai-question-section--history js-ai-questions-history<%= ' hidden' if completed_questions.empty? %>">
+        <% completed_questions.each do |question| %>
+          <%= render "custom/particapation_stats/completed_question_item", question: question, projekt_phase: @projekt_phase %>
+        <% end %>
+
+        <% if completed_questions.any? %>
+          <div class="ai-question-section--download-all">
+            <a href="<%= download_all_stat_answers_projekt_phase_path(@projekt_phase, format: 'pdf') %>" class="button hollow with-icon">
+              <i class="fa fa-file-pdf"></i> <%= t("custom.participation_stats.ai_question.download_all_pdf") %>
+            </a>
+            <a href="<%= download_all_stat_answers_projekt_phase_path(@projekt_phase, format: 'txt') %>" class="button hollow with-icon">
+              <i class="fa fa-file-alt"></i> <%= t("custom.participation_stats.ai_question.download_all_txt") %>
+            </a>
+          </div>
+        <% end %>
+      </div>
+        <% end %>
+      <% end %>
+    </section>
+  </div>
+<% end %>

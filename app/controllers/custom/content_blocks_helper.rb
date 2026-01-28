@@ -87,6 +87,6 @@ module ContentBlocksHelper
       res << "</div>"
     end
 
-    res.html_safe
+    AdminWYSIWYGSanitizer.new.sanitize(res)
   end
 end

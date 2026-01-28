@@ -1,75 +1,102 @@
 <div id="participation_statistics">
 
-  <small><%= t("stats.hint") %></small>
-
   <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
-    <div id="total_investments" class="stats-group">
-      <h4><%= t("stats.budgets.total_investments_title") %></h4>
+    <div class="ai-stats-cards margin-bottom">
+      <div class="ai-stats-card">
+        <h4><%= t("stats.budgets.total_investments") %></h4>
+        <div class="number"><%= stats.total_budget_investments %></div>
+      </div>
 
-      <%= number_with_info_tags(
-        stats.total_budget_investments,
-        t("stats.budgets.total_investments"),
-        html_class: "total-resources"
-      ) %>
+      <div class="ai-stats-card">
+        <h4><%= t("stats.total_participants") %></h4>
+        <div class="number"><%= stats.total_participants %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("stats.supports") %></h4>
+        <div class="number"><%= stats.total_supports %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("stats.budgets.total_votes") %></h4>
+        <div class="number"><%= stats.total_votes %></div>
+      </div>
 
       <% unless params[:stats_section] == "accepting" %>
-        <%= number_with_info_tags(stats.total_unfeasible_investments,
-                                  t("stats.budgets.total_unfeasible_investments")) %>
+        <div class="ai-stats-card">
+          <h4><%= t("stats.budgets.total_feasible_investments") %></h4>
+          <div class="number"><%= stats.total_feasible_investments %></div>
+        </div>
 
-        <%= number_with_info_tags(stats.total_feasible_investments,
-                                  t("stats.budgets.total_feasible_investments")) %>
+        <div class="ai-stats-card">
+          <h4><%= t("stats.budgets.total_unfeasible_investments") %></h4>
+          <div class="number"><%= stats.total_unfeasible_investments %></div>
+        </div>
       <% end %>
 
       <% if @budget.valuating_or_later? %>
-        <%= number_with_info_tags(stats.total_selected_investments,
-                                  t("stats.budgets.total_selected_investments")) %>
+        <div class="ai-stats-card">
+          <h4><%= t("stats.budgets.total_selected_investments") %></h4>
+          <div class="number"><%= stats.total_selected_investments %></div>
+        </div>
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <div id="" class="stats-group">
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_proposals_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_proposals,
-        t("custom.projekt_phases.stats.proposal_phase.total_proposals"),
-        html_class: "total-resources"
-      ) %>
+    <div class="number-stats-cards margin-bottom">
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.proposals") %></h4>
+        <div class="number"><%= stats.total_proposals %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_supports,
-        t("custom.projekt_phases.stats.proposal_phase.total_supports"),
-        html_class: "total-resources"
-      ) %>
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.authors") %></h4>
+        <div class="number"><%= stats.total_authors %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_weight_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_supports_weight,
-        t("custom.projekt_phases.stats.proposal_phase.total_supports_weight"),
-        html_class: "total-resources"
-      ) %>
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.participants") %></h4>
+        <div class="number"><%= stats.total_participants %></div>
+      </div>
 
-      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_authors_title") %></h4>
-      <%= number_with_info_tags(
-        stats.total_authors,
-        "",
-        html_class: "total-participants"
-      ) %>
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.supports") %></h4>
+        <div class="number"><%= stats.total_supports %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.weighted_score") %></h4>
+        <div class="number"><%= stats.total_supports_weight %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.comments") %></h4>
+        <div class="number"><%= stats.total_comments %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.hidden") %></h4>
+        <div class="number"><%= stats.total_hidden %></div>
+      </div>
+
+      <div class="ai-stats-card">
+        <h4><%= t("custom.projekt_phases.stats.proposal_phase.reported") %></h4>
+        <div class="number"><%= stats.total_reported %></div>
+      </div>
     </div>
   <% end %>
 
-  <% unless stats.show_percentage_values_only? %>
-    <div id="total_participants" class="stats-group">
-      <h4><%= t("stats.total_participants") %></h4>
+  <%# <% unless stats.show_percentage_values_only? || stats.is_a?(ProjektPhase::ProposalPhase::Stats) %1> %>
+  <%#   <div id="total_participants" class="stats-group"> %>
+  <%#     <h4><%= t("stats.total_participants") %1></h4> %>
 
-      <%= number_with_info_tags(
-        stats.total_participants,
-        "",
-        html_class: "participants total-participants"
-      ) %>
-    </div>
-  <% end %>
-
-  <% stats.participations.each do |participation| %>
-    <%= render "shared/stats/#{participation}", stats: stats %>
-  <% end %>
+  <%#     <%= number_with_info_tags( %>
+  <%#       stats.total_participants, %>
+  <%#       "", %>
+  <%#       html_class: "participants total-participants" %>
+  <%#     ) %1> %>
+  <%#   </div> %>
+  <%# <% end %1> %>
+  <%# <% stats.participations.each do |participation| %1> %>
+  <%#   <%= render "shared/stats/#{participation}", stats: stats %1> %>
+  <%# <% end %1> %>
 </div>

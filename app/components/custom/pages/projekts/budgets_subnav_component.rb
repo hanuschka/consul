@@ -10,22 +10,41 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
   private
 
     def budget_subnav_items_for(budget)
-      {
-        results:    t("budgets.results.link"),
-        stats:      t("stats.budgets.link")
-      }.select { |section, _| can?(:"read_#{section}", budget) }.map do |section, text|
-        {
-          text: text,
-          url:  url_to_footer_tab(section: section, remote: true),
-          active: params[:section] == section.to_s
+      items = []
+
+      items << overview_item
+
+      if can?(:read_results, budget)
+        items << {
+          text: t("budgets.results.link"),
+          url: url_to_footer_tab(section: "results", remote: true),
+          active: params[:section] == "results"
         }
-      end.push(overview_item)
+      end
+
+      if can?(:read_stats, budget)
+        items << {
+          text: t("custom.projekt_phases.subnav.key_metrics"),
+          url: url_to_footer_tab(section: "key_metrics", remote: true),
+          active: params[:section] == "key_metrics"
+        }
+
+        if Ai::Settings.ai_available?
+          items << {
+            text: t("custom.projekt_phases.subnav.analysis"),
+            url: url_to_footer_tab(section: "analysis", remote: true),
+            active: params[:section] == "analysis"
+          }
+        end
+      end
+
+      items
     end
 
     def overview_item
       {
         text: t("custom.projekts.page.footer.budget.investments_subtab"),
-        url: url_to_footer_tab(section: "overview", remote: true),
+        url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview"
       }
     end

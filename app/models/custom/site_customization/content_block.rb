@@ -2,10 +2,15 @@ require_dependency Rails.root.join("app", "models", "site_customization", "conte
 
 class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze
+  DEFAULT_MARGIN_BOTTOM = 30
+
+  attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
   belongs_to :projekt, optional: true
   acts_as_list scope: :projekt
+
+  before_validation :repair_html_body
 
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale
@@ -20,5 +25,13 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     ordered_array.each_with_index do |record_id, order|
       find(record_id).update_column(:position, (order + 1))
     end
+  end
+
+  private
+
+  def repair_html_body
+    return if body.blank?
+
+    self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
   end
 end

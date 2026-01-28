@@ -1,0 +1,13 @@
+<nav class="<%= wrapper_class %>" aria-label="<%= t('.aria_label', default: 'Secondary navigation') %>">
+  <% tabs.each do |tab| %>
+    <%= link_to tab.url, class: tab_classes(tab), data: tab_data(tab), aria: { current: (tab.current ? "page" : nil) } do %>
+      <% if tab.icon.present? %>
+        <i class="fa <%= tab.icon %>"></i>
+      <% end %>
+      <%= tab.label %>
+      <% if tab.count.present? %>
+        <span class="adm-tabs__count"><%= tab.count %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+</nav>

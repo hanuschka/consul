@@ -3,6 +3,8 @@
 <%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
+  <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
   <%= render Kern::FormFieldComponent.new(label: t('.dates_label'), hint: t('.dates_description')) do %>
     <%= render 'adm/projekt_phases/duration/dates', projekt_phase: @projekt_phase %>
   <% end %>

@@ -3,5 +3,6 @@
 <%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
+  <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
   <%= render "adm/projekt_phases/form_author/#{@projekt_phase.name}", projekt_phase: @projekt_phase %>
 </div>

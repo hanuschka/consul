@@ -3,6 +3,8 @@
 <%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
+  <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
   <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :phase_tab_name, :string) %>
 
   <% if @projekt_phase.name.in?(%w[debate_phase proposal_phase budget_phase voting_phase question_phase formular_phase legislation_phase comment_phase livestream_phase point_of_interest_phase]) %>

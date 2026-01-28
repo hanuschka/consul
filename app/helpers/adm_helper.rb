@@ -26,4 +26,16 @@ module AdmHelper
       }
     end
   end
+
+  def projekt_phase_tabs(projekt_phase, current_action: nil)
+    current_action ||= action_name
+
+    projekt_phase.admin_nav_bar_items.map do |action|
+      {
+        label: I18n.t("adm.projekt_phases.projekt_phase.#{action}"),
+        url: send("#{action}_adm_projekt_phase_path", projekt_phase),
+        current: current_action == action
+      }
+    end
+  end
 end

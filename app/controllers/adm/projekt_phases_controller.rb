@@ -154,7 +154,19 @@ module Adm
     def milestones; end
     def progress_bars; end
     def legislation_process_draft_versions; end
-    def map; end
+    def map
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+
+      @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title },
+        { name: t(".title") }
+      ]
+    end
     def projekt_point_of_interest_categories; end
     def projekt_point_of_interest_pins; end
     def map_resources_overview; end

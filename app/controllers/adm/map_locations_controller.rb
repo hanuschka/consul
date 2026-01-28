@@ -1,10 +1,10 @@
 module Adm
-  class ProjektMapLocationsController < Adm::BaseController
-    def update
-      @projekt = Projekt.find(params[:projekt_id])
-      authorize [:adm, @projekt], :update?
+  class MapLocationsController < Adm::BaseController
+    before_action :find_map_location
 
-      @map_location = @projekt.map_location
+    def update
+      authorize [:adm, @map_location.mappable], :update?, policy_class: policy_class_for(@map_location.mappable)
+
       if @map_location.update(map_location_params)
         flash.now[:success] = t("adm.default_map_location.update.success")
       end
@@ -13,12 +13,23 @@ module Adm
         helpers.dom_id(@map_location, :editor),
         Adm::MapSettingComponent.new(
           map_location: @map_location,
-          path: adm_projekt_map_location_path(@projekt)
+          path: polymorphic_path([:adm, @map_location.mappable, :map_location])
         )
       )
     end
 
     private
+
+      def find_map_location
+        @map_location = MapLocation.find(params[:id])
+      end
+
+      def policy_class_for(mappable)
+        case mappable
+        when ProjektPhase
+          Adm::ProjektPhasePolicy
+        end
+      end
 
       def map_location_params
         params.require(:map_location).permit(

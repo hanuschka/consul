@@ -101,6 +101,8 @@ de:
           color: Farbe
           name: Name
           actions: Aktionen
+      map:
+        title: Karte
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
@@ -109,4 +111,5 @@ de:
         form_author: Formular & Autor
         user_functions: Nutzerfunktionen
         projekt_labels: Labels
-        sentiments: Stimmungen
+        sentiments: Sentimente
+        map: Karte

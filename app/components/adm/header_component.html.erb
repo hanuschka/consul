@@ -1,7 +1,7 @@
 <div class="kern-container main-container">
   <% if @breadcrumbs.present? %>
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb-list">
+      <ol class="breadcrumb-list my-3">
         <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
           <% is_last = index == @breadcrumbs.size - 1 %>
           <%= breadcrumb_item(breadcrumb, is_last) %>
@@ -9,8 +9,6 @@
       </ol>
     </nav>
   <% end %>
-
-  <h1 class="kern-heading-large mb-4"><%= @title %></h1>
 </div>
 
 <hr class="kern-divider mb-5" aria-hidden="true" />

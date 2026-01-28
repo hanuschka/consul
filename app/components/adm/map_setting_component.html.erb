@@ -17,11 +17,11 @@
 
       <%= form_submit_button %>
     <% end %>
-  </div>
 
-  <% if flash[:success].present? %>
-    <div class="input-success-message mt-2">
-      <%= flash[:success] %>
-    </div>
-  <% end %>
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2">
+        <%= flash[:success] %>
+      </div>
+    <% end %>
+  </div>
 <% end %>

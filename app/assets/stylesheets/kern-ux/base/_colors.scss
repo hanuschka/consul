@@ -9,11 +9,13 @@
 
   --kern-darkblue-750: oklch(36.29% 0.1831 265);
 
+  // Kern overrides
+  --kern-color-layout-border: var(--kern-grey-100);
+
   // Semantic adm variables
   --adm-color-primary: var(--kern-darkblue-750);
   --adm-color-text: var(--kern-grey-700);
   --adm-color-text-inverse: var(--kern-custom-white);
-  --adm-color-border: var(--kern-grey-100);
 }
 
 @mixin custom-dark-colors {
@@ -25,11 +27,13 @@
 
   --kern-darkblue-750: oklch(82.15% 0.0557 265.6);
 
+  // Kern overrides
+  --kern-color-layout-border: var(--kern-grey-100);
+
   // Semantic adm variables
   --adm-color-primary: var(--kern-darkblue-750);
   --adm-color-text: var(--kern-grey-700);
   --adm-color-text-inverse: var(--kern-custom-white);
-  --adm-color-border: var(--kern-grey-100);
 }
 
 

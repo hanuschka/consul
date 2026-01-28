@@ -1,8 +1,12 @@
 @use "../abstracts/breakpoints" as breakpoints;
 
+header {
+  height: var(--kern-adm-header-height);
+}
+
 aside {
   position: fixed;
-  height: 100vh;
+  min-height: calc(100vh - var(--kern-adm-header-height));
   z-index: 1000;
   min-width: 290px;
   border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);

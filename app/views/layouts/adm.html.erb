@@ -24,10 +24,10 @@
       <span class="material-symbols-outlined" aria-hidden="true">menu</span>
     </div>
 
-    <header class="bg-darkblue d-flex">
-      <%= image_tag(image_path_for("adm_logo.png"), alt: Setting["org_name"], class: "m-5", width: "50") %>
+    <header class="bg-darkblue d-flex align-items-center">
+      <%= image_tag(image_path_for("adm_logo.png"), alt: Setting["org_name"], class: "mx-4", size: "50x50") %>
 
-      <div class="d-flex align-items-center fs-5"><%= t("adm.title") %></div>
+      <div class="fs-5"><%= t("adm.title") %></div>
     </header>
 
     <div class="d-flex">
@@ -40,7 +40,7 @@
         </div>
       </aside>
 
-      <main>
+      <main class="flex-grow-1">
         <%= yield %>
       </main>
     </div>

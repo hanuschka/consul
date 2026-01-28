@@ -6,6 +6,14 @@
 
   --kern-grey-100: oklch(91.57% 0 none);
   --kern-grey-700: oklch(39.94% 0 none);
+
+  --kern-darkblue-750: oklch(36.29% 0.1831 265);
+
+  // Semantic adm variables
+  --adm-color-primary: var(--kern-darkblue-750);
+  --adm-color-text: var(--kern-grey-700);
+  --adm-color-text-inverse: var(--kern-custom-white);
+  --adm-color-border: var(--kern-grey-100);
 }
 
 @mixin custom-dark-colors {
@@ -14,6 +22,14 @@
 
   --kern-grey-100: oklch(9.43% 0 none);
   --kern-grey-700: oklch(60.06% 0 none);
+
+  --kern-darkblue-750: oklch(82.15% 0.0557 265.6);
+
+  // Semantic adm variables
+  --adm-color-primary: var(--kern-darkblue-750);
+  --adm-color-text: var(--kern-grey-700);
+  --adm-color-text-inverse: var(--kern-custom-white);
+  --adm-color-border: var(--kern-grey-100);
 }
 
 

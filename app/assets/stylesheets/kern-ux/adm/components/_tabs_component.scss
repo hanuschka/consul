@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  border-bottom: 1px solid var(--kern-grey-100);
+  border-bottom: 1px solid var(--adm-color-border);
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 
@@ -11,7 +11,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
-    color: var(--kern-grey-700);
+    color: var(--adm-color-text);
     text-decoration: none;
     font-size: 0.9375rem;
     font-weight: 400;
@@ -24,19 +24,19 @@
     padding-bottom: 0.25rem;
 
     &:hover {
-      color: var(--kern-darkblue-600, #004a83);
+      color: var(--adm-color-primary);
       text-decoration: none;
     }
 
     &:focus {
-      outline: 2px solid var(--kern-darkblue-400, #1779ba);
+      outline: 2px solid var(--adm-color-primary);
       outline-offset: 2px;
     }
 
     &--current {
-      color: var(--kern-darkblue-700, #004a83);
+      color: var(--adm-color-primary);
       font-weight: 600;
-      border-bottom-color: var(--kern-darkblue-600, #004a83);
+      border-bottom-color: var(--adm-color-primary);
     }
 
     .fa, .fas, .far, .fab {
@@ -53,7 +53,7 @@
     padding: 0 0.375rem;
     font-size: 0.75rem;
     font-weight: 600;
-    background-color: var(--kern-grey-100);
+    background-color: var(--adm-color-border);
     border-radius: 9999px;
   }
 }

@@ -6,3 +6,12 @@ $spacing-sizes: (
   4: var(--kern-24),
   5: var(--kern-48),
 );
+
+$font-sizes: (
+  1: var(--kern-font-size-12),
+  2: var(--kern-font-size-14),
+  3: var(--kern-font-size-16),
+  4: var(--kern-font-size-20),
+  5: var(--kern-font-size-24),
+  6: var(--kern-font-size-32),
+);

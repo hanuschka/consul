@@ -95,20 +95,6 @@
   }
 }
 
-.projekt-content-start-button--ki-badge {
-  position: absolute;
-  top: 8px;
-  right: -28px;
-  transform: rotate(45deg);
-  background: #6b46c1;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 28px;
-  letter-spacing: 0.04em;
-  pointer-events: none;
-  z-index: 1;
-}
 
 .projekt-content-start-button--content {
   width: 100%;
@@ -251,12 +237,12 @@
 }
 
 .projekt-file-import-preview {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 15px 0;
 }
 
 .projekt-file-import-preview-header {
@@ -305,6 +291,12 @@
   margin-bottom: 15px;
 }
 
+.js-projekt-file-import-cancel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
 .projekt-file-import-preview-prompt {
   margin-bottom: 15px;
   min-width: 590px;
@@ -326,6 +318,7 @@
 }
 
 .projekt-start-with-prompt-form {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -341,8 +334,8 @@
   width: 100%;
   max-width: 590px;
   margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  // padding-bottom: 15px;
+  // border-bottom: 1px solid #e0e0e0;
 
   h3 {
     margin: 0;
@@ -352,6 +345,12 @@
     margin-bottom: 0 !important;
     margin-top: 0 !important;
   }
+}
+
+.js-projekt-prompt-cancel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
 }
 
 .projekt-start-with-prompt-form-content {

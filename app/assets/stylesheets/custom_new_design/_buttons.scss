@@ -227,14 +227,14 @@ button {
 .round-icon-button {
   padding: 0 !important;
   border-radius: 50%;
-  color: #919dab;
+  color: $blue-gray-1;
   transition: 50ms ease background-color;
   background-color: $light-gray-2;
   margin-bottom: 0;
   margin-top: 0;
   width: 35px;
   height: 35px;
-  font-size: 18px;
+  font-size: 20px;
 
   i {
     width: 1.3em;
@@ -252,7 +252,7 @@ button {
 .transparent-round-icon-button {
   padding: 0 !important;
   border-radius: 50%;
-  color: #919dab;
+  color: $blue-gray-1;
   width: 1.7em;
   height: 1.7em;
   transition: 50ms ease background-color;
@@ -263,7 +263,7 @@ button {
   }
 
   &:hover {
-    background-color: #ededed;
+    background-color: $light-gray-2;
   }
 
   &:active {

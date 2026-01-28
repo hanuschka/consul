@@ -11,9 +11,6 @@
       tabindex="0"
       <% end %>
     >
-      <span class="projekt-content-start-button--ki-badge">
-        KI
-      </span>
       <i class="fas fa-file-upload"></i>
       <div class="projekt-content-start-button--content">
         <div>
@@ -34,9 +31,6 @@
       tabindex="0"
       <% end %>
     >
-      <span class="projekt-content-start-button--ki-badge">
-        KI
-      </span>
       <i class="fas fa-pen"></i>
       <div class="projekt-content-start-button--content">
         <div>
@@ -100,10 +94,10 @@
         </button>
         <button
           type="button"
-          class="button secondary small hollow js-projekt-file-import-cancel"
+          class="round-icon-button js-projekt-file-import-cancel"
+          aria-label="<%= t('custom.projekts.content_start_section.file_import_preview.cancel') %>"
         >
           <i class="fas fa-times"></i>
-          <%= t('custom.projekts.content_start_section.file_import_preview.cancel') %>
         </button>
       </div>
 
@@ -140,10 +134,10 @@
       <h3><%= t('custom.projekts.content_start_section.prompt_form.header') %></h3>
       <button
         type="button"
-        class="button secondary small hollow js-projekt-prompt-cancel"
+        class="round-icon-button js-projekt-prompt-cancel"
+        aria-label="<%= t('custom.projekts.content_start_section.prompt_form.cancel') %>"
       >
         <i class="fas fa-times"></i>
-        <%= t('custom.projekts.content_start_section.prompt_form.cancel') %>
       </button>
     </div>
     <div class="projekt-start-with-prompt-form-content">

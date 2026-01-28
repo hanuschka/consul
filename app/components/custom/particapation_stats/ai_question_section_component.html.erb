@@ -1,7 +1,13 @@
 <% if can_ask_questions? %>
-  <div class="participation-stats-ai-question"
-       data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
-       data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>">
+  <div
+    class="participation-stats-ai-question <%= 'ai-feature-disabled' if ai_disabled? %>"
+    data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
+    data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>"
+    <% if ai_disabled? %>
+    data-tooltip
+    title="<%= t('ai.disabled_tooltip') %>"
+    <% end %>
+  >
     <section class="ai-stats-card">
       <%= render Shared::CollapseComponent.new(opened_by_default: false) do |c| %>
         <% c.with_head do %>
@@ -23,10 +29,12 @@
                             nil,
                             placeholder: t("custom.participation_stats.ai_question.placeholder"),
                             class: "ai-question-form--input js-ai-question-input",
-                            required: true %>
+                            required: true,
+                            disabled: ai_disabled? %>
           <div class="ai-question-form--actions">
             <%= button_tag type: "submit",
-                           class: "button ai-question-form--submit js-ai-question-submit" do %>
+                           class: "button ai-question-form--submit js-ai-question-submit",
+                           disabled: ai_disabled? do %>
               <%= t("custom.participation_stats.ai_question.submit") %>
             <% end %>
             <div class="ai-question-form--loading hidden js-ai-question-loading">
@@ -40,24 +48,17 @@
       <div class="ai-question-section--pending<%= ' hidden' unless has_pending? %> js-ai-questions-pending">
         <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
         <div class="js-ai-questions-pending-list">
-          <% pending_questions.each do |question| %>
-            <div class="ai-question-item ai-question-item--pending"
-                 data-question-id="<%= question.id %>"
-                 data-status-url="<%= stat_question_status_projekt_phase_path(@projekt_phase, question_id: question.id) %>">
-              <%= render Shared::SpinnerComponent.new(size: :medium) %>
-              <p class="ai-question-item--text"><%= truncate(question.question, length: 150) %></p>
-              <p class="ai-question-item--status">
-                <%= t("custom.participation_stats.ai_question.processing_message") %>
-              </p>
-            </div>
-          <% end %>
+          <%= render partial: "custom/particapation_stats/pending_question_item",
+                     collection: pending_questions,
+                     locals: { projekt_phase: @projekt_phase } %>
         </div>
       </div>
 
       <div class="ai-question-section--history js-ai-questions-history<%= ' hidden' if completed_questions.empty? %>">
-        <% completed_questions.each do |question| %>
-          <%= render "custom/particapation_stats/completed_question_item", question: question, projekt_phase: @projekt_phase %>
-        <% end %>
+        <%= render partial: "custom/particapation_stats/completed_question_item",
+                   collection: completed_questions,
+                   as: :question,
+                   locals: { projekt_phase: @projekt_phase } %>
 
         <% if completed_questions.any? %>
           <div class="ai-question-section--download-all">

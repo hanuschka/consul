@@ -19,40 +19,36 @@ class Ai::GenerateContentBlock < ApplicationService
         ""
       end
 
+    prompt = <<~TEXT
+      #{fetch_prompt}
+
+      Additional context of content block:
+      It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
+
+      #{projekt_context_text}
+
+      Instructions: "#{@instructions}"
+
+      Current content block HTML:
+      #{@content_block_html}
+    TEXT
+
     llm_response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(
-          <<~TEXT
-            Update the content block HTML strictly following the provided instructions.
-
-            Hard rules:
-            - Modify only what the instructions explicitly require. Do not restructure, reorder, remove, or wrap existing elements.
-            - Preserve all existing HTML exactly as it is unless an instruction explicitly requires a change.
-            - When adding UI elements, use Zurb Foundation 6 and inline styles.
-            - When adding images, use "https://placehold.co" as src and DO NOT replace existing images.
-            - DO NOT wrap images in figure elements and DO NOT alter existing figure elements.
-            - Do not optimize, clean up, or reformat the HTML. Keep the original formatting and indentation unless an instruction requires otherwise.
-            - Never infer desired changes. Only apply changes explicitly described in the instructions.
-
-            Technical note:
-            - If asked to use "brand color" use "var(--brand-color)" css variable.
-
-            Additional context of content block:
-            It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
-
-            #{projekt_context_text}
-
-            Instructions: "#{@instructions}"
-
-            Current content block HTML:
-            #{@content_block_html}
-
-            Return ONLY the updated HTML, without explanations.
-          TEXT
-        )
+        .ask(prompt)
 
     llm_response.content["html"]
+  end
+
+  def fetch_prompt
+    response = DtApi::Client.new.consul_ai_prompts.get(:content_block_ai_edit)
+
+    unless response.success?
+      raise "DT API error: #{response.code} - #{response.message}"
+    end
+
+    response.dig("consul_ai_prompt", "prompt")
   end
 
   def output_schema

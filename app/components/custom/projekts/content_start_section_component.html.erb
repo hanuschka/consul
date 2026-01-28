@@ -3,8 +3,13 @@
   <div class="projekt-content-start-buttons js-projekt-content-start-buttons">
     <button
       type="button"
-      class="projekt-content-start-button js-projekt-file-import-trigger"
-      title="<%= t('custom.projekts.content_start_section.file_import_button.title') %>"
+      class="projekt-content-start-button js-projekt-file-import-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
+      title="<%= file_import_button_title %>"
+      <%= 'disabled' if ai_disabled? %>
+      <% if ai_disabled? %>
+      data-tooltip
+      tabindex="0"
+      <% end %>
     >
       <span class="projekt-content-start-button--ki-badge">
         KI
@@ -21,8 +26,13 @@
 
     <button
       type="button"
-      class="projekt-content-start-button js-projekt-prompt-trigger"
-      title="<%= t('custom.projekts.content_start_section.prompt_button.title') %>"
+      class="projekt-content-start-button js-projekt-prompt-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
+      title="<%= prompt_button_title %>"
+      <%= 'disabled' if ai_disabled? %>
+      <% if ai_disabled? %>
+      data-tooltip
+      tabindex="0"
+      <% end %>
     >
       <span class="projekt-content-start-button--ki-badge">
         KI

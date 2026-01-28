@@ -3,6 +3,7 @@ de:
     errors:
       model_not_configured: "Fehler: KI-Modell nicht konfiguriert"
       generation_failed: "Fehler: Inhaltsblock konnte nicht mit KI generiert werden"
+    disabled_tooltip: "KI-Funktionen nicht verfügbar. Wenden Sie sich an einen Administrator."
     default_context_hint: "Standardmäßig werden Projektseitentitel, Untertitel und Inhaltsblockinhalt als Kontext gesendet"
     use_full_projekt_context: "Projektkontext verwenden"
     use_full_projekt_context_hint: "Enthält alle Inhaltsblöcke, Projektdaten, SDGs, Kategorien und Phasen im KI-Prompt (kann langsamer sein)"

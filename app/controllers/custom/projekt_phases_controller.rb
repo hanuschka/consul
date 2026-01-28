@@ -53,6 +53,20 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
+    unless Ai::Settings.ai_available?
+      respond_to do |format|
+        format.html do
+          redirect_back(fallback_location: page_path(@projekt_phase.projekt.page.slug,
+                                                      projekt_phase_id: @projekt_phase.id,
+                                                      section: "stats"))
+        end
+        format.js do
+          render json: { error: "AI features unavailable" }, status: :forbidden
+        end
+      end
+      return
+    end
+
     @projekt_phase.update(ai_stats_refresh_status: :pending)
     AiAnalytics::ProjektPhaseStatsRefresh.perform_later(@projekt_phase.id)
 
@@ -126,6 +140,8 @@ class ProjektPhasesController < ApplicationController
   def create_stat_question
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
+
+    return render json: { error: "AI features unavailable" }, status: :forbidden if !Ai::Settings.ai_available?
 
     @stat_question = @projekt_phase.stat_questions.build(
       question: params[:question],

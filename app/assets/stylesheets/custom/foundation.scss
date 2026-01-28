@@ -24,3 +24,11 @@
   }
 }
 
+.has-tip {
+  border-bottom: unset;
+}
+
+.tooltip {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+}

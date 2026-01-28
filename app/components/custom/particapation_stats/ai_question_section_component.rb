@@ -1,4 +1,4 @@
-class ParticapationStats::AiQuestionComponent < ApplicationComponent
+class ParticapationStats::AiQuestionSectionComponent < ApplicationComponent
   include ActionView::Helpers::TranslationHelper
 
   def initialize(projekt_phase:)
@@ -20,5 +20,9 @@ class ParticapationStats::AiQuestionComponent < ApplicationComponent
 
   def has_pending?
     pending_questions.any?
+  end
+
+  def ai_disabled?
+    !Ai::Settings.ai_available?
   end
 end

@@ -31,6 +31,7 @@
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
+      App.ContentBlockTemplatesSelector.initialize();
     }
   };
 }).call(this);

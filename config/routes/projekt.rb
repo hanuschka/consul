@@ -35,6 +35,8 @@ resources :projekt_phases, only: [] do
     get :download_stat_answer
     delete :delete_stat_question
     get :download_all_stat_answers
+    get :download_topic_clustering
+    get :download_semantic_clustering
   end
 end
 

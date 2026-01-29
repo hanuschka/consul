@@ -239,6 +239,20 @@ class ProjektPhasesController < ApplicationController
     end
   end
 
+  def download_topic_clustering
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_clustering(:topic)
+  end
+
+  def download_semantic_clustering
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_clustering(:semantic)
+  end
+
   private
 
     def generate_stat_answer_filename(projekt_phase, stat_question, format)
@@ -293,5 +307,64 @@ class ProjektPhasesController < ApplicationController
       end
 
       text_parts.join("\n")
+    end
+
+    def download_clustering(clustering_type)
+      clustering_key = "#{clustering_type}_clustering"
+      clustering_data = @projekt_phase.ai_stats&.dig(clustering_key) || {}
+      resource_class = clustering_resource_class
+
+      download_format = params[:format] || "csv"
+      filename = generate_clustering_filename(@projekt_phase, clustering_type, download_format)
+
+      case download_format
+      when "csv"
+        csv_data = CsvServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          resource_class: resource_class
+        ).call
+        send_data csv_data,
+                  filename: filename,
+                  type: "text/csv",
+                  disposition: "attachment"
+      when "pdf"
+        pdf = PdfServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type
+        ).call
+        send_data pdf.render,
+                  filename: filename,
+                  type: "application/pdf",
+                  disposition: "attachment"
+      when "odt"
+        odt_data = OdtServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type
+        ).call
+        send_data odt_data,
+                  filename: filename,
+                  type: "application/vnd.oasis.opendocument.text",
+                  disposition: "attachment"
+      end
+    end
+
+    def generate_clustering_filename(projekt_phase, clustering_type, format)
+      projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")
+      phase_name = projekt_phase.title.parameterize(separator: "-")
+      "#{projekt_name}-#{phase_name}-#{clustering_type}-clustering.#{format}"
+    end
+
+    def clustering_resource_class
+      case @projekt_phase
+      when ProjektPhase::BudgetPhase
+        Budget::Investment
+      when ProjektPhase::CommentPhase
+        Comment
+      else
+        Proposal
+      end
     end
 end

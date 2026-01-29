@@ -7,19 +7,13 @@ class Adm::TabsComponent < ApplicationComponent
     end
   end
 
-  attr_reader :tabs, :wrapper_class, :tab_class, :current_class, :i18n_scope
+  attr_reader :tabs, :i18n_scope
 
   def initialize(
     tabs: [],
-    wrapper_class: "adm-tabs",
-    tab_class: "adm-tabs__tab",
-    current_class: "adm-tabs__tab--current",
     i18n_scope: nil
   )
     @i18n_scope = i18n_scope
-    @wrapper_class = wrapper_class
-    @tab_class = tab_class
-    @current_class = current_class
     @tabs = build_tabs(tabs)
   end
 
@@ -66,9 +60,7 @@ class Adm::TabsComponent < ApplicationComponent
   end
 
   def tab_classes(tab)
-    classes = [tab_class]
-    classes << current_class if tab.current
-    classes.compact.join(" ")
+    tab.current ? "adm-tab active" : "adm-tab"
   end
 
   def tab_data(tab)

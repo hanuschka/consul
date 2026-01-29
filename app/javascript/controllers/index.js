@@ -52,3 +52,6 @@ application.register("ckeditor", CkeditorController)
 
 import StreetSelectorController from "./street_selector_controller"
 application.register("street-selector", StreetSelectorController)
+
+import TabsScrollController from "./components/adm/tabs_scroll_controller"
+application.register("tabs-scroll", TabsScrollController)

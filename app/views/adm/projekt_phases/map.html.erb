@@ -8,9 +8,9 @@
 
 <%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
 
-<div class="kern-container mb-5">
-  <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
+<div class="kern-container mb-5">
   <%= render Adm::MapSettingComponent.new(
     map_location: @projekt_phase.map_location,
     path: adm_projekt_phase_map_location_path(@projekt_phase)

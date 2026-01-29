@@ -30,7 +30,7 @@
       const $container = $(".js-projekt-content-block-templates-selector--inner");
       $container.html(html);
 
-      this.storeOrbitHeights($container)
+      this.storeOrbitHeights($container);
 
       $(document).foundation();
 

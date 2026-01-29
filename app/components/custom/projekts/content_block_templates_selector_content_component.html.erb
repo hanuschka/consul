@@ -1,56 +1,37 @@
 <ul id="contentBlockSelectorTabs" class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
-  <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
-    <a href="#contentBlockSelectorTab--basicContent" aria-selected="true">Basisinhalte</a>
-  </li>
-  <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-    <a href="#contentBlockSelectorTab--satatusAndNotes" >Status & Hinweise</a>
-  </li>
-  <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-    <a href="#contentBlockSelectorTab--mediaAndResources" >Medien & Ressourcen</a>
-  </li>
-  <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-    <a href="#contentBlockSelectorTab--teasersAndPromotions" >Teaser und Werbeaktionen</a>
+  <% dt_templates_by_category.each_with_index do |category_data, index| %>
+    <% category = category_data["category"] %>
+    <% is_first = index == 0 %>
+    <li class="tabs projekt-content-block-templates-selector--tab tabs-title <%= 'is-active' if is_first %>">
+      <a
+        href="#contentBlockSelectorTab--<%= category_id(category) %>"
+        aria-selected="<%= is_first %>"
+      >
+        <%= category['name_de'] %>
+      </a>
+    </li>
+  <% end %>
+  <li class="tabs-title projekt-content-block-templates-selector--tab">
+    <a href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
   </li>
   <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a  href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
-  </li>
-  <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a  href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
+    <a href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
   </li>
 </ul>
 <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
-  <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
-    <% basic_content_templates.each do |template_name| %>
-      <%= render Projekts::ContentBlockTemplateItemComponent.new(
-        template_name: template_name,
-        template_dir: "projekts/content_block_templates/basic_content"
-      ) %>
-    <% end %>
-  </div>
-  <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
-    <% status_and_notes_templates.each do |template_name| %>
-      <%= render Projekts::ContentBlockTemplateItemComponent.new(
-        template_name: template_name,
-        template_dir: "projekts/content_block_templates/status_and_notes"
-      ) %>
-    <% end %>
-  </div>
-  <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
-    <% teasers_and_promotions.each do |template_name| %>
-      <%= render Projekts::ContentBlockTemplateItemComponent.new(
-        template_name: template_name,
-        template_dir: "projekts/content_block_templates/teasers_and_promotions"
-      ) %>
-    <% end %>
-  </div>
-  <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
-    <% media_and_resources_templates.each do |template_name| %>
-      <%= render Projekts::ContentBlockTemplateItemComponent.new(
-        template_name: template_name,
-        template_dir: "custom/projekts/content_block_templates/media_and_resources"
-      ) %>
-    <% end %>
-  </div>
+  <% dt_templates_by_category.each_with_index do |category_data, index| %>
+    <% category = category_data["category"] %>
+    <% templates = category_data["templates"] || [] %>
+    <% is_first = index == 0 %>
+    <div
+      id="contentBlockSelectorTab--<%= category_id(category) %>"
+      class="tabs-panel <%= 'is-active' if is_first %>"
+    >
+      <% templates.each do |template| %>
+        <%= render Projekts::DtContentBlockTemplateItemComponent.new(template: template) %>
+      <% end %>
+    </div>
+  <% end %>
   <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
     <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
     <div

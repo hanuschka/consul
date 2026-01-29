@@ -7,7 +7,6 @@ module Adm
       @pagy, @age_ranges = pagy(scope.order(:order))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.menu.items.application_subitems.age_ranges") }
       ]
@@ -18,7 +17,6 @@ module Adm
       authorize [:adm, @age_range]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.menu.items.application_subitems.age_ranges"), url: adm_age_ranges_path },
         { name: t(".title") }
@@ -41,7 +39,6 @@ module Adm
       authorize [:adm, @age_range]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.menu.items.application_subitems.age_ranges"), url: adm_age_ranges_path },
         { name: t(".title") }

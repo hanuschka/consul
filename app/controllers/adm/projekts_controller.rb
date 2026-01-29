@@ -12,7 +12,6 @@ module Adm
       @end_date_header_options = { sort: true }
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts") }
       ]
     end
@@ -21,7 +20,6 @@ module Adm
       authorize [:adm, Projekt], :create?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: t(".title") }
       ]
@@ -41,7 +39,6 @@ module Adm
     def details
       authorize [:adm, @projekt], :show?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name }
       ]
@@ -51,7 +48,6 @@ module Adm
       authorize [:adm, @projekt], :show?
       @individual_groups = IndividualGroup.hard.visible
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t("adm.projekts.visibility.title") }
@@ -61,7 +57,6 @@ module Adm
     def projekt_managers
       authorize [:adm, @projekt], :show?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t("adm.projekts.projekt_managers.title") }
@@ -71,7 +66,6 @@ module Adm
     def map
       authorize [:adm, @projekt], :show?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t("adm.projekts.map.title") }

@@ -9,7 +9,6 @@ module Adm
         @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
         @breadcrumbs = [
-          { name: t("adm.menu.items.home"), url: adm_root_path },
           parent_breadcrumb,
           { name: @content_card.title }
         ]

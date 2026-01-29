@@ -62,7 +62,6 @@ module Adm
 
       def breadcrumbs_for_action(action_title)
         [
-          { name: t("adm.menu.items.home"), url: adm_root_path },
           { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
           { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },

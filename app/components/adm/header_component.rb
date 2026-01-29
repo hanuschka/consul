@@ -5,11 +5,17 @@ class Adm::HeaderComponent < ApplicationComponent
   end
 
   def breadcrumb_item(breadcrumb, is_last)
-    content_tag(:li,
+    item = content_tag(:li,
                 class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
                 aria: (is_last ? { current: "page" } : {})
     ) do
       breadcrumb_item_content(breadcrumb, is_last)
+    end
+
+    if is_last
+      item
+    else
+      item + content_tag(:span, "arrow_forward_ios", class: "material-symbols-outlined breadcrumb-divider")
     end
   end
 

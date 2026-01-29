@@ -6,7 +6,6 @@ module Adm
       @navbar_items = NavbarItem.top_level
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.menu.items.application_subitems.navbar") }
       ]

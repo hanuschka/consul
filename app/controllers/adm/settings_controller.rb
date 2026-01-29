@@ -3,7 +3,6 @@ module Adm
     def metadata
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t(".title") }
       ]
@@ -12,7 +11,6 @@ module Adm
     def gdpr
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t(".title") }
       ]
@@ -21,7 +19,6 @@ module Adm
     def registration
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t(".title") }
       ]

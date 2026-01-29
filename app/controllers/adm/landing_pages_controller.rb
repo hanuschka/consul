@@ -5,7 +5,6 @@ module Adm
     def index
       authorize [:adm, :landing_page]
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application_subitems.landing_pages") }
       ]
 
@@ -20,7 +19,6 @@ module Adm
       authorize [:adm, @landing_page], policy_class: Adm::LandingPagePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application_subitems.landing_pages"), url: adm_landing_pages_path },
         { name: t(".title") }
       ]

@@ -13,7 +13,6 @@ module Adm
       @name_header_options = { search: true }
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name, url: details_adm_projekt_path(@projekt) },
         { name: t(".title") }
@@ -25,7 +24,6 @@ module Adm
       @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt.name },
         { name: t("adm.projekt_phases.index.title"), url: adm_projekt_projekt_phases_path(@projekt) },
@@ -62,7 +60,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -74,7 +71,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -86,7 +82,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -110,7 +105,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -122,7 +116,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -134,7 +127,6 @@ module Adm
       authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -160,7 +152,6 @@ module Adm
       @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -176,7 +167,6 @@ module Adm
       @projekt_labels = @projekt_phase.projekt_labels
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
@@ -189,7 +179,6 @@ module Adm
       @sentiments = @projekt_phase.sentiments
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },

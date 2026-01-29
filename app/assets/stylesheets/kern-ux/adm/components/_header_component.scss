@@ -1,14 +1,22 @@
 .breadcrumb-list {
   display: flex;
+  align-items: center;
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
 
   .breadcrumb-item a {
     color: var(--kern-grey-700);
     text-decoration: none;
   }
 
-  .breadcrumb-item:not(:last-child)::after {
-    content: "/";
+  .breadcrumb-divider {
+    display: flex;
+    align-items: center;
     margin: 0 0.5em;
     color: var(--kern-grey-700);
+    font-size: 16px;
   }
 }

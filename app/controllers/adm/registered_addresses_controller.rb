@@ -9,7 +9,6 @@ module Adm
       setup_header_options
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.menu.items.application_subitems.registered_addresses") }
       ]

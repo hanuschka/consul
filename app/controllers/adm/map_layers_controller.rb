@@ -5,7 +5,6 @@ module Adm
       authorize [:adm, @map_layer]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
         { name: t(".title") }
@@ -28,7 +27,6 @@ module Adm
       authorize [:adm, @map_layer]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.home"), url: adm_root_path },
         { name: t("adm.menu.items.application") },
         { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
         { name: t(".title") }

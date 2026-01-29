@@ -77,6 +77,20 @@ en:
         resources: proposals
         in: in
         category_groups: category groups
+      clustering_export:
+        download_csv: Download CSV
+        download_pdf: Download PDF
+        download_odt: Download ODT
+        category: Category
+        subcategory: Subcategory
+        resource_id: ID
+        resource_title: Title
+        resource_url: URL
+        pdf_title_topic: Topic Clustering Export
+        pdf_title_semantic: Semantic Clustering Export
+        pdf_projekt: Project
+        pdf_phase: Phase
+        pdf_exported: Exported
       user_segments:
         title: User Segments
         men: Men

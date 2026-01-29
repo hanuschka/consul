@@ -76,6 +76,20 @@ de:
         resources: Vorschläge
         in: in
         category_groups: Kategoriegruppen
+      clustering_export:
+        download_csv: CSV herunterladen
+        download_pdf: PDF herunterladen
+        download_odt: ODT herunterladen
+        category: Kategorie
+        subcategory: Unterkategorie
+        resource_id: ID
+        resource_title: Titel
+        resource_url: URL
+        pdf_title_topic: Themengruppen Export
+        pdf_title_semantic: Sentimentanalyse Export
+        pdf_projekt: Projekt
+        pdf_phase: Phase
+        pdf_exported: Exportiert
       user_segments:
         title: Nutzersegmente
         men: Männer

@@ -18,6 +18,6 @@ App.htmlTemplateUtils = {}
  */
 App.htmlTemplateUtils.fillTemplate = function(template, data) {
   return template.replace(/{{\s*([\w.]+)\s*}}/g, (_, key) => {
-    return key.split('.').reduce((obj, k) => obj?.[k], data) ?? '';
+    return key.split('.').reduce((obj, k) => obj && obj[k], data) || '';
   });
 }

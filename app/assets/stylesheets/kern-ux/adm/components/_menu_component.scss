@@ -25,6 +25,12 @@
     align-items: center;
     gap: var(--kern-metric-space-small);
     position: relative;
+    border-radius: var(--kern-8);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--kern-color-feedback-info-background);
+    }
 
     &.with-subitems {
       &::after {

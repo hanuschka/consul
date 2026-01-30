@@ -2,6 +2,7 @@ de:
   shared:
     "true": "Ja"
     "false": "Nein"
+    back: "Zurück"
     submit: "Speichern"
     edit: "Bearbeiten"
     delete: "Löschen"

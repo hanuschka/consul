@@ -1,4 +1,6 @@
 class Adm::HeaderComponent < ApplicationComponent
+  renders_one :hint, Adm::HintComponent
+
   def initialize(title:, breadcrumbs: [])
     @title = title
     @breadcrumbs = breadcrumbs

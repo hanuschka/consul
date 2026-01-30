@@ -4,8 +4,7 @@ de:
       show:
         title: Karten
         intro_title: Hinweis zu den Karten
-        intro_text: |
-          <p>Hier legen Sie global fest, welcher Kartenausschnitt und welcher Kartentyp standardmäßig verwendet werden soll. Diese Einstellungen gelten für alle Projektkarten und werden automatisch an die einzelnen Projektphasen vererbt.</p>
-          <p>Unterstützt werden derzeit OpenStreetMap, Mapbox und 3D-Karten von Virtual City Systems. Wenn Sie stattdessen einen eigenen Geo-Server anbinden möchten, wenden Sie sich bitte an den Support von demokratie.today.</p>
+        intro_text_p1: Hier legen Sie global fest, welcher Kartenausschnitt und welcher Kartentyp standardmäßig verwendet werden soll. Diese Einstellungen gelten für alle Projektkarten und werden automatisch an die einzelnen Projektphasen vererbt.
+        intro_text_p2: Unterstützt werden derzeit OpenStreetMap, Mapbox und 3D-Karten von Virtual City Systems. Wenn Sie stattdessen einen eigenen Geo-Server anbinden möchten, wenden Sie sich bitte an den Support von demokratie.today.
       update:
         success: Standardkarte erfolgreich aktualisiert

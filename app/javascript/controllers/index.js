@@ -55,3 +55,6 @@ application.register("street-selector", StreetSelectorController)
 
 import TabsScrollController from "./components/adm/tabs_scroll_controller"
 application.register("tabs-scroll", TabsScrollController)
+
+import ComponentsAdmHintController from "./components/adm/hint_controller"
+application.register("components-adm-hint", ComponentsAdmHintController)

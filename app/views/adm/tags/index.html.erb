@@ -1,11 +1,14 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <h3 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h3>
+    <p class="kern-body mb-3 mb-md-0"><%= t(".intro_text_p1") %></p>
+    <p class="kern-body mb-5 mb-md-0"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
-  <h2 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h2>
-  <p class="kern-body mb-3 mb-md-0"><%= t(".intro_text_p1") %></p>
-  <p class="kern-body mb-5 mb-md-0"><%= t(".intro_text_p2") %></p>
 
   <%= new_resource_link(new_adm_tag_path, t('.new_tag')) %>
 

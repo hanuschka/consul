@@ -1,8 +1,8 @@
 module Adm
   class RegisteredAddressesController < Adm::BaseController
     def index
-      authorize [:adm, RegisteredAddress]
-      base_scope = RegisteredAddressesQuery.call(policy_scope([:adm, RegisteredAddress]), params)
+      authorize [:adm, ::RegisteredAddress]
+      base_scope = RegisteredAddressesQuery.call(policy_scope([:adm, ::RegisteredAddress]), params)
 
       @pagy, @registered_addresses = pagy(base_scope, limit: 20)
 

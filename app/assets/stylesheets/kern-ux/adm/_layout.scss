@@ -1,6 +1,10 @@
 @use "sass:map";
 @use "../abstracts/breakpoints" as breakpoints;
 
+html {
+  overflow-y: scroll;
+}
+
 header {
   height: var(--kern-adm-header-height);
   background-color: var(--adm-color-primary);

@@ -72,7 +72,14 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def layers_json
-      (mappable&.map_layers || MapLayer.general).to_json
+      layers = if mappable.respond_to?(:map_layers)
+                 mappable.map_layers
+               else
+                 mappable.try(:projekt_phase)&.map_layers ||
+                   mappable.try(:projekt)&.map_layers ||
+                   MapLayer.general
+               end
+      layers.to_json
     end
 
     def mapbox_public_token

@@ -136,7 +136,18 @@ module Adm
 
     # Stub actions - to be implemented
     def settings; end
-    def proposals; end
+
+    def proposals
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+      @pagy, @proposals = pagy(@projekt_phase.proposals.order(id: :desc))
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title },
+        { name: t(".title") }
+      ]
+    end
     def budget_phases; end
     def budget_edit; end
     def budget_investments; end

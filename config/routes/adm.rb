@@ -70,6 +70,12 @@ namespace :adm do
 
     resources :projekt_labels, except: %i[index show]
     resources :sentiments, except: %i[index show]
+    resources :proposals, only: [:show] do
+      member do
+        patch :toggle_admin_accepted
+        patch :update_official_answer
+      end
+    end
   end
 
   resources :projekt_manager_assignments, only: [:update]

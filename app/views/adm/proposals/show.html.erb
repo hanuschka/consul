@@ -1,0 +1,69 @@
+<%= content_for :title, @proposal.title %>
+
+<%= render Adm::HeaderComponent.new(title: @proposal.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase, current_action: "proposals")) %>
+
+<article class="kern-container mb-5">
+  <div class="mb-3">
+    <strong><%= t(".admin_accepted_status") %>:</strong>
+    <%= @proposal.admin_accepted? ? t(".accepted") : t(".not_accepted") %>
+  </div>
+
+  <h1 class="kern-title kern-title--large mb-2"><%= @proposal.title %></h1>
+  <p class="kern-body kern-body--small">
+    <%= @proposal.author.username %>
+    <% if @proposal.on_behalf_of.present? %>
+      (<%= t(".on_behalf_of") %>: <%= @proposal.on_behalf_of %>)
+    <% end %>
+    | <%= l(@proposal.created_at, format: :long) %>
+    | <%= link_to t(".view_on_site"), proposal_path(@proposal), class: "kern-button kern-button--secondary", target: "_blank", data: { turbo: false } %>
+  </p>
+  <p class="kern-body kern-body--small">
+    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @proposal.cached_votes_up %>
+    <% if @proposal.cached_votes_down > 0 %>
+      · <span class="material-symbols-outlined" aria-hidden="true">thumb_down</span> <%= @proposal.cached_votes_down %>
+    <% end %>
+    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @proposal.comments_count %>
+  </p>
+
+  <div class="kern-row mb-3">
+    <div class="kern-col-sm-12 kern-col-md-5">
+      <% if @image_url.present? %>
+        <%= image_tag(@image_url, class: "w-100") %>
+      <% end %>
+    </div>
+
+    <div class="kern-col-sm-12 kern-col-md-5">
+      <div class="kern-body mb-4">
+        <%= wysiwyg(@proposal.description) %>
+      </div>
+    </div>
+  </div>
+
+  <% if @proposal.map_location.present? %>
+    <div class="kern-row">
+      <div class="kern-col-sm-12 kern-col-md-10">
+        <%= render Kern::MapComponent.new(map_location: @proposal.map_location) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @proposal.video_url.present? %>
+    <p class="kern-body mb-4">
+      <strong><%= t(".video_url") %>:</strong>
+      <%= link_to @proposal.video_url, @proposal.video_url, target: "_blank" %>
+    </p>
+  <% end %>
+
+  <hr class="kern-divider my-5">
+
+  <%= render Adm::AttributeEditorComponent.new(
+    @proposal,
+    :official_answer,
+    :rich_text,
+    path: update_official_answer_adm_projekt_phase_proposal_path(@projekt_phase, @proposal),
+    label: t(".official_answer"),
+    description: t(".official_answer_hint")
+  ) %>
+</article>

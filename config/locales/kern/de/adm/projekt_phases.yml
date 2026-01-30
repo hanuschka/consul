@@ -75,6 +75,16 @@ de:
         title: Formular & Autor
       user_functions:
         title: Nutzerfunktionen
+      proposals:
+        title: Vorschläge
+        no_proposals: Keine Vorschläge vorhanden.
+        table:
+          id: ID
+          admin_accepted: Freigegeben
+          title: Titel
+          author: Autor
+          actions: Aktionen
+          view: Anzeigen
       projekt_labels:
         title: Labels
         create_button: Neues Label erstellen
@@ -100,6 +110,7 @@ de:
         general_settings: Allgemeine Einstellungen
         form_author: Formular & Autor
         user_functions: Nutzerfunktionen
+        proposals: Vorschläge
         projekt_labels: Labels
         sentiments: Sentimente
         map: Karte

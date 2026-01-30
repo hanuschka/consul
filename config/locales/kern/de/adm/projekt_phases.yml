@@ -108,7 +108,7 @@ de:
         lock_on: Sperrdatum
         lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
         select_managers: Abstimmungshelfer zuordnen
-        select_managers_hint: Wählen Sie die Officing Manager aus, die für diese Phase berechtigt sind.
+        select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
       projekt_phase:
         duration: Laufzeit
         naming: Benennung
@@ -120,4 +120,4 @@ de:
         projekt_labels: Labels
         sentiments: Sentimente
         map: Karte
-        officing_managers: Officing Manager
+        officing_managers: Abstimmungshelfer

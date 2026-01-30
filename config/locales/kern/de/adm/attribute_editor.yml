@@ -26,9 +26,9 @@ de:
         description_label: Description Label 11
         description_description: Description Description
         comment_form_title_label: Titel des Kommentarformulars
-        comment_form_title_description: Titel des Kommentarformulars Beschreibung
+        comment_form_title_description: Wird oberhalb des Kommentarformulars angezeigt.
         comment_form_button_label: Kommentarformular Button
-        comment_form_button_description: Kommentarformular Button Beschreibung
+        comment_form_button_description: Text des Buttons zum Absenden eines Kommentars.
       poll:
         closing_note_label: Text der Abschlussseite
         closing_note_description: Wird auf der Abschlussseite der Umfrage angezeigt, nachdem die Nutzer ihre Antworten eingereicht haben.

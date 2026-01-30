@@ -1,5 +1,6 @@
 .attribute-editor-component {
-  .attribute-form.string {
+  .attribute-form.string,
+  .attribute-form.date {
     form {
       display: flex;
       gap: 8px;

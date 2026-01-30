@@ -197,7 +197,18 @@ module Adm
       ]
     end
 
-    def officing_managers; end
+    def officing_managers
+      authorize [:adm, @projekt_phase], :update?, policy_class: Adm::ProjektPhasePolicy
+      @officing_managers = OfficingManager.all
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title },
+        { name: t(".title") }
+      ]
+    end
+
     def officing_manager_audits; end
     def age_ranges_for_stats; end
     def ai_settings; end
@@ -239,8 +250,9 @@ module Adm
           :support_button_text, :description,
           :user_status, :age_range_id,
           :geozone_restricted, :registered_address_grouping_restriction,
+          :lock_on,
           registered_address_district_ids: [], registered_address_street_ids: [],
-          individual_group_value_ids: [],
+          individual_group_value_ids: [], officing_manager_ids: [],
           registered_address_grouping_restrictions: registered_address_grouping_restrictions_params
         )
       end

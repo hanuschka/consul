@@ -36,6 +36,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::ColorComponent
     when :select
       Adm::AttributeEditors::SelectComponent
+    when :date
+      Adm::AttributeEditors::DateComponent
     else
       raise "Unsupported attribute editor kind: #{@kind}"
     end

@@ -101,8 +101,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def fetch_prompt
       parsed_response = DtApi::Caching.get_with_cache(
-        "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_question/projekt_phase",
-        error_callback: -> { raise "DT API error: Failed to fetch ai_analytics_projekt_phase_question prompt and no cached version available" }
+        "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_question/projekt_phase"
       ) do
         DtApi::Client.new.consul_ai_prompts.get(
           :ai_analytics_projekt_phase_question,

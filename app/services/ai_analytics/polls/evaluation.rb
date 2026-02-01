@@ -47,10 +47,7 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
   def fetch_prompt
     cache_key = "dt_api/consul_ai_prompts/ai_analytics_poll_evaluation/poll"
 
-    parsed_response = DtApi::Caching.get_with_cache(
-      cache_key,
-      error_callback: -> { raise "DT API error: Failed to fetch ai_analytics_poll_evaluation prompt and no cached version available" }
-    ) do
+    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
       DtApi::Client.new.consul_ai_prompts.get(
         :ai_analytics_poll_evaluation,
         resource_type: "poll"

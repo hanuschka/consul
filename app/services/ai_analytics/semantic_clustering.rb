@@ -51,10 +51,7 @@ class AiAnalytics::SemanticClustering < ApplicationService
     def fetch_prompt
       cache_key = "dt_api/consul_ai_prompts/ai_analytics_semantic_clustering/projekt_phase"
 
-      parsed_response = DtApi::Caching.get_with_cache(
-        cache_key,
-        error_callback: -> { raise "DT API error: Failed to fetch ai_analytics_semantic_clustering prompt and no cached version available" }
-      ) do
+      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
         DtApi::Client.new.consul_ai_prompts.get(
           :ai_analytics_semantic_clustering,
           resource_type: "projekt_phase"

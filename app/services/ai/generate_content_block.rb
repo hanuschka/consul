@@ -44,10 +44,7 @@ class Ai::GenerateContentBlock < ApplicationService
   def fetch_prompt
     cache_key = "dt_api/consul_ai_prompts/content_block_ai_edit"
 
-    parsed_response = DtApi::Caching.get_with_cache(
-      cache_key,
-      error_callback: -> { raise "DT API error: Failed to fetch content_block_ai_edit prompt and no cached version available" }
-    ) do
+    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
       DtApi::Client.new.consul_ai_prompts.get(:content_block_ai_edit)
     end
 

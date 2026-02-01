@@ -17,10 +17,7 @@ class ProjektContentBlockTemplatesController < ApplicationController
   def fetch_dt_templates
     cache_key = "dt_api/content_block_templates/all"
 
-    parsed_response = DtApi::Caching.get_with_cache(
-      cache_key,
-      error_callback: -> { raise "DT API error: Failed to fetch content block templates and no cached version available" }
-    ) do
+    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
       DtApi::Client.new.content_block_templates.all
     end
 

@@ -3,8 +3,17 @@
     color: var(--kern-color-layout-text-default);
 
     &.active {
-      background-color: var(--kern-color-feedback-info-background);
+      background-color: var(--kern-darkblue-750);
+      color: var(--kern-custom-white);
       border-radius: var(--kern-8);
+
+      .nav-item-link:hover {
+        background-color: var(--kern-darkblue-750);
+      }
+    }
+
+    .nav-item-link:hover {
+      background-color: var(--kern-color-feedback-info-background);
     }
 
     .nav-item-list {
@@ -28,9 +37,6 @@
     border-radius: var(--kern-8);
     transition: background-color 0.15s ease;
 
-    &:hover {
-      background-color: var(--kern-color-feedback-info-background);
-    }
 
     &.with-subitems {
       &::after {

@@ -74,6 +74,7 @@ module ProjektContentBlocksAdminActions
     return unless check_ai_model_configured
 
     use_full_projekt_context = ActiveModel::Type::Boolean.new.cast(params[:use_full_projekt_context])
+    allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
 
     new_content_block_body =
       Ai::GenerateContentBlock.call(
@@ -82,7 +83,8 @@ module ProjektContentBlocksAdminActions
         @content_block.projekt.page&.title,
         @content_block.projekt.page&.subtitle,
         projekt: @content_block.projekt,
-        use_full_projekt_context: use_full_projekt_context
+        use_full_projekt_context: use_full_projekt_context,
+        allow_text_modification: allow_text_modification
       )
 
     if new_content_block_body.present?

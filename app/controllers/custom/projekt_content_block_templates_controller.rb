@@ -15,13 +15,13 @@ class ProjektContentBlockTemplatesController < ApplicationController
   private
 
   def fetch_dt_templates
-    response = DtApi::Client.new.content_block_templates.all
+    cache_key = "dt_api/content_block_templates/all"
 
-    if response.success?
-      response.parsed_response.dig("content_block_templates_by_category") || []
-    else
-      []
+    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
+      DtApi::Client.new.content_block_templates.all
     end
+
+    parsed_response.dig("content_block_templates_by_category") || []
   rescue StandardError => e
     Rails.logger.error("Failed to fetch DT content block templates: #{e.message}")
     []

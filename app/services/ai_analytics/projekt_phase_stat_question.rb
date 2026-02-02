@@ -100,15 +100,15 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def fetch_prompt
-      response = DtApi::Client.new.consul_ai_prompts.get(
-        :ai_analytics_projekt_phase_question,
-        resource_type: "projekt_phase"
-      )
-
-      unless response.success?
-        raise "DT API error: #{response.code} - #{response.message}"
+      parsed_response = DtApi::Caching.get_with_cache(
+        "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_question/projekt_phase"
+      ) do
+        DtApi::Client.new.consul_ai_prompts.get(
+          :ai_analytics_projekt_phase_question,
+          resource_type: "projekt_phase"
+        )
       end
 
-      response.dig("consul_ai_prompt", "prompt")
+      parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

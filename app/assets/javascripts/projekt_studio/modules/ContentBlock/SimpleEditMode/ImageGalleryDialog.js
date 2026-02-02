@@ -27,24 +27,30 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   initEventListeners() {
     const $document = $(document);
 
-    $document.on("click", ".js-cb-img-dialog-close", this.closeDialog.bind(this));
+    $document.on("click", ".js-file-upload-manager-dialog-close", this.closeDialog.bind(this));
+    $document.on("close", ".js-file-upload-manager-dialog", this.handleDialogClosed.bind(this));
+    $document.on("cancel", ".js-file-upload-manager-dialog", this.handleDialogCancel.bind(this));
 
-    $document.on("input", ".js-cb-img-search", this.handleSearchInputType.bind(this));
-    $document.on("keydown", ".js-cb-img-search", this.handleSearchKeydown.bind(this));
-    $document.on("click", ".js-cb-img-search-clear", this.clearSearch.bind(this));
+    $document.on("input", ".js-file-upload-manager-search", this.handleSearchInputType.bind(this));
+    $document.on("keydown", ".js-file-upload-manager-search", this.handleSearchKeydown.bind(this));
+    $document.on("click", ".js-file-upload-manager-search-clear", this.clearSearch.bind(this));
 
-    // $document.on("click", ".js-cb-img-filter", this.handleFilterClick.bind(this));
-    $document.on("click", ".js-cb-img-upload", this.handleUploadButtonClick.bind(this));
-    $document.on("change", ".js-cb-img-file-input", this.handleFileInputChange.bind(this));
+    // $document.on("click", ".js-file-upload-manager-filter", this.handleFilterClick.bind(this));
+    $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
+    $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
 
-    $document.on("click", ".js-cb-img-edit", this.openEditModal.bind(this));
-    $document.on("click", ".js-cb-img-edit-close", this.closeEditModal.bind(this));
-    $document.on("click", ".js-cb-img-update", this.updateImage.bind(this));
-    $document.on("click", ".js-cb-img-delete", this.deleteImage.bind(this));
+    $document.on("click", ".js-file-upload-manager-edit", this.openEditModal.bind(this));
+    $document.on("click", ".js-file-upload-manager-edit-close", this.closeEditModal.bind(this));
+    $document.on("click", ".js-file-upload-manager-update", this.updateImage.bind(this));
+    $document.on("click", ".js-file-upload-manager-delete", this.deleteImage.bind(this));
 
-    $document.on("click", ".js-cb-img-select", this.handleImageSelected.bind(this));
-    $document.on("click", ".cb-img-dialog__item", this.handleItemClick.bind(this));
+    $document.on("click", ".js-file-upload-manager-select", this.handleImageSelected.bind(this));
+    $document.on("click", ".file-upload-manager-dialog--item", this.handleItemClick.bind(this));
     $document.on("click", ".pagination a", this.handleKaminariPaginationClick.bind(this));
+  },
+
+  getDialogElement() {
+    return document.querySelector(".js-file-upload-manager-dialog");
   },
 
   async openDialog(onSelectCallback, contentBlockId = null, contentBlockWrapper = null) {
@@ -62,8 +68,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
       removedItemsStack: []
     };
 
-    $(".js-cb-img-dialog").addClass("-opened")
-    $(".js-cb-img-search").val("")
+    const dialog = this.getDialogElement();
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+    }
+    if (dialog) {
+      dialog.classList.add("-opened");
+    }
+    $(".js-file-upload-manager-search").val("")
 
     this.updateEditButtonVisibility();
     this.updateSelectButtonState();
@@ -71,8 +83,29 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   closeDialog(_e) {
-    $(".js-cb-img-dialog").removeClass("-opened")
-    $(".js-cb-img-grid, .js-cb-img-pagination").empty()
+    this.requestDialogClose();
+  },
+
+  requestDialogClose() {
+    const dialog = this.getDialogElement();
+    if (dialog && dialog.open) {
+      dialog.close();
+    } else {
+      this.handleDialogClosed();
+    }
+  },
+
+  handleDialogCancel(e) {
+    e.preventDefault();
+    this.requestDialogClose();
+  },
+
+  handleDialogClosed() {
+    const dialog = this.getDialogElement();
+    if (dialog) {
+      dialog.classList.remove("-opened");
+    }
+    $(".js-file-upload-manager-grid, .js-file-upload-manager-pagination").empty()
 
     this.state.selectedImage = null;
     this.onSelectCallback = null;
@@ -95,15 +128,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   updateUploadingState() {
     const isUploading = this.state.uploadingCount > 0;
-    const searchInput = document.querySelector('.js-cb-img-search');
-    const pagination = document.querySelector('.js-cb-img-pagination');
+    const searchInput = document.querySelector('.js-file-upload-manager-search');
+    const pagination = document.querySelector('.js-file-upload-manager-pagination');
 
     searchInput.disabled = isUploading;
 
     if (pagination) {
       pagination.classList.toggle('-disabled', isUploading);
-      $(".js-cb-img-page-btn").prop("disabled", isUploading)
-      $(`.js-cb-img-page-btn[data-page=${this.state.page}]`).prop("disabled", true)
+      $(".js-file-upload-manager-page-btn").prop("disabled", isUploading)
+      $(`.js-file-upload-manager-page-btn[data-page=${this.state.page}]`).prop("disabled", true)
     }
   },
 
@@ -127,7 +160,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   clearSearch(e) {
-    const searchInput = document.querySelector(".js-cb-img-search");
+    const searchInput = document.querySelector(".js-file-upload-manager-search");
     if (searchInput) {
       searchInput.value = '';
     }
@@ -142,7 +175,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   //     this.state.type = type;
   //     this.state.page = 1;
 
-  //     document.querySelectorAll(".js-cb-img-filter").forEach(btn => {
+  //     document.querySelectorAll(".js-file-upload-manager-filter").forEach(btn => {
   //       btn.classList.remove("active");
   //     });
   //     e.currentTarget.classList.add("active");
@@ -153,8 +186,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   async navigateToPage(pageNumber) {
     if (pageNumber && pageNumber !== this.state.page) {
-      $(".js-cb-img-page-btn.-active").removeClass("-active").prop("disabled", false)
-      $(`.js-cb-img-page-btn[data-page=${pageNumber}]`).addClass("-active").prop("disabled", true)
+      $(".js-file-upload-manager-page-btn.-active").removeClass("-active").prop("disabled", false)
+      $(`.js-file-upload-manager-page-btn[data-page=${pageNumber}]`).addClass("-active").prop("disabled", true)
 
       this.state.page = pageNumber;
       await this.fetchImageItems();
@@ -162,7 +195,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   handleUploadButtonClick(_e) {
-    const fileInput = document.querySelector('.js-cb-img-file-input');
+    const fileInput = document.querySelector('.js-file-upload-manager-file-input');
     fileInput.value = '';
 
     fileInput.click();
@@ -195,8 +228,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   removeLastItemIfNeeded() {
-    const grid = document.querySelector('.js-cb-img-grid');
-    const items = grid.querySelectorAll('.cb-img-dialog__item');
+    const grid = document.querySelector('.js-file-upload-manager-grid');
+    const items = grid.querySelectorAll('.file-upload-manager-dialog--item');
 
     if (items.length >= this.paginationSize) {
       const lastItem = items[items.length - 1];
@@ -210,7 +243,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
       const removedItem = this.state.removedItemsStack.pop();
 
       document
-        .querySelector('.js-cb-img-grid')
+        .querySelector('.js-file-upload-manager-grid')
         .appendChild(removedItem);
     }
   },
@@ -226,13 +259,13 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   renderUploadingItem(tempImageData) {
-    const template = document.getElementById('cb-img-uploading-template');
+    const template = document.getElementById('file-upload-manager-uploading-template');
     const documentFramgment = template.content.cloneNode(true);
-    const itemElement = documentFramgment.querySelector('.cb-img-dialog__item');
+    const itemElement = documentFramgment.querySelector('.file-upload-manager-dialog--item');
 
     this.updateImageItem(itemElement, tempImageData)
 
-    const grid = document.querySelector('.js-cb-img-grid');
+    const grid = document.querySelector('.js-file-upload-manager-grid');
     grid.insertBefore(documentFramgment, grid.firstChild);
 
     this.removeLastItemIfNeeded();
@@ -246,7 +279,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     image.onload = () => {
       this.updateImageItem(uploadItemElement, imageData)
       uploadItemElement.classList.remove('-uploading');
-      uploadItemElement.querySelector(".cb-img-dialog__item-uploading").remove()
+      uploadItemElement.querySelector(".file-upload-manager-dialog--item-uploading").remove()
     }
   },
 
@@ -258,22 +291,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     imageItem.dataset.customThumbUrl = imageData.custom_thumb_url
 
     if (imageData.gallery_thumb_url) {
-      $imageItem.find('.js-cb-img-dialog_item-image').attr('src', imageData.gallery_thumb_url)
+      $imageItem.find('.js-file-upload-manager-dialog_item-image').attr('src', imageData.gallery_thumb_url)
     }
 
     if (imageData.in_memory_preview_url) {
       imageItem
-        .querySelector('.cb-img-dialog__item-preview')
+        .querySelector('.file-upload-manager-dialog--item-preview')
         .style.backgroundImage = `url('${imageData.in_memory_preview_url}')`;
     }
 
     $imageItem
-      .find('.cb-img-dialog__item-title')
+      .find('.file-upload-manager-dialog--item-title')
       .text(imageData.title)
       .attr("title", imageData.title)
 
     $imageItem
-      .find('.cb-img-dialog__item-alt')
+      .find('.file-upload-manager-dialog--item-alt')
       .text(imageData.alt_text || '')
   },
 
@@ -294,7 +327,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   resetSelectedImageItems() {
-    $(".cb-img-dialog__item.-selected").removeClass("-selected")
+    $(".file-upload-manager-dialog--item.-selected").removeClass("-selected")
   },
 
   handleImageSelected() {
@@ -305,8 +338,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
       const imageData = {
         id: selectedImage.dataset.id,
-        title: selectedImage.querySelector('.cb-img-dialog__item-title').textContent || '',
-        alt_text: selectedImage.querySelector('.cb-img-dialog__item-alt').textContent || '',
+        title: selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '',
+        alt_text: selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '',
         description: selectedImage.dataset.description || '',
         url: selectedImage.dataset.url || '',
         gallery_thumb_url: selectedImage.querySelector("img").src,
@@ -325,7 +358,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     try {
       const response = await this.fetchImageData();
       const html = await response.text();
-      const dialogBody = document.querySelector('.js-cb-img-dialog__body');
+      const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
       dialogBody.innerHTML = html;
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -337,12 +370,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   showLoadingOverlay() {
-    const overlay = document.querySelector('.js-cb-img-loading-overlay');
+    const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
     overlay.style.display = 'flex';
   },
 
   hideLoadingOverlay() {
-    const overlay = document.querySelector('.js-cb-img-loading-overlay');
+    const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
     overlay.style.display = 'none';
   },
 
@@ -419,7 +452,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   async fetchAndUpdatePagination() {
     const response = await this.fetchImageData({ pagination_only: "true"});
     const html = await response.text();
-    $(".js-cb-img-pagination").replaceWith(html);
+    $(".js-file-upload-manager-pagination").replaceWith(html);
   },
 
   async handleKaminariPaginationClick(e) {
@@ -433,14 +466,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   updateEditButtonVisibility() {
-    const editBtn = document.querySelector(".js-cb-img-edit");
+    const editBtn = document.querySelector(".js-file-upload-manager-edit");
     if (editBtn) {
       editBtn.style.display = this.state.selectedImage ? 'block' : 'none';
     }
   },
 
   updateSelectButtonState() {
-    const selectBtn = document.querySelector(".js-cb-img-select");
+    const selectBtn = document.querySelector(".js-file-upload-manager-select");
     if (selectBtn) {
       const hasSelection = this.state.selectedImage !== null;
       const isChosenUploading = this.state.selectedImage && this.state.selectedImage.classList.contains('-uploading');
@@ -452,29 +485,29 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   openEditModal(e) {
     if (!this.state.selectedImage) return;
 
-    const editModal = document.querySelector(".js-cb-img-edit-modal");
+    const editModal = document.querySelector(".js-file-upload-manager-edit-modal");
     editModal.classList.add("-opened");
 
-    const titleInput = editModal.querySelector(".js-cb-img-edit-title");
-    const descInput = editModal.querySelector(".js-cb-img-edit-description");
-    const altInput = editModal.querySelector(".js-cb-img-edit-alt");
+    const titleInput = editModal.querySelector(".js-file-upload-manager-edit-title");
+    const descInput = editModal.querySelector(".js-file-upload-manager-edit-description");
+    const altInput = editModal.querySelector(".js-file-upload-manager-edit-alt");
 
-    titleInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-title').textContent || '').trim();
+    titleInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '').trim();
     descInput.value = (this.state.selectedImage.dataset.description || '').trim();
-    altInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-alt').textContent || '').trim();
+    altInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '').trim();
   },
 
   closeEditModal(e) {
-    $(".js-cb-img-edit-modal").removeClass("-opened")
+    $(".js-file-upload-manager-edit-modal").removeClass("-opened")
   },
 
   async updateImage(e) {
     if (!this.state.selectedImage) return;
 
-    const modal = document.querySelector(".js-cb-img-edit-modal");
-    const titleInput = modal.querySelector(".js-cb-img-edit-title");
-    const descInput = modal.querySelector(".js-cb-img-edit-description");
-    const altInput = modal.querySelector(".js-cb-img-edit-alt");
+    const modal = document.querySelector(".js-file-upload-manager-edit-modal");
+    const titleInput = modal.querySelector(".js-file-upload-manager-edit-title");
+    const descInput = modal.querySelector(".js-file-upload-manager-edit-description");
+    const altInput = modal.querySelector(".js-file-upload-manager-edit-alt");
 
     const formData = new FormData();
     const type = this.state.type

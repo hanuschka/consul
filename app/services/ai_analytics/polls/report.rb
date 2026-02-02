@@ -16,15 +16,15 @@ class AiAnalytics::Polls::Report < ApplicationService
   end
 
   def fetch_prompt
-    response = DtApi::Client.new.consul_ai_prompts.get(
-      :ai_analytics_poll_report,
-      resource_type: "poll"
-    )
+    cache_key = "dt_api/consul_ai_prompts/ai_analytics_poll_report/poll"
 
-    unless response.success?
-      raise "DT API error: #{response.code} - #{response.message}"
+    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
+      DtApi::Client.new.consul_ai_prompts.get(
+        :ai_analytics_poll_report,
+        resource_type: "poll"
+      )
     end
 
-    response.dig("consul_ai_prompt", "prompt")
+    parsed_response.dig("consul_ai_prompt", "prompt")
   end
 end

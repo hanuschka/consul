@@ -1,11 +1,12 @@
 class Ai::GenerateContentBlock < ApplicationService
-  def initialize(instructions, content_block_html, title = nil, subtitle = nil, projekt: nil, use_full_projekt_context: false)
+  def initialize(instructions, content_block_html, title = nil, subtitle = nil, projekt: nil, use_full_projekt_context: false, allow_text_modification: false)
     @instructions = instructions
     @content_block_html = content_block_html
     @title = title
     @subtitle = subtitle
     @projekt = projekt
     @use_full_projekt_context = use_full_projekt_context
+    @allow_text_modification = allow_text_modification
   end
 
   def call
@@ -19,8 +20,17 @@ class Ai::GenerateContentBlock < ApplicationService
         ""
       end
 
+    text_modification_instruction =
+      if @allow_text_modification
+        "You CAN modify the text content of the content block if the instructions require it."
+      else
+        "IMPORTANT: You MUST NOT modify the text content. Only modify the HTML structure, styling, layout, and organization. Keep all existing text content exactly as it is."
+      end
+
     prompt = <<~TEXT
       #{fetch_prompt}
+
+      #{text_modification_instruction}
 
       Additional context of content block:
       It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"

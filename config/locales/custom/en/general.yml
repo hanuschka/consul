@@ -5,6 +5,8 @@ en:
       generation_failed: "Error: Failed to generate content block with AI"
     disabled_tooltip: "AI features unavailable. Contact administrator."
     default_context_hint: "By default, projekt page title, subtitle, and content block content are sent as context"
+    allow_text_modification: "Allow text content modification"
+    allow_text_modification_hint: "When unchecked (default), the AI will only modify HTML structure, styling, and layout while preserving all existing text content. When checked, the AI can also modify the text content based on your instructions."
     use_full_projekt_context: "Use full projekt context"
     use_full_projekt_context_hint: "Includes all content blocks, projekt dates, SDGs, categories, and phases in the AI prompt (may be slower)"
   shared:

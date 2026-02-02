@@ -20,7 +20,7 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
     {
       type: "object",
       properties: {
-        reports: {
+        evaluation: {
           type: "array",
           items: {
             type: "object",
@@ -30,12 +30,10 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
             },
             required: ["title", "content"],
             additionalProperties: false
-          },
-          minItems: 3,
-          maxItems: 3
+          }
         }
       },
-      required: ["reports"],
+      required: ["evaluation"],
       additionalProperties: false
     }
   end

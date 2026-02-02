@@ -16,7 +16,7 @@ module OdtServices
 
       def generate_text_content
         lines = []
-        lines << "# #{title}"
+        lines << "## #{title}"
         lines << ""
         lines << metadata
         lines << ""
@@ -140,7 +140,6 @@ module OdtServices
 
       def resource_content(resource)
         title = resource_title(resource)
-        details = resource_details(resource)
         url = resource_url(resource)
 
         lines = []
@@ -150,11 +149,6 @@ module OdtServices
         if url.present?
           lines << ""
           lines << url
-        end
-
-        if details.present?
-          lines << ""
-          lines << details
         end
 
         lines << ""
@@ -210,7 +204,7 @@ module OdtServices
           input_file.write(text_content)
           input_file.close
 
-          success = system("pandoc", "-f", "markdown", "-t", "odt", "-o", output_file.path, input_file.path)
+          success = system("pandoc", "-f", "markdown", "-t", "odt", "-V", "mainfont=Arial", "-o", output_file.path, input_file.path)
 
           unless success
             raise "Pandoc conversion failed. Please ensure pandoc is installed."

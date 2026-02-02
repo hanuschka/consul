@@ -182,14 +182,12 @@ module PdfServices
         pdf.start_new_page if pdf.cursor < 50
 
         title = resource_title(resource)
-        details = resource_details(resource)
         url = resource_url(resource)
 
         pdf.indent(25) do
           pdf.fill_color "f9f9f9"
           bounding_box_height = 35
           bounding_box_height += 12 if url.present?
-          bounding_box_height += 20 if details.present?
 
           pdf.fill_rectangle [0, pdf.cursor], pdf.bounds.width - 25, bounding_box_height
           pdf.fill_color "000000"
@@ -204,10 +202,6 @@ module PdfServices
                 { text: url, size: 10, link: url, color: "2563eb" }
               ]
               pdf.move_down 3
-            end
-
-            if details.present?
-              pdf.text details, size: 10, color: "4a5568"
             end
           end
           pdf.move_down 8

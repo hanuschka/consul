@@ -6,10 +6,34 @@ class AiAnalytics::Polls::Report < ApplicationService
   end
 
   def call
-    AiAnalytics::Polls::Base.call(@poll, prompt: prompt, stat_key: STAT_KEY)
+    AiAnalytics::Polls::Base.call(
+      @poll,
+      prompt: prompt,
+      stat_key: STAT_KEY,
+      output_schema: output_schema
+    )
   end
 
   private
+
+  def output_schema
+    {
+      type: "object",
+      properties: {
+        report: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            content: { type: "string" }
+          },
+          required: ["title", "content"],
+          additionalProperties: false
+        }
+      },
+      required: ["report"],
+      additionalProperties: false
+    }
+  end
 
   def prompt
     @prompt ||= fetch_prompt

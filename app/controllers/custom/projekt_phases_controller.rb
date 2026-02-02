@@ -332,7 +332,8 @@ class ProjektPhasesController < ApplicationController
         pdf = PdfServices::ClusteringExporter.new(
           projekt_phase: @projekt_phase,
           clustering_data: clustering_data,
-          clustering_type: clustering_type
+          clustering_type: clustering_type,
+          resource_class: resource_class
         ).call
         send_data pdf.render,
                   filename: filename,
@@ -342,7 +343,8 @@ class ProjektPhasesController < ApplicationController
         odt_data = OdtServices::ClusteringExporter.new(
           projekt_phase: @projekt_phase,
           clustering_data: clustering_data,
-          clustering_type: clustering_type
+          clustering_type: clustering_type,
+          resource_class: resource_class
         ).call
         send_data odt_data,
                   filename: filename,

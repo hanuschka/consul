@@ -122,28 +122,64 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             <div class="projekt-content-block-edit projekt-content-block-edit-standard-controlls js-projekt-content-block-edit-standard-controlls">
               <div class="ai-button-wrapper">
                 <div class="ai-button-wrapper--inner">
-                  <button type="button" data-original-title="AI für diesen Block aktivieren" title="AI für diesen Block aktivieren" class="projekt-frame-icon-button js-projekt-content-block--ai-edit">
+                  <button
+                    type="button"
+                    data-tooltip
+                    data-position="left"
+                    data-hover-delay="800"
+                    tabindex="0"
+                    title="AI-Generierung&#10;Ermöglicht KI-gestützte Erstellung, Bearbeitung und Verbesserung dieses Inhaltsblocks mit erweiterten Funktionen"
+                    class="projekt-frame-icon-button js-projekt-content-block--ai-edit"
+                  >
                     <i class="dt-logo-small-icon">
                     </i>
                   </button>
                 </div>
                 <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
               </div>
-              <button type="button" title="Direkt im Text editieren" class="js-edit-text-projekt-content-block projekt-frame-icon-button">
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Text-Editor&#10;Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung"
+                class="js-edit-text-projekt-content-block projekt-frame-icon-button"
+              >
                 <i class="fas fa-pencil-alt">
                 </i>
               </button>
-              <div class="projekt-frame-icon-button-wrapper" title="Mit AI editieren">
-                <button type="button" title="Mit AI editieren" class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button">
+              <div class="projekt-frame-icon-button-wrapper">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="KI-Editor&#10;Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen um diesen Block zu modifizieren, umzugestalten oder zu verbessern"
+                  class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button"
+                >
                   <i class="fas fa-magic">
                   </i>
                 </button>
               </div>
-              <button type="button" title="Code editieren" class="js-content-block-enter-code-edit-mode projekt-frame-icon-button">
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Code-Editor&#10;Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting"
+                class="js-content-block-enter-code-edit-mode projekt-frame-icon-button"
+              >
                 <i class="fas fa-code">
                 </i>
               </button>
-              <button type="button" title="Inhaltsblock kopieren" class="js-copy-current-content-block projekt-frame-icon-button">
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Duplizieren&#10;Erstellt eine exakte Kopie dieses Inhaltsblocks mit allen Einstellungen direkt unterhalb des aktuellen Blocks"
+                class="js-copy-current-content-block projekt-frame-icon-button"
+              >
                 <i class="fas fa-copy">
                 </i>
               </button>
@@ -151,7 +187,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <div class="ai-button-wrapper--inner">
                   <div class="dropdown-menu-container js-dropdown-menu">
                     <div class="js-dropdown-menu-toggle">
-                      <button type="button" title="Text per AI umgestalten" class="projekt-frame-icon-button">
+                      <button
+                        type="button"
+                        data-tooltip
+                        data-hover-delay="800"
+                        tabindex="0"
+                        title="KI-Umgestaltung&#10;Wählen Sie eine vordefinierte Option zur KI-basierten automatischen Transformation und Anpassung des Textes"
+                        class="projekt-frame-icon-button"
+                      >
                         <i class="fas fa-arrows-rotate ">
                         </i>
                       </button>
@@ -193,15 +236,36 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </div>
                 <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
               </div>
-              <button title="Editor-Menü öffnen" class="projekt-frame-icon-button js-html-edit-content-block">
+              <button
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen"
+                class="projekt-frame-icon-button js-html-edit-content-block"
+              >
                 <i class="fas fa-edit">
                 </i>
               </button>
-              <button title="Auf vorherige Version zurücksetzen" disabled class="projekt-frame-icon-button js-content-block-version-managment">
+              <button
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Versionsverlauf&#10;Verwalten Sie Versionen dieses Blocks: Anzeigen vorheriger Versionen und Rückgängigmachen von Änderungen"
+                disabled
+                class="projekt-frame-icon-button js-content-block-version-managment"
+              >
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>
-              <button type="button" title="Inhaltsblock löschen" class="js-delete-projekt-content-block -delete projekt-frame-icon-button">
+              <button
+                type="button"
+                data-tooltip
+                data-position="left"
+                data-hover-delay="800"
+                tabindex="0"
+                title="Löschen&#10;Entfernt diesen Inhaltsblock endgültig aus dem Projekt. Warnung: Diese Aktion kann nicht rückgängig gemacht werden"
+                class="js-delete-projekt-content-block -delete projekt-frame-icon-button"
+              >
                 <i class="fas fa-trash-alt">
                 </i>
               </button>

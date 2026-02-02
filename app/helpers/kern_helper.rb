@@ -21,7 +21,7 @@ module KernHelper
   end
 
   def new_resource_link(url, link_name, **options)
-    content_tag(:div, class: "d-flex justify-content-end mb-4") do
+    content_tag(:div, class: "d-flex justify-content-start mb-4") do
       kern_link_button(url, text: link_name)
     end
   end

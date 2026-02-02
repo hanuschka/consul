@@ -1,11 +1,7 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_administrators_path) %>
 
 <div class="kern-container">
-  <div class="mb-4">
-    <%= kern_link_button(adm_administrators_path, icon: "arrow_back_ios", text: t("shared.back"), style: :primary, data: { turbo_action: "advance" }) %>
-  </div>
-
   <%= render Adm::UserSearchComponent.new(url: search_adm_administrators_path, label: t(".search_label"), description: t(".search_description")) %>
 </div>

@@ -142,7 +142,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </button>
               </div>
             </div>
-            <div class="projekt-content-block-edit projekt-content-block-edit-standard-controlls js-projekt-content-block-edit-standard-controlls">
+            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
               <div class="ai-button-wrapper">
                 <div class="ai-button-wrapper--inner">
                   <button

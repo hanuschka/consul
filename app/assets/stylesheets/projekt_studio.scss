@@ -36,13 +36,16 @@
 .projekt-content-block-edit {
   display: flex;
   align-items: center;
-  padding-bottom: 8px;
+  // padding-bottom: 8px;
   min-height: 35px;
   max-height: 35px;
-  border-bottom: 1px solid #dcdcdc;
   position: relative;
   gap: 3px;
   /* z-index: 3; */
+}
+
+.projekt-content-block-edit--buttons-wrapper {
+  margin-right: 10px;
 }
 
 .projekt-content-block-edit--button {
@@ -173,6 +176,41 @@
 
   &:hover {
     background-color: #f2f2f2;
+  }
+}
+
+.js-content-block-ai-edit-save,
+.js-save-edit-text-projekt-content-block,
+.js-save-edit-html-projekt-content-block,
+.js-save-edit-code-projekt-content-block {
+  color: #00830e;
+  background-color: #dff1e1;
+  // margin-right: 10px;
+
+  &:hover {
+    background-color: #d5e9d7;
+  }
+}
+
+.js-content-block-ai-edit-cancel,
+.js-projekt-content-block--text-edit-cancel,
+.js-projekt-content-block--html-edit-cancel,
+.js-projekt-content-block--code-edit-cancel {
+  color: #004a83;
+  background-color: #d6e7f6;
+  margin-right: 10px;
+
+  &:hover {
+    background-color: #c3daee;
+  }
+}
+
+.js-content-block-enter-simple-edit-mode-from-ai {
+  color: #004a83;
+  background-color: #d6e7f6;
+
+  &:hover {
+    background-color: #c3daee;
   }
 }
 
@@ -404,7 +442,7 @@ body.custom-new-design {
 
   .projekt-frame-icon-button {
     color: #2c5282;
-    font-size: 20px;
+    // font-size: 20px;
     position: relative;
 
     &:hover:not(:disabled) {
@@ -427,25 +465,13 @@ body.custom-new-design {
   .js-content-block-version-managment {
     display: none;
   }
+}
 
-  .js-html-edit-content-block,
-  .ai-button-wrapper:has(.js-projekt-content-block--regenerate),
-  .projekt-content-block--move-button {
-    margin-right: 8px;
-    padding-right: 8px;
-    position: relative;
-
-    &::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 24px;
-      background-color: #cbd5e0;
-    }
-  }
+.projekt-content-block-edit--separator {
+  width: 1px;
+  height: 24px;
+  background-color: #cbd5e0;
+  margin: 0 2px;
 }
 
 .projekt-content-block-templates-selector--tab {
@@ -477,8 +503,12 @@ body.custom-new-design {
   &.-loading, &.-simple-edit-mode, &.-ai-edit-mode, &.-code-edit-mode {
     .projekt-content-block-edit {
       border-bottom: none;
-      padding-bottom: 9px;
-      padding-right: 50px;
+      // padding-bottom: 9px;
+      // padding-right: 50px;
+    }
+
+    .projekt-content-block--toolsets {
+      background-color: #24a1d114;
     }
   }
   &.-highlight-changed {
@@ -504,18 +534,33 @@ body.custom-new-design {
 
   &.-simple-edit-mode {
     .projekt-content-block--overlay {
-      /* background-color: #24a1d114; */
-      /* outline: 1px solid #a2d6ff; */
-      background-color: #24a1d114;
-      outline: 1px solid #d6ecff;
+      // background-color: #24a1d114;
+      // outline: 1px solid #d6ecff;
+    }
+
+    .projekt-content-block-edit {
+      // background-color: #E2EEF9;
+      // background-color: #24a1d114;
     }
 
     .projekt-content-block-edit-main-controlls {
-      display: none;
+      display: flex;
+      flex-shrink: 0;
     }
 
     .js-simple-edit-mode-controlls {
       display: flex;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .js-edit-text-projekt-content-block {
+      background-color: #45ac50;
+      color: white;
+
+      &:hover {
+        background-color: #3d9947;
+      }
     }
 
     .projekt-content-block {
@@ -530,30 +575,60 @@ body.custom-new-design {
  /* } */
 
   &.-html-edit-mode {
+    .projekt-content-block--overlay {
+      // background-color: #24a1d114;
+      // outline: 1px solid #d6ecff;
+    }
+
+    .projekt-content-block-edit {
+      // background-color: #E2EEF9;
+    }
+
     .projekt-content-block-edit-main-controlls {
-      display: none;
+      display: flex;
     }
 
     .js-html-edit-mode-controlls {
       display: flex;
+      flex: 1;
     }
 
-    .projekt-content-block--move-button {
-      display: none;
+    .js-html-edit-content-block {
+      background-color: #45ac50;
+      color: white;
+
+      &:hover {
+        background-color: #3d9947;
+      }
     }
   }
+
   &.-ai-edit-mode {
     .projekt-content-block--overlay {
-      background-color: #24a1d114;
-      outline: 1px solid #d6ecff;
+      // background-color: #24a1d114;
+      // outline: 1px solid #d6ecff;
+    }
+
+    .projekt-content-block-edit {
+      // background-color: #E2EEF9;
     }
 
     .projekt-content-block-edit-main-controlls {
-      display: none;
+      display: flex;
     }
 
     .js-ai-edit-mode-controlls {
       display: flex;
+      flex: 1;
+    }
+
+    .js-content-block-enter-ai-edit-mode {
+      background-color: #45ac50;
+      color: white;
+
+      &:hover {
+        background-color: #3d9947;
+      }
     }
   }
 
@@ -563,19 +638,29 @@ body.custom-new-design {
       outline: 1px solid #d6ecff;
     }
 
+    .projekt-content-block-edit {
+      // background-color: #E2EEF9;
+    }
+
     .projekt-content-block-edit-main-controlls {
-      display: none;
+      display: flex;
     }
 
     .js-code-edit-mode-controlls {
       display: flex;
+      flex: 1;
+    }
+
+    .js-content-block-enter-code-edit-mode {
+      background-color: #45ac50;
+      color: white;
+
+      &:hover {
+        background-color: #3d9947;
+      }
     }
 
     .projekt-content-block {
-      display: none;
-    }
-
-    .projekt-content-block--move-button {
       display: none;
     }
   }
@@ -785,6 +870,7 @@ body.-preview-mode {
 .projekt-content-block--mode-controlls {
   /* margin-left: -8px; */
   display: none;
+  justify-content: flex-start;
 }
 
 .projekt-content-block {
@@ -1546,7 +1632,7 @@ body:not(.-ai-enabled) {
   display: flex;
   gap: 5px;
   align-items: flex-end;
-  padding-bottom: 5px;
+  // padding-bottom: 5px;
 }
 
 .content-block-margin-input {
@@ -1555,6 +1641,7 @@ body:not(.-ai-enabled) {
   justify-content: flex-start;
   position: relative;
   margin-right: 10px;
+  font-size: 19px;
 
   span {
     color: #878787;
@@ -1888,4 +1975,15 @@ ul.grid-x, ul.row {
 
 .projekt-content-block--toolsets {
   margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 5px;
+  border-radius: 8px;
+}
+
+.projekt-content-block--toolsets-border {
+  width: 98.5%;
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 0 auto;
 }

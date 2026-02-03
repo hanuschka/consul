@@ -174,8 +174,8 @@
   z-index: 2;
   margin-right: 0;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 
   &:hover {
     background-color: #f2f2f2;
@@ -437,7 +437,7 @@ body.custom-new-design {
     .projekt-content-block-edit {
       border-bottom: none;
       padding-bottom: 9px;
-      padding-right: 55px;
+      padding-right: 50px;
     }
   }
   &.-highlight-changed {
@@ -1523,7 +1523,7 @@ body:not(.-ai-enabled) {
     padding: 0;
     padding-left: 10px;
     height: 32px;
-    width: 70px;
+    width: 55px;
 
     &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
       height: 32px;

@@ -91,6 +91,8 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
       <<~TEXT
         #{fetched_prompt}
+        Output response in #{target_language} language.
+
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
 

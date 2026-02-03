@@ -69,6 +69,10 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
 
   private
 
+  def target_language
+    Rails.env.development? ? "English" : "German"
+  end
+
   def update_projekt_dates(start_date_str, end_date_str)
     updates = {}
 
@@ -146,6 +150,8 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
 
     <<~PROMPT
       #{base_prompt}
+      Output response in #{target_language} language.
+
       For each logical section of the document, create an separated HTML content block that properly represents the content.
       If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
 

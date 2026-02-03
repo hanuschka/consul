@@ -87,6 +87,16 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </label>
                 <button
                   type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Text fett formatieren"
+                  class="projekt-frame-icon-button js-content-block-toggle-bold"
+                >
+                  <i class="fas fa-bold"></i>
+                </button>
+                <button
+                  type="button"
                   disabled
                   data-tooltip
                   data-hover-delay="800"

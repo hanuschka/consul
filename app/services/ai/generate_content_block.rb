@@ -32,6 +32,8 @@ class Ai::GenerateContentBlock < ApplicationService
 
       #{text_modification_instruction}
 
+      Output response in #{target_language} language.
+
       Additional context of content block:
       It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
 
@@ -49,6 +51,10 @@ class Ai::GenerateContentBlock < ApplicationService
         .ask(prompt)
 
     llm_response.content["html"]
+  end
+
+  def target_language
+    Rails.env.development? ? "English" : "German"
   end
 
   def fetch_prompt

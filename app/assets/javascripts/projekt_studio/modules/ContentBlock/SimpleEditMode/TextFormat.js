@@ -74,22 +74,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
   },
 
   unwrapBoldElement(boldElement, range) {
-    const selection = window.getSelection();
-    const selectedText = selection.toString();
-    const fullText = boldElement.textContent;
+    const selectedText = window.getSelection().toString();
 
-    if (selectedText === fullText) {
+    if (selectedText === boldElement.textContent) {
       const nodes = Array.from(boldElement.childNodes);
       const fragment = document.createDocumentFragment();
-      nodes.forEach(node => fragment.appendChild(node));
+      fragment.append(...nodes);
       boldElement.parentNode.replaceChild(fragment, boldElement);
-
-      const newRange = document.createRange();
-      if (nodes.length > 0) {
-        newRange.setStartBefore(nodes[0]);
-        newRange.setEndAfter(nodes[nodes.length - 1]);
-      }
-      return newRange;
+      return this.createRangeAround(nodes);
     }
 
     const beforeRange = document.createRange();
@@ -109,28 +101,33 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
 
     const fragment = document.createDocumentFragment();
 
-    if (beforeContent.textContent.length > 0) {
-      const beforeStrong = document.createElement("strong");
-      beforeStrong.appendChild(beforeContent);
-      fragment.appendChild(beforeStrong);
+    if (beforeContent.textContent) {
+      fragment.appendChild(this.wrapInStrong(beforeContent));
     }
 
     const selectedNodes = Array.from(selectedContent.childNodes);
-    selectedNodes.forEach(node => fragment.appendChild(node));
+    fragment.append(...selectedNodes);
 
-    if (afterContent.textContent.length > 0) {
-      const afterStrong = document.createElement("strong");
-      afterStrong.appendChild(afterContent);
-      fragment.appendChild(afterStrong);
+    if (afterContent.textContent) {
+      fragment.appendChild(this.wrapInStrong(afterContent));
     }
 
     boldElement.parentNode.replaceChild(fragment, boldElement);
+    return this.createRangeAround(selectedNodes);
+  },
 
-    const newRange = document.createRange();
-    if (selectedNodes.length > 0) {
-      newRange.setStartBefore(selectedNodes[0]);
-      newRange.setEndAfter(selectedNodes[selectedNodes.length - 1]);
+  createRangeAround(nodes) {
+    const range = document.createRange();
+    if (nodes.length > 0) {
+      range.setStartBefore(nodes[0]);
+      range.setEndAfter(nodes[nodes.length - 1]);
     }
-    return newRange;
+    return range;
+  },
+
+  wrapInStrong(content) {
+    const strong = document.createElement("strong");
+    strong.appendChild(content);
+    return strong;
   }
 }

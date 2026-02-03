@@ -49,8 +49,8 @@ en:
         info_menu: Poll
         stats_menu: Stats
         results_menu: Results
-        evaluation_menu: Evaluation
         report_menu: Report
+        evaluation_menu: Evaluation
         vote_counted: Your vote was counted!
         vote_uncounted: Your vote was withdrawn
         results:
@@ -61,12 +61,13 @@ en:
           <p>Thank you for participation.</p>
           <p>You have the opportunity to edit your answers until the participation deadline expires.
           Your information will then be transmitted to the system automatically and anonymously.</p>
-      evaluation:
-        title: AI Evaluation
-        download_all_txt: Download All Sections (TXT)
-        download_all_pdf: Download All Sections (PDF)
       report:
         title: AI Report
+        download_all_txt: Download All Sections (TXT)
+        download_all_docx: Download All Sections (DOCX)
+        download_all_pdf: Download All Sections (PDF)
+      evaluation:
+        title: AI Evaluation
       ai_stats:
         refresh_button: Refresh AI Analysis
         last_updated: "AI analysis last updated:"

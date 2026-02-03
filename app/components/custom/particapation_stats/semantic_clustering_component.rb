@@ -13,7 +13,16 @@ class ParticapationStats::SemanticClusteringComponent < ApplicationComponent
     )
   end
 
+  def show_export_buttons?
+    categories.any?
+  end
+
   private
+
+    def categories
+      return clustering_data if clustering_data.is_a?(Array)
+      clustering_data.values
+    end
 
     def clustering_data
       @projekt_phase.ai_stats&.dig("semantic_clustering") || {}

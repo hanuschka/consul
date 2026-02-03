@@ -50,8 +50,8 @@ de:
         info_menu: Abstimmung
         stats_menu: Statistik
         results_menu: Ergebnis
-        evaluation_menu: Bewertung
         report_menu: Report
+        evaluation_menu: Bewertung
         vote_counted: Ihre Stimme wurde gezählt!
         vote_uncounted: Ihre Stimme wurde entfernt
         results:
@@ -62,12 +62,13 @@ de:
           <p>Vielen Dank für Ihre Beteiligung.</p>
           <p>Bis zum Ablauf der Teilnahmefrist haben Sie die Möglichkeit, Ihre Antworten zu bearbeiten.
           Danach werden Ihre Angaben automatisch und anonym an das System übermittelt.</p>
-      evaluation:
-        title: AI Bewertung
-        download_all_txt: Alle Abschnitte herunterladen (TXT)
-        download_all_pdf: Alle Abschnitte herunterladen (PDF)
       report:
         title: AI Report
+        download_all_txt: Alle Abschnitte herunterladen (TXT)
+        download_all_docx: Alle Abschnitte herunterladen (DOCX)
+        download_all_pdf: Alle Abschnitte herunterladen (PDF)
+      evaluation:
+        title: AI Bewertung
       ai_stats:
         refresh_button: AI-Analyse aktualisieren
         last_updated: "AI-Analyse zuletzt aktualisiert:"

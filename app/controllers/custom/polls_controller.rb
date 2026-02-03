@@ -7,7 +7,7 @@ class PollsController < ApplicationController
   include Takeable
   include GuestUsers
 
-  before_action :set_geo_limitations, only: [:show, :results, :stats, :evaluation, :report]
+  before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation]
 
   helper_method :resource_model, :resource_name
   has_filters %w[all current expired]
@@ -91,15 +91,18 @@ class PollsController < ApplicationController
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
-    if params[:page_ref].present?
+    landing_page_slug = params[:landing_page_slug]
+    if landing_page_slug.present?
       @landing_page =
         @projekt_phase
           .projekt
           .landing_pages
-          .find_by(slug: params[:page_ref])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.present?
         set_landing_page_topbar_ui_variables(@landing_page)
+      else
+        redirect_to poll_path(@poll) and return
       end
     end
 
@@ -137,6 +140,19 @@ class PollsController < ApplicationController
     end
   end
 
+  def report
+    @projekt_phase = @poll.projekt_phase
+
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+
+    if !is_admin_or_manager
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "pages/forbidden", layout: false
+    else
+      render
+    end
+  end
+
   def evaluation
     @projekt_phase = @poll.projekt_phase
 
@@ -145,33 +161,102 @@ class PollsController < ApplicationController
 
     if !can_view_evaluation
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
-      render "custom/pages/forbidden", layout: false
-    else
-      render :evaluation
+      render "pages/forbidden", layout: false
     end
   end
 
-  def report
-    @projekt_phase = @poll.projekt_phase
-
+  def download_evaluation_section
     is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    return head(:forbidden) unless is_admin_or_manager
 
-    if !is_admin_or_manager
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
-      render "custom/pages/forbidden", layout: false
+    content = @poll.ai_stats&.dig("evaluation")
+    return head(:not_found) unless content.present?
+
+    download_format = params[:format] || "txt"
+    filename = "#{@poll.name.parameterize}-evaluation.#{download_format}"
+
+    case download_format
+    when "pdf"
+      pdf = PdfServices::PollReportSectionExporter.new(
+        @poll,
+        { "title" => t("custom.polls.evaluation.title"), "content" => content }
+      ).call
+      send_data pdf.render,
+                filename: filename,
+                type: "application/pdf",
+                disposition: "attachment"
+    when "docx"
+      docx = DocxServices::PollReportSectionExporter.new(
+        @poll,
+        { "title" => t("custom.polls.evaluation.title"), "content" => content }
+      ).call
+      send_data docx,
+                filename: filename,
+                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                disposition: "attachment"
     else
-      render :report
+      text = ActionView::Base.full_sanitizer.sanitize(content)
+      send_data text,
+                filename: filename,
+                type: "text/plain",
+                disposition: "attachment"
+    end
+  end
+
+  def download_all_evaluation_sections
+    is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    return head(:forbidden) unless is_admin_or_manager
+
+    content = @poll.ai_stats&.dig("evaluation")
+    return head(:not_found) unless content.present?
+
+    download_format = params[:format] || "txt"
+    filename = "#{@poll.name.parameterize}-evaluation-all.#{download_format}"
+
+    case download_format
+    when "pdf"
+      pdf = PdfServices::PollReportSectionExporter.new(
+        @poll,
+        { "title" => t("custom.polls.evaluation.title"), "content" => content }
+      ).call
+      send_data pdf.render,
+                filename: filename,
+                type: "application/pdf",
+                disposition: "attachment"
+    when "docx"
+      docx = DocxServices::PollReportSectionExporter.new(
+        @poll,
+        { "title" => t("custom.polls.evaluation.title"), "content" => content }
+      ).call
+      send_data docx,
+                filename: filename,
+                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                disposition: "attachment"
+    else
+      text = ActionView::Base.full_sanitizer.sanitize(content)
+      send_data text,
+                filename: filename,
+                type: "text/plain",
+                disposition: "attachment"
     end
   end
 
   def refresh_ai_stats
     authorize!(:refresh_ai_stats, @poll)
 
+    unless Ai::Settings.ai_available?
+      respond_to do |format|
+        format.html { redirect_back(fallback_location: report_poll_path(@poll)) }
+        format.js { render json: { error: "AI features unavailable" }, status: :forbidden }
+      end
+      return
+    end
+
     @poll.update(ai_stats_refresh_status: "pending")
     AiAnalytics::PollStatsRefresh.perform_later(@poll.id)
 
     respond_to do |format|
-      format.html { redirect_to evaluation_poll_path(@poll) }
+      format.html { redirect_to report_poll_path(@poll) }
       format.js { render json: { status_url: ai_stats_status_poll_path(@poll) } }
     end
   end
@@ -189,27 +274,35 @@ class PollsController < ApplicationController
     render json: response
   end
 
-  def download_evaluation_section
+  def download_report_section
     section_index = params[:section_index].to_i
-    content = @poll.ai_stats&.dig("evaluation")
+    content = @poll.ai_stats&.dig("report")
 
     if content.is_a?(Hash) && content["reports"].present? && content["reports"][section_index].present?
       report = content["reports"][section_index]
       download_format = params[:format] || "txt"
-      filename = generate_evaluation_section_filename(@poll, section_index, download_format)
+      filename = generate_report_section_filename(@poll, section_index, download_format)
 
       case download_format
       when "pdf"
-        pdf = PdfServices::PollEvaluationSectionExporter.new(@poll, report).call
+        pdf = PdfServices::PollReportSectionExporter.new(@poll, report).call
         send_data(
           pdf.render,
           filename: filename,
           type: "application/pdf",
           disposition: "attachment"
         )
+      when "docx"
+        docx = DocxServices::PollReportSectionExporter.new(@poll, report).call
+        send_data(
+          docx,
+          filename: filename,
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          disposition: "attachment"
+        )
       else
         send_data(
-          generate_evaluation_section_text(report),
+          generate_report_section_text(report),
           filename: filename,
           type: "text/plain",
           disposition: "attachment"
@@ -220,25 +313,33 @@ class PollsController < ApplicationController
     end
   end
 
-  def download_all_evaluation_sections
-    content = @poll.ai_stats&.dig("evaluation")
+  def download_all_report_sections
+    content = @poll.ai_stats&.dig("report")
 
     if content.is_a?(Hash) && content["reports"].present?
       download_format = params[:format] || "txt"
-      filename = generate_all_evaluation_sections_filename(@poll, download_format)
+      filename = generate_all_report_sections_filename(@poll, download_format)
 
       case download_format
       when "pdf"
-        pdf = PdfServices::PollAllEvaluationSectionsExporter.new(@poll, content["reports"]).call
+        pdf = PdfServices::PollAllReportSectionsExporter.new(@poll, content["reports"]).call
         send_data(
           pdf.render,
           filename: filename,
           type: "application/pdf",
           disposition: "attachment"
         )
+      when "docx"
+        docx = DocxServices::PollAllReportSectionsExporter.new(@poll, content["reports"]).call
+        send_data(
+          docx,
+          filename: filename,
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          disposition: "attachment"
+        )
       else
         send_data(
-          generate_all_evaluation_sections_text(content["reports"]),
+          generate_all_report_sections_text(content["reports"]),
           filename: filename,
           type: "text/plain",
           disposition: "attachment"
@@ -250,14 +351,19 @@ class PollsController < ApplicationController
   end
 
   def render_ai_stats_sections(section)
-    section ||= "evaluation"
+    section ||= "report"
     content = @poll.ai_stats&.dig(section)
     title = t("custom.polls.#{section}.title")
 
-    render_to_string(
-      partial: "custom/polls/ai_stats_sections",
-      locals: { content: content, title: title, poll: @poll }
-    )
+    if content.present?
+      partial = section == "evaluation" ? "polls/ai_stats_evaluation_section" : "polls/ai_stats_report_sections"
+      locals = { content: content, poll: @poll }
+    else
+      partial = "polls/ai_stats_empty_state"
+      locals = { title: title }
+    end
+
+    render_to_string(partial: partial, locals: locals)
   end
 
   def set_geo_limitations
@@ -285,12 +391,12 @@ class PollsController < ApplicationController
 
   private
 
-    def generate_evaluation_section_filename(poll, section_index, format)
+    def generate_report_section_filename(poll, section_index, format)
       poll_name = poll.name.parameterize(separator: "-")
-      "#{poll_name}-evaluation-section-#{section_index + 1}.#{format}"
+      "#{poll_name}-report-section-#{section_index + 1}.#{format}"
     end
 
-    def generate_evaluation_section_text(report)
+    def generate_report_section_text(report)
       plain_content = helpers.strip_tags(report["content"].to_s)
 
       <<~TEXT
@@ -300,12 +406,12 @@ class PollsController < ApplicationController
       TEXT
     end
 
-    def generate_all_evaluation_sections_filename(poll, format)
+    def generate_all_report_sections_filename(poll, format)
       poll_name = poll.name.parameterize(separator: "-")
-      "#{poll_name}-evaluation-all.#{format}"
+      "#{poll_name}-report-all.#{format}"
     end
 
-    def generate_all_evaluation_sections_text(reports)
+    def generate_all_report_sections_text(reports)
       reports.map do |report|
         plain_content = helpers.strip_tags(report["content"].to_s)
         "#{report["title"]}\n\n#{plain_content}"

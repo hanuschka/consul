@@ -34,12 +34,12 @@ module PollsHelper
     controller_name == "polls" && action_name == "show"
   end
 
-  def evaluation_menu?
-    controller_name == "polls" && action_name == "evaluation"
-  end
-
   def report_menu?
     controller_name == "polls" && action_name == "report"
+  end
+
+  def evaluation_menu?
+    controller_name == "polls" && action_name == "evaluation"
   end
 
   def show_polls_description?

@@ -2,6 +2,10 @@
   display: none;
 }
 
+.u-visibility-hidden {
+  visibility: hidden;
+}
+
 .u-flex-column {
   flex-direction: column;
 }
@@ -86,7 +90,7 @@
   margin-top: 0 !important;
 }
 
-.margin-bottom-10 {
+.margin-bottom-10, .u-margin-bottom-10 {
   margin-bottom: 10px;
 }
 
@@ -150,4 +154,3 @@
     display: block;
   }
 }
-

@@ -3,27 +3,30 @@ ProjektStudio.FileImport = {
   allowedExtensions: ['pdf', 'docx', 'odt'],
   statusCheckTimeout: 7000,
   statusCheckActive: false,
+  selectedFile: null,
 
   initialize() {
     const $document = $(document);
-    $document.on(
-      "click",
-      ".js-projekt-file-import-trigger",
-      this.handleButtonClick.bind(this)
-    );
-    $document.on(
-      "change",
-      ".js-projekt-file-import-input",
-      this.handleFileSelect.bind(this)
-    );
-    $document.on("turbolinks:before-visit", () => {
-      this.stopStatusCheck();
-    });
+
+    $document.on("click", ".js-projekt-file-import-trigger", this.handleButtonClick.bind(this));
+    $document.on("change", ".js-projekt-file-import-input", this.handleFileSelect.bind(this));
+    $document.on("click", ".js-projekt-file-import-submit", this.handleSubmit.bind(this));
+    $document.on("click", ".js-projekt-file-import-cancel", this.handleCancel.bind(this));
+    $document.on("click", ".js-projekt-file-import-select-other", this.handleSelectOther.bind(this));
+    $document.on("turbolinks:before-visit", () => { this.stopStatusCheck(); });
   },
 
   handleButtonClick(e) {
     e.preventDefault();
-    $(".js-projekt-file-import-input").click();
+    this.showFileImportForm();
+  },
+
+  showFileImportForm() {
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
+    $(".projekt-file-import-preview-info").hide();
+    $(".js-projekt-file-import-submit").prop("disabled", true);
+    $(".js-projekt-file-import-preview").show();
   },
 
   handleFileSelect(e) {
@@ -37,7 +40,61 @@ ProjektStudio.FileImport = {
       return;
     }
 
-    this.uploadFile(file);
+    this.selectedFile = file;
+    this.showFilePreview(file);
+  },
+
+  showFilePreview(file) {
+    const extension = file.name.split('.').pop().toLowerCase();
+    const iconClass = this.getFileIconClass(extension);
+    const displayName = file.name
+
+    $(".js-projekt-file-import-filename").text(displayName);
+    $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
+    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`).show();
+    $(".js-projekt-file-import-submit").prop("disabled", false);
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
+    $(".js-projekt-file-import-preview").show();
+    $(".js-projekt-file-import-user-prompt").focus();
+  },
+
+  getFileIconClass(extension) {
+    const iconMap = {
+      pdf: 'fa-file-pdf',
+      docx: 'fa-file-word',
+      odt: 'fa-file-alt'
+    };
+    return iconMap[extension] || 'fa-file';
+  },
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (!this.selectedFile) return;
+
+    const userPrompt = $(".js-projekt-file-import-user-prompt").val().trim();
+    this.uploadFile(this.selectedFile, userPrompt);
+  },
+
+  handleCancel(e) {
+    e.preventDefault();
+    this.resetFileSelection();
+  },
+
+  handleSelectOther(e) {
+    e.preventDefault();
+    $(".js-projekt-file-import-input").val('');
+    $(".js-projekt-file-import-input").click();
+  },
+
+  resetFileSelection() {
+    this.selectedFile = null;
+    $(".js-projekt-file-import-input").val('');
+    $(".js-projekt-file-import-user-prompt").val('');
+    $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt");
+    $(".js-projekt-file-import-preview").hide();
+    $(".js-projekt-content-start-buttons").show();
+    $(".js-projekt-content-start-section--title").show();
   },
 
   validateFile(file) {
@@ -60,12 +117,15 @@ ProjektStudio.FileImport = {
     return { valid: true };
   },
 
-  uploadFile(file) {
+  uploadFile(file, userPrompt) {
     this.showLoader();
 
     const projektId = ProjektStudio.getCurrentProjektId();
     const formData = new FormData();
     formData.append('file', file);
+    if (userPrompt) {
+      formData.append('user_prompt', userPrompt);
+    }
 
     App.Ajax
       .request({
@@ -134,7 +194,7 @@ ProjektStudio.FileImport = {
 
     if (response.status === "completed") {
       this.statusCheckActive = false;
-      this.finishStatusCheck(response);
+      window.location.reload()
     } else if (response.status === "failed") {
       this.handleStatusCheckFailure(response);
     } else {
@@ -162,23 +222,23 @@ ProjektStudio.FileImport = {
     this.statusCheckActive = false;
   },
 
-  finishStatusCheck(response) {
-    this.hideLoader();
-    location.reload();
-  },
-
   handleError(error) {
     alert(error.message);
   },
 
-  showLoader() {
-    $(".js-projekt-file-import-trigger").prop("disabled", true).hide();
+  showLoader(message = "Dokument wird verarbeitet...") {
+    $(".js-projekt-file-import-preview").hide();
+    $(".js-projekt-start-with-prompt-form").hide();
+    $(".js-projekt-content-start-buttons").hide();
+    $(".js-projekt-content-start-section--title").hide();
+    $(".js-projekt-loader-message").text(message);
     $(".js-projekt-file-import-loader").show();
   },
 
   hideLoader() {
-    $(".js-projekt-file-import-trigger").prop("disabled", false).show();
     $(".js-projekt-file-import-loader").hide();
-    $(".js-projekt-file-import-input").val('');
-  }
+    $(".js-projekt-file-import-preview").show();
+    this.resetFileSelection();
+  },
+
 };

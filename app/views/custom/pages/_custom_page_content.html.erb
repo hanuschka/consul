@@ -3,32 +3,7 @@
     <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
 
     <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.empty? %>
-      <div class="projekt-file-import-section js-projekt-file-import-section">
-        <div class="projekt-file-import-wrapper">
-          <button
-            type="button"
-            class="button projekt-file-import-button js-projekt-file-import-trigger"
-            title="Dokument importieren"
-          >
-            <i class="fas fa-file-import"></i>
-
-            Dokument importieren (PDF, DOCX, ODT)
-          </button>
-          <input
-            type="file"
-            class="js-projekt-file-import-input"
-            accept=".pdf,.docx,.odt"
-            style="display: none;"
-          >
-          <div
-            class="projekt-file-import-loader js-projekt-file-import-loader"
-            style="display: none;"
-          >
-            <div class="bars-scale-loader"></div>
-            <span>Dokument wird verarbeitet...</span>
-          </div>
-        </div>
-      </div>
+      <%= render Projekts::ContentStartSectionComponent.new(@custom_page.projekt) %>
     <% end %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
@@ -54,7 +29,7 @@
         <%= button_to(
           [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
           method: :delete,
-          class: "button alert",
+          class: "button -red",
           title: "Alle Inhaltsblöcke löschen",
           form: { data: { turbolinks: false } },
           data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
@@ -71,7 +46,7 @@
 </div>
 
 <% if show_admin_controls_for_projekt?(@custom_page&.projekt)  %>
-  <%= render("pages/projekt_studio/image_managment") %>
+  <%= render(ProjektStudio::FileUploadDialogComponent.new) %>
 <% end %>
 
 <% if @custom_page.print_content_flag %>

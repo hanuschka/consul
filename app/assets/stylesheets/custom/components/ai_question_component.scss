@@ -48,7 +48,7 @@
 
 .ai-question-form--input:focus {
   outline: none;
-  border-color: var(--brand);
+  border-color: var(--brand-color);
   box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.2);
 }
 
@@ -111,6 +111,12 @@
 
 .ai-question-item--date {
   color: $medium-gray-1;
+}
+
+.ai-question-delete-button {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
 }
 
 .ai-question-item--actions {

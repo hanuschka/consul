@@ -37,7 +37,7 @@ module Abilities
         poll.related&.author&.id == user.id
       end
 
-      can [:evaluation, :download_evaluation_section, :download_all_evaluation_sections], Poll do |poll|
+      can [:report, :download_report_section, :download_all_report_sections], Poll do |poll|
         poll.evaluation_enabled? && poll.projekt&.visible_for?(user)
       end
 

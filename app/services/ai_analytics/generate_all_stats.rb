@@ -22,11 +22,9 @@ class AiAnalytics::GenerateAllStats < ApplicationService
       tone_of_participation: summary_stats[:tone_of_participation]
     }
 
-    unless projekt_phase.is_a?(ProjektPhase::CommentPhase)
-      result[:tone_of_comments] = summary_stats[:tone_of_comments]
-      result[:topic_clustering] = generate_topic_clustering
-      result[:semantic_clustering] = generate_semantic_clustering
-    end
+    result[:tone_of_comments] = summary_stats[:tone_of_comments]
+    result[:topic_clustering] = generate_topic_clustering
+    result[:semantic_clustering] = generate_semantic_clustering
 
     result.tap do
       Rails.logger.info("[AI Analytics] GenerateAllStats: Successfully completed analysis for projekt_phase ##{projekt_phase.id}")

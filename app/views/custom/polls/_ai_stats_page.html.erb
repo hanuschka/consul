@@ -34,7 +34,15 @@
         <% end %>
 
         <div class="participation-stats js-participation-stats">
-          <%= render "ai_stats_sections", content: content, title: title, poll: @poll %>
+          <% if content.present? %>
+            <% if local_assigns[:section] == "evaluation" %>
+              <%= render "polls/ai_stats_evaluation_section", content: content, poll: @poll %>
+            <% else %>
+              <%= render "polls/ai_stats_report_sections", content: content, poll: @poll %>
+            <% end %>
+          <% else %>
+            <%= render "polls/ai_stats_empty_state", title: title %>
+          <% end %>
         </div>
 
       </div>

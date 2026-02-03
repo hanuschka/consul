@@ -231,6 +231,18 @@ class ProjektPhasesController < ApplicationController
                 filename: filename,
                 type: "application/pdf",
                 disposition: "attachment"
+    when "docx"
+      docx = DocxServices::AllStatQuestionsExporter.new(@projekt_phase).call
+      send_data docx,
+                filename: filename,
+                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                disposition: "attachment"
+    when "odt"
+      odt = OdtServices::AllStatQuestionsExporter.new(@projekt_phase).call
+      send_data odt,
+                filename: filename,
+                type: "application/vnd.oasis.opendocument.text",
+                disposition: "attachment"
     else
       send_data generate_all_stat_answers_text(@projekt_phase),
                 filename: filename,
@@ -332,7 +344,8 @@ class ProjektPhasesController < ApplicationController
         pdf = PdfServices::ClusteringExporter.new(
           projekt_phase: @projekt_phase,
           clustering_data: clustering_data,
-          clustering_type: clustering_type
+          clustering_type: clustering_type,
+          resource_class: resource_class
         ).call
         send_data pdf.render,
                   filename: filename,
@@ -342,11 +355,23 @@ class ProjektPhasesController < ApplicationController
         odt_data = OdtServices::ClusteringExporter.new(
           projekt_phase: @projekt_phase,
           clustering_data: clustering_data,
-          clustering_type: clustering_type
+          clustering_type: clustering_type,
+          resource_class: resource_class
         ).call
         send_data odt_data,
                   filename: filename,
                   type: "application/vnd.oasis.opendocument.text",
+                  disposition: "attachment"
+      when "docx"
+        docx_data = DocxServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type,
+          resource_class: resource_class
+        ).call
+        send_data docx_data,
+                  filename: filename,
+                  type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                   disposition: "attachment"
       end
     end

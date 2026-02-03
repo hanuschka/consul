@@ -1,5 +1,5 @@
 class AiAnalytics::Polls::Base < ApplicationService
-  def initialize(poll, prompt:, stat_key:, output_schema: nil)
+  def initialize(poll, prompt:, stat_key:, output_schema:)
     @poll = poll
     @prompt = prompt
     @stat_key = stat_key
@@ -22,13 +22,10 @@ class AiAnalytics::Polls::Base < ApplicationService
 
   def generate_analysis
     chat = Ai::RubyLlmFactory.chat
-
-    if @output_schema.present?
-      chat = chat.with_schema(@output_schema)
-    end
+      .with_schema(@output_schema)
 
     response = chat.ask(full_prompt)
-    @output_schema.present? ? response.content : response.content.strip
+    response.content
   end
 
   def full_prompt
@@ -56,7 +53,7 @@ class AiAnalytics::Polls::Base < ApplicationService
 
   def store_result(result)
     current_stats = @poll.ai_stats || {}
-    current_stats[@stat_key] = result
+    current_stats[@stat_key] = result[@stat_key]
     @poll.update_column(:ai_stats, current_stats)
   end
 

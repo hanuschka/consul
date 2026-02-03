@@ -25,6 +25,7 @@
 //= require ../projekt_studio/modules/ContentBlock/CodeEditMode
 //= require ../projekt_studio/modules/ContentBlock/Copy
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode
+//= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/ListEdit
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/ImageEdit

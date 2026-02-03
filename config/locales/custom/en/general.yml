@@ -10,6 +10,7 @@ en:
     allow_text_modification_hint_short: "By default, AI modifies only HTML structure and styling, not text content"
     use_full_projekt_context: "Use full projekt context"
     use_full_projekt_context_hint: "Includes all content blocks, projekt dates, SDGs, categories, and phases in the AI prompt (may be slower)"
+    use_full_projekt_context_hint_short: "Additional context for more comprehensive AI responses"
   shared:
     suggest:
       deficiency_report:

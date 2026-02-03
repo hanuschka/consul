@@ -88,6 +88,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
 
     this.setupTextareaListeners(popup, instructionsTextarea);
+
+    $(popup).foundation();
+
     setTimeout(() => { instructionsTextarea.focus()}, 100);
   },
 

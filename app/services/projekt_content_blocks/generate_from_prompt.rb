@@ -68,6 +68,10 @@ class ProjektContentBlocks::GenerateFromPrompt < ApplicationService
 
   private
 
+  def target_language
+    Rails.env.development? ? "English" : "German"
+  end
+
   def update_projekt_dates(start_date_str, end_date_str)
     updates = {}
 
@@ -143,6 +147,7 @@ class ProjektContentBlocks::GenerateFromPrompt < ApplicationService
 
     <<~PROMPT
       #{base_prompt}
+      Output response in #{target_language} language.
 
       Generate structured HTML content blocks based on the following description:
 

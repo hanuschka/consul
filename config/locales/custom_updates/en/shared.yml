@@ -47,8 +47,12 @@ en:
         processing_message: "I am reviewing all proposals and will provide an answer shortly."
         download_txt: "Download TXT"
         download_pdf: "Download PDF"
+        download_docx: "Download DOCX"
+        download_odt: "Download ODT"
         download_all_txt: "Download All Questions as TXT"
         download_all_pdf: "Download All Questions as PDF"
+        download_all_docx: "Download All Questions as DOCX"
+        download_all_odt: "Download All Questions as ODT"
         retention_hint: "Download answers for offline access or archiving."
         no_resources: "No proposals found to analyze."
         error: "An error occurred while generating the answer. Please try again."
@@ -81,6 +85,7 @@ en:
         download_csv: Download CSV
         download_pdf: Download PDF
         download_odt: Download ODT
+        download_docx: Download DOCX
         category: Category
         subcategory: Subcategory
         resource_id: ID

@@ -18,6 +18,10 @@
           class: "button hollow -compact -no-margin" do %>
           <i class="fa fa-file-word"></i> <%= t("custom.ai_stats.clustering_export.download_odt") %>
         <% end %>
+        <%= link_to download_semantic_clustering_projekt_phase_path(@projekt_phase, format: "docx"),
+          class: "button hollow -compact -no-margin" do %>
+          <i class="fa fa-file-word"></i> <%= t("custom.ai_stats.clustering_export.download_docx") %>
+        <% end %>
       </div>
     <% end %>
   <% end %>

@@ -34,11 +34,11 @@ module CsvServices
 
         categories.each do |category|
           category_name = category["name"]
-          subcategories = category["subcategories"] || []
+          subcategories = category["subtopics"] || category["subcategories"] || []
 
           subcategories.each do |subcategory|
             subcategory_name = subcategory["name"]
-            resource_ids = subcategory["resource_ids"] || []
+            resource_ids = subcategory["resource_ids"] || subcategory["proposal_ids"] || []
 
             resources = fetch_resources(resource_ids)
             resources.each do |resource|
@@ -58,11 +58,19 @@ module CsvServices
 
       def parse_clustering_data
         return {} if @clustering_data.nil?
-        return @clustering_data if @clustering_data.is_a?(Hash)
-        return { "categories" => @clustering_data } if @clustering_data.is_a?(Array)
+
+        if @clustering_data.is_a?(Array)
+          return { "categories" => @clustering_data }
+        elsif @clustering_data.is_a?(Hash)
+          return @clustering_data if @clustering_data["categories"].present?
+          return { "categories" => @clustering_data.values } if @clustering_data.any?
+          return {}
+        end
 
         begin
-          JSON.parse(@clustering_data)
+          parsed = JSON.parse(@clustering_data)
+          return { "categories" => parsed } if parsed.is_a?(Array)
+          parsed
         rescue JSON::ParserError, TypeError
           {}
         end

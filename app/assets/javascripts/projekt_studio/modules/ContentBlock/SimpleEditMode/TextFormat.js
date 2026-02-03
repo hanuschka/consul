@@ -77,17 +77,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
     const selection = window.getSelection();
     const selectedText = selection.toString();
     const fullText = boldElement.textContent;
-    const parentNode = boldElement.parentNode;
 
     if (selectedText === fullText) {
+      const nodes = Array.from(boldElement.childNodes);
       const fragment = document.createDocumentFragment();
-      const nodes = [];
-      while (boldElement.firstChild) {
-        const node = boldElement.firstChild;
-        fragment.appendChild(node);
-        nodes.push(node);
-      }
-      parentNode.replaceChild(fragment, boldElement);
+      nodes.forEach(node => fragment.appendChild(node));
+      boldElement.parentNode.replaceChild(fragment, boldElement);
 
       const newRange = document.createRange();
       if (nodes.length > 0) {
@@ -95,55 +90,47 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
         newRange.setEndAfter(nodes[nodes.length - 1]);
       }
       return newRange;
-    } else {
-      const beforeRange = document.createRange();
-      beforeRange.setStart(boldElement.firstChild || boldElement, 0);
-      beforeRange.setEnd(range.startContainer, range.startOffset);
-
-      const afterRange = document.createRange();
-      afterRange.setStart(range.endContainer, range.endOffset);
-      afterRange.setEnd(
-        boldElement.lastChild || boldElement,
-        boldElement.lastChild ? boldElement.lastChild.textContent.length : 0
-      );
-
-      const selectedContent = range.extractContents();
-      const beforeContent = beforeRange.cloneContents();
-      const afterContent = afterRange.cloneContents();
-
-      const fragment = document.createDocumentFragment();
-      let unwrappedStartNode = null;
-      let unwrappedEndNode = null;
-
-      if (beforeContent.textContent.length > 0) {
-        const beforeStrong = document.createElement("strong");
-        beforeStrong.appendChild(beforeContent);
-        fragment.appendChild(beforeStrong);
-      }
-
-      const selectedNodes = Array.from(selectedContent.childNodes);
-      selectedNodes.forEach((node) => {
-        if (!unwrappedStartNode) {
-          unwrappedStartNode = node;
-        }
-        unwrappedEndNode = node;
-        fragment.appendChild(node);
-      });
-
-      if (afterContent.textContent.length > 0) {
-        const afterStrong = document.createElement("strong");
-        afterStrong.appendChild(afterContent);
-        fragment.appendChild(afterStrong);
-      }
-
-      parentNode.replaceChild(fragment, boldElement);
-
-      const newRange = document.createRange();
-      if (unwrappedStartNode && unwrappedEndNode) {
-        newRange.setStartBefore(unwrappedStartNode);
-        newRange.setEndAfter(unwrappedEndNode);
-      }
-      return newRange;
     }
+
+    const beforeRange = document.createRange();
+    beforeRange.setStart(boldElement.firstChild || boldElement, 0);
+    beforeRange.setEnd(range.startContainer, range.startOffset);
+
+    const afterRange = document.createRange();
+    afterRange.setStart(range.endContainer, range.endOffset);
+    afterRange.setEnd(
+      boldElement.lastChild || boldElement,
+      boldElement.lastChild ? boldElement.lastChild.textContent.length : 0
+    );
+
+    const selectedContent = range.extractContents();
+    const beforeContent = beforeRange.cloneContents();
+    const afterContent = afterRange.cloneContents();
+
+    const fragment = document.createDocumentFragment();
+
+    if (beforeContent.textContent.length > 0) {
+      const beforeStrong = document.createElement("strong");
+      beforeStrong.appendChild(beforeContent);
+      fragment.appendChild(beforeStrong);
+    }
+
+    const selectedNodes = Array.from(selectedContent.childNodes);
+    selectedNodes.forEach(node => fragment.appendChild(node));
+
+    if (afterContent.textContent.length > 0) {
+      const afterStrong = document.createElement("strong");
+      afterStrong.appendChild(afterContent);
+      fragment.appendChild(afterStrong);
+    }
+
+    boldElement.parentNode.replaceChild(fragment, boldElement);
+
+    const newRange = document.createRange();
+    if (selectedNodes.length > 0) {
+      newRange.setStartBefore(selectedNodes[0]);
+      newRange.setEndAfter(selectedNodes[selectedNodes.length - 1]);
+    }
+    return newRange;
   }
 }

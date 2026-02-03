@@ -281,6 +281,12 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               <button
+                class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
+                title="Inhaltsbock verschieben"
+              >
+                <i class="fas fa-up-down-left-right"></i>
+              </button>
+              <button
                 type="button"
                 data-tooltip
                 data-position="left"
@@ -295,14 +301,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             </div>
         </div>
-
-
-        <button
-          class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
-          title="Inhaltsbock verschieben"
-        >
-          <i class="fas fa-up-down-left-right"></i>
-        </button>
       </div>
 
       ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}

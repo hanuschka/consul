@@ -166,16 +166,10 @@
 }
 
 .projekt-content-block--move-button {
-  position: absolute;
-  bottom: 2px;
-  right: 0;
-  font-size: 25px;
   cursor: pointer;
   z-index: 2;
   margin-right: 0;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
 
   &:hover {
     background-color: #f2f2f2;
@@ -405,6 +399,53 @@ body.custom-new-design {
 
 .projekt-content-block-edit-main-controlls {
   user-select: none;
+  justify-content: flex-end;
+  gap: 6px;
+
+  .projekt-frame-icon-button {
+    color: #2c5282;
+    font-size: 20px;
+    position: relative;
+
+    &:hover:not(:disabled) {
+      background-color: #e8f0f7;
+    }
+
+    &.-delete {
+      color: #c53030;
+
+      &:hover {
+        background-color: #fee;
+      }
+    }
+  }
+
+  .ai-button-wrapper:first-child {
+    display: none;
+  }
+
+  .js-content-block-version-managment {
+    display: none;
+  }
+
+  .js-html-edit-content-block,
+  .ai-button-wrapper:has(.js-projekt-content-block--regenerate),
+  .projekt-content-block--move-button {
+    margin-right: 8px;
+    padding-right: 8px;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 24px;
+      background-color: #cbd5e0;
+    }
+  }
 }
 
 .projekt-content-block-templates-selector--tab {

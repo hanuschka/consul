@@ -15,6 +15,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.switchToAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));
+    $document.on("selectionchange", this.handleSelectionChange.bind(this));
   },
 
   switchToSimpleEditMode(contentBlockWrapper) {
@@ -29,6 +30,10 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
     this.updateMarginBottomInputState(contentBlockWrapper)
     this.toggleSimpleEditModeFor(contentBlock, true)
+
+    setTimeout(() => {
+      ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
+    }, 50);
   },
 
   exitSimpleEditMode(contentBlockWrapper, restoreContent = false) {
@@ -207,5 +212,23 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       const parsedValue = parseInt(marginBottom);
       input.value = isNaN(parsedValue) ? ProjektStudio.config.defaultMarginBottom : parsedValue;
     }
+  },
+
+  handleSelectionChange() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const element = container.nodeType === 1 ? container : container.parentNode;
+
+    const contentBlockWrapper = element.closest(".js-projekt-content-block-wrapper");
+    if (!contentBlockWrapper || !contentBlockWrapper.classList.contains("-simple-edit-mode")) {
+      return;
+    }
+
+    ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
   }
 }

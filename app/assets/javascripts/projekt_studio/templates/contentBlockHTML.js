@@ -116,6 +116,54 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     max="85"
                   >
                 </label>
+                <div class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown" data-name="header-type">
+                  <button
+                    type="button"
+                    class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Überschrift"
+                    title="Überschrift"
+                    data-tooltip
+                    data-hover-delay="800"
+                  >
+                    Text
+                  </button>
+                  <ul
+                    class="dropdown-select-menu--list"
+                    role="listbox"
+                    aria-label="Überschrift"
+                    tabindex="-1"
+                  >
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="0"
+                      data-header-type="h2"
+                    >
+                      H2
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="1"
+                      data-header-type="h3"
+                    >
+                      H3
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="2"
+                      data-header-type="none"
+                    >
+                      Text
+                    </li>
+                  </ul>
+                </div>
                 <button
                   type="button"
                   data-tooltip

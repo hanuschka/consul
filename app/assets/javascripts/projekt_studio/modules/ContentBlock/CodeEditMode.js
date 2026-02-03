@@ -10,7 +10,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
   initEventListeners() {
     const $document = $(document);
-    $document.on("click", ".js-content-block-enter-code-edit-mode", this.enterCodeEditMode.bind(this));
     $document.on("click", ".js-save-edit-code-projekt-content-block", this.saveContentBlockAndExit.bind(this));
     $document.on("click", ".js-projekt-content-block--code-edit-cancel", this.cancelCodeEditMode.bind(this));
   },
@@ -24,6 +23,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   switchToCodeEditMode(contentBlockWrapper) {
+    contentBlockWrapper.dataset.editMode = 'code';
     this.showCodeEditModeControls(contentBlockWrapper);
     this.createAndShowEditor(contentBlockWrapper);
   },
@@ -130,9 +130,31 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }
   },
 
-  exitCodeEditMode(contentBlockWrapper) {
+  updateContentBlockFromEditor(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const editor = this.getEditor(contentBlockWrapper);
+
+    if (editor) {
+      const content = editor.getValue().trim();
+      const htmlValidation = ProjektStudio.utils.validateHTML(content);
+
+      if (htmlValidation.isValid) {
+        contentBlock.innerHTML = content;
+      }
+    }
+  },
+
+  exitCodeEditMode(contentBlockWrapper, restoreContent = false) {
+    if (restoreContent) {
+      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+    } else {
+      this.updateContentBlockFromEditor(contentBlockWrapper);
+    }
+
     this.removeEditor(contentBlockWrapper);
     this.hideCodeEditModeControls(contentBlockWrapper);
+    contentBlockWrapper.dataset.editMode = '';
 
     setTimeout(() => {
       contentBlockWrapper.scrollIntoView({
@@ -143,13 +165,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
   cancelCodeEditMode(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
-
-    if (contentBlockWrapper) {
-      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
-    }
-
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, true);
   },
 
   saveContentBlockAndExit(e) {

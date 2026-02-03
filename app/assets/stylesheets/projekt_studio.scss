@@ -134,11 +134,13 @@
   display: flex !important;
   justify-content: center;
   align-items: center;
-  font-size: 17px;
+  font-size: 18px;
   color: #004a83;
   border-radius: 50%;
-  width: 1.8em;
-  height: 1.8em;
+  // width: 1.8em;
+  // height: 1.8em;
+      width: 1.85em;
+    height: 1.85em;
 
   &:hover:not(:disabled) {
     background-color: $dt-base-transparent-background-hover;
@@ -471,7 +473,7 @@ body.custom-new-design {
   width: 1px;
   height: 24px;
   background-color: #cbd5e0;
-  margin: 0 2px;
+  margin: 0 3px;
 }
 
 .projekt-content-block-templates-selector--tab {
@@ -1878,7 +1880,6 @@ ul.grid-x, ul.row {
     .ai-context-checkbox-hint {
       font-size: 11px;
       color: #999;
-      margin-top: 3px;
       margin-left: 7px;
       line-height: 1.3;
       max-width: 280px;
@@ -1977,7 +1978,7 @@ ul.grid-x, ul.row {
   margin-top: 15px;
   display: flex;
   justify-content: flex-end;
-  padding: 2px 5px;
+  padding: 2px 10px;
   border-radius: 8px;
 }
 

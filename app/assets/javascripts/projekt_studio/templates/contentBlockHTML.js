@@ -31,6 +31,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
+      data-edit-mode=""
       >
       <div class="relative">
         <div class="projekt-content-block js-projekt-content-block">

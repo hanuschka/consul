@@ -28,6 +28,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.CKEditorMode.initialize()
       ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
+      ProjektStudio.ContentBlock.EditModeSwitcher.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()

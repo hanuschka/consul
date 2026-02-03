@@ -23,6 +23,7 @@
 //= require ../projekt_studio/modules/ContentBlock/AiEditMode
 //= require ../projekt_studio/modules/ContentBlock/DtAiEditMode
 //= require ../projekt_studio/modules/ContentBlock/CodeEditMode
+//= require ../projekt_studio/modules/ContentBlock/EditModeSwitcher
 //= require ../projekt_studio/modules/ContentBlock/Copy
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/TextFormat

@@ -31,8 +31,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
       return;
     }
 
-    this.applyBoldFormatting(range);
-    selection.removeAllRanges();
+    const newRange = this.applyBoldFormatting(range);
+    if (newRange) {
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }
   },
 
   applyBoldFormatting(range) {
@@ -42,12 +45,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
     const boldParent = this.findBoldParent(parentElement);
 
     if (boldParent) {
-      this.unwrapBoldElement(boldParent, range);
+      return this.unwrapBoldElement(boldParent, range);
     } else {
       const selectedContent = range.extractContents();
       const strongElement = document.createElement("strong");
       strongElement.appendChild(selectedContent);
       range.insertNode(strongElement);
+
+      const newRange = document.createRange();
+      newRange.selectNodeContents(strongElement);
+      return newRange;
     }
   },
 
@@ -70,13 +77,24 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
     const selection = window.getSelection();
     const selectedText = selection.toString();
     const fullText = boldElement.textContent;
+    const parentNode = boldElement.parentNode;
 
     if (selectedText === fullText) {
       const fragment = document.createDocumentFragment();
+      const nodes = [];
       while (boldElement.firstChild) {
-        fragment.appendChild(boldElement.firstChild);
+        const node = boldElement.firstChild;
+        fragment.appendChild(node);
+        nodes.push(node);
       }
-      boldElement.parentNode.replaceChild(fragment, boldElement);
+      parentNode.replaceChild(fragment, boldElement);
+
+      const newRange = document.createRange();
+      if (nodes.length > 0) {
+        newRange.setStartBefore(nodes[0]);
+        newRange.setEndAfter(nodes[nodes.length - 1]);
+      }
+      return newRange;
     } else {
       const beforeRange = document.createRange();
       beforeRange.setStart(boldElement.firstChild || boldElement, 0);
@@ -94,6 +112,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
       const afterContent = afterRange.cloneContents();
 
       const fragment = document.createDocumentFragment();
+      let unwrappedStartNode = null;
+      let unwrappedEndNode = null;
 
       if (beforeContent.textContent.length > 0) {
         const beforeStrong = document.createElement("strong");
@@ -101,7 +121,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
         fragment.appendChild(beforeStrong);
       }
 
-      fragment.appendChild(selectedContent);
+      const selectedNodes = Array.from(selectedContent.childNodes);
+      selectedNodes.forEach((node) => {
+        if (!unwrappedStartNode) {
+          unwrappedStartNode = node;
+        }
+        unwrappedEndNode = node;
+        fragment.appendChild(node);
+      });
 
       if (afterContent.textContent.length > 0) {
         const afterStrong = document.createElement("strong");
@@ -109,7 +136,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
         fragment.appendChild(afterStrong);
       }
 
-      boldElement.parentNode.replaceChild(fragment, boldElement);
+      parentNode.replaceChild(fragment, boldElement);
+
+      const newRange = document.createRange();
+      if (unwrappedStartNode && unwrappedEndNode) {
+        newRange.setStartBefore(unwrappedStartNode);
+        newRange.setEndAfter(unwrappedEndNode);
+      }
+      return newRange;
     }
   }
 }

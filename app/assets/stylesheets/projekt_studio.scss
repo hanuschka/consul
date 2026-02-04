@@ -1263,11 +1263,11 @@ body:not(.-ai-enabled) {
       border-radius: 100%;
       content: "";
       display: block;
-      height: 1.5em;
       position: absolute;
       transform: translateY(-50%);
       top: 50%;
-      width: 1.5em;
+      height: 21px;
+      width: 21px;
     }
   }
 
@@ -2071,12 +2071,9 @@ ul.grid-x, ul.row {
   .projekt-content-block--toolsets {
     position: -webkit-sticky;
     position: sticky;
-    top: 90px;
+    top: $topbar-height + 1px;
+    outline: 2px solid #c9dced;
     z-index: 10;
-
-    &.-stuck {
-      border-top: 1px solid #dcdcdc;
-    }
   }
 }
 

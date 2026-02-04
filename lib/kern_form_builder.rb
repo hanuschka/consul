@@ -173,7 +173,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
 
       @template.content_tag(:span, hint_text,
                             class: "kern-body kern-body--small",
-                            style: "grid-column: 2; margin-top: -12px;")
+                            style: "grid-column: 2; padding-left: var(--kern-metric-space-default, 16px);")
     end
 
     ## Errors

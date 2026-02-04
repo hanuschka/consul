@@ -1,9 +1,0 @@
-<% @projekt_phases.each do |projekt_phase| %>
-  <%= turbo_stream.update dom_id(projekt_phase, :default_phase) do %>
-    <%= render Adm::AttributeEditors::BooleanComponent.new(
-      projekt_phase,
-      :default_phase,
-      path: update_default_phase_adm_projekt_path(projekt_phase.projekt, projekt_phase_id: projekt_phase.id)
-    ) %>
-  <% end %>
-<% end %>

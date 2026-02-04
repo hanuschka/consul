@@ -1,7 +1,0 @@
-<%= turbo_stream.update dom_id(@projekt_phase, :frontend_visibility) do %>
-  <%= render Adm::AttributeEditors::BooleanComponent.new(
-    @projekt_phase,
-    :frontend_visibility,
-    path: toggle_frontend_visibility_adm_projekt_phase_path(@projekt_phase)
-  ) %>
-<% end %>

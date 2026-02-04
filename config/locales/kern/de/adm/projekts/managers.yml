@@ -1,0 +1,14 @@
+de:
+  adm:
+    projekts:
+      managers:
+        index:
+          title: Projektmanager*innen
+          new_link: Neue*n Projektmanager*in hinzufügen
+          no_projekt_managers: Keine Projektmanager*innen vorhanden.
+        new:
+          title: Neue*n Projektmanager*in hinzufügen
+          search_label: Nutzer*innen durchsuchen
+          search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzer*innen. Diese können Sie anschließend als Projektmanager*in hinzufügen.
+        search:
+          no_results: Keine Benutzer*innen gefunden mit diesen Kriterien.

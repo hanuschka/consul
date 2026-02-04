@@ -16,4 +16,19 @@ class Adm::BaseController < ActionController::Base
     def adm_menu_component
       Adm::MenuComponent.new
     end
+
+    def policy_class_for(record)
+      record_class = record.is_a?(Class) ? record : record.class.base_class
+
+      case record_class.name
+      when "Projekt"
+        Adm::Projekts::ProjektPolicy
+      when "ProjektPhase"
+        Adm::Projekts::ProjektPhasePolicy
+      when "ProjektManager"
+        Adm::Projekts::ProjektManagerPolicy
+      else
+        raise ArgumentError, "No policy class defined for #{record_class.name}"
+      end
+    end
 end

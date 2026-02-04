@@ -1,0 +1,21 @@
+<%= content_for :title, @projekt_phase.title %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase, current_action: "officing_managers")) %>
+
+<div class="kern-container mb-5">
+  <%= render Adm::AttributeEditorComponent.new(
+    @projekt_phase,
+    :lock_on,
+    :date,
+    label: t(".lock_on"),
+    description: t(".lock_on_hint")
+  ) %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".select_managers"), hint: t(".select_managers_hint")) do %>
+    <%= render "adm/projekts/phases/officing_managers/managers",
+               projekt_phase: @projekt_phase,
+               officing_managers: @officing_managers %>
+  <% end %>
+</div>

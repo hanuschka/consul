@@ -1,19 +1,17 @@
 module Adm
   class MapLayersController < Adm::BaseController
-    def new
-      @map_layer = MapLayer.new
-      authorize [:adm, @map_layer]
+    before_action :find_mappable, only: [:new, :create]
 
-      @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
-        { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
-        { name: t(".title") }
-      ]
+    def new
+      @map_layer = MapLayer.new(mappable: @mappable)
+      authorize @map_layer, policy_class: policy_class_for(@map_layer)
+
+      @breadcrumbs = breadcrumbs_for(@mappable, t(".title"))
     end
 
     def create
-      @map_layer = MapLayer.new(map_layer_params)
-      authorize [:adm, @map_layer]
+      @map_layer = MapLayer.new(map_layer_params.merge(mappable: @mappable))
+      authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       if @map_layer.save
         redirect_to redirect_path_for(@map_layer), notice: t(".success")
@@ -24,18 +22,14 @@ module Adm
 
     def edit
       @map_layer = MapLayer.find(params[:id])
-      authorize [:adm, @map_layer]
+      authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
-      @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
-        { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
-        { name: t(".title") }
-      ]
+      @breadcrumbs = breadcrumbs_for(@map_layer.mappable, t(".title"))
     end
 
     def update
       @map_layer = MapLayer.find(params[:id])
-      authorize [:adm, @map_layer]
+      authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       if @map_layer.update(map_layer_params)
         redirect_to redirect_path_for(@map_layer), notice: t(".success")
@@ -46,7 +40,7 @@ module Adm
 
     def destroy
       @map_layer = MapLayer.find(params[:id])
-      authorize [:adm, @map_layer]
+      authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       redirect_path = redirect_path_for(@map_layer)
       @map_layer.destroy!
@@ -55,6 +49,16 @@ module Adm
 
     private
 
+      def find_mappable
+        if params[:projekt_id]
+          @mappable = Projekt.find(params[:projekt_id])
+        elsif params[:phase_id]
+          @mappable = ProjektPhase.find(params[:phase_id])
+        else
+          @mappable = DefaultMapLocation.first_or_create!
+        end
+      end
+
       def map_layer_params
         params.require(:map_layer).permit(
           :name, :layer_names, :base, :show_by_default,
@@ -62,11 +66,49 @@ module Adm
         )
       end
 
+      def policy_class_for(map_layer)
+        case map_layer.mappable
+        when Projekt, ProjektPhase
+          Adm::Projekts::MapLayerPolicy
+        else
+          Adm::MapLayerPolicy
+        end
+      end
+
       def redirect_path_for(map_layer)
-        if map_layer.mappable.is_a?(Projekt)
-          map_adm_projekt_path(map_layer.mappable)
+        case map_layer.mappable
+        when Projekt
+          map_adm_projekts_projekt_path(map_layer.mappable)
+        when ProjektPhase
+          map_adm_projekts_phase_path(map_layer.mappable)
         else
           adm_default_map_location_path
+        end
+      end
+
+      def breadcrumbs_for(mappable, title)
+        case mappable
+        when Projekt
+          [
+            { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
+            { name: mappable.name, url: details_adm_projekts_projekt_path(mappable) },
+            { name: t("adm.projekts.projekts.tabs.map"), url: map_adm_projekts_projekt_path(mappable) },
+            { name: title }
+          ]
+        when ProjektPhase
+          [
+            { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
+            { name: mappable.projekt.name, url: details_adm_projekts_projekt_path(mappable.projekt) },
+            { name: mappable.title },
+            { name: t("adm.projekts.phases.projekt_phase.map"), url: map_adm_projekts_phase_path(mappable) },
+            { name: title }
+          ]
+        else
+          [
+            { name: t("adm.menu.items.application") },
+            { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
+            { name: title }
+          ]
         end
       end
   end

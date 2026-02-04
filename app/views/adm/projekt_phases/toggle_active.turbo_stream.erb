@@ -1,7 +1,0 @@
-<%= turbo_stream.update dom_id(@projekt_phase, :active) do %>
-  <%= render Adm::AttributeEditors::BooleanComponent.new(
-    @projekt_phase,
-    :active,
-    path: toggle_active_adm_projekt_phase_path(@projekt_phase)
-  ) %>
-<% end %>

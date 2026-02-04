@@ -4,7 +4,7 @@ module Adm
 
     def update
       @record = find_record
-      authorize [:adm, @record], :update?, policy_class: policy_class_for(@record)
+      authorize @record, :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
       if @record.update(permitted_params)
@@ -22,11 +22,6 @@ module Adm
       def find_record
         record_class = params[:record_type].classify.constantize
         record_class.find(params[:id])
-      end
-
-      def policy_class_for(record)
-        base_class = record.class.base_class
-        "Adm::#{base_class.name}Policy".constantize
       end
 
       def permitted_params

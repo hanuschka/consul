@@ -9,11 +9,10 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
   initEventListeners() {
     const $document = $(document);
-    $document.on("click", ".js-content-block-enter-ai-edit-mode", this.enterAiEditMode.bind(this));
 
     $document.on("click", ".js-content-block-ai-edit-save", this.saveContentBlockAndExit.bind(this));
     $document.on("click", ".js-content-block-ai-edit-cancel", this.cancelAiEditMode.bind(this));
-    $document.on("click", ".js-content-block-enter-simple-edit-mode-from-ai", this.switchToSimpleEditMode.bind(this));
+    $document.on("click", ".js-content-block-enter-simple-edit-mode-from-ai", this.switchToSimpleEditModeFromAi.bind(this));
 
     $document.on("click", ".js-content-block-ai-edit--submit-prompt", this.submitPrompt.bind(this));
   },
@@ -36,14 +35,15 @@ ProjektStudio.ContentBlock.AiEditMode = {
   },
 
   switchToAiEditMode(contentBlockWrapper) {
+    contentBlockWrapper.dataset.editMode = 'ai';
     this.showAiEditModeControls(contentBlockWrapper);
     this.createAndShowPopup(contentBlockWrapper);
   },
 
-  switchToSimpleEditMode(e) {
+  switchToSimpleEditModeFromAi(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    this.exitAiEditMode(contentBlockWrapper);
+    this.exitAiEditMode(contentBlockWrapper, false);
 
     ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(contentBlockWrapper);
   },
@@ -114,7 +114,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     }
   },
 
-  exitAiEditMode(contentBlockWrapper) {
+  exitAiEditMode(contentBlockWrapper, restoreContent = false) {
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     if (this.activeAjaxRequests[contentBlockId]) {
@@ -126,18 +126,18 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     if (contentBlockWrapper) {
       this.hideAiEditModeControls(contentBlockWrapper);
+      contentBlockWrapper.dataset.editMode = '';
+
+      if (restoreContent) {
+        const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+        ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+      }
     }
   },
 
   cancelAiEditMode(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
-
-    if (contentBlockWrapper) {
-      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
-    }
-
-    this.exitAiEditMode(contentBlockWrapper);
+    this.exitAiEditMode(contentBlockWrapper, true);
   },
 
   saveContentBlockAndExit(e) {

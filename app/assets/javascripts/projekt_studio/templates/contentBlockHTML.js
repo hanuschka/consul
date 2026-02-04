@@ -31,6 +31,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
+      data-edit-mode=""
       >
       <div class="relative">
         <div class="projekt-content-block js-projekt-content-block">
@@ -42,40 +43,75 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
         <div class="projekt-content-block--toolsets">
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10">
-                <button type="button" class="projekt-content-block-edit--button -green js-content-block-ai-edit-save">
+              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Speichern"
+                  class="projekt-frame-icon-button js-content-block-ai-edit-save"
+                >
                   <i class="fas fa-save"></i>
-                  Speichern
                 </button>
-                <button type="button" class="projekt-content-block-edit--button js-content-block-ai-edit-cancel">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Abbrechen"
+                  class="projekt-frame-icon-button js-content-block-ai-edit-cancel"
+                >
                   <i class="fas fa-xmark"></i>
-                  Abbrechen
                 </button>
               </div>
               <div class="d-flex u-gap-10">
-                <button type="button" class="projekt-content-block-edit--button js-content-block-enter-simple-edit-mode-from-ai">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Im Editor weiterbearbeiten"
+                  class="projekt-frame-icon-button js-content-block-enter-simple-edit-mode-from-ai"
+                >
                   <i class="fas fa-pencil-alt"></i>
-                  Im Editor weiterbearbeiten
                 </button>
               </div>
             </div>
 
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10">
-                <button type="button" class="projekt-content-block-edit--button -green js-save-edit-text-projekt-content-block">
+              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Speichern"
+                  class="projekt-frame-icon-button js-save-edit-text-projekt-content-block"
+                >
                   <i class="fas fa-save"></i>
-                  Speichern
                 </button>
-                <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--text-edit-cancel">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Abbrechen"
+                  class="projekt-frame-icon-button js-projekt-content-block--text-edit-cancel"
+                >
                   <i class="fas fa-xmark"></i>
-                  Abbrechen
                 </button>
               </div>
 
               <div class="content-block-edit-toolbar">
-                <label class="content-block-margin-input d-flex align-items-end u-gap-5">
-                  <span>Abstand unten</span>
+                <label
+                  class="content-block-margin-input d-flex align-items-end u-gap-5"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Abstand nach unten"
+                >
+                  <i class="fas fa-arrows-alt-v"></i>
                   <input
                     type="number"
                     class="js-content-block-margin-bottom-input"
@@ -85,6 +121,57 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     max="85"
                   >
                 </label>
+                <div
+                  class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
+                  data-name="header-type"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Überschrift"
+                >
+                  <button
+                    type="button"
+                    class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Überschrift"
+                  >
+                    Text
+                  </button>
+                  <ul
+                    class="dropdown-select-menu--list"
+                    role="listbox"
+                    aria-label="Überschrift"
+                    tabindex="-1"
+                  >
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="0"
+                      data-header-type="h2"
+                    >
+                      H2
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="1"
+                      data-header-type="h3"
+                    >
+                      H3
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="2"
+                      data-header-type="none"
+                    >
+                      Text
+                    </li>
+                  </ul>
+                </div>
                 <button
                   type="button"
                   data-tooltip
@@ -106,43 +193,59 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 >
                   <i class="fas fa-link"></i>
                 </button>
+              </div>
+            </div>
+
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
+              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
                 <button
                   type="button"
                   data-tooltip
                   data-hover-delay="800"
                   tabindex="0"
-                  title="Mit KI bearbeiten"
-                  class="projekt-frame-icon-button js-content-block-enter-ai-edit-mode-from-simple"
+                  title="Speichern"
+                  class="projekt-frame-icon-button js-save-edit-html-projekt-content-block"
                 >
-                  <i class="fas fa-magic"></i>
+                  <i class="fas fa-save"></i>
+                </button>
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Abbrechen"
+                  class="projekt-frame-icon-button js-projekt-content-block--html-edit-cancel"
+                >
+                  <i class="fas fa-xmark"></i>
                 </button>
               </div>
-            </div>
-
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
-              <button type="button" class="projekt-content-block-edit--button -green js-save-edit-html-projekt-content-block">
-                <i class="fas fa-save"></i>
-                Speichern
-              </button>
-              <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--html-edit-cancel">
-                <i class="fas fa-xmark"></i>
-                Abbrechen
-              </button>
             </div>
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10">
-                <button type="button" class="projekt-content-block-edit--button -green js-save-edit-code-projekt-content-block">
+              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Speichern"
+                  class="projekt-frame-icon-button js-save-edit-code-projekt-content-block"
+                >
                   <i class="fas fa-save"></i>
-                  Speichern
                 </button>
-                <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--code-edit-cancel">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Abbrechen"
+                  class="projekt-frame-icon-button js-projekt-content-block--code-edit-cancel"
+                >
                   <i class="fas fa-xmark"></i>
-                  Abbrechen
                 </button>
               </div>
             </div>
-            <div class="projekt-content-block-edit projekt-content-block-edit-standard-controlls js-projekt-content-block-edit-standard-controlls">
+            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
               <div class="ai-button-wrapper">
                 <div class="ai-button-wrapper--inner">
                   <button
@@ -196,6 +299,17 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               <button
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen"
+                class="projekt-frame-icon-button js-html-edit-content-block"
+              >
+                <i class="fas fa-edit">
+                </i>
+              </button>
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
                 type="button"
                 data-tooltip
                 data-hover-delay="800"
@@ -204,69 +318,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 class="js-copy-current-content-block projekt-frame-icon-button"
               >
                 <i class="fas fa-copy">
-                </i>
-              </button>
-              <div class="ai-button-wrapper">
-                <div class="ai-button-wrapper--inner">
-                  <div class="dropdown-menu-container js-dropdown-menu">
-                    <div class="js-dropdown-menu-toggle">
-                      <button
-                        type="button"
-                        data-tooltip
-                        data-hover-delay="800"
-                        tabindex="0"
-                        title="KI-Umgestaltung&#10;Wählen Sie eine vordefinierte Option zur KI-basierten automatischen Transformation und Anpassung des Textes"
-                        class="projekt-frame-icon-button"
-                      >
-                        <i class="fas fa-arrows-rotate ">
-                        </i>
-                      </button>
-
-                    </div>
-                    <div class="dropdown-menu-list">
-                      <div class="js-dropdown-menu-item dropdown-menu-item ">
-                        <div class="js-projekt-content-block--regenerate" data-regenerate-type="regenerate">
-                          Text neu erstellen
-                        </div>
-
-                      </div>
-                      <div class="js-dropdown-menu-item dropdown-menu-item ">
-                        <div class="js-projekt-content-block--regenerate" data-regenerate-type="make_shorter">
-                          Text kürzen
-                        </div>
-
-                      </div>
-                      <div class="js-dropdown-menu-item dropdown-menu-item ">
-                        <div class="js-projekt-content-block--regenerate" data-regenerate-type="make_longer">
-                          Text verlängern
-                        </div>
-
-                      </div>
-                      <div class="js-dropdown-menu-item dropdown-menu-item ">
-                        <div class="js-projekt-content-block--regenerate" data-regenerate-type="use_youth_language">
-                          Jugendsprache
-                        </div>
-
-                      </div>
-                      <div class="js-dropdown-menu-item dropdown-menu-item ">
-                        <div class="js-projekt-content-block--regenerate" data-regenerate-type="use_simple_language">
-                          Leichte Sprache
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
-              </div>
-              <button
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen"
-                class="projekt-frame-icon-button js-html-edit-content-block"
-              >
-                <i class="fas fa-edit">
                 </i>
               </button>
               <button
@@ -280,6 +331,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
+                title="Inhaltsbock verschieben"
+              >
+                <i class="fas fa-up-down-left-right"></i>
+              </button>
+              <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
                 data-tooltip
@@ -296,13 +355,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             </div>
         </div>
 
-
-        <button
-          class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
-          title="Inhaltsbock verschieben"
-        >
-          <i class="fas fa-up-down-left-right"></i>
-        </button>
+        <div class="projekt-content-block--toolsets-border"></div>
       </div>
 
       ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}

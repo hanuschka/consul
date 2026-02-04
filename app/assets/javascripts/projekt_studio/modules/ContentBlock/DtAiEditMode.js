@@ -52,7 +52,7 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
 
   toggleLockContentBlockEdit(contentBlockId, locked) {
     const contentBlockWrapper = document.querySelector(`.js-projekt-content-block-wrapper[data-content-block-id='${contentBlockId}']`)
-    const controlls = contentBlockWrapper.querySelector(".js-projekt-content-block-edit-standard-controlls")
+    const controlls = contentBlockWrapper.querySelector(".js-projekt-content-block-edit-main-controlls")
 
     const title = locked ? "Edit is locked while ai process is running" : ""
     controlls.title = title

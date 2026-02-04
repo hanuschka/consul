@@ -2,7 +2,8 @@
   <div id="<%= container_id %>"
        class="map_location map <%= map_location.rendering_library %> mb-4"
        style="<%= container_style %>"
-       data-map-target="container">
+       data-map-target="container"
+       data-map-location-id="<%= map_location.id %>">
   </div>
 
   <% if form && editable %>

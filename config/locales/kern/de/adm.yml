@@ -35,3 +35,12 @@ de:
         notifications: Notification
         stats: Statistics
         apps: Apps
+    ideas:
+      menu:
+        aria_label: Ideenplattform Menü
+        items:
+          ideas: Ideen
+          officers: Sachbearbeiter
+          categories: Kategorien
+          settings: Einstellungen
+          districts: Bezirke

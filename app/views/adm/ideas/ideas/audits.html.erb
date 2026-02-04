@@ -1,0 +1,59 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
+
+<div class="kern-container my-5">
+
+  <h3 class="text-xl font-bold mb-4"><%= t(".audits_title") %></h3>
+
+  <% if @idea.own_and_associated_audits.empty? %>
+    <p><%= t(".empty") %></p>
+  <% else %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".table.id") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.field") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.old_value") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.new_value") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.edited_at") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.edited_by") %></th>
+            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="kern-table__body">
+          <% @idea.own_and_associated_audits.order(:created_at).each do |audit| %>
+            <% audit.audited_changes.each do |field, value| %>
+              <% if value.is_a?(Array) || audit.action == "destroy" %>
+                <% old_value, new_value = value %>
+              <% else %>
+                <% old_value, new_value = [nil, value] %>
+              <% end %>
+
+              <tr class="kern-table__row">
+                <th scope="row" class="kern-table__header"><%= audit.id %></th>
+                <td class="kern-table__cell"><%= sanitize(@idea.class.human_attribute_name(field)) %></td>
+                <td class="kern-table__cell">
+                  <div class="audit-value"><%= truncate_audit_value(@idea, field, old_value) %></div>
+                </td>
+                <td class="kern-table__cell">
+                  <div class="audit-value"><%= truncate_audit_value(@idea, field, new_value) %></div>
+                </td>
+                <td class="kern-table__cell"><%= l audit.created_at.to_date %></td>
+                <td class="kern-table__cell"><%= audit.user&.name %></td>
+                <td class="kern-table__cell">
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t("shared.show"), url: adm_ideas_idea_audit_path(@idea, audit)) %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

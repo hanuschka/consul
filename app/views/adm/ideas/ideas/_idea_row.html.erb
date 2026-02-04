@@ -1,0 +1,32 @@
+<tr id="<%= dom_id(idea) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header"><%= idea.id %></th>
+  <td class="kern-table__cell">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      idea,
+      :accepted?,
+      path: toggle_accepted_adm_ideas_idea_path(idea)
+    ) %>
+  </td>
+  <td class="kern-table__cell"><%= l(idea.admin_accepted_at, format: "%d.%m.%Y") if idea.admin_accepted_at.present? %></td>
+  <td class="kern-table__cell"><%= l(idea.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell">
+    <%= link_to idea.title, adm_ideas_idea_path(idea), class: "kern-link" %>
+    <br>
+    <small><%= link_to t(".frontend_link"), idea_path(idea), target: "_blank", class: "kern-link" %></small>
+  </td>
+  <td class="kern-table__cell"><%= link_to idea.author.username, user_path(idea.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell"><%= t("ideas.status.#{idea.status}") %></td>
+  <td class="kern-table__cell"><%= idea.map_location&.approximated_address %></td>
+  <td class="kern-table__cell"><%= idea.category&.name %></td>
+  <td class="kern-table__cell"><%= idea.officer&.name %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("shared.edit"), url: edit_adm_ideas_idea_path(idea)) %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_ideas_idea_path(idea),
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+      ) %>
+    <% end %>
+  </td>
+</tr>

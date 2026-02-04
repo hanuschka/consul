@@ -17,7 +17,7 @@
       (<%= t(".on_behalf_of") %>: <%= @proposal.on_behalf_of %>)
     <% end %>
     | <%= l(@proposal.created_at, format: :long) %>
-    | <%= link_to t(".view_on_site"), proposal_path(@proposal), class: "kern-button kern-button--secondary", target: "_blank", data: { turbo: false } %>
+    | <%= link_to t(".view_on_site"), proposal_path(@proposal), target: "_blank", data: { turbo: false } %>
   </p>
   <p class="kern-body kern-body--small">
     <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @proposal.cached_votes_up %>

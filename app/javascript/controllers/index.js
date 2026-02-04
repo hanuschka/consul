@@ -58,3 +58,6 @@ application.register("tabs-scroll", TabsScrollController)
 
 import ComponentsAdmHintController from "./components/adm/hint_controller"
 application.register("components-adm-hint", ComponentsAdmHintController)
+
+import MapScreenshotController from "./map_screenshot_controller"
+application.register("map-screenshot", MapScreenshotController)

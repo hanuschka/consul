@@ -58,6 +58,10 @@ export default class extends Controller {
     }
 
     this.setupFormSync()
+
+    // Expose map instance for screenshot functionality
+    this.containerTarget._mapAdapter = this.adapter
+    this.containerTarget._mapLibrary = this.renderingLibraryValue
   }
 
   disconnect() {

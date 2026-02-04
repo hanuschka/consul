@@ -43,7 +43,7 @@
 
     <div class="d-flex">
       <aside id="adm-sidebar" class="d-none d-lg-block position-absolute top-0 position-lg-static" data-adm-sidebar-target="sidebar">
-        <%= render Adm::MenuComponent.new %>
+        <%= render adm_menu_component %>
 
         <div class="kern-form-check" data-controller="mode-switcher" style="margin-top: 5rem;">
           <%= check_box_tag 'mode_switcher', '1', cookies[:mode_switcher] == '1', class: 'kern-form-check__checkbox', id: 'mode_switcher', data: { action: 'change->mode-switcher#toggle' } %>

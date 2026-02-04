@@ -29,4 +29,16 @@ module AdmHelper
       }
     end
   end
+
+  def idea_tabs(idea, current_action: nil)
+    current_action ||= action_name
+
+    %w[show administer edit audits].map do |action|
+      {
+        label: I18n.t("adm.ideas.ideas.tabs.#{action}"),
+        url: send("#{action == 'show' ? '' : "#{action}_"}adm_ideas_idea_path", idea),
+        current: current_action == action
+      }
+    end
+  end
 end

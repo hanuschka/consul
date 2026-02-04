@@ -1,0 +1,50 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
+
+<div class="kern-container my-5">
+
+  <div class="max-w-4xl">
+    <%= translatable_form_for @idea, url: adm_ideas_idea_path(@idea) do |f| %>
+      <%= render "shared/errors", resource: @idea %>
+      <%= render "shared/globalize_locales", resource: @idea %>
+
+      <div class="kern-grid kern-grid--cols-2 gap-4 mb-4">
+        <div>
+          <%= render Kern::FormFieldComponent.new(label: t(".votes_needed_for_success")) do %>
+            <%= f.number_field :votes_needed_for_success, class: "kern-input", step: 1, min: 1 %>
+          <% end %>
+        </div>
+
+        <div>
+          <%= render Kern::FormFieldComponent.new(label: t(".timeframe")) do %>
+            <%= f.number_field :timeframe, class: "kern-input", step: 1, min: 1 %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <%= render Kern::FormFieldComponent.new(label: t(".officer")) do %>
+          <%= f.collection_select :idea_officer_id, Idea::Officer.all, :id, :name,
+            { include_blank: t(".no_officer") },
+            { class: "kern-select" } %>
+        <% end %>
+      </div>
+
+      <%= f.translatable_fields do |translations_form| %>
+        <div class="mb-4">
+          <%= render Kern::FormFieldComponent.new(label: t(".official_answer")) do %>
+            <%= translations_form.text_area :official_answer,
+              value: AdminWYSIWYGSanitizer.new.sanitize(@idea.official_answer),
+              class: "html-area #{ck_editor_class(current_user)} kern-textarea",
+              rows: 6 %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= form_submit_button(text: t(".submit")) %>
+    <% end %>
+  </div>
+</div>

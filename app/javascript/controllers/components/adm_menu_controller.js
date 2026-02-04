@@ -16,6 +16,7 @@ export default class extends Controller {
   }
 
   toggleExpanded(event) {
+    event.preventDefault()
     event.currentTarget.classList.toggle("expanded")
     event.currentTarget.setAttribute("aria-expanded", event.currentTarget.classList.contains("expanded"))
   }

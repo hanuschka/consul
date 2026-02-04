@@ -140,6 +140,14 @@ module ProjektAdminActions
                 notice: "Benachrichtigung erfolgreich gesendet"
   end
 
+  def toggle_hide_content_background
+    authorize!(:edit, @projekt)
+
+    @projekt.update!(hide_content_background_color: !@projekt.hide_content_background_color)
+
+    render json: { hide_content_background_color: @projekt.hide_content_background_color }
+  end
+
   private
 
     def projekt_params

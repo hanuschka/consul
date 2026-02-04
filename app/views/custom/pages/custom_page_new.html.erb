@@ -208,11 +208,30 @@
     <% end %>
 
     <% if @custom_page.projekt.present? %>
+      <% if native_projekt_studio?(@projekt) %>
+        <div
+          class="js-projekt-studio-hide-on-preview"
+          style="position: relative; height: 1px;"
+        >
+          <button
+            type="button"
+            class="projekt-studio--toggle-background-button js-toggle-content-background"
+            data-projekt-id="<%= @custom_page.projekt.id %>"
+            data-hide-background="<%= @custom_page.projekt.hide_content_background_color %>"
+            data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+          >
+            <i class="fas fa-fill-drip"></i>
+            <span class="js-background-toggle-text">
+              <%= @custom_page.projekt.hide_content_background_color ? 'Hintergrund anzeigen' : 'Hintergrund ausblenden' %>
+            </span>
+          </button>
+        </div>
+      <% end %>
       <div class="flex-layout">
         <div class="main-column">
           <div class="js-anchor-navigation-content" id="projekt-body">
             <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
-              <div class="main-content-card">
+              <div class="main-content-card <%= '-hide-background' if @custom_page.projekt.hide_content_background_color %>">
                 <% if @custom_page.content&.include?('template_projekt_library') %>
                   <%= render "projekt_library", projekt: @custom_page.projekt %>
                 <% else %>

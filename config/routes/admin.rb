@@ -98,6 +98,7 @@ namespace :admin do
       patch :update_title_image
       patch :update_map
       post :notify_reviewers
+      patch :toggle_hide_content_background
     end
 
     resources :projekt_phases, only: [:create] do

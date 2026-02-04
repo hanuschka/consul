@@ -1241,6 +1241,28 @@ body:not(.-ai-enabled) {
   }
 }
 
+.projekt-studio--toggle-background-button {
+  position: absolute;
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: white;
+  background-color: $dt-base;
+  box-shadow: 3px 3px 7px 2px #00000030;
+  font-size: 17px;
+  white-space: nowrap;
+  left: 0;
+  top: -55px;
+
+  i {
+    font-size: 19px;
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background-color: $dt-base-hover;
+  }
+}
+
 .content-block--item-action-wrapper {
   list-style: none;
   margin-bottom: 10px;

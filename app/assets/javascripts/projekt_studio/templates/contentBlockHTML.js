@@ -371,7 +371,6 @@ function showContentBlockTemplatesButton(isDraft = false) {
         ${isDraft ? "disabled" : ''}
       >
         <i class="fas fa-plus"></i>
-        Neuen Inhaltsblock hinzufügen
       </button>
     </div>
   `

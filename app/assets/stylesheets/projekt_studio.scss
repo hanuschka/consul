@@ -234,18 +234,13 @@ body.custom-new-design {
   align-items: center;
   min-height: 44px;
   // margin-top: 5px;
-  margin-top: 3px;
+  margin-top: 0;
   margin-bottom: 5px;
   min-height: 26px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
+  margin-bottom: 0;
 
   &.-opened {
-    .add-new-content-block-button {
-      i {
-        transform: rotate(45deg);
-      }
-    }
-
     .projekt-content-block-templates-selector {
       display: block;
     }
@@ -276,12 +271,6 @@ body.custom-new-design {
   margin-bottom: 15px;
 
   &.-form-opened {
-    .add-new-content-block-button {
-      i {
-        transform: rotate(45deg);
-      }
-    }
-
     .saved-content-block-form {
       display: block;
     }
@@ -329,19 +318,24 @@ body.custom-new-design {
 
 .add-new-content-block-button {
   color: $dt-base !important;
-  font-size: 17px !important;
-  margin-bottom: 18px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 50%;
+  margin-bottom: 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border: none;
+  background-color: $dt-base-light !important;
 
   i {
-    font-size: 18px !important;
-    margin-right: 5px;
+    font-size: 28px !important;
+    margin-right: 0;
   }
 
   &:hover {
-    background-color: $dt-base-transparent-background-hover !important;
+    background-color: $dt-base-light-hover !important;
   }
 
   &:active {
@@ -379,9 +373,11 @@ body.custom-new-design {
 .content-blocks-container:has(>.projekt-content-block-wrapper:only-child) {
   .add-new-content-block-button {
     font-size: 22px !important;
+    min-width: 54px;
+    min-height: 54px;
 
     i {
-      font-size: 25px;
+      font-size: 42px;
     }
   }
 }
@@ -838,6 +834,7 @@ body.-preview-mode {
   .js-sidebar-admin-controlls,
   .projekt-content-block-edit,
   .projekt-content-block--move-button,
+  .projekt-content-block--toolsets-border,
   .add-new-content-block-section,
   .sdg-goal-tag-list input:not(:checked) + label,
   .js-add-tag-link:not(.selected),
@@ -2013,7 +2010,6 @@ ul.grid-x, ul.row {
   // margin-top: 15px;
   position: relative;
   z-index: 1;
-  margin-top: 10px;
   display: flex;
   justify-content: flex-end;
   padding: 2px 10px;

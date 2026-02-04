@@ -15,17 +15,14 @@ ProjektStudio.ToggleBackground = {
   handleToggleClick(e) {
     const button = e.currentTarget;
     const url = button.dataset.url;
-    const currentState = button.dataset.hideBackground === "true";
+    const currentState = button.dataset.showBackground === "true";
     const newState = !currentState;
 
-    button.dataset.hideBackground = newState;
+    button.dataset.showBackground = newState;
     button.setAttribute("aria-pressed", newState);
 
-    const textElement = button.parentElement.querySelector(".js-background-toggle-text");
-    textElement.innerText = newState ? "Hintergrund anzeigen" : "Hintergrund ausblenden";
-
     const mainContentCard = document.querySelector(".main-content-card");
-    mainContentCard.classList.toggle("-hide-background", newState);
+    mainContentCard.classList.toggle("-hide-background", !newState);
 
     App.Ajax.request({
       url: url,

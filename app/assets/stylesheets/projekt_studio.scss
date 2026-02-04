@@ -1233,7 +1233,7 @@ body:not(.-ai-enabled) {
 .projekt-studio--toggle-background-wrapper {
   position: absolute;
   left: 0;
-  top: -55px;
+  top: -40px;
   transform: none;
   display: flex;
   align-items: center;
@@ -2079,7 +2079,10 @@ ul.grid-x, ul.row {
     position: sticky;
     top: 90px;
     z-index: 10;
-    // border-top: 1px solid #dcdcdc;
+
+    &.-stuck {
+      border-top: 1px solid #dcdcdc;
+    }
   }
 }
 

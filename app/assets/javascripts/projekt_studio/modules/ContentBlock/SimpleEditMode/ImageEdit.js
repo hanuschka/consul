@@ -58,14 +58,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
-    const cropButton = `
-      <button
-        type="button"
-        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
-          <i class="fa fas fa-crop-alt"></i>
-      </button>
-    `;
-
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
       <div class="content-block-image-height-control">
@@ -96,11 +88,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
         <div class="content-block-image-control-buttons">
           <button
             type="button"
-            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
+            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block-element-not-editable ${smallButton ? '-small' : ''}"
           >
             <i class="fa fas fa-pencil-alt"></i>
           </button>
-          ${cropButton}
+          <button
+            type="button"
+            class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button js-content-block-element-not-editable ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}"
+          >
+            <i class="fa fas fa-crop-alt"></i>
+          </button>
         </div>
       `
     );

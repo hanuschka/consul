@@ -145,33 +145,23 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
   },
 
-  // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
-    const ignoreClasess = ".orbit-controls";
-    const elements = Array.from(
-      contentBlock.querySelectorAll(`div:not(${ignoreClasess}), h2, h3, h4, h5, p, li, figcaption, ol, .js-text-editable, a.accordion-title`)
-    );
+    if (contentEditable) {
+      contentBlock.contentEditable = true;
+      // We need some delay to disable contentEditable for elements
+      setTimeout(() => {
+        const nonEditableElements = contentBlock.querySelectorAll(".js-content-block-element-not-editable");
+        nonEditableElements.forEach((element) => {
+          element.contentEditable = false;
+          Array.from(element.querySelectorAll("*")).forEach((el) => {
+            el.contentEditable = false;
+          });
+        });
 
-    let firstEditableElement = null;
-
-    elements.forEach((element) => {
-      if (ProjektStudio.utils.hasNoBlockChildren(element)) {
-        if (contentEditable) {
-          element.contentEditable = true;
-          if (!firstEditableElement) {
-            firstEditableElement = element;
-          }
-        } else {
-          element.removeAttribute("contenteditable");
-        }
-      } else {
-        element.removeAttribute("contenteditable");
-      }
-    });
-
-    // Focus the first editable element, if enabling edit mode
-    if (contentEditable && firstEditableElement) {
-      ProjektStudio.utils.focusContentEditableElement(firstEditableElement)
+        ProjektStudio.utils.focusContentEditableElement(contentBlock);
+      }, 30)
+    } else {
+      contentBlock.contentEditable = false;
     }
   },
 
@@ -230,5 +220,6 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     }
 
     ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
-  }
+  },
+
 }

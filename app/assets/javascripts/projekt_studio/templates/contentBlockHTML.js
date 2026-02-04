@@ -105,7 +105,12 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
 
               <div class="content-block-edit-toolbar">
-                <label class="content-block-margin-input d-flex align-items-end u-gap-5">
+                <label
+                  class="content-block-margin-input d-flex align-items-end u-gap-5"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Abstand nach unten"
+                >
                   <i class="fas fa-arrows-alt-v"></i>
                   <input
                     type="number"
@@ -116,16 +121,19 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     max="85"
                   >
                 </label>
-                <div class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown" data-name="header-type">
+                <div
+                  class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
+                  data-name="header-type"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Überschrift"
+                >
                   <button
                     type="button"
                     class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
                     aria-haspopup="listbox"
                     aria-expanded="false"
                     aria-label="Überschrift"
-                    title="Überschrift"
-                    data-tooltip
-                    data-hover-delay="800"
                   >
                     Text
                   </button>
@@ -184,16 +192,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   class="projekt-frame-icon-button js-content-block-add-link"
                 >
                   <i class="fas fa-link"></i>
-                </button>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Mit KI bearbeiten"
-                  class="projekt-frame-icon-button js-content-block-enter-ai-edit-mode-from-simple"
-                >
-                  <i class="fas fa-magic"></i>
                 </button>
               </div>
             </div>

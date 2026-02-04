@@ -34,13 +34,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-edit-mode=""
       >
       <div class="relative">
-        <div class="projekt-content-block js-projekt-content-block">
-          ${contentBlockHTML}
-        </div>
-
-        <div class="projekt-content-block--overlay">
-        </div>
-
         <div class="projekt-content-block--toolsets">
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls d-flex-justify-space-between">
               <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
@@ -356,6 +349,13 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         </div>
 
         <div class="projekt-content-block--toolsets-border"></div>
+
+        <div class="projekt-content-block js-projekt-content-block">
+          ${contentBlockHTML}
+        </div>
+
+        <div class="projekt-content-block--overlay">
+        </div>
       </div>
 
       ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}

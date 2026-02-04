@@ -59,7 +59,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
       const dragHandleHTML = `
         <button
-          class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag"
+          class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle js-content-block-element-not-editable -drag"
           title="Element verschieben"
           contenteditable="false"
         >
@@ -72,7 +72,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     const deleteButtonHtml = `
         <button
-          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item -delete"
+          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item js-content-block-element-not-editable -delete"
           contenteditable="false"
         >
         <i class="fa fas fa-trash"></i>
@@ -220,7 +220,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass}`;
+    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass} js-content-block-element-not-editable`;
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -236,7 +236,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     buttonWrapper.innerHTML = `
          <div class="content-block--item-action-wrapper--inner">
-            <button class="content-block--item-action js-projekt-content-block--add-item">
+            <button class="content-block--item-action js-projekt-content-block--add-item js-content-block-element-not-editable">
               <i class="fa fas fa-plus"></i>
               Weiteres Element hinzufügen
             </button>

@@ -58,26 +58,37 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
-    const cropButton = `
-      <button
-        type="button"
-        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
-          <i class="fa fas fa-crop-alt"></i>
-      </button>
-    `;
-
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
       <div class="content-block-image-height-control">
-        <button type="button" class="js-content-block-image-height-decrease"><i class="fa fas fa-minus"></i></button>
+        <button
+          type="button"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe verringern"
+          class="js-content-block-image-height-decrease"
+        >
+          <i class="fa fas fa-minus"></i>
+        </button>
         <input
           type="number"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe (px)"
           class="js-content-block-image-height-input"
           min="30"
           max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
-        <button type="button" class="js-content-block-image-height-increase"><i class="fa fas fa-plus"></i></button>
+        <button
+          type="button"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe erhöhen"
+          class="js-content-block-image-height-increase"
+        >
+          <i class="fa fas fa-plus"></i>
+        </button>
       </div>
     `
 
@@ -96,14 +107,27 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
         <div class="content-block-image-control-buttons">
           <button
             type="button"
-            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
+            data-tooltip
+            data-hover-delay="800"
+            title="Bild ändern"
+            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block-element-not-editable ${smallButton ? '-small' : ''}"
           >
             <i class="fa fas fa-pencil-alt"></i>
           </button>
-          ${cropButton}
+          <button
+            type="button"
+            data-tooltip
+            data-hover-delay="800"
+            title="Bild zuschneiden"
+            class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button js-content-block-element-not-editable ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}"
+          >
+            <i class="fa fas fa-crop-alt"></i>
+          </button>
         </div>
       `
     );
+
+    $(imageWrapper).foundation();
   },
 
   removeImageControls(imgWrapper) {

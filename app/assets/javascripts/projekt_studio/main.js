@@ -31,6 +31,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.EditModeSwitcher.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()

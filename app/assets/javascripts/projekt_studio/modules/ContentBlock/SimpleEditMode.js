@@ -15,6 +15,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.switchToAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));
+    $document.on("selectionchange", this.handleSelectionChange.bind(this));
   },
 
   switchToSimpleEditMode(contentBlockWrapper) {
@@ -29,6 +30,10 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
     this.updateMarginBottomInputState(contentBlockWrapper)
     this.toggleSimpleEditModeFor(contentBlock, true)
+
+    setTimeout(() => {
+      ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
+    }, 50);
   },
 
   exitSimpleEditMode(contentBlockWrapper, restoreContent = false) {
@@ -140,33 +145,23 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
   },
 
-  // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
-    const ignoreClasess = ".orbit-controls";
-    const elements = Array.from(
-      contentBlock.querySelectorAll(`div:not(${ignoreClasess}), h2, h3, h4, h5, p, li, figcaption, ol, .js-text-editable, a.accordion-title`)
-    );
+    if (contentEditable) {
+      contentBlock.contentEditable = true;
+      // We need some delay to disable contentEditable for elements
+      setTimeout(() => {
+        const nonEditableElements = contentBlock.querySelectorAll(".js-content-block-element-not-editable");
+        nonEditableElements.forEach((element) => {
+          element.contentEditable = false;
+          Array.from(element.querySelectorAll("*")).forEach((el) => {
+            el.contentEditable = false;
+          });
+        });
 
-    let firstEditableElement = null;
-
-    elements.forEach((element) => {
-      if (ProjektStudio.utils.hasNoBlockChildren(element)) {
-        if (contentEditable) {
-          element.contentEditable = true;
-          if (!firstEditableElement) {
-            firstEditableElement = element;
-          }
-        } else {
-          element.removeAttribute("contenteditable");
-        }
-      } else {
-        element.removeAttribute("contenteditable");
-      }
-    });
-
-    // Focus the first editable element, if enabling edit mode
-    if (contentEditable && firstEditableElement) {
-      ProjektStudio.utils.focusContentEditableElement(firstEditableElement)
+        ProjektStudio.utils.focusContentEditableElement(contentBlock);
+      }, 30)
+    } else {
+      contentBlock.contentEditable = false;
     }
   },
 
@@ -207,5 +202,24 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       const parsedValue = parseInt(marginBottom);
       input.value = isNaN(parsedValue) ? ProjektStudio.config.defaultMarginBottom : parsedValue;
     }
-  }
+  },
+
+  handleSelectionChange() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const element = container.nodeType === 1 ? container : container.parentNode;
+
+    const contentBlockWrapper = element.closest(".js-projekt-content-block-wrapper");
+    if (!contentBlockWrapper || !contentBlockWrapper.classList.contains("-simple-edit-mode")) {
+      return;
+    }
+
+    ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
+  },
+
 }

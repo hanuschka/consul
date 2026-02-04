@@ -1,6 +1,7 @@
 de:
   adm:
     projekts:
+      title: Projekt Management
       menu:
         aria_label: Projekts Navigation
         items:

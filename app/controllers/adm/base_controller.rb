@@ -9,12 +9,16 @@ class Adm::BaseController < ActionController::Base
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
-  helper_method :adm_menu_component
+  helper_method :adm_menu_component, :adm_header_title
 
   private
 
     def adm_menu_component
       Adm::MenuComponent.new
+    end
+
+    def adm_header_title
+      I18n.t("adm.title")
     end
 
     def policy_class_for(record)

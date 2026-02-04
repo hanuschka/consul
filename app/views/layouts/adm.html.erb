@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><%= safe_join([yield(:title), t("adm.title")].compact, " | ") %></title>
+    <title><%= safe_join([yield(:title), adm_header_title].compact, " | ") %></title>
 
     <%= csrf_meta_tags %>
     <%= favicon_link_tag "favicon.ico" %>
@@ -33,7 +33,7 @@
 
       <div class="d-flex align-items-center">
         <%= image_tag(image_path_for("adm_logo.png"), alt: Setting["org_name"], class: "mx-4 position-relative", size: "50x50") %>
-        <div class="fs-5"><%= t("adm.title") %></div>
+        <div class="fs-5"><%= adm_header_title %></div>
       </div>
 
       <div class="d-flex align-items-center mr-4 position-relative">

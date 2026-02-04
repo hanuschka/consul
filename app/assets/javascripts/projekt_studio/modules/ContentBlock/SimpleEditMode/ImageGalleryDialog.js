@@ -72,9 +72,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     if (dialog && !dialog.open) {
       dialog.showModal();
     }
-    if (dialog) {
-      dialog.classList.add("-opened");
-    }
     $(".js-file-upload-manager-search").val("")
 
     this.updateEditButtonVisibility();
@@ -102,9 +99,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   handleDialogClosed() {
     const dialog = this.getDialogElement();
-    if (dialog) {
-      dialog.classList.remove("-opened");
-    }
+
     $(".js-file-upload-manager-grid, .js-file-upload-manager-pagination").empty()
 
     this.state.selectedImage = null;

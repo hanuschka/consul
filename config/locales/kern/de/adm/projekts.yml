@@ -56,7 +56,7 @@ de:
           individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter "Starke Gruppen" angelegt wurden.
         projekt_managers:
           title: Projektmanager*innen
-          no_assignments: Diesem Projekt sind keine Projektmanager*innen zugewiesen.
+          no_managers: Es sind noch keine Projektmanager*innen im System registriert.
           assignment:
             hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
             permissions:

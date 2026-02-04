@@ -5,11 +5,11 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
 
 <div class="kern-container mb-5">
-  <% if @projekt.projekt_manager_assignments.any? %>
-    <% @projekt.projekt_manager_assignments.includes(projekt_manager: :user).each do |assignment| %>
+  <% if @projekt_manager_assignments.any? %>
+    <% @projekt_manager_assignments.each do |assignment| %>
       <%= render 'adm/projekts/projekts/projekt_managers/assignment', projekt: @projekt, assignment: assignment %>
     <% end %>
   <% else %>
-    <p><%= t('.no_assignments') %></p>
+    <p class="kern-body"><%= t('.no_managers') %></p>
   <% end %>
 </div>

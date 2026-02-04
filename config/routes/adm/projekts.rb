@@ -6,8 +6,6 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :manager_assignments, only: [:update]
-
     resources :phases, only: [:update] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
@@ -83,6 +81,7 @@ namespace :adm do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create]
+      resources :manager_assignments, only: [:update]
       patch :update_default_phase, on: :member
     end
   end

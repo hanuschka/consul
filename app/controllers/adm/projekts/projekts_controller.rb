@@ -56,6 +56,13 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
   def projekt_managers
     authorize [:adm, :projekts, @projekt], :show?
+
+    # Auto-create assignments for all projekt managers
+    ProjektManager.find_each do |pm|
+      pm.projekt_manager_assignments.find_or_create_by!(projekt: @projekt)
+    end
+    @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
+
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
       { name: @projekt.name },

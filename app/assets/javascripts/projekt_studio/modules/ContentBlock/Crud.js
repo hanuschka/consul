@@ -18,10 +18,12 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   toggleStartSection(show) {
+    console.log("toggleStartSection", show)
     $(".js-projekt-content-start-section").toggle(show)
   },
 
   toggleAddFirstContentBlock(show) {
+    console.log("toggleAddFirstContentBlock", show)
     $(".js-add-first-content-block-wrapper").toggle(show)
   },
 
@@ -45,9 +47,9 @@ ProjektStudio.ContentBlock.Crud = {
 
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
 
-    $('.js-content-blocks-container').append(newContentBlockContainer)
+    $('.js-content-blocks-list').append(newContentBlockContainer)
 
-    this.toggleStartSection(false)
+    this.rerenderContentBlockListControls()
 
     this.createContentBlock(
       newContentBlockContainer,
@@ -79,6 +81,11 @@ ProjektStudio.ContentBlock.Crud = {
         $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", true)
       }
     }
+    else {
+      $('.js-content-blocks-list').append(newContentBlockContainer)
+    }
+
+    this.rerenderContentBlockListControls()
 
     this.createContentBlock(
       newContentBlockContainer,
@@ -88,10 +95,15 @@ ProjektStudio.ContentBlock.Crud = {
     )
   },
 
-  createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
-    this.toggleAddFirstContentBlock(true)
-    this.toggleDeleteAllButton(true)
+  rerenderContentBlockListControls() {
+    const hasContentBlocks = $('.js-content-blocks-list .js-content-block').length > 0;
 
+    this.toggleStartSection(!hasContentBlocks)
+    this.toggleAddFirstContentBlock(hasContentBlocks)
+    this.toggleDeleteAllButton(hasContentBlocks)
+  },
+
+  createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       $(newContentBlockContainer).find('.projekt-content-block').foundation();
@@ -202,12 +214,7 @@ ProjektStudio.ContentBlock.Crud = {
 
     contentBlockWrapper.remove()
 
-    const remainingContentBlocks = document.querySelectorAll('.js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)').length;
-    if (remainingContentBlocks === 0) {
-      this.toggleAddFirstContentBlock(false)
-      this.toggleDeleteAllButton(false)
-      this.toggleStartSection(true)
-    }
+    this.rerenderContentBlockListControls()
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});

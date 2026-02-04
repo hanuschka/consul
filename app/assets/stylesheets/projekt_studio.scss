@@ -672,7 +672,7 @@ body.custom-new-design {
   top: -5px;
   left: -15px;
   right: -15px;
-  bottom: 0;
+  bottom: -12px;
   border-radius: 10px;
   margin: auto;
   /* display: block; */
@@ -2011,6 +2011,8 @@ ul.grid-x, ul.row {
 
 .projekt-content-block--toolsets {
   // margin-top: 15px;
+  position: relative;
+  z-index: 1;
   margin-top: 10px;
   display: flex;
   justify-content: flex-end;

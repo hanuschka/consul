@@ -213,18 +213,20 @@
           class="js-projekt-studio-hide-on-preview"
           style="position: relative; height: 1px;"
         >
-          <button
-            type="button"
-            class="projekt-studio--toggle-background-button js-toggle-content-background"
-            data-projekt-id="<%= @custom_page.projekt.id %>"
-            data-hide-background="<%= @custom_page.projekt.hide_content_background_color %>"
-            data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
-          >
-            <i class="fas fa-fill-drip"></i>
-            <span class="js-background-toggle-text">
+          <div class="projekt-studio--toggle-background-wrapper">
+            <button
+              type="button"
+              class="js-toggle-content-background"
+              role="switch"
+              aria-pressed="<%= @custom_page.projekt.hide_content_background_color %>"
+              data-projekt-id="<%= @custom_page.projekt.id %>"
+              data-hide-background="<%= @custom_page.projekt.hide_content_background_color %>"
+              data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+            ></button>
+            <span class="projekt-studio--toggle-background-label js-background-toggle-text">
               <%= @custom_page.projekt.hide_content_background_color ? 'Hintergrund anzeigen' : 'Hintergrund ausblenden' %>
             </span>
-          </button>
+          </div>
         </div>
       <% end %>
       <div class="flex-layout">

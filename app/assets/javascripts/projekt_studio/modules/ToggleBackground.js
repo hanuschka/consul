@@ -19,8 +19,9 @@ ProjektStudio.ToggleBackground = {
     const newState = !currentState;
 
     button.dataset.hideBackground = newState;
+    button.setAttribute("aria-pressed", newState);
 
-    const textElement = button.querySelector(".js-background-toggle-text");
+    const textElement = button.parentElement.querySelector(".js-background-toggle-text");
     textElement.innerText = newState ? "Hintergrund anzeigen" : "Hintergrund ausblenden";
 
     const mainContentCard = document.querySelector(".main-content-card");

@@ -366,12 +366,18 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   showLoadingOverlay() {
     const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
-    overlay.style.display = 'flex';
+
+    if (overlay) {
+      overlay.style.display = 'flex';
+    }
   },
 
   hideLoadingOverlay() {
     const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
-    overlay.style.display = 'none';
+
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
   },
 
   async fetchImageData(params = {}) {

@@ -1473,14 +1473,8 @@ body:not(.-ai-enabled) {
 }
 
 .orbit-figure {
-  .content-block-image-change-button {
-    bottom: 50px;
-    right: 15px;
-  }
-
-  .content-block-image-crop-button {
-    bottom: 50px;
-    left: 15px;
+  .content-block-image-control-buttons {
+    bottom: 47px;
   }
 }
 

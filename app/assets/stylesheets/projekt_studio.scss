@@ -823,6 +823,7 @@ body.-preview-mode {
   .js-sidebar-admin-controlls,
   .projekt-content-block-edit,
   .projekt-content-block--move-button,
+  .projekt-content-block--toolsets,
   .projekt-content-block--toolsets-border,
   .add-new-content-block-section,
   .sdg-goal-tag-list input:not(:checked) + label,
@@ -1256,18 +1257,17 @@ body:not(.-ai-enabled) {
     width: 3.5rem;
     position: relative;
     color: #fdfdfd;
-    box-shadow: 3px 3px 7px 2px #00000030;
 
     &::after {
       background: #fff;
       border-radius: 100%;
       content: "";
       display: block;
-      height: 1.75em;
+      height: 1.5em;
       position: absolute;
       transform: translateY(-50%);
       top: 50%;
-      width: 1.75em;
+      width: 1.5em;
     }
   }
 

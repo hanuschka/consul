@@ -64,9 +64,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const relativeContainer = contentBlockWrapper.querySelector('.relative');
     if (!relativeContainer) return;
 
-    const toolsets = relativeContainer.querySelector('.projekt-content-block--toolsets');
-    if (toolsets) {
-      relativeContainer.insertBefore(editorContainer, toolsets);
+    const toolsetsBorder = relativeContainer.querySelector('.projekt-content-block--toolsets-border');
+    if (toolsetsBorder) {
+      toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
     } else {
       relativeContainer.appendChild(editorContainer);
     }

@@ -497,11 +497,9 @@ body.custom-new-design {
     }
   }
 
-  &.-loading, &.-simple-edit-mode, &.-ai-edit-mode, &.-code-edit-mode {
+  &.-loading, &.-in-edit-mode {
     .projekt-content-block-edit {
       border-bottom: none;
-      // padding-bottom: 9px;
-      // padding-right: 50px;
     }
 
     .projekt-content-block--toolsets {
@@ -630,15 +628,6 @@ body.custom-new-design {
   }
 
   &.-code-edit-mode {
-    .projekt-content-block--overlay {
-      background-color: #24a1d114;
-      outline: 1px solid #d6ecff;
-    }
-
-    .projekt-content-block-edit {
-      // background-color: #E2EEF9;
-    }
-
     .projekt-content-block-edit-main-controlls {
       display: flex;
     }
@@ -1903,7 +1892,8 @@ ul.grid-x, ul.row {
 .content-block-ai-edit-popup {
   position: absolute;
   // bottom: -220px;
-  right: 0;
+  right: -510px;
+  top: 40px;
   background: white;
   border: 1px solid #ccc;
   padding: 17px;
@@ -2071,7 +2061,7 @@ ul.grid-x, ul.row {
 .projekt-content-block--toolsets {
   // margin-top: 15px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   justify-content: flex-end;
   padding: 2px 10px;

@@ -672,7 +672,7 @@ body.custom-new-design {
   border-radius: 10px;
   margin: auto;
   /* display: block; */
-  z-index: 0;
+  z-index: -1;
   transition: 100ms ease background-color;
 }
 
@@ -1239,6 +1239,68 @@ body:not(.-ai-enabled) {
     background-color: #45ac50 !important;
     color: white !important;
   }
+}
+
+.projekt-studio--toggle-background-wrapper {
+  position: absolute;
+  left: 0;
+  top: -55px;
+  transform: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  [aria-pressed] {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0.85em 1em;
+    border: 1px solid transparent;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    font-family: inherit;
+    line-height: 1;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 1.5rem;
+    font-weight: bold;
+    min-width: 3.5rem;
+    width: 3.5rem;
+    position: relative;
+    color: #fdfdfd;
+    box-shadow: 3px 3px 7px 2px #00000030;
+
+    &::after {
+      background: #fff;
+      border-radius: 100%;
+      content: "";
+      display: block;
+      height: 1.75em;
+      position: absolute;
+      transform: translateY(-50%);
+      top: 50%;
+      width: 1.75em;
+    }
+  }
+
+  [aria-pressed][aria-pressed=true] {
+    background: #1779ba;
+
+    &::after {
+      right: 0.5em;
+    }
+  }
+
+  [aria-pressed][aria-pressed=false] {
+    background: #747474;
+
+    &::after {
+      left: 0.5em;
+    }
+  }
+}
+
+.projekt-studio--toggle-background-label {
+  font-size: 17px;
 }
 
 .content-block--item-action-wrapper {

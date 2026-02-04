@@ -2001,6 +2001,14 @@ ul.grid-x, ul.row {
   }
 }
 
+.projekt-content-block--toolsets-border {
+  width: 98.5%;
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 0 auto;
+  margin-bottom: 12px;
+}
+
 .projekt-content-block--toolsets {
   // margin-top: 15px;
   margin-top: 10px;
@@ -2010,9 +2018,3 @@ ul.grid-x, ul.row {
   border-radius: 8px;
 }
 
-.projekt-content-block--toolsets-border {
-  width: 98.5%;
-  height: 1px;
-  background-color: #dcdcdc;
-  margin: 0 auto;
-}

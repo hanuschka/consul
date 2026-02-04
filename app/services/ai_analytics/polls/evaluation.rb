@@ -25,7 +25,10 @@ class AiAnalytics::Polls::Evaluation < ApplicationService
           items: {
             type: "object",
             properties: {
-              title: { type: "string" },
+              title: {
+                type: "string",
+                description: "Plain text title without HTML formatting or markdown"
+              },
               content: { type: "string" }
             },
             required: ["title", "content"],

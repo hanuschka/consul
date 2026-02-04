@@ -71,12 +71,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    if (!popup) return;
-
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    if (!relativeContainer) return;
-
-    relativeContainer.appendChild(popup);
+    const toolsets = contentBlockWrapper.querySelector('.projekt-content-block--toolsets');
+    toolsets.appendChild(popup);
 
     popup.style.display = 'block';
 

@@ -143,9 +143,9 @@ module ProjektAdminActions
   def toggle_hide_content_background
     authorize!(:edit, @projekt)
 
-    @projekt.update!(hide_content_background_color: !@projekt.hide_content_background_color)
+    @projekt.update!(show_content_background: !@projekt.show_content_background)
 
-    render json: { hide_content_background_color: @projekt.hide_content_background_color }
+    render json: { show_content_background: @projekt.show_content_background }
   end
 
   private

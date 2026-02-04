@@ -503,7 +503,7 @@ body.custom-new-design {
     }
 
     .projekt-content-block--toolsets {
-      background-color: #24a1d114;
+      background-color: #F1F8FC;
     }
   }
   &.-highlight-changed {
@@ -1233,7 +1233,7 @@ body:not(.-ai-enabled) {
 .projekt-studio--toggle-background-wrapper {
   position: absolute;
   left: 0;
-  top: -55px;
+  top: -40px;
   transform: none;
   display: flex;
   align-items: center;
@@ -2066,5 +2066,27 @@ ul.grid-x, ul.row {
   justify-content: flex-end;
   padding: 2px 10px;
   border-radius: 8px;
+  align-self: flex-start;
 }
 
+.projekt-content-block-wrapper.-in-edit-mode {
+  .relative {
+    overflow: visible;
+  }
+
+  .projekt-content-block--toolsets {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 90px;
+    z-index: 10;
+
+    &.-stuck {
+      border-top: 1px solid #dcdcdc;
+    }
+  }
+}
+
+
+.add-first-content-block-wrapper {
+  margin-bottom: 10px;
+}

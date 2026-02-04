@@ -218,14 +218,12 @@
               type="button"
               class="js-toggle-content-background"
               role="switch"
-              aria-pressed="<%= @custom_page.projekt.hide_content_background_color %>"
+              aria-pressed="<%= @custom_page.projekt.show_content_background %>"
               data-projekt-id="<%= @custom_page.projekt.id %>"
-              data-hide-background="<%= @custom_page.projekt.hide_content_background_color %>"
+              data-show-background="<%= @custom_page.projekt.show_content_background %>"
               data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
             ></button>
-            <span class="projekt-studio--toggle-background-label js-background-toggle-text">
-              <%= @custom_page.projekt.hide_content_background_color ? 'Hintergrund anzeigen' : 'Hintergrund ausblenden' %>
-            </span>
+            <span class="projekt-studio--toggle-background-label">Hintergrund</span>
           </div>
         </div>
       <% end %>
@@ -233,7 +231,7 @@
         <div class="main-column">
           <div class="js-anchor-navigation-content" id="projekt-body">
             <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
-              <div class="main-content-card <%= '-hide-background' if @custom_page.projekt.hide_content_background_color %>">
+              <div class="main-content-card <%= '-hide-background' unless @custom_page.projekt.show_content_background %>">
                 <% if @custom_page.content&.include?('template_projekt_library') %>
                   <%= render "projekt_library", projekt: @custom_page.projekt %>
                 <% else %>

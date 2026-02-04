@@ -18,6 +18,7 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   toggleStartSection(show) {
+    console.log("toggleStartSection", show)
     $(".js-projekt-content-start-section").toggle(show)
   },
 
@@ -47,6 +48,8 @@ ProjektStudio.ContentBlock.Crud = {
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
 
     $('.js-content-blocks-list').append(newContentBlockContainer)
+
+    this.rerenderContentBlockListControls()
 
     this.createContentBlock(
       newContentBlockContainer,
@@ -211,12 +214,7 @@ ProjektStudio.ContentBlock.Crud = {
 
     contentBlockWrapper.remove()
 
-    const remainingContentBlocks = document.querySelectorAll('.js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)').length;
-    if (remainingContentBlocks === 0) {
-      this.toggleAddFirstContentBlock(false)
-      this.toggleDeleteAllButton(false)
-      this.toggleStartSection(true)
-    }
+    this.rerenderContentBlockListControls()
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});

@@ -9,10 +9,8 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     base_scope = filter_assigned_ideas_only(base_scope)
     @pagy, @ideas = pagy(Adm::IdeasQuery.call(base_scope, params))
 
-    @id_header_options = { sort: true }
     @title_header_options = { search: true }
     @created_at_header_options = { sort: true }
-    @admin_accepted_at_header_options = { sort: true }
     @category_header_options = { filter_options: category_filter_options }
     @officer_header_options = { filter_options: officer_filter_options }
 

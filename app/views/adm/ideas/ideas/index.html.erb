@@ -8,14 +8,11 @@
       <table class="kern-table">
         <thead class="kern-table__head">
           <tr class="kern-table__row">
-            <%= render Kern::Table::HeaderComponent.new(:id, t(".table.id"), **@id_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.admin_accepted") %></th>
-            <%= render Kern::Table::HeaderComponent.new(:admin_accepted_at, t(".table.admin_accepted_at"), **@admin_accepted_at_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options) %>
+            <th scope="col" class="kern-table__header"><%= t(".table.admin_accepted") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.status") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.location") %></th>
             <%= render Kern::Table::HeaderComponent.new(:idea_category_id, t(".table.category"), **@category_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:idea_officer_id, t(".table.officer"), **@officer_header_options) %>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>

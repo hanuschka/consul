@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "edit__documents" do %>
+  <%= form_with model: idea, url: adm_ideas_idea_path(idea), method: :patch do |f| %>
+    <div class="kern-fieldset__body mb-4">
+      <%= render "documents/nested_documents", documentable: idea, f: f %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

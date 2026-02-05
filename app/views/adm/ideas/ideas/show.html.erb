@@ -5,29 +5,38 @@
 <%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
 
 <article class="kern-container mb-5">
-  <div class="mb-3">
+  <p class="kern-body kern-body--small mb-1">
     <strong><%= t(".admin_accepted_status") %>:</strong>
     <%= @idea.accepted? ? t(".accepted") : t(".not_accepted") %>
-  </div>
+    <% if @idea.admin_accepted_at.present? %>
+      (<%= l(@idea.admin_accepted_at, format: :long) %>)
+    <% end %>
+  </p>
+  <p class="kern-body kern-body--small mb-1">
+    <strong><%= t(".status") %>:</strong>
+    <%= t(".status_#{@idea.status}") %>
+    <% if @idea.remaining_days.present? %>
+      · <strong><%= t(".remaining_days") %>:</strong> <%= t(".remaining_days_count", count: @idea.remaining_days) %>
+    <% end %>
+  </p>
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".votes_needed_for_success") %>:</strong> <%= @idea.votes_needed_for_success %>
+    · <strong><%= t(".timeframe") %>:</strong> <%= t(".timeframe_days", count: @idea.timeframe) %>
+  </p>
+  <% if @idea.hidden_at.present? %>
+    <p class="kern-body kern-body--small mb-3">
+      <strong><%= t(".hidden_at") %>:</strong> <%= l(@idea.hidden_at, format: :long) %>
+    </p>
+  <% end %>
 
   <h1 class="kern-title kern-title--large mb-2"><%= @idea.title %></h1>
-  <p class="kern-body kern-body--small">
+
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".author") %>:</strong>
     <%= @idea.author.username %>
     <% if @idea.on_behalf_of.present? %>
       (<%= t(".on_behalf_of") %>: <%= @idea.on_behalf_of %>)
     <% end %>
-    | <%= l(@idea.created_at, format: :long) %>
-    | <%= link_to t(".view_on_site"), idea_path(@idea), target: "_blank", data: { turbo: false } %>
-    | <%= link_to t(".download_pdf"), adm_ideas_idea_path(@idea, format: :pdf),
-          data: @idea.map_location.present? ? {
-            controller: "map-screenshot",
-            map_screenshot_container_value: dom_id(@idea, "map"),
-            action: "click->map-screenshot#capture"
-          } : {} %>
-  </p>
-  <p class="kern-body kern-body--small">
-    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @idea.cached_votes_up %>
-    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @idea.comments_count %>
   </p>
 
   <% if @idea.category.present? %>
@@ -42,6 +51,32 @@
     </p>
   <% end %>
 
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".created_at") %>:</strong> <%= l(@idea.created_at, format: :long) %>
+    <strong><%= t(".updated_at") %>:</strong> <%= l(@idea.updated_at, format: :long) %>
+  </p>
+
+  <% if @idea.approximated_address.present? %>
+    <p class="kern-body mb-3">
+      <strong><%= t(".address") %>:</strong>
+      <%= @idea.approximated_address %>
+    </p>
+  <% end %>
+
+  <p class="kern-body kern-body--small">
+    <%= link_to t(".view_on_site"), idea_path(@idea), target: "_blank", data: { turbo: false } %>
+    | <%= link_to t(".download_pdf"), adm_ideas_idea_path(@idea, format: :pdf),
+          data: @idea.map_location.present? ? {
+            controller: "map-screenshot",
+            map_screenshot_container_value: dom_id(@idea, "map"),
+            action: "click->map-screenshot#capture"
+          } : {} %>
+  </p>
+  <p class="kern-body kern-body--small">
+    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @idea.cached_votes_up %>
+    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @idea.comments_count %>
+  </p>
+
   <div class="kern-row mb-3">
     <% if @image_url.present? %>
       <div class="kern-col-sm-12 kern-col-md-5">
@@ -55,13 +90,6 @@
       </div>
     </div>
   </div>
-
-  <% if @idea.approximated_address.present? %>
-    <p class="kern-body mb-3">
-      <strong><%= t(".address") %>:</strong>
-      <%= @idea.approximated_address %>
-    </p>
-  <% end %>
 
   <% if @idea.map_location.present? %>
     <div class="kern-row mb-4">

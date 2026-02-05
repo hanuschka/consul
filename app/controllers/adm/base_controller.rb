@@ -13,6 +13,10 @@ class Adm::BaseController < ActionController::Base
 
   private
 
+    def frame_partial_path
+      turbo_frame_request_id&.gsub("__", "/")
+    end
+
     def adm_menu_component
       Adm::MenuComponent.new
     end
@@ -31,6 +35,8 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::ProjektPhasePolicy
       when "ProjektManager"
         Adm::Projekts::ProjektManagerPolicy
+      when "Idea"
+        Adm::Ideas::IdeaPolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

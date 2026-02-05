@@ -28,6 +28,8 @@ de:
           labels:
             title: Titel
             description: Beschreibung
+            image: Bild
+            documents: Dokumente
             video_url: Video-URL
             category: Kategorie
             map_location: Kartenstandort
@@ -44,6 +46,23 @@ de:
           admin_accepted_status: Status der Freigabe
           accepted: Freigegeben
           not_accepted: Nicht freigegeben
+          admin_accepted_at: Freigegeben am
+          status: Status
+          status_active: Aktiv
+          status_archived: Archiviert
+          status_pending: Ausstehend
+          votes_needed_for_success: Benötigte Stimmen
+          timeframe: Zeitrahmen
+          timeframe_days:
+            one: "%{count} Tag"
+            other: "%{count} Tage"
+          remaining_days: Verbleibende Tage
+          remaining_days_count:
+            one: "%{count} Tag"
+            other: "%{count} Tage"
+          hidden_at: Ausgeblendet am
+          created_at: Erstellt am
+          updated_at: Zuletzt aktualisiert
           category: Kategorie
           officer: Sachbearbeiter
           video_url: Video-URL
@@ -58,7 +77,6 @@ de:
           timeframe: Zeitrahmen (Tage)
           officer: Sachbearbeiter
           no_officer: "-- Kein Sachbearbeiter --"
-          official_answer: Offizielle Antwort
           submit: Speichern
         audits:
           title: Änderungslog

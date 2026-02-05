@@ -44,10 +44,13 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     @idea = Idea.find(params[:id])
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy
 
-    @districts = RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
-    @map_coordinates_for_districts = @districts.map do |district|
-      [district.id, [district.map_location.latitude, district.map_location.longitude]]
-    end.to_h
+    @idea.build_image(user: current_user) unless @idea.image
+    @districts = ::RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
+
+    @breadcrumbs = [
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+      { name: @idea.title }
+    ]
   end
 
   def update
@@ -56,7 +59,17 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
 
     if @idea.update(idea_params)
       notify_new_officer(@idea)
-      redirect_to adm_ideas_root_path, notice: t("custom.admin.ideas.update.success_notice")
+
+      if turbo_frame_request?
+        flash.now[:success] = t("adm.attribute.update.success")
+        render turbo_stream: turbo_stream.replace(
+          turbo_frame_request_id,
+          partial: "adm/ideas/ideas/#{frame_partial_path}",
+          locals: { idea: @idea }
+        )
+      else
+        redirect_to adm_ideas_root_path, notice: t("custom.admin.ideas.update.success_notice")
+      end
     else
       render :edit
     end
@@ -72,6 +85,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   def administer
     @idea = Idea.find(params[:id])
     authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
+
+    @breadcrumbs = [
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+      { name: @idea.title }
+    ]
   end
 
   def audits
@@ -112,6 +130,28 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
         path: update_official_answer_adm_ideas_idea_path(@idea),
         label: t("adm.ideas.ideas.show.official_answer"),
         description: t("adm.ideas.ideas.show.official_answer_hint")
+      )
+    )
+  end
+
+  def update_image
+    @idea = Idea.find(params[:id])
+    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
+
+    @idea.build_image(user: current_user) unless @idea.image
+
+    if @idea.image.update(attachment: params[:image][:attachment])
+      flash.now[:success] = t("adm.attribute.update.success")
+    end
+
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(@idea.image, :attachment),
+      Adm::AttributeEditorComponent.new(
+        @idea.image,
+        :attachment,
+        :image,
+        path: update_image_adm_ideas_idea_path(@idea),
+        label: t("adm.ideas.ideas.edit.labels.image")
       )
     )
   end

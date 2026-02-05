@@ -146,10 +146,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       @projekt = Projekt.find(params[:id])
     end
 
-    def frame_partial_path
-      turbo_frame_request_id&.gsub("__", "/")
-    end
-
     def projekt_params
       params.require(:projekt).permit(
         :name, :total_duration_start, :total_duration_end,

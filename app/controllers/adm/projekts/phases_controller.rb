@@ -205,10 +205,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       @projekt = Projekt.find(params[:projekt_id])
     end
 
-    def frame_partial_path
-      turbo_frame_request_id&.gsub("__", "/")
-    end
-
     def find_projekt_phase
       if @projekt
         @projekt_phase = @projekt.projekt_phases.find(params[:id])

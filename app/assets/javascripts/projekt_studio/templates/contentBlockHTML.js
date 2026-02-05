@@ -33,143 +33,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       >
       <div class="relative">
         <div class="projekt-content-block--toolsets">
-            <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
-              <button
-                type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Speichern"
-                class="projekt-frame-icon-button js-save-content-block"
-              >
-                <i class="fas fa-save"></i>
-              </button>
-              <button
-                type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Abbrechen"
-                class="projekt-frame-icon-button js-cancel-content-block"
-              >
-                <i class="fas fa-xmark"></i>
-              </button>
-            </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Im Editor weiterbearbeiten"
-                  class="projekt-frame-icon-button js-content-block-enter-simple-edit-mode-from-ai"
-                >
-                  <i class="fas fa-pencil-alt"></i>
-                </button>
-              </div>
-            </div>
-
-            <div
-              class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
-              <div class="content-block-edit-toolbar">
-                <label
-                  class="content-block-margin-input d-flex align-items-end u-gap-5"
-                  data-tooltip
-                  data-hover-delay="800"
-                  title="Abstand nach unten"
-                >
-                  <i class="fas fa-arrows-alt-v"></i>
-                  <input
-                    type="number"
-                    class="js-content-block-margin-bottom-input"
-                    value="35"
-                    step="5"
-                    min="0"
-                    max="85"
-                  >
-                </label>
-                <div
-                  class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
-                  data-name="header-type"
-                  data-tooltip
-                  data-hover-delay="800"
-                  title="Überschrift"
-                >
-                  <button
-                    type="button"
-                    class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
-                    aria-haspopup="listbox"
-                    aria-expanded="false"
-                    aria-label="Überschrift"
-                  >
-                    Text
-                  </button>
-                  <ul
-                    class="dropdown-select-menu--list"
-                    role="listbox"
-                    aria-label="Überschrift"
-                    tabindex="-1"
-                  >
-                    <li
-                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                      role="option"
-                      tabindex="-1"
-                      data-index="0"
-                      data-header-type="h2"
-                    >
-                      H2
-                    </li>
-                    <li
-                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                      role="option"
-                      tabindex="-1"
-                      data-index="1"
-                      data-header-type="h3"
-                    >
-                      H3
-                    </li>
-                    <li
-                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                      role="option"
-                      tabindex="-1"
-                      data-index="2"
-                      data-header-type="none"
-                    >
-                      Text
-                    </li>
-                  </ul>
-                </div>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Text fett formatieren"
-                  class="projekt-frame-icon-button js-content-block-toggle-bold"
-                >
-                  <i class="fas fa-bold"></i>
-                </button>
-                <button
-                  type="button"
-                  disabled
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Link hinzufügen"
-                  class="projekt-frame-icon-button js-content-block-add-link"
-                >
-                  <i class="fas fa-link"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
-            </div>
-
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
-            </div>
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
               <div class="ai-button-wrapper">
                 <div class="ai-button-wrapper--inner">
@@ -277,6 +141,121 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
 
+            </div>
+            <div
+              class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
+              <div class="content-block-edit-toolbar">
+                <label
+                  class="content-block-margin-input d-flex align-items-end u-gap-5"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Abstand nach unten"
+                >
+                  <i class="fas fa-arrows-alt-v"></i>
+                  <input
+                    type="number"
+                    class="js-content-block-margin-bottom-input"
+                    value="35"
+                    step="5"
+                    min="0"
+                    max="85"
+                  >
+                </label>
+                <div
+                  class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
+                  data-name="header-type"
+                  data-tooltip
+                  data-hover-delay="800"
+                  title="Überschrift"
+                >
+                  <button
+                    type="button"
+                    class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Überschrift"
+                  >
+                    Text
+                  </button>
+                  <ul
+                    class="dropdown-select-menu--list"
+                    role="listbox"
+                    aria-label="Überschrift"
+                    tabindex="-1"
+                  >
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="0"
+                      data-header-type="h2"
+                    >
+                      H2
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="1"
+                      data-header-type="h3"
+                    >
+                      H3
+                    </li>
+                    <li
+                      class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
+                      role="option"
+                      tabindex="-1"
+                      data-index="2"
+                      data-header-type="none"
+                    >
+                      Text
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Text fett formatieren"
+                  class="projekt-frame-icon-button js-content-block-toggle-bold"
+                >
+                  <i class="fas fa-bold"></i>
+                </button>
+                <button
+                  type="button"
+                  disabled
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Link hinzufügen"
+                  class="projekt-frame-icon-button js-content-block-add-link"
+                >
+                  <i class="fas fa-link"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
+            </div>
+
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
+            </div>
+            <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
+              <button
+                type="button"
+                class="projekt-content-block-edit--button -green js-save-content-block"
+              >
+                <i class="fas fa-save"></i>
+                Speichern
+              </button>
+              <button
+                type="button"
+                class="projekt-content-block-edit--button js-cancel-content-block"
+              >
+                <i class="fas fa-xmark"></i>
+                Abbrechen
+              </button>
             </div>
         </div>
 

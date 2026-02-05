@@ -11,7 +11,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       class="js-content-blocks-list content-blocks-container"
     >
       <div
-        class="js-add-first-content-block-wrapper add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper"
+        class="js-add-first-content-block-wrapper add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper js-projekt-studio-hide-on-preview"
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
         ${showContentBlockTemplatesButton()}

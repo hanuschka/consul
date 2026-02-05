@@ -53,33 +53,18 @@
       <div class="content-block-ai-edit-popup-content">
 
         <form class="u-width-100" action="">
-          <div class="content-block-ai-edit-popup-header">
-            <h3>Mit KI bearbeiten</h3>
-            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
-            <div
-              class="ai-edit-success-indicator js-ai-edit-success-indicator"
-              style="display: none;"
-            >
-              <i class="fas fa-check"></i>
-            </div>
-          </div>
-          <div class="ai-edit-form">
-            <div class="ai-default-context-hint">
-              <%= t("ai.default_context_hint") %>
-            </div>
-            <textarea
-              name="instructions"
-              rows="4"
-              required
-              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
-              class="ai-instructions-textarea js-ai-instructions-textarea"
+          <div class="u-flex u-gap-10">
+            <div class="u-width-100 ai-edit-form">
+              <textarea
+                name="instructions"
+                rows="3"
+                required
+                placeholder="<%= t('ai.instructions_placeholder') %>"
+                class="ai-instructions-textarea js-ai-instructions-textarea"
               ></textarea>
-            <div style="color: #999; font-size: 12px; margin-top: 5px;">
-              Enter zum Absenden, Umschalt+Enter für neue Zeile
             </div>
-          </div>
-          <div class="ai-edit-actions d-flex justify-between">
-            <div>
+
+            <div class="content-block-ai-edit-popup-checkboxes">
               <div class="u-margin-bottom-5">
                 <label
                   class="content-block-ai-edit-popup-checkbox-label"
@@ -112,18 +97,31 @@
                 </div>
               </div>
             </div>
-            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
-              <span class="js-submit-state">
-                <i class="fas fa-magic"></i>
-                Absenden
-              </span>
-              <span class="js-cancel-state">
-                <i class="fas fa-times"></i>
-                Abbrechen
-              </span>
-            </button>
           </div>
-
+          <div class="ai-edit-actions d-flex justify-between">
+            <div class="d-flex u-gap-20 u-flex-align-center">
+              <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+                <span class="js-submit-state">
+                  <i class="fas fa-magic"></i>
+                  Absenden
+                </span>
+                <span class="js-cancel-state">
+                  <i class="fas fa-times"></i>
+                  Abbrechen
+                </span>
+              </button>
+              <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
+              <div
+                class="ai-edit-success-indicator js-ai-edit-success-indicator"
+                style="display: none;"
+              >
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            <div class="ai-instructions-hint js-ai-instructions-hint">
+              <%= t('ai.instructions_hint') %>
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -22,7 +22,7 @@
             <%= button_to remove_path_for(document),
                   method: :delete,
                   class: "kern-btn kern-btn--secondary kern-btn--small" do %>
-              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+              <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
               <span class="kern-label"><%= t(".remove") %></span>
             <% end %>
           </li>
@@ -35,7 +35,7 @@
               class="kern-btn kern-btn--secondary"
               data-attribute-editors--documents-target="addButton"
               data-action="click->attribute-editors--documents#showForm">
-        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+        <span class="material-symbols-outlined kern-label" aria-hidden="true">add</span>
         <span class="kern-label"><%= t(".add") %></span>
       </button>
 
@@ -57,7 +57,7 @@
 
         <div class="d-flex gap-2">
           <button type="submit" class="kern-btn kern-btn--primary">
-            <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+            <span class="material-symbols-outlined kern-label" aria-hidden="true">upload</span>
             <span class="kern-label"><%= t(".upload") %></span>
           </button>
           <button type="button" class="kern-btn kern-btn--secondary" data-action="click->attribute-editors--documents#hideForm">

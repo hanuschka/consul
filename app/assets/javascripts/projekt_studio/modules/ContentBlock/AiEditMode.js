@@ -254,7 +254,6 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const popupSubmitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const popupLoader = popup.querySelector('.ai-edit-mode--loader');
     const toolbarSaveButton = contentBlockWrapper.querySelector('.js-save-content-block');
-    const toolbarSwitchToSimpleButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-enter-simple-edit-mode-from-ai');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const useFullProjektContextCheckbox = popup.querySelector('.js-ai-use-full-projekt-context');
     const allowTextModificationCheckbox = popup.querySelector('.js-ai-allow-text-modification');
@@ -267,10 +266,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
     if (!isLoading) {
       this.setButtonState(popupSubmitButton, 'submit');
     }
+
     popupLoader.style.display = isLoading ? 'block' : 'none';
     toolbarSaveButton.disabled = isLoading;
-    toolbarSwitchToSimpleButton.disabled = isLoading;
     instructionsTextarea.disabled = isLoading;
+
     if (useFullProjektContextCheckbox) {
       useFullProjektContextCheckbox.disabled = isLoading;
     }

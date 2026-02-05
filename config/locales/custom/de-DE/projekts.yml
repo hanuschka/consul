@@ -27,10 +27,10 @@ de:
           description: Erstellen Sie einen einzelnen Inhaltsblock und gestalten Sie Inhalte und Struktur vollständig nach Ihren eigenen Vorgaben.
           action: Jetzt starten →
         file_import_preview:
-          select_other_file: Andere Datei wählen
+          select_other_file: Datei wählen
           cancel: Abbrechen
           additional_instructions: "Zusätzliche Anweisungen für die KI (optional):"
-          submit: Dokument importieren
+          submit: Jetzt starten
         prompt_form:
           header: Prompt eingeben
           label: "Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:"

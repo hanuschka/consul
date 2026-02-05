@@ -31,15 +31,21 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     contentBlockWrapper.classList.add("-html-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = 'html';
 
+    const originalContent = contentBlock.innerHTML;
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
+
     contentBlock.innerHTML = `
+      <div class="js-html-edit-mode-original-content" style="display: none;">
+        ${originalContent}
+      </div>
       <textarea
         name="body"
         id="${this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)}"
         rows="8"
-        class="html-area extended-a"
+        class="html-area extended-a js-projekt-studio-hide-on-preview"
         style="visibility: hidden; display: none;"
       >
-         ${contentBlock.innerHTML}
+         ${originalContent}
       </textarea>
     `
 

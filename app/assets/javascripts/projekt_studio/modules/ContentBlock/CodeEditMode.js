@@ -52,7 +52,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const currentHTML = contentBlock.innerHTML.trim();
 
     const editorContainer = document.createElement('div');
-    editorContainer.className = 'code-editor-container js-code-editor-container';
+    editorContainer.className = 'code-editor-container js-code-editor-container js-projekt-studio-hide-on-preview';
 
     const textarea = document.createElement('textarea');
     textarea.className = 'code-editor-textarea';

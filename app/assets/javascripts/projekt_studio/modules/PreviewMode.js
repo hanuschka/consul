@@ -66,7 +66,7 @@ ProjektStudio.PreviewMode = {
     const categoriesSidebarCard = categoriesList.closest(".js-sidebar-card")
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
 
-    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+    // $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
 
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)

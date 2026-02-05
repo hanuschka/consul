@@ -60,7 +60,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
-      <div class="content-block-image-height-control">
+      <div class="content-block-image-height-control js-projekt-studio-hide-on-preview">
         <button
           type="button"
           data-tooltip
@@ -104,7 +104,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
           <div class="loading-spinner-inline"></div>
         </div>
         ${dimensionControls}
-        <div class="content-block-image-control-buttons">
+        <div class="content-block-image-control-buttons js-projekt-studio-hide-on-preview">
           <button
             type="button"
             data-tooltip

@@ -839,6 +839,12 @@ body.-preview-mode {
   .js-update-projekt-form {
     pointer-events: none;
   }
+
+  .projekt-content-block-wrapper.-code-edit-mode {
+    .projekt-content-block {
+      display: block !important;
+    }
+  }
 }
 
 .content-block-template-hints {

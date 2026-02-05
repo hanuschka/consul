@@ -230,12 +230,11 @@ body.custom-new-design {
   justify-content: center;
   align-items: center;
   min-height: 44px;
-  // margin-top: 5px;
-  margin-top: 0;
+  margin-top: 5px;
+  // margin-top: 0;
   margin-bottom: 5px;
   min-height: 26px;
-  // margin-bottom: 10px;
-  margin-bottom: 0;
+  margin-bottom: 5px;
 
   &.-opened {
     .projekt-content-block-templates-selector {

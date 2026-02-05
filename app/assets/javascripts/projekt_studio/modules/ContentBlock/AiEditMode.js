@@ -1,6 +1,5 @@
 ProjektStudio.ContentBlock.AiEditMode = {
   initialized: false,
-  templateSelector: '.js-ai-edit-popup-template',
   activeAjaxRequests: {},
 
   initialize() {
@@ -11,12 +10,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const $document = $(document);
 
     $document.on("click", ".js-content-block-enter-simple-edit-mode-from-ai", this.switchToSimpleEditModeFromAi.bind(this));
-
     $document.on("click", ".js-content-block-ai-edit--submit-prompt", this.submitPrompt.bind(this));
   },
 
   getTemplate() {
-    return document.querySelector(this.templateSelector);
+    return document.querySelector('.js-ai-edit-popup-template');
   },
 
   clonePopupFromTemplate() {
@@ -69,8 +67,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    const toolsets = contentBlockWrapper.querySelector('.projekt-content-block--toolsets');
-    toolsets.appendChild(popup);
+    const toolbarBorder = contentBlockWrapper.querySelector('.projekt-content-block--toolsets-border');
+    toolbarBorder.after(popup);
 
     popup.style.display = 'block';
 
@@ -179,14 +177,10 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     this.setLoadingState(contentBlockWrapper, popup, true);
 
-    const ajaxRequest = $.ajax({
+    const ajaxRequest = window.App.Ajax.request({
       url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded,
-        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-      },
       data: {
         instructions: instructions,
         content_block_html: contentBlock.innerHTML,

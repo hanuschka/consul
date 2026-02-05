@@ -60,10 +60,10 @@ en:
           description: Create a single content block and design the content and structure completely according to your own specifications.
           action: Get started →
         file_import_preview:
-          select_other_file: Choose another file
+          select_other_file: Choose file
           cancel: Cancel
           additional_instructions: "Additional instructions for the AI (optional):"
-          submit: Import document
+          submit: Get started
         prompt_form:
           header: Enter prompt
           label: "Describe the project and what content should be created:"

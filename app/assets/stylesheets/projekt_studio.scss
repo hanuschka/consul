@@ -828,23 +828,9 @@ body.custom-new-design {
 }
 
 body.-preview-mode {
-  .js-sidebar-admin-controlls,
-  .projekt-content-block-edit,
-  .projekt-content-block--move-button,
-  .projekt-content-block--toolsets,
-  .projekt-content-block--toolsets-border,
-  .add-new-content-block-section,
   .sdg-goal-tag-list input:not(:checked) + label,
   .js-add-tag-link:not(.selected),
-  .js-sidebar-section-toggle-visibility,
-  .projekt-section-data-wrapper.-deactivated,
   .projekt-section-data-wrapper[data-other-conditions-are-met="false"],
-  .custom-content-block-controls,
-  .projekt-frame-icon-button,
-  .js-projekt-banner-edit-field-text-edit-button,
-  .projekt-image-upload-button,
-  .js-projekt-section-data-wrapper.-deactivated,
-  .projekt-content-blocks-delete-section,
   .js-projekt-studio-hide-on-preview
   {
     display: none !important;

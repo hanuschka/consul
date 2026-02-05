@@ -32,7 +32,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-edit-mode=""
       >
       <div class="relative">
-        <div class="projekt-content-block--toolsets">
+        <div class="projekt-content-block--toolsets js-projekt-studio-hide-on-preview">
 
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
               <div class="ai-button-wrapper">
@@ -259,7 +259,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             </div>
         </div>
 
-        <div class="projekt-content-block--toolsets-border"></div>
+        <div class="projekt-content-block--toolsets-border js-projekt-studio-hide-on-preview"></div>
 
         <div class="projekt-content-block js-projekt-content-block">
           ${contentBlockHTML}
@@ -276,7 +276,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
-    <div class="add-new-content-block-section js-show-content-block-templates-section">
+    <div class="add-new-content-block-section js-show-content-block-templates-section js-projekt-studio-hide-on-preview">
       <button
         type="button"
         class="js-show-content-block-templates add-new-content-block-button"

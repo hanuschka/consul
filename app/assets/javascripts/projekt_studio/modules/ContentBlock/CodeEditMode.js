@@ -9,9 +9,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   initEventListeners() {
-    const $document = $(document);
-    $document.on("click", ".js-save-edit-code-projekt-content-block", this.saveContentBlockAndExit.bind(this));
-    $document.on("click", ".js-projekt-content-block--code-edit-cancel", this.cancelCodeEditMode.bind(this));
   },
 
   enterCodeEditMode(e) {

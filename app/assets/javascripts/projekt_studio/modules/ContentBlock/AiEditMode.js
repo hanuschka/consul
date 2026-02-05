@@ -10,8 +10,6 @@ ProjektStudio.ContentBlock.AiEditMode = {
   initEventListeners() {
     const $document = $(document);
 
-    $document.on("click", ".js-content-block-ai-edit-save", this.saveContentBlockAndExit.bind(this));
-    $document.on("click", ".js-content-block-ai-edit-cancel", this.cancelAiEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-simple-edit-mode-from-ai", this.switchToSimpleEditModeFromAi.bind(this));
 
     $document.on("click", ".js-content-block-ai-edit--submit-prompt", this.submitPrompt.bind(this));
@@ -261,7 +259,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     const popupSubmitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const popupLoader = popup.querySelector('.ai-edit-mode--loader');
-    const toolbarSaveButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-ai-edit-save');
+    const toolbarSaveButton = contentBlockWrapper.querySelector('.js-save-content-block');
     const toolbarSwitchToSimpleButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-enter-simple-edit-mode-from-ai');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const useFullProjektContextCheckbox = popup.querySelector('.js-ai-use-full-projekt-context');

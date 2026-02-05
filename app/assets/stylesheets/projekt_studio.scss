@@ -46,6 +46,7 @@
 
 .projekt-content-block-edit--buttons-wrapper {
   margin-right: 10px;
+  display: none;
 }
 
 .projekt-content-block-edit--button {
@@ -181,28 +182,24 @@
   }
 }
 
-.js-content-block-ai-edit-save,
-.js-save-edit-text-projekt-content-block,
-.js-save-edit-html-projekt-content-block,
-.js-save-edit-code-projekt-content-block {
-  color: #00830e;
-  background-color: #dff1e1;
+.projekt-content-block-wrapper.-in-edit-mode {
+  .js-save-content-block {
+    color: #00830e;
+    background-color: #dff1e1;
 
-  &:hover {
-    background-color: #d5e9d7 !important;
+    &:hover {
+      background-color: #d5e9d7 !important;
+    }
   }
-}
 
-.js-content-block-ai-edit-cancel,
-.js-projekt-content-block--text-edit-cancel,
-.js-projekt-content-block--html-edit-cancel,
-.js-projekt-content-block--code-edit-cancel {
-  color: #004a83;
-  background-color: #d6e7f6;
-  margin-right: 10px;
+  .js-cancel-content-block {
+    color: #004a83;
+    background-color: #d6e7f6;
+    margin-right: 10px;
 
-  &:hover {
-    background-color: #c3daee;
+    &:hover {
+      background-color: #c3daee;
+    }
   }
 }
 
@@ -543,6 +540,10 @@ body.custom-new-design {
       flex-shrink: 0;
     }
 
+    .projekt-content-block-edit--buttons-wrapper {
+      display: flex;
+    }
+
     .js-simple-edit-mode-controlls {
       display: flex;
       flex: 1;
@@ -583,6 +584,10 @@ body.custom-new-design {
       display: flex;
     }
 
+    .projekt-content-block-edit--buttons-wrapper {
+      display: flex;
+    }
+
     .js-html-edit-mode-controlls {
       display: flex;
       flex: 1;
@@ -612,6 +617,10 @@ body.custom-new-design {
       display: flex;
     }
 
+    .projekt-content-block-edit--buttons-wrapper {
+      display: flex;
+    }
+
     .js-ai-edit-mode-controlls {
       display: flex;
       flex: 1;
@@ -629,6 +638,10 @@ body.custom-new-design {
 
   &.-code-edit-mode {
     .projekt-content-block-edit-main-controlls {
+      display: flex;
+    }
+
+    .projekt-content-block-edit--buttons-wrapper {
       display: flex;
     }
 
@@ -823,6 +836,7 @@ body.-preview-mode {
   .js-sidebar-admin-controlls,
   .projekt-content-block-edit,
   .projekt-content-block--move-button,
+  .projekt-content-block--toolsets,
   .projekt-content-block--toolsets-border,
   .add-new-content-block-section,
   .sdg-goal-tag-list input:not(:checked) + label,
@@ -1256,18 +1270,17 @@ body:not(.-ai-enabled) {
     width: 3.5rem;
     position: relative;
     color: #fdfdfd;
-    box-shadow: 3px 3px 7px 2px #00000030;
 
     &::after {
       background: #fff;
       border-radius: 100%;
       content: "";
       display: block;
-      height: 1.75em;
       position: absolute;
       transform: translateY(-50%);
       top: 50%;
-      width: 1.75em;
+      height: 21px;
+      width: 21px;
     }
   }
 
@@ -2071,12 +2084,9 @@ ul.grid-x, ul.row {
   .projekt-content-block--toolsets {
     position: -webkit-sticky;
     position: sticky;
-    top: 90px;
+    top: $topbar-height + 1px;
+    outline: 2px solid #c9dced;
     z-index: 10;
-
-    &.-stuck {
-      border-top: 1px solid #dcdcdc;
-    }
   }
 }
 

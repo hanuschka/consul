@@ -53,20 +53,11 @@
       <div class="content-block-ai-edit-popup-content">
 
         <form class="u-width-100" action="">
-          <div class="content-block-ai-edit-popup-header">
-            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
-            <div
-              class="ai-edit-success-indicator js-ai-edit-success-indicator"
-              style="display: none;"
-            >
-              <i class="fas fa-check"></i>
-            </div>
-          </div>
           <div class="u-flex u-gap-10">
             <div class="u-width-100 ai-edit-form">
               <textarea
                 name="instructions"
-                rows="4"
+                rows="3"
                 required
                 placeholder="<%= t('ai.instructions_placeholder') %>"
                 class="ai-instructions-textarea js-ai-instructions-textarea"
@@ -108,21 +99,29 @@
             </div>
           </div>
           <div class="ai-edit-actions d-flex justify-between">
-            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
-              <span class="js-submit-state">
-                <i class="fas fa-magic"></i>
-                Absenden
-              </span>
-              <span class="js-cancel-state">
-                <i class="fas fa-times"></i>
-                Abbrechen
-              </span>
-            </button>
-            <div style="color: #999; font-size: 12px; margin-top: 5px;">
-              Enter zum Absenden, Umschalt+Enter für neue Zeile
+            <div class="d-flex u-gap-20 u-flex-align-center">
+              <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+                <span class="js-submit-state">
+                  <i class="fas fa-magic"></i>
+                  Absenden
+                </span>
+                <span class="js-cancel-state">
+                  <i class="fas fa-times"></i>
+                  Abbrechen
+                </span>
+              </button>
+              <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
+              <div
+                class="ai-edit-success-indicator js-ai-edit-success-indicator"
+                style="display: none;"
+              >
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            <div class="ai-instructions-hint js-ai-instructions-hint">
+              <%= t('ai.instructions_hint') %>
             </div>
           </div>
-
         </form>
       </div>
     </div>

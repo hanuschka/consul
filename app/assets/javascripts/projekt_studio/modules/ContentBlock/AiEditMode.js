@@ -259,6 +259,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const useFullProjektContextCheckbox = popup.querySelector('.js-ai-use-full-projekt-context');
     const allowTextModificationCheckbox = popup.querySelector('.js-ai-allow-text-modification');
     const toolbarLoader = contentBlockWrapper.querySelector('.ai-edit-mode--loader');
+    const instructionsHint = popup.querySelector('.js-ai-instructions-hint');
 
     popupSubmitButton.disabled = isLoading;
     popupSubmitButton.classList.toggle("-green", !isLoading)
@@ -276,6 +277,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
     if (allowTextModificationCheckbox) {
       allowTextModificationCheckbox.disabled = isLoading;
     }
+    const successIndicator = popup.querySelector('.js-ai-edit-success-indicator');
+    const successVisible = successIndicator && successIndicator.style.display !== 'none';
+    instructionsHint.style.display = (isLoading || successVisible) ? 'none' : 'block';
     toolbarLoader.style.display = isLoading ? 'block' : 'none';
   },
 
@@ -292,12 +296,15 @@ ProjektStudio.ContentBlock.AiEditMode = {
     if (!popup) return;
 
     const successIndicator = popup.querySelector('.js-ai-edit-success-indicator');
+    const instructionsHint = popup.querySelector('.js-ai-instructions-hint');
     if (!successIndicator) return;
 
     successIndicator.style.display = 'inline-flex';
+    instructionsHint.style.display = 'none';
 
     setTimeout(() => {
       successIndicator.style.display = 'none';
+      instructionsHint.style.display = 'block';
     }, 3000);
   },
 

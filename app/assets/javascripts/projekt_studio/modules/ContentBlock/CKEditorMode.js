@@ -4,8 +4,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-code-edit-content-block", this.handleEnterCodeEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.handleCancelHtmlEditMode.bind(this));
-    $document.on("click", ".js-save-edit-html-projekt-content-block", this.handleSaveFromCkeditor.bind(this));
   },
 
   switchToHtmlEditMode(contentBlockWrapper) {

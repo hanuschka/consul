@@ -10,8 +10,6 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   initEventListeners() {
     const $document = $(document);
 
-    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.switchToAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));

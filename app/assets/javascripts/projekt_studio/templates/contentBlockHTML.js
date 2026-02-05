@@ -33,29 +33,30 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       >
       <div class="relative">
         <div class="projekt-content-block--toolsets">
+            <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Speichern"
+                class="projekt-frame-icon-button js-save-content-block"
+              >
+                <i class="fas fa-save"></i>
+              </button>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Abbrechen"
+                class="projekt-frame-icon-button js-cancel-content-block"
+              >
+                <i class="fas fa-xmark"></i>
+              </button>
+            </div>
+
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Speichern"
-                  class="projekt-frame-icon-button js-content-block-ai-edit-save"
-                >
-                  <i class="fas fa-save"></i>
-                </button>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Abbrechen"
-                  class="projekt-frame-icon-button js-content-block-ai-edit-cancel"
-                >
-                  <i class="fas fa-xmark"></i>
-                </button>
-              </div>
               <div class="d-flex u-gap-10">
                 <button
                   type="button"
@@ -72,29 +73,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Speichern"
-                  class="projekt-frame-icon-button js-save-edit-text-projekt-content-block"
-                >
-                  <i class="fas fa-save"></i>
-                </button>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Abbrechen"
-                  class="projekt-frame-icon-button js-projekt-content-block--text-edit-cancel"
-                >
-                  <i class="fas fa-xmark"></i>
-                </button>
-              </div>
-
               <div class="content-block-edit-toolbar">
                 <label
                   class="content-block-margin-input d-flex align-items-end u-gap-5"
@@ -188,53 +166,9 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             </div>
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
-              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Speichern"
-                  class="projekt-frame-icon-button js-save-edit-html-projekt-content-block"
-                >
-                  <i class="fas fa-save"></i>
-                </button>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Abbrechen"
-                  class="projekt-frame-icon-button js-projekt-content-block--html-edit-cancel"
-                >
-                  <i class="fas fa-xmark"></i>
-                </button>
-              </div>
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex u-gap-10 projekt-content-block-edit--buttons-wrapper">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Speichern"
-                  class="projekt-frame-icon-button js-save-edit-code-projekt-content-block"
-                >
-                  <i class="fas fa-save"></i>
-                </button>
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="Abbrechen"
-                  class="projekt-frame-icon-button js-projekt-content-block--code-edit-cancel"
-                >
-                  <i class="fas fa-xmark"></i>
-                </button>
-              </div>
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
               <div class="ai-button-wrapper">

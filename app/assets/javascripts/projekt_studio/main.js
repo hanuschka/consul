@@ -29,6 +29,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
       ProjektStudio.ContentBlock.EditModeSwitcher.initialize()
+      ProjektStudio.ContentBlock.EditModeButtons.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize()

@@ -153,11 +153,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     this.hideCodeEditModeControls(contentBlockWrapper);
     contentBlockWrapper.dataset.editMode = '';
 
-    setTimeout(() => {
-      contentBlockWrapper.scrollIntoView({
-        block: "center", inline: "nearest"
-      })
-    }, 0)
+    // setTimeout(() => {
+    //   contentBlockWrapper.scrollIntoView({
+    //     block: "start", inline: "nearest"
+    //   })
+    // }, 0)
   },
 
   cancelCodeEditMode(e) {

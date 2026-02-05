@@ -156,6 +156,35 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     )
   end
 
+  def add_document
+    @idea = Idea.find(params[:id])
+    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
+
+    document = @idea.documents.build(
+      user: current_user,
+      title: params[:title],
+      attachment: params[:attachment]
+    )
+
+    if document.save
+      flash.now[:success] = t("adm.attribute.update.success")
+      @idea.documents.reload
+    else
+      render plain: document.errors.full_messages.join(", "), status: :unprocessable_entity
+    end
+  end
+
+  def remove_document
+    @idea = Idea.find(params[:id])
+    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
+
+    document = @idea.documents.find(params[:document_id])
+    document.destroy
+
+    flash.now[:success] = t("adm.attribute.update.success")
+    @idea.documents.reload
+  end
+
   private
 
     def idea_params
@@ -189,4 +218,5 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
 
       IdeaMailer.notify_officer(idea, idea.officer).deliver_later
     end
+
 end

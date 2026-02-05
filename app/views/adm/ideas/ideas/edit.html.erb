@@ -5,43 +5,19 @@
 <%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
 
 <div class="kern-container mb-5">
-  <%= render Adm::AttributeEditorComponent.new(
-    @idea,
-    :title,
-    :string,
-    label: t(".labels.title")
-  ) %>
+  <%= render Adm::AttributeEditorComponent.new(@idea, :title, :string, label: t(".labels.title")) %>
+  <%= render Adm::AttributeEditorComponent.new(@idea, :description, :rich_text, label: t(".labels.description")) %>
+  <%= render Adm::AttributeEditorComponent.new(@idea.image, :attachment, :image, path: update_image_adm_ideas_idea_path(@idea), label: t(".labels.image")) %>
 
-  <%= render Adm::AttributeEditorComponent.new(
-    @idea,
-    :description,
-    :rich_text,
-    label: t(".labels.description")
-  ) %>
-
-  <% if feature?(:allow_images) && @idea.image %>
-    <%= render Adm::AttributeEditorComponent.new(
-      @idea.image,
-      :attachment,
-      :image,
-      path: update_image_adm_ideas_idea_path(@idea),
-      label: t(".labels.image")
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.documents")) do %>
+    <%= render Adm::AttributeEditors::DocumentsComponent.new(
+      @idea,
+      add_path: add_document_adm_ideas_idea_path(@idea),
+      remove_path: remove_document_adm_ideas_idea_path(@idea)
     ) %>
   <% end %>
 
-  <% if feature?(:allow_attached_documents) %>
-    <%= render Kern::FormFieldComponent.new(label: t(".labels.documents")) do %>
-      <%= render "adm/ideas/ideas/edit/documents", idea: @idea %>
-    <% end %>
-  <% end %>
-
-  <%= render Adm::AttributeEditorComponent.new(
-    @idea,
-    :video_url,
-    :string,
-    label: t(".labels.video_url")
-  ) %>
-
+  <%= render Adm::AttributeEditorComponent.new(@idea, :video_url, :string, label: t(".labels.video_url")) %>
   <%= render Kern::FormFieldComponent.new(label: t(".labels.category")) do %>
     <%= render "adm/ideas/ideas/edit/category", idea: @idea %>
   <% end %>
@@ -50,10 +26,5 @@
     <%= render "adm/ideas/ideas/edit/map_location", idea: @idea, districts: @districts %>
   <% end %>
 
-  <%= render Adm::AttributeEditorComponent.new(
-    @idea,
-    :on_behalf_of,
-    :string,
-    label: t(".labels.on_behalf_of")
-  ) %>
+  <%= render Adm::AttributeEditorComponent.new(@idea, :on_behalf_of, :string, label: t(".labels.on_behalf_of")) %>
 </div>

@@ -1,9 +1,9 @@
 <aside class="sidebar">
-  <% if show_admin_controls_for_projekt?(@projekt) %>
-    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
-      <%= render partial: 'pages/sidebar/admin_controls' %>
-    <% end %>
-  <% end %>
+  <%# <% if show_admin_controls_for_projekt?(@projekt) %1> %>
+  <%#   <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %1> %>
+  <%#     <%= render partial: 'pages/sidebar/admin_controls' %1> %>
+  <%#   <% end %1> %>
+  <%# <% end %1> %>
 
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_admin_controls_for_projekt?(@projekt) %>

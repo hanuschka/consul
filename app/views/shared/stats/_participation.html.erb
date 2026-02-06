@@ -42,49 +42,98 @@
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <div class="number-stats-cards margin-bottom">
+    <div class="number-stats-cards margin-bottom":
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.proposals") %></h4>
-        <div class="number"><%= stats.total_proposals %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.visible_proposals_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.visible_proposals_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.visible_proposals_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.authors") %></h4>
-        <div class="number"><%= stats.total_authors %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.proposal_authors_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.proposal_authors_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.proposal_authors_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.participants") %></h4>
-        <div class="number"><%= stats.total_participants %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.unique_supporters_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.unique_supporters_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.unique_supporters_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.supports") %></h4>
-        <div class="number"><%= stats.total_supports %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.total_votes_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.total_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.total_votes_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.weighted_score") %></h4>
-        <div class="number"><%= stats.total_supports_weight %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.online_votes_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.online_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.online_votes_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.comments") %></h4>
-        <div class="number"><%= stats.total_comments %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.offline_votes_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.offline_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.offline_votes_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.hidden") %></h4>
-        <div class="number"><%= stats.total_hidden %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.visible_comments_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.visible_comments_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.visible_comments_count %></div>
       </div>
 
       <div class="ai-stats-card">
-        <h4><%= t("custom.projekt_phases.stats.proposal_phase.reported") %></h4>
-        <div class="number"><%= stats.total_reported %></div>
+        <h4
+          title="<%= t("custom.projekt_phases.stats.proposal_phase.reported_proposals_count.tooltip") %>"
+          data-tooltip=""
+        >
+          <%= t("custom.projekt_phases.stats.proposal_phase.reported_proposals_count.title") %>
+          <i class="fas fa-info-circle"></i>
+        </h4>
+        <div class="number"><%= stats.reported_proposals_count %></div>
       </div>
     </div>
   <% end %>
 
+</div>
   <%# <% unless stats.show_percentage_values_only? || stats.is_a?(ProjektPhase::ProposalPhase::Stats) %1> %>
   <%#   <div id="total_participants" class="stats-group"> %>
   <%#     <h4><%= t("stats.total_participants") %1></h4> %>
@@ -99,4 +148,3 @@
   <%# <% stats.participations.each do |participation| %1> %>
   <%#   <%= render "shared/stats/#{participation}", stats: stats %1> %>
   <%# <% end %1> %>
-</div>

@@ -40,7 +40,6 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.AiEditMode.initialize()
       ProjektStudio.ContentBlock.CodeEditMode.initialize()
       ProjektStudio.ContentBlock.Copy.initialize()
-      ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       ProjektStudio.FileImport.initialize()
       ProjektStudio.ToggleBackground.initialize()

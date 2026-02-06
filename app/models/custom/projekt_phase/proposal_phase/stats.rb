@@ -1,39 +1,47 @@
 class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
   def self.stats_methods
-    super +
-      %i[total_proposals total_authors total_supports total_supports_weight total_comments total_hidden total_reported]
+    %i[
+      visible_proposals_count
+      proposal_authors_count
+      unique_supporters_count
+      total_votes_count
+      online_votes_count
+      offline_votes_count
+      visible_comments_count
+      reported_proposals_count
+    ]
   end
 
-  def total_participants
-    participants.distinct.count
-  end
-
-  def total_proposals
+  def visible_proposals_count
     proposals.count
   end
 
-  def total_authors
+  def proposal_authors_count
     proposals.select(:author_id).distinct.count
   end
 
-  def total_supports
-    supports.distinct.count
+  def unique_supporters_count
+    supports.select(:voter_id).distinct.count
   end
 
-  def total_supports_weight
-    supports.sum(:vote_weight) + proposals.sum(:officing_bulk_votes)
+  def total_votes_count
+    online_votes_count + offline_votes_count
   end
 
-  def total_comments
-    comments.count
+  def online_votes_count
+    supports.count
   end
 
-  def total_hidden
-    proposals.only_hidden.count
+  def offline_votes_count
+    proposals.sum(:officing_bulk_votes)
   end
 
-  def total_reported
-    proposals.with_hidden.flagged.count
+  def visible_comments_count
+    comments.where(hidden_at: nil).count
+  end
+
+  def reported_proposals_count
+    proposals.with_hidden.flagged.select(:id).distinct.count
   end
 
   private

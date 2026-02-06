@@ -5,6 +5,12 @@ $small-tablet-viewport-start: 750px;
 $mobile-viewport-start: 640px;
 $mobile-side-padding: 20px;
 
+$topbar-max-width: 1245px;
 $topbar-height: 90px;
 $topbar-height-mobile: 60px;
 $mobile-custom-fixed-tabs-height: 50px;
+
+:root {
+  --topbar-height: #{$topbar-height};
+  --tobar-max-width: #{$topbar-max-width};
+}

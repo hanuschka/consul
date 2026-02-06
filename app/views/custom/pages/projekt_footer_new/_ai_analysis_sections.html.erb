@@ -1,10 +1,12 @@
-<% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
+<% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase) || projekt_phase.is_a?(ProjektPhase::CommentPhase) %>
   <%= render ParticapationStats::SummaryComponent.new(projekt_phase: projekt_phase) %>
+<% end %>
 
+<% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
   <%= render ParticapationStats::AiQuestionSectionComponent.new(projekt_phase: projekt_phase) %>
-  <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: projekt_phase) %>
-  <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: projekt_phase) %>
-<% elsif projekt_phase.is_a?(ProjektPhase::CommentPhase) %>
+<% end %>
+
+<% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase)  %>
   <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: projekt_phase) %>
   <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: projekt_phase) %>
 <% end %>

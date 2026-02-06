@@ -58,3 +58,5 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id", to: "budgets/inves
 post "iframe_sessions", to: "iframe_sessions#create"
 
 post "/voice_assistant/create_session", to: "voice_assistant#create_session"
+
+resources :projekt_content_block_templates, only: [:index]

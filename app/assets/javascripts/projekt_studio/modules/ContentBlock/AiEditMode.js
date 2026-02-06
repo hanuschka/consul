@@ -88,6 +88,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
 
     this.setupTextareaListeners(popup, instructionsTextarea);
+
+    $(popup).foundation();
+
     setTimeout(() => { instructionsTextarea.focus()}, 100);
   },
 
@@ -157,6 +160,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const submitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const useFullProjektContextCheckbox = popup.querySelector('.js-ai-use-full-projekt-context');
+    const allowTextModificationCheckbox = popup.querySelector('.js-ai-allow-text-modification');
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     if (this.activeAjaxRequests[contentBlockId]) {
@@ -172,6 +176,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const instructions = instructionsTextarea.value.trim();
     const useFullProjektContext =
       useFullProjektContextCheckbox ? useFullProjektContextCheckbox.checked : false;
+    const allowTextModification =
+      allowTextModificationCheckbox ? allowTextModificationCheckbox.checked : false;
 
     if (!instructionsTextarea.reportValidity()) return
 
@@ -190,7 +196,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
       data: {
         instructions: instructions,
         content_block_html: contentBlock.innerHTML,
-        use_full_projekt_context: useFullProjektContext
+        use_full_projekt_context: useFullProjektContext,
+        allow_text_modification: allowTextModification
       }
     });
 
@@ -262,6 +269,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const toolbarSwitchToSimpleButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-enter-simple-edit-mode-from-ai');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const useFullProjektContextCheckbox = popup.querySelector('.js-ai-use-full-projekt-context');
+    const allowTextModificationCheckbox = popup.querySelector('.js-ai-allow-text-modification');
     const toolbarLoader = contentBlockWrapper.querySelector('.ai-edit-mode--loader');
 
     popupSubmitButton.disabled = isLoading;
@@ -276,6 +284,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
     instructionsTextarea.disabled = isLoading;
     if (useFullProjektContextCheckbox) {
       useFullProjektContextCheckbox.disabled = isLoading;
+    }
+    if (allowTextModificationCheckbox) {
+      allowTextModificationCheckbox.disabled = isLoading;
     }
     toolbarLoader.style.display = isLoading ? 'block' : 'none';
   },

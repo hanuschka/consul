@@ -80,12 +80,32 @@
           </div>
           <div class="ai-edit-actions d-flex justify-between">
             <div>
-              <label class="content-block-ai-edit-popup-checkbox-label">
+              <label
+                class="content-block-ai-edit-popup-checkbox-label"
+                data-tooltip
+                data-position="left"
+                tabindex="0"
+                title="<%= t("ai.allow_text_modification_hint") %>"
+              >
+                <input type="checkbox" class="js-ai-allow-text-modification">
+                <span><%= t("ai.allow_text_modification") %></span>
+              </label>
+              <div class="ai-context-checkbox-hint u-margin-bottom">
+                <%= t("ai.allow_text_modification_hint_short") %>
+              </div>
+
+              <label
+                class="content-block-ai-edit-popup-checkbox-label"
+                data-tooltip
+                data-position="left"
+                tabindex="0"
+                title="<%= t("ai.use_full_projekt_context_hint") %>"
+              >
                 <input type="checkbox" class="js-ai-use-full-projekt-context">
                 <span><%= t("ai.use_full_projekt_context") %></span>
               </label>
-              <div class="ai-context-checkbox-hint">
-                <%= t("ai.use_full_projekt_context_hint") %>
+              <div class="ai-context-checkbox-hint u-margin-bottom">
+                <%= t("ai.use_full_projekt_context_hint_short") %>
               </div>
             </div>
             <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">

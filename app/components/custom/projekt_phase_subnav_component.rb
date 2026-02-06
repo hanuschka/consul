@@ -23,13 +23,12 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       }
     ]
 
-    if Ai::Settings.ai_available?
-      items << {
-        text: t("custom.projekt_phases.subnav.analysis"),
-        url:  url_to_footer_tab(section: "analysis", remote: true),
-        active: params[:section] == "analysis"
-      }
-    end
+    items << {
+      text: t("custom.projekt_phases.subnav.analysis"),
+      url:  url_to_footer_tab(section: "analysis", remote: true),
+      active: params[:section] == "analysis",
+      disabled: !Ai::Settings.ai_available?
+    }
 
     items
   end

@@ -94,6 +94,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
     setTimeout(() => {
       this.toggleLinksInteration(contentBlock, enabled)
+      this.toggleGlighboxGallery(contentBlock, enabled)
 
       ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
         contentBlock, enabled
@@ -104,8 +105,6 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
         contentBlock, enabled
       )
-      // Should be always last item
-      this.toggleGlighboxGallery(contentBlock, enabled)
       if (!enabled) {
         ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
       }

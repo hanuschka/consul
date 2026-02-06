@@ -6,7 +6,7 @@
   <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.ai_analysis") %></h2>
   <%= render ParticapationStats::SummaryComponent.new(projekt_phase: projekt_phase) %>
 
-  <%= render ParticapationStats::AiQuestionComponent.new(projekt_phase: projekt_phase) %>
+  <%= render ParticapationStats::AiQuestionSectionComponent.new(projekt_phase: projekt_phase) %>
   <%= render ParticapationStats::TopicClusteringComponent.new(projekt_phase: projekt_phase) %>
   <%= render ParticapationStats::SemanticClusteringComponent.new(projekt_phase: projekt_phase) %>
 

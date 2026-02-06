@@ -53,6 +53,20 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
+    unless Ai::Settings.ai_available?
+      respond_to do |format|
+        format.html do
+          redirect_back(fallback_location: page_path(@projekt_phase.projekt.page.slug,
+                                                      projekt_phase_id: @projekt_phase.id,
+                                                      section: "stats"))
+        end
+        format.js do
+          render json: { error: "AI features unavailable" }, status: :forbidden
+        end
+      end
+      return
+    end
+
     @projekt_phase.update(ai_stats_refresh_status: :pending)
     AiAnalytics::ProjektPhaseStatsRefresh.perform_later(@projekt_phase.id)
 
@@ -126,6 +140,8 @@ class ProjektPhasesController < ApplicationController
   def create_stat_question
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
+
+    return render json: { error: "AI features unavailable" }, status: :forbidden if !Ai::Settings.ai_available?
 
     @stat_question = @projekt_phase.stat_questions.build(
       question: params[:question],
@@ -215,12 +231,38 @@ class ProjektPhasesController < ApplicationController
                 filename: filename,
                 type: "application/pdf",
                 disposition: "attachment"
+    when "docx"
+      docx = DocxServices::AllStatQuestionsExporter.new(@projekt_phase).call
+      send_data docx,
+                filename: filename,
+                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                disposition: "attachment"
+    when "odt"
+      odt = OdtServices::AllStatQuestionsExporter.new(@projekt_phase).call
+      send_data odt,
+                filename: filename,
+                type: "application/vnd.oasis.opendocument.text",
+                disposition: "attachment"
     else
       send_data generate_all_stat_answers_text(@projekt_phase),
                 filename: filename,
                 type: "text/plain",
                 disposition: "attachment"
     end
+  end
+
+  def download_topic_clustering
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_clustering(:topic)
+  end
+
+  def download_semantic_clustering
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    download_clustering(:semantic)
   end
 
   private
@@ -277,5 +319,77 @@ class ProjektPhasesController < ApplicationController
       end
 
       text_parts.join("\n")
+    end
+
+    def download_clustering(clustering_type)
+      clustering_key = "#{clustering_type}_clustering"
+      clustering_data = @projekt_phase.ai_stats&.dig(clustering_key) || {}
+      resource_class = clustering_resource_class
+
+      download_format = params[:format] || "csv"
+      filename = generate_clustering_filename(@projekt_phase, clustering_type, download_format)
+
+      case download_format
+      when "csv"
+        csv_data = CsvServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          resource_class: resource_class
+        ).call
+        send_data csv_data,
+                  filename: filename,
+                  type: "text/csv",
+                  disposition: "attachment"
+      when "pdf"
+        pdf = PdfServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type,
+          resource_class: resource_class
+        ).call
+        send_data pdf.render,
+                  filename: filename,
+                  type: "application/pdf",
+                  disposition: "attachment"
+      when "odt"
+        odt_data = OdtServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type,
+          resource_class: resource_class
+        ).call
+        send_data odt_data,
+                  filename: filename,
+                  type: "application/vnd.oasis.opendocument.text",
+                  disposition: "attachment"
+      when "docx"
+        docx_data = DocxServices::ClusteringExporter.new(
+          projekt_phase: @projekt_phase,
+          clustering_data: clustering_data,
+          clustering_type: clustering_type,
+          resource_class: resource_class
+        ).call
+        send_data docx_data,
+                  filename: filename,
+                  type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                  disposition: "attachment"
+      end
+    end
+
+    def generate_clustering_filename(projekt_phase, clustering_type, format)
+      projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")
+      phase_name = projekt_phase.title.parameterize(separator: "-")
+      "#{projekt_name}-#{phase_name}-#{clustering_type}-clustering.#{format}"
+    end
+
+    def clustering_resource_class
+      case @projekt_phase
+      when ProjektPhase::BudgetPhase
+        Budget::Investment
+      when ProjektPhase::CommentPhase
+        Comment
+      else
+        Proposal
+      end
     end
 end

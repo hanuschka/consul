@@ -73,6 +73,12 @@ en:
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Create newsletter
             notify_reviewers: Notify reviewers
+        topbar:
+          preview_mode: Preview mode
+          copy_code: Copy source code
+          edit_projekt: Edit projekt
+          create_newsletter_draft: Create newsletter
+          notify_reviewers: Notify reviewers
           projekt_information:
             title: Project information
           map:

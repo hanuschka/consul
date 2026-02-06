@@ -73,6 +73,12 @@ de:
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Newsletter-Entwurf
             notify_reviewers: Prüfer benachrichtigen
+        topbar:
+          preview_mode: Vorschaumodus
+          copy_code: Quellcode kopieren
+          edit_projekt: Projekteinstellungen
+          create_newsletter_draft: Newsletter-Entwurf
+          notify_reviewers: Prüfer benachrichtigen
           projekt_information:
             title: Projektinformation
           map:

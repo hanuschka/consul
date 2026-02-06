@@ -1,0 +1,46 @@
+<div class="projekt-page--admin-topbar">
+  <div class="projekt-page--admin-topbar--inner">
+    <div class="projekt-page--admin-topbar-left">
+      <button
+        class="button projekt-page--admin-topbar-button hollow js-turn-on-preview-mode-button"
+        title="<%= t('custom.projekts.page.topbar.preview_mode') %>"
+        type="button"
+      >
+        <i class="fas fa-laptop"></i>
+        <span class="js-projekt-studio-preview-button-text">
+          <%= t('custom.projekts.page.topbar.preview_mode') %>
+        </span>
+      </button>
+    </div>
+
+    <div class="projekt-page--admin-topbar-right">
+      <% namespace = admin_namespace_for_current_user %>
+
+      <% if current_user&.email.in?(@partner_emails) %>
+        <%= link_to "#", class: "button hollow projekt-page--admin-topbar-button js-copy-source-button", data: { target: "page-content" } do %>
+          <i class="fas fa-code"></i>
+          <span><%= t("custom.projekts.page.topbar.copy_code") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.administrator? %>
+        <%= link_to new_admin_newsletter_path(projekt_id: @projekt), class: "button projekt-page--admin-topbar-button", target: "_blank" do %>
+          <i class="fas fa-envelope"></i>
+          <span><%= t("custom.projekts.page.topbar.create_newsletter_draft") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+        <%= link_to polymorphic_path([namespace, @projekt], action: :edit), class: "button hollow projekt-page--admin-topbar-button" do %>
+          <i class="fas fa-cog"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
+        <% end %>
+
+        <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow projekt-page--admin-topbar-button" do %>
+          <i class="fas fa-bell"></i>
+          <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

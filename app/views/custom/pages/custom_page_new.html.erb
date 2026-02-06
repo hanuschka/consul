@@ -190,20 +190,11 @@
       </div>
     <% end %>
 
-    <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
-
-    <% if native_projekt_studio?(@projekt) %>
-      <button
-        class="projekt-studio--peview-button js-turn-on-preview-mode-button"
-        title="Vorschaumodus umschalten"
-        type="button"
-      >
-        <i class="fas fa-laptop"></i>
-        <span class="js-projekt-studio-preview-button-text">
-          Vorschaumodus
-        </span>
-      </button>
+    <% if show_admin_controls_for_projekt?(@projekt) %>
+      <%= render "pages/topbar/admin_topbar" %>
     <% end %>
+
+    <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
     <% if @custom_page.projekt.present? %>
       <% if native_projekt_studio?(@projekt) %>

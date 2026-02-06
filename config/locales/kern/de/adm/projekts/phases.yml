@@ -111,6 +111,9 @@ de:
           lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
           select_managers: Abstimmungshelfer zuordnen
           select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+        ai_settings:
+          title: KI Anweisung
+          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
@@ -123,3 +126,4 @@ de:
           sentiments: Sentimente
           map: Karte
           officing_managers: Abstimmungshelfer
+          ai_settings: KI Anweisung

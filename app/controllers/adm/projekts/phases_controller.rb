@@ -184,7 +184,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def officing_manager_audits; end
   def age_ranges_for_stats; end
-  def ai_settings; end
+  # TODO: implement ai_settings logic
+  def ai_settings
+    authorize_phase(:update?)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def projekt_notifications; end
   def projekt_events; end
   def projekt_livestreams; end

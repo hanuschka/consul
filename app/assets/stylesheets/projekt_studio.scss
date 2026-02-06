@@ -2085,6 +2085,14 @@ ul.grid-x, ul.row {
   }
 }
 
+main:has(.projekt-page--admin-topbar) {
+  .projekt-content-block-wrapper.-in-edit-mode {
+    .projekt-content-block--toolsets {
+      top: $topbar-height + $admin-topbar-height + 1px;
+    }
+  }
+}
+
 
 .add-first-content-block-wrapper {
   margin-bottom: 10px;

@@ -9,10 +9,10 @@
   border-bottom: 1px solid #c5c5c6;
   padding: 0 10px;
   // background-color: white;
-  background: $brand-lighter;
+  background: color-mix(in srgb, var(--brand-color) 5%, $main-background-color 95%);
   display: flex;
   align-items: center;
-  height: 40px;
+  height: var(--admin-topbar-height);
 
   .button {
     margin: 0;

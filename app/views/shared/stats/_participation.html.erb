@@ -42,13 +42,14 @@
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
-    <div class="number-stats-cards margin-bottom">
+    <div class="number-stats-cards margin-bottom":
       <div class="ai-stats-card">
         <h4
           title="<%= t("custom.projekt_phases.stats.proposal_phase.visible_proposals_count.tooltip") %>"
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.visible_proposals_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.visible_proposals_count %></div>
       </div>
@@ -59,6 +60,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.proposal_authors_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.proposal_authors_count %></div>
       </div>
@@ -69,6 +71,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.unique_supporters_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.unique_supporters_count %></div>
       </div>
@@ -79,6 +82,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.total_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.total_votes_count %></div>
       </div>
@@ -89,6 +93,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.online_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.online_votes_count %></div>
       </div>
@@ -99,6 +104,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.offline_votes_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.offline_votes_count %></div>
       </div>
@@ -109,6 +115,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.visible_comments_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.visible_comments_count %></div>
       </div>
@@ -119,6 +126,7 @@
           data-tooltip=""
         >
           <%= t("custom.projekt_phases.stats.proposal_phase.reported_proposals_count.title") %>
+          <i class="fas fa-info-circle"></i>
         </h4>
         <div class="number"><%= stats.reported_proposals_count %></div>
       </div>

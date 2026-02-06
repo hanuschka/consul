@@ -147,6 +147,10 @@ class PagesController < ApplicationController
     @commentable = @projekt_phase
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
+
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = ProjektPhase::Stats.new(@projekt_phase)
+    end
   end
 
   def set_debate_phase_footer_tab_variables

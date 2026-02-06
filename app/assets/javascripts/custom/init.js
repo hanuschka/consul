@@ -32,6 +32,7 @@
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
+      App.AdminTopbarViewMode.initialize();
     }
   };
 }).call(this);

@@ -74,6 +74,8 @@ en:
             create_newsletter_draft: Create newsletter
             notify_reviewers: Notify reviewers
         topbar:
+          admin_view: Admin view
+          user_view: User view
           preview_mode: Preview mode
           copy_code: Copy source code
           edit_projekt: Edit projekt

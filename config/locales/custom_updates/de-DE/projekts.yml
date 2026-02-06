@@ -74,6 +74,8 @@ de:
             create_newsletter_draft: Newsletter-Entwurf
             notify_reviewers: Prüfer benachrichtigen
         topbar:
+          admin_view: Adminansicht
+          user_view: Nutzeransicht
           preview_mode: Vorschaumodus
           copy_code: Quellcode kopieren
           edit_projekt: Projekteinstellungen

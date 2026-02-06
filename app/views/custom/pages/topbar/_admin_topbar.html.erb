@@ -30,13 +30,6 @@
         <% end %>
       <% end %>
 
-      <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
-        <%= link_to polymorphic_path([namespace, @projekt], action: :edit), class: "button hollow projekt-page--admin-topbar-button" do %>
-          <i class="fas fa-cog"></i>
-          <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
-        <% end %>
-      <% end %>
-
       <% if current_user&.administrator? %>
         <%= link_to new_admin_newsletter_path(projekt_id: @projekt), class: "button hollow projekt-page--admin-topbar-button", target: "_blank" do %>
           <i class="fas fa-envelope"></i>
@@ -48,6 +41,13 @@
         <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow projekt-page--admin-topbar-button" do %>
           <i class="fas fa-bell"></i>
           <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+        <%= link_to polymorphic_path([namespace, @projekt], action: :edit), class: "button hollow projekt-page--admin-topbar-button" do %>
+          <i class="fas fa-cog"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
         <% end %>
       <% end %>
     </div>

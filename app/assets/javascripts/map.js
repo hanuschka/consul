@@ -20,8 +20,14 @@
       }
 
       if (mapInstance) {
-        mapInstance.map.off();
-        mapInstance.map.remove();
+        if ( mapInstance.constructor.name === "LeafletMapController" ) {
+          mapInstance.map.off();
+          mapInstance.map.remove();
+        } else if ( mapInstance.constructor.name === "MapboxMapController" ) {
+          mapInstance.map.off();
+          mapInstance.map.remove();
+        }
+
         App.Map.maps = App.Map.maps.filter(function(m) {
           return m !== mapInstance;
         });
@@ -68,7 +74,7 @@
     // Public Interface method for assistant map update and external use
     // DO NOT DELETE
     setMarkerTo(lat, lng, shouldScroll) {
-      if (App.Map.anyMapInitialized()) {
+      if (App.Map.maps.length > 0) {
         App.Map.maps[0].setMarkerTo(lat, lng, shouldScroll);
       }
     },

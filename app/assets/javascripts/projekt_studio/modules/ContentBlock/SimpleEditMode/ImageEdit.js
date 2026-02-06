@@ -114,6 +114,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   openaImageGallery(e) {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
     const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
@@ -130,8 +134,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   toggleCropImage(e) {
-    e.preventDefault()
+    e.stopImmediatePropagation()
     e.stopPropagation()
+    e.preventDefault()
 
     const button = e.currentTarget;
     const wrapper = this.getImageWrapper(button);
@@ -179,12 +184,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
     blurOverlay.style.backgroundImage = `url(${previewUrl})`;
 
-    // const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
-    //   selectedPicture.id,
-    //   img.clientWidth + 50
-    // )
-    // const customThumbUrl = thumbResponse['custom_thumb_url']
-    const customThumbUrl = selectedPicture['custom_thumb_url']
+    const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
+      selectedPicture.id,
+      img.clientWidth
+    )
+    const customThumbUrl = thumbResponse['custom_thumb_url']
 
     const onImageLoadComplete = () => {
       if (blurOverlay) {
@@ -210,17 +214,19 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     this.currentImg = null;
   },
 
-  // async fetchCustomThumbVersionOfPicture(pictureId, width) {
-  //   return await $.ajax({
-  //     url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
-  //     method: "GET",
-  //     headers: {
-  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //     },
-  //     data: { width: width },
-  //     responseType: "json"
-  //   })
-  // },
+  async fetchCustomThumbVersionOfPicture(pictureId, width) {
+    const pad = Math.round(width * 0.2);
+
+    return await $.ajax({
+      url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
+      method: "GET",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: { width: width, pad: pad },
+      responseType: "json"
+    })
+  },
 
   finishImageLoading(img, imageWrapper, contentBlockWrapper, contentBlockId) {
     imageWrapper.classList.remove("-loading")
@@ -269,6 +275,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   handleHeightInputChange(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const input = e.currentTarget;
     const wrapper = input.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -281,6 +291,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   decreaseHeight(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -297,6 +311,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   increaseHeight(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");

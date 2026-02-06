@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_one :poll_officer, class_name: "Poll::Officer"
   has_one :organization
   has_one :lock
+  belongs_to :api_client, optional: true
   has_many :flags
   has_many :identities, dependent: :destroy
   has_many :debates, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -73,6 +74,7 @@ class User < ApplicationRecord
     inverse_of:  :author
   has_many :related_contents, foreign_key: :author_id, inverse_of: :author, dependent: nil
   has_many :topics, foreign_key: :author_id, inverse_of: :author
+  has_many :saved_content_blocks, dependent: :destroy
   belongs_to :geozone
 
   validates :username, presence: true, if: :username_required?

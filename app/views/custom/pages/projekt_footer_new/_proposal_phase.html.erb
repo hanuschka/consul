@@ -3,14 +3,11 @@
 <% unless embedded? %>
   <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
-  <% if params[:section] == "stats" && can?(:read_stats, @projekt_phase) %>
-    <% if can?(:refresh_stats, @projekt_phase) %>
-      <%= button_to("Statistiken aktualisieren", refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
-    <% end %>
+  <% if params[:section] == "key_metrics" && can?(:read_stats, @projekt_phase) %>
+    <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
 
-    <div class='participation-stats'>
-      <%= render "shared/stats/participation", stats: @stats %>
-    </div>
+  <% elsif params[:section] == "analysis" && can?(:read_stats, @projekt_phase) && Ai::Settings.ai_available? %>
+    <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
 
   <% else %>
     <div class="flex justify-between items-center">

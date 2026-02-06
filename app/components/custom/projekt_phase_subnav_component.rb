@@ -10,17 +10,26 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
   end
 
   def projekt_phase_subnav_items
-    [
-      {
-        text: t("custom.projekt_phases.subnav.stats"),
-        url:  url_to_footer_tab(section: "stats", remote: true),
-        active: params[:section] == "stats"
-      },
+    items = [
       {
         text: t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
-        url: url_to_footer_tab(section: "overview", remote: true),
+        url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview"
+      },
+      {
+        text: t("custom.projekt_phases.subnav.key_metrics"),
+        url:  url_to_footer_tab(section: "key_metrics", remote: true),
+        active: params[:section] == "key_metrics"
       }
     ]
+
+    items << {
+      text: t("custom.projekt_phases.subnav.analysis"),
+      url:  url_to_footer_tab(section: "analysis", remote: true),
+      active: params[:section] == "analysis",
+      disabled: !Ai::Settings.ai_available?
+    }
+
+    items
   end
 end

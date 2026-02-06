@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th><%= t("custom.admin.registered_address_districts.attributes.name") %></th>
-      <th><%= t("custom.admin.registered_address_districts.attributes.coordinates") %></th>
+      <th><%= t("custom.admin.registered_address_districts.attributes.boundaries") %></th>
       <th><%= t("admin.actions.actions") %></th>
     </tr>
   </thead>
@@ -13,7 +13,7 @@
     <% @registered_address_districts.each do |district| %>
       <tr id="<%= dom_id(district) %>">
         <td><%= district.name %></td>
-        <td><%= "#{district.map_location&.longitude}, #{district.map_location&.latitude}" if district.map_location %></td>
+        <td><%= district.name %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(district,
                                                       actions: [:edit],

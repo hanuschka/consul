@@ -2,6 +2,19 @@
   .budget-subnav {
     margin-top: 0px;
     margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .budget-subnav--items {
+      display: flex;
+      align-items: center;
+    }
+
+    .budget-subnav--actions {
+      display: flex;
+      align-items: center;
+    }
 
     .budget-subnav-item {
       margin-right: 10px;

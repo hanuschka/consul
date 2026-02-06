@@ -8,23 +8,26 @@
       <%= f.radio_button :geozone_restricted, "no_restriction",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.no_restriction"),
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
+                         disabled: @projekt_phase.user_status == "guest",
                          checked: (@projekt_phase.geozone_restricted.blank? || @projekt_phase.geozone_restricted == "no_restriction") %>
     </div>
 
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_citizens",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_citizens"),
+                         disabled: @projekt_phase.user_status == "guest",
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
     </div>
 
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_geozones",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_geozones"),
+                         disabled: @projekt_phase.user_status == "guest",
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
 
       <div class="projekt-phase-geo-restriction-selector">
-        <%= f.collection_check_boxes(:geozone_restriction_ids, Geozone.all, :id, :name, {}) do |b| %>
-          <%= b.label(style: "display:inline-block;cursor:pointer;") { b.check_box(style: "margin-top:0;") + b.text } %>
+        <%= f.collection_check_boxes(:registered_address_district_ids, RegisteredAddress::District.all, :id, :name, {}) do |b| %>
+          <%= b.label(style: "cursor:pointer;") { b.check_box(style: "margin-top:0;", disabled: (@projekt_phase.user_status == "guest")) + b.text } %>
         <% end %>
       </div>
     </div>
@@ -32,6 +35,7 @@
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_streets",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_streets"),
+                         disabled: @projekt_phase.user_status == "guest",
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
 
       <div class="projekt-phase-street-selector projekt-phase-geo-restriction-selector" style="column-count: 1;">
@@ -45,7 +49,7 @@
         </div>
 
         <%= select_tag :streets, options_from_collection_for_select(RegisteredAddress::Street.all, :id, :name_with_plz),
-          class: "js-select-street", prompt: "Bitte wählen" %>
+          class: "js-select-street", prompt: "Bitte wählen", disabled: (@projekt_phase.user_status == "guest") %>
 
         <div class='hide'>
           <%= f.collection_check_boxes :registered_address_street_ids, RegisteredAddress::Street.all, :id, :name %>

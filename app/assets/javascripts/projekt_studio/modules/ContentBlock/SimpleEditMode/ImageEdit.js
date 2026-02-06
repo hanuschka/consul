@@ -49,7 +49,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
   wrapImageWithControls(img) {
     const imageWrapper = document.createElement("div")
-    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
+    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper", "js-content-block-element-not-editable")
 
     const smallButton = img.height < 120;
     const computedStyle = getComputedStyle(img);

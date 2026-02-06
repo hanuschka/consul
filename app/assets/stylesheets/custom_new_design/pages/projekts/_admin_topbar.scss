@@ -7,8 +7,12 @@
   width: 100%;
   border-top: 1px solid #c5c5c6;
   border-bottom: 1px solid #c5c5c6;
-  padding: 7px 10px;
-  background-color: white;
+  padding: 0 10px;
+  // background-color: white;
+  background: $brand-lighter;
+  display: flex;
+  align-items: center;
+  height: 40px;
 
   .button {
     margin: 0;

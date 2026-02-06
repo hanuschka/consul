@@ -27,6 +27,8 @@ module Adm
           @map_location = Projekt.find(params[:projekt_id]).map_location
         elsif params[:phase_id]
           @map_location = ProjektPhase.find(params[:phase_id]).map_location
+        elsif params[:idea_id]
+          @map_location = Idea.find(params[:idea_id]).map_location
         end
       end
 
@@ -36,6 +38,8 @@ module Adm
           Adm::Projekts::ProjektPolicy
         when ProjektPhase
           Adm::Projekts::ProjektPhasePolicy
+        when Idea
+          Adm::Ideas::IdeaPolicy
         else
           raise ArgumentError, "No policy class defined for #{mappable.class.name}"
         end
@@ -47,6 +51,8 @@ module Adm
           adm_projekts_projekt_map_location_path(mappable)
         when ProjektPhase
           adm_projekts_phase_map_location_path(mappable)
+        when Idea
+          adm_ideas_idea_map_location_path(mappable)
         else
           polymorphic_path([:adm, mappable, :map_location])
         end

@@ -45,7 +45,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy
 
     @idea.build_image(user: current_user) unless @idea.image
-    @districts = ::RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
+    @idea.create_map_location unless @idea.map_location
 
     @breadcrumbs = [
       { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },

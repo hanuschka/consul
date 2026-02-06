@@ -93,4 +93,11 @@
   &.icon-circle::before {
     content: "circle";
   }
+
+  // Font Awesome icons (icon-* classes from custom/icons.scss)
+  &[class*="icon-"]:not(.icon-circle)::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 14px;
+  }
 }

@@ -22,9 +22,10 @@
     <%= render "adm/ideas/ideas/edit/category", idea: @idea %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".labels.map_location")) do %>
-    <%= render "adm/ideas/ideas/edit/map_location", idea: @idea, districts: @districts %>
-  <% end %>
+  <%= render Adm::MapSettingComponent.new(
+    map_location: @idea.map_location,
+    path: adm_ideas_idea_map_location_path(@idea)
+  ) %>
 
   <%= render Adm::AttributeEditorComponent.new(@idea, :on_behalf_of, :string, label: t(".labels.on_behalf_of")) %>
 </div>

@@ -17,6 +17,7 @@ namespace :adm do
     # Ideas resource with path: "" (matched after specific resources)
     resources :ideas, only: [:show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "idea_audits"
+      resource :map_location, controller: "/adm/map_locations", only: [:update]
       member do
         get :administer
         get :audits

@@ -23,5 +23,23 @@
       <%= paginate @related_users %>
     <% end %>
 
+    <% if @individual_group_value.auto_join_emails.any? %>
+      <h3>Konto noch nicht erstellt (<%= @individual_group_value.auto_join_emails.size %>)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @individual_group_value.auto_join_emails.each do |email| %>
+            <tr>
+              <td><%= email %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
   </div>
 </div>

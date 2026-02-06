@@ -4,6 +4,7 @@
     "@geoman-io/leaflet-geoman-free": "^2.15.0",
     "ace-builds": "^1.43.3",
     "chart.js": "^4.5.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
     "html2canvas": "^1.4.1",

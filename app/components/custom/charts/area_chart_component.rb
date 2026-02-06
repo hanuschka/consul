@@ -1,4 +1,4 @@
-class Shared::AreaChartComponent < ApplicationComponent
+class Charts::AreaChartComponent < ApplicationComponent
   def initialize(title:, labels:, values:, total: nil, color: "#6BA3D6")
     @title = title
     @labels = labels
@@ -23,4 +23,3 @@ class Shared::AreaChartComponent < ApplicationComponent
     @total || @values.sum
   end
 end
-

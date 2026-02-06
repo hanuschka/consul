@@ -1,4 +1,4 @@
-class Shared::BarChartComponent < ApplicationComponent
+class Charts::BarChartComponent < ApplicationComponent
   def initialize(title:, labels:, values:, orientation: "vertical", colors: nil, use_percentage: false)
     @title = title
     @labels = labels

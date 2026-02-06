@@ -179,7 +179,7 @@
   .resources-list--inner {
     // display: grid;
     // grid-template-columns: repeat(3, 1fr);
-    grid-gap: 12px;
+    gap: 12px;
     display: flex;
     justify-items: center;
     align-items: flex-start;

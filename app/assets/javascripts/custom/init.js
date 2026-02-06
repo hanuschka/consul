@@ -22,8 +22,16 @@
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
+      App.SharedModal.initialize();
       App.ProposalAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
+      App.BarChartComponent.initialize();
+      App.AreaChartComponent.initialize();
+      App.HeatmapComponent.initialize();
+      App.StatsRefresh.initialize();
+      App.AiQuestionPolling.initialize();
+      App.CkeditorInlineStylesWorkarounds.initialize();
+      App.ContentBlockTemplatesSelector.initialize();
     }
   };
 }).call(this);

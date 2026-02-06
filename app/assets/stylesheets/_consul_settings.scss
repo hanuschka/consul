@@ -155,7 +155,9 @@ $tab-content-border: $border !default;
 
 $closebutton-color: $text !default;
 
-$tooltip-background-color: $brand !default;
+$tooltip-background-color: $white !default;
+$tooltip-color: $black !default;
+$tooltip-radius: rem-calc(8) !default;
 
 // 4. Foundation fixes
 // -------------------

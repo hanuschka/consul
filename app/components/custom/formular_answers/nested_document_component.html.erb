@@ -1,22 +1,25 @@
 <fieldset class="documents-list">
   <p class="help-text"><%= note %></p>
 
-  <div id="nested-documents" data-max-documents-allowed="<%= max_documents_allowed %>">
-    <%= f.fields_for :formular_answer_documents do |documents_builder| %>
+  <div id="nested-documents">
+    <%= f.fields_for :formular_answer_documents do |document_builder| %>
+      <% next unless document_builder.object.formular_field_key == formular_field.key %>
       <%= render FormularAnswers::DocumentFieldsComponent.new(
-        f: documents_builder,
+        f: document_builder,
         formular_field: formular_field,
         formular_answer: formular_answer
       ) %>
+      <% break %>
     <% end %>
   </div>
 
   <%= link_to_add_association t("documents.form.add_new_document"), f, :formular_answer_documents,
+                              force_non_association_create: true,
                               partial: "custom/formular_answers/document_fields",
                               id: "new_document_link",
                               role: 'button',
                               class: "button upload-document
-                                      #{"hide" if max_documents_allowed?}",
+                                      #{"hide" if formular_answer.formular_answer_documents.find_by(formular_field_key: formular_field.key)}",
                               render_options: {
                                 locals: {
                                   formular_field: formular_field,
@@ -27,8 +30,4 @@
                                 association_insertion_node: "#nested-documents",
                                 association_insertion_method: "append"
                               } %>
-
-  <div id="max-documents-notice" class="max-documents-notice callout primary text-center <%= "hide" unless max_documents_allowed? %>">
-    <%= sanitize(t("documents.max_documents_allowed_reached")) %>
-  </div>
 </fieldset>

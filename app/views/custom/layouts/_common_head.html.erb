@@ -20,9 +20,12 @@
 
 <%= stylesheet_link_tag "print", media: 'print' %>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+
 <%= content_for :additional_plugin_scripts %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= content_for :additional_scripts %>
+
 
 <% if @projekt.present? && !projekt_feature?(@projekt, "general.allow_indexing") %>
   <meta name="robots" content="noindex">

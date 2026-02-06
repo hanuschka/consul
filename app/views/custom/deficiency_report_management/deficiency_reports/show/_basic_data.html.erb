@@ -1,4 +1,4 @@
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <%= link_to t("custom.shared.download_pdf"), deficiency_report_management_deficiency_report_path(deficiency_report, format: :pdf),
       class: "float-right small clear #{'js-update-screenshot' if deficiency_report.map_location.present?}",
@@ -6,13 +6,13 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <h2><%= deficiency_report.title %></h2>
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <strong><%= t("custom.admin.deficiency_reports.show.created_at") %>:</strong>
     <%= l(deficiency_report.created_at, format: "%d %b %Y") %>,
@@ -22,13 +22,13 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <%= auto_link_already_sanitized_html wysiwyg(deficiency_report.description) %>
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns">
     <% if deficiency_report.approximated_address.present? %>
       <div class='margin-bottom'>
@@ -46,7 +46,7 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns">
     <div class="margin-top margin-bottom">
       <strong><%= "#{DeficiencyReport.human_attribute_name(:author)}:" %></strong>

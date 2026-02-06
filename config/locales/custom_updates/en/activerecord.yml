@@ -192,6 +192,14 @@ en:
         open_ended: Open ended
         end_datetime: Ending
         weblink: Link
+        language: Language
+        wheelchair_accessible: Wheelchair accessible
+        accessible_toilet: Accessible toilet available
+        disabled_parking_nearby: Disabled parking nearby
+        tactile_guidance_systems: Tactile guidance systems available
+        induction_loop_available: Induction loop available
+        assistance_dogs_welcome: Assistance dogs welcome
+        sign_language_interpreter: Sign language interpreter available
       projekt_notification:
         title: Title
         body: Body

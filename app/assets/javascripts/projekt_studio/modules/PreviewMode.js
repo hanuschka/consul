@@ -59,21 +59,23 @@ ProjektStudio.PreviewMode = {
     }
 
     const sdgList = document.querySelector(".js-sidebar-card .js-sdg-goal-tag-list")
-    const anyCheckedSDG = sdgList.querySelector('input:checked')
-    const sdgSidebarCard = sdgList.closest(".js-sidebar-card")
+    const anyCheckedSDG = sdgList ? sdgList.querySelector('input:checked') : false
+    const sdgSidebarCard = sdgList ? sdgList.closest(".js-sidebar-card") : null
     const categoriesList = document.querySelector(".js-sidebar-card .categories--simple-selector")
-    const anyCheckedCategory = categoriesList.querySelector('.js-add-tag-link.selected')
+    const anyCheckedCategory = categoriesList ? categoriesList.querySelector('.js-add-tag-link.selected') : false
     const categoriesSidebarCard = categoriesList.closest(".js-sidebar-card")
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
+
+    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
 
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
-    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
+    $(".js-content-block-ai-edit-popup").toggle(!previewModeEnabled)
 
-    console.log("anyCheckedSDG", anyCheckedSDG)
-    console.log("anyCheckedCategory", anyCheckedCategory)
+    // console.log("anyCheckedSDG", anyCheckedSDG)
+    // console.log("anyCheckedCategory", anyCheckedCategory)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {

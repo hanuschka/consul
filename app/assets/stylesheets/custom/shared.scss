@@ -359,7 +359,7 @@ span.toggle-arrow {
   }
 }
 
-.d-flex {
+.d-flex, .u-flex {
   display: flex;
 }
 
@@ -372,12 +372,24 @@ span.toggle-arrow {
   justify-content: space-between;
 }
 
+.u-gap-5 {
+  gap: 5px;
+}
+
 .u-gap-10 {
   gap: 10px;
 }
 
-.u-gap-5 {
-  gap: 5px;
+.u-gap-15 {
+  gap: 15px;
+}
+
+.u-gap-20 {
+  gap: 20px;
+}
+
+.u-gap-30 {
+  gap: 30px;
 }
 
 .d-flex-start {

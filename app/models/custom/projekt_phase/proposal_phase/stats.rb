@@ -12,6 +12,10 @@ class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
     ]
   end
 
+  def total_participants
+    participants.distinct.count
+  end
+
   def visible_proposals_count
     proposals.count
   end

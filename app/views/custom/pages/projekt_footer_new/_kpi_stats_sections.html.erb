@@ -1,4 +1,5 @@
 <% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
+  <% stats = ProjektPhase::ProposalPhase::Stats.new(projekt_phase) if projekt_phase.is_a?(ProjektPhase::ProposalPhase) && !stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
   <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.key_metrics") %></h2>
   <%= render "shared/stats/participation", stats: stats %>
   <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: projekt_phase) %>

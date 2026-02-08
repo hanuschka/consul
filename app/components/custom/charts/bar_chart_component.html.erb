@@ -6,7 +6,8 @@
        data-chart-values="<%= values_json %>"
        data-chart-orientation="<%= @orientation %>"
        <% if colors_json %>data-chart-colors="<%= colors_json %>"<% end %>
-       <% if use_percentage? %>data-chart-use-percentage="true"<% end %>>
+       <% if use_percentage? %>data-chart-use-percentage="true"<% end %>
+       <% if show_labels_in_bars? %>data-chart-show-labels-in-bars="true"<% end %>>
     <canvas></canvas>
   </div>
 </div>

@@ -33,6 +33,7 @@
       const orientation = container.dataset.chartOrientation || "vertical";
       const colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
       const usePercentage = container.dataset.chartUsePercentage === "true";
+      const showLabelsInBars = container.dataset.chartShowLabelsInBars === "true";
 
       return {
         labels: labels,
@@ -41,6 +42,7 @@
         backgroundColor: colors || "#6BA3D6",
         borderColor: colors || "#6BA3D6",
         usePercentage: usePercentage,
+        showLabelsInBars: showLabelsInBars,
         maxValue: Math.max.apply(null, values)
       };
     },
@@ -88,13 +90,14 @@
       return config;
     },
 
-    createLabelAxisConfig: function() {
+    createLabelAxisConfig: function(chartData) {
       return {
         grid: {
           display: false,
           color: "#e0e0e0"
         },
         ticks: {
+          display: !chartData.showLabelsInBars,
           color: "#333",
           font: {
             size: 15,
@@ -133,10 +136,31 @@
 
     createChartConfig: function(chartData) {
       const valueAxisConfig = this.createValueAxisConfig(chartData);
-      const labelAxisConfig = this.createLabelAxisConfig();
+      const labelAxisConfig = this.createLabelAxisConfig(chartData);
+
+      const datalabelsConfig = chartData.showLabelsInBars
+        ? {
+            color: "#fff",
+            font: {
+              size: 12,
+              weight: "bold"
+            },
+            anchor: "end",
+            align: "start",
+            offset: 4,
+            formatter: (value, context) => {
+              return context.chart.data.labels[context.dataIndex];
+            }
+          }
+        : {
+            display: false
+          };
+
+      console.log(chartData.labels)
 
       return {
         type: "bar",
+        plugins: [ChartDataLabels],
         data: {
           labels: chartData.labels,
           datasets: [{
@@ -156,7 +180,8 @@
             legend: {
               display: false
             },
-            tooltip: this.createTooltipConfig(chartData)
+            tooltip: this.createTooltipConfig(chartData),
+            datalabels: datalabelsConfig
           },
           scales: {
             x: chartData.isHorizontal ? valueAxisConfig : labelAxisConfig,

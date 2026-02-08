@@ -313,6 +313,44 @@ body.custom-new-design {
   /* position: absolute; */
 }
 
+.add-new-content-block-template-button {
+  color: $dt-base !important;
+  padding: 7px 15px;
+  border-radius: 8px;
+  margin-bottom: 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background-color: $dt-base-light !important;
+
+  i {
+    font-size: 20px !important;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: $dt-base-light-hover !important;
+  }
+
+  &:active {
+    color: #7a7a7a;
+    outline: none !important;
+  }
+
+  &:focused {
+    outline: none !important;
+  }
+
+  &:disabled {
+    color: #a0a0a0 !important;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+}
+
 .add-new-content-block-button {
   color: $dt-base !important;
   padding: 5px;

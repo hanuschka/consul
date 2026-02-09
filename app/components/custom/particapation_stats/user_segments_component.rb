@@ -23,14 +23,6 @@ class ParticapationStats::UserSegmentsComponent < ApplicationComponent
     @stats.individual_group?
   end
 
-  def gender_cards
-    [
-      { key: "men", count: @stats.total_male_participants, percentage: @stats.male_percentage },
-      { key: "women", count: @stats.total_female_participants, percentage: @stats.female_percentage },
-      { key: "divers", count: @stats.total_other_gen_participants, percentage: @stats.other_gen_percentage }
-    ].reject { |card| card[:count].zero? }
-  end
-
   # def average_percentage
   #   100.0 / 3
   # end
@@ -42,16 +34,6 @@ class ParticapationStats::UserSegmentsComponent < ApplicationComponent
   #   sign = diff > 0 ? "+" : ""
   #   "#{sign}#{diff.round(1)}%"
   # end
-
-  def age_chart_data
-    data = @stats.participants_by_age
-    return { labels: [], values: [] } if data.blank?
-
-    filtered = data.values.reject { |v| v[:count].zero? }
-    labels = filtered.map { |v| v[:range] }
-    values = filtered.map { |v| v[:count] }
-    { labels:, values: }
-  end
 
   def geozone_chart_data
     data = @stats.participants_by_geozone

@@ -111,12 +111,11 @@
 
   // &:hover:not(:disabled) {
   &:hover {
-    background-color: $dt-base-transparent-background-hover;
+    background-color: var(--dt-base-transparent-background-hover);
   }
 
   &:active {
-    background-color: #d2d1d1;
-    outline: none;
+    background-color: var(--dt-base-transparent-background-active);
   }
 
   &.-delete {

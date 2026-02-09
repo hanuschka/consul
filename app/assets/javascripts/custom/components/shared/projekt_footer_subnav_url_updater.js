@@ -7,9 +7,12 @@
     },
 
     handleClick(event) {
-      const url = event.currentTarget.href;
-      if (url && history.pushState) {
-        history.pushState(null, "", url);
+      const section = event.currentTarget.dataset.section;
+
+      if (section && history.pushState) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set("section", section);
+        history.pushState(null, "", currentUrl.toString());
       }
     }
   };

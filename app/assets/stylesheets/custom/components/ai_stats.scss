@@ -57,6 +57,7 @@
     flex-grow: 1;
     width: calc(25% - 15px);
     min-width: 150px;
+    max-width: 300px;
 
     @media (max-width: $small-tablet-viewport-start) {
       width: calc(33% - 15px);

@@ -15,13 +15,16 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         text: t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
         url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview"
-      },
-      {
+      }
+    ]
+
+    unless @projekt_phase.is_a?(ProjektPhase::CommentPhase)
+      items << {
         text: t("custom.projekt_phases.subnav.key_metrics"),
         url:  url_to_footer_tab(section: "key_metrics", remote: true),
         active: params[:section] == "key_metrics"
       }
-    ]
+    end
 
     items << {
       text: t("custom.projekt_phases.subnav.analysis"),

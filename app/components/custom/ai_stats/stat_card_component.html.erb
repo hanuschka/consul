@@ -1,11 +1,14 @@
 <div class="ai-stats-card">
-  <div class="u-flex u-justify-between u-align-center">
+  <div class="ai-stats-card--title u-flex u-justify-between u-align-center">
     <h4><%= title %></h4>
-    <i
-      title="<%= tooltip %>"
-      data-tooltip
-      class="fas fa-info-circle"
-    >
+
+    <% if tooltip.present? %>
+      <i
+        title="<%= tooltip %>"
+        data-tooltip
+        class="fas fa-info-circle"
+      >
+    <% end %>
     </i>
   </div>
   <%= content %>

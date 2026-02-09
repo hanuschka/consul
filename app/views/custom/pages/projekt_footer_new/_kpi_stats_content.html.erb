@@ -22,7 +22,7 @@
 
     <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.distributions") %></h2>
     <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
-    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
     <%= render ParticapationStats::UserSegmentsComponent.new(stats: stats) %>
+    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
   <% end %>
 </div>

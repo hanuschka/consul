@@ -1,20 +1,6 @@
 <div class="user-segments-stats">
   <h3 class="user-segments-stats--title"><%= t("custom.shared.user_segments.title") %></h3>
 
-  <% if gender? %>
-    <div class="user-segments-stats--gender-cards">
-      <% gender_cards.each do |card| %>
-        <div class="ai-stats-card user-segments-stats--gender-card">
-          <h4 class="user-segments-stats--gender-card-title"><%= t("custom.shared.user_segments.#{card[:key]}") %></h4>
-          <div class="user-segments-stats--gender-card-number"><%= card[:count] %></div>
-          <%# <% if percentage_diff(card[:percentage]) %1> %>
-          <%#   <div class="user-segments-stats--gender-card-diff"><%= percentage_diff(card[:percentage]) %1> <%= t("custom.shared.user_segments.to_average") %1></div> %>
-          <%# <% end %1> %>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
-
   <%# <% if age? %1> %>
   <%#   <% age_data = age_chart_data %1> %>
   <%#   <% if age_data[:labels].any? %1> %>

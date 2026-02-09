@@ -3,5 +3,5 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container my-5">
-  <%= render "form", url: adm_projekts_phase_label_path(@projekt_phase, @projekt_label) %>
+  <%= render "form", url: adm_projekts_phase_sentiment_path(@projekt_phase, @sentiment) %>
 </div>

@@ -34,6 +34,8 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::ProjektPolicy
       when "ProjektPhase"
         Adm::Projekts::ProjektPhasePolicy
+      when "ProjektPhaseSetting"
+        Adm::Projekts::ProjektPhasePolicy
       when "ProjektManager"
         Adm::Projekts::ProjektManagerPolicy
       when "Idea"

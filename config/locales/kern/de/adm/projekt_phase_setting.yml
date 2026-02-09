@@ -63,6 +63,18 @@ de:
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
             comments_count: Meist Kommentiert
+    point_of_interest_phase:
+      feature:
+        general:
+          users_can_create_pins: Pins setzen
+          users_can_create_pins_description: Nutzer können Pins erstellen
+      option:
+        form:
+          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+        general:
+          max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
+          max_number_of_pins_per_user_description: Legt die maximale Anzahl an Pins fest, die ein Nutzer erstellen kann.
     proposal_phase:
       feature:
         general:

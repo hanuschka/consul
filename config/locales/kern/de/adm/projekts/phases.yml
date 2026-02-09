@@ -111,6 +111,27 @@ de:
           lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
           select_managers: Abstimmungshelfer zuordnen
           select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+        projekt_point_of_interest_categories:
+          title: Kategorien
+          create_button: Neue Kategorie erstellen
+          no_categories: Keine Kategorien vorhanden.
+          table:
+            name: Name
+            icon: Icon
+            color: Farbe
+            actions: Aktionen
+        projekt_point_of_interest_pins:
+          title: Pins
+          no_pins: Keine Pins vorhanden.
+          table:
+            id: ID
+            address: Adresse
+            author: Autor
+            category: Kategorie
+            created_at: Erstellt am
+        map_resources_overview:
+          title: Kartenübersicht
+          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -127,3 +148,6 @@ de:
           map: Karte
           officing_managers: Abstimmungshelfer
           ai_settings: KI Anweisung
+          projekt_point_of_interest_categories: Kategorien
+          projekt_point_of_interest_pins: Pins
+          map_resources_overview: Kartenübersicht

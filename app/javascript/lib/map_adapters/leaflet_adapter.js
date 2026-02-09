@@ -302,6 +302,7 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
 
     this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false })
+    this.clusterGroup.addTo(this.map)
 
     // L.deflate may not be available if the plugin failed to load
     if (typeof L.deflate === "function") {
@@ -316,9 +317,6 @@ export default class LeafletAdapter extends BaseAdapter {
         })
       })
       this.deflateFeatures.addTo(this.map)
-    } else {
-      // Fallback: just use the cluster group directly
-      this.clusterGroup.addTo(this.map)
     }
   }
 

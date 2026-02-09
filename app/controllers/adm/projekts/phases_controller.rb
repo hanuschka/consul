@@ -108,7 +108,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
-  # Stub actions - to be implemented
   def settings; end
 
   def proposals
@@ -142,9 +141,40 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
-  def projekt_point_of_interest_categories; end
-  def projekt_point_of_interest_pins; end
-  def map_resources_overview; end
+  def projekt_point_of_interest_categories
+    authorize_phase(:update?)
+    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def projekt_point_of_interest_pins
+    authorize_phase(:update?)
+    @pagy, @pins = pagy(@projekt_phase.projekt_point_of_interest_pins.ordered)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def map_resources_overview
+    authorize_phase(:update?)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
 
   def projekt_labels
     authorize_phase(:update?)

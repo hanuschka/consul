@@ -1,4 +1,4 @@
-class Adm::SentimentPolicy < ApplicationPolicy
+class Adm::Projekts::ProjektLabelPolicy < ApplicationPolicy
   def create?
     @user&.administrator?
   end

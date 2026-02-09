@@ -24,6 +24,9 @@ en:
         generate_ai_summary_button: "Generate AI summary"
         ai_summary_generated: "AI summary was successfully generated"
         proposal_phase:
+          total_unique_participants_count:
+            title: Total Participants
+            tooltip: Count of unique users who actively participated in the process. Includes proposal authors, users who supported proposals, and users who posted comments. Each user is counted once, even if they performed multiple actions.
           visible_proposals_count:
             title: Submitted Proposals
             tooltip: Total number of proposals created within the phase, excluding proposals that are currently hidden.

@@ -1,6 +1,8 @@
 class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
   def self.stats_methods
+    base_stats_methods + gender_methods + age_methods + geozone_methods +
     %i[
+      total_unique_participants_count
       visible_proposals_count
       proposal_authors_count
       unique_supporters_count
@@ -8,12 +10,19 @@ class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
       online_votes_count
       offline_votes_count
       visible_comments_count
-      reported_proposals_count
     ]
   end
 
   def total_participants
     participants.distinct.count
+  end
+
+  def total_unique_participants_count
+    author_ids = proposals.select(:author_id).distinct.pluck(:author_id)
+    voter_ids = supports.select(:voter_id).distinct.pluck(:voter_id)
+    commenter_ids = comments.where(hidden_at: nil).select(:user_id).distinct.pluck(:user_id)
+
+    (author_ids + voter_ids + commenter_ids).uniq.compact.count
   end
 
   def visible_proposals_count
@@ -44,14 +53,14 @@ class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
     comments.where(hidden_at: nil).count
   end
 
-  def reported_proposals_count
-    proposals.with_hidden.flagged.select(:id).distinct.count
-  end
-
   private
 
     def participant_ids
-      supports.select(:voter_id).distinct.pluck(:voter_id)
+      author_ids = proposals.select(:author_id).distinct.pluck(:author_id)
+      voter_ids = supports.select(:voter_id).distinct.pluck(:voter_id)
+      commenter_ids = comments.where(hidden_at: nil).select(:user_id).distinct.pluck(:user_id)
+
+      (author_ids + voter_ids + commenter_ids).uniq.compact
     end
 
     def supports

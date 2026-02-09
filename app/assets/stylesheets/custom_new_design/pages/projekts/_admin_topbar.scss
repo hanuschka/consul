@@ -1,12 +1,16 @@
+// $projekt-page-admin-topbar-border-color: color-mix(in srgb, var(--brand-color) 95%, $main-background-color 5%);
+
 .projekt-page--admin-topbar {
   position: fixed;
   top: var(--topbar-height);
   left: 0;
   right: 0;
-  z-index: 15;
+  // z-index: 15;
+  z-index: 500;
   width: 100%;
-  border-top: 1px solid #c5c5c6;
-  border-bottom: 1px solid #c5c5c6;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: color-mix(in srgb, var(--brand-color) 80%, $main-background-color 20%);
   padding: 0 10px;
   // background-color: white;
   background: color-mix(in srgb, var(--brand-color) 5%, $main-background-color 95%);

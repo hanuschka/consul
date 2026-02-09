@@ -31,17 +31,17 @@ class ParticapationStats::UserSegmentsComponent < ApplicationComponent
     ].reject { |card| card[:count].zero? }
   end
 
-  def average_percentage
-    100.0 / 3
-  end
+  # def average_percentage
+  #   100.0 / 3
+  # end
 
-  def percentage_diff(percentage)
-    diff = percentage - average_percentage
-    return nil if diff.abs < 0.1
+  # def percentage_diff(percentage)
+  #   diff = percentage - average_percentage
+  #   return nil if diff.abs < 0.1
 
-    sign = diff > 0 ? "+" : ""
-    "#{sign}#{diff.round(1)}%"
-  end
+  #   sign = diff > 0 ? "+" : ""
+  #   "#{sign}#{diff.round(1)}%"
+  # end
 
   def age_chart_data
     data = @stats.participants_by_age

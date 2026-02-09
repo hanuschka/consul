@@ -24,6 +24,9 @@ de:
         generate_ai_summary_button: "AI-Summary generieren"
         ai_summary_generated: "AI Summary wurde erfolgreich generiert"
         proposal_phase:
+          total_unique_participants_count:
+            title: Gesamtteilnehmer
+            tooltip: Anzahl der eindeutigen Nutzer, die aktiv am Beteiligungsprozess teilgenommen haben. Berücksichtigt werden Autoren von Vorschlägen, Unterstützer sowie Nutzer, die Kommentare verfasst haben.
           visible_proposals_count:
             title: Eingereichte Vorschläge
             tooltip: Anzahl aller eingereichten und aktuell sichtbaren Vorschläge in dieser Beteiligungsphase. Ausgeblendete Vorschläge werden nicht mitgezählt.

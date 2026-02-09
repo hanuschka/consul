@@ -27,6 +27,7 @@
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
+      App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();

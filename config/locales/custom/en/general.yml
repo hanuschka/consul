@@ -5,6 +5,8 @@ en:
       generation_failed: "Error: Failed to generate content block with AI"
     disabled_tooltip: "AI features unavailable. Contact administrator."
     instructions_placeholder: "Enter your instructions for editing this content block. By default, the project title, subtitle, and the content of this content block are provided as context."
+    submit: Submit
+    cancel: Cancel
     instructions_hint: "Enter to submit, Shift+Enter for new line"
     allow_text_modification: "Allow text content modification"
     allow_text_modification_hint: "When unchecked (default), the AI will only modify HTML structure, styling, and layout while preserving all existing text content. When checked, the AI can also modify the text content based on your instructions."

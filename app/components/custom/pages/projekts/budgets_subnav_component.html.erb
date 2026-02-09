@@ -1,5 +1,5 @@
 <div class='budget-subnav'>
-  <div class='js-projekt-footer-subnav-item budget-subnav--items'>
+  <div class='budget-subnav--items'>
     <% budget_subnav_items_for(budget).each do |item| %>
       <% if item[:disabled] %>
         <span
@@ -11,7 +11,7 @@
           <%= item[:text] %>
         </span>
       <% else %>
-        <%= link_to item[:text], item[:url], class: "budget-subnav-item #{'is-active' if item[:active] }", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
+        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item budget-subnav-item #{'is-active' if item[:active] }", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
       <% end %>
     <% end %>
   </div>

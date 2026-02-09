@@ -23,7 +23,11 @@ $dropdown-active-color: darken($dropdown-hover-color, 4%);
 $dt-base: #004a83;
 $dt-base-hover: lighten($dt-base, 10%);
 $dt-base-secondary: lighten($dt-base, 70%);
+$dt-base-transparent-background-hover: #dfebf5;
 
 :root {
   --medium-gray-3: #{$medium-gray-3};
+  --dt-base: #{$dt-base};
+  --dt-base-transparent-background-hover: #dfebf5;
+  --dt-base-transparent-background-active: #d1e2f0;
 }

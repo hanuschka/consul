@@ -1,44 +1,58 @@
 <div id="participation_statistics">
 
   <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
-    <div class="ai-stats-cards margin-bottom">
-      <div class="ai-stats-card">
-        <h4><%= t("stats.budgets.total_investments") %></h4>
+    <div class="number-stats-cards margin-bottom">
+      <%= render(AiStats::StatCardComponent.new(
+        title: t("stats.budgets.total_investments"),
+        tooltip: t("custom.projekt_phases.stats.budget_phase.total_investments.tooltip")
+      )) do %>
         <div class="number"><%= stats.total_budget_investments %></div>
-      </div>
+      <% end %>
 
-      <div class="ai-stats-card">
-        <h4><%= t("stats.total_participants") %></h4>
+      <%= render(AiStats::StatCardComponent.new(
+        title: t("stats.total_participants"),
+        tooltip: t("custom.projekt_phases.stats.budget_phase.total_participants.tooltip")
+      )) do %>
         <div class="number"><%= stats.total_participants %></div>
-      </div>
+      <% end %>
 
-      <div class="ai-stats-card">
-        <h4><%= t("stats.supports") %></h4>
+      <%= render(AiStats::StatCardComponent.new(
+        title: t("stats.supports"),
+        tooltip: t("custom.projekt_phases.stats.budget_phase.total_supports.tooltip")
+      )) do %>
         <div class="number"><%= stats.total_supports %></div>
-      </div>
+      <% end %>
 
-      <div class="ai-stats-card">
-        <h4><%= t("stats.budgets.total_votes") %></h4>
+      <%= render(AiStats::StatCardComponent.new(
+        title: t("stats.budgets.total_votes"),
+        tooltip: t("custom.projekt_phases.stats.budget_phase.total_votes.tooltip")
+      )) do %>
         <div class="number"><%= stats.total_votes %></div>
-      </div>
+      <% end %>
 
       <% unless params[:stats_section] == "accepting" %>
-        <div class="ai-stats-card">
-          <h4><%= t("stats.budgets.total_feasible_investments") %></h4>
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("stats.budgets.total_feasible_investments"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.total_feasible_investments.tooltip")
+        )) do %>
           <div class="number"><%= stats.total_feasible_investments %></div>
-        </div>
+        <% end %>
 
-        <div class="ai-stats-card">
-          <h4><%= t("stats.budgets.total_unfeasible_investments") %></h4>
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("stats.budgets.total_unfeasible_investments"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.total_unfeasible_investments.tooltip")
+        )) do %>
           <div class="number"><%= stats.total_unfeasible_investments %></div>
-        </div>
+        <% end %>
       <% end %>
 
       <% if @budget.valuating_or_later? %>
-        <div class="ai-stats-card">
-          <h4><%= t("stats.budgets.total_selected_investments") %></h4>
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("stats.budgets.total_selected_investments"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.total_selected_investments.tooltip")
+        )) do %>
           <div class="number"><%= stats.total_selected_investments %></div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>

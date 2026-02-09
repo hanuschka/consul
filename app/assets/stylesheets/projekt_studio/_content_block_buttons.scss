@@ -109,12 +109,13 @@
       width: 1.85em;
     height: 1.85em;
 
-  &:hover:not(:disabled) {
-    background-color: $dt-base-transparent-background-hover;
+  // &:hover:not(:disabled) {
+  &:hover {
+    background-color: var(--dt-base-transparent-background-hover);
   }
 
   &:active {
-    background-color: #d2d1d1;
+    background-color: var(--dt-base-transparent-background-active);
   }
 
   &.-delete {
@@ -134,16 +135,5 @@
       background-color: transparent !important;
       cursor: default !important;
     }
-  }
-}
-
-.projekt-content-block--move-button {
-  cursor: pointer;
-  z-index: 2;
-  margin-right: 0;
-  border-radius: 50%;
-
-  &:hover {
-    background-color: #f2f2f2;
   }
 }

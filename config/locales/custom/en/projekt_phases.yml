@@ -1,0 +1,44 @@
+en:
+  custom:
+    projekt_phases:
+      stats:
+        budget_phase:
+          total_investments:
+            tooltip: "Total number of investment proposals submitted in this phase"
+          total_participants:
+            tooltip: "Number of unique participants who created proposals, supported them, or wrote comments"
+          total_supports:
+            tooltip: "Total number of supports for all proposals"
+          total_votes:
+            tooltip: "Total number of votes cast (online and offline)"
+          total_feasible_investments:
+            tooltip: "Number of proposals that have been evaluated as feasible"
+          total_unfeasible_investments:
+            tooltip: "Number of proposals that have been evaluated as unfeasible"
+          total_selected_investments:
+            tooltip: "Number of proposals selected for the final voting phase"
+        proposal_phase:
+          total_unique_participants_count:
+            title: "Total Participants"
+            tooltip: "Number of unique participants who created proposals, supported them, or wrote comments"
+          visible_proposals_count:
+            title: "Total Proposals"
+            tooltip: "Total number of visible proposals in this phase"
+          proposal_authors_count:
+            title: "Authors"
+            tooltip: "Number of users who created at least one proposal"
+          unique_supporters_count:
+            title: "Supporters"
+            tooltip: "Number of unique users who supported proposals"
+          total_votes_count:
+            title: "Total Votes"
+            tooltip: "Total number of votes cast (online and offline)"
+          online_votes_count:
+            title: "Online Votes"
+            tooltip: "Number of votes cast online"
+          offline_votes_count:
+            title: "Offline Votes"
+            tooltip: "Number of votes cast offline"
+          visible_comments_count:
+            title: "Comments"
+            tooltip: "Number of visible comments on proposals"

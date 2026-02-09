@@ -156,8 +156,6 @@
             display: false
           };
 
-      console.log(chartData.labels)
-
       return {
         type: "bar",
         plugins: [ChartDataLabels],

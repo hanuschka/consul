@@ -110,11 +110,11 @@ class ProjektPhasesController < ApplicationController
 
     partial =
       if params[:section] == "analysis"
-        "pages/projekt_footer_new/ai_analysis_sections"
+        "pages/projekt_footer_new/ai_analysis_content"
       elsif params[:section] == "key_metrics"
-        "pages/projekt_footer_new/kpi_stats_sections"
+        "pages/projekt_footer_new/kpi_stats_content"
       else
-        "pages/projekt_footer_new/participation_stats_sections"
+        "pages/projekt_footer_new/ai_analysis_content"
       end
 
     render_to_string(

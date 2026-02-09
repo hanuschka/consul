@@ -1,18 +1,28 @@
-<% if can?(:refresh_stats, @projekt_phase) %>
-  <div class="u-flex margin-bottom u-full-width u-justify-between u-align-start">
-    <div class="u-flex u-gap-15">
-      <%= render Shared::StatsRefreshComponent.new(
-        refresh_path: refresh_stats_projekt_phase_path(@projekt_phase),
-        section: "key_metrics",
-        button_text: "custom.projekt_phases.stats.refresh_stats_button",
-        processing_text: "custom.projekt_phases.stats.processing_stats",
-        last_updated_text: "custom.projekt_phases.stats.refresh_stats_last_updated",
-        last_updated_at: @projekt_phase.stats_refreshed_at
-      ) %>
-    </div>
-  </div>
-<% end %>
-
 <div class="participation-stats js-participation-stats js-participation-stats-key-metrics">
-  <%= render "pages/projekt_footer_new/kpi_stats_sections", projekt_phase: @projekt_phase, stats: @stats %>
+  <% if can?(:refresh_stats, @projekt_phase) %>
+    <div class="u-flex margin-bottom u-full-width u-justify-between u-align-start">
+      <div class="u-flex u-gap-15">
+        <%= render Shared::StatsRefreshComponent.new(
+          refresh_path: refresh_stats_projekt_phase_path(@projekt_phase),
+          section: "key_metrics",
+          button_text: "custom.projekt_phases.stats.refresh_stats_button",
+          processing_text: "custom.projekt_phases.stats.processing_stats",
+          last_updated_text: "custom.projekt_phases.stats.refresh_stats_last_updated",
+          last_updated_at: @projekt_phase.stats_refreshed_at
+        ) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
+    <% stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase) if @projekt_phase.is_a?(ProjektPhase::ProposalPhase) %>
+    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.key_metrics") %></h2>
+    <%= render "shared/stats/participation", stats: @stats %>
+    <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
+
+    <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.distributions") %></h2>
+    <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
+    <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
+    <%= render ParticapationStats::UserSegmentsComponent.new(stats: stats) %>
+  <% end %>
 </div>

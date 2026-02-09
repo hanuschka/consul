@@ -90,9 +90,6 @@
         >
           <div
             class="projekt-studio--toggle-background-wrapper"
-            title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
-            data-tooltip
-            data-hover-delay="500"
           >
             <button
               type="button"
@@ -103,7 +100,12 @@
               data-show-background="<%= @custom_page.projekt.show_content_background %>"
               data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
             ></button>
-            <span class="projekt-studio--toggle-background-label">
+            <span
+              class="projekt-studio--toggle-background-label"
+              title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
+              data-tooltip
+              data-hover-delay="500"
+            >
               <%= t('custom.projekts.page.toggle_background_label') %>
             </span>
           </div>

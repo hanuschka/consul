@@ -132,6 +132,15 @@ de:
         map_resources_overview:
           title: Kartenübersicht
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+        projekt_questions:
+          title: Kurzumfragen
+          create_button: Frage erstellen
+          no_questions: Keine Kurzumfragen vorhanden.
+          table:
+            title: Titel
+            question_options: Antworten
+            comments_count: Kommentare
+            actions: Aktionen
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -147,6 +156,7 @@ de:
           sentiments: Sentimente
           map: Karte
           officing_managers: Abstimmungshelfer
+          projekt_questions: Kurzumfragen
           ai_settings: KI Anweisung
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins

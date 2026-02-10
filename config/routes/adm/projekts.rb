@@ -63,6 +63,9 @@ namespace :adm do
 
       resources :labels, except: %i[index show]
       resources :sentiments, except: %i[index show]
+      resources :projekt_questions, except: %i[index show] do
+        post :send_notifications, on: :collection
+      end
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :proposals, only: [:show] do
         member do

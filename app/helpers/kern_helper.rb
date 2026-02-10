@@ -1,6 +1,8 @@
 module KernHelper
-  def kern_button(icon: nil, text: nil, autofocus: false, type: :button, style: :primary, disabled: false)
-    button_tag(type: type, class: "kern-btn kern-btn--#{style}", autofocus: autofocus, disabled: disabled) do
+  def kern_button(icon: nil, text: nil, autofocus: false, type: :button, style: :primary, disabled: false, **options)
+    classes = ["kern-btn", "kern-btn--#{style}", options.delete(:class)].compact.join(" ")
+
+    button_tag(type: type, class: classes, autofocus: autofocus, disabled: disabled, **options) do
       if icon.present?
         concat(content_tag(:span, icon, class: "kern-label material-symbols-outlined", "aria-hidden": "true"))
       end

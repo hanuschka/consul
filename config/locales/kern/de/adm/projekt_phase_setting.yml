@@ -63,6 +63,11 @@ de:
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
             comments_count: Meist Kommentiert
+    question_phase:
+      feature:
+        general:
+          show_questions_list: Aktivieren Sie eine Übersicht aller Fragen
+          show_questions_list_description: Zeigt eine Übersichtsseite mit allen Fragen der Kurzumfrage an
     point_of_interest_phase:
       feature:
         general:

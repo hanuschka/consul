@@ -64,3 +64,6 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
+
+import AdmNestedFieldsController from "./adm/nested_fields_controller"
+application.register("adm-nested-fields", AdmNestedFieldsController)

@@ -135,6 +135,8 @@ de:
         projekt_questions:
           title: Kurzumfragen
           create_button: Frage erstellen
+          send_notifications_button: Benachrichtigungen senden
+          send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
           no_questions: Keine Kurzumfragen vorhanden.
           table:
             title: Titel

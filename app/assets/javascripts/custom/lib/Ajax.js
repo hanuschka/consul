@@ -1,6 +1,6 @@
 window.App.Ajax = {
   post: function(url, data) {
-    return this.request("POST", url, data)
+    return this.request({ method: "POST", url: url, data: data })
   },
 
   request: function(options) {

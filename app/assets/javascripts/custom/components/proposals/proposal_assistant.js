@@ -109,6 +109,7 @@
     },
 
     tryToPushInitialDataToDtAssistant: function() {
+      // console.log("tryToPushInitialDataToDtAssistant", this.initialData)
       this.postMessageToDtIframe(
         "Dt.VoiceAssistant.setInitialData", this.initialData
       )

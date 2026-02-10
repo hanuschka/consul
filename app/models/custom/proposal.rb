@@ -48,10 +48,13 @@ class Proposal < ApplicationRecord
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }
 
+  scope :discard_draft,            -> { published }
+  scope :discard_archived,         -> { not_archived }
+
   scope :for_public_render,        -> {
     includes(:tags)
-      .published #discard_draft
-      .not_archived # discard_archived
+      .discard_draft
+      .discard_archived
       .not_retired
   }
 

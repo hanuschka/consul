@@ -43,6 +43,9 @@ ProjektStudio.Sidebar = {
     iconClassList.toggle("fa-eye-slash", !sectionDeactivatedNew);
     iconClassList.toggle("fa-eye", sectionDeactivatedNew);
 
+    const newTitle = sectionDeactivatedNew ? e.currentTarget.dataset.offTitle : e.currentTarget.dataset.onTitle;
+    e.currentTarget.setAttribute("title", newTitle);
+
     // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
     const settingValue = sectionDeactivatedNew  ? "" : "active"

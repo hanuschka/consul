@@ -1,7 +1,7 @@
 <div class="sidebar-users-list">
   <div class="sidebar-users-list--images" role="list">
     <% @users.last(5).each do |user| %>
-      <%= link_to user, class: "sidebar-users-list--image", role: "listitem" do %>
+      <%= link_to user, class: "sidebar-users-list--image", role: "listitem", title: user.name, aria: { label: user.name } do %>
         <% if user.image.present? %>
           <%= image_tag(user.image&.variant(:thumb)) %>
         <% else %>

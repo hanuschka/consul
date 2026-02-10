@@ -101,6 +101,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.intermediate_poll_results_for_admins": "active",
           "feature.resource.stats_enabled": "",
           "feature.resource.advanced_stats_enabled": "",
+          "feature.resource.evaluation_enabled": "",
           "feature.resource.show_comments": "active",
           "feature.resource.show_open_answer_author_name": ""
         },
@@ -130,7 +131,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
-          "feature.resource.show_video_as_link": ""
+          "feature.resource.show_video_as_link": "",
+          "feature.resource.hide_ballots_count": ""
         },
 
         "ProjektPhase::QuestionPhase" => {

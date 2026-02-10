@@ -95,10 +95,8 @@ class DeficiencyReportsController < ApplicationController
       )
     )
 
-    @deficiency_report.responsible = @deficiency_report.get_default_responsible
-    @deficiency_report.assigned_at = Time.zone.now if @deficiency_report.responsible.present?
-
     if @deficiency_report.save
+      @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
       redirect_to deficiency_report_path(@deficiency_report)

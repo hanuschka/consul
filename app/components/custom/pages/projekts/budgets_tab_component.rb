@@ -29,14 +29,15 @@ class Pages::Projekts::BudgetsTabComponent < ApplicationComponent
   def coordinates
     return unless budget.present?
 
-    if budget.publishing_prices_or_later? && budget.investments.selected.any?
-      investments = budget.investments.selected
+    investments = if budget.publishing_prices_or_later? && budget.investments.selected.any?
+      budget.investments.selected
     else
-      investments = budget.investments
+      budget.investments
     end
 
-    MapLocation.where(investment_id: investments).map do |map_location|
-      map_location.features_json_data
-    end
+    MapLocation
+      .with_investment_associations
+      .where(mappable_id: investments.pluck(:id))
+      .map(&:features_json_data)
   end
 end

@@ -1,3 +1,5 @@
+<% provide :title do %><%= t("custom.projekts.index.title") %><% end %>
+
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
     social_title: t("custom.projekts.index.title"),
@@ -36,7 +38,7 @@
           current_filter: @current_projekts_filter,
           text_search_enabled: true,
           filters: @active_projekts_filters,
-          resource_link_additional_url_params: (@landing_page.present? ? { page_ref: @landing_page&.slug } : nil),
+          resource_link_additional_url_params: (@landing_page.present? ? { landing_page: @landing_page&.slug } : nil),
         ) do |c| %>
           <% c.with_items_remark do %>
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>
@@ -73,6 +75,7 @@
         <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(geozones: @geozones, resource_name: @resource_name, selected_affiliated_geozones: @affiliated_geozones) %>
         <%= render Sidebar::CategoriesCardComponent.new(categories: @categories) if @categories.any? %>
         <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
+        <%= render Sidebar::Filters::PhasesCardComponent.new(phases: @phases, selected_phase_type: @selected_phase_type) if @phases.any? %>
       <%# <% end %>
     </div>
   </div>

@@ -11,9 +11,11 @@
       <% end %>
       <% if investment.should_show_ballots?(controller_path: controller_path, current_user: current_user) %>
         <div class="margin-bottom-10">
-          <strong>
-            <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
-          </strong>
+          <% if !projekt_phase_feature?(investment.projekt_phase, "resource.hide_ballots_count") %>
+            <strong>
+              <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
+            </strong>
+          <% end %>
         </div>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
@@ -47,9 +49,11 @@
       <% end %>
       <% if investment.should_show_ballots?(controller_path: controller_path, current_user: current_user) %>
         <div class="margin-bottom-10">
-          <strong>
-            <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
-          </strong>
+          <% if !projekt_phase_feature?(investment.projekt_phase, "resource.hide_ballots_count") %>
+            <strong>
+              <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
+            </strong>
+          <% end %>
         </div>
 
         <% if investment.budget.distributed_voting? %>
@@ -93,7 +97,7 @@
     </div>
   <% end %>
 
-  <% if controller_name != "offline_ballots" && (!current_user&.administrator? || !current_user&.poll_officer?) %>
+  <% if !((current_user&.administrator? || current_user&.officing_manager?) && controller_path.in?(["officing/budgets", "budgets/ballot/lines"])) %>
     <% unless ballot.conditional? %>
       <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
     <% end %>

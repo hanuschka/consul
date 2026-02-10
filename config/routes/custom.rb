@@ -1,5 +1,6 @@
+get "blobs/:key",            to: "blobs#show", as: :blob_asset
 get "ckeditor/assets",      to: "ckeditor/assets#index"
-get "ckeditor/assets/:key", to: "ckeditor/assets#show", as: :ckeditor_asset
+get "ckeditor/assets/:key", to: "blobs#show"
 
 namespace :ckeditor do
   resources :pictures, only: [:create, :update, :destroy] do

@@ -83,7 +83,6 @@ group :test do
   gem "capybara", "~> 3.39.2"
   gem "capybara-webmock", "~> 0.7.0"
   gem "email_spec", "~> 2.2.2"
-  gem "pdf-reader"
   gem "rspec-rails", "~> 5.1.2"
   gem "selenium-webdriver", "~> 4.16.0"
   gem "simplecov", "~> 0.22.0", require: false

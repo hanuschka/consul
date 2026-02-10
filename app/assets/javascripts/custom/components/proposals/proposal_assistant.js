@@ -109,6 +109,7 @@
     },
 
     tryToPushInitialDataToDtAssistant: function() {
+      // console.log("tryToPushInitialDataToDtAssistant", this.initialData)
       this.postMessageToDtIframe(
         "Dt.VoiceAssistant.setInitialData", this.initialData
       )
@@ -247,7 +248,7 @@
             })
           }
         }
-      } else if (App.Map.anyMapInitialized()) {
+      } else if (App.Map.maps.length > 0) {
         App.Map.setMarkerTo(coordinates[0], coordinates[1], false)
       }
     },

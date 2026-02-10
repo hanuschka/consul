@@ -230,7 +230,7 @@ module Statisticable
     end
 
     def geozones
-      Geozone.all.order("name")
+      RegisteredAddress::District.present? ? RegisteredAddress::District.all.order("name") : Geozone.all.order("name")
     end
 
     def geozone_stats

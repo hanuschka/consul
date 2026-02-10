@@ -1,0 +1,10 @@
+<% if projekt_phase.is_a?(ProjektPhase::ProposalPhase) || projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
+  <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.key_metrics") %></h2>
+  <%= render "shared/stats/participation", stats: stats %>
+  <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: projekt_phase) %>
+
+  <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.distributions") %></h2>
+  <%= render ParticapationStats::TimelineComponent.new(projekt_phase: projekt_phase) %>
+  <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: projekt_phase) %>
+  <%= render ParticapationStats::UserSegmentsComponent.new(stats: stats) %>
+<% end %>

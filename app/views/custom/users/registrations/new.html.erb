@@ -20,6 +20,7 @@
         <%= f.hidden_field :locale, value: I18n.locale %>
 
         <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
+                                     autocomplete: "on",
                                      placeholder: t("devise_views.users.registrations.new.username_label"),
                                      "aria-label": t("devise_views.users.registrations.new.username_label"),
                                      hint: username_hint %>

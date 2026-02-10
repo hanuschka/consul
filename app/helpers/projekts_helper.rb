@@ -29,14 +29,20 @@ module ProjektsHelper
     Setting["extended_feature.modulewide.show_affiliation_filter_in_index_sidebar"].present? ? true : false
   end
 
-  def prepare_projekt_name(projekt, placement = nil)
+  def prepare_projekt_name(projekt, placement = nil, landing_page: nil)
     classes = []
     # classes.push("draft-projekt") unless projekt.activated?
 
+    url = if landing_page.present?
+      landing_page_projekt_page_path(landing_page_slug: landing_page, id: projekt.page.slug)
+    else
+      projekt.page.url
+    end
+
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, projekt.page.url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
-      link_to projekt.page.title, projekt.page.url, class: classes.join(" ")
+      link_to projekt.page.title, url, class: classes.join(" ")
     else
       projekt.page.title
     end

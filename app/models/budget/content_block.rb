@@ -5,5 +5,15 @@ class Budget
 
     belongs_to :heading
     delegate :name, to: :heading, allow_nil: true
+
+    before_validation :repair_html_body
+
+    private
+
+    def repair_html_body
+      return if body.blank?
+
+      self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
+    end
   end
 end

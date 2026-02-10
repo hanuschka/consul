@@ -1,27 +1,19 @@
 window.App.Ajax = {
   post: function(url, data) {
-    return this.request("POST", url, data)
+    return this.request({ method: "POST", url: url, data: data })
   },
 
-  request: function(type, url, data) {
-    $.ajax({
-      type: type,
-      url: url,
+  request: function(options) {
+    const csrfToken = $("meta[name='csrf-token']").attr("content");
+
+    const defaultOptions = {
       headers: {
-        'X-CSRF-TOKEN': this.getCsrfToken()
-      },
-      data: data
-    });
-  },
+        "X-CSRF-Token": csrfToken
+      }
+    };
 
-  getCsrfToken: function() {
-    var csrfTokenElement =  document.querySelector('meta[name="csrf-token"]');
+    const mergedOptions = $.extend(true, {}, defaultOptions, options);
 
-    if (csrfTokenElement) {
-      return csrfTokenElement.getAttribute("content")
-    }
-    else {
-      return null
-    }
+    return $.ajax(mergedOptions);
   }
 }

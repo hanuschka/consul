@@ -1,5 +1,4 @@
-<div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
-
+<li id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
   <div class="projekt-event-item-new-calendar-column" aria-hidden="true">
     <div class="projekt-event-item-new-calendar">
       <div class="projekt-event-item-new-calendar-dayname">
@@ -24,55 +23,119 @@
     </div>
   </div>
 
-  <div class="projekt-event-item-new-body">
-    <h3 class="projekt-event-item-new-body--title">
-      <% if @show_projekt_link && projekt_event.projekt.published? %>
-        <%= link_to(projekt_event.title, projekt_event.projekt.page.url) %>
-      <% else %>
-        <%= projekt_event.title %>
-      <% end %>
-    </h3>
-    <% if projekt_event.description.present? %>
-      <div class="projekt-event-item-new--description-text-wrapper">
-        <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>
-          <% component.with_inner_content do %>
-            <div class="projekt-event-item-new--description-text">
-              <%= helpers.auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(projekt_event.description) %>
+  <div class="u-flex u-flex-column projekt-event-item-new--column">
+    <div class="projekt-event-item-new--inner">
+      <div class="projekt-event-item-new-body">
+        <h2 class="projekt-event-item-new-body--title">
+          <% if @show_projekt_link && projekt_event.projekt.published? %>
+            <%= link_to(projekt_event.title, projekt_event.projekt.page.url) %>
+          <% else %>
+            <%= projekt_event.title %>
+          <% end %>
+        </h2>
+        <% if projekt_event.description.present? %>
+          <div class="projekt-event-item-new--description-text-wrapper">
+            <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>
+              <% component.with_inner_content do %>
+                <div class="projekt-event-item-new--description-text">
+                  <%= helpers.auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(projekt_event.description) %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="projekt-event-item-new-body--details">
+          <% if projekt_event.projekt.page.published? %>
+            <div class="projekt-event-item-new-body--details-row">
+              <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.name) %>"></i>
+              <span>
+                <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"}, aria: { hidden: true }, tabindex: "-1" do %>
+                  <%= projekt_event.projekt.name %>
+                <% end %>
+              </span>
             </div>
           <% end %>
-        <% end %>
-      </div>
-    <% end %>
-    <div class="projekt-event-item-new-body--details">
-      <% if projekt_event.projekt.page.published? %>
-        <div class="projekt-event-item-new-body--details-row">
-          <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.name) %>"></i>
-          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"}, aria: { hidden: true }, tabindex: "-1" do %>
-            <%= projekt_event.projekt.name %>
+          <div class="projekt-event-item-new-body--details-row">
+            <i class="fa fa-map"></i>
+            <span>
+              <%= l(projekt_event.datetime, format: "%d. %B %Y %H:%M") %>
+              <% if projekt_event.end_datetime.present? %>
+                - <%= l(projekt_event.end_datetime, format: "%d. %B %Y %H:%M") %>
+            <% elsif projekt_event.open_ended? %>
+              (<%= projekt_event.class.human_attribute_name(:open_ended) %>)
+            <% end %>
+            </span>
+          </div>
+          <% if projekt_event.location.present? %>
+            <div class="projekt-event-item-new-body--details-row">
+              <i class="fa fa-map-marker-alt"></i>
+              <span><%= projekt_event.location %></span>
+            </div>
+          <% end %>
+          <% if projekt_event.weblink.present? %>
+            <div class="projekt-event-item-new-body--details-row">
+              <i class="fa fa-globe"></i>
+              <span><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></span>
+            </div>
           <% end %>
         </div>
-      <% end %>
-      <div class="projekt-event-item-new-body--details-row">
-        <i class="fa fa-map"></i><%= l(projekt_event.datetime, format: "%d. %B %Y %H:%M") %>
-        <% if projekt_event.end_datetime.present? %>
-          -
-          <%= l(projekt_event.end_datetime, format: "%d. %B %Y %H:%M") %>
-        <% elsif projekt_event.open_ended? %>
-          (<%= projekt_event.class.human_attribute_name(:open_ended) %>)
-        <% end %>
       </div>
-      <% if projekt_event.location.present? %>
-        <div class="projekt-event-item-new-body--details-row"><i class="fa fa-map-marker-alt"></i><%= projekt_event.location %></div>
+
+      <% if projekt_event.image.present? %>
+        <div class="projekt-event-item-new-image">
+          <%= image_tag projekt_event.image.variant(:projekt_event_thumb) %>
+        </div>
       <% end %>
-      <% if projekt_event.weblink.present? %>
-        <div class="projekt-event-item-new-body--details-row"><i class="fa fa-globe"></i><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></div>
+    </div>
+    <div class="projekt-event-item-new-body--details-second">
+      <% if projekt_event.language.present? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-language"></i>
+          <span><%= projekt_event.language %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.wheelchair_accessible? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-wheelchair"></i>
+          <span><%= ProjektEvent.human_attribute_name(:wheelchair_accessible) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.accessible_toilet? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-toilet"></i>
+          <span><%= ProjektEvent.human_attribute_name(:accessible_toilet) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.disabled_parking_nearby? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-parking"></i>
+          <span><%= ProjektEvent.human_attribute_name(:disabled_parking_nearby) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.tactile_guidance_systems? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-walking"></i>
+          <span><%= ProjektEvent.human_attribute_name(:tactile_guidance_systems) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.induction_loop_available? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-volume-up"></i>
+          <span><%= ProjektEvent.human_attribute_name(:induction_loop_available) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.assistance_dogs_welcome? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-dog"></i>
+          <span><%= ProjektEvent.human_attribute_name(:assistance_dogs_welcome) %></span>
+        </div>
+      <% end %>
+      <% if projekt_event.sign_language_interpreter? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-sign-language"></i>
+          <span><%= ProjektEvent.human_attribute_name(:sign_language_interpreter) %></span>
+        </div>
       <% end %>
     </div>
   </div>
-
-  <% if projekt_event.image.present? %>
-    <div class="projekt-event-item-new-image">
-      <%= image_tag projekt_event.image.variant(:projekt_event_thumb) %>
-    </div>
-  <% end %>
-</div>
+</li>

@@ -40,6 +40,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-show-more-text data-show-less-text
       data-pswp-width data-pswp-height
       data-turbolinks
+      data-box-shadow
       url
     ]
   end

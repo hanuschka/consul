@@ -129,6 +129,8 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
     contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = '';
+
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {

@@ -67,7 +67,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    const toolbarBorder = contentBlockWrapper.querySelector('.projekt-content-block--toolsets-border');
+    const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolset-anchor');
     toolbarBorder.after(popup);
 
     popup.style.display = 'block';
@@ -124,6 +124,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
         const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
         ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
       }
+
+      ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
     }
   },
 

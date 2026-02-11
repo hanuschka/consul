@@ -85,15 +85,15 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   rerenderContentBlockListControls() {
-    const hasContentBlocks = $('.js-content-blocks-list .js-content-block').length > 1
+    const hasNoContentBlocks = $('.js-content-blocks-list .js-content-block').length === 0
 
-    if (!hasContentBlocks) {
+    if (hasNoContentBlocks) {
       this.addContentBlockAfter = null
     }
 
-    $(".js-projekt-content-start-section").toggle(show)
-    $(".js-add-first-content-block-wrapper").toggle(show)
-    $(".js-delete-all-content-blocks").toggle(show)
+    $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
+    $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
+    $(".js-delete-all-content-blocks").toggle(hasNoContentBlocks)
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {

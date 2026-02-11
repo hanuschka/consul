@@ -196,7 +196,7 @@ class PagesController < ApplicationController
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+      @stats = @projekt_phase
     else
       if params[:search].present?
         @resources = @resources.search(params[:search])

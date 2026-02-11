@@ -55,7 +55,7 @@
         <% end %>
       <% end %>
     </div>
-  <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
+  <% elsif stats.is_a?(ProjektPhase::ProposalPhase) %>
     <div class="number-stats-cards margin-bottom">
       <%= render(AiStats::StatCardComponent.new(
         title: t("custom.projekt_phases.stats.proposal_phase.total_unique_participants_count.title"),
@@ -114,7 +114,7 @@
       <% end %>
     </div>
 
-    <div class="kpi-stats-pie-grid">
+    <div class="kpi-stats-pie-grid margin-bottom">
       <% stats.participations.each do |participation| %>
         <% if participation == "gender" %>
           <%= render Stats::GenderStatsComponent.new(stats: stats) %>

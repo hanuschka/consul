@@ -28,7 +28,13 @@ class ProjektPhasesController < ApplicationController
     authorize!(:refresh_stats, @projekt_phase)
 
     @projekt_phase.stats_version&.destroy!
-    @projekt_phase.update(stats_refreshed_at: Time.current)
+
+    if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+      ProjektPhase::ProposalPhase::StatsService.new(@projekt_phase).call
+      @projekt_phase.reload
+    else
+      @projekt_phase.update(stats_refreshed_at: Time.current)
+    end
 
     respond_to do |format|
       format.html do
@@ -100,7 +106,7 @@ class ProjektPhasesController < ApplicationController
   def render_participation_stats_sections
     case @projekt_phase
     when ProjektPhase::ProposalPhase
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+      @stats = @projekt_phase
     when ProjektPhase::BudgetPhase
       @budget = @projekt_phase.budget
       @stats = Budget::Stats.new(@budget) if @budget
@@ -129,7 +135,7 @@ class ProjektPhasesController < ApplicationController
 
     case @projekt_phase
     when ProjektPhase::ProposalPhase
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+      @stats = @projekt_phase
     when ProjektPhase::BudgetPhase
       @budget = @projekt_phase.budget
       @stats = Budget::Stats.new(@budget) if @budget

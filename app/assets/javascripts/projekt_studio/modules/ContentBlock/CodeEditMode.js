@@ -61,7 +61,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const relativeContainer = contentBlockWrapper.querySelector('.relative');
     if (!relativeContainer) return;
 
-    const toolsetsBorder = relativeContainer.querySelector('.projekt-content-block--toolsets-border');
+    const toolsetsBorder = relativeContainer.querySelector('.js-projekt-content-block--toolbar');
     if (toolsetsBorder) {
       toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
     } else {
@@ -153,11 +153,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     this.hideCodeEditModeControls(contentBlockWrapper);
     contentBlockWrapper.dataset.editMode = '';
 
-    // setTimeout(() => {
-    //   contentBlockWrapper.scrollIntoView({
-    //     block: "start", inline: "nearest"
-    //   })
-    // }, 0)
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelCodeEditMode(e) {

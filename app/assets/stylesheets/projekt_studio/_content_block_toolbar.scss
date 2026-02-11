@@ -1,0 +1,42 @@
+.projekt-content-block--toolbar-border {
+  width: 98.5%;
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 0 auto;
+  margin-bottom: 12px;
+}
+
+.projekt-content-block--toolbar {
+  // margin-top: 15px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 10px;
+  border-radius: 8px;
+  align-self: flex-start;
+  flex-direction: row-reverse;
+}
+
+.projekt-content-block-wrapper.-in-edit-mode {
+  .relative {
+    overflow: visible;
+  }
+
+  .projekt-content-block--toolbar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: $topbar-height + 10px;
+    outline: 2px solid #c9dced;
+    box-shadow: 2px 2px 10px #c9dcedba;
+    z-index: 10;
+  }
+}
+
+main:has(.projekt-page--admin-topbar) {
+  .projekt-content-block-wrapper.-in-edit-mode {
+    .projekt-content-block--toolbar {
+      top: $topbar-height + $admin-topbar-height + 10px;
+    }
+  }
+}

@@ -49,7 +49,7 @@ ProjektStudio.ContentBlock.DomHelpers = {
   },
 
   scrollToContentBlockTop(contentBlockWrapper) {
-    const toolbar = contentBlockWrapper.querySelector('.js-projekt-content-block--toolset-anchor');
+    const toolbar = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
     const anchor = toolbar || contentBlockWrapper;
     setTimeout(() => {
       anchor.scrollIntoView({ block: "center" });

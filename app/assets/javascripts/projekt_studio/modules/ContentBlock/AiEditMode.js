@@ -67,7 +67,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolset-anchor');
+    const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
     toolbarBorder.after(popup);
 
     popup.style.display = 'block';

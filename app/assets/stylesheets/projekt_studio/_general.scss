@@ -163,7 +163,7 @@ body.custom-new-design {
   }
 }
 
-.projekt-content-block--toolsets-border {
+.projekt-content-block--toolbar-border {
   width: 98.5%;
   height: 1px;
   background-color: #dcdcdc;
@@ -171,7 +171,7 @@ body.custom-new-design {
   margin-bottom: 12px;
 }
 
-.projekt-content-block--toolsets {
+.projekt-content-block--toolbar {
   // margin-top: 15px;
   position: relative;
   z-index: 2;
@@ -188,7 +188,7 @@ body.custom-new-design {
     overflow: visible;
   }
 
-  .projekt-content-block--toolsets {
+  .projekt-content-block--toolbar {
     position: -webkit-sticky;
     position: sticky;
     top: $topbar-height + 1px;
@@ -199,7 +199,7 @@ body.custom-new-design {
 
 main:has(.projekt-page--admin-topbar) {
   .projekt-content-block-wrapper.-in-edit-mode {
-    .projekt-content-block--toolsets {
+    .projekt-content-block--toolbar {
       top: $topbar-height + $admin-topbar-height + 1px;
     }
   }

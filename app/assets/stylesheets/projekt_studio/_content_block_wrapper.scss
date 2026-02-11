@@ -87,7 +87,7 @@
   &.-draft {
     opacity: 0.7;
 
-    .projekt-content-block--toolsets {
+    .projekt-content-block--toolbar {
       pointer-events: none;
       opacity: 0.3;
       filter: grayscale(1);
@@ -99,7 +99,7 @@
       border-bottom: none;
     }
 
-    .projekt-content-block--toolsets {
+    .projekt-content-block--toolbar {
       // background-color: #F1F8FC;
       background-color: #f1f8fccc;
       backdrop-filter: blur(2px);

@@ -116,16 +116,13 @@
     },
 
     requestSession: async function() {
-      const searchParams = new URLSearchParams(window.location.search);
       const dataset = this.element.dataset;
-
       const response = await App.Ajax.request({
         method: "POST",
         url: dataset.createSessionUrl,
         data: {
           codename: dataset.codename,
-          consul_projekt_phase_id: searchParams.get("consul_projekt_phase_id"),
-          data: this.initialData
+          consul_projekt_phase_id: dataset.projektPhaseId
         }
       });
 
@@ -245,7 +242,7 @@
     sendGreeting: function() {
       const language = this.element.dataset.language;
       const greetingText =
-        language === "en" ? "Let's start." : "Lasst uns beginnen.";
+        language === "en" ? "Hi" : "Hallo";
 
       const greetingMessage = {
         type: "response.create",
@@ -255,7 +252,7 @@
         }
       };
 
-      const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 100;
+      const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 350;
 
       setTimeout(function() {
         App.VoiceAssistant.dataChannel.send(JSON.stringify(greetingMessage));
@@ -403,7 +400,6 @@
     generateImage: function(prompt) {
       this.showImageGeneratingAnimation();
 
-      const searchParams = new URLSearchParams(window.location.search);
       const dataset = this.element.dataset;
 
       setTimeout(function() {
@@ -413,7 +409,7 @@
           data: {
             prompt: prompt,
             codename: dataset.codename,
-            consul_projekt_phase_id: searchParams.get("consul_projekt_phase_id")
+            consul_projekt_phase_id: dataset.projektPhaseId
           }
         })
         .then(function(imageData) {

@@ -1,75 +1,7 @@
-.voice-assistant-round-button {
-  display: flex;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: 50px;
-  height: 50px;
-  padding: 0;
-  border-radius: 100%;
-  color: white;
-  background-color: #4a4a4a;
-  font-size: 28px;
-  justify-content: center;
-  align-items: center;
-  transition: 200ms ease all;
-  will-change: left;
-  z-index: 2;
-  margin-top: 0;
-  border-top: 1px solid hsla(0, 0%, 100%, .1);
-  border-right: 1px solid hsla(0, 0%, 100%, .05);
-  margin-bottom: 0 !important;
-
-  &:not(:disabled) {
-    &:hover {
-      background-color: #5b5959;
-    }
-
-    &:active {
-      background-color: #5f5f5f;
-    }
-  }
-
-  &:disabled {
-    opacity: 1;
-
-    &:hover {
-      background-color: #4a4a4a;
-      color: inherit;
-    }
-  }
-}
-
-.voice-assistant-topbar {
-  display: flex;
-  justify-content: flex-start;
-  position: relative;
-  padding-left: 15px;
-  padding-top: 2px;
-  margin-bottom: 5px;
-
-  h2 {
-    text-align: left;
-    margin-bottom: 0 !important;
-    padding-top: 3px;
-    padding-bottom: 2px;
-  }
-}
-
-@keyframes startingTextAnimation {
-  from { opacity: 0.55; }
-  to   { opacity: 0.8; }
-}
-
-.voice-assistant-statusbar-value[data-status-value="starting"] {
-  opacity: 0.55;
-  will-change: opacity;
-}
 
 .voice-assistant {
   width: 335px;
-  height: 100px;
+  height: 105px;
   position: fixed;
   bottom: 8px;
   left: 0;
@@ -213,6 +145,75 @@
       opacity: 1;
     }
   }
+}
+
+.voice-assistant-round-button {
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  border-radius: 100%;
+  color: white;
+  background-color: #4a4a4a;
+  font-size: 28px;
+  justify-content: center;
+  align-items: center;
+  transition: 200ms ease all;
+  will-change: left;
+  z-index: 2;
+  margin-top: 0;
+  border-top: 1px solid hsla(0, 0%, 100%, .1);
+  border-right: 1px solid hsla(0, 0%, 100%, .05);
+  margin-bottom: 0 !important;
+
+  &:not(:disabled) {
+    &:hover {
+      background-color: #5b5959;
+    }
+
+    &:active {
+      background-color: #5f5f5f;
+    }
+  }
+
+  &:disabled {
+    opacity: 1;
+
+    &:hover {
+      background-color: #4a4a4a;
+      color: inherit;
+    }
+  }
+}
+
+.voice-assistant-topbar {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  padding-left: 15px;
+  padding-top: 2px;
+  margin-bottom: 5px;
+
+  h2 {
+    text-align: left;
+    margin-bottom: 0 !important;
+    padding-top: 3px;
+    padding-bottom: 2px;
+  }
+}
+
+@keyframes startingTextAnimation {
+  from { opacity: 0.55; }
+  to   { opacity: 0.8; }
+}
+
+.voice-assistant-statusbar-value[data-status-value="starting"] {
+  opacity: 0.55;
+  will-change: opacity;
 }
 
 .voice-assistant-panel {

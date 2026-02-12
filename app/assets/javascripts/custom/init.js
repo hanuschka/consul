@@ -23,7 +23,7 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
-      App.ProposalAssistant.initialize();
+      App.VoiceAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();

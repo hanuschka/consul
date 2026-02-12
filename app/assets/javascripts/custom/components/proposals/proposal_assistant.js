@@ -316,8 +316,17 @@
       const args = JSON.parse(message.arguments);
 
       switch (message.name) {
-        case "generateResource":
-          this.handleGenerateResource(args);
+        case "createResource":
+          this.handleResourceCreate(args);
+          break;
+        case "createProposal":
+          this.handleResourceCreate(args);
+          break;
+        case "createBudgetInvestment":
+          this.handleResourceCreate(args);
+          break;
+        case "createDeficiencyReport":
+          this.handleResourceCreate(args);
           break;
         case "updateTitle":
           this.updateTitle(args.value);
@@ -355,7 +364,7 @@
       }
     },
 
-    handleGenerateResource: function(args) {
+    handleResourceCreate: function(args) {
       if (args.title) { this.updateTitle(args.title); }
       if (args.description) { this.updateDescription(args.description); }
       if (args.image_prompt) { this.generateImage(args.image_prompt); }
@@ -415,7 +424,7 @@
         .then(function(imageData) {
           App.VoiceAssistant.updateImage(imageData.image);
         });
-      }, 3000);
+      }, 100);
     },
 
     updateTitle: function(title, scroll) {
@@ -522,7 +531,11 @@
     },
 
     updateImage: function(image) {
-      var imageFileInput = document.querySelector(".js-direct-image-upload--input");
+      var imageFileInput = $(".js-direct-image-upload:visible")
+        .first()
+        .find(".js-direct-image-upload--input")
+        .get(0);
+
       setBase64ToFileInput(imageFileInput, image);
     },
 
@@ -613,6 +626,26 @@
     }
   };
 
+  // function setBase64ToFileInput(fileInput, base64String) {
+  //   // Add data URI prefix if missing
+  //   if (!base64String.startsWith("data:")) {
+  //     base64String = "data:image/jpeg;base64," + base64String;
+  //   }
+
+  //   const [meta, data] = base64String.split(",");
+  //   const mime = meta.match(/:(.*?);/)[1];
+  //   const binary = atob(data);
+  //   const bytes = new Uint8Array(binary.length);
+
+  //   for (let i = 0; i < binary.length; i++) {
+  //     bytes[i] = binary.charCodeAt(i);
+  //   }
+
+  //   const file = new File([bytes], "image.jpg", { type: mime });
+  //   const dt = new DataTransfer();
+  //   dt.items.add(file);
+  //   fileInput.files = dt.files;
+  // }
   function setBase64ToFileInput(fileInput, base64String) {
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);
@@ -621,10 +654,13 @@
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "image/jpeg" });
+
     const file = new File([blob], "generated_image.jpg", { type: "image/jpeg" });
+
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
     fileInput.files = dataTransfer.files;
-    fileInput.dispatchEvent(new Event("change"));
+    $(fileInput).trigger("change");
   }
+
 }).call(this);

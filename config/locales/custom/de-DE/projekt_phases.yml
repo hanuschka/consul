@@ -3,20 +3,75 @@ de:
     projekt_phases:
       stats:
         budget_phase:
-          total_investments:
-            tooltip: "Gesamtzahl der eingereichten Vorschläge in dieser Phase"
-          total_participants:
-            tooltip: "Anzahl der eindeutigen Teilnehmer*innen, die Vorschläge erstellt, unterstützt oder Kommentare verfasst haben"
-          total_supports:
-            tooltip: "Gesamtzahl der Unterstützungen für alle Vorschläge"
-          total_votes:
-            tooltip: "Gesamtzahl aller abgegebenen Stimmen (online und offline)"
-          total_feasible_investments:
-            tooltip: "Anzahl der Vorschläge, die als kriterienkonform bewertet wurden"
-          total_unfeasible_investments:
-            tooltip: "Anzahl der Vorschläge, die als nicht kriterienkonform bewertet wurden"
-          total_selected_investments:
-            tooltip: "Anzahl der Vorschläge, die zur finalen Abstimmung zugelassen wurden"
+          accepting:
+            title: "Vorschläge einreichen"
+            visible_proposals_count:
+              title: "Eingereichte Vorschläge"
+              tooltip: "Anzahl aller eingereichten und aktuell sichtbaren Vorschläge in dieser Phase."
+            proposal_authors_count:
+              title: "Aktive Autoren"
+              tooltip: "Anzahl der unterschiedlichen Nutzer, die mindestens einen Vorschlag eingereicht haben."
+            comments_count:
+              title: "Kommentare"
+              tooltip: "Gesamtanzahl aller veröffentlichten Kommentare."
+            reported_proposals_count:
+              title: "Gemeldete Vorschläge"
+              tooltip: "Anzahl der Vorschläge, die mindestens einmal von Nutzern gemeldet wurden."
+          reviewing:
+            title: "Interne Prüfung"
+            pending_proposals_count:
+              title: "Noch nicht bewertet"
+              tooltip: "Anzahl der Vorschläge, die noch keiner fachlichen Prüfung unterzogen wurden."
+            approved_proposals_count:
+              title: "Entspricht den Kriterien"
+              tooltip: "Anzahl der geprüften Vorschläge, die alle festgelegten Kriterien erfüllen."
+            rejected_proposals_count:
+              title: "Entspricht nicht den Kriterien"
+              tooltip: "Anzahl der geprüften Vorschläge, die die Kriterien nicht erfüllen."
+          selecting:
+            title: "Unterstützungsphase"
+            unique_supporters_count:
+              title: "Unterstützer"
+              tooltip: "Anzahl der eindeutigen Nutzer, die mindestens einen Vorschlag unterstützt haben."
+            total_votes_count:
+              title: "Unterstützungen gesamt"
+              tooltip: "Gesamtanzahl aller abgegebenen Unterstützungen."
+            online_votes_count:
+              title: "Online-Unterstützungen"
+              tooltip: "Anzahl aller online abgegebenen Unterstützungen in der Vorauswahl."
+            offline_votes_count:
+              title: "Offline-Unterstützungen"
+              tooltip: "Anzahl aller offline erfassten und nachträglich eingepflegten Unterstützungen."
+          publishing_prices:
+            title: "Auswahl für Abstimmung"
+            selected_proposals_count:
+              title: "Für Abstimmung berücksichtigt"
+              tooltip: "Anzahl der Vorschläge, die für die finale Abstimmung zugelassen wurden."
+            not_selected_proposals_count:
+              title: "Nicht berücksichtigt"
+              tooltip: "Anzahl der Vorschläge, die nicht zur Abstimmung zugelassen wurden."
+          balloting:
+            title: "Abstimmung"
+            unique_voters_count:
+              title: "Wähler"
+              tooltip: "Anzahl der eindeutigen Nutzer, die an der Abstimmung teilgenommen haben."
+            total_votes_count:
+              title: "Stimmen gesamt"
+              tooltip: "Gesamtanzahl aller abgegebenen Stimmen in der Abstimmung."
+            weighted_votes_total:
+              title: "Gewichtete Stimmen"
+              tooltip: "Gesamtanzahl der gewichteten Stimmen gemäß dem gewählten Abstimmungsmodell."
+            weighted_votes_online:
+              title: "Gewichtete Stimmen (online)"
+              tooltip: "Gewichtete Stimmen, die online abgegeben wurden."
+            weighted_votes_offline:
+              title: "Gewichtete Stimmen (offline)"
+              tooltip: "Gewichtete Stimmen, die offline erfasst wurden."
+          finished:
+            title: "Abschluss"
+            winners_count:
+              title: "Gewinner"
+              tooltip: "Anzahl der Vorschläge, die als Gewinner des Bürgerbudgets festgelegt wurden."
         proposal_phase:
           total_unique_participants_count:
             title: "Teilnehmer*innen gesamt"

@@ -1,60 +1,168 @@
 <div id="participation_statistics">
 
-  <% if stats.is_a?(Budget::Stats) && !stats.is_a?(Budget::Investment::Stats) %>
-    <div class="number-stats-cards margin-bottom">
-      <%= render(AiStats::StatCardComponent.new(
-        title: t("stats.budgets.total_investments"),
-        tooltip: t("custom.projekt_phases.stats.budget_phase.total_investments.tooltip")
-      )) do %>
-        <div class="number"><%= stats.total_budget_investments %></div>
-      <% end %>
-
-      <%= render(AiStats::StatCardComponent.new(
-        title: t("stats.total_participants"),
-        tooltip: t("custom.projekt_phases.stats.budget_phase.total_participants.tooltip")
-      )) do %>
-        <div class="number"><%= stats.total_participants %></div>
-      <% end %>
-
-      <%= render(AiStats::StatCardComponent.new(
-        title: t("stats.supports"),
-        tooltip: t("custom.projekt_phases.stats.budget_phase.total_supports.tooltip")
-      )) do %>
-        <div class="number"><%= stats.total_supports %></div>
-      <% end %>
-
-      <%= render(AiStats::StatCardComponent.new(
-        title: t("stats.budgets.total_votes"),
-        tooltip: t("custom.projekt_phases.stats.budget_phase.total_votes.tooltip")
-      )) do %>
-        <div class="number"><%= stats.total_votes %></div>
-      <% end %>
-
-      <% unless params[:stats_section] == "accepting" %>
+  <% if stats.is_a?(ProjektPhase::BudgetPhase) %>
+    <% if stats.has_accepting_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.accepting.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
         <%= render(AiStats::StatCardComponent.new(
-          title: t("stats.budgets.total_feasible_investments"),
-          tooltip: t("custom.projekt_phases.stats.budget_phase.total_feasible_investments.tooltip")
+          title: t("custom.projekt_phases.stats.budget_phase.accepting.visible_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.accepting.visible_proposals_count.tooltip")
         )) do %>
-          <div class="number"><%= stats.total_feasible_investments %></div>
+          <div class="number"><%= stats.accepting_visible_proposals_count %></div>
         <% end %>
 
         <%= render(AiStats::StatCardComponent.new(
-          title: t("stats.budgets.total_unfeasible_investments"),
-          tooltip: t("custom.projekt_phases.stats.budget_phase.total_unfeasible_investments.tooltip")
+          title: t("custom.projekt_phases.stats.budget_phase.accepting.proposal_authors_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.accepting.proposal_authors_count.tooltip")
         )) do %>
-          <div class="number"><%= stats.total_unfeasible_investments %></div>
+          <div class="number"><%= stats.accepting_proposal_authors_count %></div>
         <% end %>
-      <% end %>
 
-      <% if @budget.valuating_or_later? %>
         <%= render(AiStats::StatCardComponent.new(
-          title: t("stats.budgets.total_selected_investments"),
-          tooltip: t("custom.projekt_phases.stats.budget_phase.total_selected_investments.tooltip")
+          title: t("custom.projekt_phases.stats.budget_phase.accepting.comments_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.accepting.comments_count.tooltip")
         )) do %>
-          <div class="number"><%= stats.total_selected_investments %></div>
+          <div class="number"><%= stats.accepting_comments_count %></div>
         <% end %>
-      <% end %>
-    </div>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.accepting.reported_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.accepting.reported_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.accepting_reported_proposals_count %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if stats.has_reviewing_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.reviewing.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.reviewing.pending_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.reviewing.pending_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.reviewing_pending_proposals_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.reviewing.approved_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.reviewing.approved_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.reviewing_approved_proposals_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.reviewing.rejected_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.reviewing.rejected_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.reviewing_rejected_proposals_count %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if stats.has_selecting_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.selecting.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.selecting.unique_supporters_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.selecting.unique_supporters_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.selecting_unique_supporters_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.selecting.total_votes_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.selecting.total_votes_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.selecting_total_votes_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.selecting.online_votes_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.selecting.online_votes_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.selecting_online_votes_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.selecting.offline_votes_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.selecting.offline_votes_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.selecting_offline_votes_count %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if stats.has_publishing_prices_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.publishing_prices.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.publishing_prices.selected_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.publishing_prices.selected_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.publishing_prices_selected_proposals_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.publishing_prices.not_selected_proposals_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.publishing_prices.not_selected_proposals_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.publishing_prices_not_selected_proposals_count %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if stats.has_balloting_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.balloting.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.balloting.unique_voters_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.balloting.unique_voters_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.balloting_unique_voters_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.balloting.total_votes_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.balloting.total_votes_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.balloting_total_votes_count %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_total.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_total.tooltip")
+        )) do %>
+          <div class="number"><%= stats.balloting_weighted_votes_total %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_online.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_online.tooltip")
+        )) do %>
+          <div class="number"><%= stats.balloting_weighted_votes_online %></div>
+        <% end %>
+
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_offline.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.balloting.weighted_votes_offline.tooltip")
+        )) do %>
+          <div class="number"><%= stats.balloting_weighted_votes_offline %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if stats.has_finished_stats? %>
+      <h2 class="participation-stats--section-title"><%= t("custom.projekt_phases.stats.budget_phase.finished.title") %></h2>
+      <div class="number-stats-cards margin-bottom">
+        <%= render(AiStats::StatCardComponent.new(
+          title: t("custom.projekt_phases.stats.budget_phase.finished.winners_count.title"),
+          tooltip: t("custom.projekt_phases.stats.budget_phase.finished.winners_count.tooltip")
+        )) do %>
+          <div class="number"><%= stats.finished_winners_count %></div>
+        <% end %>
+      </div>
+    <% end %>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase) %>
     <div class="number-stats-cards margin-bottom">
       <%= render(AiStats::StatCardComponent.new(

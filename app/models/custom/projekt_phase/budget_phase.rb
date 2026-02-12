@@ -1,4 +1,52 @@
 class ProjektPhase::BudgetPhase < ProjektPhase
+  store_accessor :stats,
+    :accepting_visible_proposals_count,
+    :accepting_proposal_authors_count,
+    :accepting_comments_count,
+    :accepting_reported_proposals_count,
+    :reviewing_pending_proposals_count,
+    :reviewing_approved_proposals_count,
+    :reviewing_rejected_proposals_count,
+    :selecting_unique_supporters_count,
+    :selecting_total_votes_count,
+    :selecting_online_votes_count,
+    :selecting_offline_votes_count,
+    :publishing_prices_selected_proposals_count,
+    :publishing_prices_not_selected_proposals_count,
+    :balloting_unique_voters_count,
+    :balloting_total_votes_count,
+    :balloting_weighted_votes_total,
+    :balloting_weighted_votes_online,
+    :balloting_weighted_votes_offline,
+    :finished_winners_count
+
+  def has_accepting_stats?
+    accepting_visible_proposals_count.to_i > 0 || accepting_proposal_authors_count.to_i > 0
+  end
+
+  def has_reviewing_stats?
+    reviewing_approved_proposals_count.to_i > 0 ||
+      reviewing_rejected_proposals_count.to_i > 0 ||
+      reviewing_pending_proposals_count.to_i > 0
+  end
+
+  def has_selecting_stats?
+    selecting_total_votes_count.to_i > 0
+  end
+
+  def has_publishing_prices_stats?
+    publishing_prices_selected_proposals_count.to_i > 0 ||
+      publishing_prices_not_selected_proposals_count.to_i > 0
+  end
+
+  def has_balloting_stats?
+    balloting_total_votes_count.to_i > 0
+  end
+
+  def has_finished_stats?
+    finished_winners_count.to_i > 0
+  end
+
   has_one :budget, foreign_key: :projekt_phase_id,
     dependent: :destroy, inverse_of: :projekt_phase
 

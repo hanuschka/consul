@@ -2,7 +2,8 @@ class ProjektPhase::StatsRefreshJob < ApplicationJob
   queue_as :default
 
   STATS_SERVICES = {
-    ProjektPhase::ProposalPhase => ProjektPhase::ProposalPhase::StatsService
+    ProjektPhase::ProposalPhase => ProjektPhase::ProposalPhase::StatsService,
+    ProjektPhase::BudgetPhase   => ProjektPhase::BudgetPhase::StatsService
   }.freeze
 
   def perform(projekt_phase_id)

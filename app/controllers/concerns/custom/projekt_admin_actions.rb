@@ -123,7 +123,24 @@ module ProjektAdminActions
     @projekt.page.image = image
 
     if @projekt.page.save
-      render json: { status: { message: "Projekt page title image updated" }}
+      attachment = @projekt.page.image.attachment
+      lightbox_variant =
+        attachment
+          .variant(
+            resize_to_limit: [1750, 900],
+            saver: { quality: 80 },
+            strip: true,
+            format: "jpeg"
+          )
+          .processed
+
+      render json: {
+        status: { message: "Projekt page title image updated" },
+        image_url: polymorphic_path(
+          attachment.variant(resize_to_fill: [930, 585], coalesce: true, gravity: "center")
+        ),
+        lightbox_image_url: polymorphic_path(lightbox_variant)
+      }
     else
       render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
     end

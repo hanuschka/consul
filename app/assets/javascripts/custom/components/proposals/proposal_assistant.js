@@ -252,7 +252,7 @@
         }
       };
 
-      const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 200;
+      const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 350;
 
       setTimeout(function() {
         App.VoiceAssistant.dataChannel.send(JSON.stringify(greetingMessage));

@@ -1,5 +1,6 @@
+get "blobs/:key",            to: "blobs#show", as: :blob_asset
 get "ckeditor/assets",      to: "ckeditor/assets#index"
-get "ckeditor/assets/:key", to: "ckeditor/assets#show", as: :ckeditor_asset
+get "ckeditor/assets/:key", to: "blobs#show"
 
 namespace :ckeditor do
   resources :pictures, only: [:create, :update, :destroy] do
@@ -57,6 +58,8 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id", to: "budgets/inves
 
 post "iframe_sessions", to: "iframe_sessions#create"
 
-post "/voice_assistant/create_session", to: "voice_assistant#create_session"
+post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
+get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
+post "/voice_assistant/generate_image",               to: "voice_assistant#generate_image"
 
 resources :projekt_content_block_templates, only: [:index]

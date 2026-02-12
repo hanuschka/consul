@@ -12,9 +12,14 @@ class VoiceAssistantController < ActionController::Base
 
       data.merge!({
         projekt: {
-          title: projekt.title,
+          name: projekt.page.title,
+          page_content: projekt.page_content,
+          start_date: projekt.total_duration_start,
+          end_date: projekt.total_duration_end
         },
         projekt_phase: {
+          start_date: projekt_phase.start_date,
+          end_date: projekt_phase.end_date,
           labels: projekt_phase.projekt_labels.as_json(only: [:id, :name]),
           sentiments: projekt_phase.sentiments.as_json(only: [:id, :name, :color])
         }

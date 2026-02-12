@@ -149,7 +149,7 @@ class PagesController < ApplicationController
     set_comment_flags(@comment_tree.comments)
 
     if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
-      @stats = ProjektPhase::Stats.new(@projekt_phase)
+      @stats = @projekt_phase
     end
   end
 

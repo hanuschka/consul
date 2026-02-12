@@ -47,6 +47,42 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     finished_winners_count.to_i > 0
   end
 
+  def gender?
+    false
+  end
+
+  def age?
+    false
+  end
+
+  def geozone?
+    false
+  end
+
+  def individual_group?
+    false
+  end
+
+  def participations
+    []
+  end
+
+  def soft_individual_groups
+    IndividualGroup.none
+  end
+
+  def total_individual_group_value_participants(_value)
+    0
+  end
+
+  def participants_by_age
+    {}
+  end
+
+  def participants_by_geozone
+    {}
+  end
+
   has_one :budget, foreign_key: :projekt_phase_id,
     dependent: :destroy, inverse_of: :projekt_phase
 

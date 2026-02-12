@@ -18,9 +18,17 @@
   align-items: center;
   height: var(--admin-topbar-height);
 
+  @media(max-width: $mobile-viewport-start) {
+    top: calc(var(--topbar-height-mobile) + var(--mobile-custom-fixed-tabs-height));
+  }
+
   .button {
     margin: 0;
     padding: 6px 12px !important;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding: 6px 5px !important;
+    }
   }
 }
 
@@ -39,9 +47,17 @@
   display: flex;
   align-items: center;
   gap: 10px;
+
+  @media(max-width: $medium-tablet-viewport-start) {
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 .projekt-page--admin-topbar-left {
+  @media(max-width: $small-tablet-viewport-start) {
+    display: none;
+  }
 }
 
 .projekt-page--admin-topbar-right {

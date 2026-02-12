@@ -92,7 +92,26 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   toggleSimpleEditModeFor(contentBlock, enabled, endCallback) {
     this.toggleContentEditableFor(contentBlock, enabled)
 
-    setTimeout(() => {
+    if (enabled) {
+      setTimeout(() => {
+        this.toggleLinksInteration(contentBlock, enabled)
+        this.toggleGlighboxGallery(contentBlock, enabled)
+
+        ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
+          contentBlock, enabled
+        )
+        ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.toggleImageControls(
+          contentBlock, enabled
+        )
+        ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
+          contentBlock, enabled
+        )
+
+        if (endCallback) {
+          endCallback()
+        }
+      }, 10)
+    } else {
       this.toggleLinksInteration(contentBlock, enabled)
       this.toggleGlighboxGallery(contentBlock, enabled)
 
@@ -105,15 +124,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
         contentBlock, enabled
       )
-      if (!enabled) {
-        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
-      }
+
+      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
       if (endCallback) {
         endCallback()
       }
-
-    }, 10)
+    }
   },
 
   toggleGlighboxGallery(contentBlock, enabled) {

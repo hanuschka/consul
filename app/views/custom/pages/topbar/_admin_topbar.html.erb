@@ -1,6 +1,6 @@
 <div class="projekt-page--admin-topbar">
   <div class="projekt-page--admin-topbar--inner">
-    <div class="projekt-page--admin-topbar-left">
+    <div class="projekt-page--admin-topbar-left hide-on-medium-tablet">
       <button
         class="button hollow -selected js-admin-view-button js-view-mode-button"
         data-view-mode="admin"
@@ -31,14 +31,14 @@
       <% end %>
 
       <% if current_user&.administrator? %>
-        <%= link_to new_admin_newsletter_path(projekt_id: @projekt), class: "button hollow projekt-page--admin-topbar-button", target: "_blank" do %>
+        <%= link_to new_admin_newsletter_path(projekt_id: @projekt), class: "button hollow projekt-page--admin-topbar-button hide-on-small-tablet", target: "_blank" do %>
           <i class="fas fa-envelope"></i>
           <span><%= t("custom.projekts.page.topbar.create_newsletter_draft") %></span>
         <% end %>
       <% end %>
 
       <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
-        <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow projekt-page--admin-topbar-button" do %>
+        <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow projekt-page--admin-topbar-button hide-on-mobile" do %>
           <i class="fas fa-bell"></i>
           <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
         <% end %>

@@ -118,13 +118,9 @@
 
     requestSession: async function() {
       const dataset = this.element.dataset;
-      const response = await App.Ajax.request({
-        method: "POST",
-        url: dataset.createSessionUrl,
-        data: {
-          codename: dataset.codename,
-          consul_projekt_phase_id: dataset.projektPhaseId
-        }
+      const response = await App.Ajax.post(dataset.createSessionUrl, {
+        codename: dataset.codename,
+        consul_projekt_phase_id: dataset.projektPhaseId
       });
 
       await this.handleSessionInitialized(response.ephemeral_key, response.model);
@@ -423,6 +419,12 @@
         color: "#97d8ff",
         amplitude: 0.3
       });
+      // this.waveDecoration = new SiriWave({
+      //   container: this.element.querySelector(".js-voice-assistant-visualization-blur"),
+      //   speed: 0.05,
+      //   color: "#97d8ff",
+      //   amplitude: 0.3
+      // });
     },
 
     getSpeakButton: function() {

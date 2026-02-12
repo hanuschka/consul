@@ -46,11 +46,7 @@
       messagebar.classList.remove("-visible");
 
       App.Ajax
-        .request({
-          method: "GET",
-          url: this.element.dataset.geocodeUrl,
-          data: { location_name: locationName }
-        })
+        .get(this.element.dataset.geocodeUrl, { location_name: locationName })
         .then(function(locationJson) {
           messagebar.classList.remove("-error");
           messagebar.innerHTML = "";
@@ -118,14 +114,10 @@
 
       setTimeout(function() {
         App.Ajax
-          .request({
-            method: "POST",
-            url: dataset.generateImageUrl,
-            data: {
-              prompt: prompt,
-              codename: dataset.codename,
-              consul_projekt_phase_id: dataset.projektPhaseId
-            }
+          .post(dataset.generateImageUrl, {
+            prompt: prompt,
+            codename: dataset.codename,
+            consul_projekt_phase_id: dataset.projektPhaseId
           })
           .then(function(imageData) {
             App.AssistantUserResourceForm.updateImage(imageData.image);

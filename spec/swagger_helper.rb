@@ -65,6 +65,7 @@ RSpec.configure do |config|
       #   }
       # ],
       tags: [
+        { name: 'Auth', description: 'Authentication and token management' },
         { name: 'Projekts', description: 'Projekt management and core operations' },
         { name: 'Projekt Phases', description: 'Phases within projekts' },
         { name: 'Proposals', description: 'Proposals for projekt phases' },
@@ -87,6 +88,10 @@ RSpec.configure do |config|
         { name: 'Iframes', description: 'Embedded iframe content' }
       ],
       'x-tagGroups': [
+        {
+          name: 'Auth',
+          tags: ['Auth']
+        },
         {
           name: 'Projekts',
           tags: [

@@ -129,9 +129,17 @@ class Proposal < ApplicationRecord
     projekt_phase.feature?("form.anonimize_authors")
   end
 
+  after_commit :enqueue_stats_refresh
+
   protected
 
     def set_responsible_name
       self.responsible_name = 'unregistriered'
+    end
+
+    def enqueue_stats_refresh
+      return unless projekt_phase_id
+
+      ProjektPhase::StatsRefreshJob.perform_later(projekt_phase_id)
     end
 end

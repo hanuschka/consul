@@ -24,14 +24,33 @@ en:
         generate_ai_summary_button: "Generate AI summary"
         ai_summary_generated: "AI summary was successfully generated"
         proposal_phase:
-          proposals: Proposals
-          authors: Authors
-          participants: Participants
-          supports: Supports
-          weighted_score: Weighted Score
-          comments: Comments
-          hidden: Hidden
-          reported: Reported
+          total_unique_participants_count:
+            title: Total Participants
+            tooltip: Count of unique users who actively participated in the process. Includes proposal authors, users who supported proposals, and users who posted comments. Each user is counted once, even if they performed multiple actions.
+          visible_proposals_count:
+            title: Submitted Proposals
+            tooltip: Total number of proposals created within the phase, excluding proposals that are currently hidden.
+          proposal_authors_count:
+            title: Active Authors
+            tooltip: Count of unique users who have created at least one visible proposal. Each author is counted once, regardless of the number of proposals.
+          unique_supporters_count:
+            title: Supporters
+            tooltip: Count of unique users who have supported or voted on at least one proposal.
+          total_votes_count:
+            title: Total Supports
+            tooltip: Total number of all votes cast across all proposals. A single user may cast multiple votes.
+          online_votes_count:
+            title: Online Supports
+            tooltip: Total number of votes submitted via the online platform.
+          offline_votes_count:
+            title: Offline Supports
+            tooltip: Total number of votes that were collected offline and manually entered into the system.
+          visible_comments_count:
+            title: Public Comments
+            tooltip: Total number of published comments associated with proposals. Hidden comments are excluded.
+          reported_proposals_count:
+            title: Reported Proposals
+            tooltip: Total number of proposals that have received at least one user report.
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht

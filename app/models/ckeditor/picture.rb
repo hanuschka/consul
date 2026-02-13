@@ -27,10 +27,18 @@ class Ckeditor::Picture < Ckeditor::Asset
     end
   end
 
-  def custom_thumb_url(width: nil, height: nil)
+  def custom_thumb_url(width: nil, height: nil, pad: 0)
     if data_content_type == "image/gif"
       rails_blob_url(storage_data, only_path: true)
     else
+      if width.present?
+        width = width + pad
+      end
+
+      if height.present?
+        height = height + pad
+      end
+
       rails_representation_url(
         storage_data.variant(
           coalesce: true,

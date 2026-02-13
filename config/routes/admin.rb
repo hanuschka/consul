@@ -98,6 +98,7 @@ namespace :admin do
       patch :update_title_image
       patch :update_map
       post :notify_reviewers
+      patch :toggle_hide_content_background
     end
 
     resources :projekt_phases, only: [:create] do
@@ -113,6 +114,7 @@ namespace :admin do
     resources :projekt_content_blocks, only: [:create] do
       collection do
         post :import_document
+        post :generate_from_prompt
         get :import_status
         delete :destroy_all
       end

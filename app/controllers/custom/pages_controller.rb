@@ -151,6 +151,10 @@ class PagesController < ApplicationController
     @commentable = @projekt_phase
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
+
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = @projekt_phase
+    end
   end
 
   def set_debate_phase_footer_tab_variables
@@ -196,7 +200,7 @@ class PagesController < ApplicationController
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+      @stats = @projekt_phase
     else
       if params[:search].present?
         @resources = @resources.search(params[:search])
@@ -319,15 +323,7 @@ class PagesController < ApplicationController
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
     elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
-      params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
-      params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
-      params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]
-
-      if params["stats_section"].in? %w[accepting reviewing selecting valuating publishing_prices balloting]
-        @stats = Budget::PhaseStats.new(@budget, params["stats_section"])
-      else
-        @stats = Budget::Stats.new(@budget)
-      end
+      @stats = @projekt_phase
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)

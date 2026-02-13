@@ -3,6 +3,14 @@ module AdminHelper
     "/#{namespace}"
   end
 
+  def admin_namespace_for_current_user
+    if current_user.present? && current_user.administrator?
+      :admin
+    elsif current_user.present? && current_user.projekt_manager?
+      :projekt_management
+    end
+  end
+
   def namespaced_header_title
     if namespace == "moderation/budgets"
       t("moderation.header.title")

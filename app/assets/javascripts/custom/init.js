@@ -23,14 +23,18 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
-      App.ProposalAssistant.initialize();
+      App.VoiceAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
+      App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
+      App.ContentBlockTemplatesSelector.initialize();
+      App.AdminTopbarViewMode.initialize();
+      App.ProjektFooterSubnavUrlUpdater.initialize();
     }
   };
 }).call(this);

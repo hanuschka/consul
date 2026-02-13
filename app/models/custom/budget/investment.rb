@@ -12,6 +12,8 @@ class Budget
     ).freeze
 
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
+
+    after_commit :enqueue_stats_refresh
     delegate :approximated_address, to: :map_location, allow_nil: true
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
@@ -61,6 +63,13 @@ class Budget
       return 0 if total_ballot_votes.zero?
 
       (total_ballot_votes.to_f / heading.total_ballot_votes.to_f) * 100.0
+    end
+
+    def enqueue_stats_refresh
+      phase_id = budget&.projekt_phase_id
+      return unless phase_id
+
+      ProjektPhase::StatsRefreshJob.perform_later(phase_id)
     end
 
     def permission_problem(user)

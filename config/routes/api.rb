@@ -2,6 +2,10 @@
   get "/api/docs_alt", to: "docs#api_alt"
 
   namespace :api do
+    namespace :auth do
+      post :rotate_token, to: "auth/rotate_token#create"
+    end
+
     resources :projekts, shallow: true do
       member do
         patch :update_setting

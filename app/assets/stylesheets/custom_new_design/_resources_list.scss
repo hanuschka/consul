@@ -128,14 +128,14 @@
   }
 
   .resources-list--filter-title {
-    color: #919191;
+    color: $medium-gray-1;
     margin-right: 12px;
     display: flex;
     align-items: center;
   }
 
   .resources-list--filter-label {
-    color: #919191;
+    color: $medium-gray-1;
   }
 
   .resources-list--switch-view-button {
@@ -180,7 +180,7 @@
   .resources-list--inner {
     // display: grid;
     // grid-template-columns: repeat(3, 1fr);
-    grid-gap: 12px;
+    gap: 12px;
     display: flex;
     justify-items: center;
     align-items: flex-start;

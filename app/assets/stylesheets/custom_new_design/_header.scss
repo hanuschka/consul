@@ -96,13 +96,14 @@
     border-radius: 10px;
     word-wrap: break-word;
     max-width: 100%;
+    backdrop-filter: blur(5px);
   }
 
   .homepage-image-header--title-wrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 1245px;
+    max-width: $topbar-max-width;
     padding-top: 240px;
     margin: auto;
 
@@ -147,13 +148,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     margin-top: 0.65rem;
 
     label {
-      color: $dark
+      color: $dark;
     }
 
     .locale-switcher {
 
       &:focus {
-        outline: 3px solid #ffbf47 !important
+        outline: 3px solid #ffbf47 !important;
       }
     }
   }
@@ -177,8 +178,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: black !important;
-    color: white !important;
+    background: #dedede !important;
+    color: black !important;
   }
 
   .locale .locale-form select {
@@ -393,6 +394,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     color: white;
     height: 25px;
     background: #58a958;
+    background-color: #4a894a;
     border-radius: 50%;
     display: flex;
     justify-content: center;

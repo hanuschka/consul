@@ -55,5 +55,10 @@ $welcometextpositionlarge:    rem-calc(25);
 $welcomespan:                 $brand;
 
 
+:root {
+  --brand-color: #{$brand};
+  --main-background-color: #{$main-background-color};
+}
+
 // fonts
 @import "custom_fonts";

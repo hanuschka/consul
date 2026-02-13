@@ -495,6 +495,50 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/auth/rotate_token":
+    post:
+      summary: Rotate API access token
+      tags:
+      - Auth
+      security:
+      - bearer_auth: []
+      description: Regenerates the access token for the authenticated API client.
+        The old token is immediately invalidated and the new token is returned. Any
+        authenticated client can rotate its own token.
+      responses:
+        '200':
+          description: old token is invalidated after rotation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: sk_abc123...
+                    required:
+                    - access_token
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budgets/{budget_id}/investments":
     parameters:
     - name: budget_id
@@ -2683,6 +2727,30 @@ paths:
                     open_ended:
                       type: boolean
                       nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
+                      type: boolean
+                      nullable: true
                   required:
                   - title
               required:
@@ -2800,6 +2868,30 @@ paths:
                       type: string
                       nullable: true
                     open_ended:
+                      type: boolean
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    wheelchair_accessible:
+                      type: boolean
+                      nullable: true
+                    accessible_toilet:
+                      type: boolean
+                      nullable: true
+                    disabled_parking_nearby:
+                      type: boolean
+                      nullable: true
+                    tactile_guidance_systems:
+                      type: boolean
+                      nullable: true
+                    induction_loop_available:
+                      type: boolean
+                      nullable: true
+                    assistance_dogs_welcome:
+                      type: boolean
+                      nullable: true
+                    sign_language_interpreter:
                       type: boolean
                       nullable: true
         description: Attributes to update on the event
@@ -6345,19 +6437,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type. Required
                         for creation.
                     start_date:
@@ -6631,19 +6723,19 @@ paths:
                       enum:
                       - ProjektPhase::CommentPhase
                       - ProjektPhase::ProposalPhase
+                      - ProjektPhase::PointOfInterestPhase
                       - ProjektPhase::QuestionPhase
                       - ProjektPhase::VotingPhase
+                      - ProjektPhase::IframePhase
                       - ProjektPhase::BudgetPhase
                       - ProjektPhase::LegislationPhase
                       - ProjektPhase::FormularPhase
-                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::EventPhase
                       - ProjektPhase::MilestonePhase
                       - ProjektPhase::ProjektNotificationPhase
-                      - ProjektPhase::EventPhase
+                      - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
-                      - ProjektPhase::IframePhase
-                      - ProjektPhase::PointOfInterestPhase
                       description: Phase type determining participation type.
                     start_date:
                       type: string
@@ -8793,6 +8885,8 @@ paths:
                         items:
                           type: string
 tags:
+- name: Auth
+  description: Authentication and token management
 - name: Projekts
   description: Projekt management and core operations
 - name: Projekt Phases
@@ -8834,6 +8928,9 @@ tags:
 - name: Iframes
   description: Embedded iframe content
 x-tagGroups:
+- name: Auth
+  tags:
+  - Auth
 - name: Projekts
   tags:
   - Projekts
@@ -9383,19 +9480,19 @@ components:
           enum:
           - ProjektPhase::CommentPhase
           - ProjektPhase::ProposalPhase
+          - ProjektPhase::PointOfInterestPhase
           - ProjektPhase::QuestionPhase
           - ProjektPhase::VotingPhase
+          - ProjektPhase::IframePhase
           - ProjektPhase::BudgetPhase
           - ProjektPhase::LegislationPhase
           - ProjektPhase::FormularPhase
-          - ProjektPhase::LivestreamPhase
+          - ProjektPhase::EventPhase
           - ProjektPhase::MilestonePhase
           - ProjektPhase::ProjektNotificationPhase
-          - ProjektPhase::EventPhase
+          - ProjektPhase::LivestreamPhase
           - ProjektPhase::ArgumentPhase
           - ProjektPhase::NewsfeedPhase
-          - ProjektPhase::IframePhase
-          - ProjektPhase::PointOfInterestPhase
           description: 'The type of projekt phase that determines what kind of participation
             or content is available. Regular phases: CommentPhase (discussion/feedback),
             ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),

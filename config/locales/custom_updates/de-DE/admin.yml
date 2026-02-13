@@ -671,6 +671,7 @@ de:
       projekt_events:
         edit:
           title: Veranstaltung bearbeiten
+          accessibility_features: Barrierefreiheit
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite

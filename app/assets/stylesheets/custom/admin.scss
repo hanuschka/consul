@@ -269,6 +269,7 @@ $connection-badge-success-color: #007a2f;
 $connection-badge-warning-color: #d7a518;
 $connection-badge-error-color: #a33a29;
 $connection-badge-blue-color: #1a6fa8;
+$connection-badge-gray-color: #6b7280;
 
 .admin-connection-status {
   padding: 2rem;
@@ -315,6 +316,11 @@ $connection-badge-blue-color: #1a6fa8;
     color: $connection-badge-blue-color;
     background-color: mix($connection-badge-blue-color, white, 18%);
   }
+
+  &.-gray {
+    color: $connection-badge-gray-color;
+    background-color: mix($connection-badge-gray-color, white, 15%);
+  }
 }
 
 .admin-connection-checks--badge-header {
@@ -350,6 +356,10 @@ $connection-badge-blue-color: #1a6fa8;
   .admin-connection-checks--badge.-blue & {
     color: mix($connection-badge-blue-color, black, 50%);
   }
+
+  .admin-connection-checks--badge.-gray & {
+    color: mix($connection-badge-gray-color, black, 50%);
+  }
 }
 
 .admin-connection-checks--badge-hint {
@@ -372,6 +382,10 @@ $connection-badge-blue-color: #1a6fa8;
 
   .admin-connection-checks--badge.-blue & {
     color: mix($connection-badge-blue-color, gray, 40%);
+  }
+
+  .admin-connection-checks--badge.-gray & {
+    color: mix($connection-badge-gray-color, gray, 40%);
   }
 }
 

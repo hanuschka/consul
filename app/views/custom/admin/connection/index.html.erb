@@ -2,30 +2,39 @@
   <h1 class="admin-connection-status--title"><%= t(".title") %></h1>
 
   <ul class="admin-connection-checks">
-    <%= render Admin::ConnectionBadgeComponent.new(
-      status: @connection_works ? "success" : "error",
-      icon: @connection_works ? "fa-check" : "fa-xmark",
-      label: t(@connection_works ? ".checks.connection_works.label_ok" : ".checks.connection_works.label_fail"),
-      description: t(@connection_works ? ".checks.connection_works.description_ok" : ".checks.connection_works.description_fail"),
-      hint: t(".checks.connection_works.hint"),
-      error: @connection_error
-    ) %>
+    <% if @api_accessible && @dt_connected %>
+      <%= render Admin::ConnectionBadgeComponent.new(
+        status: @connection_works ? "success" : "error",
+        icon: @connection_works ? "fa-check" : "fa-xmark",
+        label: t(@connection_works ? ".checks.connection_works.label_ok" : ".checks.connection_works.label_fail"),
+        description: t(@connection_works ? ".checks.connection_works.description_ok" : ".checks.connection_works.description_fail"),
+        hint: t(".checks.connection_works.hint"),
+        error: @connection_error
+      ) %>
+    <% end %>
+
+    <% if @dt_connected %>
+      <%= render Admin::ConnectionBadgeComponent.new(
+        status: @api_accessible ? "success" : "error",
+        icon: @api_accessible ? "fa-check" : "fa-xmark",
+        label: t(@api_accessible ? ".checks.api_accessible.label_ok" : ".checks.api_accessible.label_fail"),
+        description: t(@api_accessible ? ".checks.api_accessible.description_ok" : ".checks.api_accessible.description_fail"),
+        hint: t(".checks.api_accessible.hint"),
+        error: @api_accessible_error
+      ) %>
+    <% end %>
 
     <%= render Admin::ConnectionBadgeComponent.new(
-      status: @api_accessible ? "success" : "error",
-      icon: @api_accessible ? "fa-check" : "fa-xmark",
-      label: t(@api_accessible ? ".checks.api_accessible.label_ok" : ".checks.api_accessible.label_fail"),
-      description: t(@api_accessible ? ".checks.api_accessible.description_ok" : ".checks.api_accessible.description_fail"),
-      hint: t(".checks.api_accessible.hint")
-    ) %>
-
-    <%= render Admin::ConnectionBadgeComponent.new(
-      status: @dt_connected ? "blue" : "warning",
+      status: @dt_connected ? "blue" : "gray",
       icon: @dt_connected ? "fa-plug" : "fa-exclamation",
       label: t(@dt_connected ? ".checks.dt_connected.label_ok" : ".checks.dt_connected.label_fail"),
       description: t(@dt_connected ? ".checks.dt_connected.description_ok" : ".checks.dt_connected.description_fail"),
-      hint: t(".checks.dt_connected.hint")
+      hint: t(".checks.dt_connected.hint"),
+      error: @dt_connected_error
     ) %>
-
   </ul>
+
+  <div class="margin-top">
+    <%= render InternalApiClients::ConnectToClientComponent.new %>
+  </div>
 </div>

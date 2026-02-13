@@ -171,3 +171,14 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
 }
+
+.budget-phase-stats-section-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 1rem;
+
+  .participation-stats--section-title {
+    margin-top: 0;
+  }
+}

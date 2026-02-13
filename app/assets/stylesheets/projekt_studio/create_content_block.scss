@@ -249,10 +249,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
   flex-direction: column;
+}
+
+.projekt-file-import-preview-info-wrapper {
+  min-height: 42px;
 }
 
 .projekt-file-import-preview-info {
@@ -286,15 +287,12 @@
 }
 
 .projekt-file-import-preview-actions {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
 }
 
 .js-projekt-file-import-cancel {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 5px;
+  right: 10px;
 }
 
 .projekt-file-import-preview-prompt {

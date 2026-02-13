@@ -5,33 +5,20 @@
     initialize() {
       const $document = $(document);
 
-      $document.on("click", ".js-projekt-empty-block-trigger", this.handleEmptyBlockTrigger.bind(this));
-      $document.on("click", ".js-projekt-template-trigger", this.handleTemplateTrigger.bind(this));
+      $document.on("click", ".js-projekt-empty-block-trigger", this.createEmptyContentBlock.bind(this));
+      $document.on("click", ".js-projekt-template-trigger", this.openTemplateSelector.bind(this));
     },
 
-    handleEmptyBlockTrigger(e) {
+    createEmptyContentBlock(e) {
       e.preventDefault();
-      this.createEmptyBlock();
-    },
 
-    handleTemplateTrigger(e) {
-      e.preventDefault();
-      this.openTemplateSelector();
-    },
-
-    createEmptyBlock() {
       ProjektStudio.ContentBlock.Crud.addInitialEmptyContentBlock()
     },
 
-    openTemplateSelector() {
-      const container = document.querySelector(".js-projekt-content-start-section");
+    openTemplateSelector(e) {
+      e.preventDefault();
 
-      if (container && $('#contentBlockTemplatesModal').length) {
-        ProjektStudio.ContentBlock.Crud.addContentBlockAfter = container;
-        $('#contentBlockTemplatesModal').foundation('open');
-      } else {
-        alert("Vorlagen-Dialog ist nicht verfügbar");
-      }
+      ProjektStudio.ContentBlockTemplateSelector.openDialog()
     }
   };
 }).call(this);

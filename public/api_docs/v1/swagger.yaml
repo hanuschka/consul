@@ -495,6 +495,50 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/auth/rotate_token":
+    post:
+      summary: Rotate API access token
+      tags:
+      - Auth
+      security:
+      - bearer_auth: []
+      description: Regenerates the access token for the authenticated API client.
+        The old token is immediately invalidated and the new token is returned. Any
+        authenticated client can rotate its own token.
+      responses:
+        '200':
+          description: old token is invalidated after rotation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: sk_abc123...
+                    required:
+                    - access_token
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budgets/{budget_id}/investments":
     parameters:
     - name: budget_id
@@ -8841,6 +8885,8 @@ paths:
                         items:
                           type: string
 tags:
+- name: Auth
+  description: Authentication and token management
 - name: Projekts
   description: Projekt management and core operations
 - name: Projekt Phases
@@ -8882,6 +8928,9 @@ tags:
 - name: Iframes
   description: Embedded iframe content
 x-tagGroups:
+- name: Auth
+  tags:
+  - Auth
 - name: Projekts
   tags:
   - Projekts

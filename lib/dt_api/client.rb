@@ -43,6 +43,10 @@ class DtApi::Client
     )
   end
 
+  def connection
+    @connection ||= DtApi::Resources::Connection.new(self)
+  end
+
   def content_block_templates
     @content_block_templates ||= DtApi::Resources::ContentBlockTemplates.new(self)
   end

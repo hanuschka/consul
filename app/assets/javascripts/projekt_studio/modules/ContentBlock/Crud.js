@@ -93,7 +93,7 @@ ProjektStudio.ContentBlock.Crud = {
 
     $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
     $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
-    $(".js-delete-all-content-blocks").toggle(hasNoContentBlocks)
+    $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
@@ -204,6 +204,12 @@ ProjektStudio.ContentBlock.Crud = {
     const nextContentBlockSection = contentBlockWrapper.nextElementSibling
     const prevContentBlockSection = contentBlockWrapper.previousElementSibling
     const scrollTo = nextContentBlockSection || prevContentBlockSection
+
+    // Clean up tooltips on content block destroy
+    contentBlockWrapper.querySelectorAll("[data-tooltip]").each((element) => {
+      const instance = $(element).data("zf.tooltip");
+      if (instance) instance.destroy();
+    })
 
     contentBlockWrapper.remove()
 

@@ -178,11 +178,16 @@ module Ai::RubyLlmFactory
       username = proxy_config[:username]
       password = proxy_config[:password]
 
-      if username.present?
-        "http://#{username}:#{password}@#{address}:#{port}"
-      else
-        "http://#{address}:#{port}"
-      end
+      uri =
+        if username.present?
+          "http://#{username}:#{password}@#{address}:#{port}"
+        else
+          "http://#{address}:#{port}"
+        end
+
+      Rails.logger.debug "[Ai::RubyLlmFactory] Using proxy: #{uri}"
+
+      uri
     end
   end
 end

@@ -1,5 +1,5 @@
 class InternalApiClients::ConnectToClientComponent < ApplicationComponent
   def render?
-    Dt.enabled?
+    !Dt.enabled?
   end
 end

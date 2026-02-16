@@ -157,6 +157,50 @@ de:
             comments: Kommentare
             final_version: Endversion
             actions: Aktionen
+        formular:
+          title: Formularfelder
+          create_button: Neues Feld erstellen
+          primary_fields_title: Primäre Felder
+          follow_up_fields_title: Follow-up Felder
+          no_fields: Keine primären Felder vorhanden.
+          no_follow_up_fields: Keine Follow-up Felder vorhanden.
+          table:
+            name: Name
+            kind: Typ
+            required: Pflichtfeld
+            actions: Aktionen
+          kinds:
+            string: Textfeld
+            textarea: Textbereich
+            email: E-Mail
+            date: Datum
+            dropdown: Dropdown
+            image: Bild
+            document: Dokument
+            description: Beschreibung
+        formular_answers:
+          title: Einsendungen
+          emails_title: Follow-up E-Mails
+          new_email_title: Einsendungen & neue E-Mail erstellen
+          download_csv: CSV herunterladen
+          create_email_draft: E-Mail-Entwurf erstellen
+          no_answers: Keine Einsendungen vorhanden.
+          table:
+            submitter: Einsender-ID
+            email: E-Mail
+            submitted_at: Eingereicht am
+          letters_table:
+            subject: Betreff
+            recipients: Empfänger
+            status: Status
+            actions: Aktionen
+            no_subject: "(Kein Betreff)"
+            draft: Entwurf
+            sent_at: "Gesendet am %{date}"
+            follow_up_emails: Follow-up E-Mail(s)
+            send_emails: E-Mails versenden
+            send_confirm: Möchten Sie die E-Mails wirklich versenden?
+            delete_confirm: Möchten Sie diesen Entwurf wirklich löschen?
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
@@ -175,3 +219,6 @@ de:
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
           legislation_process_draft_versions: Textentwürfe
+          formular: Formularfelder
+          formular_answers: Einsendungen
+          settings: Einstellungen

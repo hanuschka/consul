@@ -63,6 +63,13 @@ de:
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
             comments_count: Meist Kommentiert
+    formular_phase:
+      option:
+        general:
+          submissions_limit: Maximale Anzahl an Einsendungen pro Nutzer
+          submissions_limit_description: Legt fest, wie oft ein Nutzer das Formular ausfüllen darf.
+          primary_formular_cutoff_date: Ende der 1. Phase
+          primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
     iframe_phase:
       option:
         general:

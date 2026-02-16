@@ -125,8 +125,42 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def budget_edit; end
   def budget_investments; end
   def poll_questions; end
-  def formular; end
-  def formular_answers; end
+  def formular
+    authorize_phase(:update?)
+    @formular = @projekt_phase.formular
+    @formular_fields_primary = @formular.formular_fields.primary
+    @formular_fields_follow_up = @formular.formular_fields.follow_up
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def formular_answers
+    authorize_phase(:update?)
+    @formular = @projekt_phase.formular
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
+    @formular_follow_up_letters = @formular.formular_follow_up_letters
+
+    respond_to do |format|
+      format.html do
+        @breadcrumbs = [
+          { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+          { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::FormularAnswersExporter.call(@formular),
+          filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
+      end
+    end
+  end
   def milestones; end
   def progress_bars; end
   def legislation_process_draft_versions

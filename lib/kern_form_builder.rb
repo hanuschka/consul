@@ -2,7 +2,6 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   INPUT_METHODS = %i[
     text_field
     text_area
-    date_field
     number_field
     password_field
     email_field
@@ -19,6 +18,21 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       form_group(field, field_errors, options, hint_text) do
         super(field, options)
       end
+    end
+  end
+
+  def date_field(field, options = {})
+    field_errors = field_errors(field)
+    hint_text = options.delete(:hint)
+
+    options[:class] = input_classes(options[:class], field_errors)
+    options[:aria]  = input_aria(field, field_errors, hint_text)
+
+    value = options.fetch(:value) { object&.send(field) }
+    options[:value] = value.is_a?(String) ? value.presence : value
+
+    form_group(field, field_errors, options, hint_text) do
+      super(field, options)
     end
   end
 

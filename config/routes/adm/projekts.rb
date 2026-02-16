@@ -68,6 +68,12 @@ namespace :adm do
       end
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :legislation_draft_versions, except: %i[index show]
+      resources :formular_fields, except: %i[index show]
+      resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
+        member do
+          post :send_emails
+        end
+      end
       resources :proposals, only: [:show] do
         member do
           patch :toggle_admin_accepted

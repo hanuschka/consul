@@ -5,18 +5,18 @@
                           ["only_citizens", t("adm.projekts.phases.restrictions.geozone.only_citizens")],
                           ["only_geozones", t("adm.projekts.phases.restrictions.geozone.only_geozones")],
                           ["only_streets", t("adm.projekts.phases.restrictions.geozone.only_streets")]] %>
-    <div class="kern-fieldset__body mb-4" data-controller="related-options" data-action="input->related-options#toggle">
+    <div class="kern-fieldset__body mb-4" data-controller="related-content" data-action="input->related-content#toggle">
       <% geozone_options.each do |value, label| %>
         <div class="kern-form-check">
           <%= f.radio_button :geozone_restricted, value,
               class: "kern-form-check__radio",
               disabled: disabled,
-              data: value.in?(["only_geozones", "only_streets"]) ? { related_options_target: "trigger" } : {} %>
+              data: value.in?(["only_geozones", "only_streets"]) ? { related_content_target: "trigger" } : {} %>
           <%= f.label :geozone_restricted, label, value: value, class: "kern-label" %>
         </div>
 
         <% if value == "only_geozones" %>
-          <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_geozones' %>" data-related-options-target="content">
+          <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_geozones' %>" data-related-content-target="content">
             <%= f.collection_check_boxes(:registered_address_district_ids, RegisteredAddress::District.all, :id, :name) do |b| %>
               <div class="kern-form-check mb-2">
                 <%= b.check_box(class: "kern-form-check__checkbox", disabled: disabled) %>
@@ -25,7 +25,7 @@
             <% end %>
           </div>
         <% elsif value == "only_streets" %>
-          <div class="options-group mt-2 pl-3 mb-2" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_streets' %>" data-related-options-target="content">
+          <div class="options-group mt-2 pl-3 mb-2" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_streets' %>" data-related-content-target="content">
             <div data-controller="street-selector"
                  data-street-selector-search-url-value="<%= search_adm_registered_address_streets_path %>"
                  data-street-selector-field-name-value="<%= f.object_name %>[registered_address_street_ids][]">

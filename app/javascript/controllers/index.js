@@ -44,8 +44,8 @@ application.register("mode-switcher", ModeSwitcherController)
 import MapController from "./map_controller"
 application.register("map", MapController)
 
-import RelatedOptionsController from "./related_options_controller"
-application.register("related-options", RelatedOptionsController)
+import RelatedContentController from "./related_content_controller"
+application.register("related-content", RelatedContentController)
 
 import AutoRemoveController from "./auto_remove_controller"
 application.register("auto-remove", AutoRemoveController)
@@ -67,3 +67,10 @@ application.register("map-screenshot", MapScreenshotController)
 
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
+
+import CheckAllController from "./check_all_controller"
+application.register("check-all", CheckAllController)
+
+import FormularFieldsKindController from "./formular_fields/kind_controller"
+application.register("formular-fields--kind", FormularFieldsKindController)
+

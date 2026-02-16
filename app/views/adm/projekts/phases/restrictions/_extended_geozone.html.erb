@@ -3,7 +3,7 @@
     <% disabled = projekt_phase.user_status == "guest" %>
     <% current_restriction = projekt_phase.registered_address_grouping_restriction %>
 
-    <div class="kern-fieldset__body mb-4" data-controller="related-options" data-action="input->related-options#toggle">
+    <div class="kern-fieldset__body mb-4" data-controller="related-content" data-action="input->related-content#toggle">
       <div class="kern-form-check">
         <%= f.radio_button :registered_address_grouping_restriction, "no_restriction",
             class: "kern-form-check__radio",
@@ -17,11 +17,11 @@
           <%= f.radio_button :registered_address_grouping_restriction, grouping.key,
               class: "kern-form-check__radio",
               disabled: disabled,
-              data: { related_options_target: "trigger" } %>
+              data: { related_content_target: "trigger" } %>
           <%= f.label :registered_address_grouping_restriction, "#{grouping.name} (#{grouping.key})", value: grouping.key, class: "kern-label" %>
         </div>
 
-        <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless current_restriction == grouping.key %>" data-related-options-target="content">
+        <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless current_restriction == grouping.key %>" data-related-content-target="content">
           <%= f.fields_for :registered_address_grouping_restrictions do |ff| %>
             <%= ff.collection_check_boxes grouping.key, grouping.restriction_options, :to_s, :to_s do |b| %>
               <div class="kern-form-check mb-2">

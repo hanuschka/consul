@@ -29,6 +29,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
       ProjektStudio.ContentBlock.EditModeSwitcher.initialize()
+      ProjektStudio.ContentBlock.EditModeButtons.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize()
@@ -39,9 +40,9 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.AiEditMode.initialize()
       ProjektStudio.ContentBlock.CodeEditMode.initialize()
       ProjektStudio.ContentBlock.Copy.initialize()
-      ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       ProjektStudio.FileImport.initialize()
+      ProjektStudio.ToggleBackground.initialize()
       // ExplainWithAi.initialize()
 
       this.initialized = true;

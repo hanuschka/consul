@@ -45,10 +45,15 @@ class Ai::GenerateContentBlock < ApplicationService
       #{@content_block_html}
     TEXT
 
+    Rails.logger.debug "[Ai::GenerateContentBlock] Sending prompt to LLM (#{prompt.length} chars total)"
+
     llm_response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
         .ask(prompt)
+
+    Rails.logger.debug "[Ai::GenerateContentBlock] LLM response — model: #{llm_response.model}, input_tokens: #{llm_response.input_tokens}, output_tokens: #{llm_response.output_tokens}"
+    Rails.logger.debug "[Ai::GenerateContentBlock] LLM response content: #{llm_response.content.inspect}"
 
     llm_response.content["html"]
   end
@@ -60,11 +65,16 @@ class Ai::GenerateContentBlock < ApplicationService
   def fetch_prompt
     cache_key = "dt_api/consul_ai_prompts/content_block_ai_edit"
 
+    Rails.logger.debug "[Ai::GenerateContentBlock] Fetching prompt from DT API (cache_key: #{cache_key})"
+
     parsed_response = DtApi::Caching.get_with_cache(cache_key) do
+      Rails.logger.debug "[Ai::GenerateContentBlock] Cache miss — calling DT API"
       DtApi::Client.new.consul_ai_prompts.get(:content_block_ai_edit)
     end
 
-    parsed_response.dig("consul_ai_prompt", "prompt")
+    prompt_text = parsed_response.dig("consul_ai_prompt", "prompt")
+    Rails.logger.debug "[Ai::GenerateContentBlock] Fetched prompt (#{prompt_text&.length || 0} chars): #{prompt_text&.truncate(200)}"
+    prompt_text
   end
 
   def output_schema

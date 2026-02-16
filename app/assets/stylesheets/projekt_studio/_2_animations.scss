@@ -1,0 +1,53 @@
+@keyframes content-block-additional-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes content-block-added-highlight {
+  0% {
+    background-color: transparent;
+    outline: 1px solid transparent;
+  }
+  30%, 70% {
+    // outline: 1px solid #b0d7f8;
+    background-color:  #f4faff;
+    // background-color:  #f0ffec;
+
+    /* outline: 1px solid #b0d7f8; */
+    /* outline: 1px solid #d6ecff; */
+  }
+  100% {
+    background-color: transparent;
+    outline: 1px solid transparent;
+  }
+}
+
+@keyframes content-block-link-blink {
+  0%, 50%, 100% { opacity: 0.7; }
+  25%, 75% { opacity: 1; }
+}
+
+@keyframes pulse-highlight {
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: #eef7ff;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

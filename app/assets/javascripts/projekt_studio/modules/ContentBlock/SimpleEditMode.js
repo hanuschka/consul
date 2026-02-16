@@ -10,8 +10,6 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   initEventListeners() {
     const $document = $(document);
 
-    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.switchToAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));
@@ -94,7 +92,26 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   toggleSimpleEditModeFor(contentBlock, enabled, endCallback) {
     this.toggleContentEditableFor(contentBlock, enabled)
 
-    setTimeout(() => {
+    if (enabled) {
+      setTimeout(() => {
+        this.toggleLinksInteration(contentBlock, enabled)
+        this.toggleGlighboxGallery(contentBlock, enabled)
+
+        ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
+          contentBlock, enabled
+        )
+        ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.toggleImageControls(
+          contentBlock, enabled
+        )
+        ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
+          contentBlock, enabled
+        )
+
+        if (endCallback) {
+          endCallback()
+        }
+      }, 10)
+    } else {
       this.toggleLinksInteration(contentBlock, enabled)
       this.toggleGlighboxGallery(contentBlock, enabled)
 
@@ -107,15 +124,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
         contentBlock, enabled
       )
-      if (!enabled) {
-        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
-      }
+
+      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
       if (endCallback) {
         endCallback()
       }
-
-    }, 10)
+    }
   },
 
   toggleGlighboxGallery(contentBlock, enabled) {

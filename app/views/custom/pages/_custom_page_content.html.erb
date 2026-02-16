@@ -23,9 +23,9 @@
       </div>
     </div>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.any? %>
+    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
-      <div class="projekt-content-blocks-delete-section">
+      <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-projekt-studio-hide-on-preview">
         <%= button_to(
           [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
           method: :delete,

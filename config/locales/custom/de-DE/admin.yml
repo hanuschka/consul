@@ -1,5 +1,28 @@
 de:
   admin:
+    connection:
+      index:
+        title: "DT API Verbindungsstatus"
+        connection_error_label: "Fehler:"
+        checks:
+          dt_connected:
+            label_ok: "DT API verbunden"
+            label_fail: "DT API nicht verbunden"
+            description_ok: "Der DT API Client ist registriert und verfügt über einen gültigen Service-Token."
+            description_fail: "Kein registrierter DT API Client gefunden oder der Service-Token fehlt."
+            hint: "Nur lokale Konfigurationsprüfung — es wird kein HTTP-Aufruf gemacht."
+          api_accessible:
+            label_ok: "DT API erreichbar"
+            label_fail: "DT API nicht erreichbar"
+            description_ok: "Der DT API Endpunkt ist erreichbar und antwortet ohne Server-Fehler."
+            description_fail: "Der DT API Endpunkt hat nicht geantwortet oder einen Server-Fehler zurückgegeben (5xx)."
+            hint: "Sendet eine HTTP-Anfrage an den Status-Endpunkt; besteht bei Nicht-5xx-Antwort."
+          connection_works:
+            label_ok: "DT Verbindung funktioniert"
+            label_fail: "DT Verbindung fehlgeschlagen"
+            description_ok: "Die Authentifizierung ist gültig und die Verbindung ist vollständig funktionsfähig."
+            description_fail: "Die Verbindungsprüfung hat eine unerwartete Antwort erhalten oder die Authentifizierung ist fehlgeschlagen."
+            hint: "Erfordert HTTP 200 mit authenticated: true im JSON-Antwort-Body."
     header:
       title: Verwaltung
     actions:

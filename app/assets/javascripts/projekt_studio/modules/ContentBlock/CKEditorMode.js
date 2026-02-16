@@ -4,8 +4,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-code-edit-content-block", this.handleEnterCodeEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.handleCancelHtmlEditMode.bind(this));
-    $document.on("click", ".js-save-edit-html-projekt-content-block", this.handleSaveFromCkeditor.bind(this));
   },
 
   switchToHtmlEditMode(contentBlockWrapper) {
@@ -33,15 +31,21 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     contentBlockWrapper.classList.add("-html-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = 'html';
 
+    const originalContent = contentBlock.innerHTML;
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
+
     contentBlock.innerHTML = `
+      <div class="js-html-edit-mode-original-content" style="display: none;">
+        ${originalContent}
+      </div>
       <textarea
         name="body"
         id="${this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)}"
         rows="8"
-        class="html-area extended-a"
+        class="html-area extended-a js-projekt-studio-hide-on-preview"
         style="visibility: hidden; display: none;"
       >
-         ${contentBlock.innerHTML}
+         ${originalContent}
       </textarea>
     `
 
@@ -125,6 +129,8 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
     contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = '';
+
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {

@@ -75,5 +75,7 @@ ProjektStudio.ContentBlock.Render = {
       )
 
     ProjektStudio.ContentBlock.DomHelpers.morphElementHTML(".js-custom-page-content--inner", newHtml);
+
+    ProjektStudio.ContentBlock.Crud.rerenderContentBlockListControls()
   }
 };

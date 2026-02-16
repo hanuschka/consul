@@ -9,9 +9,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   initEventListeners() {
-    const $document = $(document);
-    $document.on("click", ".js-save-edit-code-projekt-content-block", this.saveContentBlockAndExit.bind(this));
-    $document.on("click", ".js-projekt-content-block--code-edit-cancel", this.cancelCodeEditMode.bind(this));
   },
 
   enterCodeEditMode(e) {
@@ -55,7 +52,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const currentHTML = contentBlock.innerHTML.trim();
 
     const editorContainer = document.createElement('div');
-    editorContainer.className = 'code-editor-container js-code-editor-container';
+    editorContainer.className = 'code-editor-container js-code-editor-container js-projekt-studio-hide-on-preview';
 
     const textarea = document.createElement('textarea');
     textarea.className = 'code-editor-textarea';
@@ -64,9 +61,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const relativeContainer = contentBlockWrapper.querySelector('.relative');
     if (!relativeContainer) return;
 
-    const toolsets = relativeContainer.querySelector('.projekt-content-block--toolsets');
-    if (toolsets) {
-      relativeContainer.insertBefore(editorContainer, toolsets);
+    const toolsetsBorder = relativeContainer.querySelector('.js-projekt-content-block--toolbar');
+    if (toolsetsBorder) {
+      toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
     } else {
       relativeContainer.appendChild(editorContainer);
     }
@@ -156,11 +153,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     this.hideCodeEditModeControls(contentBlockWrapper);
     contentBlockWrapper.dataset.editMode = '';
 
-    setTimeout(() => {
-      contentBlockWrapper.scrollIntoView({
-        block: "center", inline: "nearest"
-      })
-    }, 0)
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelCodeEditMode(e) {

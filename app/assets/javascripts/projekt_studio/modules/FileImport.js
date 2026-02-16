@@ -47,7 +47,7 @@ ProjektStudio.FileImport = {
   showFilePreview(file) {
     const extension = file.name.split('.').pop().toLowerCase();
     const iconClass = this.getFileIconClass(extension);
-    const displayName = file.name
+    const displayName = this.truncateFilename(file.name, 80);
 
     $(".js-projekt-file-import-filename").text(displayName);
     $(".js-projekt-file-import-icon").removeClass().addClass(`fas ${iconClass} js-projekt-file-import-icon`);
@@ -66,6 +66,22 @@ ProjektStudio.FileImport = {
       odt: 'fa-file-alt'
     };
     return iconMap[extension] || 'fa-file';
+  },
+
+  truncateFilename(filename, maxLength) {
+    if (filename.length <= maxLength) {
+      return filename;
+    }
+
+    const extension = filename.split('.').pop();
+    const nameWithoutExt = filename.slice(0, -(extension.length + 1));
+    const availableLength = maxLength - extension.length - 4;
+    const halfLength = Math.floor(availableLength / 2);
+
+    const start = nameWithoutExt.slice(0, halfLength);
+    const end = nameWithoutExt.slice(-halfLength);
+
+    return `${start}...${end}.${extension}`;
   },
 
   handleSubmit(e) {

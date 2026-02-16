@@ -26,6 +26,8 @@ class AiAnalytics::SemanticClustering < ApplicationService
 
         #{resource_type.capitalize}:
         #{resources_text}
+
+        Dont return clusters and subclusters, if there no match of #{resource_type.capitalize}.
       TEXT
 
         # Your goals:

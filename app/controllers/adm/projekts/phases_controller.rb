@@ -129,7 +129,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def formular_answers; end
   def milestones; end
   def progress_bars; end
-  def legislation_process_draft_versions; end
+  def legislation_process_draft_versions
+    authorize_phase(:update?)
+    @process = @projekt_phase.legislation_process
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def map
     authorize_phase(:update?)
     @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?

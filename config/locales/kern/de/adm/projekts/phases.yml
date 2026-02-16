@@ -146,6 +146,17 @@ de:
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+        legislation_process_draft_versions:
+          title: Textentwürfe
+          create_button: Neuen Textentwurf erstellen
+          no_draft_versions: Keine Textentwürfe vorhanden.
+          table:
+            title: Titel
+            created_at: Erstellt am
+            status: Status
+            comments: Kommentare
+            final_version: Endversion
+            actions: Aktionen
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
@@ -163,3 +174,4 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
+          legislation_process_draft_versions: Textentwürfe

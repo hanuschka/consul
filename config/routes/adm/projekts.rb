@@ -67,6 +67,7 @@ namespace :adm do
         post :send_notifications, on: :collection
       end
       resources :projekt_point_of_interest_categories, except: %i[index show]
+      resources :legislation_draft_versions, except: %i[index show]
       resources :proposals, only: [:show] do
         member do
           patch :toggle_admin_accepted

@@ -22,18 +22,10 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def date_field(field, options = {})
-    field_errors = field_errors(field)
-    hint_text = options.delete(:hint)
-
-    options[:class] = input_classes(options[:class], field_errors)
-    options[:aria]  = input_aria(field, field_errors, hint_text)
-
     value = options.fetch(:value) { object&.send(field) }
-    options[:value] = value.is_a?(String) ? value.presence : value
+    options[:value] = value.respond_to?(:strftime) ? value.strftime("%Y-%m-%d") : value.presence
 
-    form_group(field, field_errors, options, hint_text) do
-      super(field, options)
-    end
+    text_field(field, options.merge(type: "date"))
   end
 
   def select(field, choices = nil, options = {}, html_options = {})

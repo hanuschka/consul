@@ -19,6 +19,10 @@
     },
 
     setupGlighbox(element = null) {
+      if (this.lightbox) {
+        this.lightbox.destroy();
+      }
+
       this.scrollbarWidth = this.getScrollbarWidth();
 
       var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container">
@@ -38,22 +42,22 @@
         additionalParams.elements = element
       }
 
-      var lightbox = new GLightbox({
+      this.lightbox = new GLightbox({
         lightboxHTML: customLightboxHTML,
         openEffect: "fade",
         closeEffect: "fade",
-        preload: false
-        *additionalParams
+        preload: false,
+        ...additionalParams
       });
 
-      lightbox.on('open', () => {
+      this.lightbox.on('open', () => {
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {
           stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
         }
       });
-      lightbox.on('close', () => {
+      this.lightbox.on('close', () => {
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {

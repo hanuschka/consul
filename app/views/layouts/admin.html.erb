@@ -7,32 +7,24 @@
   </head>
 
   <body class="admin <%= "frame-admin-layout custom-new-design" if embedded? %>">
-    <% unless embedded? %>
-      <%= render "layouts/admin_header" %>
-    <% end %>
+    <%= render "layouts/admin_header" %>
 
     <div class="menu-and-content">
       <%= check_box_tag :show_menu, nil, false, role: "switch" %>
 
-      <% unless embedded? %>
-        <nav id="side_menu" class="admin-sidebar">
-          <% if namespace == "admin" %>
-            <%= render Admin::MenuComponent.new %>
-          <% elsif namespace == "sdg_management" %>
-            <%= render SDGManagement::MenuComponent.new %>
-          <% elsif namespace == "deficiency_report_management" %>
-            <%= render DeficiencyReportManagement::MenuComponent.new %>
-          <% elsif namespace == "idea_management" %>
-            <%= render IdeaManagement::MenuComponent.new %>
-          <% else %>
-            <%= render "/#{namespace}/menu" %>
-          <% end %>
-        </nav>
-      <% end %>
-
-      <div class="admin-frame-top-navigation">
-        <%= content_for(:admin_frame_top_navigation) %>
-      </div>
+      <nav id="side_menu" class="admin-sidebar">
+        <% if namespace == "admin" %>
+          <%= render Admin::MenuComponent.new %>
+        <% elsif namespace == "sdg_management" %>
+          <%= render SDGManagement::MenuComponent.new %>
+        <% elsif namespace == "deficiency_report_management" %>
+          <%= render DeficiencyReportManagement::MenuComponent.new %>
+        <% elsif namespace == "idea_management" %>
+          <%= render IdeaManagement::MenuComponent.new %>
+        <% else %>
+          <%= render "/#{namespace}/menu" %>
+        <% end %>
+      </nav>
 
       <div class="admin-content">
         <%= label_tag :show_menu, t("admin.menu.admin"),

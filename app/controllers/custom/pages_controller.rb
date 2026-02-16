@@ -48,13 +48,18 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      if params[:page_ref].present?
+      landing_page_slug = params[:landing_page_slug]
+      if landing_page_slug.present?
         @landing_page =
           @projekt
             .landing_pages
-            .find_by(slug: params[:page_ref])
+            .find_by(slug: landing_page_slug)
 
-        set_landing_page_topbar_ui_variables(@landing_page)
+        if @landing_page.present?
+          set_landing_page_topbar_ui_variables(@landing_page)
+        else
+          redirect_to page_path(@custom_page.slug) and return
+        end
       end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
@@ -142,6 +147,10 @@ class PagesController < ApplicationController
     @commentable = @projekt_phase
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
+
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = @projekt_phase
+    end
   end
 
   def set_debate_phase_footer_tab_variables
@@ -186,8 +195,8 @@ class PagesController < ApplicationController
                                .base_selection
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = @projekt_phase
     else
       if params[:search].present?
         @resources = @resources.search(params[:search])
@@ -309,16 +318,8 @@ class PagesController < ApplicationController
 
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
-    elsif params[:section] == "stats" && can?(:read_stats, @budget)
-      params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
-      params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
-      params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]
-
-      if params["stats_section"].in? %w[accepting reviewing selecting valuating publishing_prices balloting]
-        @stats = Budget::PhaseStats.new(@budget, params["stats_section"])
-      else
-        @stats = Budget::Stats.new(@budget)
-      end
+    elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
+      @stats = @projekt_phase
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)

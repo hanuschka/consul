@@ -19,6 +19,18 @@ class DtApi::Client
     @api_token = api_token || InternalApiClient&.dt&.service_api_token
   end
 
+  def projekts
+    @projekts ||= DtApi::Resources::Projekts.new(self)
+  end
+
+  def clients
+    @clients ||= DtApi::Resources::Clients.new(self)
+  end
+
+  def consul_ai_prompts
+    @consul_ai_prompts ||= DtApi::Resources::ConsulAiPrompts.new(self)
+  end
+
   def ai_assistant_configs
     @projekts ||= DtApi::Resources::ClientAiAssistantConfigs.new(
       self
@@ -29,6 +41,14 @@ class DtApi::Client
     @voice_assistant ||= DtApi::Resources::VoiceAssistant.new(
       self
     )
+  end
+
+  def connection
+    @connection ||= DtApi::Resources::Connection.new(self)
+  end
+
+  def content_block_templates
+    @content_block_templates ||= DtApi::Resources::ContentBlockTemplates.new(self)
   end
 
   def get_with_auth(url, query: nil)

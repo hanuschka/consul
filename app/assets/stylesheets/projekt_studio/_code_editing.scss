@@ -1,0 +1,40 @@
+.js-code-edit-mode-controlls {
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
+.code-editor-container {
+  width: 100%;
+  position: relative;
+  margin-top: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fff;
+
+  .ace_editor {
+    min-height: 300px;
+  }
+
+  .ace_info {
+    background-image: none;
+  }
+
+  .ace_tooltip {
+    padding: 0;
+    border: 0;
+    box-shadow: 0;
+
+    span:has(.ace_info) {
+      display: none !important;
+      visibility: hidden;
+    }
+  }
+
+  .ace_tooltip:has(.ace_error) {
+    padding: 3px 4px;
+    border: 1px solid gray;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}

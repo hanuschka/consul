@@ -419,6 +419,7 @@ en:
       projekt_events:
         edit:
           title: Edit event
+          accessibility_features: Accessibility Features
       projekt_phases:
         nav_bar:
           duration: Duration

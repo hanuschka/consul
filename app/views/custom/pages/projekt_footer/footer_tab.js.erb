@@ -10,6 +10,11 @@ App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();
 App.LivesteamLivequestion.initialize();
 App.IframeFilter.initialize();
+App.BarChartComponent.initialize();
+App.AreaChartComponent.initialize();
+App.HeatmapComponent.initialize();
+App.PieChartComponent.initialize();
+
 
 <% if @projekt_phase.is_a?(ProjektPhase::LegislationPhase) %>
   App.Legislation.initialize();

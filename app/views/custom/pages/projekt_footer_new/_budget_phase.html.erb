@@ -11,7 +11,7 @@
 
   <div class="flex justify-between items-center">
     <div class="hide-on-small-tablet">
-      <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && params[:section] != "results" && params[:section] != "stats" %>
+      <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && params[:section] != "results" && params[:section] != "stats" && params[:section] != "key_metrics" && params[:section] != "analysis" %>
         <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
           <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
         </div>
@@ -22,8 +22,10 @@
   <% if @budget.present? %>
     <% if params[:section] == "results" && can?(:read_results, @budget) %>
       <%= render "pages/projekt_footer_new/budget/results" %>
-    <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>
-      <%= render "pages/projekt_footer_new/budget/stats" %>
+    <% elsif params[:section] == "key_metrics" && can?(:read_stats, @budget) %>
+      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+    <% elsif params[:section] == "analysis" && can?(:read_stats, @budget) && Ai::Settings.ai_available? %>
+      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
     <% else %>
     <% if @budget.current_phase.kind == 'informing' %>
       <div class="flex-layout">

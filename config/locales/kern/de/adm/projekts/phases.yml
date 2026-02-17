@@ -177,6 +177,19 @@ de:
             actions: Aktionen
             primary: Primär
             secondary: Sekundär
+        projekt_livestreams:
+          title: Livestreams
+          create_button: Neuen Livestream hinzufügen
+          no_livestreams: Keine Livestreams vorhanden.
+          table:
+            title: Titel
+            url: URL
+            platform: Plattform
+            starts_at: Startzeit
+            actions: Aktionen
+            show: Anzeigen
+            send_notifications: Benachrichtigungen senden
+            send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         projekt_notifications:
           title: Benachrichtigungen
           create_button: Neue Benachrichtigung erstellen
@@ -265,6 +278,7 @@ de:
           formular: Formularfelder
           formular_answers: Einsendungen
           projekt_notifications: Benachrichtigungen
+          projekt_livestreams: Livestreams
           projekt_events: Veranstaltungen
           milestones: Meilensteine
           progress_bars: Fortschrittsbalken

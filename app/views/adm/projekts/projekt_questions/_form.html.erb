@@ -1,5 +1,8 @@
 <%= form_with model: @projekt_question, url: url do |f| %>
 
+  <% if @projekt_question.projekt_livestream_id.present? %>
+    <%= f.hidden_field :projekt_livestream_id %>
+  <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
     <%= f.text_field :title, label: false, placeholder: t(".title_label") %>

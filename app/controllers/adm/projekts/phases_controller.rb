@@ -312,7 +312,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
-  def projekt_livestreams; end
+  def projekt_livestreams
+    authorize_phase(:update?)
+    @projekt_livestreams = @projekt_phase.projekt_livestreams
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def projekt_questions
     authorize_phase(:update?)
     @pagy, @projekt_questions = pagy(@projekt_phase.questions.order(id: :desc))

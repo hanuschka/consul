@@ -79,6 +79,11 @@ namespace :adm do
         end
       end
       resources :projekt_notifications, except: %i[index show]
+      resources :projekt_livestreams, except: %i[index] do
+        member do
+          post :send_notifications
+        end
+      end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
         member do
           post :send_emails

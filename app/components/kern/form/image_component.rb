@@ -16,6 +16,13 @@ class Kern::Form::ImageComponent < ApplicationComponent
     end
 
     def show_preview?
-      imageable.image&.attachment&.attached?
+      imageable.image&.attachment&.attached? && image_errors.empty?
+    end
+
+    def image_errors
+      image_record = imageable.image
+      return [] unless image_record
+
+      image_record.errors.full_messages
     end
 end

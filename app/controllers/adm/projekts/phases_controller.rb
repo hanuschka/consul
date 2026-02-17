@@ -161,8 +161,29 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       end
     end
   end
-  def milestones; end
-  def progress_bars; end
+  def milestones
+    authorize_phase(:update?)
+    @milestones = @projekt_phase.milestones.order_by_publication_date
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def progress_bars
+    authorize_phase(:update?)
+    @progress_bars = @projekt_phase.progress_bars
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def legislation_process_draft_versions
     authorize_phase(:update?)
     @process = @projekt_phase.legislation_process

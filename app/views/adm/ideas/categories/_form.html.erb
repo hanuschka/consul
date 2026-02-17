@@ -1,7 +1,7 @@
 <% form_url = @category.persisted? ? adm_ideas_category_path(@category) : adm_ideas_categories_path %>
 
 <%= translatable_form_for @category, url: form_url do |f| %>
-  <%= render "shared/errors", resource: @category %>
+
   <%= render "shared/globalize_locales", resource: @category %>
 
   <%= f.translatable_fields do |translations_form| %>

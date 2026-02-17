@@ -96,6 +96,11 @@ de:
         general:
           max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
           max_number_of_pins_per_user_description: Legt die maximale Anzahl an Pins fest, die ein Nutzer erstellen kann.
+    milestone_phase:
+      feature:
+        general:
+          newest_first: Neueste Meilensteine zuerst anzeigen
+          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
     event_phase:
       feature:
         general:

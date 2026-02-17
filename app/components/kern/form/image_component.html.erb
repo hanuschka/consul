@@ -1,11 +1,18 @@
 <div data-controller="kern--form--image">
   <%= @form.fields_for :image, image do |image_builder| %>
-    <div class="kern-form-input <%= 'd-none' if show_preview? %>">
+    <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
+         data-kern--form--image-target="inputWrapper">
       <%= image_builder.file_field :attachment,
                                    label: false,
                                    accept: Image.accepted_content_types.join(","),
-                                   class: "kern-form-input__input",
+                                   class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
                                    data: { kern__form__image_target: "input", action: "change->kern--form--image#change" } %>
+      <% if image_errors.any? %>
+        <p class="kern-error" role="alert">
+          <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+          <span class="kern-body"><%= image_errors.join(", ") %></span>
+        </p>
+      <% end %>
     </div>
 
     <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
@@ -14,10 +21,6 @@
       <% else %>
         <%= tag.img alt: @label, style: "width: 100%;", data: { kern__form__image_target: "previewImage" } %>
       <% end %>
-    </div>
-
-    <div class="error-message mt-3 <%= 'd-none' if imageable.errors[:image].blank? %>">
-      <%= content_tag(:span) { sanitize imageable.errors[:image].join("; ") } %>
     </div>
 
     <%= tag.button type: "button",

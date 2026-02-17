@@ -1,5 +1,4 @@
 <%= form_with model: @projekt_event, url: url do |f| %>
-  <%= render "shared/errors", resource: @projekt_event %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".title_label")) do %>
     <%= f.text_field :title, label: false, required: true %>

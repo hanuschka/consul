@@ -1,0 +1,24 @@
+de:
+  adm:
+    projekts:
+      milestones:
+        new:
+          title: Meilenstein erstellen
+        create:
+          success: Meilenstein wurde erfolgreich erstellt.
+        edit:
+          title: Meilenstein bearbeiten
+        update:
+          success: Meilenstein wurde erfolgreich aktualisiert.
+        destroy:
+          success: Meilenstein wurde erfolgreich gelöscht.
+        form:
+          status_label: Aktueller Status (optional)
+          no_statuses: Es wurde noch kein Status für diese Vorschläge definiert
+          manage_statuses: Status verwalten
+          description_label: Beschreibung
+          publication_date_label: Datum der Veröffentlichung
+          custom_date_label: Benutzerdefiniertes Datum
+          custom_date_hint: Optionaler Text, der anstelle des Veröffentlichungsdatums angezeigt wird.
+          image_label: Titelbild
+          submit: Speichern

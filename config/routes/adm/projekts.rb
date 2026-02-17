@@ -6,6 +6,8 @@ namespace :adm do
       post :search, on: :collection
     end
 
+    resources :milestone_statuses, except: %i[show]
+
     resources :phases, only: [:update] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
@@ -67,6 +69,8 @@ namespace :adm do
         post :send_notifications, on: :collection
       end
       resources :projekt_point_of_interest_categories, except: %i[index show]
+      resources :milestones, except: %i[index show]
+      resources :progress_bars, except: %i[index show]
       resources :legislation_draft_versions, except: %i[index show]
       resources :formular_fields, except: %i[index show]
       resources :projekt_events, except: %i[index show] do

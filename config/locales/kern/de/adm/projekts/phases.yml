@@ -155,6 +155,28 @@ de:
             open_ended: Offenes Ende
             send_notifications: Benachrichtigungen senden
             send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+        milestones:
+          title: Meilensteine
+          create_button: Meilenstein hinzufügen
+          no_milestones: Keine Meilensteine vorhanden.
+          table:
+            description: Beschreibung
+            publication_date: Veröffentlichung
+            status: Status
+            image: Bild
+            show_image: Bild anzeigen
+            actions: Aktionen
+        progress_bars:
+          title: Fortschrittsbalken
+          create_button: Neuen Fortschrittsbalken erstellen
+          no_progress_bars: Keine Fortschrittsbalken vorhanden.
+          table:
+            title: Titel
+            kind: Typ
+            percentage: Fortschritt
+            actions: Aktionen
+            primary: Primär
+            secondary: Sekundär
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -234,4 +256,6 @@ de:
           formular: Formularfelder
           formular_answers: Einsendungen
           projekt_events: Veranstaltungen
+          milestones: Meilensteine
+          progress_bars: Fortschrittsbalken
           settings: Einstellungen

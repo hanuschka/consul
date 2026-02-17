@@ -1,5 +1,5 @@
 <%= form_with model: @sentiment, url: url do |f| %>
-  <%= render "shared/errors", resource: @sentiment %>
+
 
   <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>

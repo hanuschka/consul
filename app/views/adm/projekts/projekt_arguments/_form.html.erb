@@ -1,0 +1,28 @@
+<%= form_with model: @projekt_argument, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".type_label")) do %>
+    <%= f.collection_radio_buttons :pro, [[true, t(".pro")], [false, t(".contra")]], :first, :last %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label")) do %>
+    <%= f.text_field :name, label: false, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".party_label")) do %>
+    <%= f.text_field :party, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".position_label")) do %>
+    <%= f.text_field :position, label: false, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".note_label")) do %>
+    <%= f.text_area :note, label: false, rows: 6, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
+    <%= render Kern::Form::ImageComponent.new(form: f, label: t(".image_label")) %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

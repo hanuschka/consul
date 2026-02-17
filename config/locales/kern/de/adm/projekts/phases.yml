@@ -177,6 +177,21 @@ de:
             actions: Aktionen
             primary: Primär
             secondary: Sekundär
+        projekt_arguments:
+          title: Stimmen
+          create_button: Stimme erstellen
+          send_notifications_button: Benachrichtigungen senden
+          send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+          pro: Pro
+          contra: Contra
+          no_arguments: Keine Stimmen vorhanden.
+          table:
+            name: Name
+            party: Partei
+            position: Position
+            image: Bild
+            show_image: Bild anzeigen
+            actions: Aktionen
         projekt_livestreams:
           title: Livestreams
           create_button: Neuen Livestream hinzufügen
@@ -277,6 +292,7 @@ de:
           legislation_process_draft_versions: Textentwürfe
           formular: Formularfelder
           formular_answers: Einsendungen
+          projekt_arguments: Stimmen
           projekt_notifications: Benachrichtigungen
           projekt_livestreams: Livestreams
           projekt_events: Veranstaltungen

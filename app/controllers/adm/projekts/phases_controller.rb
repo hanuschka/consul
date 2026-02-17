@@ -334,7 +334,18 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
-  def projekt_arguments; end
+  def projekt_arguments
+    authorize_phase(:update?)
+    @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro
+    @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
 
   private
 

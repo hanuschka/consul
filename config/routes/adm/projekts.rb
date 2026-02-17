@@ -78,6 +78,9 @@ namespace :adm do
           post :send_notifications
         end
       end
+      resources :projekt_arguments, except: %i[index show] do
+        post :send_notifications, on: :collection
+      end
       resources :projekt_notifications, except: %i[index show]
       resources :projekt_livestreams, except: %i[index] do
         member do

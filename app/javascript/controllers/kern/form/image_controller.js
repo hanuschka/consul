@@ -1,0 +1,29 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["input", "preview", "previewImage", "actions", "destroy"]
+
+  change() {
+    const file = this.inputTarget.files[0]
+    if (!file) return
+
+    this.destroyTarget.value = "false"
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      this.previewImageTarget.src = e.target.result
+      this.previewTarget.classList.remove("d-none")
+      this.inputTarget.closest(".kern-form-input").classList.add("d-none")
+      this.actionsTarget.classList.remove("d-none")
+    }
+    reader.readAsDataURL(file)
+  }
+
+  remove() {
+    this.destroyTarget.value = "1"
+    this.inputTarget.value = ""
+    this.previewTarget.classList.add("d-none")
+    this.actionsTarget.classList.add("d-none")
+    this.inputTarget.closest(".kern-form-input").classList.remove("d-none")
+  }
+}

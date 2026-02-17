@@ -21,11 +21,24 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def rich_text_area(field, options = {})
+    toolbar = @template.ck_editor_class(@template.current_user)
+    options[:data] = (options[:data] || {}).merge(controller: "ckeditor", ckeditor_toolbar_value: toolbar)
+    text_area(field, options)
+  end
+
   def date_field(field, options = {})
     value = options.fetch(:value) { object&.send(field) }
     options[:value] = value.respond_to?(:strftime) ? value.strftime("%Y-%m-%d") : value.presence
 
     text_field(field, options.merge(type: "date"))
+  end
+
+  def datetime_local_field(field, options = {})
+    value = options.fetch(:value) { object&.send(field) }
+    options[:value] = value.respond_to?(:strftime) ? value.strftime("%Y-%m-%dT%H:%M") : value.presence
+
+    text_field(field, options.merge(type: "datetime-local"))
   end
 
   def select(field, choices = nil, options = {}, html_options = {})

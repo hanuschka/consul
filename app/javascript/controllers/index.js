@@ -74,3 +74,6 @@ application.register("check-all", CheckAllController)
 import FormularFieldsKindController from "./formular_fields/kind_controller"
 application.register("formular-fields--kind", FormularFieldsKindController)
 
+import KernFormImageController from "./kern/form/image_controller"
+application.register("kern--form--image", KernFormImageController)
+

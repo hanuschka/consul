@@ -3,4 +3,4 @@ de:
     components:
       attribute_editors:
         image_component:
-          choose_different: Anderes Bild wählen
+          remove: Bild entfernen

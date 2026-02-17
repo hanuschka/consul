@@ -96,6 +96,13 @@ de:
         general:
           max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
           max_number_of_pins_per_user_description: Legt die maximale Anzahl an Pins fest, die ein Nutzer erstellen kann.
+    event_phase:
+      feature:
+        general:
+          reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
+          reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
+          show_on_home_page: Veranstaltung auf Homepage anzeigen
+          show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
     proposal_phase:
       feature:
         general:

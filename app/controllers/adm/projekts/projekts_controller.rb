@@ -82,7 +82,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def phases
     authorize [:adm, :projekts, @projekt], :show?
     base_scope = policy_scope([:adm, :projekts, @projekt.projekt_phases])
-      .regular_phases
       .includes(:geozone_restrictions, :age_restriction)
     @projekt_phases = ProjektPhasesQuery.call(base_scope, params)
 
@@ -135,7 +134,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_phase = @projekt.projekt_phases.find(params[:projekt_phase_id])
     param_key = @projekt_phase.model_name.param_key
     @projekt_phase.default_phase = params[param_key][:default_phase]
-    @projekt_phases = @projekt.projekt_phases.regular_phases
+    @projekt_phases = @projekt.projekt_phases
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end

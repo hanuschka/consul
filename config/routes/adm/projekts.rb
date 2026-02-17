@@ -69,6 +69,11 @@ namespace :adm do
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :legislation_draft_versions, except: %i[index show]
       resources :formular_fields, except: %i[index show]
+      resources :projekt_events, except: %i[index show] do
+        member do
+          post :send_notifications
+        end
+      end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
         member do
           post :send_emails

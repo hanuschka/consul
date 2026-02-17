@@ -143,6 +143,18 @@ de:
             question_options: Antworten
             comments_count: Kommentare
             actions: Aktionen
+        projekt_events:
+          title: Veranstaltungen
+          create_button: Neue Veranstaltung erstellen
+          no_events: Keine Veranstaltungen vorhanden.
+          table:
+            title: Titel
+            location: Veranstaltungsort
+            datetime: Datum
+            actions: Aktionen
+            open_ended: Offenes Ende
+            send_notifications: Benachrichtigungen senden
+            send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -221,4 +233,5 @@ de:
           legislation_process_draft_versions: Textentwürfe
           formular: Formularfelder
           formular_answers: Einsendungen
+          projekt_events: Veranstaltungen
           settings: Einstellungen

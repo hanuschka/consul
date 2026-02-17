@@ -290,7 +290,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
-  def projekt_notifications; end
+  def projekt_notifications
+    authorize_phase(:update?)
+    @projekt_notifications = @projekt_phase.projekt_notifications.order(created_at: :desc)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def projekt_events
     authorize_phase(:update?)
     @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)

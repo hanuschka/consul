@@ -177,6 +177,15 @@ de:
             actions: Aktionen
             primary: Primär
             secondary: Sekundär
+        projekt_notifications:
+          title: Benachrichtigungen
+          create_button: Neue Benachrichtigung erstellen
+          no_notifications: Keine Benachrichtigungen vorhanden.
+          table:
+            title: Titel
+            body: Nachricht
+            created_at: Erstellt am
+            actions: Aktionen
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -255,6 +264,7 @@ de:
           legislation_process_draft_versions: Textentwürfe
           formular: Formularfelder
           formular_answers: Einsendungen
+          projekt_notifications: Benachrichtigungen
           projekt_events: Veranstaltungen
           milestones: Meilensteine
           progress_bars: Fortschrittsbalken

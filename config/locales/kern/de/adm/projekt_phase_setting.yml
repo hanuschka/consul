@@ -108,6 +108,13 @@ de:
           reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
           show_on_home_page: Veranstaltung auf Homepage anzeigen
           show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
+    newsfeed_phase:
+      option:
+        general:
+          newsfeed_id: Newsfeed ID
+          newsfeed_id_description: Bitte geben Sie hier die ID des News-Feeds ein
+          newsfeed_type: Newsfeed Type
+          newsfeed_type_description: Bitte geben Sie hier den Typ des News-Feeds an
     proposal_phase:
       feature:
         general:

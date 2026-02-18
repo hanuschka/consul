@@ -312,6 +312,7 @@
     handleAssistantFunctionCall: function(message) {
       const args = JSON.parse(message.arguments);
       const form = App.AssistantUserResourceForm;
+      console.log("message", message)
 
       switch (message.name) {
         case "createResource":
@@ -345,6 +346,8 @@
           form.updateLocation(args.location, true);
           break;
         case "generateImage":
+          console.log("args.image_prompt")
+          console.log(args.image_prompt)
           form.generateImage(args.image_prompt);
           break;
         case "selectCategory":
@@ -363,6 +366,7 @@
     },
 
     handleResourceCreate: function(args) {
+      console.log("handleResourceCreate", args)
       const form = App.AssistantUserResourceForm;
 
       if (args.title) { form.updateTitle(args.title); }

@@ -272,6 +272,41 @@ de:
             send_emails: E-Mails versenden
             send_confirm: Möchten Sie die E-Mails wirklich versenden?
             delete_confirm: Möchten Sie diesen Entwurf wirklich löschen?
+        budget_phases:
+          title: Phasen
+          table:
+            name: Phase
+            starts_at: Start
+            ends_at: Ende
+            enabled: Aktiviert
+            current: Aktuelle Phase
+            actions: Aktionen
+        budget_edit:
+          title: Editieren
+        budget_investments:
+          title: Vorschläge
+          no_investments: Keine Investitionsvorschläge vorhanden.
+          table:
+            id: ID
+            created_at: Eingereicht
+            title: Titel
+            feasibility: Kriterien
+            valuation_finished: Bewertung beendet
+            total_votes: Unterstützung
+            preselected: Vorausgewählt
+            selected: Ausgewählt
+            price: Preis
+            balloters: Anzahl Wähler
+            total_ballot_votes: Anzahl Stimmen
+            district: Bezirk
+            winner: Gewinner
+            admin: Administrator
+            author: Autor
+            valuator: Gutachter
+            pdf_link: PDF
+            actions: Aktionen
+        age_ranges_for_stats:
+          title: Alterskohorten
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
@@ -280,6 +315,10 @@ de:
           form_author: Formular & Autor
           user_functions: Nutzerfunktionen
           proposals: Vorschläge
+          budget_phases: Phasen
+          budget_edit: Editieren
+          budget_investments: Vorschläge
+          age_ranges_for_stats: Alterskohorten
           projekt_labels: Labels
           sentiments: Sentimente
           map: Karte

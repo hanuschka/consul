@@ -61,6 +61,7 @@ namespace :adm do
         # Toggle actions
         patch :toggle_active
         patch :toggle_frontend_visibility
+        patch :update_age_ranges_for_stats
       end
 
       resources :labels, except: %i[index show]
@@ -98,6 +99,11 @@ namespace :adm do
           patch :update_official_answer
         end
       end
+      resources :budget_phases, only: [:edit] do
+        patch :toggle_enabled, on: :member
+      end
+      resources :budgets, only: [:update]
+      resources :budget_investments, only: [:show, :edit, :update, :destroy]
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do

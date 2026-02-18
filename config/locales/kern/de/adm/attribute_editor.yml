@@ -74,3 +74,46 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           landing_site_logo_follow_to_landing_page_description: "Wenn aktiviert, führt ein Klick auf das Logo in der Top-Navigation nicht zur allgemeinen Startseite, sondern zur aktuell konfigurierten Themen- oder Gebietsseite."
           landing_navigation_link_color_label: Farbe der Links in der Top-Navigation
           landing_navigation_link_color_description: "Legen Sie die Schriftfarbe der Links in der oberen Navigationsleiste fest. Das ist wichtig, da das Hintergrundbild auf dieser Themenseite von dem auf der Startseite abweichen kann und die Lesbarkeit sichergestellt sein muss."
+      budget/phase:
+        name_label: Name
+        name_description: Bezeichnung dieser Budget-Phase.
+        starts_at_label: Startdatum
+        starts_at_description: Wann beginnt diese Budget-Phase?
+        ends_at_label: Enddatum
+        ends_at_description: Wann endet diese Budget-Phase?
+      budget:
+        voting_style_label: Abstimmungsstil
+        voting_style_description: Welcher Abstimmungsstil soll für diese Budget-Phase verwendet werden?
+        voting_style_label_options:
+          knapsack: Knapsack (Mehrere Stimmen bis Budget aufgebraucht ist)
+          approval: Zustimmung (Eine Stimme)
+          distributed: Mehrere Stimmen
+        currency_symbol_label: Währung
+        currency_symbol_description: Welches Währungssymbol soll angezeigt werden?
+        currency_symbol_label_options:
+          "€": "€ (Euro)"
+          "$": "$ (Dollar)"
+          "£": "£ (Pfund)"
+          "¥": "¥ (Yen)"
+        max_preselected_label: Bestenliste (optional)
+        max_preselected_description: Wie viele Vorschläge sollen in die Prüfungsphase gehen
+        hide_money_label: Geld ausblenden
+        hide_money_description: Wenn diese Option aktiviert ist, werden alle Felder, die den Geldbetrag anzeigen, während des gesamten Vorgangs ausgeblendet.
+        max_number_of_winners_label: Maximale Anzahl an Gewinnern
+        results_enabled_label: Ergebnisse
+        results_enabled_description: Zeigt die Ergebnisse des Bürgerhaushalts am Ende der Abstimmung an.
+        show_results_after_first_vote_label: Ergebnisse nach erster Stimme anzeigen
+        show_results_after_first_vote_description: Sollen Zwischenergebnisse nach der ersten Stimmabgabe sichtbar sein?
+        show_percentage_values_only_label: Prozentuale Werte
+        show_percentage_values_only_description: Sollen im Ergebnis nur Prozentwerte statt absoluter Zahlen angezeigt werden?
+        stats_enabled_label: Statistiken
+        stats_enabled_description: Zeigt die Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
+        advanced_stats_enabled_label: Erweiterte Statistiken
+        advanced_stats_enabled_description: Zeigt erweiterte Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
+      budget/heading:
+        section_title: Standardüberschrift
+        price_label: Budget
+        price_description: Gesamtbudget für diese Überschrift.
+        population_label: Bevölkerung (optional)
+        max_ballot_lines_label: Stimmen erlaubt
+        max_ballot_lines_description: Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.

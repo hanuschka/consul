@@ -26,6 +26,10 @@ de:
       projekt:
         show_start_date_in_frontend: Startdatum in der Seitenleiste des Projektes anzeigen
         show_end_date_in_frontend: Enddatum in der Seitenleiste des Projektes anzeigen
+      budget/investment:
+        feasibility_undecided: Nicht bewertet
+        feasibility_feasible: Entspricht den Kriterien
+        feasibility_unfeasible: Entspricht nicht den Kriterien
       tag:
         name: Name des Tags
       individual_group:

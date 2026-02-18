@@ -32,14 +32,14 @@ class Adm::BaseController < ActionController::Base
       case record_class.name
       when "Projekt"
         Adm::Projekts::ProjektPolicy
-      when "ProjektPhase"
-        Adm::Projekts::ProjektPhasePolicy
-      when "ProjektPhaseSetting"
+      when "ProjektPhase", "ProjektPhaseSetting"
         Adm::Projekts::ProjektPhasePolicy
       when "ProjektManager"
         Adm::Projekts::ProjektManagerPolicy
       when "Idea"
         Adm::Ideas::IdeaPolicy
+      when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
+        Adm::Projekts::BudgetPolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

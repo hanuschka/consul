@@ -1,6 +1,10 @@
 module AdmHelper
   include Pagy::Frontend
 
+  def human_boolean(value)
+    t("shared.#{value == true}")
+  end
+
   def restriction_label_for(projekt_phase)
     restrictions = []
     restrictions << I18n.t("adm.projekts.phases.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?

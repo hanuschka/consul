@@ -1,0 +1,19 @@
+<main class="ai-proposal-flow--page">
+  <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 4) %>
+
+  <div class="ai-proposal-flow--body ai-proposal-flow--success">
+    <div class="ai-proposal-flow--success-icon">✓</div>
+    <h2><%= t("ai_proposal_flow.step4.heading") %></h2>
+    <p><%= t("ai_proposal_flow.step4.subheading") %></p>
+
+    <div class="ai-proposal-flow--reference-box">
+      <span class="ai-proposal-flow--reference-label"><%= t("ai_proposal_flow.step4.reference_label") %></span>
+      <strong class="ai-proposal-flow--reference-number">#<%= @draft_resource.id %></strong>
+    </div>
+
+    <div class="ai-proposal-flow--success-actions">
+      <%= link_to t("ai_proposal_flow.step4.view_proposal"), @resource_url, class: "button -outline expanded" %>
+      <%= link_to t("ai_proposal_flow.step4.new_idea"), @new_idea_url, class: "button -outline expanded" %>
+    </div>
+  </div>
+</main>

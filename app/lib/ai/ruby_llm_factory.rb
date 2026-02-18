@@ -171,7 +171,8 @@ module Ai::RubyLlmFactory
     @proxy_uri ||= begin
       proxy_config = Rails.application.secrets.web_server_proxy
 
-      return nil if proxy_config.blank? && proxy_config[:address].blank?
+      return nil if proxy_config.blank?
+      return nil if proxy_config[:address].blank?
 
       address = proxy_config[:address]
       port = proxy_config[:port]

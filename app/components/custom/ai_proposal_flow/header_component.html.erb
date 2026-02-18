@@ -1,0 +1,33 @@
+<div class="ai-proposal-flow--header">
+  <a
+    href="<%= projekt_page_url %>"
+    class="ai-proposal-flow--projekt-badge"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <%= projekt_phase.projekt.page.title %>
+  </a>
+
+  <h1><%= t("ai_proposal_flow.header.title") %></h1>
+  <p><%= t("ai_proposal_flow.header.subtitle") %></p>
+
+  <div class="ai-proposal-flow--step-progress">
+    <% steps.each_with_index do |step, i| %>
+      <div class="ai-proposal-flow--step-node -<%= step[:state] %>">
+        <div class="ai-proposal-flow--step-circle">
+          <% if step[:state] == :completed %>
+            ✓
+          <% else %>
+            <%= step[:n] %>
+          <% end %>
+        </div>
+        <span class="ai-proposal-flow--step-label">
+          <%= t("ai_proposal_flow.steps.#{step[:key]}") %>
+        </span>
+      </div>
+      <% if i < steps.length - 1 %>
+        <div class="ai-proposal-flow--step-connector -<%= step[:state] == :completed ? 'completed' : 'pending' %>"></div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

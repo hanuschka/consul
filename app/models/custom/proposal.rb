@@ -6,7 +6,7 @@ class Proposal < ApplicationRecord
   include OnBehalfOfSubmittable
   include Memoable
 
-  belongs_to :old_projekt, class_name: 'Projekt', foreign_key: :projekt_id # TODO: remove column after data migration con1538
+  belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase, allow_nil: true
   belongs_to :projekt_phase
@@ -48,6 +48,7 @@ class Proposal < ApplicationRecord
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }
 
+  default_scope { where(draft: false) }
   scope :discard_draft,            -> { published }
   scope :discard_archived,         -> { not_archived }
 
@@ -77,8 +78,9 @@ class Proposal < ApplicationRecord
   # TODO: REFACTOR FOR NEW DESIGN
   def self.scoped_projekt_ids_for_footer(projekt)
     projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-        projekt.all_children_projekts.unshift(projekt).any? { |p| p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? }
+      ProjektSetting.find_by(projekt:, key: "projekt_feature.main.activate").value.present? &&
+        projekt.all_children_projekts.unshift(projekt).any? do |p|
+ p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? end
     end.pluck(:id)
   end
 
@@ -89,12 +91,13 @@ class Proposal < ApplicationRecord
   def self.successful
     ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
-	end
+  end
 
   def self.unsuccessful
-    ids = Proposal.includes([:projekt_phase]).select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal.includes([:projekt_phase]).select do |p|
+ p.cached_votes_up < p.custom_votes_needed_for_success end.pluck(:id)
     Proposal.where(id: ids)
-	end
+  end
 
   def custom_votes_needed_for_success
     return Proposal.votes_needed_for_success unless projekt_phase.present?
@@ -134,7 +137,7 @@ class Proposal < ApplicationRecord
   protected
 
     def set_responsible_name
-      self.responsible_name = 'unregistriered'
+      self.responsible_name = "unregistriered"
     end
 
     def enqueue_stats_refresh

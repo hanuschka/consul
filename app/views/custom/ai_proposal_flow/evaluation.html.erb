@@ -1,0 +1,12 @@
+<main class="ai-proposal-flow--page">
+  <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 3) %>
+
+  <div class="ai-proposal-flow--body">
+    <%= render AiProposalFlow::EvaluationResultComponent.new(evaluation_result: @draft_resource.ai_evaluation_result) %>
+
+    <div class="ai-proposal-flow--navigation">
+      <%= button_to t("ai_proposal_flow.nav.submit"), @publish_url, method: :patch, class: "button -gold" %>
+      <%= link_to t("ai_proposal_flow.nav.back_edit"), @back_to_edit_url, class: "button -outline" %>
+    </div>
+  </div>
+</main>

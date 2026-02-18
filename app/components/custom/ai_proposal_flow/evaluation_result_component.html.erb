@@ -1,0 +1,29 @@
+<div class="ai-proposal-flow--evaluation">
+  <div class="ai-proposal-flow--evaluation-total">
+    <span class="ai-proposal-flow--evaluation-total--label"><%= t("ai_proposal_flow.evaluation.total_score") %></span>
+    <span class="ai-proposal-flow--evaluation-total--score"><%= total_score %></span>
+  </div>
+
+  <% criteria.each do |criterion| %>
+    <div class="ai-proposal-flow--evaluation-criterion">
+      <div class="ai-proposal-flow--evaluation-criterion--header">
+        <span class="ai-proposal-flow--evaluation-criterion--text"><%= criterion["text"] %></span>
+        <span class="ai-proposal-flow--evaluation-criterion--score">
+          <%= criterion["score"] %> / <%= criterion["max_score"] %>
+        </span>
+      </div>
+      <div class="ai-proposal-flow--evaluation-bar-track">
+        <div
+          class="ai-proposal-flow--evaluation-bar <%= bar_modifier(criterion["score"]) %>"
+          style="width: <%= (criterion["score"].to_f / criterion["max_score"] * 100).round %>%"
+        ></div>
+      </div>
+      <p class="ai-proposal-flow--evaluation-criterion--feedback"><em><%= criterion["feedback"] %></em></p>
+    </div>
+  <% end %>
+
+  <div class="ai-proposal-flow--overall-box -<%= overall_passed ? 'passed' : 'failed' %>">
+    <strong><%= overall_passed ? t("ai_proposal_flow.evaluation.passed") : t("ai_proposal_flow.evaluation.failed") %></strong>
+    <p><%= overall_feedback %></p>
+  </div>
+</div>

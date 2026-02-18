@@ -35,6 +35,8 @@
       App.ContentBlockTemplatesSelector.initialize();
       App.AdminTopbarViewMode.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.AiProposalFlow.initialize();
+      App.ProjektPhaseProposalCriteria.initialize();
     }
   };
 }).call(this);

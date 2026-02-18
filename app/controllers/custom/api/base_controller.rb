@@ -108,7 +108,6 @@ class Api::BaseController < ActionController::API
     filename = "image.#{extension}"
 
     new_temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
-
     uploaded_file = ActionDispatch::Http::UploadedFile.new(
       tempfile: new_temp_file,
       filename: filename,

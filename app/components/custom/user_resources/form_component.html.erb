@@ -6,11 +6,14 @@
     ) %>
   <% end %>
 
-  <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
-    <%= back_link %>
+  <%= translatable_form_for(resource, url: @url, html: { class: "js-rich-text-form user-resource-form", id: dom_id(resource, :form) }) do |f| %>
+    <% if show_back_button? %>
+      <%= back_link %>
+    <% end %>
 
     <% sidebar_html = capture do %>
-      <aside class="sidebar">
+      <% if show_sidebar? %>
+        <aside class="sidebar">
         <fieldset class="required-fields">
           <%= hidden_field_tag :order, params[:order] %>
 
@@ -62,7 +65,8 @@
               <%= f.text_field :on_behalf_of, label: false, placeholder: "Namen eingeben...", class: "light-input" %>
             <% end %>
           <% end %>
-      </aside>
+        </aside>
+      <% end %>
     <% end %>
 
     <div class="flex-layout">
@@ -186,7 +190,7 @@
             </div>
 
           <% end %>
-          <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>
+          <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button", style: "display: none") %>
         </div>
       </div>
 

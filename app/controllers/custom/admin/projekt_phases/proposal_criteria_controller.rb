@@ -39,7 +39,7 @@ class Admin::ProjektPhases::ProposalCriteriaController < Admin::BaseController
   private
 
     def load_projekt_phase
-      @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
+      @projekt_phase = ProjektPhase.find(params[:id])
     end
 
     def criterion_params

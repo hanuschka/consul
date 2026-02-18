@@ -12,14 +12,17 @@ class Proposals::GenerateController < AiProposalFlowBaseController
     proposal = build_and_save_draft(draft_data)
     redirect_to generate_proposal_edit_draft_path(proposal)
   rescue StandardError => e
+    raise e if Rails.env.development?
+
     flash[:error] = I18n.t("ai_proposal_flow.generate_error")
-    redirect_to generate_proposal_new_path(projekt_phase_id: @projekt_phase.id)
+    redirect_to generate_proposal_new_path(projekt_phase_id: @projekt_phase.id, idea_text: params[:idea_text])
   end
 
   def edit_draft
-    @generate_image_url = ai_generate_image_path
+    @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
     @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id)
+
     render "ai_proposal_flow/edit_draft"
   end
 
@@ -43,7 +46,7 @@ class Proposals::GenerateController < AiProposalFlowBaseController
 
     flash[:error] = I18n.t("ai_proposal_flow.evaluate_error")
 
-    @generate_image_url = ai_generate_image_path
+    @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
     @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id)
 
@@ -97,6 +100,14 @@ class Proposals::GenerateController < AiProposalFlowBaseController
       )
       proposal.tag_list = draft_data["tag_list"]
       proposal.save!(validate: false)
+
+      if draft_data["location"].present?
+        ProposalAiDraft::GeocodeLocationService.call(
+          proposal:,
+          location_name: draft_data["location"]
+        )
+      end
+
       proposal
     end
 

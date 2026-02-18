@@ -1,4 +1,6 @@
 class AiProposalFlow::EvaluationResultComponent < ApplicationComponent
+  MAX_SCORE_PER_CRITERION = 25
+
   def initialize(evaluation_result:)
     @evaluation_result = evaluation_result || {}
   end

@@ -6,12 +6,11 @@ class UserResources::FormComponent < ApplicationComponent
 
   attr_reader :resource
 
-  def initialize(resource, url:, title:, hide_sidebar: false, hide_back_button: false)
+  def initialize(resource, url:, title:, embbeded_in_ai_flow: false)
     @resource = resource
     @title = title
     @url = url
-    @hide_sidebar = hide_sidebar
-    @hide_back_button = hide_back_button
+    @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
   def render?
@@ -145,10 +144,10 @@ class UserResources::FormComponent < ApplicationComponent
   end
 
   def show_sidebar?
-    !@hide_sidebar
+    !@embbeded_in_ai_flow
   end
 
   def show_back_button?
-    !@hide_back_button
+    !@embbeded_in_ai_flow
   end
 end

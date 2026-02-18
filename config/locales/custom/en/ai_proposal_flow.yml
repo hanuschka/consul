@@ -31,12 +31,14 @@ en:
       heading: "Thank you for your proposal!"
       subheading: "Your contribution has been successfully submitted and will be reviewed."
       reference_label: "YOUR REFERENCE NUMBER"
+      proposal_label: "YOUR PROPOSAL"
+      submitted_badge: "Submitted"
       view_proposal: "View proposal"
       new_idea: "Submit another idea"
     nav:
       back: "← Back"
       back_edit: "← Edit proposal"
-      submit: "Submit proposal ✓"
+      submit: "Submit proposal"
   admin:
     projekt_phases:
       proposal_criteria:

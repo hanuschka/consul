@@ -36,11 +36,30 @@
       if (!dataset.imagePrompt) return;
       if (dataset.hasImage === "true") return;
 
-      if (!App.AssistantUserResourceForm.element) {
-        App.AssistantUserResourceForm.initialize($body.get(0));
-      }
+      this.generateAndAssignImage(dataset);
+    },
 
-      App.AssistantUserResourceForm.generateImage(dataset.imagePrompt);
+    generateAndAssignImage(dataset) {
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(true);
+
+      setTimeout(() => {
+        App.Ajax
+          .post(dataset.generateImageUrl, {
+            prompt: dataset.imagePrompt,
+            codename: dataset.codename,
+            consul_projekt_phase_id: dataset.projektPhaseId,
+            resource_type: dataset.resourceType,
+            resource_id: dataset.resourceId
+          })
+          .then((responseData) => {
+            const $upload = $(".js-direct-image-upload:visible").first();
+
+            $upload.find(".js-direct-image-upload-image-preview").attr("src", responseData.image_url);
+            $upload.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
+
+            App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
+          });
+      }, 100);
     },
 
     initStep2SubmitLoader() {

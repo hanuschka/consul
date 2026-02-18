@@ -34,6 +34,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         - A clear description (3-5 sentences explaining the idea, its benefit, and feasibility)
         - Relevant tags as a comma-separated list (max 5 tags)
         - A brief image prompt for generating a banner image that visually represents the proposal
+        - A location name if a specific place is mentioned in the idea (street, district, city area, etc.), or null if no location is mentioned
 
         Respond in the same language as the citizen's idea.
       PROMPT
@@ -46,9 +47,10 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
           title:        { type: "string" },
           description:  { type: "string" },
           tag_list:     { type: "string" },
-          image_prompt: { type: "string" }
+          image_prompt: { type: "string" },
+          location:     { type: ["string", "null"] }
         },
-        required: ["title", "description", "tag_list", "image_prompt"],
+        required: ["title", "description", "tag_list", "image_prompt", "location"],
         additionalProperties: false
       }
     end

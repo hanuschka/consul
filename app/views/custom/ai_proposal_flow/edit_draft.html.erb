@@ -2,20 +2,21 @@
   <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 2) %>
 
   <div
-    class="ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
+    class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
     data-generate-image-url="<%= @generate_image_url %>"
     data-image-prompt="<%= @draft_resource.ai_image_prompt %>"
     data-has-image="<%= @draft_resource.image.present? %>"
     data-codename="<%= @draft_resource.projekt_phase.try(:voice_assistant_codename) %>"
     data-projekt-phase-id="<%= @draft_resource.projekt_phase_id %>"
+    data-resource-type="<%= @draft_resource.class.name %>"
+    data-resource-id="<%= @draft_resource.id %>"
   >
     <% if @draft_resource.is_a?(Proposal) %>
       <%= render UserResources::FormComponent.new(
         @draft_resource,
         url: @update_draft_url,
         title: t("proposals.new.start_new"),
-        hide_sidebar: true,
-        hide_back_button: true
+        embbeded_in_ai_flow: true
       ) %>
     <% else %>
       <%= render Budgets::Investments::FormComponent.new(

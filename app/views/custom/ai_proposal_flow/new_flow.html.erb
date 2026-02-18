@@ -1,7 +1,7 @@
 <main class="ai-proposal-flow--page">
   <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @projekt_phase, current_step: 1) %>
 
-  <div class="ai-proposal-flow--body">
+  <div class="new-card ai-proposal-flow--body">
     <%= render AiProposalFlow::ProjectSummaryBannerComponent.new(projekt_phase: @projekt_phase) %>
 
     <% if @projekt_phase.proposal_criteria.any? %>
@@ -14,7 +14,9 @@
       <%= hidden_field_tag :projekt_phase_id, @projekt_phase.id %>
       <%= f.label :idea_text, t("ai_proposal_flow.step1.textarea_label"), class: "ai-proposal-flow--label" %>
       <%= f.text_area :idea_text,
+        label: false,
         maxlength: 600,
+        value: params[:idea_text],
         placeholder: t("ai_proposal_flow.step1.placeholder"),
         class: "js-ai-flow-idea-textarea ai-proposal-flow--idea-textarea" %>
       <div class="ai-proposal-flow--char-counter">

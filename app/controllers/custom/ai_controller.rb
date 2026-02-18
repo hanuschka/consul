@@ -73,7 +73,7 @@ class AiController < ApplicationController
       resource_class = ASSIGNABLE_RESOURCE_TYPES[params[:resource_type]]
       return nil unless resource_class
 
-      resource_class.find_by(id: params[:resource_id])
+      resource_class.unscoped.find_by(id: params[:resource_id])
     end
 
     def attach_generated_image(resource, base64_image)

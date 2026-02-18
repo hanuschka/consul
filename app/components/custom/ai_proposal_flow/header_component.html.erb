@@ -16,9 +16,9 @@
       <div class="ai-proposal-flow--step-node -<%= step[:state] %>">
         <div class="ai-proposal-flow--step-circle">
           <% if step[:state] == :completed %>
-            ✓
+            <i class="fas fa-check"></i>
           <% else %>
-            <%= step[:n] %>
+            <i class="fas <%= step[:icon] %>"></i>
           <% end %>
         </div>
         <span class="ai-proposal-flow--step-label">

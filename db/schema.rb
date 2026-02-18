@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_11_120000) do
+ActiveRecord::Schema.define(version: 2026_02_17_181135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -407,10 +407,15 @@ ActiveRecord::Schema.define(version: 2026_02_11_120000) do
     t.time "email_on_feasibility_sent_at"
     t.time "email_on_selected_sent_at"
     t.boolean "preselected", default: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
+    t.index ["draft"], name: "index_budget_investments_on_draft"
     t.index ["group_id"], name: "index_budget_investments_on_group_id"
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
@@ -2046,6 +2051,16 @@ ActiveRecord::Schema.define(version: 2026_02_11_120000) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_geozones_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_proposal_criteria", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "text", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_proposal_criteria_on_projekt_phase_id"
+  end
+
   create_table "projekt_phase_settings", force: :cascade do |t|
     t.bigint "projekt_phase_id"
     t.string "key"
@@ -2339,12 +2354,17 @@ ActiveRecord::Schema.define(version: 2026_02_11_120000) do
     t.integer "cached_votes_down", default: 0
     t.integer "officing_bulk_votes", default: 0
     t.boolean "admin_accepted", default: true, null: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
     t.index ["community_id"], name: "index_proposals_on_community_id"
     t.index ["confidence_score"], name: "index_proposals_on_confidence_score"
+    t.index ["draft"], name: "index_proposals_on_draft"
     t.index ["geozone_id"], name: "index_proposals_on_geozone_id"
     t.index ["hidden_at"], name: "index_proposals_on_hidden_at"
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
@@ -3130,6 +3150,7 @@ ActiveRecord::Schema.define(version: 2026_02_11_120000) do
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
+  add_foreign_key "projekt_phase_proposal_criteria", "projekt_phases"
   add_foreign_key "projekt_phase_settings", "projekt_phases"
   add_foreign_key "projekt_phase_stat_questions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"

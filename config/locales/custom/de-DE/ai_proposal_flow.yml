@@ -31,12 +31,14 @@ de:
       heading: "Herzlichen Dank für Ihren Vorschlag!"
       subheading: "Ihr Beitrag wurde erfolgreich eingereicht und wird nun von der Stadtverwaltung geprüft."
       reference_label: "IHRE REFERENZNUMMER"
+      proposal_label: "IHR VORSCHLAG"
+      submitted_badge: "Eingereicht"
       view_proposal: "Vorschlag ansehen"
       new_idea: "Weitere Idee einreichen"
     nav:
       back: "← Zurück"
       back_edit: "← Vorschlag editieren"
-      submit: "Vorschlag einreichen ✓"
+      submit: "Vorschlag einreichen"
   admin:
     projekt_phases:
       proposal_criteria:

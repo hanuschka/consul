@@ -9,13 +9,13 @@
       <div class="ai-proposal-flow--evaluation-criterion--header">
         <span class="ai-proposal-flow--evaluation-criterion--text"><%= criterion["text"] %></span>
         <span class="ai-proposal-flow--evaluation-criterion--score">
-          <%= criterion["score"] %> / <%= criterion["max_score"] %>
+          <%= criterion["score"] %> / <%= MAX_SCORE_PER_CRITERION %>
         </span>
       </div>
       <div class="ai-proposal-flow--evaluation-bar-track">
         <div
           class="ai-proposal-flow--evaluation-bar <%= bar_modifier(criterion["score"]) %>"
-          style="width: <%= (criterion["score"].to_f / criterion["max_score"] * 100).round %>%"
+          style="width: <%= (criterion["score"].to_f / MAX_SCORE_PER_CRITERION * 100).round %>%"
         ></div>
       </div>
       <p class="ai-proposal-flow--evaluation-criterion--feedback"><em><%= criterion["feedback"] %></em></p>

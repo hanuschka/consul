@@ -1,9 +1,9 @@
 class AiProposalFlow::HeaderComponent < ApplicationComponent
   STEPS = [
-    { n: 1, key: "idea" },
-    { n: 2, key: "ai_draft" },
-    { n: 3, key: "evaluation" },
-    { n: 4, key: "submitted" }
+    { n: 1, key: "idea",       icon: "fa-lightbulb" },
+    { n: 2, key: "ai_draft",   icon: "fa-magic" },
+    { n: 3, key: "evaluation", icon: "fa-chart-bar" },
+    { n: 4, key: "submitted",  icon: "fa-paper-plane" }
   ].freeze
 
   def initialize(projekt_phase:, current_step:)

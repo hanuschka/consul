@@ -33,6 +33,7 @@
       const $document = $(document);
       $document.on("click", ".js-criteria-delete-btn", function(e) {
         e.preventDefault();
+        if (!confirm("Sind Sie sicher, dass Sie dieses Kriterium löschen möchten?")) return;
         const $item = $(this).closest(".js-criteria-item");
         const url = $(this).data("url");
         App.Ajax.delete(url).then(() => $item.remove());

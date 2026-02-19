@@ -34,8 +34,7 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def permission_problem_key
       if @projekt_phase.present?
-        @permission_problem_key ||= @projekt_phase.permission_problem(current_user,
-location: "new_button_component")
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user, location: "new_button_component")
       end
     end
 
@@ -54,7 +53,7 @@ location: "new_button_component")
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
               individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
               proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"],
-              max_pin_number: @projekt_phase&.max_pins_per_user
+              max_pin_number: @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase) ? @projekt_phase.max_pins_per_user : nil
         )
       )
     end

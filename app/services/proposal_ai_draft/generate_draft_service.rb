@@ -18,12 +18,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
   private
 
     def fetch_system_prompt
-      cache_key = "dt_api/consul_ai_prompts/proposal_generate_with_ai"
-
-      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-        DtApi::Client.new.consul_ai_prompts.get(:proposal_generate_with_ai)
-      end
-
+      parsed_response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:proposal_generate_with_ai).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 

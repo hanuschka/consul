@@ -1,7 +1,7 @@
 class ProjektContentBlockTemplatesController < ApplicationController
-  skip_authorization_check
-
   def index
+    authorize! :index, :projekt_content_block_templates
+
     dt_templates_by_category = fetch_dt_templates
 
     if dt_templates_by_category.nil?

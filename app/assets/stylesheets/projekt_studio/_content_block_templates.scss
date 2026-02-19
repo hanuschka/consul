@@ -184,3 +184,17 @@
     color: $dt-base;
   }
 }
+
+.content-block-templates-selector--fallback-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #555;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 20px;
+}

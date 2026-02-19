@@ -1,11 +1,19 @@
 <div data-reveal id="contentBlockTemplatesModal" class="reveal modern-modal projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
   <div class="projekt-content-block-templates-selector">
-    <div class="d-flex">
-      <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
-      <button class="close-button round-icon-button" data-close aria-label="Close Accessible Modal" type="button">
-        <i class="fa fa-xmark">
-        </i>
-      </button>
+    <div class="content-block-templates-selector--header">
+      <div class="d-flex">
+        <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
+        <button class="close-button round-icon-button" data-close aria-label="Close Accessible Modal" type="button">
+          <i class="fa fa-xmark">
+          </i>
+        </button>
+      </div>
+    </div>
+    <div
+      class="content-block-templates-selector--fallback-note js-content-block-templates-fallback-note"
+      style="display: none;"
+    >
+      <i class="fas fa-circle-exclamation"></i> <%= t('custom.projekt.content_block_templates_selector.fallback_note') %>
     </div>
     <div class="js-projekt-content-block-templates-selector--inner projekt-content-block-templates-selector--inner">
       <div class="js-content-block-templates-loading" style="text-align: center; padding: 40px;">

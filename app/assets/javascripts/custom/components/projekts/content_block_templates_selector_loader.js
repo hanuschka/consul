@@ -16,7 +16,8 @@
       $.ajax({
         url: "/projekt_content_block_templates",
         method: "GET",
-        dataType: "html"
+        dataType: "html",
+        timeout: 7000
       })
         .then((html) => {
           this.handleLoadSuccess(html);
@@ -64,6 +65,8 @@
 
       const fallbackContent = document.importNode(fallbackTemplate.content, true);
       $container.empty().append(fallbackContent);
+
+      $(".js-content-block-templates-fallback-note").show();
 
       this.reinitFoundationComponents($container);
     }

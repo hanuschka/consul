@@ -44,18 +44,40 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
       {
         type: "object",
         properties: {
-          total_score:      { type: "integer" },
-          overall_passed:   { type: "boolean" },
-          overall_feedback: { type: "string" },
+          total_score: {
+            type: "integer",
+            description: "The sum of all individual criteria scores."
+          },
+          overall_passed: {
+            type: "boolean",
+            description: "Whether the proposal passes all required criteria overall."
+          },
+          overall_feedback: {
+            type: "string",
+            description: "A summary feedback message for the proposal as a whole."
+          },
           criteria: {
             type: "array",
+            description: "Evaluation results for each individual criterion.",
             items: {
               type: "object",
               properties: {
-                text:      { type: "string" },
-                score:     { type: "integer" },
-                feedback:  { type: "string" },
-                passed:    { type: "boolean" }
+                text: {
+                  type: "string",
+                  description: "The exact criterion text being evaluated."
+                },
+                score: {
+                  type: "integer",
+                  description: "Score awarded for this criterion."
+                },
+                feedback: {
+                  type: "string",
+                  description: "Explanation of how well the proposal meets this criterion."
+                },
+                passed: {
+                  type: "boolean",
+                  description: "Whether the proposal meets this criterion."
+                }
               },
               required: ["text", "score", "feedback", "passed"],
               additionalProperties: false

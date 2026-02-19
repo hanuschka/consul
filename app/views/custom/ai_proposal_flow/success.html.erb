@@ -1,0 +1,35 @@
+<main class="ai-proposal-flow--page">
+  <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 4) %>
+
+  <div class="new-card ai-proposal-flow--body ai-proposal-flow--success">
+    <div class="ai-proposal-flow--success-glow"></div>
+
+    <div class="ai-proposal-flow--success-icon-wrap">
+      <div class="ai-proposal-flow--success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+    </div>
+
+    <h2 class="ai-proposal-flow--success-heading"><%= t("ai_proposal_flow.step4.heading") %></h2>
+    <p class="ai-proposal-flow--success-subheading"><%= t("ai_proposal_flow.step4.subheading") %></p>
+
+    <div class="ai-proposal-flow--success-proposal-card">
+      <div class="ai-proposal-flow--success-proposal-card--icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div class="ai-proposal-flow--success-proposal-card--body">
+        <span class="ai-proposal-flow--success-proposal-card--label"><%= t("ai_proposal_flow.step4.proposal_label") %></span>
+        <%= link_to @draft_resource.title, @resource_url, class: "ai-proposal-flow--success-proposal-card--title" %>
+      </div>
+      <span class="ai-proposal-flow--success-proposal-card--badge">
+        <i class="fas fa-check-circle"></i>
+        <%= t("ai_proposal_flow.step4.submitted_badge") %>
+      </span>
+    </div>
+
+    <div class="ai-proposal-flow--success-actions">
+      <%= link_to t("ai_proposal_flow.step4.view_proposal"), @resource_url, class: "button expanded" %>
+      <%= link_to t("ai_proposal_flow.step4.new_idea"), @new_idea_url, class: "button hollow expanded" %>
+    </div>
+  </div>
+</main>

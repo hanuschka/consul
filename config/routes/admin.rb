@@ -40,6 +40,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
+      get    :proposal_criteria,                to: "projekt_phases/proposal_criteria#index"
+      post   :proposal_criteria,                to: "projekt_phases/proposal_criteria#create",
+as: :create_proposal_criterion
+      patch  "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#update",
+as: :update_proposal_criterion
+      delete "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#destroy",
+as: :destroy_proposal_criterion
+      patch  :reorder_proposal_criteria,        to: "projekt_phases/proposal_criteria#reorder"
     end
 
     resources :formular, only: [] do
@@ -496,9 +504,12 @@ namespace :admin do
     end
     resources :images, only: [:index, :update, :destroy]
     resources :content_blocks, except: [:show]
-    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",as: "delete_heading_content_block"
-    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block", as: "edit_heading_content_block"
-    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block", as: "update_heading_content_block"
+    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",
+as: "delete_heading_content_block"
+    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block",
+as: "edit_heading_content_block"
+    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block",
+as: "update_heading_content_block"
     resources :information_texts, only: [:index] do
       post :update, on: :collection
     end

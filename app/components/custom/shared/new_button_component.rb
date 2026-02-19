@@ -34,7 +34,8 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def permission_problem_key
       if @projekt_phase.present?
-        @permission_problem_key ||= @projekt_phase.permission_problem(current_user, location: "new_button_component")
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user,
+location: "new_button_component")
       end
     end
 
@@ -53,7 +54,7 @@ class Shared::NewButtonComponent < ApplicationComponent
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
               individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
               proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"],
-              max_pin_number: @projekt_phase.try(:max_pins_per_user)
+              max_pin_number: @projekt_phase&.max_pins_per_user
         )
       )
     end
@@ -108,7 +109,8 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def link_path
       if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
-        new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase, projekt_id: @projekt)
+        new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase,
+projekt_id: @projekt)
       elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
         new_proposal_path(link_params_hash)
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
@@ -116,6 +118,14 @@ class Shared::NewButtonComponent < ApplicationComponent
       elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
         new_projekt_point_of_interest_pin_path(link_params_hash)
       end
+    end
+
+    def show_ai_flow_link?
+      @projekt_phase.is_a?(ProjektPhase::ProposalPhase) && Ai::Settings.ai_available?
+    end
+
+    def ai_flow_link_path
+      generate_proposal_new_path(projekt_phase_id: @projekt_phase.id)
     end
 
     def new_button_html

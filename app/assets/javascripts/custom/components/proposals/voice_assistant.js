@@ -419,12 +419,6 @@
         color: "#97d8ff",
         amplitude: 0.3
       });
-      // this.waveDecoration = new SiriWave({
-      //   container: this.element.querySelector(".js-voice-assistant-visualization-blur"),
-      //   speed: 0.05,
-      //   color: "#97d8ff",
-      //   amplitude: 0.3
-      // });
     },
 
     getSpeakButton: function() {

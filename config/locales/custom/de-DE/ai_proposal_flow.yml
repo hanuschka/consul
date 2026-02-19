@@ -1,0 +1,49 @@
+de:
+  ai_proposal_flow:
+    header:
+      title: "Idee einreichen"
+      subtitle: "Gestalten Sie Ihre Stadt mit – Ihr Vorschlag wird geprüft und der Gemeinschaft präsentiert."
+    generate_error: "KI-Entwurf konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    evaluate_error: "KI-Bewertung fehlgeschlagen. Bitte versuchen Sie es erneut."
+    entry_button: "KI-Entwurf erstellen"
+    steps:
+      idea: "Idee"
+      ai_draft: "KI-Entwurf"
+      evaluation: "Bewertung"
+      submitted: "Eingereicht"
+    loader:
+      generating_message: "KI generiert Ihren Entwurf …"
+      generating_submessage: "Titel und Beschreibung werden erstellt."
+      evaluating_message: "KI analysiert Ihren Vorschlag …"
+      evaluating_submessage: "Bewertung anhand der Kriterien läuft."
+    step1:
+      criteria_heading: "Kriterien zum Einreichen Ihrer Idee"
+      idea_heading: "Ihre Idee"
+      textarea_label: "BESCHREIBEN SIE IHRE IDEE KURZ UND PRÄGNANT"
+      placeholder: "Beschreiben Sie Ihre Idee kurz und prägnant."
+      submit_button: "KI-Entwurf generieren →"
+      chars_label: "Zeichen"
+    evaluation:
+      total_score: "Gesamtpunktzahl"
+      passed: "Ihr Vorschlag erfüllt die Kriterien!"
+      failed: "Ihr Vorschlag bedarf noch Verbesserungen."
+    step4:
+      heading: "Herzlichen Dank für Ihren Vorschlag!"
+      subheading: "Ihr Beitrag wurde erfolgreich eingereicht und wird nun von der Stadtverwaltung geprüft."
+      reference_label: "IHRE REFERENZNUMMER"
+      proposal_label: "IHR VORSCHLAG"
+      submitted_badge: "Eingereicht"
+      view_proposal: "Vorschlag ansehen"
+      new_idea: "Weitere Idee einreichen"
+    nav:
+      back: "← Zurück"
+      back_edit: "← Vorschlag editieren"
+      submit: "Vorschlag einreichen"
+  admin:
+    projekt_phases:
+      proposal_criteria:
+        title: "Bewertungskriterien"
+        add_criterion: "Kriterium hinzufügen"
+        text_placeholder: "Kriterium beschreiben …"
+        save: "Speichern"
+        delete: "Löschen"

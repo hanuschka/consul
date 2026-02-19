@@ -9,7 +9,7 @@ en:
             label_ok: "DT API connected"
             label_fail: "DT API not connected"
             description_ok: "The DT API client is registered and has a valid service token."
-            description_fail: "No registered DT API client found or the service token is missing."
+            description_fail: "No DT API client registered or service token missing."
             hint: "Local config check only — no HTTP request is made."
           api_accessible:
             label_ok: "DT API accessible"
@@ -23,6 +23,9 @@ en:
             description_ok: "Authentication is valid and the connection is fully operational."
             description_fail: "The connection check returned an unexpected response or authentication failed."
             hint: "Requires HTTP 200 with authenticated: true in the JSON response body."
+  internal_api_clients:
+    connect:
+      success: "Successfully connected to DT."
   activerecord:
     attributes:
       api_client:

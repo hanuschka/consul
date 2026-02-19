@@ -47,7 +47,4 @@ group :development, :test do
   gem 'rswag-specs'
 end
 
-gem 'openssl', '~> 4.0'
-gem 'faraday', '~> 2.14', '>= 2.14.1'
-
 gem 'proj4rb'

@@ -6,7 +6,7 @@ class DtApi::Resources::VoiceAssistant
   end
 
   def create_session(codename:, consul_projekt_phase_id:, data:)
-    @client.post_with_auth(
+    @client.post(
       BASE_PATH + "/create_session",
       body: {
         codename:,

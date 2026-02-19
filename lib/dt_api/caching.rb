@@ -1,9 +1,8 @@
 module DtApi::Caching
   module_function
 
-  def update_cache_if_different(cache_key, response)
+  def update_cache_if_different(cache_key, new_data)
     cached_data = Rails.cache.read(cache_key)
-    new_data = response.parsed_response
 
     if cached_data != new_data
       Rails.cache.write(cache_key, new_data, expires_in: 5.months)
@@ -23,13 +22,13 @@ module DtApi::Caching
           "DT API connection error: #{error.class} for #{cache_key} and no cached version available"
         end
 
-      raise error_message
+      raise DtApi::CacheMissError, error_message
     end
   end
 
   def build_cache_key(url, query)
-    key = "dt_api#{url}"
-    key += "?#{URI.encode_www_form(query)}" if query.present?
+    key = "dt_api:#{url}"
+    key += "?#{URI.encode_www_form(query.sort.to_h)}" if query.present?
     key
   end
 end

@@ -6,7 +6,7 @@ class DtApi::Resources::Ai
   end
 
   def generate_image(prompt:)
-    @client.post_with_auth(
+    @client.post(
       BASE_PATH + "/generate_image",
       body: { prompt: }
     )

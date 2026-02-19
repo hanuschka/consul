@@ -37,6 +37,10 @@ class DtApi::Client
     )
   end
 
+  def ai
+    @ai ||= DtApi::Resources::Ai.new(self)
+  end
+
   def voice_assistant
     @voice_assistant ||= DtApi::Resources::VoiceAssistant.new(
       self
@@ -54,7 +58,7 @@ class DtApi::Client
   def get_with_auth(url, query: nil)
     self.class.get(
       url,
-      query: query,
+      query:,
       **base_headers,
       **auth_settings,
     )
@@ -63,20 +67,20 @@ class DtApi::Client
   def post_with_auth(url, body:, multipart: false)
     self.class.post(
       url,
-      multipart: multipart,
+      multipart:,
       **base_headers,
       **auth_settings,
-      body: body
+      body:
     )
   end
 
   def patch_with_auth(url, body:, multipart: false)
     self.class.patch(
       url,
-      multipart: multipart,
+      multipart:,
       **base_headers,
       **auth_settings,
-      body: body
+      body:
     )
   end
 
@@ -114,8 +118,8 @@ class DtApi::Client
 
       if username.present? && password.present?
         additional_settings[:basic_auth] = {
-          username: username,
-          password: password
+          username:,
+          password:
         }
       end
     end

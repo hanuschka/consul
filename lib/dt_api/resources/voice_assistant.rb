@@ -9,17 +9,10 @@ class DtApi::Resources::VoiceAssistant
     @client.post_with_auth(
       BASE_PATH + "/create_session",
       body: {
-        codename: codename,
-        consul_projekt_phase_id: consul_projekt_phase_id,
-        data: data
+        codename:,
+        consul_projekt_phase_id:,
+        data:
       }
-    )
-  end
-
-  def generate_image(prompt:)
-    @client.post_with_auth(
-      "/ai/generate_image",
-      body: { prompt: prompt }
     )
   end
 end

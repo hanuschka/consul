@@ -5,7 +5,7 @@ class AiController < ApplicationController
   DEFICIENCY_REPORT_CODENAME = "deficiency_report_voice_assistant".freeze
 
   ASSIGNABLE_RESOURCE_TYPES = {
-    "Proposal"          => Proposal,
+    "Proposal" => Proposal,
     "Budget::Investment" => Budget::Investment
   }.freeze
 
@@ -15,7 +15,7 @@ class AiController < ApplicationController
       return
     end
 
-    response = DtApi::Client.new.voice_assistant.generate_image(prompt: params[:prompt])
+    response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt])
 
     unless response.success?
       Sentry.capture_message(
@@ -45,7 +45,7 @@ class AiController < ApplicationController
       return
     end
 
-    image_response = DtApi::Client.new.voice_assistant.generate_image(prompt: params[:prompt])
+    image_response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt])
 
     unless image_response.success?
       Sentry.capture_message(

@@ -16,22 +16,28 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
 
   private
 
-    def build_prompt(criteria)
-      criteria_list = criteria.map.with_index(1) { |c, i| "#{i}. #{c.text}" }.join("\n")
-      <<~PROMPT
-        Evaluate the following proposal against the given criteria. Score each criterion from 0 to 25.
+    def fetch_system_prompt
+      cache_key = "dt_api/consul_ai_prompts/proposal_evaluate_criteria"
+      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
+        DtApi::Client.new.consul_ai_prompts.get(:proposal_evaluate_criteria)
+      end
+      parsed_response.dig("consul_ai_prompt", "prompt")
+    end
 
+    def build_prompt(criteria)
+      system_prompt = fetch_system_prompt
+      raise "[ProposalAiDraft] System prompt not found for proposal_evaluate_criteria" if system_prompt.nil?
+
+      criteria_list = criteria.map.with_index(1) { |c, i| "#{i}. #{c.text}" }.join("\n")
+      dynamic_context = <<~CONTEXT
         Proposal title: #{@resource.title}
         Proposal description: #{@resource.description}
 
         Criteria:
         #{criteria_list}
+      CONTEXT
 
-        For each criterion provide: the criterion text, a score (0-25), a one-sentence feedback, and whether it passed (score >= 15).
-        Also provide a total_score (sum of all criteria scores) and an overall assessment.
-
-        Respond in the same language as the proposal.
-      PROMPT
+      system_prompt + "\n" + dynamic_context
     end
 
     def output_schema

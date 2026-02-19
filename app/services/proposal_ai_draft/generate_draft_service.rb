@@ -18,26 +18,32 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
   private
 
+    def fetch_system_prompt
+      cache_key = "dt_api/consul_ai_prompts/proposal_generate_with_ai"
+
+      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
+        DtApi::Client.new.consul_ai_prompts.get(:proposal_generate_with_ai)
+      end
+
+      parsed_response.dig("consul_ai_prompt", "prompt")
+    end
+
     def build_prompt(projekt_name, criteria_texts)
+      system_prompt = fetch_system_prompt
+      raise "[ProposalAiDraft] System prompt not found for proposal_generate_with_ai" if system_prompt.nil?
+
       criteria_list = criteria_texts.map.with_index(1) { |c, i| "#{i}. #{c}" }.join("\n")
-      <<~PROMPT
-        You are helping a citizen write a proposal for the participatory project "#{projekt_name}".
+      dynamic_context = <<~CONTEXT
+        Project name: #{projekt_name}
 
         The citizen described their idea as:
         "#{@idea_text}"
 
         The proposal must meet these criteria:
         #{criteria_list}
+      CONTEXT
 
-        Generate a well-structured proposal with:
-        - A concise, engaging title (max 80 characters)
-        - A clear description (3-5 sentences explaining the idea, its benefit, and feasibility)
-        - Relevant tags as a comma-separated list (max 5 tags)
-        - A brief image prompt for generating a banner image that visually represents the proposal
-        - A location name if a specific place is mentioned in the idea (street, district, city area, etc.), or null if no location is mentioned
-
-        Respond in the same language as the citizen's idea.
-      PROMPT
+      "#{system_prompt}\n#{dynamic_context}"
     end
 
     def output_schema

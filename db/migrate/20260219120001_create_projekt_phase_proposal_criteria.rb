@@ -1,7 +1,5 @@
 class CreateProjektPhaseProposalCriteria < ActiveRecord::Migration[6.1]
   def change
-    drop_table :projekt_phase_proposal_criteria
-
     create_table :projekt_phase_proposal_criteria do |t|
       t.bigint :projekt_phase_id, null: false
       t.text :text, null: false

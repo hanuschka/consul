@@ -42,6 +42,7 @@ de:
     projekt:
       back_to_projekt_overview: zurück zur Projektübersicht
       content_block_templates_selector:
+        fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
         tabs:
           internal_content_blocks: Interne Inhaltsblöcke
           own_content_blocks: Eigene Inhaltsblöcke

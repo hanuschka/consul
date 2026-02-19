@@ -16,7 +16,8 @@
       $.ajax({
         url: "/projekt_content_block_templates",
         method: "GET",
-        dataType: "html"
+        dataType: "html",
+        timeout: 7000
       })
         .then((html) => {
           this.handleLoadSuccess(html);
@@ -30,11 +31,14 @@
       const $container = $(".js-projekt-content-block-templates-selector--inner");
       $container.html(html);
 
+      this.reinitFoundationComponents($container);
+    },
+
+    reinitFoundationComponents($container) {
       this.storeOrbitHeights($container);
-
       $(document).foundation();
-
       this.restoreOrbitHeights($container);
+
       $container.find('[data-tabs]').on('change.zf.tabs', () => this.restoreOrbitHeights($container));
     },
 
@@ -55,7 +59,16 @@
 
     handleLoadError() {
       const $container = $(".js-projekt-content-block-templates-selector--inner");
-      $container.html('<p style="text-align: center; padding: 40px; color: red;">Fehler beim Laden der Vorlagen. Bitte versuchen Sie es erneut.</p>');
+      const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
+
+      if (!fallbackTemplate) return
+
+      const fallbackContent = document.importNode(fallbackTemplate.content, true);
+      $container.empty().append(fallbackContent);
+
+      $(".js-content-block-templates-fallback-note").show();
+
+      this.reinitFoundationComponents($container);
     }
   };
 }).call(this);

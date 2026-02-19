@@ -1,0 +1,55 @@
+de:
+  adm:
+    projekts:
+      budget_investments:
+        tabs:
+          show: Anzeigen
+          administer: Administrieren
+          edit: Bearbeiten
+          audits: Änderungslog
+        show:
+          title: Investitionsvorschlag
+          author: Autor
+          heading: Überschrift
+          created_at: Eingereicht
+          feasibility: Kriterien
+          valuation_finished: Bewertung beendet
+          price: Kosten
+          total_votes: Unterstützung
+          ballot_lines: Anzahl Wähler
+          total_ballot_votes: Anzahl Stimmen
+          preselected: Vorausgewählt
+          selected: Ausgewählt
+          winner: Gewinner
+          district: Bezirk
+          admin: Administrator
+          valuator: Gutachter
+          description: Beschreibung
+          download_pdf: PDF herunterladen
+          back: Zurück zur Liste
+        administer:
+          title: Administrieren
+        edit:
+          title: Investitionsvorschlag bearbeiten
+          user_submission_fields: Nutzereingaben
+          documents: Dokumente
+        update:
+          success: Investitionsvorschlag wurde erfolgreich aktualisiert.
+        destroy:
+          success: Investitionsvorschlag wurde erfolgreich gelöscht.
+        form:
+          title_label: Titel
+          description_label: Beschreibung
+          heading_label: Überschrift
+          price_label: Kosten
+          feasibility_label: Kriterien
+          feasibility_hint: "Kriterienstatus: undecided, feasible, unfeasible"
+          selected_label: Ausgewählt
+          winner_label: Gewinner
+          incompatible_label: Inkompatibel
+          visible_to_valuators_label: Sichtbar für Gutachter
+          valuator_explanation_label: Gutachter-Erklärung
+          image_label: Bild
+          submit: Speichern
+        audits:
+          title: Änderungslog

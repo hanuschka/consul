@@ -1,0 +1,15 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @investment.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: @tabs) %>
+
+<div class="kern-container mb-5">
+  <%= render Adm::AttributeEditorComponent.new(@investment, :price, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :feasibility, :select, select_options: Budget::Investment::FEASIBILITIES) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :selected, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :winner, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :incompatible, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :visible_to_valuators, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@investment, :valuator_explanation, :string) %>
+</div>

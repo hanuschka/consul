@@ -110,6 +110,37 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
         stats_enabled_description: Zeigt die Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
         advanced_stats_enabled_label: Erweiterte Statistiken
         advanced_stats_enabled_description: Zeigt erweiterte Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
+      budget/investment:
+        title_label: Titel
+        title_description: Der Titel des Investitionsvorschlags.
+        description_label: Beschreibung
+        description_description: Ausführliche Beschreibung des Investitionsvorschlags.
+        price_label: Kosten
+        price_description: Geschätzter Preis des Investitionsvorschlags.
+        feasibility_label: Kriterien
+        feasibility_description: "Kriterienstatus des Investitionsvorschlags."
+        feasibility_label_options:
+          undecided: Nicht bewertet
+          feasible: Entspricht den Kriterien
+          unfeasible: Entspricht nicht den Kriterien
+        selected_label: Ausgewählt
+        selected_description: Wurde der Vorschlag zur Abstimmung ausgewählt?
+        winner_label: Gewinner
+        winner_description: Hat der Vorschlag die Abstimmung gewonnen?
+        incompatible_label: Inkompatibel
+        incompatible_description: Ist dieser Vorschlag mit einem anderen inkompatibel?
+        visible_to_valuators_label: Sichtbar für Gutachter
+        visible_to_valuators_description: Soll dieser Vorschlag für Gutachter sichtbar sein?
+        valuator_explanation_label: Gutachter-Erklärung
+        valuator_explanation_description: Erläuterung für Gutachter.
+        video_url_label: Video-URL
+        on_behalf_of_label: Im Auftrag von
+        implementation_performer_label: Umsetzung
+        implementation_performer_label_options:
+          city: Umsetzung durch die Stadtverwaltung
+          user: Ich kann bei der Umsetzung unterstützen
+        implementation_contribution_label: Beitrag zur Umsetzung
+        user_cost_estimate_label: Geschätzte Kosten (Nutzer)
       budget/heading:
         section_title: Standardüberschrift
         price_label: Budget

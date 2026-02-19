@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(@investment, :documents) do %>
+  <%= render Adm::AttributeEditors::DocumentsComponent.new(
+    @investment,
+    add_path: add_document_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+    remove_path: remove_document_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
+  ) %>
+<% end %>

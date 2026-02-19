@@ -156,7 +156,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @title_header_options = { search: true }
     @feasibility_header_options = {
-      filter_options: %w[undecided feasible unfeasible].map do |value|
+      filter_options: Budget::Investment::FEASIBILITIES.map do |value|
         [value, Budget::Investment.human_attribute_name("feasibility_#{value}")]
       end
     }
@@ -165,6 +165,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @preselected_header_options = { filter_options: boolean_filter_options }
     @selected_header_options = { filter_options: boolean_filter_options }
     @winner_header_options = { filter_options: boolean_filter_options }
+    @district_header_options = {
+      filter_options: ::RegisteredAddress::District.order(:name).pluck(:id, :name)
+    }
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },

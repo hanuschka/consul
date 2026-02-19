@@ -237,6 +237,18 @@ export default class BaseAdapter {
     throw new Error("Subclass must implement onFeatureCreated()")
   }
 
+  /**
+   * Set feature styling for next created features.
+   * Called when the user selects labels/sentiments that affect pin appearance.
+   * @param {String|null} color - Hex color for the feature
+   * @param {String|null} iconName - Font Awesome icon name
+   * @param {String|null} iconUnicode - Font Awesome unicode value
+   * @param {String|null} categoryName - Category/label name
+   */
+  setFeatureStyle(color, iconName, iconUnicode, categoryName) {
+    // Subclasses implement to update drawing tool styling
+  }
+
   // ===========================================================================
   // 7. FORM INPUT SYNCHRONIZATION
   // ===========================================================================

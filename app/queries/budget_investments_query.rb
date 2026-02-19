@@ -43,6 +43,17 @@ class BudgetInvestmentsQuery < ApplicationQuery
         .order(Arel.sql("COALESCE(SUM(votes.vote_weight), 0) + budget_investments.physical_votes #{direction}"))
     end
 
+    def apply_filters(scope)
+      scope = super(scope)
+
+      district_ids = Array(params[:district]).reject(&:blank?)
+      if district_ids.present?
+        scope = scope.joins(:map_location).where(map_locations: { registered_address_district_id: district_ids })
+      end
+
+      scope
+    end
+
     def apply_search(scope)
       search_term = searchable_params[:title]
       return scope if search_term.blank?

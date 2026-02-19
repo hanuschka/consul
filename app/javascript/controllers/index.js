@@ -68,6 +68,7 @@ application.register("map-screenshot", MapScreenshotController)
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 
+
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)
 

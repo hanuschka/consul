@@ -23,12 +23,11 @@
             <% end %>
             <th scope="col" class="kern-table__header"><%= t(".table.balloters") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.total_ballot_votes") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.district") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:winner, t(".table.winner"), **@winner_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.admin") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.valuator") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.pdf_link") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>
         </thead>
@@ -58,12 +57,10 @@
                 <%= valuators ? valuators.join(", ") : "" %>
               </td>
               <td class="kern-table__cell">
-                <%= kern_link_button adm_projekts_phase_budget_investment_path(@projekt_phase, investment, format: :pdf), text: t(".table.pdf_link"), style: :tertiary %>
-              </td>
-              <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(label: "Anzeigen", url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment)) %>
                   <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_budget_investment_path(@projekt_phase, investment)) %>
+                  <% actions.with_action(label: t(".table.pdf_link"), url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment, format: :pdf)) %>
                   <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>

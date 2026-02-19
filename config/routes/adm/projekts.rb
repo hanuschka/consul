@@ -103,7 +103,15 @@ namespace :adm do
         patch :toggle_enabled, on: :member
       end
       resources :budgets, only: [:update]
-      resources :budget_investments, only: [:show, :edit, :update, :destroy]
+      resources :budget_investments, only: [:show, :edit, :update, :destroy] do
+        resource :map_location, controller: "/adm/map_locations", only: [:update]
+        member do
+          get :administer
+          get :audits
+          post :add_document
+          delete :remove_document
+        end
+      end
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do

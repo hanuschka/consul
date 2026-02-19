@@ -1,4 +1,6 @@
 class Kern::MapComponent < ApplicationComponent
+  delegate :pick_text_color, to: :helpers
+
   def initialize(
     map_location:,
     form: nil,
@@ -55,6 +57,24 @@ class Kern::MapComponent < ApplicationComponent
     }
   end
 
+  def show_labels?
+    editable && projekt_phase&.feature?("form.labels") && projekt_phase.projekt_labels.any?
+  end
+
+  def show_sentiments?
+    editable && projekt_phase&.feature?("form.sentiments") && projekt_phase.sentiments.any?
+  end
+
+  def projekt_phase
+    @projekt_phase ||= mappable.try(:projekt_phase)
+  end
+
+  def mappable_form
+    @mappable_form ||= ActionView::Helpers::FormBuilder.new(
+      mappable.model_name.param_key, mappable, self, {}
+    )
+  end
+
   private
 
     def rendering_library
@@ -78,6 +98,7 @@ class Kern::MapComponent < ApplicationComponent
 
     def admin_features_json
       return "{}" if admin_editor
+      return "{}" if editable
 
       map_location.features.is_a?(String) ? map_location.features : map_location.features.to_json
     end

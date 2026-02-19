@@ -1,0 +1,92 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @investment.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: @tabs) %>
+
+<div class="kern-container mb-5">
+  <%= form_with model: @investment,
+        url: adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+        method: :patch do |form| %>
+
+    <%= render Kern::FormFieldComponent.new(divider: false,
+      label: t("adm.attribute_editor.budget/investment.title_label")) do %>
+      <%= form.text_field :title, label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(divider: false,
+      label: t("adm.attribute_editor.budget/investment.description_label"),
+      hint: t("adm.attribute_editor.budget/investment.description_description")) do %>
+      <%= form.rich_text_area :description, label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(divider: false,
+      label: t("adm.attribute_editor.budget/investment.image_label", default: "Bild")) do %>
+      <%= render Kern::Form::ImageComponent.new(
+        form: form,
+        label: t("adm.attribute_editor.budget/investment.image_label", default: "Bild")) %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(divider: false,
+      label: t("adm.attribute_editor.budget/investment.on_behalf_of_label")) do %>
+      <%= form.text_field :on_behalf_of, label: false %>
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.enable_external_video") %>
+      <%= render Kern::FormFieldComponent.new(divider: false,
+        label: t("adm.attribute_editor.budget/investment.video_url_label")) do %>
+        <%= form.text_field :video_url, label: false %>
+      <% end %>
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
+      <%= render Kern::FormFieldComponent.new(divider: false,
+        label: t("adm.attribute_editor.budget/investment.implementation_performer_label")) do %>
+        <%= form.select :implementation_performer,
+          Budget::Investment.implementation_performers.keys.map { |k|
+            [t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{k}"), k]
+          }, { include_blank: true }, { label: false } %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(divider: false,
+        label: t("adm.attribute_editor.budget/investment.implementation_contribution_label")) do %>
+        <%= form.text_field :implementation_contribution, label: false %>
+      <% end %>
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
+      <%= render Kern::FormFieldComponent.new(divider: false,
+        label: t("adm.attribute_editor.budget/investment.user_cost_estimate_label")) do %>
+        <%= form.text_field :user_cost_estimate, label: false %>
+      <% end %>
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.show_map") %>
+      <div class="kern-row">
+        <div class="kern-col-10">
+          <%= form.fields_for :map_location do |ml_form| %>
+            <%= render Kern::MapComponent.new(
+              map_location: @investment.map_location,
+              form: ml_form,
+              editable: true,
+              admin_editor: false,
+              height: 500
+            ) %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.allow_attached_documents") %>
+    <%= render Kern::FormFieldComponent.new(divider: false,label: t(".documents")) do %>
+      <%= render Adm::AttributeEditors::DocumentsComponent.new(
+        @investment,
+        add_path: add_document_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+        remove_path: remove_document_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
+      ) %>
+    <% end %>
+  <% end %>
+</div>

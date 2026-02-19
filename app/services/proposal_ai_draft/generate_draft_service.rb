@@ -32,6 +32,8 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       system_prompt = fetch_system_prompt
       raise "[ProposalAiDraft] System prompt not found for proposal_generate_with_ai" if system_prompt.nil?
 
+      system_prompt = system_prompt.gsub("{{projekt_name}}", projekt_name)
+
       criteria_list = criteria_texts.map.with_index(1) { |c, i| "#{i}. #{c}" }.join("\n")
       dynamic_context = <<~CONTEXT
         Project name: #{projekt_name}

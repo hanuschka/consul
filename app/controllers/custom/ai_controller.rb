@@ -15,7 +15,7 @@ class AiController < ApplicationController
       return
     end
 
-    response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt])
+    response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt], aspect_ratio: params[:aspect_ratio])
 
     unless response.success?
       Sentry.capture_message(
@@ -45,7 +45,7 @@ class AiController < ApplicationController
       return
     end
 
-    image_response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt])
+    image_response = DtApi::Client.new.ai.generate_image(prompt: params[:prompt], aspect_ratio: params[:aspect_ratio])
 
     unless image_response.success?
       Sentry.capture_message(

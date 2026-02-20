@@ -15,7 +15,11 @@
 
     <div class="ai-proposal-flow--success-proposal-card">
       <div class="ai-proposal-flow--success-proposal-card--icon">
-        <i class="fas fa-file-alt"></i>
+        <% if @draft_resource.image.present? %>
+          <%= image_tag @draft_resource.image.variant(:medium), alt: @draft_resource.title %>
+        <% else %>
+          <i class="fas fa-file-alt"></i>
+        <% end %>
       </div>
       <div class="ai-proposal-flow--success-proposal-card--body">
         <span class="ai-proposal-flow--success-proposal-card--label"><%= t("ai_proposal_flow.step4.proposal_label") %></span>
@@ -28,7 +32,6 @@
     </div>
 
     <div class="ai-proposal-flow--success-actions">
-      <%= link_to t("ai_proposal_flow.step4.view_proposal"), @resource_url, class: "button expanded" %>
       <%= link_to t("ai_proposal_flow.step4.new_idea"), @new_idea_url, class: "button hollow expanded" %>
     </div>
   </div>

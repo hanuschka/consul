@@ -10,11 +10,7 @@
   <%= render Adm::AttributeEditorComponent.new(@idea.image, :attachment, :image, path: update_image_adm_ideas_idea_path(@idea), label: t(".labels.image")) %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".labels.documents")) do %>
-    <%= render Adm::AttributeEditors::DocumentsComponent.new(
-      @idea,
-      add_path: add_document_adm_ideas_idea_path(@idea),
-      remove_path: remove_document_adm_ideas_idea_path(@idea)
-    ) %>
+    <%= render "adm/ideas/ideas/edit/documents", idea: @idea %>
   <% end %>
 
   <%= render Adm::AttributeEditorComponent.new(@idea, :video_url, :string, label: t(".labels.video_url")) %>

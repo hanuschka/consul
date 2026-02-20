@@ -1,43 +1,5 @@
 <%= tag.div data: controller_data_attributes do %>
 
-  <% if show_labels? %>
-    <div data-feature-style-mode="icon">
-      <div class="kern-title kern-title--small mb-2"><%= projekt_phase.projekt_labels_label_text %></div>
-      <div class="map-feature-pills">
-        <%= mappable_form.collection_check_boxes :projekt_label_ids, projekt_phase.projekt_labels, :id, :name do |cb|
-          cb.check_box(style: "display:none") +
-          cb.label(
-            id: dom_id(cb.object),
-            class: "map-feature-pill map-feature-pill--label",
-            data: {
-              "icon-name" => cb.object.icon,
-              "icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode
-            }
-          ) {
-            tag.i(class: "fas fa-#{cb.object.icon}") + " #{cb.text}"
-          }
-        end %>
-      </div>
-    </div>
-  <% end %>
-
-  <% if show_sentiments? %>
-    <div data-feature-style-mode="color">
-      <div class="kern-title kern-title--small mb-2"><%= projekt_phase.sentiment_label_text %></div>
-      <div class="map-feature-pills">
-        <%= mappable_form.collection_radio_buttons :sentiment_id, projekt_phase.sentiments, :id, :name, include_hidden: false do |rb|
-          rb.radio_button(style: "display:none") +
-          rb.label(
-            id: dom_id(rb.object),
-            class: "map-feature-pill map-feature-pill--sentiment",
-            data: { color: rb.object.color },
-            style: "--pill-color:#{rb.object.color};--pill-text-color:#{pick_text_color(rb.object.color)}"
-          ) { rb.text }
-        end %>
-      </div>
-    </div>
-  <% end %>
-
   <% if editable && !admin_editor %>
     <div class="kern-title kern-title--small mb-2">
       <%= t("components.adm.map_setting_component.map_label") %>

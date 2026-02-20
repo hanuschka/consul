@@ -68,7 +68,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
           locals: { idea: @idea }
         )
       else
-        redirect_to adm_ideas_root_path, notice: t("custom.admin.ideas.update.success_notice")
+        redirect_to edit_adm_ideas_idea_path(@idea), notice: t("adm.attribute.update.success")
       end
     else
       render :edit
@@ -154,35 +154,6 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
         label: t("adm.ideas.ideas.edit.labels.image")
       )
     )
-  end
-
-  def add_document
-    @idea = Idea.find(params[:id])
-    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
-
-    document = @idea.documents.build(
-      user: current_user,
-      title: params[:title],
-      attachment: params[:attachment]
-    )
-
-    if document.save
-      flash.now[:success] = t("adm.attribute.update.success")
-      @idea.documents.reload
-    else
-      render plain: document.errors.full_messages.join(", "), status: :unprocessable_entity
-    end
-  end
-
-  def remove_document
-    @idea = Idea.find(params[:id])
-    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
-
-    document = @idea.documents.find(params[:document_id])
-    document.destroy
-
-    flash.now[:success] = t("adm.attribute.update.success")
-    @idea.documents.reload
   end
 
   private

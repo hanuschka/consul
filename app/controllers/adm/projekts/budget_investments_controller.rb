@@ -1,9 +1,10 @@
 class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include ImageAttributes
   include MapLocationAttributes
+  include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer edit update destroy audits add_document remove_document]
+  before_action :set_investment, only: %i[show administer edit update destroy audits]
   before_action :set_tabs, only: %i[show administer edit audits]
 
   def show
@@ -55,33 +56,6 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
   end
 
-  def add_document
-    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
-
-    document = @investment.documents.build(
-      user: current_user,
-      title: params[:title],
-      attachment: params[:attachment]
-    )
-
-    if document.save
-      flash.now[:success] = t("adm.attribute.update.success")
-      @investment.documents.reload
-    else
-      render plain: document.errors.full_messages.join(", "), status: :unprocessable_entity
-    end
-  end
-
-  def remove_document
-    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
-
-    document = @investment.documents.find(params[:document_id])
-    document.destroy
-
-    flash.now[:success] = t("adm.attribute.update.success")
-    @investment.documents.reload
-  end
-
   private
 
     def set_projekt_phase
@@ -102,7 +76,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         :user_cost_estimate, :sentiment_id,
         projekt_label_ids: [],
         image_attributes: image_attributes,
-        map_location_attributes: map_location_attributes
+        map_location_attributes: map_location_attributes,
+        documents_attributes: [document_attributes]
       )
     end
 

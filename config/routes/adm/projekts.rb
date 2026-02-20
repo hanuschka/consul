@@ -108,8 +108,6 @@ namespace :adm do
         member do
           get :administer
           get :audits
-          post :add_document
-          delete :remove_document
         end
       end
     end

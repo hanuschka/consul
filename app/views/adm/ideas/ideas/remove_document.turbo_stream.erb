@@ -1,7 +1,0 @@
-<%= turbo_stream.replace dom_id(@idea, :documents) do %>
-  <%= render Adm::AttributeEditors::DocumentsComponent.new(
-    @idea,
-    add_path: add_document_adm_ideas_idea_path(@idea),
-    remove_path: remove_document_adm_ideas_idea_path(@idea)
-  ) %>
-<% end %>

@@ -1,6 +1,4 @@
 class Kern::MapComponent < ApplicationComponent
-  delegate :pick_text_color, to: :helpers
-
   def initialize(
     map_location:,
     form: nil,
@@ -55,24 +53,6 @@ class Kern::MapComponent < ApplicationComponent
       map_mapbox_style_id_value: mapbox_style_id,
       map_vc_map_module_url_value: vc_map_module_url
     }
-  end
-
-  def show_labels?
-    editable && projekt_phase&.feature?("form.labels") && projekt_phase.projekt_labels.any?
-  end
-
-  def show_sentiments?
-    editable && projekt_phase&.feature?("form.sentiments") && projekt_phase.sentiments.any?
-  end
-
-  def projekt_phase
-    @projekt_phase ||= mappable.try(:projekt_phase)
-  end
-
-  def mappable_form
-    @mappable_form ||= ActionView::Helpers::FormBuilder.new(
-      mappable.model_name.param_key, mappable, self, {}
-    )
   end
 
   private

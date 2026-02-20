@@ -67,7 +67,7 @@ export default class extends Controller {
 
   disconnect() {
     if (this._featureStyleChangeHandler) {
-      this.element.removeEventListener("change", this._featureStyleChangeHandler)
+      document.removeEventListener("change", this._featureStyleChangeHandler)
     }
     if (this.adapter) {
       this.adapter.destroy()
@@ -198,16 +198,16 @@ export default class extends Controller {
 
       this.readFeatureStyleFromDOM()
     }
-    this.element.addEventListener("change", this._featureStyleChangeHandler)
+    document.addEventListener("change", this._featureStyleChangeHandler)
   }
 
   /**
    * Read current feature style from checked inputs in the DOM.
    * Queries [data-feature-style-mode="icon"] and [data-feature-style-mode="color"]
-   * containers within this controller's element.
+   * containers in the document (labels/sentiments may be outside the map element).
    */
   readFeatureStyleFromDOM() {
-    const iconContainer = this.element.querySelector('[data-feature-style-mode="icon"]')
+    const iconContainer = document.querySelector('[data-feature-style-mode="icon"]')
     if (iconContainer) {
       const checked = iconContainer.querySelectorAll("input:checked")
       const labels = Array.from(checked).map(input => {
@@ -226,7 +226,7 @@ export default class extends Controller {
       }
     }
 
-    const colorContainer = this.element.querySelector('[data-feature-style-mode="color"]')
+    const colorContainer = document.querySelector('[data-feature-style-mode="color"]')
     if (colorContainer) {
       const checked = colorContainer.querySelector("input:checked")
       const label = checked ? colorContainer.querySelector(`label[for="${checked.id}"]`) : null

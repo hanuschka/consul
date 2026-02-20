@@ -25,8 +25,6 @@ namespace :adm do
         patch :toggle_image
         patch :update_official_answer
         patch :update_image
-        post :add_document
-        delete :remove_document
       end
     end
   end

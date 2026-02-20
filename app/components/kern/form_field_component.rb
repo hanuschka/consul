@@ -1,9 +1,10 @@
 class Kern::FormFieldComponent < ApplicationComponent
-  def initialize(label:, hint: nil, divider: true)
+  def initialize(label:, hint: nil, divider: true, inline: false)
     @label = label
     @hint = hint
     @divider = divider
+    @inline = inline
   end
 
-  attr_reader :label, :hint, :divider
+  attr_reader :label, :hint, :divider, :inline
 end

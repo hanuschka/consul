@@ -134,28 +134,6 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     )
   end
 
-  def update_image
-    @idea = Idea.find(params[:id])
-    authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
-
-    @idea.build_image(user: current_user) unless @idea.image
-
-    if @idea.image.update(attachment: params[:image][:attachment])
-      flash.now[:success] = t("adm.attribute.update.success")
-    end
-
-    render turbo_stream: turbo_stream.replace(
-      helpers.dom_id(@idea.image, :attachment),
-      Adm::AttributeEditorComponent.new(
-        @idea.image,
-        :attachment,
-        :image,
-        path: update_image_adm_ideas_idea_path(@idea),
-        label: t("adm.ideas.ideas.edit.labels.image")
-      )
-    )
-  end
-
   private
 
     def idea_params

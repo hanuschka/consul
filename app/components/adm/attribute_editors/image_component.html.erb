@@ -2,33 +2,7 @@
   <%= hidden_field_tag :kind, "image" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-    <div class="kern-form-input <%= 'd-none' if show_preview? %>">
-      <%= form.file_field @attribute,
-                          label: false,
-                          accept: SiteCustomization::Image::VALID_FORMATS.join(','),
-                          class: 'kern-form-input__input js-file-input',
-                          disabled: disabled?,
-                          autofocus: (helpers.turbo_frame_request? && !show_preview?),
-                          onchange: "this.form.requestSubmit();",
-                          aria: aria_attributes %>
-    </div>
-
-    <%= image_tag(@record.send(@attribute), alt: label, style: "width:100%;") if show_preview? %>
-
-    <div class='error-message mt-3 <%= 'd-none' if @record.errors.blank? %>'>
-      <%= helpers.content_tag(:span, class: '') { sanitize @record.errors[@attribute].join('; ') } %>
-    </div>
-
-    <%= tag.button type: 'button',
-            class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
-            style: "float: right;",
-            disabled: disabled?,
-            onclick: "this.form.querySelector('.js-file-input').click(); return false;",
-            aria: aria_attributes do %>
-      <span class="kern-label">
-        <%= t('adm.components.attribute_editors.image_component.choose_different') %>
-      </span>
-    <% end %>
+  <%= render Kern::Form::ImageComponent.new(form: form, attribute: @attribute, auto_submit: true) %>
 <% end %>
 
 <% if flash[:success].present? %>

@@ -21,7 +21,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
-    <%= render Kern::Form::ImageComponent.new(form: f, label: t(".image_label")) %>
+    <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
   <% end %>
 
   <%= form_submit_button(text: t(".submit")) %>

@@ -24,7 +24,6 @@ namespace :adm do
         patch :toggle_accepted
         patch :toggle_image
         patch :update_official_answer
-        patch :update_image
       end
     end
   end

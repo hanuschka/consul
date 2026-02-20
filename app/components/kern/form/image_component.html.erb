@@ -1,39 +1,34 @@
-<div data-controller="kern--form--image">
-  <%= @form.fields_for :image, image do |image_builder| %>
-    <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
-         data-kern--form--image-target="inputWrapper">
-      <%= image_builder.file_field :attachment,
-                                   label: false,
-                                   accept: Image.accepted_content_types.join(","),
-                                   class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
-                                   data: { kern__form__image_target: "input", action: "change->kern--form--image#change" } %>
-      <% if image_errors.any? %>
-        <p class="kern-error" role="alert">
-          <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
-          <span class="kern-body"><%= image_errors.join(", ") %></span>
-        </p>
-      <% end %>
-    </div>
-
-    <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
-      <% if show_preview? %>
-        <%= image_tag(imageable.image.attachment, alt: @label, style: "width: 100%;", data: { kern__form__image_target: "previewImage" }) %>
-      <% else %>
-        <%= tag.img alt: @label, style: "width: 100%;", data: { kern__form__image_target: "previewImage" } %>
-      <% end %>
-    </div>
-
-    <%= tag.button type: "button",
-            class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
-            style: "float: right;",
-            data: { kern__form__image_target: "actions", action: "kern--form--image#remove" } do %>
-      <span class="kern-label">
-        <%= t("adm.components.attribute_editors.image_component.remove") %>
-      </span>
+<div data-controller="kern--form--image"
+     data-kern--form--image-auto-submit-value="<%= @auto_submit %>">
+  <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
+       data-kern--form--image-target="inputWrapper">
+    <%= @form.file_field @attribute,
+                         label: false,
+                         accept: Image.accepted_content_types.join(","),
+                         class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
+                         data: { kern__form__image_target: "input", action: "change->kern--form--image#change" } %>
+    <% if image_errors.any? %>
+      <p class="kern-error" role="alert">
+        <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+        <span class="kern-body"><%= image_errors.join(", ") %></span>
+      </p>
     <% end %>
+  </div>
 
-    <%= image_builder.hidden_field :cached_attachment %>
-    <%= image_builder.hidden_field :_destroy, value: false, data: { kern__form__image_target: "destroy" } %>
-    <%= image_builder.hidden_field :user_id, value: helpers.current_user&.id %>
+  <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
+    <% if show_preview? %>
+      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" }) %>
+    <% else %>
+      <%= tag.img alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" } %>
+    <% end %>
+  </div>
+
+  <%= tag.button type: "button",
+          class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
+          style: "float: right;",
+          data: { kern__form__image_target: "actions", action: "kern--form--image#remove" } do %>
+    <span class="kern-label">
+      <%= t("adm.components.attribute_editors.image_component.remove") %>
+    </span>
   <% end %>
 </div>

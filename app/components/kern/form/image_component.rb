@@ -1,28 +1,21 @@
 class Kern::Form::ImageComponent < ApplicationComponent
-  def initialize(form:, label:, hint: nil)
+  def initialize(form:, attribute:, auto_submit: false)
     @form = form
-    @label = label
-    @hint = hint
+    @attribute = attribute
+    @auto_submit = auto_submit
   end
 
   private
 
-    def imageable
-      @form.object
-    end
-
-    def image
-      imageable.image || imageable.build_image
-    end
-
     def show_preview?
-      imageable.image&.attachment&.attached? && image_errors.empty?
+      @form.object.send(@attribute).attached? && image_errors.empty?
+    end
+
+    def preview_attachment
+      @form.object.send(@attribute)
     end
 
     def image_errors
-      image_record = imageable.image
-      return [] unless image_record
-
-      image_record.errors.full_messages
+      @form.object.errors[@attribute].to_a
     end
 end

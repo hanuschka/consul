@@ -39,7 +39,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
-    <%= render Kern::Form::ImageComponent.new(form: f, label: t(".image_label")) %>
+    <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".description_label")) do %>

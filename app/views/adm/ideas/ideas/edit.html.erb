@@ -7,7 +7,9 @@
 <div class="kern-container mb-5">
   <%= render Adm::AttributeEditorComponent.new(@idea, :title, :string, label: t(".labels.title")) %>
   <%= render Adm::AttributeEditorComponent.new(@idea, :description, :rich_text, label: t(".labels.description")) %>
-  <%= render Adm::AttributeEditorComponent.new(@idea.image, :attachment, :image, path: update_image_adm_ideas_idea_path(@idea), label: t(".labels.image")) %>
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.image")) do %>
+    <%= render "adm/ideas/ideas/edit/image", idea: @idea %>
+  <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".labels.documents")) do %>
     <%= render "adm/ideas/ideas/edit/documents", idea: @idea %>

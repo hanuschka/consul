@@ -21,9 +21,7 @@
 
     <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
       label: t("adm.attribute_editor.budget/investment.image_label", default: "Bild")) do %>
-      <%= render Kern::Form::ImageComponent.new(
-        form: form,
-        label: t("adm.attribute_editor.budget/investment.image_label", default: "Bild")) %>
+      <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, inline: true,

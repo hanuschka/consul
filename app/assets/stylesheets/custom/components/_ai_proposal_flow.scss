@@ -40,35 +40,68 @@
 }
 
 .ai-proposal-flow--header {
-  background: linear-gradient(135deg, #f0fafb 0%, #f7f4ea 100%);
-  padding: 1rem 1.5rem;
+  background:
+    radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--brand-color) 13%, white) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, color-mix(in srgb, var(--brand-color) 7%, white) 0%, transparent 45%),
+    white;
+  padding: 1.25rem 1.75rem 1.5rem;
   color: #333;
-  border: 1.5px solid rgba(13, 126, 133, .18);
-  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--brand-color) 18%, transparent);
+  border-radius: 20px;
   margin: auto;
   margin-bottom: 1.5rem;
+  box-shadow:
+    0 2px 18px color-mix(in srgb, var(--brand-color) 7%, transparent),
+    0 1px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand-color) 10%, transparent) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
   h1 {
-    margin-bottom: 10px !important;
-    margin-top: 10px !important;
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+    color: #1a1a1a;
+    margin-bottom: 0.3rem !important;
+    margin-top: 0.65rem !important;
   }
 
   p {
-    margin-bottom: 22px;
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
   }
 }
 
 .ai-proposal-flow--projekt-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid var(--brand-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.85rem;
+  background: color-mix(in srgb, var(--brand-color) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-color) 28%, transparent);
   border-radius: 100px;
   color: var(--brand-color);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: background 0.15s ease;
 
   &:hover {
-    opacity: 0.8;
+    background: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 }
 
@@ -91,48 +124,62 @@
 }
 
 .ai-proposal-flow--step-circle {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #bbb;
-  color: white;
+  background: transparent;
+  border: 2px solid #d4d4d4;
+  color: #b0b0b0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ai-proposal-flow--step-node.-active .ai-proposal-flow--step-circle {
-  background: var(--color-teal, #00a99d);
+  background: var(--brand-color);
+  border-color: var(--brand-color);
+  color: white;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand-color) 18%, transparent);
 }
 
 .ai-proposal-flow--step-node.-completed .ai-proposal-flow--step-circle {
-  background: var(--color-teal, #00a99d);
+  background: var(--brand-color);
+  border-color: var(--brand-color);
+  color: white;
 }
 
 .ai-proposal-flow--step-label {
-  font-size: 16px;
-  color: #666;
+  font-size: 0.95rem;
+  color: #aaa;
   text-align: center;
   white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .ai-proposal-flow--step-node.-active .ai-proposal-flow--step-label {
-  color: #333;
+  color: var(--brand-color);
   font-weight: 700;
+}
+
+.ai-proposal-flow--step-node.-completed .ai-proposal-flow--step-label {
+  color: #555;
+  font-weight: 600;
 }
 
 .ai-proposal-flow--step-connector {
   flex: 1;
   height: 2px;
-  background: #ddd;
-  margin-top: 25px;
+  background: #e4e4e4;
+  margin-top: 22px;
   min-width: 20px;
+  border-radius: 2px;
 }
 
 .ai-proposal-flow--step-connector.-completed {
-  background: var(--color-teal, #00a99d);
+  background: var(--brand-color);
 }
 
 .ai-proposal-flow--body {
@@ -177,8 +224,8 @@
   text-decoration: none;
   color: inherit;
   gap: 20px;
-  background: linear-gradient(135deg, #f0fafb 0%, #f7f4ea 100%);
-  border: 1.5px solid rgba(13, 126, 133, .18);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 8%, white) 0%, white 100%);
+  border: 1.5px solid color-mix(in srgb, var(--brand-color) 20%, transparent);
   border-radius: 16px;
   padding: 15px 22px 15px 20px;
   margin-bottom: 28px;
@@ -458,8 +505,8 @@
   align-items: center;
   gap: 0.85rem;
   text-align: left;
-  background: linear-gradient(135deg, #f0fafb 0%, #f7f4ea 100%);
-  border: 1.5px solid rgba(13, 126, 133, 0.18);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 8%, white) 0%, white 100%);
+  border: 1.5px solid color-mix(in srgb, var(--brand-color) 20%, transparent);
   border-radius: 12px;
   padding: 15px 15px;
   max-width: 550px;

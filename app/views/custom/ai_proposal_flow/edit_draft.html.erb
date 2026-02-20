@@ -36,10 +36,12 @@
         type="submit"
         form="<%= dom_id(@draft_resource, :form) %>"
         class="button ai-proposal-flow--navigation--submit"
-        >
-        Weiter zur Bewertung →
+      >
+        <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
       </button>
-      <%= link_to t("ai_proposal_flow.nav.back"), @back_to_new_url, class: "button -outline" %>
+      <%= link_to @back_to_new_url, class: "button -outline" do %>
+        <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back") %>
+      <% end %>
     </div>
   </div>
 </main>

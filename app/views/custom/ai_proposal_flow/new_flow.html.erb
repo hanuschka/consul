@@ -24,7 +24,9 @@
       </div>
 
       <div class="ai-proposal-flow--navigation">
-        <%= f.submit t("ai_proposal_flow.step1.submit_button"), class: "button -teal ai-proposal-flow--submit-btn" %>
+        <button type="submit" class="button -teal ai-proposal-flow--submit-btn">
+          <%= t("ai_proposal_flow.step1.submit_button") %> <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
     <% end %>
 

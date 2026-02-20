@@ -8,7 +8,9 @@
       <%= button_to @publish_url, method: :patch, class: "button -gold" do %>
         <i class="fas fa-check"></i> <%= t("ai_proposal_flow.nav.submit") %>
       <% end %>
-      <%= link_to t("ai_proposal_flow.nav.back_edit"), @back_to_edit_url, class: "button -outline" %>
+      <%= link_to @back_to_edit_url, class: "button -outline" do %>
+        <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back_edit") %>
+      <% end %>
     </div>
   </div>
 </main>

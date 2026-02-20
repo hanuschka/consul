@@ -21,7 +21,7 @@ en:
       idea_heading: "Your Idea"
       textarea_label: "DESCRIBE YOUR IDEA BRIEFLY"
       placeholder: "e.g. »I would like a drinking fountain in the city park …«"
-      submit_button: "Generate AI Draft →"
+      submit_button: "Generate AI Draft"
       chars_label: "characters"
     evaluation:
       total_score: "Total Score"
@@ -36,8 +36,9 @@ en:
       view_proposal: "View proposal"
       new_idea: "Submit another idea"
     nav:
-      back: "← Back"
-      back_edit: "← Edit proposal"
+      back: "Back"
+      back_edit: "Edit proposal"
+      next_evaluation: "Continue to Evaluation"
       submit: "Submit proposal"
   admin:
     projekt_phases:

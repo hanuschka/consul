@@ -21,7 +21,7 @@ de:
       idea_heading: "Ihre Idee"
       textarea_label: "BESCHREIBEN SIE IHRE IDEE KURZ UND PRÄGNANT"
       placeholder: "Beschreiben Sie Ihre Idee kurz und prägnant."
-      submit_button: "KI-Entwurf generieren →"
+      submit_button: "KI-Entwurf generieren"
       chars_label: "Zeichen"
     evaluation:
       total_score: "Gesamtpunktzahl"
@@ -36,8 +36,9 @@ de:
       view_proposal: "Vorschlag ansehen"
       new_idea: "Weitere Idee einreichen"
     nav:
-      back: "← Zurück"
-      back_edit: "← Vorschlag editieren"
+      back: "Zurück"
+      back_edit: "Vorschlag editieren"
+      next_evaluation: "Weiter zur Bewertung"
       submit: "Vorschlag einreichen"
   admin:
     projekt_phases:

@@ -6,6 +6,6 @@ class DtApi::Resources::Connection
   end
 
   def status
-    @client.get_with_auth("#{BASE_PATH}/status")
+    @client.get("#{BASE_PATH}/status")
   end
 end

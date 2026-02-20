@@ -23,7 +23,16 @@
 
       if (!$form.length) return;
 
-      $form.on("submit", () => this.showLoader());
+      $form.on("submit", (e) => {
+        const value = $(".js-ai-flow-idea-textarea").val().trim();
+
+        if (!value) {
+          e.preventDefault();
+          return;
+        }
+
+        this.showLoader();
+      });
     },
 
     initStep2ImageGeneration() {

@@ -5,9 +5,8 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
   end
 
   def call
-    criteria_texts = @projekt_phase.proposal_criteria.pluck(:text)
     projekt_name = @projekt_phase.projekt.page.title
-    prompt = build_prompt(projekt_name, criteria_texts)
+    prompt = build_prompt(projekt_name)
     response = Ai::RubyLlmFactory.chat_with_json_output(output_schema).ask(prompt)
     response.content
   rescue StandardError => e
@@ -19,28 +18,21 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
   private
 
     def fetch_system_prompt
-      cache_key = "dt_api/consul_ai_prompts/proposal_generate_with_ai"
-
-      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-        DtApi::Client.new.consul_ai_prompts.get(:proposal_generate_with_ai)
-      end
-
+      parsed_response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:proposal_generate_with_ai).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 
-    def build_prompt(projekt_name, criteria_texts)
+    def build_prompt(projekt_name)
       system_prompt = fetch_system_prompt
       raise "[ProposalAiDraft] System prompt not found for proposal_generate_with_ai" if system_prompt.nil?
 
-      criteria_list = criteria_texts.map.with_index(1) { |c, i| "#{i}. #{c}" }.join("\n")
+      system_prompt = system_prompt.gsub("{{projekt_name}}", projekt_name)
+
       dynamic_context = <<~CONTEXT
         Project name: #{projekt_name}
 
         The citizen described their idea as:
         "#{@idea_text}"
-
-        The proposal must meet these criteria:
-        #{criteria_list}
       CONTEXT
 
       "#{system_prompt}\n#{dynamic_context}"
@@ -50,11 +42,26 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       {
         type: "object",
         properties: {
-          title:        { type: "string" },
-          description:  { type: "string" },
-          tag_list:     { type: "string" },
-          image_prompt: { type: "string" },
-          location:     { type: ["string", "null"] }
+          title: {
+            type: "string",
+            description: "A concise, compelling title for the citizen proposal."
+          },
+          description: {
+            type: "string",
+            description: "A detailed description of the proposal explaining the problem, solution, and expected impact. Should be written in HTML format."
+          },
+          tag_list: {
+            type: "string",
+            description: "A comma-separated list of relevant tags categorizing the proposal topic."
+          },
+          image_prompt: {
+            type: "string",
+            description: "A descriptive prompt for generating a representative image for the proposal. Should be vivid and specific."
+          },
+          location: {
+            type: ["string", "null"],
+            description: "The geographic location relevant to the proposal (e.g. street, district, city). Null if not location-specific."
+          }
         },
         required: ["title", "description", "tag_list", "image_prompt", "location"],
         additionalProperties: false

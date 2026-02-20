@@ -151,15 +151,11 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     end
 
     def fetch_prompt
-      cache_key = "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_summary/projekt_phase"
-
-      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-        DtApi::Client.new.consul_ai_prompts.get(
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
           :ai_analytics_projekt_phase_summary,
           resource_type: "projekt_phase"
-        )
-      end
-
+        ).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

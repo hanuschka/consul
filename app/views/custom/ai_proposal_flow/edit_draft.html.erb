@@ -4,6 +4,7 @@
   <div
     class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
     data-generate-image-url="<%= @generate_image_url %>"
+    data-aspect-ratio="5:4"
     data-image-prompt="<%= @draft_resource.ai_image_prompt %>"
     data-has-image="<%= @draft_resource.image.present? %>"
     data-codename="<%= @draft_resource.projekt_phase.try(:voice_assistant_codename) %>"

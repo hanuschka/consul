@@ -140,6 +140,7 @@
   overflow: hidden;
   padding: 1rem 2rem 1rem !important;
   margin: 1.5rem auto 0 !important;
+  padding-bottom: 40px !important;
 
   .user-resources-form {
     margin-top: 0 !important;
@@ -376,6 +377,7 @@
   padding: 3rem 2rem 2.5rem;
   position: relative;
   overflow: hidden;
+  padding-top: 32px !important;
 }
 
 .ai-proposal-flow--success-glow {
@@ -459,15 +461,17 @@
   background: linear-gradient(135deg, #f0fafb 0%, #f7f4ea 100%);
   border: 1.5px solid rgba(13, 126, 133, 0.18);
   border-radius: 12px;
-  padding: 1rem 1.25rem;
-  max-width: 480px;
-  margin: 0 auto 2rem;
+  padding: 15px 15px;
+  max-width: 550px;
+  margin: 0 auto 1.5rem;
 }
 
 .ai-proposal-flow--success-proposal-card--icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
+  // width: 55px;
+  // height: 55px;
+  width: 58px;
+  height: 58px;
+  border-radius: 5px;
   background: white;
   border: 1px solid rgba(13, 126, 133, 0.15);
   display: flex;
@@ -476,6 +480,7 @@
   color: var(--color-teal, #00a99d);
   font-size: 1.1rem;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .ai-proposal-flow--success-proposal-card--body {

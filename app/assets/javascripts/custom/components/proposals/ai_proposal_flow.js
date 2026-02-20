@@ -55,6 +55,7 @@
         App.Ajax
           .post(dataset.generateImageUrl, {
             prompt: dataset.imagePrompt,
+            aspect_ratio: dataset.aspectRatio,
             codename: dataset.codename,
             consul_projekt_phase_id: dataset.projektPhaseId,
             resource_type: dataset.resourceType,

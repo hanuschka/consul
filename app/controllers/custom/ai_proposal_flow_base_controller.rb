@@ -16,9 +16,8 @@ class AiProposalFlowBaseController < ApplicationController
       authorize! :update, @draft_resource
 
       unless @draft_resource.draft?
-        Rails.logger.warn("[AiProposalFlow] Draft published: proposal #{@draft_resource.id}")
-        flash[:notice] = "Ihr Vorschlag wurde erfolgreich eingereicht!"
-        redirect_to @draft_resource
+        Rails.logger.warn("[AiProposalFlow] Draft published: #{resource_class} #{@draft_resource.id}")
+        redirect_to new_flow_redirect_path
       end
     end
 
@@ -27,7 +26,8 @@ class AiProposalFlowBaseController < ApplicationController
       authorize! :update, @draft_resource
     end
 
-    def resource_class          = raise NotImplementedError
-    def build_and_save_draft(_) = raise NotImplementedError
-    def draft_resource_params   = raise NotImplementedError
+    def resource_class            = raise NotImplementedError
+    def build_and_save_draft(_)   = raise NotImplementedError
+    def draft_resource_params     = raise NotImplementedError
+    def new_flow_redirect_path    = raise NotImplementedError
 end

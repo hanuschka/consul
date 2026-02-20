@@ -5,10 +5,10 @@ class DtApi::Resources::Ai
     @client = client
   end
 
-  def generate_image(prompt:)
-    @client.post(
-      BASE_PATH + "/generate_image",
-      body: { prompt: }
-    )
+  def generate_image(prompt:, aspect_ratio: nil)
+    body = { prompt: }
+    body[:aspect_ratio] = aspect_ratio if aspect_ratio.present?
+
+    @client.post(BASE_PATH + "/generate_image", body:)
   end
 end

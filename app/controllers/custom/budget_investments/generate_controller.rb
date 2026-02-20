@@ -59,6 +59,10 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
 
     def resource_class = Budget::Investment
 
+    def new_flow_redirect_path
+      generate_budget_investment_new_path(projekt_phase_id: @draft_resource.projekt_phase.id)
+    end
+
     def build_and_save_draft(draft_data)
       investment = Budget::Investment.new(
         draft: true,

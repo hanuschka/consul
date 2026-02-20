@@ -19,66 +19,168 @@
     <strong><%= t(".price") %>:</strong> <%= @investment.formatted_price %>
   </p>
 
-  <h1 class="kern-title kern-title--large mb-2"><%= @investment.title %></h1>
-
-  <p class="kern-body kern-body--small mb-3">
-    <strong><%= t(".author") %>:</strong> <%= @investment.author&.name %>
-  </p>
-
-  <p class="kern-body kern-body--small mb-3">
-    <strong><%= t(".heading") %>:</strong> <%= @investment.heading&.name %>
-  </p>
-
-  <% if @investment.district.present? %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".district") %>:</strong> <%= @investment.district.name %>
-    </p>
-  <% end %>
-
-  <% if @investment.administrator.present? %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".admin") %>:</strong> <%= @investment.administrator.description_or_name %>
-    </p>
-  <% end %>
-
-  <% valuators = [@investment.assigned_valuation_groups, @investment.assigned_valuators].compact.presence %>
-  <% if valuators %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".valuator") %>:</strong> <%= valuators.join(", ") %>
-    </p>
-  <% end %>
-
-  <p class="kern-body kern-body--small mb-3">
-    <strong><%= t(".created_at") %>:</strong> <%= l(@investment.created_at, format: :long) %>
-  </p>
-
-  <p class="kern-body kern-body--small">
-    <%= link_to t(".download_pdf"), adm_projekts_phase_budget_investment_path(@projekt_phase, @investment, format: :pdf) %>
-  </p>
-  <p class="kern-body kern-body--small">
-    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @investment.total_votes %>
-    · <span class="material-symbols-outlined" aria-hidden="true">how_to_vote</span> <%= @investment.ballot_lines_count %>
-    · <span class="material-symbols-outlined" aria-hidden="true">ballot</span> <%= @investment.total_ballot_votes %>
-  </p>
-
-  <div class="kern-row mb-3">
-    <% if @image_url.present? %>
-      <div class="kern-col-sm-12 kern-col-md-5">
-        <%= image_tag(@image_url, class: "w-100") %>
-      </div>
-    <% end %>
-
-    <div class="kern-col-sm-12 kern-col-md-<%= @image_url.present? ? 5 : 10 %>">
-      <div class="kern-body mb-4">
-        <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
-      </div>
-    </div>
+  <div class="d-flex gap-2 mb-4 justify-content-end">
+    <%= kern_link_button(edit_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+          text: t(".edit"), icon: "edit") %>
+    <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment, format: :pdf),
+          text: t(".download_pdf"), icon: "download", style: :secondary) %>
   </div>
 
-  <% if @investment.map_location.present? %>
-    <div class="kern-row mb-4">
-      <div class="kern-col-sm-12 kern-col-md-10">
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-4">
+      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.title_label") %></strong>
+    </div>
+    <div class="kern-col-12 kern-col-md-6">
+      <p class="kern-body"><%= @investment.title %></p>
+    </div>
+  </div>
+  <hr class="kern-divider mb-3">
+
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-4">
+      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.description_label") %></strong>
+    </div>
+    <div class="kern-col-12 kern-col-md-6">
+      <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@investment.description) %></div>
+    </div>
+  </div>
+  <hr class="kern-divider mb-3">
+
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-4">
+      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.image_label", default: "Bild") %></strong>
+    </div>
+    <div class="kern-col-12 kern-col-md-6">
+      <% if @investment.image&.attachment&.attached? %>
+        <%= image_tag(@investment.image.attachment, style: "width: 100%;") %>
+      <% end %>
+    </div>
+  </div>
+  <hr class="kern-divider mb-3">
+
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-4">
+      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.on_behalf_of_label") %></strong>
+    </div>
+    <div class="kern-col-12 kern-col-md-6">
+      <p class="kern-body"><%= @investment.on_behalf_of %></p>
+    </div>
+  </div>
+  <hr class="kern-divider mb-3">
+
+  <% if @projekt_phase.feature?("form.enable_external_video") %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.video_url_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @investment.video_url %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_performer_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body">
+          <% if @investment.implementation_performer.present? %>
+            <%= t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{@investment.implementation_performer}") %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_contribution_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @investment.implementation_contribution %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.user_cost_estimate_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @investment.user_cost_estimate %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.labels") && @projekt_phase.projekt_labels.any? %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= @projekt_phase.projekt_labels_label_text %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <div data-feature-style-mode="icon">
+          <div class="map-feature-pills">
+            <% @investment.projekt_labels.each do |label| %>
+              <span class="map-feature-pill map-feature-pill--label"
+                    data-icon-name="<%= label.icon %>"
+                    data-icon-unicode="<%= AwesomeIcon.find_by(name: label.icon)&.unicode %>">
+                <i class="fas fa-<%= label.icon %>"></i> <%= label.name %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.sentiments") && @projekt_phase.sentiments.any? %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= @projekt_phase.sentiment_label_text %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @investment.sentiment.present? %>
+          <span class="map-feature-pill map-feature-pill--sentiment"
+                data-color="<%= @investment.sentiment.color %>"
+                style="--pill-color:<%= @investment.sentiment.color %>;--pill-text-color:<%= pick_text_color(@investment.sentiment.color) %>">
+            <%= @investment.sentiment.name %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.show_map") && @investment.map_location.present? %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".map") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
         <%= render Kern::MapComponent.new(map_location: @investment.map_location) %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+  <% end %>
+
+  <% if @projekt_phase.feature?("form.allow_attached_documents") && @investment.documents.any? %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.projekts.budget_investments.edit.documents") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <ul class="kern-body">
+          <% @investment.documents.each do |document| %>
+            <li><%= link_to document.title, document.attachment, target: :blank %></li>
+          <% end %>
+        </ul>
       </div>
     </div>
   <% end %>

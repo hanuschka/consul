@@ -10,12 +10,20 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
-    @image_url = @investment.image&.attachment&.variant(
-      resize_to_limit: [500, 500],
-      format: "jpeg"
-    )
+    respond_to do |format|
+      format.html do
+        @image_url = @investment.image&.attachment&.variant(
+          resize_to_limit: [500, 500],
+          format: "jpeg"
+        )
 
-    @breadcrumbs = breadcrumbs_for_action(@investment.title)
+        @breadcrumbs = breadcrumbs_for_action(@investment.title)
+      end
+      format.pdf do
+        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment)
+        send_data pdf_content.render, filename: "budget_investment_#{@investment.id}.pdf", type: "application/pdf"
+      end
+    end
   end
 
   def audits
@@ -82,7 +90,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer edit audits].map do |tab_action|
+      @tabs = %w[show administer audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(

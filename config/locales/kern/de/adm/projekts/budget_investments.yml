@@ -25,6 +25,8 @@ de:
           admin: Administrator
           valuator: Gutachter
           description: Beschreibung
+          map: Karte
+          edit: Bearbeiten
           download_pdf: PDF herunterladen
           back: Zurück zur Liste
         administer:

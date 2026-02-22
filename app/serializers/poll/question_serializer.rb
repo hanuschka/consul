@@ -9,6 +9,8 @@ class Poll::QuestionSerializer < BaseSerializer
     question_data = question.as_json(
       only: [
         :id,
+        :multiple,
+        :given_order,
         :created_at,
         :updated_at
       ]

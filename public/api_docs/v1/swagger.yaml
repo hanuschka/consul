@@ -5913,6 +5913,642 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/poll_questions/{poll_question_id}/answers":
+    parameters:
+    - name: poll_question_id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List answers for a poll question
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "List all answers for a specific poll question. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: answers found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answers:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answers
+                required:
+                - data
+        '404':
+          description: question not found
+    post:
+      summary: Create a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Create a new answer for a poll question. If given_order is not
+        provided, it will be auto-assigned to the next position. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: answer created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Answer title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Answer description (sets description for the current
+                        locale)
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order (auto-assigned if omitted)
+                    translations_attributes:
+                      type: array
+                      description: Multilingual content. Provide title and description
+                        for each language.
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            description: Answer title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Answer description in the specified language
+              required:
+              - answer
+        description: Poll question answer creation payload
+  "/api/poll_questions/{poll_question_id}/answers/order":
+    parameters:
+    - name: poll_question_id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Reorder answers for a poll question
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Reorder the answers of a poll question by providing an ordered
+        list of answer IDs. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: answers reordered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ordered_list:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of answer IDs in desired order
+              required:
+              - ordered_list
+        description: Ordered list of answer IDs
+  "/api/poll_question_answers/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Poll Question Answer ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Retrieve a specific poll question answer by ID. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: answer found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '404':
+          description: answer not found
+    patch:
+      summary: Update a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Update an existing poll question answer. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: answer updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                      description: Answer title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Answer description (sets description for the current
+                        locale)
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order of the answer
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Translation ID (required for updating existing
+                              translations)
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            nullable: true
+                            description: Answer title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Answer description in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
+        description: Attributes to update on the answer
+    delete:
+      summary: Delete a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Delete a poll question answer. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: answer deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: answer not found
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/polls/{poll_id}/questions":
+    parameters:
+    - name: poll_id
+      in: path
+      description: Poll ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List questions for a poll
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "List all questions within a specific poll. Returns questions with
+        their answers. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
+      responses:
+        '200':
+          description: questions found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      questions:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - questions
+                required:
+                - data
+        '404':
+          description: poll not found
+    post:
+      summary: Create a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Create a new question within a poll. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: question created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Question title (sets title for the current locale)
+                    multiple:
+                      type: boolean
+                      nullable: true
+                      description: Whether multiple answers can be selected
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order of the question
+                    translations_attributes:
+                      type: array
+                      description: Multilingual content. Provide title for each language.
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            description: Question title in the specified language
+              required:
+              - question
+        description: Poll question creation payload
+  "/api/poll_questions/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Retrieve a specific poll question by ID with its answers. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: question found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '404':
+          description: question not found
+    patch:
+      summary: Update a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Update an existing poll question. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: question updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                      description: Question title (sets title for the current locale)
+                    multiple:
+                      type: boolean
+                      nullable: true
+                      description: Whether multiple answers can be selected
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order of the question
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Translation ID (required for updating existing
+                              translations)
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            nullable: true
+                            description: Question title in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
+        description: Attributes to update on the poll question
+    delete:
+      summary: Delete a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Delete a poll question and all its answers. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: question deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: question not found
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/polls":
     parameters:
     - name: projekt_phase_id
@@ -8927,6 +9563,10 @@ tags:
   description: Reports of deficiencies or issues
 - name: Iframes
   description: Embedded iframe content
+- name: Poll Questions
+  description: Questions within polls
+- name: Poll Question Answers
+  description: Answer options for poll questions
 x-tagGroups:
 - name: Auth
   tags:
@@ -8951,6 +9591,8 @@ x-tagGroups:
   - Iframes
   - Point Of Interest Categories
   - Point Of Interest Pins
+  - Poll Questions
+  - Poll Question Answers
 - name: Ideas
   tags:
   - Ideas
@@ -11000,3 +11642,87 @@ components:
               nullable: true
               description: Original unmodified image
               example: https://example.com/uploads/original.jpg
+    PollQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the poll question
+          example: 1
+        title:
+          type: string
+          description: The question text in the current locale
+          example: What is your preference?
+        multiple:
+          type: boolean
+          nullable: true
+          description: Whether multiple answers can be selected
+          example: false
+        given_order:
+          type: integer
+          nullable: true
+          description: Display order of the question
+          example: 1
+        created_at:
+          type: string
+          format: date_time
+          description: Timestamp when the question was created
+          example: '2024-01-10T09:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          description: Timestamp when the question was last modified
+          example: '2024-01-15T11:00:00Z'
+        answers:
+          type: array
+          description: Available answer options for this question
+          items:
+            "$ref": "#/components/schemas/PollQuestionAnswer"
+      required:
+      - id
+      - created_at
+      - updated_at
+    PollQuestionAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the answer
+          example: 1
+        title:
+          type: string
+          description: The answer text in the current locale
+          example: Option A
+        description:
+          type: string
+          nullable: true
+          description: Optional description for the answer in the current locale
+          example: Additional context for option A
+        given_order:
+          type: integer
+          nullable: true
+          description: Display order of the answer
+          example: 1
+        total_votes:
+          type: integer
+          description: Total number of votes for this answer
+          example: 42
+        total_votes_percentage:
+          type: number
+          description: Percentage of total votes this answer received
+          example: 35.5
+        created_at:
+          type: string
+          format: date_time
+          description: Timestamp when the answer was created
+          example: '2024-01-10T09:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          description: Timestamp when the answer was last modified
+          example: '2024-01-15T11:00:00Z'
+      required:
+      - id
+      - title
+      - created_at
+      - updated_at

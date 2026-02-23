@@ -4,8 +4,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer edit update destroy milestones audits]
-  before_action :set_tabs, only: %i[show administer milestones audits]
+  before_action :set_investment, only: %i[show administer edit update destroy milestones progress_bars audits]
+  before_action :set_tabs, only: %i[show administer milestones progress_bars audits]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -30,6 +30,13 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @investment], :show?, policy_class: Adm::Projekts::BudgetPolicy
 
     @milestones = @investment.milestones.order_by_publication_date
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+  end
+
+  def progress_bars
+    authorize [:adm, :projekts, @investment], :show?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @progress_bars = @investment.progress_bars
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
@@ -97,7 +104,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer milestones audits].map do |tab_action|
+      @tabs = %w[show administer milestones progress_bars audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(

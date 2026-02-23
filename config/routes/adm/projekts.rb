@@ -71,7 +71,7 @@ namespace :adm do
       end
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :milestones, controller: "milestones/phases", except: %i[index show]
-      resources :progress_bars, except: %i[index show]
+      resources :progress_bars, controller: "progress_bars/phases", except: %i[index show]
       resources :legislation_draft_versions, except: %i[index show]
       resources :formular_fields, except: %i[index show]
       resources :projekt_events, except: %i[index show] do
@@ -106,9 +106,11 @@ namespace :adm do
       resources :budget_investments, only: [:show, :edit, :update, :destroy] do
         resource :map_location, controller: "/adm/map_locations", only: [:update]
         resources :milestones, controller: "milestones/budget_investments", except: %i[index show]
+        resources :progress_bars, controller: "progress_bars/budget_investments", except: %i[index show]
         member do
           get :administer
           get :milestones
+          get :progress_bars
           get :audits
         end
       end

@@ -7,9 +7,12 @@ de:
           administer: Administrieren
           edit: Bearbeiten
           milestones: Meilensteine
+          progress_bars: Fortschrittsbalken
           audits: Änderungslog
         milestones:
           title: Meilensteine
+        progress_bars:
+          title: Fortschrittsbalken
         show:
           title: Investitionsvorschlag
           author: Autor

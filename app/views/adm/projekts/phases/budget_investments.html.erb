@@ -5,6 +5,11 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container mb-5">
+  <div class="d-flex justify-content-end gap-2 mb-4">
+    <%= kern_link_button budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters),
+          text: t(".download_csv"), icon: "download", style: :secondary, data: { turbo: false } %>
+  </div>
+
   <% if @investments.any? %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">

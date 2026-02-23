@@ -150,31 +150,40 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.order(id: :desc), params)
-    @pagy, @investments = pagy(base_scope)
 
-    boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
+    respond_to do |format|
+      format.html do
+        @pagy, @investments = pagy(base_scope)
 
-    @title_header_options = { search: true }
-    @feasibility_header_options = {
-      filter_options: Budget::Investment::FEASIBILITIES.map do |value|
-        [value, Budget::Investment.human_attribute_name("feasibility_#{value}")]
+        boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
+
+        @title_header_options = { search: true }
+        @feasibility_header_options = {
+          filter_options: Budget::Investment::FEASIBILITIES.map do |value|
+            [value, Budget::Investment.human_attribute_name("feasibility_#{value}")]
+          end
+        }
+        @valuation_finished_header_options = { filter_options: boolean_filter_options }
+        @total_votes_header_options = { sort: true }
+        @preselected_header_options = { filter_options: boolean_filter_options }
+        @selected_header_options = { filter_options: boolean_filter_options }
+        @winner_header_options = { filter_options: boolean_filter_options }
+        @district_header_options = {
+          filter_options: ::RegisteredAddress::District.order(:name).pluck(:id, :name)
+        }
+
+        @breadcrumbs = [
+          { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+          { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
       end
-    }
-    @valuation_finished_header_options = { filter_options: boolean_filter_options }
-    @total_votes_header_options = { sort: true }
-    @preselected_header_options = { filter_options: boolean_filter_options }
-    @selected_header_options = { filter_options: boolean_filter_options }
-    @winner_header_options = { filter_options: boolean_filter_options }
-    @district_header_options = {
-      filter_options: ::RegisteredAddress::District.order(:name).pluck(:id, :name)
-    }
-
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(base_scope, request.host),
+                  filename: "budget_investments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def poll_questions; end

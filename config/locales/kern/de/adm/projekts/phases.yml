@@ -289,6 +289,7 @@ de:
           valuators_hint: Wählen Sie die Gutachter aus, die für dieses Budget zuständig sind.
         budget_investments:
           title: Vorschläge
+          download_csv: CSV herunterladen
           no_investments: Keine Investitionsvorschläge vorhanden.
           table:
             id: ID

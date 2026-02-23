@@ -5,10 +5,22 @@ de:
         tabs:
           show: Anzeigen
           administer: Administrieren
+          people: Gutachter & Administratoren
           edit: Bearbeiten
           milestones: Meilensteine
           progress_bars: Fortschrittsbalken
           audits: Änderungslog
+        people:
+          title: Gutachter & Administratoren
+          administrator: Administrator
+          administrator_hint: Wählen Sie den Administrator aus, der für diesen Vorschlag zuständig ist.
+          valuator_groups: Gutachtergruppen
+          valuator_groups_hint: Wählen Sie die Gutachtergruppen aus, die für die Bewertung dieses Vorschlags zuständig sind.
+          no_administrators: Keine Administratoren für dieses Budget vorhanden.
+          no_valuator_groups: Keine Gutachtergruppen vorhanden.
+          no_valuators: Keine Gutachter für dieses Budget vorhanden.
+          valuators: Gutachter
+          valuators_hint: Wählen Sie die Gutachter aus, die für die Bewertung dieses Vorschlags zuständig sind.
         milestones:
           title: Meilensteine
         progress_bars:

@@ -4,8 +4,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer edit update destroy milestones progress_bars audits]
-  before_action :set_tabs, only: %i[show administer edit milestones progress_bars audits]
+  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits]
+  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -52,6 +52,16 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
+  def people
+    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @budget = @projekt_phase.budget
+    @admins = @budget.administrators.includes(:user)
+    @valuators = @budget.valuators.includes(:user).order("users.email ASC")
+    @valuator_groups = ValuatorGroup.all.order(name: :asc)
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+  end
+
   def edit
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
@@ -69,6 +79,29 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.budget_investments.edit.title"))
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def frame_update
+    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
+
+    if @investment.update(investment_params)
+      flash.now[:success] = t("adm.attribute.update.success")
+    end
+
+    partial_name = turbo_frame_request_id.delete_prefix("investment_")
+    budget = @projekt_phase.budget
+
+    render turbo_stream: turbo_stream.replace(
+      turbo_frame_request_id,
+      partial: "adm/projekts/budget_investments/people/#{partial_name}",
+      locals: {
+        investment: @investment,
+        projekt_phase: @projekt_phase,
+        admins: budget.administrators.includes(:user),
+        valuators: budget.valuators.includes(:user).order("users.email ASC"),
+        valuator_groups: ValuatorGroup.all.order(name: :asc)
+      }
+    )
   end
 
   def destroy
@@ -96,7 +129,10 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         :video_url, :on_behalf_of,
         :implementation_performer, :implementation_contribution,
         :user_cost_estimate, :sentiment_id,
+        :administrator_id,
         projekt_label_ids: [],
+        valuator_ids: [],
+        valuator_group_ids: [],
         image_attributes: image_attributes,
         map_location_attributes: map_location_attributes,
         documents_attributes: [document_attributes]
@@ -104,7 +140,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer milestones progress_bars audits].map do |tab_action|
+      @tabs = %w[show administer people milestones progress_bars audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(

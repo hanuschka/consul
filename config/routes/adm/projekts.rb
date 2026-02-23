@@ -109,6 +109,8 @@ namespace :adm do
         resources :progress_bars, controller: "progress_bars/budget_investments", except: %i[index show]
         member do
           get :administer
+          get :people
+          patch :frame_update
           get :milestones
           get :progress_bars
           get :audits

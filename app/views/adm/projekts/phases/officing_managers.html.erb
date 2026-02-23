@@ -8,9 +8,7 @@
   <%= render Adm::AttributeEditorComponent.new(
     @projekt_phase,
     :lock_on,
-    :date,
-    label: t(".lock_on"),
-    description: t(".lock_on_hint")
+    :date
   ) %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".select_managers"), hint: t(".select_managers_hint")) do %>

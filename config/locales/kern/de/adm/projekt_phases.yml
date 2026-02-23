@@ -70,9 +70,9 @@ de:
           no_restriction: Keine Einschränkung
 
       general_settings:
-        title: Allgemeine Einstellungen
+        title: Funktionen
       form_author:
-        title: Formular & Autor
+        title: Formular Autor
       user_functions:
         title: Nutzerfunktionen
       proposals:
@@ -113,8 +113,8 @@ de:
         duration: Laufzeit
         naming: Benennung
         restrictions: Beteiligungsbeschränkung
-        general_settings: Allgemeine Einstellungen
-        form_author: Formular & Autor
+        general_settings: Funktionen
+        form_author: Formular Autor
         user_functions: Nutzerfunktionen
         proposals: Vorschläge
         projekt_labels: Labels

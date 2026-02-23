@@ -5,17 +5,18 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container my-5">
-  <%= form_with model: @projekt_phase, url: update_age_ranges_for_stats_adm_projekts_phase_path(@projekt_phase), method: :patch, scope: @projekt_phase.model_name.param_key do |f| %>
+  <%= turbo_frame_tag "age_ranges_for_stats" do %>
+    <%= form_with model: @projekt_phase, url: update_age_ranges_for_stats_adm_projekts_phase_path(@projekt_phase), method: :patch, scope: @projekt_phase.model_name.param_key do |f| %>
 
-    <%= render Kern::FormFieldComponent.new(label: t(".title")) do %>
-      <% @age_ranges.each do |age_range| %>
-        <div class="kern-checkbox">
-          <%= check_box_tag "#{@projekt_phase.model_name.param_key}[age_ranges_for_stat_ids][]", age_range.id, @projekt_phase.age_ranges_for_stat_ids.include?(age_range.id), id: "age_range_#{age_range.id}" %>
-          <%= label_tag "age_range_#{age_range.id}", age_range.name %>
-        </div>
+      <%= render Kern::FormFieldComponent.new(label: t(".title"), hint: t(".hint")) do %>
+        <%= f.collection_check_boxes :age_ranges_for_stat_ids, @age_ranges, :id, :name %>
       <% end %>
+
+      <%= form_submit_button(text: t("shared.submit")) %>
     <% end %>
 
-    <%= form_submit_button(text: t("shared.submit")) %>
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+    <% end %>
   <% end %>
 </div>

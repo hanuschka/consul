@@ -351,7 +351,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     age_range_ids = params.dig(param_key, :age_ranges_for_stat_ids)&.reject(&:blank?) || []
     @projekt_phase.age_ranges_for_stat_ids = age_range_ids
 
-    redirect_to age_ranges_for_stats_adm_projekts_phase_path(@projekt_phase), notice: t("adm.attribute.update.success")
+    redirect_to age_ranges_for_stats_adm_projekts_phase_path(@projekt_phase), flash: { success: t("adm.attribute.update.success") }
   end
 
   # TODO: implement ai_settings logic

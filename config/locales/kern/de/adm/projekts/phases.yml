@@ -72,9 +72,9 @@ de:
           age:
             no_restriction: Keine Einschränkung
         general_settings:
-          title: Allgemeine Einstellungen
+          title: Funktionen
         form_author:
-          title: Formular & Autor
+          title: Formular Autor
         user_functions:
           title: Nutzerfunktionen
         proposals:
@@ -306,13 +306,14 @@ de:
             pdf_link: PDF
             actions: Aktionen
         age_ranges_for_stats:
-          title: Alterskohorten
+          title: Altersgruppen für Statistiken
+          hint: Wählen Sie die Altersgruppen aus, die für die statistische Auswertung der Beteiligung an dieser Phase berücksichtigt werden sollen.
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
           restrictions: Beteiligungsbeschränkung
-          general_settings: Allgemeine Einstellungen
-          form_author: Formular & Autor
+          general_settings: Funktionen
+          form_author: Formular Autor
           user_functions: Nutzerfunktionen
           proposals: Vorschläge
           budget_phases: Phasen

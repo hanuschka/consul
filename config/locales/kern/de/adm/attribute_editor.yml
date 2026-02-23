@@ -3,6 +3,8 @@ de:
     attribute_editor:
       default_description: Ohne Beschreibung
       projekt_phase:
+        lock_on_label: Sperrdatum
+        lock_on_description: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
         phase_tab_name_label: Tab-Bezeichnung
         phase_tab_name_description: Wie soll der Tab für diese Phase im Frontend angezeigt werden?
         cta_button_name_label: Button-Beschriftung auf der Projektseite

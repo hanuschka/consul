@@ -4,7 +4,7 @@
 
 <%= render Adm::TabsComponent.new(tabs: @tabs) %>
 
-<div class="kern-container mb-5">
+<%= turbo_frame_tag "investment_content" do %>
   <%= form_with model: @investment,
         url: adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
         method: :patch, multipart: true do |form| %>
@@ -123,6 +123,10 @@
       <% end %>
     <% end %>
 
-    <%= form_submit_button %>
+    <div class="d-flex gap-2 mb-4">
+      <%= kern_button(text: t("shared.submit"), icon: "save", type: "submit") %>
+      <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+            text: t("shared.cancel"), style: :secondary) %>
+    </div>
   <% end %>
-</div>
+<% end %>

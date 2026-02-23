@@ -5,6 +5,7 @@ de:
     back: "Zurück"
     submit: "Speichern"
     edit: "Bearbeiten"
+    cancel: "Abbrechen"
     delete: "Löschen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
     table:

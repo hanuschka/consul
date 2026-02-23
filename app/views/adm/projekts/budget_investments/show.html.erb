@@ -19,104 +19,106 @@
     <strong><%= t(".price") %>:</strong> <%= @investment.formatted_price %>
   </p>
 
-  <div class="d-flex gap-2 mb-4 justify-content-end">
-    <%= kern_link_button(edit_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
-          text: t(".edit"), icon: "edit") %>
-    <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment, format: :pdf),
-          text: t(".download_pdf"), icon: "download", style: :secondary) %>
-  </div>
+  <%= turbo_frame_tag "investment_content" do %>
 
-  <div class="kern-row mb-3">
-    <div class="kern-col-12 kern-col-md-4">
-      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.title_label") %></strong>
+    <div class="d-flex gap-2 mb-4 justify-content-end">
+      <%= kern_link_button(edit_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+            text: t(".edit"), icon: "edit", data: { turbo_frame: "investment_content" }) %>
+      <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment, format: :pdf),
+            text: t(".download_pdf"), icon: "download", style: :secondary, data: { turbo: false }) %>
     </div>
-    <div class="kern-col-12 kern-col-md-6">
-      <p class="kern-body"><%= @investment.title %></p>
-    </div>
-  </div>
-  <hr class="kern-divider mb-3">
 
-  <div class="kern-row mb-3">
-    <div class="kern-col-12 kern-col-md-4">
-      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.description_label") %></strong>
-    </div>
-    <div class="kern-col-12 kern-col-md-6">
-      <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@investment.description) %></div>
-    </div>
-  </div>
-  <hr class="kern-divider mb-3">
-
-  <div class="kern-row mb-3">
-    <div class="kern-col-12 kern-col-md-4">
-      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.image_label", default: "Bild") %></strong>
-    </div>
-    <div class="kern-col-12 kern-col-md-6">
-      <% if @investment.image&.attachment&.attached? %>
-        <%= image_tag(@investment.image.attachment, style: "width: 100%;") %>
-      <% end %>
-    </div>
-  </div>
-  <hr class="kern-divider mb-3">
-
-  <div class="kern-row mb-3">
-    <div class="kern-col-12 kern-col-md-4">
-      <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.on_behalf_of_label") %></strong>
-    </div>
-    <div class="kern-col-12 kern-col-md-6">
-      <p class="kern-body"><%= @investment.on_behalf_of %></p>
-    </div>
-  </div>
-  <hr class="kern-divider mb-3">
-
-  <% if @projekt_phase.feature?("form.enable_external_video") %>
     <div class="kern-row mb-3">
       <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.video_url_label") %></strong>
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.title_label") %></strong>
       </div>
       <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @investment.video_url %></p>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
-  <% end %>
-
-  <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_performer_label") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body">
-          <% if @investment.implementation_performer.present? %>
-            <%= t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{@investment.implementation_performer}") %>
-          <% end %>
-        </p>
+        <p class="kern-body"><%= @investment.title %></p>
       </div>
     </div>
     <hr class="kern-divider mb-3">
 
     <div class="kern-row mb-3">
       <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_contribution_label") %></strong>
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.description_label") %></strong>
       </div>
       <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @investment.implementation_contribution %></p>
+        <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@investment.description) %></div>
       </div>
     </div>
     <hr class="kern-divider mb-3">
-  <% end %>
 
-  <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
     <div class="kern-row mb-3">
       <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.user_cost_estimate_label") %></strong>
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.image_label", default: "Bild") %></strong>
       </div>
       <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @investment.user_cost_estimate %></p>
+        <% if @investment.image&.attachment&.attached? %>
+          <%= image_tag(@investment.image.attachment, style: "width: 100%;") %>
+        <% end %>
       </div>
     </div>
     <hr class="kern-divider mb-3">
-  <% end %>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.on_behalf_of_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @investment.on_behalf_of %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @projekt_phase.feature?("form.enable_external_video") %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.video_url_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= @investment.video_url %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_performer_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body">
+            <% if @investment.implementation_performer.present? %>
+              <%= t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{@investment.implementation_performer}") %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.implementation_contribution_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= @investment.implementation_contribution %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t("adm.attribute_editor.budget/investment.user_cost_estimate_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= @investment.user_cost_estimate %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
 
   <% if @projekt_phase.feature?("form.labels") && @projekt_phase.projekt_labels.any? %>
     <div class="kern-row mb-3">
@@ -183,5 +185,6 @@
         </ul>
       </div>
     </div>
+  <% end %>
   <% end %>
 </article>

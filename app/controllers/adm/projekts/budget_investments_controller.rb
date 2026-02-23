@@ -4,8 +4,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer edit update destroy audits]
-  before_action :set_tabs, only: %i[show administer edit audits]
+  before_action :set_investment, only: %i[show administer edit update destroy milestones audits]
+  before_action :set_tabs, only: %i[show administer milestones audits]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -24,6 +24,13 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         send_data pdf_content.render, filename: "budget_investment_#{@investment.id}.pdf", type: "application/pdf"
       end
     end
+  end
+
+  def milestones
+    authorize [:adm, :projekts, @investment], :show?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @milestones = @investment.milestones.order_by_publication_date
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
   def audits
@@ -90,7 +97,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer audits].map do |tab_action|
+      @tabs = %w[show administer milestones audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(

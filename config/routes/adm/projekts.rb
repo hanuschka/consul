@@ -70,7 +70,7 @@ namespace :adm do
         post :send_notifications, on: :collection
       end
       resources :projekt_point_of_interest_categories, except: %i[index show]
-      resources :milestones, except: %i[index show]
+      resources :milestones, controller: "milestones/phases", except: %i[index show]
       resources :progress_bars, except: %i[index show]
       resources :legislation_draft_versions, except: %i[index show]
       resources :formular_fields, except: %i[index show]
@@ -105,8 +105,10 @@ namespace :adm do
       resources :budgets, only: [:update]
       resources :budget_investments, only: [:show, :edit, :update, :destroy] do
         resource :map_location, controller: "/adm/map_locations", only: [:update]
+        resources :milestones, controller: "milestones/budget_investments", except: %i[index show]
         member do
           get :administer
+          get :milestones
           get :audits
         end
       end

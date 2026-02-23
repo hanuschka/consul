@@ -6,7 +6,10 @@ de:
           show: Anzeigen
           administer: Administrieren
           edit: Bearbeiten
+          milestones: Meilensteine
           audits: Änderungslog
+        milestones:
+          title: Meilensteine
         show:
           title: Investitionsvorschlag
           author: Autor

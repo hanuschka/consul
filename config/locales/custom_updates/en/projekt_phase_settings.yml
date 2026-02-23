@@ -1,0 +1,8 @@
+en:
+  custom:
+    projekt_phase_settings:
+      proposals:
+        option:
+          resource:
+            minimum_supports_to_show: "Minimum supports to show"
+            minimum_supports_to_show_description: "Proposals are only shown once they reach this number of supports (0 = always visible)"

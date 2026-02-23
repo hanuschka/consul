@@ -2,8 +2,24 @@ class Adm::Projekts::BudgetsController < Adm::Projekts::BaseController
   before_action :set_projekt_phase
   before_action :set_budget
 
+  def calculate_winners
+    authorize [:adm, :projekts, @budget]
+
+    Budget::Result.new(@budget, @budget.heading).delay.calculate_winners
+    redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase),
+      notice: t(".notice")
+  end
+
+  def recalculate_winners
+    authorize [:adm, :projekts, @budget]
+
+    Budget::Result.new(@budget, @budget.heading).calculate_winners
+    redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase),
+      notice: t(".notice")
+  end
+
   def update
-    authorize @projekt_phase, :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
+    authorize [:adm, :projekts, @budget]
 
     if @budget.update(budget_params)
       flash.now[:success] = t("adm.attribute.update.success")

@@ -102,7 +102,12 @@ namespace :adm do
       resources :budget_phases, only: [:edit] do
         patch :toggle_enabled, on: :member
       end
-      resources :budgets, only: [:update]
+      resources :budgets, only: [:update] do
+        member do
+          put :calculate_winners
+          put :recalculate_winners
+        end
+      end
       resources :budget_investments, only: [:show, :edit, :update, :destroy] do
         resource :map_location, controller: "/adm/map_locations", only: [:update]
         resources :milestones, controller: "milestones/budget_investments", except: %i[index show]

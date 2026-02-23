@@ -15,6 +15,14 @@ class Adm::Projekts::BudgetPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def calculate_winners?
+    @user&.administrator? && @record.balloting_or_later?
+  end
+
+  def recalculate_winners?
+    @user&.administrator? && @record.balloting_or_later?
+  end
+
   class Scope < Scope
     def resolve
       scope.all

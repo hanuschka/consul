@@ -289,6 +289,10 @@ de:
           valuators_hint: Wählen Sie die Gutachter aus, die für dieses Budget zuständig sind.
         budget_investments:
           title: Vorschläge
+          calculate_winners: Gewinner ermitteln
+          calculate_winners_confirm: Bestbewertete Vorschläge werden im Hintergrund ermittelt. Fortfahren?
+          recalculate_winners: Gewinner neu ermitteln
+          recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
           download_csv: CSV herunterladen
           no_investments: Keine Investitionsvorschläge vorhanden.
           table:

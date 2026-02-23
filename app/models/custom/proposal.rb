@@ -24,6 +24,7 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :visible_on_overview, -> { where(visible_on_overview: true) }
   scope :base_selection, -> {
     published
       .not_archived

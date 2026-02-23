@@ -78,9 +78,21 @@ class Kern::MapComponent < ApplicationComponent
 
     def admin_features_json
       return "{}" if admin_editor
-      return "{}" if editable
 
-      map_location.features.is_a?(String) ? map_location.features : map_location.features.to_json
+      features = if @resources.present?
+                   map_location.features
+                 else
+                   parent_admin_features
+                 end
+
+      return "{}" if features.blank?
+
+      features.is_a?(String) ? features : features.to_json
+    end
+
+    def parent_admin_features
+      phase = mappable.try(:projekt_phase)
+      phase&.map_location&.features
     end
 
     def layers_json

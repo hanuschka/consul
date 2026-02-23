@@ -458,6 +458,7 @@ export default class MapboxAdapter extends BaseAdapter {
   }
 
   renderReadOnlyFeatures(features) {
+    const mapboxgl = window.mapboxgl
     const formatted = this.formatFeatures(features)
 
     // Separate points for clustering
@@ -511,36 +512,51 @@ export default class MapboxAdapter extends BaseAdapter {
       paint: { "text-color": "#ffffff" }
     })
 
-    // Individual points
+    // Individual points as DOM markers (pin-shaped, matching Leaflet style)
+    this.readOnlyMarkers = {}
+    this.readOnlyMarkersOnScreen = {}
+
+    const updateMarkers = () => {
+      if (!this.map.isSourceLoaded("user-features-points")) return
+
+      const newMarkers = {}
+      const sourceFeatures = this.map.querySourceFeatures("user-features-points")
+
+      for (const feature of sourceFeatures) {
+        if (feature.properties.cluster) continue
+
+        const coords = feature.geometry.coordinates
+        const id = feature.properties.id || feature.id || `${coords[0]}_${coords[1]}`
+
+        let marker = this.readOnlyMarkers[id]
+        if (!marker) {
+          const color = this.adminEditor ? "#ff0000" :
+            feature.properties?.feature_color || feature.properties?.color || this.defaultFeatureColor
+          const iconName = feature.properties?.feature_icon_name || "circle"
+
+          const el = document.createElement("div")
+          el.className = "map-marker"
+          el.innerHTML = `<div class="map-icon icon-${iconName}" style="background-color: ${color}"></div>`
+
+          marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+            .setLngLat(coords)
+          this.readOnlyMarkers[id] = marker
+        }
+
+        newMarkers[id] = marker
+        if (!this.readOnlyMarkersOnScreen[id]) marker.addTo(this.map)
+      }
+
+      for (const id in this.readOnlyMarkersOnScreen) {
+        if (!newMarkers[id]) this.readOnlyMarkersOnScreen[id].remove()
+      }
+      this.readOnlyMarkersOnScreen = newMarkers
+    }
+
+    this.map.on("render", updateMarkers)
+
     const featureColor = this.adminEditor ? "#ff0000" :
       ["coalesce", ["get", "feature_color"], ["get", "color"], this.defaultFeatureColor]
-
-    this.map.addLayer({
-      id: "user-features-circles",
-      type: "circle",
-      source: "user-features-points",
-      filter: ["!", ["has", "point_count"]],
-      paint: {
-        "circle-radius": 16,
-        "circle-color": featureColor,
-        "circle-opacity": 0.75
-      }
-    })
-
-    // Point icons
-    this.map.addLayer({
-      id: "user-features-circles-icons",
-      type: "symbol",
-      source: "user-features-points",
-      filter: ["all", ["!", ["has", "point_count"]], ["has", "feature_icon_unicode_processed"]],
-      layout: {
-        "text-field": ["get", "feature_icon_unicode_processed"],
-        "text-font": ["Font Awesome 5 Free Regular", "Font Awesome 5 Free Solid", "Font Awesome 5 Brands Regular"],
-        "text-size": 14,
-        "text-offset": [0, 0.2]
-      },
-      paint: { "text-color": "#ffffff" }
-    })
 
     // Shapes source
     this.map.addSource("user-features-shapes", {
@@ -588,8 +604,8 @@ export default class MapboxAdapter extends BaseAdapter {
       })
     })
 
-    // Feature popup handlers
-    const featureLayers = ["user-features-circles", "user-features-lines", "user-features-polygons"]
+    // Feature popup handlers for shapes (point popups handled by DOM marker click)
+    const featureLayers = ["user-features-lines", "user-features-polygons"]
     featureLayers.forEach(layerId => {
       this.map.on("mouseenter", layerId, () => {
         this.map.getCanvas().style.cursor = "pointer"
@@ -608,17 +624,25 @@ export default class MapboxAdapter extends BaseAdapter {
       const mapboxgl = window.mapboxgl
 
       if (!this.map.getSource("admin-features")) {
+        const formatted = this.formatFeatures(features)
+
+        // Admin point markers as DOM elements (red pins)
+        formatted.features
+          .filter(f => f.geometry.type === "Point")
+          .forEach(feature => {
+            const [lng, lat] = feature.geometry.coordinates
+            const el = document.createElement("div")
+            el.className = "map-marker"
+            el.innerHTML = '<div class="map-icon icon-circle" style="background-color: #ff0000"></div>'
+
+            new mapboxgl.Marker({ element: el, anchor: "bottom" })
+              .setLngLat([lng, lat])
+              .addTo(this.map)
+          })
+
         this.map.addSource("admin-features", {
           type: "geojson",
           data: features
-        })
-
-        this.map.addLayer({
-          id: "admin-features-circles",
-          type: "circle",
-          source: "admin-features",
-          filter: ["==", "$type", "Point"],
-          paint: { "circle-radius": 12, "circle-color": "#ff0000", "circle-opacity": 0.5 }
         })
 
         this.map.addLayer({
@@ -655,7 +679,6 @@ export default class MapboxAdapter extends BaseAdapter {
         label.appendChild(span)
 
         input.addEventListener("change", () => {
-          this.toggleLayer("admin-features-circles", input.checked)
           this.toggleLayer("admin-features-lines", input.checked)
           this.toggleLayer("admin-features-polygons", input.checked)
         })
@@ -665,7 +688,7 @@ export default class MapboxAdapter extends BaseAdapter {
 
       // Popup for admin features
       const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>'
-      const adminLayers = ["admin-features-circles", "admin-features-lines", "admin-features-polygons"]
+      const adminLayers = ["admin-features-lines", "admin-features-polygons"]
       adminLayers.forEach(layerId => {
         this.map.on("click", layerId, (e) => {
           new mapboxgl.Popup()

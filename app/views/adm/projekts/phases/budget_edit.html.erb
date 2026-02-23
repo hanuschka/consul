@@ -20,4 +20,14 @@
   <%= render Adm::AttributeEditorComponent.new(@budget, :show_percentage_values_only, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(@budget, :stats_enabled, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(@budget, :advanced_stats_enabled, :boolean) %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".administrators"), hint: t(".administrators_hint")) do %>
+    <%= render "adm/projekts/phases/budget_edit/administrators",
+               budget: @budget, projekt_phase: @projekt_phase %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".valuators"), hint: t(".valuators_hint")) do %>
+    <%= render "adm/projekts/phases/budget_edit/valuators",
+               budget: @budget, projekt_phase: @projekt_phase %>
+  <% end %>
 </div>

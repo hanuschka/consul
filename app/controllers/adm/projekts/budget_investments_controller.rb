@@ -5,7 +5,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
   before_action :set_projekt_phase
   before_action :set_investment, only: %i[show administer edit update destroy milestones progress_bars audits]
-  before_action :set_tabs, only: %i[show administer milestones progress_bars audits]
+  before_action :set_tabs, only: %i[show administer edit milestones progress_bars audits]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy

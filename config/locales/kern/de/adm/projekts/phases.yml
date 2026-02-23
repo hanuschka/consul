@@ -283,6 +283,10 @@ de:
             actions: Aktionen
         budget_edit:
           title: Editieren
+          administrators: Administratoren
+          administrators_hint: Wählen Sie die Administratoren aus, die für dieses Budget zuständig sind.
+          valuators: Gutachter
+          valuators_hint: Wählen Sie die Gutachter aus, die für dieses Budget zuständig sind.
         budget_investments:
           title: Vorschläge
           no_investments: Keine Investitionsvorschläge vorhanden.

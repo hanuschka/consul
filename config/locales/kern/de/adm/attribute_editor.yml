@@ -133,6 +133,12 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
         visible_to_valuators_description: Soll dieser Vorschlag für Gutachter sichtbar sein?
         valuator_explanation_label: Gutachter-Erklärung
         valuator_explanation_description: Erläuterung für Gutachter.
+        valuation_finished_label: Bewertung beendet
+        valuation_finished_description: Vorschlag kann vom Autor nicht mehr geändert werden.
+        price_first_year_label: Fortlaufende Kosten pro Jahr (intern)
+        price_first_year_description: Fortlaufende Kosten pro Jahr – nur für interne Informationen.
+        duration_label: Zeitrahmen
+        duration_description: Geschätzter Zeitrahmen für die Umsetzung.
         video_url_label: Video-URL
         on_behalf_of_label: Im Auftrag von
         implementation_performer_label: Umsetzung

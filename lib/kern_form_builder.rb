@@ -22,8 +22,10 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def rich_text_area(field, options = {})
-    toolbar = @template.ck_editor_class(@template.current_user)
-    options[:data] = (options[:data] || {}).merge(controller: "ckeditor", ckeditor_toolbar_value: toolbar)
+    unless options[:disabled]
+      toolbar = @template.ck_editor_class(@template.current_user)
+      options[:data] = (options[:data] || {}).merge(controller: "ckeditor", ckeditor_toolbar_value: toolbar)
+    end
     text_area(field, options)
   end
 
@@ -57,10 +59,11 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     field_errors = field_errors(field)
     label_text = options.delete(:label)
     hint_text = options.delete(:hint)
+    disabled = options[:disabled]
 
     options[:class] = checkbox_input_classes(options[:class], field_errors)
 
-    checkbox_group(field, field_errors, label_text, hint_text) do
+    checkbox_group(field, field_errors, label_text, hint_text, disabled: disabled) do
       super(field, options, checked_value, unchecked_value)
     end
   end
@@ -68,15 +71,17 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   def collection_radio_buttons(field, collection, value_method, text_method, options = {}, html_options = {}, &block)
     field_errors = field_errors(field)
     legend_text = options.delete(:legend)
+    disabled = options.delete(:disabled)
 
     if block_given?
       super
     else
       radio_buttons = super(field, collection, value_method, text_method, options, html_options) do |b|
         @template.content_tag(:div, class: "kern-form-check") do
+          label_class = disabled ? "kern-label kern-label--disabled" : "kern-label"
           @template.safe_join([
-            b.radio_button(class: radio_input_classes(nil, field_errors)),
-            b.label(class: "kern-label")
+            b.radio_button(class: radio_input_classes(nil, field_errors), disabled: disabled),
+            b.label(class: label_class)
           ])
         end
       end
@@ -88,15 +93,17 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   def collection_check_boxes(field, collection, value_method, text_method, options = {}, html_options = {}, &block)
     field_errors = field_errors(field)
     legend_text = options.delete(:legend)
+    disabled = options.delete(:disabled)
 
     if block_given?
       super
     else
       check_boxes = super(field, collection, value_method, text_method, options, html_options) do |b|
         @template.content_tag(:div, class: "kern-form-check") do
+          label_class = disabled ? "kern-label kern-label--disabled" : "kern-label"
           @template.safe_join([
-            b.check_box(class: checkbox_input_classes(nil, field_errors)),
-            b.label(class: "kern-label")
+            b.check_box(class: checkbox_input_classes(nil, field_errors), disabled: disabled),
+            b.label(class: label_class)
           ])
         end
       end
@@ -126,7 +133,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
 
-    def checkbox_group(field, field_errors, label_text, hint_text)
+    def checkbox_group(field, field_errors, label_text, hint_text, disabled: false)
       wrapper_class = merge_css_classes(
         "kern-form-check mb-3",
         ("kern-form-check--error" if field_errors.any?)
@@ -136,7 +143,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
         @template.safe_join(
           [
             yield,
-            build_checkbox_label(field, label_text),
+            build_checkbox_label(field, label_text, disabled: disabled),
             checkbox_hint_html(hint_text),
             error_html(field, field_errors)
           ].compact
@@ -169,14 +176,16 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       return if label_option == false
 
       text = label_option.is_a?(String) ? label_option : nil
-      label(field, text, class: "kern-label")
+      label_class = options[:disabled] ? "kern-label kern-label--disabled" : "kern-label"
+      label(field, text, class: label_class)
     end
 
-    def build_checkbox_label(field, label_text)
+    def build_checkbox_label(field, label_text, disabled: false)
       return if label_text == false
 
       text = label_text.is_a?(String) ? label_text : nil
-      label(field, text, class: "kern-label")
+      label_class = disabled ? "kern-label kern-label--disabled" : "kern-label"
+      label(field, text, class: label_class)
     end
 
     ## Hint

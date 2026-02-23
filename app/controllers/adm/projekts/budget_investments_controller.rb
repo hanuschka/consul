@@ -77,8 +77,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     def investment_params
       params.require(:budget_investment).permit(
         :title, :description, :heading_id,
-        :price, :feasibility, :selected, :winner, :incompatible,
-        :visible_to_valuators, :valuator_explanation,
+        :price, :price_first_year, :duration, :feasibility, :selected, :winner, :incompatible,
+        :visible_to_valuators, :valuator_explanation, :valuation_finished,
         :video_url, :on_behalf_of,
         :implementation_performer, :implementation_contribution,
         :user_cost_estimate, :sentiment_id,

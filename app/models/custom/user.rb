@@ -25,6 +25,8 @@ class User < ApplicationRecord
 
   before_validation :strip_whitespace
 
+  after_destroy :export_to_brevo_on_destroy
+
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :attempt_verification, if: -> { Setting["feature.melderegister"].present? }
   after_create :take_votes_from_erased_user
@@ -327,6 +329,10 @@ class User < ApplicationRecord
   end
 
   private
+
+    def export_to_brevo_on_destroy
+      MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete")
+    end
 
     def geozone_with_plz
       Geozone.find_with_plz(plz)

@@ -282,6 +282,8 @@ class User < ApplicationRecord
     remove_roles
     remove_audits #custom
     remove_subscriptions #custom
+
+    MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete")
   end
 
   def erased?

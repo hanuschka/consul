@@ -13,6 +13,7 @@ class Poll::QuestionSerializer < BaseSerializer
         :given_order,
         :show_images,
         :answer_mandatory,
+        :bundle_question,
         :created_at,
         :updated_at
       ]

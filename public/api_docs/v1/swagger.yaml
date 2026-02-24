@@ -6386,7 +6386,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: question created
+          description: bundle question created
           content:
             application/json:
               schema:
@@ -6463,6 +6463,11 @@ paths:
                       type: boolean
                       nullable: true
                       description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Set to true to create a bundle question (container
+                        for nested questions)
                     given_order:
                       type: integer
                       nullable: true
@@ -6625,6 +6630,11 @@ paths:
                       type: boolean
                       nullable: true
                       description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Whether this is a bundle question (container for
+                        nested questions)
                     given_order:
                       type: integer
                       nullable: true
@@ -11855,6 +11865,10 @@ components:
           type: boolean
           nullable: true
           description: Show blue info box in frontend
+        bundle_question:
+          type: boolean
+          nullable: true
+          description: Whether this is a bundle question (container for nested questions)
         given_order:
           type: integer
           nullable: true

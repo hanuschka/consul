@@ -11,13 +11,19 @@ class Poll::QuestionSerializer < BaseSerializer
         :id,
         :multiple,
         :given_order,
+        :show_images,
+        :answer_mandatory,
         :created_at,
         :updated_at
       ]
     )
 
     question_data.merge!(
-      title: question.title
+      title: question.title,
+      description: question.description,
+      intro: question.intro,
+      vote_type: question.votation_type&.vote_type,
+      show_hint_callout: question.votation_type&.show_hint_callout
     )
 
     if question.question_answers.any?

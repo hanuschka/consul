@@ -70,6 +70,8 @@ class Api::PollQuestionsController < Api::BaseController
     def question_params
       params.require(:question).permit(
         :title,
+        :description,
+        :intro,
         :multiple,
         :given_order,
         :show_images,

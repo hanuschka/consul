@@ -8,7 +8,7 @@ class ProjektPhase::ProposalPhase::StatsService
   end
 
   def call
-    demographics = DemographicsCalculator.new(participant_ids)
+    demographics = ProjektPhase::DemographicsCalculator.new(participant_ids)
 
     @projekt_phase.update!(
       stats: {

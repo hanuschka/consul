@@ -112,14 +112,15 @@
 
       const dataset = this.element.dataset;
 
-      setTimeout(function() {
+      setTimeout(() => {
         App.Ajax
           .post(dataset.generateImageUrl, {
             prompt: prompt,
+            aspect_ratio: dataset.aspectRatio,
             codename: dataset.codename,
             consul_projekt_phase_id: dataset.projektPhaseId
           })
-          .then(function(imageData) {
+          .then((imageData) => {
             App.AssistantUserResourceForm.updateImage(imageData.image);
           });
       }, 100);
@@ -199,11 +200,11 @@
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "image/jpeg" });
-
     const file = new File([blob], "generated_image.jpg", { type: "image/jpeg" });
 
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
+
     fileInput.files = dataTransfer.files;
     $(fileInput).trigger("change");
   }

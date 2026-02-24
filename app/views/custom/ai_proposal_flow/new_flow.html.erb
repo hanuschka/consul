@@ -1,0 +1,38 @@
+<main class="ai-proposal-flow--page">
+  <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @projekt_phase, current_step: 1) %>
+
+  <div class="new-card ai-proposal-flow--body">
+    <%= render AiProposalFlow::ProjectSummaryBannerComponent.new(projekt_phase: @projekt_phase) %>
+
+    <% if @projekt_phase.proposal_criteria.any? %>
+      <h2 class="ai-proposal-flow--section-heading"><%= t("ai_proposal_flow.step1.criteria_heading") %></h2>
+      <%= render AiProposalFlow::CriteriaListComponent.new(criteria: @projekt_phase.proposal_criteria) %>
+    <% end %>
+
+    <h2 class="ai-proposal-flow--section-heading"><%= t("ai_proposal_flow.step1.idea_heading") %></h2>
+    <%= form_with url: @generate_draft_url, method: :post, class: "js-ai-flow-step1-form" do |f| %>
+      <%= hidden_field_tag :projekt_phase_id, @projekt_phase.id %>
+      <%= f.label :idea_text, t("ai_proposal_flow.step1.textarea_label"), class: "ai-proposal-flow--label" %>
+      <%= f.text_area :idea_text,
+        label: false,
+        maxlength: 600,
+        value: params[:idea_text],
+        placeholder: t("ai_proposal_flow.step1.placeholder"),
+        class: "js-ai-flow-idea-textarea ai-proposal-flow--idea-textarea" %>
+      <div class="ai-proposal-flow--char-counter">
+        <span class="js-ai-flow-char-count">0</span> / 600 <%= t("ai_proposal_flow.step1.chars_label") %>
+      </div>
+
+      <div class="ai-proposal-flow--navigation">
+        <button type="submit" class="button -teal ai-proposal-flow--submit-btn">
+          <%= t("ai_proposal_flow.step1.submit_button") %> <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    <% end %>
+
+    <%= render AiProposalFlow::AiLoaderComponent.new(
+      message_key: "ai_proposal_flow.loader.generating_message",
+      submessage_key: "ai_proposal_flow.loader.generating_submessage"
+    ) %>
+  </div>
+</main>

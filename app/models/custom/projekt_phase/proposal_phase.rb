@@ -91,14 +91,14 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
-      proposals
+      proposals proposal_criteria
       projekt_labels sentiments map
       officing_managers ai_settings
     ]
   end
 
   def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[ officing_managers])
+    admin_nav_bar_items.excluding(%w[officing_managers])
   end
 
   def safe_to_destroy?

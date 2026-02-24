@@ -186,7 +186,18 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
   end
 
-  def poll_questions; end
+  def poll_questions
+    authorize_phase(:update?)
+    @poll = @projekt_phase.poll
+    @questions = @poll.questions.root_questions.where(context_id: nil)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
 
   def formular
     authorize_phase(:update?)
@@ -340,7 +351,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
-  def officing_manager_audits; end
+  def officing_manager_audits
+    authorize_phase(:update?)
+    poll = @projekt_phase.poll
+    poll_voters = Poll::Voter.where(poll_id: poll.id)
+                             .where.not(officing_manager_id: nil)
+
+    @pagy, @audits = pagy(Audit.where(auditable: poll_voters).order(created_at: :desc))
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
 
   def age_ranges_for_stats
     authorize_phase(:update?)

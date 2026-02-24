@@ -187,3 +187,26 @@ de:
             alphabet: Alphabetisch
             votes_up: Am meisten gewählt
             random: Zufällig
+    voting_phase:
+      feature:
+        resource:
+          wizard_mode: Sequentielle Abstimmung
+          wizard_mode_description: Die Abstimmung wird im Modus von sequentiellen Fragen angezeigt
+          show_on_home_page: Sichtbarkeit Homepage
+          show_on_home_page_description: Zeigt die Abstimmung auf der Homepage an
+          show_on_index_page: Sichtbarkeit Übersichtsseite
+          show_on_index_page_description: Zeigt die Abstimmung auf der Übersichtsseite aller Abstimmungen an
+          results_enabled: Ergebnisse
+          results_enabled_description: Zeigt die Ergebnisse der Abstimmung am Ende der Abstimmung an
+          intermediate_poll_results_for_admins: Zwischenergebnisse (Admins / Projektmanager)
+          intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
+          stats_enabled: Statistiken
+          stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
+          advanced_stats_enabled: Erweiterte Statistiken
+          advanced_stats_enabled_description: Zeigt erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
+          evaluation_enabled: Report für Bürger anzeigen
+          evaluation_enabled_description: Zeigt eine automatisch erstellte, zusammenfassende Auswertung der Abstimmungsergebnisse für Bürger an.
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
+          show_open_answer_author_name: Name veröffentlichen
+          show_open_answer_author_name_description: Zeigt den Benutzername der offenen Antworten an

@@ -111,6 +111,27 @@ de:
           lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
           select_managers: Abstimmungshelfer zuordnen
           select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+        poll_questions:
+          title: Abstimmungsfragen
+          create_question: Normale Frage erstellen
+          create_bundle_question: Fragenbündel erstellen
+          no_questions: Keine Abstimmungsfragen vorhanden.
+          table:
+            title: Titel
+            type: Typ
+            multiple: Mehrfachauswahl
+            contextualized_by: "Kontextualisiert durch:"
+            bundle_question: Fragenbündel
+            normal_question: Normale Frage
+            edit_answers: Antworten bearbeiten
+            actions: Aktionen
+        officing_manager_audits:
+          title: Änderungslog Abstimmungshelfer
+          no_audits: Keine Einträge vorhanden.
+          table:
+            id: ID
+            changes: Änderungen
+            created_at: Aufgenommen am
         projekt_point_of_interest_categories:
           title: Kategorien
           create_button: Neue Kategorie erstellen
@@ -333,6 +354,8 @@ de:
           sentiments: Sentimente
           map: Karte
           officing_managers: Abstimmungshelfer
+          officing_manager_audits: Änderungslog
+          poll_questions: Abstimmungsfragen
           projekt_questions: Kurzumfragen
           ai_settings: KI Anweisung
           projekt_point_of_interest_categories: Kategorien

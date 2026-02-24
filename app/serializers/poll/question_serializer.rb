@@ -17,7 +17,8 @@ class Poll::QuestionSerializer < BaseSerializer
     )
 
     question_data.merge!(
-      title: question.title
+      title: question.title,
+      vote_type: question.votation_type&.vote_type
     )
 
     if question.question_answers.any?

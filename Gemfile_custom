@@ -37,7 +37,7 @@ gem 'pdf-reader', '2.15.1'
 gem 'docx', '0.10.0'
 
 group :development, :test do
-  gem 'pry', '~> 0.13.0'
+  gem 'pry', '~> 0.14'
   gem 'pry-byebug', '~> 3.9'
   gem 'pry-rails'
 

@@ -10,7 +10,7 @@ class Api::PollQuestionAnswersController < Api::BaseController
     answers = @question.question_answers.order(given_order: :asc)
     serialized_answers = Poll::Question::AnswerSerializer.serialize_collection(answers)
 
-    render json: { data: { answers: serialized_answers } }
+    render json: { data: { answers: serialized_answers }}
   end
 
   def create
@@ -22,9 +22,9 @@ class Api::PollQuestionAnswersController < Api::BaseController
     if answer.save
       serialized_answer = Poll::Question::AnswerSerializer.new(answer).serialize
 
-      render json: { data: { answer: serialized_answer } }, status: 201
+      render json: { data: { answer: serialized_answer }}, status: :created
     else
-      render json: { error: { messages: answer.errors.full_messages } }, status: 422
+      render json: { error: { messages: answer.errors.full_messages }}, status: :unprocessable_entity
     end
   end
 
@@ -33,7 +33,7 @@ class Api::PollQuestionAnswersController < Api::BaseController
 
     serialized_answer = Poll::Question::AnswerSerializer.new(@answer).serialize
 
-    render json: { data: { answer: serialized_answer } }
+    render json: { data: { answer: serialized_answer }}
   end
 
   def update
@@ -42,9 +42,9 @@ class Api::PollQuestionAnswersController < Api::BaseController
     if @answer.update(answer_params)
       serialized_answer = Poll::Question::AnswerSerializer.new(@answer).serialize
 
-      render json: { data: { answer: serialized_answer } }
+      render json: { data: { answer: serialized_answer }}
     else
-      render json: { error: { messages: @answer.errors.full_messages } }, status: 422
+      render json: { error: { messages: @answer.errors.full_messages }}, status: :unprocessable_entity
     end
   end
 
@@ -54,7 +54,7 @@ class Api::PollQuestionAnswersController < Api::BaseController
     if @answer.destroy
       render json: { message: "Poll question answer destroyed" }
     else
-      render json: { error: { messages: @answer.errors.messages } }, status: 422
+      render json: { error: { messages: @answer.errors.messages }}, status: :unprocessable_entity
     end
   end
 
@@ -68,20 +68,26 @@ class Api::PollQuestionAnswersController < Api::BaseController
 
   private
 
-  def answer_params
-    params.require(:answer).permit(
-      :title,
-      :description,
-      :given_order,
-      translation_params(Poll::Question::Answer, only: [:title, :description])
-    )
-  end
+    def answer_params
+      params.require(:answer).permit(
+        :title,
+        :description,
+        :given_order,
+        :open_answer,
+        :more_info_link,
+        :more_info_iframe,
+        :next_question_id,
+        :terminates_poll,
+        translation_params(Poll::Question::Answer, only: [:title, :description]),
+        videos_attributes: [:id, :title, :url, :_destroy]
+      )
+    end
 
-  def find_question
-    @question = Poll::Question.find(params[:poll_question_id])
-  end
+    def find_question
+      @question = Poll::Question.find(params[:poll_question_id])
+    end
 
-  def find_answer
-    @answer = Poll::Question::Answer.find(params[:id])
-  end
+    def find_answer
+      @answer = Poll::Question::Answer.find(params[:id])
+    end
 end

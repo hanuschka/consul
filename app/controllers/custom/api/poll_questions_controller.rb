@@ -22,6 +22,7 @@ class Api::PollQuestionsController < Api::BaseController
     question = @poll.questions.new(question_params)
     question.author = User.administrators.first
     question.votation_type ||= VotationType.new(vote_type: :unique)
+    question.given_order ||= @poll.questions.maximum(:given_order).to_i + 1
 
     if question.save
       serialized_question = Poll::QuestionSerializer.new(question).serialize
@@ -71,8 +72,10 @@ class Api::PollQuestionsController < Api::BaseController
         :title,
         :multiple,
         :given_order,
-        translation_params(Poll::Question, only: [:title]),
-        votation_type_attributes: [:id, :vote_type, :max_votes, :max_votes_per_answer]
+        :show_images,
+        :answer_mandatory,
+        translation_params(Poll::Question, only: [:title, :description, :intro]),
+        votation_type_attributes: [:id, :vote_type, :max_votes, :max_votes_per_answer, :show_hint_callout]
       )
     end
 

@@ -28,9 +28,6 @@
             <tr id="<%= dom_id(question) %>" class="kern-table__row">
               <th scope="row" class="kern-table__header">
                 <%= question.title %>
-                <% if question.allows_multiple_answers? %>
-                  <small>(<%= t(".table.multiple") %>)</small>
-                <% end %>
                 <% if question.contextualize_by_poll_question_id.present? %>
                   <br>
                   <small><%= t(".table.contextualized_by") %> <%= question.contextualize_by_question.title %></small>
@@ -40,7 +37,7 @@
                 <% if question.bundle_question? %>
                   <%= t(".table.bundle_question") %>
                 <% else %>
-                  <%= t(".table.normal_question") %>
+                  <%= I18n.t("activerecord.attributes.votation_type/vote_type.#{question.votation_type.vote_type}") %>
                 <% end %>
               </td>
               <td class="kern-table__cell">

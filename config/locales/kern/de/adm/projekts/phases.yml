@@ -119,10 +119,8 @@ de:
           table:
             title: Titel
             type: Typ
-            multiple: Mehrfachauswahl
             contextualized_by: "Kontextualisiert durch:"
             bundle_question: Fragenbündel
-            normal_question: Normale Frage
             edit_answers: Antworten bearbeiten
             actions: Aktionen
         officing_manager_audits:

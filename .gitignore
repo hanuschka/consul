@@ -47,3 +47,4 @@ tmp/
 /spec/examples.txt
 /coverage/
 tags
+consul_local_scripts/

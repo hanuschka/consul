@@ -6,9 +6,9 @@
 
 <div class="kern-container mb-5">
   <div class="d-flex justify-content-end gap-2 mb-4">
-    <%= kern_link_button new_admin_question_path(poll_id: @poll.id),
+    <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase),
           text: t(".create_question"), icon: "add", style: :secondary %>
-    <%= kern_link_button new_admin_question_path(poll_id: @poll.id, bundle_question: true),
+    <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase, bundle_question: true),
           text: t(".create_bundle_question"), icon: "add", style: :secondary %>
   </div>
 
@@ -42,9 +42,9 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t(".table.edit_answers"), url: admin_question_path(question)) %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_admin_question_path(question)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: admin_question_path(question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t(".table.edit_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question)) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, question)) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -53,8 +53,6 @@
       </table>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_questions") %>
-    </div>
+    <p><%= t(".no_questions") %></p>
   <% end %>
 </div>

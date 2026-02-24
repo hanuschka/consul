@@ -108,6 +108,9 @@ namespace :adm do
           put :recalculate_winners
         end
       end
+      resources :poll_questions, only: [:new, :create, :show, :edit, :update, :destroy] do
+        post :order_questions, on: :collection
+      end
       resources :budget_investments, only: [:show, :edit, :update, :destroy] do
         resource :map_location, controller: "/adm/map_locations", only: [:update]
         resources :milestones, controller: "milestones/budget_investments", except: %i[index show]

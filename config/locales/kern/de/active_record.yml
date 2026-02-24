@@ -32,5 +32,24 @@ de:
         feasibility_unfeasible: Entspricht nicht den Kriterien
       tag:
         name: Name des Tags
+      poll/question:
+        intro: Einleitungssatz
+        title: Frage
+        description: Beschreibung
+        answer_mandatory: Antwort obligatorisch
+        show_images: Antwortoptionen sollen als Bilder angezeigt werden
+        contextualize_by_poll_question_id: Kontext dieser Frage
+      votation_type:
+        vote_type: Antwortoptionen
+        max_votes: Maximale Stimmanzahl
+        max_votes_per_answer: Maximale Stimmanzahl pro Antwort
+        show_hint_callout: Informationstext der blauen Box im Frontend anzeigen
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
+      votation_type/vote_type:
+        unique: Einzelne Stimme
+        multiple: Mehrere Stimmen
+        multiple_with_weight: Mehrere gewichtete Stimmen
+        rating_scale: Bewertungsskala
       individual_group:
         visible: Sichtbar

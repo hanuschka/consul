@@ -38,6 +38,8 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::ProjektManagerPolicy
       when "Idea"
         Adm::Ideas::IdeaPolicy
+      when "Poll::Question"
+        Adm::Projekts::PollQuestionPolicy
       when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
         Adm::Projekts::BudgetPolicy
       else

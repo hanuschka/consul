@@ -115,7 +115,7 @@ de:
           title: Abstimmungsfragen
           create_question: Normale Frage erstellen
           create_bundle_question: Fragenbündel erstellen
-          no_questions: Keine Abstimmungsfragen vorhanden.
+          no_questions: Dieser Abstimmung sind keine Fragen zugeordnet.
           table:
             title: Titel
             type: Typ

@@ -1,5 +1,5 @@
 class Kern::FormFieldComponent < ApplicationComponent
-  def initialize(label:, hint: nil, divider: true, inline: false)
+  def initialize(label: nil, hint: nil, divider: true, inline: false)
     @label = label
     @hint = hint
     @divider = divider

@@ -34,6 +34,21 @@ module KernHelper
     end
   end
 
+  def kern_alert(title:, style: :info, &block)
+    content_tag(:div, class: "kern-alert kern-alert--#{style}", role: "alert") do
+      header = content_tag(:div, class: "kern-alert__header") do
+        concat(content_tag(:span, nil, class: "kern-icon kern-icon--#{style}", "aria-hidden": "true"))
+        concat(content_tag(:span, title, class: "kern-title"))
+      end
+      if block
+        body = content_tag(:div, class: "kern-alert__body") { capture(&block) }
+        safe_join([header, body])
+      else
+        header
+      end
+    end
+  end
+
   def localized_fields_for(form, attribute, type, **options)
     fields = I18n.available_locales.map do |locale|
       content_tag(:div, class: "kern-row mb-5") do

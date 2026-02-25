@@ -5,7 +5,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".name_label")) do %>
-    <%= f.text_field :name, label: false, required: true %>
+    <%= f.text_field :name, label: false %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".party_label")) do %>
@@ -13,11 +13,11 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".position_label")) do %>
-    <%= f.text_field :position, label: false, required: true %>
+    <%= f.text_field :position, label: false %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".note_label")) do %>
-    <%= f.text_area :note, label: false, rows: 6, required: true %>
+    <%= f.text_area :note, label: false, rows: 6 %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>

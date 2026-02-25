@@ -121,7 +121,8 @@ de:
             type: Typ
             contextualized_by: "Kontextualisiert durch:"
             bundle_question: Fragenbündel
-            edit_answers: Antworten bearbeiten
+            edit_answers: Antwortliste
+            edit_questions: Fragenliste
             actions: Aktionen
         officing_manager_audits:
           title: Änderungslog Abstimmungshelfer

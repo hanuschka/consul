@@ -1,5 +1,5 @@
-<div data-controller="kern--form--documents"
-     data-kern--form--documents-max-value="<%= max_documents_allowed %>">
+<div data-controller="kern--form--nested-entries"
+     data-kern--form--nested-entries-max-value="<%= max_documents_allowed %>">
 
   <p class="kern-body kern-body--small mb-3">
     <%= t(".hint",
@@ -8,11 +8,11 @@
           max_size: max_file_size) %>
   </p>
 
-  <div data-kern--form--documents-target="entries">
+  <div data-kern--form--nested-entries-target="entries">
     <% documents.each do |document| %>
       <% @form.fields_for :documents, document do |df| %>
         <div class="d-flex align-items-center justify-content-between mb-2"
-               data-kern--form--documents-target="entry">
+               data-kern--form--nested-entries-target="entry">
           <div>
             <span class="material-symbols-outlined" aria-hidden="true">description</span>
             <%= document.title %>
@@ -20,11 +20,11 @@
           </div>
           <div>
             <%= df.hidden_field :id %>
-            <%= df.hidden_field :_destroy, value: false, data: { kern__form__documents_target: "destroy" } %>
+            <%= df.hidden_field :_destroy, value: false, data: { kern__form__nested_entries_target: "destroy" } %>
             <%= df.hidden_field :user_id, value: document.user_id %>
             <button type="button"
                     class="kern-btn kern-btn--secondary kern-btn--small"
-                    data-action="kern--form--documents#remove">
+                    data-action="kern--form--nested-entries#remove">
               <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
               <span class="kern-label"><%= t(".remove") %></span>
             </button>
@@ -34,10 +34,10 @@
     <% end %>
   </div>
 
-  <template data-kern--form--documents-target="template">
+  <template data-kern--form--nested-entries-target="template">
     <% @form.fields_for :documents, Document.new, child_index: "NEW_RECORD" do |df| %>
       <div class="mb-2"
-           data-kern--form--documents-target="entry">
+           data-kern--form--nested-entries-target="entry">
         <div class="kern-form-input mb-3">
           <label class="kern-label"><%= t(".title_label") %></label>
           <input type="text" class="kern-form-input__input"
@@ -56,7 +56,7 @@
 
         <button type="button"
                 class="kern-btn kern-btn--secondary kern-btn--small"
-                data-action="kern--form--documents#remove">
+                data-action="kern--form--nested-entries#remove">
           <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
           <span class="kern-label"><%= t(".remove") %></span>
         </button>
@@ -65,6 +65,6 @@
   </template>
 
   <%= kern_button(text: t(".add"), style: :tertiary, class: "mt-2 p-0",
-        data: { kern__form__documents_target: "addButton",
-                action: "kern--form--documents#add" }) %>
+        data: { kern__form__nested_entries_target: "addButton",
+                action: "kern--form--nested-entries#add" }) %>
 </div>

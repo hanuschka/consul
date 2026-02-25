@@ -21,7 +21,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @question], :create?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     @question.votation_type ||= VotationType.new(vote_type: :unique)
-    @question.given_order ||= @poll.questions.maximum(:given_order).to_i + 1
+    @question.given_order = @poll.questions.maximum(:given_order).to_i + 1
 
     if @question.save
       redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question)
@@ -72,7 +72,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
   def order_questions
     authorize [:adm, :projekts, @poll], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
-    ::Poll::Question.order_questions(params[:ordered_list])
+    ordered_ids = params[:tree].map { |item| item[:id] }
+    ::Poll::Question.order_questions(ordered_ids)
     head :ok
   end
 

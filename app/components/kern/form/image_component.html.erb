@@ -23,12 +23,14 @@
     <% end %>
   </div>
 
-  <%= tag.button type: "button",
-          class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
-          style: "float: right;",
-          data: { kern__form__image_target: "actions", action: "kern--form--image#remove" } do %>
-    <span class="kern-label">
-      <%= t("adm.components.attribute_editors.image_component.remove") %>
-    </span>
+  <% if @show_actions %>
+    <%= tag.button type: "button",
+            class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
+            style: "float: right;",
+            data: { kern__form__image_target: "actions", action: "kern--form--image#remove" } do %>
+      <span class="kern-label">
+        <%= t("adm.components.attribute_editors.image_component.remove") %>
+      </span>
+    <% end %>
   <% end %>
 </div>

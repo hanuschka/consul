@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["entries", "template", "addButton", "entry"]
-  static values = { max: Number }
+  static targets = ["entries", "template", "addButton", "entry", "destroy"]
+  static values = { max: { type: Number, default: 10 } }
 
   add() {
     const content = this.templateTarget.content.cloneNode(true)
@@ -19,8 +19,8 @@ export default class extends Controller {
   }
 
   remove(event) {
-    const entry = event.target.closest("[data-kern--form--documents-target='entry']")
-    const destroyField = entry.querySelector("[data-kern--form--documents-target='destroy']")
+    const entry = this.entryTargets.find((e) => e.contains(event.target))
+    const destroyField = this.destroyTargets.find((d) => entry.contains(d))
 
     if (destroyField) {
       destroyField.value = "1"

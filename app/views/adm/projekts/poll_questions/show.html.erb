@@ -7,6 +7,21 @@
 <%= render Adm::HeaderComponent.new(title: @question.title, breadcrumbs: @breadcrumbs, back_button_url: back_url) %>
 
 <div class="kern-container mb-5">
+  <dl class="mb-4">
+    <% unless @question.bundle_question? %>
+      <dt class="kern-label"><%= VotationType.human_attribute_name(:vote_type) %></dt>
+      <dd class="kern-body mb-2"><%= I18n.t("activerecord.attributes.votation_type/vote_type.#{@question.votation_type.vote_type}") %></dd>
+    <% end %>
+
+    <dt class="kern-label"><%= Poll::Question.human_attribute_name(:answer_mandatory) %></dt>
+    <dd class="kern-body mb-2"><%= t("shared.#{@question.answer_mandatory?}") %></dd>
+
+    <% unless @question.bundle_question? %>
+      <dt class="kern-label"><%= Poll::Question.human_attribute_name(:show_images) %></dt>
+      <dd class="kern-body mb-2"><%= t("shared.#{@question.show_images?}") %></dd>
+    <% end %>
+  </dl>
+
   <div class="d-flex gap-2 mb-4">
     <%= kern_link_button edit_adm_projekts_phase_poll_question_path(@projekt_phase, @question),
           text: @question.bundle_question? ? t(".edit_bundle") : t(".edit_question"),
@@ -17,7 +32,7 @@
     <h3 class="mb-3"><%= t(".answers_title") %></h3>
 
     <div class="d-flex gap-2 mb-4">
-      <%= kern_link_button new_admin_question_answer_path(@question),
+      <%= kern_link_button new_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question),
             text: t(".add_answer"), icon: "add", style: :secondary %>
     </div>
 
@@ -34,12 +49,15 @@
               <th scope="col" class="kern-table__header"><%= t(".table.documents") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.videos") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
+              <th scope="col" class="kern-table__header"></th>
             </tr>
           </thead>
 
-          <tbody class="kern-table__body">
+          <tbody class="kern-table__body"
+                 data-controller="sortable"
+                 data-sortable-url-value="<%= order_answers_adm_projekts_phase_poll_question_poll_question_answers_path(@projekt_phase, @question) %>">
             <% @question.question_answers.each do |answer| %>
-              <tr id="<%= dom_id(answer) %>" class="kern-table__row">
+              <tr id="<%= dom_id(answer) %>" class="kern-table__row" data-sortable-id="<%= answer.id %>">
                 <td class="kern-table__cell"><%= answer.title %></td>
                 <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
                   <td class="kern-table__cell"><%= strip_tags(answer.description).truncate(80) %></td>
@@ -49,9 +67,12 @@
                 <td class="kern-table__cell"><%= answer.videos.count %></td>
                 <td class="kern-table__cell">
                   <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                    <% actions.with_action(label: t("shared.edit"), url: edit_admin_question_answer_path(@question, answer)) %>
-                    <% actions.with_action(label: t("shared.delete"), url: admin_question_answer_path(@question, answer), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer)) %>
+                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                   <% end %>
+                </td>
+                <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+                  <span class="material-symbols-outlined">drag_indicator</span>
                 </td>
               </tr>
             <% end %>

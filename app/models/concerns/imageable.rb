@@ -10,4 +10,12 @@ module Imageable
           attributes['cached_attachment'].blank?
       }
   end
+
+  def save(**options)
+    super.tap { |result| image&.cache_attachment_for_rerender unless result }
+  end
+
+  def update(attributes = {})
+    super.tap { |result| image&.cache_attachment_for_rerender unless result }
+  end
 end

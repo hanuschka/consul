@@ -46,6 +46,17 @@ de:
         show_hint_callout: Informationstext der blauen Box im Frontend anzeigen
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
+      poll/question/answer:
+        title: Titel
+        description: Beschreibung
+        open_answer: Offene Antwort
+        more_info_link: Weitere Informationen (Link)
+        more_info_iframe: Weitere Informationen (Iframe)
+        next_question_id: Nächste Frage
+        terminates_poll: Beendet die Abstimmung
+      poll/question/answer/video:
+        title: Titel
+        url: Externes Video
       votation_type/vote_type:
         unique: Einzelne Stimme
         multiple: Mehrere Stimmen

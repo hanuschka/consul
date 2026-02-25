@@ -109,7 +109,10 @@ namespace :adm do
         end
       end
       resources :poll_questions, only: [:new, :create, :show, :edit, :update, :destroy] do
-        post :order_questions, on: :collection
+        patch :order_questions, on: :collection
+        resources :poll_question_answers, only: [:new, :create, :edit, :update, :destroy] do
+          patch :order_answers, on: :collection
+        end
       end
       resources :budget_investments, only: [:show, :edit, :update, :destroy] do
         resource :map_location, controller: "/adm/map_locations", only: [:update]

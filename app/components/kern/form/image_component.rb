@@ -1,8 +1,9 @@
 class Kern::Form::ImageComponent < ApplicationComponent
-  def initialize(form:, attribute:, auto_submit: false)
+  def initialize(form:, attribute:, auto_submit: false, show_actions: true)
     @form = form
     @attribute = attribute
     @auto_submit = auto_submit
+    @show_actions = show_actions
   end
 
   private

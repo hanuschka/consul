@@ -25,8 +25,8 @@ application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarIte
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
 
-import KernFormDocumentsController from "./kern/form/documents_controller"
-application.register("kern--form--documents", KernFormDocumentsController)
+import KernFormNestedEntriesController from "./kern/form/nested_entries_controller"
+application.register("kern--form--nested-entries", KernFormNestedEntriesController)
 
 import KernFormCheckFilter from "./kern_form_check_filter_controller"
 application.register("kern-form-check-filter", KernFormCheckFilter)

@@ -29,9 +29,7 @@
     "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
-    "sortablejs": "^1.15.6"
-  },
-  "devDependencies": {
+    "sortablejs": "^1.15.6",
     "esbuild": "^0.25.10"
   },
   "scripts": {

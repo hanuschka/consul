@@ -90,7 +90,11 @@
   margin-top: 0 !important;
 }
 
-.margin-bottom-10 {
+.u-margin-bottom-5 {
+  margin-bottom: 5px;
+}
+
+.margin-bottom-10, .u-margin-bottom-10 {
   margin-bottom: 10px;
 }
 
@@ -125,12 +129,16 @@
   justify-content: space-between;
 }
 
+.u-gap-5 {
+  gap: 5px;
+}
+
 .u-gap-10 {
   gap: 10px;
 }
 
-.u-gap-5 {
-  gap: 5px;
+.u-gap-20 {
+  gap: 20px;
 }
 
 .d-flex-start, .u-flex-start {
@@ -154,4 +162,3 @@
     display: block;
   }
 }
-

@@ -2,6 +2,47 @@
   flex: 80%;
   padding: 1.5rem;
 }
+
+.projekt-phase-criteria--list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.projekt-phase-criteria--item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background: white;
+  justify-content: space-between;
+}
+
+.projekt-phase-criteria--drag-handle {
+  cursor: grab;
+  color: #aaa;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.projekt-phase-criteria--text {
+  flex: 1;
+  cursor: text;
+}
+
+.projekt-phase-criteria--delete-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  flex-shrink: 0;
+}
+
 .admin {
   .images {
     background: #e7f2fc;
@@ -269,4 +310,158 @@
   color: white;
   border-radius: 5px;
   overflow: hidden;
+}
+
+// Connection status page
+
+$connection-badge-success-color: #007a2f;
+$connection-badge-warning-color: #d7a518;
+$connection-badge-error-color: #a33a29;
+$connection-badge-blue-color: #1a6fa8;
+$connection-badge-gray-color: #6b7280;
+
+.admin-connection-status {
+  padding: 2rem;
+  max-width: 720px;
+}
+
+.admin-connection-status--title {
+  margin-bottom: 2rem;
+}
+
+.admin-connection-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 650px;
+}
+
+.admin-connection-checks--badge {
+  display: flex;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  padding-bottom: 20px;
+
+  &.-success {
+    color: $connection-badge-success-color;
+    background-color: mix($connection-badge-success-color, white, 25%);
+  }
+
+  &.-warning {
+    color: $connection-badge-warning-color;
+    background-color: mix($connection-badge-warning-color, white, 30%);
+  }
+
+  &.-error {
+    color: $connection-badge-error-color;
+    background-color: mix($connection-badge-error-color, white, 22%);
+  }
+
+  &.-blue {
+    color: $connection-badge-blue-color;
+    background-color: mix($connection-badge-blue-color, white, 18%);
+  }
+
+  &.-gray {
+    color: $connection-badge-gray-color;
+    background-color: mix($connection-badge-gray-color, white, 15%);
+  }
+}
+
+.admin-connection-checks--badge-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0;
+  font-size: 16px;
+
+}
+
+.admin-connection-checks--badge-label {
+  font-weight: bold;
+}
+
+.admin-connection-checks--badge-description {
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+
+  .admin-connection-checks--badge.-success & {
+    color: mix($connection-badge-success-color, black, 50%);
+  }
+
+  .admin-connection-checks--badge.-warning & {
+    color: mix($connection-badge-warning-color, black, 50%);
+  }
+
+  .admin-connection-checks--badge.-error & {
+    color: mix($connection-badge-error-color, black, 50%);
+  }
+
+  .admin-connection-checks--badge.-blue & {
+    color: mix($connection-badge-blue-color, black, 50%);
+  }
+
+  .admin-connection-checks--badge.-gray & {
+    color: mix($connection-badge-gray-color, black, 50%);
+  }
+}
+
+.admin-connection-checks--badge-hint {
+  font-size: 0.75rem;
+  font-style: italic;
+  margin: 0.25rem 0 0;
+  line-height: 1.4;
+
+  .admin-connection-checks--badge.-success & {
+    color: mix($connection-badge-success-color, gray, 40%);
+  }
+
+  .admin-connection-checks--badge.-warning & {
+    color: mix($connection-badge-warning-color, gray, 40%);
+  }
+
+  .admin-connection-checks--badge.-error & {
+    color: mix($connection-badge-error-color, gray, 40%);
+  }
+
+  .admin-connection-checks--badge.-blue & {
+    color: mix($connection-badge-blue-color, gray, 40%);
+  }
+
+  .admin-connection-checks--badge.-gray & {
+    color: mix($connection-badge-gray-color, gray, 40%);
+  }
+}
+
+.admin-connection-status--error-detail {
+  margin-top: 0.5rem;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.admin-connection-status--error-detail-label {
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #cc4b37;
+  white-space: nowrap;
+}
+
+.admin-connection-status--error-detail-message {
+  font-family: monospace;
+  font-size: 0.875rem;
+  background: #f8f8f8;
+  border: 1px solid $border-color;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  text-wrap: auto;
+}
+
+.admin-connection-checks--badge-icon {
+  font-size: 30px;
+  margin-right: 15px;
 }

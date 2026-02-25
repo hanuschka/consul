@@ -1,0 +1,16 @@
+<main class="ai-proposal-flow--page">
+  <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 3) %>
+
+  <div class="new-card ai-proposal-flow--body">
+    <%= render AiProposalFlow::EvaluationResultComponent.new(evaluation_result: @draft_resource.ai_evaluation_result) %>
+
+    <div class="ai-proposal-flow--navigation">
+      <%= button_to @publish_url, method: :patch, class: "button -gold" do %>
+        <i class="fas fa-check"></i> <%= t("ai_proposal_flow.nav.submit") %>
+      <% end %>
+      <%= link_to @back_to_edit_url, class: "button -outline" do %>
+        <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back_edit") %>
+      <% end %>
+    </div>
+  </div>
+</main>

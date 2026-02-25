@@ -46,8 +46,12 @@ de:
         processing_message: "Ich prüfe alle Vorschläge und werde in Kürze eine Antwort geben."
         download_txt: "TXT herunterladen"
         download_pdf: "PDF herunterladen"
+        download_docx: "DOCX herunterladen"
+        download_odt: "ODT herunterladen"
         download_all_txt: "Alle Fragen als TXT herunterladen"
         download_all_pdf: "Alle Fragen als PDF herunterladen"
+        download_all_docx: "Alle Fragen als DOCX herunterladen"
+        download_all_odt: "Alle Fragen als ODT herunterladen"
         retention_hint: "Laden Sie Antworten für Offline-Zugriff oder Archivierung herunter."
         no_resources: "Keine Vorschläge gefunden, die analysiert werden können."
         error: "Bei der Generierung der Antwort ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
@@ -76,6 +80,21 @@ de:
         resources: Vorschläge
         in: in
         category_groups: Kategoriegruppen
+      clustering_export:
+        download_csv: CSV herunterladen
+        download_pdf: PDF herunterladen
+        download_odt: ODT herunterladen
+        download_docx: DOCX herunterladen
+        category: Kategorie
+        subcategory: Unterkategorie
+        resource_id: ID
+        resource_title: Titel
+        resource_url: URL
+        pdf_title_topic: Themengruppen Export
+        pdf_title_semantic: Sentimentanalyse Export
+        pdf_projekt: Projekt
+        pdf_phase: Phase
+        pdf_exported: Exportiert
       user_segments:
         title: Nutzersegmente
         men: Männer

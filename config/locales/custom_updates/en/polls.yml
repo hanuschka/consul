@@ -64,6 +64,7 @@ en:
       report:
         title: AI Report
         download_all_txt: Download All Sections (TXT)
+        download_all_docx: Download All Sections (DOCX)
         download_all_pdf: Download All Sections (PDF)
       evaluation:
         title: AI Evaluation

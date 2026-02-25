@@ -18,7 +18,8 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
         items << {
           text: t("budgets.results.link"),
           url: url_to_footer_tab(section: "results", remote: true),
-          active: params[:section] == "results"
+          active: params[:section] == "results",
+          section: "results"
         }
       end
 
@@ -26,16 +27,17 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
         items << {
           text: t("custom.projekt_phases.subnav.key_metrics"),
           url: url_to_footer_tab(section: "key_metrics", remote: true),
-          active: params[:section] == "key_metrics"
+          active: params[:section] == "key_metrics",
+          section: "key_metrics"
         }
 
-        if Ai::Settings.ai_available?
-          items << {
-            text: t("custom.projekt_phases.subnav.analysis"),
-            url: url_to_footer_tab(section: "analysis", remote: true),
-            active: params[:section] == "analysis"
-          }
-        end
+        items << {
+          text: t("custom.projekt_phases.subnav.analysis"),
+          url: url_to_footer_tab(section: "analysis", remote: true),
+          active: params[:section] == "analysis",
+          disabled: !Ai::Settings.ai_available?,
+          section: "analysis"
+        }
       end
 
       items
@@ -45,7 +47,8 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
       {
         text: t("custom.projekts.page.footer.budget.investments_subtab"),
         url: url_to_footer_tab(section: "", remote: true),
-        active: params[:section].blank? || params[:section] == "overview"
+        active: params[:section].blank? || params[:section] == "overview",
+        section: "overview"
       }
     end
 end

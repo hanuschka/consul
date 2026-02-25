@@ -1,0 +1,50 @@
+en:
+  ai_proposal_flow:
+    header:
+      title: "Submit your idea"
+      subtitle: "Shape your city – Your proposal will be reviewed and presented to the community."
+    generate_error: "AI draft generation failed. Please try again."
+    evaluate_error: "AI evaluation failed. Please try again."
+    entry_button: "Create AI draft"
+    steps:
+      idea: "Idea"
+      ai_draft: "AI Draft"
+      evaluation: "Evaluation"
+      submitted: "Submitted"
+    loader:
+      generating_message: "AI is generating your draft …"
+      generating_submessage: "Title and description are being created."
+      evaluating_message: "AI is analysing your proposal …"
+      evaluating_submessage: "Evaluation against the criteria is running."
+    step1:
+      criteria_heading: "Criteria for submitting your idea"
+      idea_heading: "Your Idea"
+      textarea_label: "DESCRIBE YOUR IDEA BRIEFLY"
+      placeholder: "e.g. »I would like a drinking fountain in the city park …«"
+      submit_button: "Generate AI Draft"
+      chars_label: "characters"
+    evaluation:
+      total_score: "Total Score"
+      passed: "Your proposal meets the criteria!"
+      failed: "Your proposal needs improvement."
+    step4:
+      heading: "Thank you for your proposal!"
+      subheading: "Your contribution has been successfully submitted and will be reviewed."
+      reference_label: "YOUR REFERENCE NUMBER"
+      proposal_label: "YOUR PROPOSAL"
+      submitted_badge: "Submitted"
+      view_proposal: "View proposal"
+      new_idea: "Submit another idea"
+    nav:
+      back: "Back"
+      back_edit: "Edit proposal"
+      next_evaluation: "Continue to Evaluation"
+      submit: "Submit proposal"
+  admin:
+    projekt_phases:
+      proposal_criteria:
+        title: "Evaluation Criteria"
+        add_criterion: "Add criterion"
+        text_placeholder: "Describe the criterion …"
+        save: "Save"
+        delete: "Delete"

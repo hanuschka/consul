@@ -97,7 +97,7 @@ ProjektStudio.SavedContentBlocks = {
     const templateContentElement = container.querySelector(".js-content-block-template-content")
     templateContentElement.innerHTML = content
 
-    // this.turnOffEditModeForItem(container)
+    this.turnOffEditModeForItem(container)
 
     $.ajax({
       url: `/admin/saved_content_blocks/${savedContentBlockId}`,
@@ -254,15 +254,9 @@ ProjektStudio.SavedContentBlocks = {
 
   getEditorName(container) {
     const editorName = container.dataset.editorName
+    const surroundingContentBlockId = ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId
 
-    const surroundingContentBlockId =
-        ProjektStudio.ContentBlock.Crud.addContentBlockAfter
-        .dataset
-        .contentBlockId
-
-    const scopedToContentBlockEditorName = `${editorName}-content-block-${surroundingContentBlockId}`
-
-    return scopedToContentBlockEditorName
+    return `${editorName}-content-block-${surroundingContentBlockId}`
   },
 
   getFormContainer(element) {

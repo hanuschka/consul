@@ -5,9 +5,12 @@ class DtApi::Resources::ConsulAiPrompts
     @client = client
   end
 
-  def get(codename)
-    @client.get_with_auth(
-      "#{BASE_PATH}/#{codename}"
+  def get(codename, resource_type: nil)
+    query = resource_type.present? ? { resource_type: resource_type } : nil
+
+    @client.get(
+      "#{BASE_PATH}/#{codename}",
+      query: query
     )
   end
 end

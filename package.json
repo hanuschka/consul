@@ -35,7 +35,7 @@
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --target=es2015 --outdir=app/assets/builds --public-path=/assets",
     "build:css": "npm run build:css:adm --",
-    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules",
+    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed",
     "@redocly/cli": "^2.9.0"
   }
 }

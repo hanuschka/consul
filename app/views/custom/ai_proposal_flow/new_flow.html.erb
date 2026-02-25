@@ -4,9 +4,9 @@
   <div class="new-card ai-proposal-flow--body">
     <%= render AiProposalFlow::ProjectSummaryBannerComponent.new(projekt_phase: @projekt_phase) %>
 
-    <% if @projekt_phase.proposal_criteria.any? %>
+    <% if @projekt_phase.user_resource_criteria.any? %>
       <h2 class="ai-proposal-flow--section-heading"><%= t("ai_proposal_flow.step1.criteria_heading") %></h2>
-      <%= render AiProposalFlow::CriteriaListComponent.new(criteria: @projekt_phase.proposal_criteria) %>
+      <%= render AiProposalFlow::CriteriaListComponent.new(criteria: @projekt_phase.user_resource_criteria) %>
     <% end %>
 
     <h2 class="ai-proposal-flow--section-heading"><%= t("ai_proposal_flow.step1.idea_heading") %></h2>

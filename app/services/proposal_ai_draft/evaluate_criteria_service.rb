@@ -4,7 +4,7 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
   end
 
   def call
-    criteria = @resource.projekt_phase.proposal_criteria.to_a
+    criteria = @resource.projekt_phase.user_resource_criteria.to_a
     prompt = build_prompt(criteria)
     response = Ai::RubyLlmFactory.chat_with_json_output(output_schema).ask(prompt)
     response.content

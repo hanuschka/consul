@@ -8,7 +8,7 @@ class Api::BaseController < ActionController::API
   COMMENTS_PER_PAGE = 5000
 
   before_action :authenticate_api_client!
-  rescue_from StandardError, with: :render_internal_server_error
+  # rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized

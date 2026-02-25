@@ -38,15 +38,15 @@ en:
       subject: Upload of CSV data completed successfully.
       p1_html: "Your data was added successfully: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
-      subject: Your post violates the netiquette.
-      title: Your post violates the netiquette.
+      subject: Your proposal violates the admission conditions.
       hi: "Hello %{username},"
-      text1: "We have checked your post: %{text}"
-      text2: "Unfortunately, it violates the netiquette of this platform. We have therefore removed your post."
-      text3: You can read the rules of netiquette %{netiquette_link}.
+      text1: "We have checked your topic proposal: %{text}."
+      text2: "Unfortunately, it violates the admission conditions of our topic selection. We have therefore removed your proposal."
+      text3: You can read the admission conditions %{netiquette_link}.
       netiquette_link_text: here
-      text4: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
+      text4: If you have any questions, please contact us. You are cordially invited to create a new post that complies with the admission conditions.
       sincerely: Kind regards
+      signature: Your ABSTIMMUNG21 Team
     comment:
       subject: Your	proposal  has been  commented on.
       title: Your proposal has been commented on.

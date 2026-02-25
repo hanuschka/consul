@@ -51,6 +51,7 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
         .not_archived
         .not_retired
         .with_current_projekt
+        .visible_on_overview
         .merge(Projekt.show_in_homepage)
         .by_projekt_id(scoped_projekt_ids)
         .sort_by_created_at

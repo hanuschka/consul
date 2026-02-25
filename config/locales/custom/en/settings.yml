@@ -1,0 +1,5 @@
+en:
+  settings:
+    moderation:
+      reports_notification_email: Reports notification email
+      reports_notification_email_description: Email address to receive notifications when a user reports content. Leave blank to disable notifications.

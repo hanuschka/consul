@@ -30,6 +30,8 @@ class Adm::BaseController < ActionController::Base
       record_class = record.is_a?(Class) ? record : record.class.base_class
 
       case record_class.name
+      when "Setting"
+        Adm::SettingPolicy
       when "Projekt"
         Adm::Projekts::ProjektPolicy
       when "ProjektPhase", "ProjektPhaseSetting"

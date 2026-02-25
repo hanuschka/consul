@@ -7,13 +7,21 @@ export default class extends Controller {
     this.close = this.close.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleWindowScroll = this.handleWindowScroll.bind(this);
+    this.handleBeforeCache = this.handleBeforeCache.bind(this);
     document.addEventListener("table-actions:close-all", this.close);
+    document.addEventListener("turbo:before-cache", this.handleBeforeCache);
   }
 
   disconnect() {
     document.removeEventListener("table-actions:close-all", this.close);
     document.removeEventListener("click", this.handleClickOutside);
     window.removeEventListener("scroll", this.handleWindowScroll);
+    document.removeEventListener("turbo:before-cache", this.handleBeforeCache);
+  }
+
+  handleBeforeCache() {
+    this.menuTarget.classList.add("d-none");
+    this.buttonTarget.setAttribute("aria-expanded", "false");
   }
 
   handleClickOutside(event) {

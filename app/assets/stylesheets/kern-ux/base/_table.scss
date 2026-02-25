@@ -18,6 +18,11 @@
   border: 1px solid #ccc;
 }
 
+[data-controller="table-actions"] > [data-table-actions-target="button"] .material-symbols-outlined {
+  font-size: 1.25em !important;
+  color: var(--kern-color-action-default);
+}
+
 .kern-table__actions-menu {
   background-color: var(--kern-custom-white);
   border-radius: var(--kern-8);

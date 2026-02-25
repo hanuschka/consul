@@ -1,0 +1,11 @@
+en:
+  custom:
+    moderation_mailer:
+      flag_report:
+        subject: "New content report: %{resource_type}"
+        heading: A user has reported content
+        resource_type_label: Resource type
+        resource_label: Reported content
+        reporter_label: Reported by
+        reported_at_label: Reported at
+        review_link: Review in moderation dashboard

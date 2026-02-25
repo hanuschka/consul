@@ -42,7 +42,7 @@ en:
       submit: "Submit proposal"
   admin:
     projekt_phases:
-      proposal_criteria:
+      user_resource_criteria:
         title: "Evaluation Criteria"
         add_criterion: "Add criterion"
         text_placeholder: "Describe the criterion …"

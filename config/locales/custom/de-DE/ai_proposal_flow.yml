@@ -42,7 +42,7 @@ de:
       submit: "Vorschlag einreichen"
   admin:
     projekt_phases:
-      proposal_criteria:
+      user_resource_criteria:
         title: "Bewertungskriterien"
         add_criterion: "Kriterium hinzufügen"
         text_placeholder: "Kriterium beschreiben …"

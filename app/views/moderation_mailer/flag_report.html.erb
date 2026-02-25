@@ -1,0 +1,31 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= I18n.t("custom.moderation_mailer.flag_report.heading") %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= I18n.t("custom.moderation_mailer.flag_report.resource_type_label") %>:</strong>
+    <%= @resource_type %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= I18n.t("custom.moderation_mailer.flag_report.resource_label") %>:</strong>
+    <%= @resource_snippet %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= I18n.t("custom.moderation_mailer.flag_report.reporter_label") %>:</strong>
+    <%= @reporter.username %> (<%= @reporter.email %>)
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= I18n.t("custom.moderation_mailer.flag_report.reported_at_label") %>:</strong>
+    <%= l(@reported_at, format: :long) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= link_to I18n.t("custom.moderation_mailer.flag_report.review_link"),
+                admin_root_url,
+                style: "color: #004a83;" %>
+  </p>
+</td>

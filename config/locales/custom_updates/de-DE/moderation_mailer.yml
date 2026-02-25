@@ -1,0 +1,11 @@
+de:
+  custom:
+    moderation_mailer:
+      flag_report:
+        subject: "Neue Inhaltsmeldung: %{resource_type}"
+        heading: Ein Nutzer hat Inhalt gemeldet
+        resource_type_label: Ressourcentyp
+        resource_label: Gemeldeter Inhalt
+        reporter_label: Gemeldet von
+        reported_at_label: Gemeldet am
+        review_link: Im Moderations-Dashboard überprüfen

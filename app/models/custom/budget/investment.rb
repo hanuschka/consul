@@ -7,11 +7,14 @@ class Budget
     include Sentimentable
     include Memoable
 
-    DEFAULT_ORDERS = %w(
-      random total_votes ballot_line_weight newest comments_count
-    ).freeze
+    default_scope { where(draft: false) }
 
-    delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
+    DEFAULT_ORDERS = %w[
+      random total_votes ballot_line_weight newest comments_count
+    ].freeze
+
+    delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?,
+to: :budget
 
     after_commit :enqueue_stats_refresh
     delegate :approximated_address, to: :map_location, allow_nil: true
@@ -44,7 +47,7 @@ class Budget
     end
 
     def register_selection(user, vote_weight = 1)
-      vote_by(voter: user, vote: "yes", vote_weight: vote_weight) if selectable_by?(user)
+      vote_by(voter: user, vote: "yes", vote_weight:) if selectable_by?(user)
     end
 
     def total_supporters

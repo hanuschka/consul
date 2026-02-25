@@ -10,6 +10,11 @@ class Poll::Question::AnswerSerializer < BaseSerializer
       only: [
         :id,
         :given_order,
+        :open_answer,
+        :more_info_link,
+        :more_info_iframe,
+        :next_question_id,
+        :terminates_poll,
         :created_at,
         :updated_at
       ]
@@ -22,6 +27,12 @@ class Poll::Question::AnswerSerializer < BaseSerializer
 
     answer_data[:total_votes] = answer.total_votes
     answer_data[:total_votes_percentage] = answer.total_votes_percentage
+
+    if answer.videos.any?
+      answer_data[:videos] = answer.videos.map do |video|
+        { id: video.id, title: video.title, url: video.url }
+      end
+    end
 
     answer_data
   end

@@ -6023,12 +6023,51 @@ paths:
                     description:
                       type: string
                       nullable: true
-                      description: Answer description (sets description for the current
-                        locale)
+                      description: Answer description (sets for the current locale)
+                    open_answer:
+                      type: boolean
+                      nullable: true
+                      description: Free-text answer (no predefined options)
+                    more_info_link:
+                      type: string
+                      nullable: true
+                      description: External link URL for more info
+                    more_info_iframe:
+                      type: string
+                      nullable: true
+                      description: Embedded iframe URL
+                    next_question_id:
+                      type: integer
+                      nullable: true
+                      description: ID of next question to show after this answer
+                    terminates_poll:
+                      type: boolean
+                      nullable: true
+                      description: Whether selecting this answer ends the poll
                     given_order:
                       type: integer
                       nullable: true
                       description: Display order (auto-assigned if omitted)
+                    videos_attributes:
+                      type: array
+                      description: External videos (YouTube/Vimeo)
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Video ID (required for update/delete)
+                          title:
+                            type: string
+                            description: Video title
+                          url:
+                            type: string
+                            description: YouTube or Vimeo URL
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set true to remove video
                     translations_attributes:
                       type: array
                       description: Multilingual content. Provide title and description
@@ -6187,12 +6226,51 @@ paths:
                     description:
                       type: string
                       nullable: true
-                      description: Answer description (sets description for the current
-                        locale)
+                      description: Answer description (sets for the current locale)
+                    open_answer:
+                      type: boolean
+                      nullable: true
+                      description: Free-text answer (no predefined options)
+                    more_info_link:
+                      type: string
+                      nullable: true
+                      description: External link URL for more info
+                    more_info_iframe:
+                      type: string
+                      nullable: true
+                      description: Embedded iframe URL
+                    next_question_id:
+                      type: integer
+                      nullable: true
+                      description: ID of next question to show after this answer
+                    terminates_poll:
+                      type: boolean
+                      nullable: true
+                      description: Whether selecting this answer ends the poll
                     given_order:
                       type: integer
                       nullable: true
                       description: Display order of the answer
+                    videos_attributes:
+                      type: array
+                      description: External videos (YouTube/Vimeo)
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Video ID (required for update/delete)
+                          title:
+                            type: string
+                            description: Video title
+                          url:
+                            type: string
+                            description: YouTube or Vimeo URL
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set true to remove video
                     translations_attributes:
                       type: array
                       nullable: true
@@ -6308,7 +6386,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: question created
+          description: bundle question created
           content:
             application/json:
               schema:
@@ -6365,17 +6443,62 @@ paths:
                     title:
                       type: string
                       description: Question title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Description text (sets for the current locale)
+                    intro:
+                      type: string
+                      nullable: true
+                      description: Introduction text (sets for the current locale)
                     multiple:
                       type: boolean
                       nullable: true
                       description: Whether multiple answers can be selected
+                    show_images:
+                      type: boolean
+                      nullable: true
+                      description: Display answer options as images
+                    answer_mandatory:
+                      type: boolean
+                      nullable: true
+                      description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Set to true to create a bundle question (container
+                        for nested questions)
                     given_order:
                       type: integer
                       nullable: true
-                      description: Display order of the question
+                      description: Display order (auto-assigned if omitted)
+                    votation_type_attributes:
+                      type: object
+                      properties:
+                        vote_type:
+                          type: string
+                          enum:
+                          - unique
+                          - multiple
+                          - multiple_with_weight
+                          - rating_scale
+                          description: Votation type
+                        max_votes:
+                          type: integer
+                          nullable: true
+                          description: Max total votes allowed (for multiple types)
+                        max_votes_per_answer:
+                          type: integer
+                          nullable: true
+                          description: Max votes per single answer (for multiple types)
+                        show_hint_callout:
+                          type: boolean
+                          nullable: true
+                          description: Show blue info box in frontend
                     translations_attributes:
                       type: array
-                      description: Multilingual content. Provide title for each language.
+                      description: Multilingual content. Provide title, description,
+                        and intro for each language.
                       items:
                         type: object
                         properties:
@@ -6385,6 +6508,14 @@ paths:
                           title:
                             type: string
                             description: Question title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Question description in the specified language
+                          intro:
+                            type: string
+                            nullable: true
+                            description: Introduction text in the specified language
               required:
               - question
         description: Poll question creation payload
@@ -6479,14 +6610,58 @@ paths:
                       type: string
                       nullable: true
                       description: Question title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Description text (sets for the current locale)
+                    intro:
+                      type: string
+                      nullable: true
+                      description: Introduction text (sets for the current locale)
                     multiple:
                       type: boolean
                       nullable: true
                       description: Whether multiple answers can be selected
+                    show_images:
+                      type: boolean
+                      nullable: true
+                      description: Display answer options as images
+                    answer_mandatory:
+                      type: boolean
+                      nullable: true
+                      description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Whether this is a bundle question (container for
+                        nested questions)
                     given_order:
                       type: integer
                       nullable: true
                       description: Display order of the question
+                    votation_type_attributes:
+                      type: object
+                      properties:
+                        vote_type:
+                          type: string
+                          enum:
+                          - unique
+                          - multiple
+                          - multiple_with_weight
+                          - rating_scale
+                          description: Votation type
+                        max_votes:
+                          type: integer
+                          nullable: true
+                          description: Max total votes allowed (for multiple types)
+                        max_votes_per_answer:
+                          type: integer
+                          nullable: true
+                          description: Max votes per single answer (for multiple types)
+                        show_hint_callout:
+                          type: boolean
+                          nullable: true
+                          description: Show blue info box in frontend
                     translations_attributes:
                       type: array
                       nullable: true
@@ -6506,6 +6681,14 @@ paths:
                             type: string
                             nullable: true
                             description: Question title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Question description in the specified language
+                          intro:
+                            type: string
+                            nullable: true
+                            description: Introduction text in the specified language
                           _destroy:
                             type: boolean
                             nullable: true
@@ -11653,11 +11836,39 @@ components:
           type: string
           description: The question text in the current locale
           example: What is your preference?
+        description:
+          type: string
+          nullable: true
+          description: Description text in the current locale
+        intro:
+          type: string
+          nullable: true
+          description: Introduction text shown above the question in the current locale
         multiple:
           type: boolean
           nullable: true
           description: Whether multiple answers can be selected
           example: false
+        show_images:
+          type: boolean
+          nullable: true
+          description: Display answer options as images
+        answer_mandatory:
+          type: boolean
+          nullable: true
+          description: Whether answering this question is mandatory
+        vote_type:
+          type: string
+          nullable: true
+          description: Votation type (unique, multiple, multiple_with_weight, rating_scale)
+        show_hint_callout:
+          type: boolean
+          nullable: true
+          description: Show blue info box in frontend
+        bundle_question:
+          type: boolean
+          nullable: true
+          description: Whether this is a bundle question (container for nested questions)
         given_order:
           type: integer
           nullable: true
@@ -11696,8 +11907,27 @@ components:
         description:
           type: string
           nullable: true
-          description: Optional description for the answer in the current locale
-          example: Additional context for option A
+          description: Description in the current locale
+        open_answer:
+          type: boolean
+          nullable: true
+          description: Free-text answer (no predefined options)
+        more_info_link:
+          type: string
+          nullable: true
+          description: External link URL for more info
+        more_info_iframe:
+          type: string
+          nullable: true
+          description: Embedded iframe URL
+        next_question_id:
+          type: integer
+          nullable: true
+          description: ID of the next question to show after this answer
+        terminates_poll:
+          type: boolean
+          nullable: true
+          description: Whether selecting this answer ends the poll
         given_order:
           type: integer
           nullable: true
@@ -11709,18 +11939,31 @@ components:
           example: 42
         total_votes_percentage:
           type: number
-          description: Percentage of total votes this answer received
+          description: Percentage of total votes
           example: 35.5
+        videos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Video ID
+              title:
+                type: string
+                description: Video title
+              url:
+                type: string
+                description: YouTube or Vimeo URL
+          description: External videos
         created_at:
           type: string
           format: date_time
-          description: Timestamp when the answer was created
-          example: '2024-01-10T09:00:00Z'
+          description: Created timestamp
         updated_at:
           type: string
           format: date_time
-          description: Timestamp when the answer was last modified
-          example: '2024-01-15T11:00:00Z'
+          description: Updated timestamp
       required:
       - id
       - title

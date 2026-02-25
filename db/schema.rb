@@ -2358,7 +2358,10 @@ ActiveRecord::Schema.define(version: 2026_02_23_000001) do
     t.text "ai_idea_text"
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
+<<<<<<< HEAD
     t.boolean "visible_on_overview", default: true, null: false
+=======
+>>>>>>> new-connection
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"

@@ -1,10 +1,10 @@
 <%= form_with model: @projekt_argument, url: url do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".type_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".type_label"), required: true) do %>
     <%= f.collection_radio_buttons :pro, [[true, t(".pro")], [false, t(".contra")]], :first, :last %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".name_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), required: true) do %>
     <%= f.text_field :name, label: false %>
   <% end %>
 
@@ -12,11 +12,11 @@
     <%= f.text_field :party, label: false %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".position_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".position_label"), required: true) do %>
     <%= f.text_field :position, label: false %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".note_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".note_label"), required: true) do %>
     <%= f.text_area :note, label: false, rows: 6 %>
   <% end %>
 

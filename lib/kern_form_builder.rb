@@ -176,6 +176,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
       return if label_option == false
 
       text = label_option.is_a?(String) ? label_option : nil
+      text = append_required_mark(field, text)
       label_class = options[:disabled] ? "kern-label kern-label--disabled" : "kern-label"
       label(field, text, class: label_class)
     end
@@ -275,6 +276,24 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
 
     def sanitized_object_name
       object_name.to_s.gsub(/[\[\]]+/, "_").chomp("_")
+    end
+
+    ## Required
+
+    def field_required?(field)
+      return false unless object.class.respond_to?(:validators_on)
+
+      object.class.validators_on(field).any? do |v|
+        v.is_a?(ActiveModel::Validations::PresenceValidator) &&
+          v.options.except(:message).empty?
+      end
+    end
+
+    def append_required_mark(field, text)
+      return text unless field_required?(field)
+
+      base = text || object.class.human_attribute_name(field)
+      @template.safe_join([base, " *"])
     end
 
     ## Utils

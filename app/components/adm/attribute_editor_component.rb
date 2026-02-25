@@ -15,7 +15,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def label
-    @options[:label].presence || I18n.t(i18n_key(:label), default: @attribute.to_s.humanize)
+    text = @options[:label].presence || I18n.t(i18n_key(:label), default: @attribute.to_s.humanize)
+    field_required? ? "#{text} *" : text
   end
 
   def description
@@ -81,5 +82,14 @@ class Adm::AttributeEditorComponent < ApplicationComponent
 
     def setting_type?
       SETTING_TYPES.any? { |type| @record.is_a?(type) }
+    end
+
+    def field_required?
+      return false unless @record.class.respond_to?(:validators_on)
+
+      @record.class.validators_on(@attribute).any? do |v|
+        v.is_a?(ActiveModel::Validations::PresenceValidator) &&
+          v.options.except(:message).empty?
+      end
     end
 end

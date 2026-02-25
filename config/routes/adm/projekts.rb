@@ -23,6 +23,7 @@ namespace :adm do
 
         # Content management
         get :proposals
+        get :proposal_criteria
         get :budget_phases
         get :budget_edit
         get :budget_investments

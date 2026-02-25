@@ -17,18 +17,6 @@ ProjektStudio.ContentBlock.Crud = {
     this.deleteContentBlock(contentBlockWrapper)
   },
 
-  toggleStartSection(show) {
-    $(".js-projekt-content-start-section").toggle(show)
-  },
-
-  toggleAddFirstContentBlock(show) {
-    $(".js-add-first-content-block-wrapper").toggle(show)
-  },
-
-  toggleDeleteAllButton(show) {
-    $(".js-delete-all-content-blocks").toggle(show)
-  },
-
   generateDraftIndex() {
     return Date.now();
   },
@@ -45,9 +33,9 @@ ProjektStudio.ContentBlock.Crud = {
 
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
 
-    $('.js-content-blocks-container').append(newContentBlockContainer)
+    $('.js-content-blocks-list').append(newContentBlockContainer)
 
-    this.toggleStartSection(false)
+    this.rerenderContentBlockListControls()
 
     this.createContentBlock(
       newContentBlockContainer,
@@ -57,6 +45,7 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   addContentBlock(previousContentBlockWrapper, contentBlockTemplate) {
+    console.log(previousContentBlockWrapper)
     const previousContentBlockId = previousContentBlockWrapper ? previousContentBlockWrapper.dataset.contentBlockId : null;
     const draftContentBlockIndex = this.generateDraftIndex();
 
@@ -76,9 +65,16 @@ ProjektStudio.ContentBlock.Crud = {
       previousContentBlockWrapper.after(newContentBlockContainer)
 
       if (!isFirstBlock) {
-        $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", true)
+        $(newContentBlockContainer)
+          .find(".js-show-content-block-templates")
+          .prop("disabled", true)
       }
     }
+    else {
+      $('.js-content-blocks-list').append(newContentBlockContainer)
+    }
+
+    this.rerenderContentBlockListControls()
 
     this.createContentBlock(
       newContentBlockContainer,
@@ -88,14 +84,23 @@ ProjektStudio.ContentBlock.Crud = {
     )
   },
 
-  createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
-    this.toggleAddFirstContentBlock(true)
-    this.toggleDeleteAllButton(true)
+  rerenderContentBlockListControls() {
+    const hasNoContentBlocks = $('.js-content-blocks-list .js-content-block').length === 0
 
+    if (hasNoContentBlocks) {
+      this.addContentBlockAfter = null
+    }
+
+    $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
+    $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
+    $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
+  },
+
+  createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
-      $(newContentBlockContainer).find('.projekt-content-block').foundation();
-      App.ImageGallery.initialize();
+      $(newContentBlockContainer).find('.projekt-content-block').foundation()
+      App.ImageGallery.initialize()
     }, 0)
 
     const projektId = ProjektStudio.getCurrentProjektId()
@@ -137,8 +142,8 @@ ProjektStudio.ContentBlock.Crud = {
       newContentBlockContainer.classList.remove('-highlight-changed')
     }, 1700)
 
-    newContentBlockContainer.dataset.contentBlockId = params.content_block_id;
-    newContentBlockContainer.dataset.draft = false;
+    newContentBlockContainer.dataset.contentBlockId = params.content_block_id
+    newContentBlockContainer.dataset.draft = false
     newContentBlockContainer.classList.remove('-draft')
     $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", false)
   },
@@ -195,22 +200,23 @@ ProjektStudio.ContentBlock.Crud = {
 
     if (!deleteConfirmed) return
 
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-    const nextContentBlockSection = contentBlockWrapper.nextElementSibling;
-    const prevContentBlockSection = contentBlockWrapper.previousElementSibling;
-    const scrollTo = nextContentBlockSection || prevContentBlockSection;
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId
+    const nextContentBlockSection = contentBlockWrapper.nextElementSibling
+    const prevContentBlockSection = contentBlockWrapper.previousElementSibling
+    const scrollTo = nextContentBlockSection || prevContentBlockSection
+
+    // Clean up tooltips on content block destroy
+    contentBlockWrapper.querySelectorAll("[data-tooltip]").each((element) => {
+      const instance = $(element).data("zf.tooltip");
+      if (instance) instance.destroy();
+    })
 
     contentBlockWrapper.remove()
 
-    const remainingContentBlocks = document.querySelectorAll('.js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)').length;
-    if (remainingContentBlocks === 0) {
-      this.toggleAddFirstContentBlock(false)
-      this.toggleDeleteAllButton(false)
-      this.toggleStartSection(true)
-    }
+    this.rerenderContentBlockListControls()
 
     if (scrollTo) {
-      scrollTo.scrollIntoView({block: "center"});
+      scrollTo.scrollIntoView({block: "center"})
     }
 
     $.ajax({

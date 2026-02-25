@@ -2,6 +2,10 @@
   get "/api/docs_alt", to: "docs#api_alt"
 
   namespace :api do
+    namespace :auth do
+      post :rotate_token, to: "auth/rotate_token#create"
+    end
+
     resources :projekts, shallow: true do
       member do
         patch :update_setting
@@ -50,7 +54,14 @@
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
-    resources :polls, only: [:index, :show]
+    resources :polls, only: [:index, :show] do
+      resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
+    end
+    resources :poll_questions, only: [:show, :update, :destroy] do
+      resources :poll_question_answers, only: [:index, :create], path: "answers", as: :answers
+      patch :order_answers, to: "poll_question_answers#order_answers", path: "answers/order"
+    end
+    resources :poll_question_answers, only: [:show, :update, :destroy]
     resources :livestreams, only: [:index, :show]
     resources :proposals, only: [:index, :show]
     resources :events, only: [:index, :show]

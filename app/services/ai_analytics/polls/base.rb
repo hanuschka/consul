@@ -46,9 +46,9 @@ class AiAnalytics::Polls::Base < ApplicationService
       - Dont add spaces before <li> items.
       - Structure your answer clearly with paragraphs
       - Dont use br html tags
-    TEXT
 
-    context + @prompt.gsub("{{target_language}}", target_language)
+      Output response in #{target_language} language.
+    TEXT
   end
 
   def store_result(result)

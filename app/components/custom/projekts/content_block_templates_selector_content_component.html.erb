@@ -12,10 +12,14 @@
     </li>
   <% end %>
   <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
+    <a href="#contentBlockSelectorTab--globalContentBlocks">
+      <%= t('custom.projekt.content_block_templates_selector.tabs.internal_content_blocks') %>
+    </a>
   </li>
   <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
+    <a href="#contentBlockSelectorTab--userContentBlocks">
+      <%= t('custom.projekt.content_block_templates_selector.tabs.own_content_blocks') %>
+    </a>
   </li>
 </ul>
 <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
@@ -35,39 +39,39 @@
   <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
     <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
     <div
-        class="add-new-saved-content-block-section js-show-content-block-templates-section"
-        data-editor-name="new-global-content-block-form"
-        data-saved-content-block-type="global"
+      class="add-new-saved-content-block-section js-show-content-block-templates-section"
+      data-editor-name="new-global-content-block-form"
+      data-saved-content-block-type="global"
+    >
+      <div class="add-new-content-block-section--plus-button-wrapper">
+        <button
+          title="<%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_create_title') %>"
+          type="button"
+          class="js-toggle-saved-content-block-form add-new-content-block-template-button"
         >
-        <div class="add-new-content-block-section--plus-button-wrapper">
-          <button
-              title="Neue interne Inhaltsblockvorlage erstellen"
-              type="button"
-              class="js-toggle-saved-content-block-form add-new-content-block-button"
-              >
-              <i class="fas fa-plus"></i>
-              Neuen internen Inhaltsblock hinzufügen
-          </button>
-        </div>
-        <div class="js-saved-content-block-form saved-content-block-form">
-          <h3>Neue interne Inhaltsblockvorlage erstellen</h3>
-          <p><i>HTML Code hier hinzufügen</i></p>
-          <textarea
-              id="global-content-block-form--textarea"
-              name="content"
-              class="saved-content-block-form--textarea"
-              ></textarea>
-        </div>
-        <div class="saved-content-block-form--controlls d-flex u-gap-10">
-          <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
-            <i class="fas fa-save"></i>
-            Speichern
-          </button>
-          <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
-            <i class="fas fa-xmark"></i>
-            Abbrechen
-          </button>
-        </div>
+          <i class="fas fa-plus"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_add_button') %>
+        </button>
+      </div>
+      <div class="js-saved-content-block-form saved-content-block-form">
+        <h3><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_form_heading') %></h3>
+        <p><i><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.html_code_hint') %></i></p>
+        <textarea
+          id="global-content-block-form--textarea"
+          name="content"
+          class="saved-content-block-form--textarea"
+        ></textarea>
+      </div>
+      <div class="saved-content-block-form--controlls d-flex u-gap-10">
+        <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
+          <i class="fas fa-save"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.save') %>
+        </button>
+        <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
+          <i class="fas fa-xmark"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.cancel') %>
+        </button>
+      </div>
     </div>
 
     <div class="saved-content-blocks-list js-saved-content-blocks-list">
@@ -80,39 +84,39 @@
   <div id="contentBlockSelectorTab--userContentBlocks" class="tabs-panel">
     <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_explanation') %></p>
     <div
-        class="add-new-saved-content-block-section js-show-content-block-templates-section"
-        data-editor-name="new-user-content-block-form"
-        data-saved-content-block-type="user"
+      class="add-new-saved-content-block-section js-show-content-block-templates-section"
+      data-editor-name="new-user-content-block-form"
+      data-saved-content-block-type="user"
+    >
+      <div class="add-new-content-block-section--plus-button-wrapper">
+        <button
+          title="<%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_create_title') %>"
+          type="button"
+          class="js-toggle-saved-content-block-form add-new-content-block-template-button"
         >
-        <div class="add-new-content-block-section--plus-button-wrapper">
-          <button
-              title="Neue eigene Inhaltsblockvorlage erstellen"
-              type="button"
-              class="js-toggle-saved-content-block-form add-new-content-block-button"
-              >
-              <i class="fas fa-plus"></i>
-              Neuen eigenen Inhaltsblock hinzufügen
-          </button>
-        </div>
-        <div class="js-saved-content-block-form saved-content-block-form">
-          <h3>Neue eigene Inhaltsblockvorlage erstellen</h3>
-          <p><i>HTML Code hier hinzufügen</i></p>
-          <textarea
-              id="user-content-block-form--textarea"
-              name="content"
-              class="saved-content-block-form--textarea"
-              ></textarea>
-        </div>
-        <div class="saved-content-block-form--controlls d-flex u-gap-10">
-          <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
-            <i class="fas fa-save"></i>
-            Speichern
-          </button>
-          <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
-            <i class="fas fa-xmark"></i>
-            Abbrechen
-          </button>
-        </div>
+          <i class="fas fa-plus"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_add_button') %>
+        </button>
+      </div>
+      <div class="js-saved-content-block-form saved-content-block-form">
+        <h3><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_form_heading') %></h3>
+        <p><i><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.html_code_hint') %></i></p>
+        <textarea
+          id="user-content-block-form--textarea"
+          name="content"
+          class="saved-content-block-form--textarea"
+        ></textarea>
+      </div>
+      <div class="saved-content-block-form--controlls d-flex u-gap-10">
+        <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
+          <i class="fas fa-save"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.save') %>
+        </button>
+        <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
+          <i class="fas fa-xmark"></i>
+          <%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.cancel') %>
+        </button>
+      </div>
     </div>
 
     <div class="saved-content-blocks-list js-saved-content-blocks-list">

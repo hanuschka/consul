@@ -1,54 +1,12 @@
-class VoiceAssistantController < ActionController::Base
-  skip_authorization_check
-
-  DEFICIENCY_REPORT_CODENAME = "deficiency_report_voice_assistant".freeze
+class VoiceAssistantController < ApplicationController
+  before_action :authenticate_user!
+  before_action :authorize_voice_assistant
 
   def create_session
-    data = {}
-
-    if params[:consul_projekt_phase_id].present?
-      projekt_phase = ProjektPhase.find(params[:consul_projekt_phase_id])
-      projekt = projekt_phase.projekt
-
-      data.merge!({
-        projekt: {
-          name: projekt.page.title,
-          page_content: projekt.page_content,
-          start_date: projekt.total_duration_start,
-          end_date: projekt.total_duration_end
-        },
-        projekt_phase: {
-          start_date: projekt_phase.start_date,
-          end_date: projekt_phase.end_date,
-          labels: projekt_phase.projekt_labels.as_json(only: [:id, :name]),
-          sentiments: projekt_phase.sentiments.as_json(only: [:id, :name, :color])
-        }
-      })
-    end
-
-    if params[:codename] == "budget_proposal_voice_assistant"
-      implementation_performers =
-        Budget::Investment.implementation_performers.map { |ip|
-          [ t("activerecord.attributes.budget/investment.implementation_performers.#{ip[0]}"), ip[0]]
-        }
-
-      data.merge!({
-        implementation_performers: implementation_performers
-      })
-    end
-
-    if params[:codename] == "deficiency_report_voice_assistant"
-      data.merge!({
-        categories: DeficiencyReport::Category.all.as_json(only: [:id, :name])
-      })
-    end
-
-
     response =
-      dt_api.voice_assistant.create_session(
+      VoiceAssistant::CreateSessionService.call(
         codename: params[:codename],
-        consul_projekt_phase_id: params[:consul_projekt_phase_id],
-        data: data
+        consul_projekt_phase_id: params[:consul_projekt_phase_id]
       )
 
     render json: response.parsed_response, status: response.code
@@ -67,19 +25,9 @@ class VoiceAssistantController < ActionController::Base
     end
   end
 
-  def generate_image
-    if params[:codename] == DEFICIENCY_REPORT_CODENAME
-      render json: { error: "Image generation not available" }, status: 403
-      return
-    end
-
-    response = dt_api.voice_assistant.generate_image(prompt: params[:prompt])
-    render json: response.parsed_response, status: response.code
-  end
-
   private
 
-  def dt_api
-    DtApi::Client.new
+  def authorize_voice_assistant
+    authorize! :use, :voice_assistant
   end
 end

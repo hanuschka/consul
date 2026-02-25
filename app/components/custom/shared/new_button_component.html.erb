@@ -1,5 +1,11 @@
 <%= new_button_html %>
 
+<% if show_ai_flow_link? %>
+  <%= link_to t("ai_proposal_flow.entry_button"), ai_flow_link_path,
+        class: "button expanded new-resource-button ai-flow-button",
+        data: { turbolinks: false } %>
+<% end %>
+
 <% if permission_problem_key.present? %>
   <div class="callout alert new-resource-not-allowed-message" style='display:none'>
     <%= permission_problem_message(permission_problem_key) %>

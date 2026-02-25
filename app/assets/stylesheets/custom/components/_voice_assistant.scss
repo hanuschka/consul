@@ -9,6 +9,7 @@
   border-radius: 20px;
   border: 1px solid #959595;
   background-color: #383838;
+  backdrop-filter: blur(7px);
   margin: auto;
   z-index: 500;
   box-shadow: 2px 3px 5px 4px rgba(0, 0, 0, 0.12);
@@ -87,7 +88,10 @@
   }
 
   &[data-status="running"] {
+    // background-image: radial-gradient(18% 28% at 24% 50%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 18% 71%, #0099FF80 6%, #383838CC 100%),radial-gradient(70% 53% at 36% 76%, #00B4FF99 0%, #383838CC 100%),radial-gradient(42% 53% at 15% 94%, #007AFF99 7%, #383838CC 100%),radial-gradient(42% 53% at 34% 72%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 35% 87%, #0099FF99 7%, #383838CC 100%),radial-gradient(31% 43% at 7% 98%, #007AFF80 24%, #383838CC 100%),radial-gradient(21% 37% at 72% 23%, #00B4FF99 24%, #383838CC 100%),radial-gradient(35% 56% at 91% 74%, #1E90FF99 9%, #383838CC 100%),radial-gradient(74% 86% at 67% 38%, #0084FFAA 24%, #383838CC 100%),linear-gradient(125deg, #00A8FFAA 1%, #0084FFAA 100%);
     background-color: #383838;
+    // background-image: radial-gradient(18% 28% at 24% 50%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #38383866 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #0084FF66 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #38383899 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #38383899 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #38383899 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #0099FF66 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #38383899 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #007AFF80 24%, #073AFF00 100%),linear-gradient(125deg, #38383899 1%, #0084FF80 100%);
+    // animation: backgroundGradientPulse 3s ease-in-out infinite;
 
     .voice-assistant-speak-button:not(:disabled) {
       i::before {
@@ -247,6 +251,17 @@
   right: 10px;
 }
 
+// .js-voice-assistant-visualization-blur {
+//   opacity: 0;
+//   width: 250px;
+//   position: absolute;
+//   top: 0;
+//   bottom: 0;
+//   right: 10px;
+//   filter: blur(8px);
+//   transform: scale(7.5);
+// }
+
 @keyframes showElement {
   0%   { opacity: 0; }
   50%  { opacity: 0; }
@@ -262,6 +277,18 @@
   100% {
     left: 47px;
     transform: translateX(0);
+  }
+}
+
+@keyframes backgroundGradientPulse {
+  0%   {
+    filter: brightness(1);
+  }
+  50%  {
+    filter: brightness(1.15);
+  }
+  100% {
+    filter: brightness(1);
   }
 }
 

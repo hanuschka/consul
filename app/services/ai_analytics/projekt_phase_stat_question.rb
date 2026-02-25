@@ -18,7 +18,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     stat_question.update!(status: :processing)
 
     answer = generate_answer(resources)
-    stat_question.update!(status: :completed, answer: answer)
+    stat_question.update!(status: :completed, answer:)
 
     Rails.logger.info("[AI Analytics] ProjektPhaseStatQuestion: Completed for question ##{stat_question.id}")
   rescue => e
@@ -55,9 +55,9 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def generate_answer(resources)
       items_text =
-        resources.map { |item|
+        resources.map do |item|
           build_item_text(item)
-        }.join("\n\n")
+        end.join("\n\n")
 
       prompt = build_prompt(items_text, resources)
 
@@ -73,9 +73,9 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       text += "\nDescription: #{item.description&.truncate(500)}" if item.description.present?
 
       if item.respond_to?(:comments) && item.comments.any?
-        comments_text = item.comments.first(5).map { |c|
+        comments_text = item.comments.first(5).map do |c|
           "- #{c.body&.truncate(100)}"
-        }.join("\n")
+        end.join("\n")
         text += "\nComments:\n#{comments_text}"
       end
 
@@ -102,15 +102,11 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def fetch_prompt
-      parsed_response = DtApi::Caching.get_with_cache(
-        "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_question/projekt_phase"
-      ) do
-        DtApi::Client.new.consul_ai_prompts.get(
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
           :ai_analytics_projekt_phase_question,
           resource_type: "projekt_phase"
-        )
-      end
-
+        ).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

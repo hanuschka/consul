@@ -8,47 +8,43 @@ class AiAnalytics::Polls::Report < ApplicationService
   def call
     AiAnalytics::Polls::Base.call(
       @poll,
-      prompt: prompt,
+      prompt:,
       stat_key: STAT_KEY,
-      output_schema: output_schema
+      output_schema:
     )
   end
 
   private
 
-  def output_schema
-    {
-      type: "object",
-      properties: {
-        report: {
-          type: "object",
-          properties: {
-            title: { type: "string" },
-            content: { type: "string" }
-          },
-          required: ["title", "content"],
-          additionalProperties: false
-        }
-      },
-      required: ["report"],
-      additionalProperties: false
-    }
-  end
-
-  def prompt
-    @prompt ||= fetch_prompt
-  end
-
-  def fetch_prompt
-    cache_key = "dt_api/consul_ai_prompts/ai_analytics_poll_report/poll"
-
-    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-      DtApi::Client.new.consul_ai_prompts.get(
-        :ai_analytics_poll_report,
-        resource_type: "poll"
-      )
+    def output_schema
+      {
+        type: "object",
+        properties: {
+          report: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              content: { type: "string" }
+            },
+            required: ["title", "content"],
+            additionalProperties: false
+          }
+        },
+        required: ["report"],
+        additionalProperties: false
+      }
     end
 
-    parsed_response.dig("consul_ai_prompt", "prompt")
-  end
+    def prompt
+      @prompt ||= fetch_prompt
+    end
+
+    def fetch_prompt
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
+          :ai_analytics_poll_report,
+          resource_type: "poll"
+        ).parsed_response
+      parsed_response.dig("consul_ai_prompt", "prompt")
+    end
 end

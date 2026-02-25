@@ -1,8 +1,3 @@
-$orange-button-color: #FFA42D;
-$grey-button-color: #cfd9e2;
-$green-button-color: #00AA0B;
-$red-button-color: #cc4b37;
-
 button {
   cursor: pointer;
 
@@ -36,6 +31,13 @@ button {
     &.-no-margin {
       margin-top: 0;
       margin-bottom: 0;
+    }
+
+    &.-selected {
+      background-color: #daeeda;
+      background-color: rgba($brand, 0.15) !important;
+      color: $brand !important;
+      outline: 1px solid $brand !important;
     }
 
     &.-round {

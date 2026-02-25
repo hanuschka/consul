@@ -31,13 +31,15 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
           section: "key_metrics"
         }
 
-        items << {
-          text: t("custom.projekt_phases.subnav.analysis"),
-          url: url_to_footer_tab(section: "analysis", remote: true),
-          active: params[:section] == "analysis",
-          disabled: !Ai::Settings.ai_available?,
-          section: "analysis"
-        }
+        if current_user&.administrator? || current_user&.projekt_manager?
+          items << {
+            text: t("custom.projekt_phases.subnav.analysis"),
+            url: url_to_footer_tab(section: "analysis", remote: true),
+            active: params[:section] == "analysis",
+            disabled: !Ai::Settings.ai_available?,
+            section: "analysis"
+          }
+        end
       end
 
       items

@@ -27,7 +27,8 @@
           </div>
           <%= render Navigation::ProposalBrowseNavigationComponent.new(
             resources: @proposals,
-            projekt_phase: @projekt_phase
+            projekt_phase: @projekt_phase,
+            current_order: @current_order
           ) %>
           <% current_proposal = @proposals.first %>
           <div class="current-proposal">

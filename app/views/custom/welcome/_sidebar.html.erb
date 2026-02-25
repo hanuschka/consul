@@ -41,7 +41,7 @@
         <% end %>
       <% end %>
 
-      <% proposals_count = Proposal.for_public_render.count %>
+      <% proposals_count = Proposal.for_public_render.where(visible_on_overview: true).count %>
       <% if proposals_count > 0 %>
         <%= link_to proposals_path, class: "resources--info-count -no-default-style" do %>
           <span>

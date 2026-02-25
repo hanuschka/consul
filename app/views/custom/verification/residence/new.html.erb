@@ -26,8 +26,8 @@
         </div>
 
         <div class="">
-          <%= f.label :last_name, autocomplete: "on", t("custom.verification.residence.new.last_name") %>
-          <%= f.text_field :last_name, label: false, placeholder: t("custom.verification.residence.new.last_name") %>
+          <%= f.label :last_name, t("custom.verification.residence.new.last_name") %>
+          <%= f.text_field :last_name, autocomplete: "on", label: false, placeholder: t("custom.verification.residence.new.last_name") %>
         </div>
 
         <%= render Users::RegisteredAddressFieldsComponent.new(

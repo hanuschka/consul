@@ -65,6 +65,11 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   def edit
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
+    unless turbo_frame_request?
+      redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
+      return
+    end
+
     @investment.build_image(user: current_user) unless @investment.image
     @investment.create_map_location unless @investment.map_location
     @breadcrumbs = breadcrumbs_for_action(t(".title"))

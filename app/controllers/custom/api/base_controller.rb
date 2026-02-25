@@ -67,10 +67,9 @@ class Api::BaseController < ActionController::API
     end
 
     def render_internal_server_error(exception)
-      raise exception unless Rails.env.production?
+      raise exception if !Rails.env.production?
 
       Sentry.capture_exception(exception)
-
       Rails.logger.error("[API] #{exception.class} (#{exception.message}):\n#{exception.backtrace.join("\n")}")
 
       render json: {

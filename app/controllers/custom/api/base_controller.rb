@@ -71,6 +71,8 @@ class Api::BaseController < ActionController::API
 
       Sentry.capture_exception(exception)
 
+      Rails.logger.error("[API] #{exception.class} (#{exception.message}):\n#{exception.backtrace.join("\n")}")
+
       render json: {
         error: {
           type: "internal_server_error",

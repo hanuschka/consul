@@ -48,13 +48,18 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      if params[:page_ref].present?
+      landing_page_slug = params[:landing_page_slug]
+      if landing_page_slug.present?
         @landing_page =
           @projekt
             .landing_pages
-            .find_by(slug: params[:page_ref])
+            .find_by(slug: landing_page_slug)
 
-        set_landing_page_topbar_ui_variables(@landing_page)
+        if @landing_page.present?
+          set_landing_page_topbar_ui_variables(@landing_page)
+        else
+          redirect_to page_path(@custom_page.slug) and return
+        end
       end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
@@ -79,7 +84,7 @@ class PagesController < ApplicationController
       )
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
-          @custom_page.content.include?("</iframe>")
+          @custom_page.content&.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
@@ -114,7 +119,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
-        unless current_user&.administrator?
+        unless current_user&.has_pm_permission_to?(:manage, @projekt)
           redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
@@ -125,6 +130,9 @@ class PagesController < ApplicationController
         elsif @projekt_phase.name == "proposal_phase"
           send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
             filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+        elsif @projekt_phase.name == "budget_phase"
+          send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+            filename: "budget_investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
     end
@@ -139,6 +147,10 @@ class PagesController < ApplicationController
     @commentable = @projekt_phase
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
+
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = @projekt_phase
+    end
   end
 
   def set_debate_phase_footer_tab_variables
@@ -183,8 +195,8 @@ class PagesController < ApplicationController
                                .base_selection
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
-      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
+    if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      @stats = @projekt_phase
     else
       if params[:search].present?
         @resources = @resources.search(params[:search])
@@ -275,7 +287,7 @@ class PagesController < ApplicationController
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
-    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"&& !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
 
@@ -306,16 +318,8 @@ class PagesController < ApplicationController
 
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
-    elsif params[:section] == "stats" && can?(:read_stats, @budget)
-      params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
-      params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
-      params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]
-
-      if params["stats_section"].in? %w[accepting reviewing selecting valuating publishing_prices balloting]
-        @stats = Budget::PhaseStats.new(@budget, params["stats_section"])
-      else
-        @stats = Budget::Stats.new(@budget)
-      end
+    elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
+      @stats = @projekt_phase
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)

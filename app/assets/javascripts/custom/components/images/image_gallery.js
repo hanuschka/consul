@@ -2,6 +2,27 @@
   "use strict";
   App.ImageGallery = {
     initialize: function() {
+      this.setMissingHrefs()
+      this.setupGlighbox()
+    },
+
+    getStickyHeader() {
+      return document.querySelector(".top-bar-wrapper")
+    },
+
+    getScrollbarWidth: function() {
+      return window.innerWidth - document.documentElement.clientWidth;
+    },
+
+    initializeFor(element) {
+      this.setupGlighbox(element)
+    },
+
+    setupGlighbox(element = null) {
+      if (this.lightbox) {
+        this.lightbox.destroy();
+      }
+
       this.scrollbarWidth = this.getScrollbarWidth();
 
       var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container">
@@ -15,21 +36,28 @@
                                   </div>
                                 </div>`;
 
-      var lightbox = new GLightbox({
+      let additionalParams = {}
+
+      if (element) {
+        additionalParams.elements = element
+      }
+
+      this.lightbox = new GLightbox({
         lightboxHTML: customLightboxHTML,
         openEffect: "fade",
         closeEffect: "fade",
-        preload: false
+        preload: false,
+        ...additionalParams
       });
 
-      lightbox.on('open', () => {
+      this.lightbox.on('open', () => {
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {
           stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
         }
       });
-      lightbox.on('close', () => {
+      this.lightbox.on('close', () => {
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {
@@ -38,12 +66,13 @@
       });
     },
 
-    getStickyHeader() {
-      return document.querySelector(".top-bar-wrapper")
+    setMissingHrefs: function() {
+      document.querySelectorAll(".glightbox:not([href]), .glightbox[href='']").forEach((el) => {
+        var img = el.querySelector("img");
+        if (img && img.src) {
+          el.href = img.src;
+        }
+      });
     },
-
-    getScrollbarWidth: function() {
-      return window.innerWidth - document.documentElement.clientWidth;
-    }
   };
 }).call(this);

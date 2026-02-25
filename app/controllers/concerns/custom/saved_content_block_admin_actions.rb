@@ -9,6 +9,10 @@ module SavedContentBlockAdminActions
   def create
     @saved_content_block = SavedContentBlock.new(saved_content_block_params)
 
+    if params[:saved_content_block][:user_specific].to_s == 'true'
+      @saved_content_block.user = current_user
+    end
+
     if @saved_content_block.save
       content_block_html =
         ApplicationController.render(

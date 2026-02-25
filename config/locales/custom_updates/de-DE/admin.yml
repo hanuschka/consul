@@ -74,6 +74,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           responsible_name: Sachbearbeiterin oder Sachbearbeiter
           only_hidden: Nur gelöschte Meldungen anzeigen
@@ -217,6 +218,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           officer_name: Sachbearbeiter*in
           actions: Aktionen
@@ -312,7 +314,7 @@ de:
           success: Gebiet erfolgreich aktualisiert
         attributes:
           name: Name
-          coordinates: Koordinaten
+          boundaries: Grenzen
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -677,6 +679,7 @@ de:
       projekt_events:
         edit:
           title: Veranstaltung bearbeiten
+          accessibility_features: Barrierefreiheit
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite

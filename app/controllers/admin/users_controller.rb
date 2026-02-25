@@ -1,4 +1,5 @@
 class Admin::UsersController < Admin::BaseController
+  include ImageAttributes
   load_and_authorize_resource
 
   has_filters %w[active erased], only: :index

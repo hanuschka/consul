@@ -6,10 +6,11 @@ class UserResources::FormComponent < ApplicationComponent
 
   attr_reader :resource
 
-  def initialize(resource, url:, title:)
+  def initialize(resource, url:, title:, embbeded_in_ai_flow: false)
     @resource = resource
     @title = title
     @url = url
+    @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
   def render?
@@ -130,15 +131,23 @@ class UserResources::FormComponent < ApplicationComponent
   def show_map_input?
     return true if resource.is_a?(Idea)
 
-    projekt_phase_feature?(projekt_phase, "form.show_map") || @resource.try(:map_location).present?
+    projekt_phase_feature?(projekt_phase, "form.show_map") || @resource&.map_location.present?
   end
 
   def map_location
     resource.map_location ||
       resource.build_map_location(
-        latitude: resource.try(:projekt_phase)&.map_location&.latitude,
-        longitude: resource.try(:projekt_phase)&.map_location&.longitude,
-        zoom: resource.try(:projekt_phase)&.map_location&.zoom
+        latitude: resource&.projekt_phase&.map_location&.latitude,
+        longitude: resource&.projekt_phase&.map_location&.longitude,
+        zoom: resource&.projekt_phase&.map_location&.zoom
       )
+  end
+
+  def show_sidebar?
+    !@embbeded_in_ai_flow
+  end
+
+  def show_back_button?
+    !@embbeded_in_ai_flow
   end
 end

@@ -18,6 +18,12 @@
   }
 }
 
+.hide-on-medium-tablet {
+  @media screen and (max-width: $medium-tablet-viewport-start) {
+    display: none !important;
+  }
+}
+
 .hide-on-small-tablet {
   @media screen and (max-width: $small-tablet-viewport-start) {
     display: none !important;
@@ -48,6 +54,7 @@
   overflow: hidden;
   position: relative;
   color: black;
+  width: 100%;
 
   .meter {
     height: 100%;

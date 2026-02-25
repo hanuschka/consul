@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2026_02_19_120001) do
-=======
 ActiveRecord::Schema.define(version: 2026_02_23_000001) do
->>>>>>> c89b2364bf (con-2652)
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"

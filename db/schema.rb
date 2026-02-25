@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2026_02_19_120001) do
+=======
+ActiveRecord::Schema.define(version: 2026_02_23_000001) do
+>>>>>>> c89b2364bf (con-2652)
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2358,6 +2362,10 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
     t.text "ai_idea_text"
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
+<<<<<<< HEAD
+=======
+    t.boolean "visible_on_overview", default: true, null: false
+>>>>>>> c89b2364bf (con-2652)
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"

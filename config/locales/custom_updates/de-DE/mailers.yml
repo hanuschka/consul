@@ -40,15 +40,15 @@ de:
       subject: Upload der CSV-Daten erfolgreich abgeschlossen.
       p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
-      subject: Ihr Beitrag verstößt gegen die Netiquette.
-      title: Ihr Beitrag verstößt gegen die Netiquette.
+      subject: Ihr Vorschlag verstößt gegen die Zulassungsbedingungen.
       hi: "Hallo %{username},"
-      text1: "wir haben Ihren Beitrag geprüft: %{text}"
-      text2: "Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
-      text3: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
+      text1: "wir haben Ihren Themenvorschlag %{text} geprüft."
+      text2: "Leider verstößt er gegen die Zulassungsbedingungen unserer Themenwahl. Wir haben Ihren Vorschlag daher entfernt."
+      text3: Die Zulassungsbedingungen können Sie %{netiquette_link} nachlesen.
       netiquette_link_text: hier
-      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
+      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Zulassungsbedingungen einhält.
       sincerely: Mit freundlichen Grüßen
+      signature: Ihr Team von ABSTIMMUNG21
     comment:
       subject: Ihr Vorschlag wurde kommentiert.
       title: Ihr Vorschlag wurde kommentiert.

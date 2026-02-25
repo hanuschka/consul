@@ -439,7 +439,7 @@ de:
       start_new: Neuen Vorschlag erstellen
     notice:
       retired: Vorschlag im Ruhezustand
-      published: Der Vorschlag wurde veröffentlicht
+      published: Ihr Vorschlag ist eingegangen. Vielen Dank! Wir haben Ihnen eine E-Mail mit Informationen zum weiteren Vorgehen geschickt.
     proposal:
       created: "Sie haben einen Vorschlag erstellt!"
       share:

@@ -16,7 +16,7 @@ class Widget::Feed < ApplicationRecord
   end
 
   def proposals
-    Proposal.published.not_archived.with_current_projekt.sort_by_created_at
+    Proposal.published.not_archived.with_current_projekt.visible_on_overview.sort_by_created_at
   end
 
   def debates

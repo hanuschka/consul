@@ -24,6 +24,7 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :visible_on_overview, -> { where(visible_on_overview: true) }
   scope :base_selection, -> {
     published
       .not_archived
@@ -133,6 +134,7 @@ class Proposal < ApplicationRecord
   end
 
   after_commit :enqueue_stats_refresh
+  after_commit :update_visible_on_overview
 
   protected
 
@@ -144,5 +146,17 @@ class Proposal < ApplicationRecord
       return unless projekt_phase_id
 
       ProjektPhase::StatsRefreshJob.perform_later(projekt_phase_id)
+    end
+
+    def update_visible_on_overview
+      return if projekt_phase_id.blank?
+      return if visible_on_overview
+
+      min_setting = projekt_phase.settings.find_by(key: "option.resource.minimum_supports_to_show")
+      min_supports = min_setting&.value.to_i
+
+      if cached_votes_up >= min_supports
+        Proposal.where(id: id).update_all(visible_on_overview: true)
+      end
     end
 end

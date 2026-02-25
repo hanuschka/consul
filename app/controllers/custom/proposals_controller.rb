@@ -48,6 +48,7 @@ class ProposalsController
     @resources =
       @resources
         .where(admin_accepted: true)
+        .where(visible_on_overview: true)
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -118,6 +119,13 @@ class ProposalsController
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
+
+    min_supports = @projekt_phase.settings
+                                 .find_by(key: "option.resource.minimum_supports_to_show")
+                                 &.value.to_i
+    if min_supports.to_i > 0
+      @proposal.visible_on_overview = false
+    end
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")

@@ -54,6 +54,9 @@ de:
     mailer_from_address_description: "Diese E-Mail-Adresse wird in E-Mails angezeigt, die von dieser Anwendung versendet werden"
     mailer_from_deficiency_report_address: Absender E-Mail-Adresse des Mängelmelders
     mailer_from_deficiency_report_address_description: Diese E-Mail-Adresse wird in E-Mails angezeigt, die über den Mängelmelder versendet werden
+    moderation:
+      reports_notification_email: E-Mail-Adresse für Moderationsbenachrichtigungen
+      reports_notification_email_description: E-Mail-Adresse, an die Benachrichtigungen gesendet werden, wenn ein Nutzer Inhalt meldet. Leer lassen, um Benachrichtigungen zu deaktivieren.
     meta_title: "Seiten-Titel (SEO)"
     meta_title_description: "Titel für die Seite <title>, zur Verbesserung der Auffindbarkeit in Suchmaschinen"
     meta_description: "Seiten-Beschreibung (SEO)"

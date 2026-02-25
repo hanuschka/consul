@@ -27,7 +27,7 @@ module ContentBlocksHelper
     end
 
     if edit_link || copy_link
-      res << "<div class='custom-content-block-controls'>"
+      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
         res << edit_link if edit_link.present?
         res << copy_link if copy_link.present?
       res << "</div>"
@@ -42,7 +42,7 @@ module ContentBlocksHelper
 
     return true if content_block&.body.present?
 
-    current_user&.administrator?
+    current_user.present? && current_user&.administrator?
   end
 
   def render_custom_projekt_content_block?(key, projekt)
@@ -81,12 +81,12 @@ module ContentBlocksHelper
     res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
 
     if edit_link || copy_link
-      res << "<div class='custom-content-block-controls'>"
+      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
         res << edit_link if edit_link.present?
         res << copy_link if copy_link.present?
       res << "</div>"
     end
 
-    res.html_safe
+    AdminWYSIWYGSanitizer.new.sanitize(res)
   end
 end

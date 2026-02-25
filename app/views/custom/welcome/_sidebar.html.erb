@@ -1,4 +1,4 @@
-<div class="sidebar">
+<aside class="sidebar">
   <div class="hide-on-small-tablet">
     <% if render_custom_content_block?('home_page_sidebar') %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle") do |c| %>
@@ -41,7 +41,7 @@
         <% end %>
       <% end %>
 
-      <% proposals_count = Proposal.for_public_render.count %>
+      <% proposals_count = Proposal.for_public_render.where(visible_on_overview: true).count %>
       <% if proposals_count > 0 %>
         <%= link_to proposals_path, class: "resources--info-count -no-default-style" do %>
           <span>
@@ -119,4 +119,4 @@
       %>
     <% end %>
   <% end %>
-</div>
+</aside>

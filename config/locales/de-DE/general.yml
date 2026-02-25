@@ -211,6 +211,7 @@ de:
       open_source_url: http://www.gnu.org/licenses/agpl-3.0.html
       participation_text: Gestalten Sie die Stadt, in der Sie leben möchten.
       participation_title: Teilnahme
+      api_docs: API-Docs
       privacy: Datenschutzbestimmungen
     header:
       administration_menu: Admin
@@ -390,7 +391,7 @@ de:
       start_new: Neuen Vorschlag erstellen
     notice:
       retired: Vorschlag im Ruhezustand
-      published: Der Vorschlag wurde veröffentlicht
+      published: Ihr Vorschlag ist eingegangen. Vielen Dank! Wir haben Ihnen eine E-Mail mit Informationen zum weiteren Vorgehen geschickt.
     proposal:
       created: "Sie haben einen Vorschlag erstellt!"
       share:

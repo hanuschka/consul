@@ -20,6 +20,8 @@ class Setting < ApplicationRecord
       key.rpartition(".").first
     elsif %w[extra_fields].include? prefix
       key.rpartition(".").first
+    elsif %w[ai].include? prefix
+      "ai"
     else
       "configuration"
     end
@@ -110,48 +112,53 @@ class Setting < ApplicationRecord
         "uploads.documents.content_types": "application/pdf",
         # Names for the moderation console, as a hint for moderators
         # to know better how to assign users with official positions
-        "official_level_1_name": I18n.t("seeds.settings.official_level_1_name"),
-        "official_level_2_name": I18n.t("seeds.settings.official_level_2_name"),
-        "official_level_3_name": I18n.t("seeds.settings.official_level_3_name"),
-        "official_level_4_name": I18n.t("seeds.settings.official_level_4_name"),
-        "official_level_5_name": I18n.t("seeds.settings.official_level_5_name"),
-        "max_ratio_anon_votes_on_debates": 50,
-        "max_votes_for_debate_edit": 1000,
-        "max_votes_for_proposal_edit": 1000,
-        "comments_body_max_length": 1000,
-        "proposal_code_prefix": "CONSUL",
-        "votes_for_proposal_success": 10000,
-        "months_to_archive_proposals": 12,
+        official_level_1_name: I18n.t("seeds.settings.official_level_1_name"),
+        official_level_2_name: I18n.t("seeds.settings.official_level_2_name"),
+        official_level_3_name: I18n.t("seeds.settings.official_level_3_name"),
+        official_level_4_name: I18n.t("seeds.settings.official_level_4_name"),
+        official_level_5_name: I18n.t("seeds.settings.official_level_5_name"),
+        max_ratio_anon_votes_on_debates: 50,
+        max_votes_for_debate_edit: 1000,
+        max_votes_for_proposal_edit: 1000,
+        comments_body_max_length: 1000,
+        proposal_code_prefix: "CONSUL",
+        votes_for_proposal_success: 10000,
+        months_to_archive_proposals: 12,
         # Users with this email domain will automatically be marked as level 1 officials
         # Emails under the domain's subdomains will also be included
-        "email_domain_for_officials": "",
-        "facebook_handle": nil,
-        "instagram_handle": nil,
-        "telegram_handle": nil,
-        "twitter_handle": nil,
-        "twitter_hashtag": nil,
-        "youtube_handle": nil,
-        "url": "http://example.com", # Public-facing URL of the app.
+        email_domain_for_officials: "",
+        facebook_handle: nil,
+        instagram_handle: nil,
+        telegram_handle: nil,
+        twitter_handle: nil,
+        twitter_hashtag: nil,
+        youtube_handle: nil,
+        url: "http://example.com", # Public-facing URL of the app.
         # CONSUL installation's organization name
-        "org_name": "CONSUL",
-        "newsletter_brand_color": "#004a83",
-        "meta_title": nil,
-        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
-        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
-        "proposal_notification_minimum_interval_in_days": 3,
-        "direct_message_max_per_day": 3,
-        "mailer_from_name": "CONSUL",
-        "mailer_from_address": "noreply@consul.dev",
-        "mailer_from_deficiency_report_address": "noreply@consul.dev",
-        "min_age_to_participate": 16,
-        "hot_score_period_in_days": 31,
-        "related_content_score_threshold": -0.3,
-        "featured_proposals_number": 3,
+        org_name: "CONSUL",
+        newsletter_brand_color: "#004a83",
+        meta_title: nil,
+        meta_description: "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
+        meta_keywords: "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
+        proposal_notification_minimum_interval_in_days: 3,
+        direct_message_max_per_day: 3,
+        mailer_from_name: "CONSUL",
+        mailer_from_address: "noreply@consul.dev",
+        mailer_from_deficiency_report_address: "noreply@consul.dev",
+        "moderation.reports_notification_email": nil,
+        min_age_to_participate: 16,
+        hot_score_period_in_days: 31,
+        related_content_score_threshold: -0.3,
+        featured_proposals_number: 3,
         "feature.dashboard.notification_emails": nil,
         "machine_learning.comments_summary": false,
         "machine_learning.related_content": false,
         "machine_learning.tags": false,
-        "postal_codes": "",
+        "ai.llm_provider": nil,
+        "ai.llm_model": nil,
+        "ai.llm_api_endpoint": nil,
+        "ai.llm_custom_model": nil,
+        postal_codes: "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",
         "remote_census.request.structure": "",
@@ -197,6 +204,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
+        "deficiency_reports.show_create_report_button": "active",
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,
@@ -292,7 +300,7 @@ class Setting < ApplicationRecord
     end
 
     def destroy_obsolete
-      Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
+      Setting.all.each { |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
     end
 
     def old_design_enabled?

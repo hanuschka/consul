@@ -1,7 +1,3 @@
-$orange-button-color: #FFA42D;
-$grey-button-color: #cfd9e2;
-$green-button-color: #00AA0B;
-
 button {
   cursor: pointer;
 
@@ -28,61 +24,22 @@ button {
       color: white;
     }
 
-    &.-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      transition: 50ms ease background-color;
-      background-color: $light-gray-2;
-      margin-bottom: 0;
+    i {
+      width: 1.35em;
+    }
+
+    &.-no-margin {
       margin-top: 0;
-
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: darken($light-gray-2, 2);
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
+      margin-bottom: 0;
     }
 
-    &.-transparent-round-icon-button {
-      padding: 0 !important;
-      border-radius: 50%;
-      color: #919dab;
-      width: 1.7em;
-      height: 1.7em;
-      transition: 50ms ease background-color;
-      background: transparent;
-
-      i {
-        width: 1.3em;
-      }
-
-      &:hover {
-        background-color: #ededed;
-      }
-
-      &:active {
-        background-color: #edebeb;
-      }
+    &.-selected {
+      background-color: #daeeda;
+      background-color: rgba($brand, 0.15) !important;
+      color: $brand !important;
+      outline: 1px solid $brand !important;
     }
-    &.-transparent-round-icon-button-black {
-      @extend .-transparent-round-icon-button;
-      color: black;
 
-      &:hover {
-        background-color: #00000012;
-      }
-
-      &:active {
-        background-color: #00000012;
-      }
-    }
     &.-round {
       border-radius: 38px !important;
     }
@@ -140,6 +97,18 @@ button {
       }
     }
 
+    &.-red {
+      background-color: $red-button-color;
+
+      &:hover, &:focus {
+        background-color: lighten($red-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($red-button-color, 7%)
+      }
+    }
+
     &.hollow {
       background-color: transparent;
       border: 1px solid $brand;
@@ -160,6 +129,10 @@ button {
       }
     }
 
+    &.-compact {
+      padding: 6px 10px !important;
+    }
+
     &.full-width {
       text-align: center;
       display: block;
@@ -171,17 +144,12 @@ button {
     &.left-aligned {
       text-align: start;
       padding-left: 0.5em;
-
-      i {
-        width: 25px;
-        text-align: center;
-      }
     }
 
     &.with-icon {
       i {
-        width: 25px;
-        text-align: center;
+        font-size: 1.1em;
+        margin-right: 5px;
       }
     }
   }
@@ -256,4 +224,64 @@ button {
   width: 35px;
   height: 35px;
   font-size: 20px;
+}
+
+.round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: $blue-gray-1;
+  transition: 50ms ease background-color;
+  background-color: $light-gray-2;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: darken($light-gray-2, 2);
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button {
+  padding: 0 !important;
+  border-radius: 50%;
+  color: $blue-gray-1;
+  width: 1.7em;
+  height: 1.7em;
+  transition: 50ms ease background-color;
+  background: transparent;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: $light-gray-2;
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}
+
+.transparent-round-icon-button-black {
+  @extend .transparent-round-icon-button;
+  color: black;
+
+  &:hover {
+    background-color: #00000012;
+  }
+
+  &:active {
+    background-color: #00000012;
+  }
 }

@@ -49,7 +49,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
   wrapImageWithControls(img) {
     const imageWrapper = document.createElement("div")
-    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
+    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper", "js-content-block-element-not-editable")
 
     const smallButton = img.height < 120;
     const computedStyle = getComputedStyle(img);
@@ -58,28 +58,37 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
-    const showCropButton = true;
-
-    const cropButton = `
-      <button
-        type="button"
-        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
-          <i class="fa fas fa-crop-alt"></i>
-      </button>
-    `;
-
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
-      <div class="content-block-image-height-control">
-        <button type="button" class="js-content-block-image-height-decrease">−</button>
+      <div class="content-block-image-height-control js-projekt-studio-hide-on-preview">
+        <button
+          type="button"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe verringern"
+          class="js-content-block-image-height-decrease"
+        >
+          <i class="fa fas fa-minus"></i>
+        </button>
         <input
           type="number"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe (px)"
           class="js-content-block-image-height-input"
-          min="200"
+          min="30"
           max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
-        <button type="button" class="js-content-block-image-height-increase">+</button>
+        <button
+          type="button"
+          data-tooltip
+          data-hover-delay="800"
+          title="Bildhöhe erhöhen"
+          class="js-content-block-image-height-increase"
+        >
+          <i class="fa fas fa-plus"></i>
+        </button>
       </div>
     `
 
@@ -95,17 +104,30 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
           <div class="loading-spinner-inline"></div>
         </div>
         ${dimensionControls}
-        <div class="content-block-image-control-buttons">
+        <div class="content-block-image-control-buttons js-projekt-studio-hide-on-preview">
           <button
             type="button"
-            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
+            data-tooltip
+            data-hover-delay="800"
+            title="Bild ändern"
+            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block-element-not-editable ${smallButton ? '-small' : ''}"
           >
             <i class="fa fas fa-pencil-alt"></i>
           </button>
-          ${cropButton}
+          <button
+            type="button"
+            data-tooltip
+            data-hover-delay="800"
+            title="Bild zuschneiden"
+            class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button js-content-block-element-not-editable ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}"
+          >
+            <i class="fa fas fa-crop-alt"></i>
+          </button>
         </div>
       `
     );
+
+    $(imageWrapper).foundation();
   },
 
   removeImageControls(imgWrapper) {
@@ -116,6 +138,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   openaImageGallery(e) {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
     const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
@@ -132,8 +158,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   toggleCropImage(e) {
-    e.preventDefault()
+    e.stopImmediatePropagation()
     e.stopPropagation()
+    e.preventDefault()
 
     const button = e.currentTarget;
     const wrapper = this.getImageWrapper(button);
@@ -181,12 +208,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
     blurOverlay.style.backgroundImage = `url(${previewUrl})`;
 
-    // const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
-    //   selectedPicture.id,
-    //   img.clientWidth + 50
-    // )
-    // const customThumbUrl = thumbResponse['custom_thumb_url']
-    const customThumbUrl = selectedPicture['custom_thumb_url']
+    const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
+      selectedPicture.id,
+      img.clientWidth
+    )
+    const customThumbUrl = thumbResponse['custom_thumb_url']
 
     const onImageLoadComplete = () => {
       if (blurOverlay) {
@@ -212,17 +238,19 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     this.currentImg = null;
   },
 
-  // async fetchCustomThumbVersionOfPicture(pictureId, width) {
-  //   return await $.ajax({
-  //     url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
-  //     method: "GET",
-  //     headers: {
-  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //     },
-  //     data: { width: width },
-  //     responseType: "json"
-  //   })
-  // },
+  async fetchCustomThumbVersionOfPicture(pictureId, width) {
+    const pad = Math.round(width * 0.2);
+
+    return await $.ajax({
+      url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
+      method: "GET",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: { width: width, pad: pad },
+      responseType: "json"
+    })
+  },
 
   finishImageLoading(img, imageWrapper, contentBlockWrapper, contentBlockId) {
     imageWrapper.classList.remove("-loading")
@@ -271,6 +299,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   handleHeightInputChange(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const input = e.currentTarget;
     const wrapper = input.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -283,6 +315,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   decreaseHeight(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
@@ -299,6 +335,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   increaseHeight(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
     const button = e.currentTarget;
     const wrapper = button.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");

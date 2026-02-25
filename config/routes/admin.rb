@@ -40,6 +40,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
+      get    :proposal_criteria,                to: "projekt_phases/proposal_criteria#index"
+      post   :proposal_criteria,                to: "projekt_phases/proposal_criteria#create",
+as: :create_proposal_criterion
+      patch  "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#update",
+as: :update_proposal_criterion
+      delete "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#destroy",
+as: :destroy_proposal_criterion
+      patch  :reorder_proposal_criteria,        to: "projekt_phases/proposal_criteria#reorder"
     end
 
     resources :formular, only: [] do
@@ -98,6 +106,7 @@ namespace :admin do
       patch :update_title_image
       patch :update_map
       post :notify_reviewers
+      patch :toggle_hide_content_background
     end
 
     resources :projekt_phases, only: [:create] do
@@ -110,7 +119,14 @@ namespace :admin do
         patch :update_position
       end
     end
-    resources :projekt_content_blocks, only: [:create]
+    resources :projekt_content_blocks, only: [:create] do
+      collection do
+        post :import_document
+        post :generate_from_prompt
+        get :import_status
+        delete :destroy_all
+      end
+    end
 
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
@@ -305,6 +321,11 @@ namespace :admin do
   put :update_map, to: "settings#update_map"
   put :update_content_types, to: "settings#update_content_types"
 
+  resources :ai_settings, only: [:index, :update]
+  patch :ai_settings_api_key, to: "ai_settings#update"
+
+  resources :external_api_keys, only: [:index, :show, :edit, :update]
+
   resources :moderators, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
@@ -326,6 +347,12 @@ namespace :admin do
 
   resources :administrators, only: [:index, :create, :destroy, :edit, :update] do
     get :search, on: :collection
+  end
+
+  resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      post :regenerate_token
+    end
   end
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
@@ -477,9 +504,12 @@ namespace :admin do
     end
     resources :images, only: [:index, :update, :destroy]
     resources :content_blocks, except: [:show]
-    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",as: "delete_heading_content_block"
-    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block", as: "edit_heading_content_block"
-    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block", as: "update_heading_content_block"
+    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",
+as: "delete_heading_content_block"
+    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block",
+as: "edit_heading_content_block"
+    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block",
+as: "update_heading_content_block"
     resources :information_texts, only: [:index] do
       post :update, on: :collection
     end

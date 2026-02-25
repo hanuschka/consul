@@ -12,6 +12,11 @@
     display: none;
   }
 
+  .button {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .sidebar-card--content { // margin-top: 12px;
     padding-top: 0;
   }
@@ -71,6 +76,11 @@
   .options-group {
     margin-bottom: 5px;
   }
+
+  .social-share-button .ssb-icon {
+    width: 47px;
+    height: 47px;
+  }
 }
 
 .sidebar-card--section {
@@ -100,6 +110,7 @@
 .sidebar-card--title {
   display: flex;
   align-items: center;
+  width: 100%;
   justify-content: space-between;
   font-size: 16px !important;
   margin-bottom: 0 !important;

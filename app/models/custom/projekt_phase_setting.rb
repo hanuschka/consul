@@ -15,6 +15,9 @@ class ProjektPhaseSetting < ApplicationRecord
   validates :projekt_phase_id, :key, presence: true
   validates :key, uniqueness: { scope: :projekt_phase_id }
 
+  after_commit :recalculate_proposal_visibility,
+               if: -> { key == "option.resource.minimum_supports_to_show" }
+
   default_scope { order(id: :asc) }
 
   def kind_prefix
@@ -91,6 +94,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
+          "option.resource.minimum_supports_to_show": "0",
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -101,6 +105,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.intermediate_poll_results_for_admins": "active",
           "feature.resource.stats_enabled": "",
           "feature.resource.advanced_stats_enabled": "",
+          "feature.resource.evaluation_enabled": "",
           "feature.resource.show_comments": "active",
           "feature.resource.show_open_answer_author_name": ""
         },
@@ -130,7 +135,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
-          "feature.resource.show_video_as_link": ""
+          "feature.resource.show_video_as_link": "",
+          "feature.resource.hide_ballots_count": ""
         },
 
         "ProjektPhase::QuestionPhase" => {
@@ -205,4 +211,22 @@ class ProjektPhaseSetting < ApplicationRecord
   def i18n_key
     "custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}"
   end
+
+  private
+
+    def recalculate_proposal_visibility
+      return unless projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+
+      min_supports = value.to_i
+
+      if min_supports == 0
+        projekt_phase.proposals.update_all(visible_on_overview: true)
+      else
+        projekt_phase.proposals.where(visible_on_overview: false).find_each do |proposal|
+          if proposal.cached_votes_up >= min_supports
+            Proposal.where(id: proposal.id).update_all(visible_on_overview: true)
+          end
+        end
+      end
+    end
 end

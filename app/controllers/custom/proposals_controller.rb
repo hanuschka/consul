@@ -47,6 +47,8 @@ class ProposalsController
 
     @resources =
       @resources
+        .where(admin_accepted: true)
+        .where(visible_on_overview: true)
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -118,6 +120,13 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
+    min_supports = @projekt_phase.settings
+                                 .find_by(key: "option.resource.minimum_supports_to_show")
+                                 &.value.to_i
+    if min_supports.to_i > 0
+      @proposal.visible_on_overview = false
+    end
+
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
 
@@ -162,6 +171,11 @@ class ProposalsController
   def show
     super
     @projekt = @proposal.projekt_phase.projekt
+
+    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+      head :not_found, content_type: "text/html" and return
+    end
+
     # @notifications = @proposal.notifications
     @notifications = @proposal.notifications.not_moderated
     @milestones = @proposal.milestones
@@ -172,14 +186,17 @@ class ProposalsController
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
-    if params[:page_ref].present?
+    landing_page_slug = params[:landing_page_slug]
+    if landing_page_slug.present?
       @landing_page =
         @projekt
           .landing_pages
-          .find_by(slug: params[:page_ref])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.present?
         set_landing_page_topbar_ui_variables(@landing_page)
+      else
+        redirect_to proposal_path(@proposal) and return
       end
     end
 

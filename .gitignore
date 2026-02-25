@@ -51,3 +51,4 @@ tmp/
 !/app/assets/builds/.keep
 
 tags
+consul_local_scripts/

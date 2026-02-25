@@ -12,6 +12,7 @@ require_relative 'schemas/deficiency_reports_schemas'
 require_relative 'schemas/milestones_livestreams_schemas'
 require_relative 'schemas/point_of_interest_schemas'
 require_relative 'schemas/miscellaneous_schemas'
+require_relative 'schemas/polls_schemas'
 
 Rswag::Specs::SwaggerRoot = Rails.root.join('public').to_s
 
@@ -65,6 +66,7 @@ RSpec.configure do |config|
       #   }
       # ],
       tags: [
+        { name: 'Auth', description: 'Authentication and token management' },
         { name: 'Projekts', description: 'Projekt management and core operations' },
         { name: 'Projekt Phases', description: 'Phases within projekts' },
         { name: 'Proposals', description: 'Proposals for projekt phases' },
@@ -84,9 +86,15 @@ RSpec.configure do |config|
         { name: 'Texts', description: 'Text content for projekt phases' },
         { name: 'Ideas', description: 'Citizen ideas and proposals' },
         { name: 'Deficiency Reports', description: 'Reports of deficiencies or issues' },
-        { name: 'Iframes', description: 'Embedded iframe content' }
+        { name: 'Iframes', description: 'Embedded iframe content' },
+        { name: 'Poll Questions', description: 'Questions within polls' },
+        { name: 'Poll Question Answers', description: 'Answer options for poll questions' }
       ],
       'x-tagGroups': [
+        {
+          name: 'Auth',
+          tags: ['Auth']
+        },
         {
           name: 'Projekts',
           tags: [
@@ -107,7 +115,9 @@ RSpec.configure do |config|
             'Texts',
             'Iframes',
             'Point Of Interest Categories',
-            'Point Of Interest Pins'
+            'Point Of Interest Pins',
+            'Poll Questions',
+            'Poll Question Answers'
           ]
         },
         {
@@ -136,6 +146,7 @@ RSpec.configure do |config|
                          .merge(Schemas::MilestonesLivestreams.all)
                          .merge(Schemas::PointOfInterest.all)
                          .merge(Schemas::Miscellaneous.all)
+                         .merge(Schemas::Polls.all)
       }
     }
   }

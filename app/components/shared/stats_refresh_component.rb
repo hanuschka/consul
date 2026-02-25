@@ -15,4 +15,8 @@ class Shared::StatsRefreshComponent < ApplicationComponent
   def processing?
     processing
   end
+
+  def ai_disabled?
+    !Ai::Settings.ai_available?
+  end
 end

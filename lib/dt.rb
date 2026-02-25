@@ -19,6 +19,10 @@ module Dt
     Rails.application.secrets.dt[:enabled]
   end
 
+  def self.connected?
+    InternalApiClient.dt_connected?
+  end
+
   def self.platforms_overview_url
     "#{url}/platforms"
   end

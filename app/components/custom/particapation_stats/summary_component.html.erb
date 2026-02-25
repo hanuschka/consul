@@ -12,21 +12,23 @@
 
   <section class="ai-stats-card participation-stats-summary--tone">
     <h3 class="ai-stats-card--title participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_participation") %></h3>
-    <div class="participation-stats-summary--tone-value">
       <% if tone_of_participation.present? %>
-        <%= tone_of_participation %>
+        <div class="participation-stats-summary--tone-value">
+          <%= tone_of_participation %>
+        </div>
       <% else %>
         <%= t("custom.participation_stats.no_resources_to_analyze") %>
       <% end %>
-    </div>
   </section>
 
-  <% if tone_of_comments.present? %>
     <section class="ai-stats-card participation-stats-summary--tone">
       <h3 class="ai-stats-card--title participation-stats-summary--tone-title"><%= t("custom.participation_stats.tone_of_comments") %></h3>
-      <div class="participation-stats-summary--tone-value">
-        <%= tone_of_comments %>
-      </div>
+      <% if tone_of_comments.present? %>
+        <div class="participation-stats-summary--tone-value">
+          <%= tone_of_comments %>
+        </div>
+      <% else %>
+        <%= t("custom.participation_stats.no_resources_to_analyze") %>
+      <% end %>
     </section>
-  <% end %>
 </div>

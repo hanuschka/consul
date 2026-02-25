@@ -9,10 +9,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   initEventListeners() {
-    const $document = $(document);
-    $document.on("click", ".js-content-block-enter-code-edit-mode", this.enterCodeEditMode.bind(this));
-    $document.on("click", ".js-save-edit-code-projekt-content-block", this.saveContentBlockAndExit.bind(this));
-    $document.on("click", ".js-projekt-content-block--code-edit-cancel", this.cancelCodeEditMode.bind(this));
   },
 
   enterCodeEditMode(e) {
@@ -24,6 +20,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   switchToCodeEditMode(contentBlockWrapper) {
+    contentBlockWrapper.dataset.editMode = 'code';
     this.showCodeEditModeControls(contentBlockWrapper);
     this.createAndShowEditor(contentBlockWrapper);
   },
@@ -55,7 +52,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const currentHTML = contentBlock.innerHTML.trim();
 
     const editorContainer = document.createElement('div');
-    editorContainer.className = 'code-editor-container js-code-editor-container';
+    editorContainer.className = 'code-editor-container js-code-editor-container js-projekt-studio-hide-on-preview';
 
     const textarea = document.createElement('textarea');
     textarea.className = 'code-editor-textarea';
@@ -64,9 +61,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const relativeContainer = contentBlockWrapper.querySelector('.relative');
     if (!relativeContainer) return;
 
-    const toolsets = relativeContainer.querySelector('.projekt-content-block--toolsets');
-    if (toolsets) {
-      relativeContainer.insertBefore(editorContainer, toolsets);
+    const toolsetsBorder = relativeContainer.querySelector('.js-projekt-content-block--toolbar');
+    if (toolsetsBorder) {
+      toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
     } else {
       relativeContainer.appendChild(editorContainer);
     }
@@ -130,26 +127,38 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }
   },
 
-  exitCodeEditMode(contentBlockWrapper) {
+  updateContentBlockFromEditor(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const editor = this.getEditor(contentBlockWrapper);
+
+    if (editor) {
+      const content = editor.getValue().trim();
+      const htmlValidation = ProjektStudio.utils.validateHTML(content);
+
+      if (htmlValidation.isValid) {
+        contentBlock.innerHTML = content;
+      }
+    }
+  },
+
+  exitCodeEditMode(contentBlockWrapper, restoreContent = false) {
+    if (restoreContent) {
+      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+    } else {
+      this.updateContentBlockFromEditor(contentBlockWrapper);
+    }
+
     this.removeEditor(contentBlockWrapper);
     this.hideCodeEditModeControls(contentBlockWrapper);
+    contentBlockWrapper.dataset.editMode = '';
 
-    setTimeout(() => {
-      contentBlockWrapper.scrollIntoView({
-        block: "center", inline: "nearest"
-      })
-    }, 0)
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelCodeEditMode(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
-
-    if (contentBlockWrapper) {
-      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
-    }
-
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, true);
   },
 
   saveContentBlockAndExit(e) {

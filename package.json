@@ -10,6 +10,7 @@
     "Leaflet.Deflate": "^2.1.0",
     "ace-builds": "^1.43.3",
     "chart.js": "^4.5.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
     "html-to-image": "^1.11.13",
@@ -27,6 +28,7 @@
     "redoc": "^3.0.0-rc.0",
     "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
+    "siriwave": "^2.4.0",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {

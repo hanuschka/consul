@@ -4,6 +4,7 @@ namespace :adm do
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
+      patch :toggle_manage_all_projekts, on: :member
     end
 
     resources :milestone_statuses, except: %i[show]

@@ -6,6 +6,7 @@ de:
           title: Projektmanager*innen
           new_link: Neue*n Projektmanager*in hinzufügen
           no_projekt_managers: Keine Projektmanager*innen vorhanden.
+          manage_all_projekts: Admin
         new:
           title: Neue*n Projektmanager*in hinzufügen
           search_label: Nutzer*innen durchsuchen

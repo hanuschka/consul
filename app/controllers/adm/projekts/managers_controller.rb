@@ -1,5 +1,7 @@
 class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
   def index
+    authorize ProjektManager, policy_class: Adm::Projekts::ProjektManagerPolicy
+
     @pagy, @projekt_managers = pagy(
       policy_scope(ProjektManager, policy_scope_class: Adm::Projekts::ProjektManagerPolicy::Scope)
         .order(id: :desc)
@@ -12,7 +14,7 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
   end
 
   def new
-    authorize ProjektManager, :index?, policy_class: Adm::Projekts::ProjektManagerPolicy
+    authorize ProjektManager, policy_class: Adm::Projekts::ProjektManagerPolicy
 
     @breadcrumbs = [
       { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
@@ -28,8 +30,16 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
     @projekt_manager.destroy!
   end
 
+  def toggle_manage_all_projekts
+    @projekt_manager = ProjektManager.find(params[:id])
+    authorize @projekt_manager, :update?, policy_class: Adm::Projekts::ProjektManagerPolicy
+
+    @projekt_manager.update!(manage_all_projekts: !@projekt_manager.manage_all_projekts)
+  end
+
   def search
-    authorize ProjektManager, :index?, policy_class: Adm::Projekts::ProjektManagerPolicy
+    authorize ProjektManager, :create?, policy_class: Adm::Projekts::ProjektManagerPolicy
+
     params[:role] = "projekt_manager"
     @users = User.search(params[:search]).where.missing(:projekt_manager).limit(4)
   end

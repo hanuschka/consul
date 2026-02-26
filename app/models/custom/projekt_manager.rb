@@ -8,6 +8,8 @@ class ProjektManager < ApplicationRecord
   validates :user_id, presence: true, uniqueness: true
 
   def allowed_to?(permission, projekt)
+    return true if manage_all_projekts?
+
     return false unless projekt.present? && permission.present?
     return false unless projekt.is_a?(Projekt)
 

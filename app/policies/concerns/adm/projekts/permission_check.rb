@@ -9,7 +9,7 @@ module Adm::Projekts::PermissionCheck
     private
 
     def managed_projekt_ids
-      return Projekt.pluck(:id) if @user&.administrator?
+      return Projekt.ids if @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
       return [] unless @user&.projekt_manager?
 
       @user.projekt_manager

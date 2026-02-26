@@ -3,6 +3,13 @@
   <td class="kern-table__cell"><%= projekt_manager.name %></td>
   <td class="kern-table__cell"><%= projekt_manager.email %></td>
   <td class="kern-table__cell">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      projekt_manager,
+      :manage_all_projekts?,
+      path: toggle_manage_all_projekts_adm_projekts_manager_path(projekt_manager)
+    ) %>
+  </td>
+  <td class="kern-table__cell">
     <%= link_to t('shared.delete'),
                 adm_projekts_manager_path(projekt_manager),
                 data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },

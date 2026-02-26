@@ -11,7 +11,7 @@ module Adm
 
     def create
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :create?, policy_class: policy_class_for(role_class)
 
       @user = User.find(params[:user_id])
       role_class.find_or_create_by!(user: @user)
@@ -19,7 +19,7 @@ module Adm
 
     def destroy
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :destroy?, policy_class: policy_class_for(role_class)
 
       @user = User.find(params[:user_id])
       role_class.find_by!(user: @user)&.destroy!

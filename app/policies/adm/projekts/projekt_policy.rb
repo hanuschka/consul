@@ -1,27 +1,38 @@
 class Adm::Projekts::ProjektPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def index?
-    @user&.administrator?
+    @user&.administrator? || @user&.projekt_manager?
   end
 
   def show?
-    @user&.administrator?
+    permitted?
   end
 
   def create?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
   end
 
   class Scope < Scope
+    include Adm::Projekts::PermissionCheck::ScopeCheck
+
     def resolve
-      scope.includes([:projekt_settings, :parent, [page: :translations]])
+      scope.where(id: managed_projekt_ids)
+        .includes([:projekt_settings, :parent, [page: :translations]])
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record
   end
 end

@@ -1,23 +1,31 @@
 class Adm::Projekts::FormularFollowUpLetterPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def create?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
   end
 
   def send_emails?
-    @user&.administrator?
+    permitted?
   end
 
   class Scope < Scope
     def resolve
       scope.all
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record.formular&.projekt_phase&.projekt
   end
 end

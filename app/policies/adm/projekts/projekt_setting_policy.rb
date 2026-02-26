@@ -1,4 +1,4 @@
-class Adm::Projekts::PhaseSettingPolicy < ApplicationPolicy
+class Adm::Projekts::ProjektSettingPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def update?
@@ -8,6 +8,6 @@ class Adm::Projekts::PhaseSettingPolicy < ApplicationPolicy
   private
 
   def projekt_from_record
-    @record.projekt_phase.projekt
+    @record.projekt
   end
 end

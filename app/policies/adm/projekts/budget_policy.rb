@@ -1,31 +1,39 @@
 class Adm::Projekts::BudgetPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def show?
-    @user&.administrator?
+    permitted?
   end
 
   def edit?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
   end
 
   def calculate_winners?
-    @user&.administrator? && @record.balloting_or_later?
+    permitted? && @record.balloting_or_later?
   end
 
   def recalculate_winners?
-    @user&.administrator? && @record.balloting_or_later?
+    permitted? && @record.balloting_or_later?
   end
 
   class Scope < Scope
     def resolve
       scope.all
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record.respond_to?(:projekt) ? @record.projekt : @record.budget&.projekt
   end
 end

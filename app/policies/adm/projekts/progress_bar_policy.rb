@@ -1,19 +1,27 @@
 class Adm::Projekts::ProgressBarPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def create?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
   end
 
   class Scope < Scope
     def resolve
       scope.all
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record.progressable&.respond_to?(:projekt) ? @record.progressable.projekt : @record.progressable
   end
 end

@@ -1,23 +1,31 @@
 class Adm::Projekts::ProjektEventPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def create?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
   end
 
   def send_notifications?
-    @user&.administrator?
+    permitted?
   end
 
   class Scope < Scope
     def resolve
       scope.all
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record.projekt_phase&.projekt
   end
 end

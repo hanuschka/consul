@@ -1,13 +1,21 @@
 class Adm::Projekts::MapLayerPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def create?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   def destroy?
-    @user&.administrator?
+    permitted?
+  end
+
+  private
+
+  def projekt_from_record
+    @record.mappable.is_a?(ProjektPhase) ? @record.mappable.projekt : @record.mappable
   end
 end

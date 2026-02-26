@@ -32,8 +32,10 @@ class Adm::BaseController < ActionController::Base
       case record_class.name
       when "Setting"
         Adm::SettingPolicy
-      when "Projekt", "ProjektSetting"
+      when "Projekt"
         Adm::Projekts::ProjektPolicy
+      when "ProjektSetting"
+        Adm::Projekts::ProjektSettingPolicy
       when "ProjektPhase", "ProjektPhaseSetting"
         Adm::Projekts::ProjektPhasePolicy
       when "ProjektManager"

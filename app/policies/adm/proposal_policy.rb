@@ -1,15 +1,23 @@
 class Adm::ProposalPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def show?
-    @user&.administrator?
+    permitted?
   end
 
   def update?
-    @user&.administrator?
+    permitted?
   end
 
   class Scope < Scope
     def resolve
       scope.all
     end
+  end
+
+  private
+
+  def projekt_from_record
+    @record.projekt
   end
 end

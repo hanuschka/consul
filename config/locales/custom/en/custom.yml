@@ -49,6 +49,9 @@ en:
           html_code_hint: Add HTML code here
           save: Save
           cancel: Cancel
+    proposals:
+      vote_share:
+        share_button: Share
     projekts:
       new:
         first_level: 'First level'

@@ -193,7 +193,7 @@ class PagesController < ApplicationController
 
     @resources = @projekt_phase.proposals
                                .base_selection
-                               .where(visible_on_overview: true)
+                               .meets_minimum_supports
                                .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)

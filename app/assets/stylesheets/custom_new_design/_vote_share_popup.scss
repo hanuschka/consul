@@ -1,0 +1,180 @@
+$share-color-whatsapp: #25D366;
+$share-color-facebook: #1877F2;
+$share-color-twitter: #000;
+$share-color-telegram: #0088cc;
+$share-color-linkedin: #0A66C2;
+$share-color-email: #EA4335;
+$share-color-copy-link: #555;
+
+.vote-share-popup-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.vote-share-popup-container--button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 2px 12px;
+  font-size: 16px;
+  color: $brand;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: rgba($brand, 0.08);
+  }
+
+  i {
+    font-size: 14px;
+    color: $brand;
+  }
+}
+
+.vote-share-popup-container--dropdown {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px 10px;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.vote-share-popup-container:hover .vote-share-popup-container--dropdown {
+  display: block;
+}
+
+.vote-share-popup-container--dropdown-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  .ssb-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    font-size: 16px;
+    border-radius: 50%;
+    margin-bottom: 0;
+    background: white !important;
+    border: 1.5px solid;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+
+    &::before {
+      font-size: 15px !important;
+      transition: color 150ms ease;
+    }
+  }
+
+  .ssb-whatsapp_app {
+    border-color: $share-color-whatsapp;
+    color: $share-color-whatsapp !important;
+
+    &::before { color: $share-color-whatsapp !important; }
+
+    &:hover {
+      background: mix($share-color-whatsapp, white, 15%) !important;
+      border-color: mix($share-color-whatsapp, white, 60%) !important;
+
+      &::before { color: $share-color-whatsapp !important; }
+    }
+  }
+
+  .ssb-facebook {
+    border-color: $share-color-facebook;
+    color: $share-color-facebook !important;
+
+    &::before { color: $share-color-facebook !important; }
+
+    &:hover {
+      background: mix($share-color-facebook, white, 15%) !important;
+      border-color: mix($share-color-facebook, white, 60%) !important;
+
+      &::before { color: $share-color-facebook !important; }
+    }
+  }
+
+  .ssb-twitter {
+    border-color: $share-color-twitter;
+    color: $share-color-twitter !important;
+
+    &::before { color: $share-color-twitter !important; }
+
+    &:hover {
+      background: mix($share-color-twitter, white, 15%) !important;
+      border-color: mix($share-color-twitter, white, 60%) !important;
+
+      &::before { color: $share-color-twitter !important; }
+    }
+  }
+
+  .ssb-telegram {
+    border-color: $share-color-telegram;
+    color: $share-color-telegram !important;
+
+    &::before { color: $share-color-telegram !important; }
+
+    &:hover {
+      background: mix($share-color-telegram, white, 15%) !important;
+      border-color: mix($share-color-telegram, white, 60%) !important;
+
+      &::before { color: $share-color-telegram !important; }
+    }
+  }
+
+  .ssb-linkedin {
+    border-color: $share-color-linkedin;
+    color: $share-color-linkedin !important;
+
+    &::before { color: $share-color-linkedin !important; }
+
+    &:hover {
+      background: mix($share-color-linkedin, white, 15%) !important;
+      border-color: mix($share-color-linkedin, white, 60%) !important;
+
+      &::before { color: $share-color-linkedin !important; }
+    }
+  }
+
+  .ssb-email {
+    border-color: $share-color-email;
+    color: $share-color-email !important;
+
+    &::before { color: $share-color-email !important; }
+
+    &:hover {
+      background: mix($share-color-email, white, 15%) !important;
+      border-color: mix($share-color-email, white, 60%) !important;
+
+      &::before { color: $share-color-email !important; }
+    }
+  }
+
+  .ssb-copy-link {
+    border-color: $share-color-copy-link;
+    color: $share-color-copy-link !important;
+
+    &::before { color: $share-color-copy-link !important; }
+
+    &:hover {
+      background: mix($share-color-copy-link, white, 15%) !important;
+      border-color: mix($share-color-copy-link, white, 60%) !important;
+
+      &::before { color: $share-color-copy-link !important; }
+    }
+  }
+}

@@ -1,3 +1,9 @@
+<% if voted_in_favor? %>
+  <%= render "shared/vote_share_popup",
+    title: votable.title,
+    url: polymorphic_url(votable) %>
+<% end %>
+
 <div class="in-favor-against">
   <div class="in-favor">
     <%= button_to polymorphic_path(votable, action: :vote, value: "yes", offline_user_id: params[:offline_user_id]),

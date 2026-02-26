@@ -1,0 +1,57 @@
+<div class="vote-share-popup-container">
+  <div class="vote-share-popup-container--button">
+    <i class="fas fa-share-alt"></i>
+    <span><%= t("custom.proposals.vote_share.share_button") %></span>
+  </div>
+
+  <div class="vote-share-popup-container--dropdown">
+    <div class="vote-share-popup-container--dropdown-links">
+      <%= link_to "",
+        "whatsapp://send?text=#{url_encode(title)} #{url_encode(url)}",
+        class: "ssb-icon ssb-whatsapp_app",
+        title: t("social_share_button.share_to", name: "WhatsApp"),
+        target: "_blank",
+        rel: "noopener" %>
+
+      <%= link_to "",
+        "https://www.facebook.com/sharer/sharer.php?u=#{url_encode(url)}",
+        class: "ssb-icon ssb-facebook",
+        title: t("social_share_button.share_to", name: "Facebook"),
+        target: "_blank",
+        rel: "noopener" %>
+
+      <%= link_to "",
+        "https://twitter.com/intent/tweet?url=#{url_encode(url)}&text=#{url_encode(title)}",
+        class: "ssb-icon ssb-twitter",
+        title: t("social_share_button.share_to", name: "Twitter"),
+        target: "_blank",
+        rel: "noopener" %>
+
+      <%= link_to "",
+        "https://t.me/share/url?url=#{url_encode(url)}&text=#{url_encode(title)}",
+        class: "ssb-icon ssb-telegram",
+        title: t("social_share_button.share_to", name: "Telegram"),
+        target: "_blank",
+        rel: "noopener" %>
+
+      <%= link_to "",
+        "https://www.linkedin.com/sharing/share-offsite/?url=#{url_encode(url)}",
+        class: "ssb-icon ssb-linkedin",
+        title: t("social_share_button.share_to", name: "LinkedIn"),
+        target: "_blank",
+        rel: "noopener" %>
+
+      <%= link_to "",
+        "mailto:?subject=#{url_encode(title)}&body=#{url_encode(url)}",
+        class: "ssb-icon ssb-email",
+        title: t("social_share_button.share_to", name: "Email") %>
+
+      <%= link_to "#",
+        class: "ssb-icon ssb-copy-link js-copy-data-url",
+        data: { url: url },
+        title: t("social_share_button.copy_link_title") do %>
+        <span class="show-for-sr"><%= t("social_share_button.copy_link_title") %></span>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -181,7 +181,8 @@ class DebatesController < ApplicationController
   end
 
   def flag
-    Flag.flag(current_user, @debate)
+    flag = Flag.flag(current_user, @debate)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @debate.update!(ignored_flag_at: nil)
 
     redirect_to @debate

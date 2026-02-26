@@ -236,7 +236,8 @@ notice: I18n.t("flash.actions.create.proposal")
   end
 
   def flag
-    Flag.flag(current_user, @proposal)
+    flag = Flag.flag(current_user, @proposal)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @proposal.update!(ignored_flag_at: nil)
 
     redirect_to @proposal

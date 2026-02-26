@@ -10,6 +10,16 @@ $share-color-copy-link: #555;
   position: relative;
   width: 100%;
   margin-bottom: 8px;
+
+  &:hover {
+    .vote-share-popup-container--dropdown {
+      display: block;
+    }
+  }
+}
+
+.resource-item:has(.vote-share-popup-container:hover) {
+  overflow: visible;
 }
 
 .vote-share-popup-container--button {
@@ -50,23 +60,19 @@ $share-color-copy-link: #555;
   white-space: nowrap;
 }
 
-.vote-share-popup-container:hover .vote-share-popup-container--dropdown {
-  display: block;
-}
-
 .vote-share-popup-container--dropdown-links {
   .social-share-full {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
   }
 
   .social-share-button {
     display: flex !important;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
   }
 
   #social-share,

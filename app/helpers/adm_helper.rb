@@ -46,6 +46,18 @@ module AdmHelper
     end
   end
 
+  def overview_page_tabs(current_action: nil)
+    current_action ||= action_name
+
+    %w[navigation footer].map do |action|
+      {
+        label: I18n.t("adm.projekts.overview_page.tabs.#{action}"),
+        url: send("#{action}_adm_projekts_overview_page_path"),
+        current: current_action == action
+      }
+    end
+  end
+
   def projekt_tabs(projekt, current_action: nil)
     current_action ||= action_name
 

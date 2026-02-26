@@ -7,6 +7,7 @@ de:
         items:
           projekts: Projekte
           managers: Projektmanager*innen
+          overview_page: Projektübersichtsseite
       projekts:
         index:
           title: Projekte

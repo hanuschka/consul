@@ -209,11 +209,6 @@ class Setting < ApplicationRecord
         "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
 
-        "projekts.show_archived.sidebar": true,
-        "projekts.second_level_projekts_in_active_filter": false,
-        "projekts.second_level_projekts_in_archived_filter": false,
-        "projekts.set_default_sorting_to_newest": false,
-
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
         "deficiency_reports.officers_can_administer_assigned_reports": true,
@@ -285,7 +280,6 @@ class Setting < ApplicationRecord
 
         "extended_feature.deficiency_reports.enable_my_posts_filter": true,
 
-        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_all": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_underway": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_ongoing": true,

@@ -26,7 +26,7 @@ class Adm::BaseMenuComponent < ApplicationComponent
   private
 
     def item_class(item)
-      class_names("nav-item", "active": current_page?(item[:path]))
+      class_names("nav-item", "active": item_active?(item))
     end
 
     def link_attributes(item)
@@ -37,11 +37,19 @@ class Adm::BaseMenuComponent < ApplicationComponent
         class: class_names("nav-item-link", "with-subitems": has_subitems, "expanded": subitems_expanded),
         role: ("button" if has_subitems),
         aria: {
-          current: ("page" if current_page?(item[:path])),
+          current: ("page" if item_active?(item)),
           expanded: (subitems_expanded if has_subitems)
         },
         data: { adm_menu_target: ("expandable" if has_subitems) }
       }.compact
+    end
+
+    def item_active?(item)
+      if item[:active_prefix]
+        request.path.start_with?(item[:active_prefix])
+      else
+        current_page?(item[:path])
+      end
     end
 
     def subitem_active?(subitems)

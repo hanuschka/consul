@@ -40,14 +40,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
-      get    :proposal_criteria,                to: "projekt_phases/proposal_criteria#index"
-      post   :proposal_criteria,                to: "projekt_phases/proposal_criteria#create",
-as: :create_proposal_criterion
-      patch  "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#update",
-as: :update_proposal_criterion
-      delete "proposal_criteria/:criterion_id", to: "projekt_phases/proposal_criteria#destroy",
-as: :destroy_proposal_criterion
-      patch  :reorder_proposal_criteria,        to: "projekt_phases/proposal_criteria#reorder"
+      get    :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#index"
+      post   :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#create",
+as: :create_user_resource_criterion
+      patch  "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
+as: :update_user_resource_criterion
+      delete "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
+as: :destroy_user_resource_criterion
+      patch  :reorder_user_resource_criteria,        to: "projekt_phases/user_resource_criteria#reorder"
     end
 
     resources :formular, only: [] do

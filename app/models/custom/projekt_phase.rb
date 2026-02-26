@@ -93,7 +93,7 @@ class ProjektPhase < ApplicationRecord
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
-  has_many :proposal_criteria, class_name: "ProjektPhase::ProposalCriteria", dependent: :destroy
+  has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 

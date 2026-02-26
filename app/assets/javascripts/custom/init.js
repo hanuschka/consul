@@ -36,7 +36,7 @@
       App.AdminTopbarViewMode.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
       App.AiProposalFlow.initialize();
-      App.ProjektPhaseProposalCriteria.initialize();
+      App.UserResourceCriteria.initialize();
     }
   };
 }).call(this);

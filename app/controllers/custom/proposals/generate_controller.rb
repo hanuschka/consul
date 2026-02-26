@@ -21,7 +21,8 @@ class Proposals::GenerateController < AiProposalFlowBaseController
   def edit_draft
     @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id, idea_text: @draft_resource.ai_idea_text)
+    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id,
+idea_text: @draft_resource.ai_idea_text)
 
     render "ai_proposal_flow/edit_draft"
   end
@@ -30,7 +31,7 @@ class Proposals::GenerateController < AiProposalFlowBaseController
     params_with_image_user = draft_resource_params_with_image_user
     @draft_resource.update!(params_with_image_user)
 
-    if @draft_resource.projekt_phase.proposal_criteria.exists?
+    if @draft_resource.projekt_phase.user_resource_criteria.exists?
       evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
       @draft_resource.update!(ai_evaluation_result: evaluation)
 
@@ -48,7 +49,8 @@ class Proposals::GenerateController < AiProposalFlowBaseController
 
     @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id, idea_text: @draft_resource.ai_idea_text)
+    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id,
+idea_text: @draft_resource.ai_idea_text)
 
     render "ai_proposal_flow/edit_draft"
   end

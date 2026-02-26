@@ -149,7 +149,7 @@ anchor: "projekt-footer")
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       end
     end
@@ -203,7 +203,7 @@ anchor: "projekt-footer")
                                  .includes([:image, :projekt_labels, :translations,
   author: [:image, :organization], sentiment: [:translations]])
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       else
         if params[:search].present?
@@ -328,7 +328,7 @@ anchor: "projekt-footer")
 
       if params[:section] == "results" && can?(:read_results, @budget)
         @investments = Budget::Result.new(@budget, @budget.heading).investments
-      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
+      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
         @investments = @budget.investments
       else
@@ -506,5 +506,17 @@ feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_na
       @projekt_phase.user_status == "verified" &&
         current_user.verified_at.nil? &&
         helpers.projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
+    end
+
+    def can_view_stats_section?(section, phase)
+      return true if current_user&.administrator? || current_user&.projekt_manager?
+
+      if section == "key_metrics"
+        phase.feature?("general.public_kpi_stats")
+      elsif section == "analysis"
+        phase.feature?("general.public_ai_stats")
+      else
+        false
+      end
     end
 end

@@ -120,8 +120,7 @@ class PagesController < ApplicationController
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
         unless current_user&.has_pm_permission_to?(:manage, @projekt)
-          redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id,
-anchor: "projekt-footer")
+          redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
 
@@ -200,8 +199,7 @@ anchor: "projekt-footer")
       @resources = @projekt_phase.proposals
                                  .base_selection
                                  .with_min_supports(min_supports)
-                                 .includes([:image, :projekt_labels, :translations,
-  author: [:image, :organization], sentiment: [:translations]])
+                                 .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
       if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase

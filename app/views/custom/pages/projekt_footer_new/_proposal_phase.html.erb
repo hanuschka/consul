@@ -73,7 +73,7 @@
               <%= render_custom_block content_block_sidebar_name %>
 
               <% if projekt_phase_feature?(@projekt_phase, "general.browse_mode_in_phase_footer") && !browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
-                <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
+                <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse", order: @current_order),
                   remote: true,
                   class: "button with-icon" do %>
                   <i class="fa-window-maximize fas"></i>

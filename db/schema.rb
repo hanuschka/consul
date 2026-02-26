@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2026_02_23_000001) do
-=======
 ActiveRecord::Schema.define(version: 2026_02_25_000001) do
->>>>>>> new-connection
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"

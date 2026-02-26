@@ -24,12 +24,18 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :with_min_supports, ->(min_supports) {
+    if min_supports.to_i > 0
+      where("proposals.cached_votes_up >= ?", min_supports.to_i)
+    else
+      all
+    end
+  }
   scope :meets_minimum_supports, -> {
-    restricted =
-      ProjektPhaseSetting
-        .where(key: "option.resource.minimum_supports_to_show")
-        .where.not(value: ["0", "", nil])
-        .pluck(:projekt_phase_id, :value)
+    restricted = ProjektPhaseSetting
+      .where(key: "option.resource.minimum_supports_to_show")
+      .where.not(value: ["0", "", nil])
+      .pluck(:projekt_phase_id, :value)
 
     if restricted.empty?
       all

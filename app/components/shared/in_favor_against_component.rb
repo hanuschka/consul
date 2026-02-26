@@ -23,6 +23,10 @@ class Shared::InFavorAgainstComponent < ApplicationComponent
       end
     end
 
+    def voted_in_favor?
+      voting_user&.voted_as_when_voted_for(votable) == true
+    end
+
     def agree_aria_label
       t("votes.agree_label", title: votable.title)
     end

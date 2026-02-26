@@ -24,6 +24,12 @@
       </div>
 
     <% else %>
+      <% if voted? %>
+        <%= render "shared/vote_share_popup",
+          title: proposal.title,
+          url: proposal_url(proposal) %>
+      <% end %>
+
       <div class="in-favor">
         <% if voted? %>
           <%= button_to unvote_proposal_url(proposal, offline_user_id: params[:offline_user_id]),

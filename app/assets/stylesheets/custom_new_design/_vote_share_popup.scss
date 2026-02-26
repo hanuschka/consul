@@ -55,10 +55,24 @@ $share-color-copy-link: #555;
 }
 
 .vote-share-popup-container--dropdown-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  .social-share-full {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .social-share-button {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #social-share,
+  .sidebar-title {
+    display: none;
+  }
 
   .ssb-icon {
     display: flex;

@@ -7,9 +7,9 @@ module Adm
       authorize [:adm, @proposal]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
-        { name: @projekt_phase.projekt.name, url: details_adm_projekt_path(@projekt_phase.projekt) },
-        { name: @projekt_phase.title, url: proposals_adm_projekt_phase_path(@projekt_phase) },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
         { name: @proposal.title }
       ]
 
@@ -38,7 +38,7 @@ module Adm
           @proposal,
           :official_answer,
           :rich_text,
-          path: update_official_answer_adm_projekt_phase_proposal_path(@projekt_phase, @proposal),
+          path: update_official_answer_adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
           label: t(".official_answer"),
           description: t(".official_answer_hint")
         )
@@ -48,7 +48,7 @@ module Adm
     private
 
       def find_projekt_phase
-        @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
+        @projekt_phase = ProjektPhase.find(params[:phase_id])
       end
 
       def find_proposal

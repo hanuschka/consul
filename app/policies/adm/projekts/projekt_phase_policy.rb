@@ -21,7 +21,7 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.all
+      scope.where.not(type: "ProjektPhase::DebatePhase")
     end
   end
 end

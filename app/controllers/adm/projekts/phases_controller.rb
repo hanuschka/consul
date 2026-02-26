@@ -135,7 +135,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def budget_phases
     authorize_phase(:update?)
     @budget = @projekt_phase.budget
-    @budget_phases = @budget.phases.order(:id)
+    @budget_phases = @budget&.phases&.order(:id) || Budget::Phase.none
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },

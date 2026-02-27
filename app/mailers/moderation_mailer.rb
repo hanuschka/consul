@@ -1,4 +1,6 @@
 class ModerationMailer < ApplicationMailer
+  helper :mailer
+
   def flag_report(flag)
     @flag = flag
     @flaggable = flag.flaggable

@@ -1,0 +1,15 @@
+<div class="vote-share-popup-container">
+  <div class="vote-share-popup-container--button">
+    <i class="fas fa-share-alt"></i>
+    <span><%= t("custom.proposals.vote_share.share_button") %></span>
+  </div>
+
+  <div class="vote-share-popup-container--dropdown">
+    <div class="vote-share-popup-container--dropdown-links">
+      <%= render "shared/social_share",
+        title: title,
+        url: url,
+        description: title %>
+    </div>
+  </div>
+</div>

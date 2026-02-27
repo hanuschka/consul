@@ -38,7 +38,8 @@ module Budgets
     end
 
     def flag
-      Flag.flag(current_user, @investment)
+      flag = Flag.flag(current_user, @investment)
+      Flags::NotifyModerationJob.perform_later(flag.id) if flag
       @investment.update!(ignored_flag_at: nil)
 
       redirect_to @investment

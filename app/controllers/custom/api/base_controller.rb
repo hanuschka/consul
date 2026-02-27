@@ -8,7 +8,7 @@ class Api::BaseController < ActionController::API
   COMMENTS_PER_PAGE = 5000
 
   before_action :authenticate_api_client!
-  rescue_from StandardError, with: :render_internal_server_error
+  # rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized
@@ -67,10 +67,9 @@ class Api::BaseController < ActionController::API
     end
 
     def render_internal_server_error(exception)
-      raise exception unless Rails.env.production?
+      raise exception if !Rails.env.production?
 
       Sentry.capture_exception(exception)
-
       Rails.logger.error("[API] #{exception.class} (#{exception.message}):\n#{exception.backtrace.join("\n")}")
 
       render json: {

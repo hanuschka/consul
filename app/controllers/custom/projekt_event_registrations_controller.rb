@@ -19,6 +19,7 @@ class ProjektEventRegistrationsController < ApplicationController
 
     if registration.save
       mark_guest_registered(@projekt_event.id) if registration.guest?
+      Mailer.projekt_event_registration_email(registration).deliver_later
       if registration.status == "confirmed"
         flash[:notice] = t("custom.projekt_events.registration.confirmed")
       else

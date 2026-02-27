@@ -324,6 +324,24 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def projekt_event_registration_email(registration)
+    @email_to = registration.user&.email || registration.email
+    return if @email_to.blank?
+
+    event = registration.projekt_event
+    email_text = if registration.status == "confirmed"
+                   event.confirmation_email_text
+                 else
+                   event.waitlist_email_text
+                 end
+    return if email_text.blank?
+
+    @title = event.title
+    @body = email_text
+
+    mail(to: @email_to, subject: @title, template_name: "custom_mail")
+  end
+
   private
 
     def with_user(user, &block)

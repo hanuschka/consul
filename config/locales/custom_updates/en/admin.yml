@@ -421,6 +421,8 @@ en:
           title: Edit event
           accessibility_features: Accessibility Features
           max_attendees_placeholder: "Leave empty for unlimited"
+          confirmation_email_text: "Confirmation email text"
+          waitlist_email_text: "Waitlist email text"
       projekt_phases:
         nav_bar:
           duration: Duration

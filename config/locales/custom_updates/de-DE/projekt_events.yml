@@ -24,6 +24,7 @@ de:
         fully_booked: "Ausgebucht"
         spots_available: "%{available} von %{total} Plätzen verfügbar"
         register: "Anmelden"
+        join_waitlist: "Auf Warteliste setzen"
         cancel: "Abmelden"
         login_to_register: "Einloggen zum Anmelden"
         first_name: "Vorname"

@@ -204,6 +204,8 @@ en:
         induction_loop_available: Induction loop available
         assistance_dogs_welcome: Assistance dogs welcome
         sign_language_interpreter: Sign language interpreter available
+        confirmation_email_text: Confirmation email text
+        waitlist_email_text: Waitlist email text
       projekt_notification:
         title: Title
         body: Body

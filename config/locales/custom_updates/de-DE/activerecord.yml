@@ -291,6 +291,8 @@ de:
         induction_loop_available: Induktionsanlage vorhanden
         assistance_dogs_welcome: Assistenzhunde willkommen
         sign_language_interpreter: Gebärdensprachdolmetscher:in vorhanden
+        confirmation_email_text: Bestätigungs-E-Mail-Text
+        waitlist_email_text: Wartelisten-E-Mail-Text
       projekt_notification:
         title: Titel
         body: Nachricht

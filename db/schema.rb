@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_27_120001) do
+ActiveRecord::Schema.define(version: 2026_02_27_130000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2022,6 +2022,8 @@ ActiveRecord::Schema.define(version: 2026_02_27_120001) do
     t.boolean "assistance_dogs_welcome", default: false
     t.boolean "sign_language_interpreter", default: false
     t.integer "max_attendees"
+    t.text "confirmation_email_text"
+    t.text "waitlist_email_text"
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

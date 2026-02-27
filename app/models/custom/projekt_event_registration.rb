@@ -39,7 +39,10 @@ class ProjektEventRegistration < ApplicationRecord
 
       projekt_event.with_lock do
         next_registration = projekt_event.projekt_event_registrations.waitlisted.order(:created_at).first
-        next_registration&.update!(status: "confirmed")
+        if next_registration
+          next_registration.update!(status: "confirmed")
+          Mailer.projekt_event_registration_email(next_registration).deliver_later
+        end
       end
     end
 end

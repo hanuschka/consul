@@ -80,6 +80,26 @@
 
   <div class="row">
     <div class="column small-12">
+      <%= f.text_area :confirmation_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(event.confirmation_email_text),
+        rows: 6,
+        id: "projekt-event-confirmation-email-#{event.id}",
+        class: "html-area regular" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
+      <%= f.text_area :waitlist_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(event.waitlist_email_text),
+        rows: 6,
+        id: "projekt-event-waitlist-email-#{event.id}",
+        class: "html-area regular" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
       <%= f.submit(t("custom.admin.projekt_phases.projekt_events.button"), class: "button") %>
     </div>
   </div>

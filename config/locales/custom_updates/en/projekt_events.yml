@@ -18,6 +18,7 @@ en:
         fully_booked: "Fully booked"
         spots_available: "%{available} of %{total} spots available"
         register: "Register"
+        join_waitlist: "Join waitlist"
         cancel: "Cancel registration"
         login_to_register: "Log in to register"
         first_name: "First name"

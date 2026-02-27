@@ -121,26 +121,15 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
-      redirect_to user_path(@proposal.author, filter: "proposals"),
-notice: I18n.t("flash.actions.create.proposal")
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
 
       Mailer.proposal_created(@proposal).deliver_later
 
-      if @proposal.projekt_phase.active?
-        redirect_to page_path(
-          @proposal.projekt_phase.projekt.page.slug,
-          anchor: "filter-subnav",
-          projekt_phase_id: @proposal.projekt_phase.id,
-          order: params[:order]
-        ), notice: t("proposals.notice.published")
-      else
-        redirect_to proposals_path(
-          resources_order: params[:order]
-        ), notice: t("proposals.notice.published")
-      end
+      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id

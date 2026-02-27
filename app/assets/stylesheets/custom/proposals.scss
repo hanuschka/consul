@@ -77,11 +77,12 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
-    padding: 1rem 30px;
+    padding: 10px 30px;
     width: 100%;
     margin: auto;
     background: white;
     position: sticky;
+    border-radius: 10px;
     top: $topbar-height;
     z-index: 1000;
     border-bottom: 1px solid $border;

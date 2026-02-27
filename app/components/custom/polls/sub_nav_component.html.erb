@@ -13,7 +13,7 @@
                 data: { turbolinks: false } %>
   <% end %>
 
-  <% if poll.evaluation_enabled? || can?(:edit, poll.projekt) || current_user&.administrator? %>
+  <% if poll.report_visible_for_citizens? || can?(:edit, poll.projekt) || current_user&.administrator? %>
     <% if Ai::Settings.ai_available? %>
       <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
                   class: ("is-active" if report_menu?) %>

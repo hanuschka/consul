@@ -15,11 +15,29 @@
       <p class="care-cart-empty">Ihr Warenkorb ist leer.</p>
     </div>
     <div class="care-cart-panel-footer">
+      <!-- Gutscheincode -->
+      <div class="care-coupon-wrap">
+        <input type="text"
+               class="care-coupon-input"
+               id="care-coupon-input"
+               placeholder="Gutscheincode eingeben …">
+        <button class="care-coupon-btn" id="care-coupon-btn">Einlösen</button>
+      </div>
+      <div class="care-coupon-msg" id="care-coupon-msg"></div>
+
+      <div class="care-cart-subtotal-row">
+        <span>Zwischensumme:</span>
+        <span id="care-cart-subtotal">0,00 €</span>
+      </div>
+      <div class="care-cart-discount-row" id="care-cart-discount-row" style="display:none;">
+        <span id="care-cart-discount-label">Rabatt:</span>
+        <span id="care-cart-discount-val" class="care-discount-val">−0,00 €</span>
+      </div>
       <div class="care-cart-total-row">
         <span>Gesamt:</span>
         <strong id="care-cart-total">0,00 €</strong>
       </div>
-      <button class="care-btn-checkout">Zur Kasse</button>
+      <button class="care-btn-checkout">Zur Kasse →</button>
     </div>
   </div>
   <div class="care-cart-overlay" id="care-cart-overlay"></div>

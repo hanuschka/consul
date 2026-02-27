@@ -204,6 +204,43 @@
             <p class="care-review-text"><%= review[:text] %></p>
           </div>
         <% end %>
+
+        <!-- Bewertungsformular -->
+        <div class="care-review-form-wrap">
+          <h3>Eigene Bewertung schreiben</h3>
+          <div class="care-review-form" id="care-review-form">
+            <div class="care-review-form-row">
+              <div class="care-form-group">
+                <label class="care-form-label">Ihr Name</label>
+                <input type="text" class="care-form-input" id="care-review-name" placeholder="Max Mustermann">
+              </div>
+              <div class="care-form-group">
+                <label class="care-form-label">Ihre Bewertung</label>
+                <div class="care-star-picker" id="care-star-picker">
+                  <% (1..5).each do |i| %>
+                    <span class="care-star-pick" data-value="<%= i %>">★</span>
+                  <% end %>
+                </div>
+                <input type="hidden" id="care-review-rating" value="0">
+              </div>
+            </div>
+            <div class="care-form-group">
+              <label class="care-form-label">Ihr Erfahrungsbericht</label>
+              <textarea class="care-form-textarea" id="care-review-text"
+                        placeholder="Wie gefällt Ihnen das Produkt? Teilen Sie Ihre Erfahrungen …"
+                        rows="4"></textarea>
+            </div>
+            <div class="care-review-form-footer">
+              <span class="care-form-hint">* Ihre Bewertung wird nach Prüfung veröffentlicht</span>
+              <button class="care-btn-submit-review" id="care-btn-submit-review">
+                Bewertung abschicken
+              </button>
+            </div>
+            <div class="care-review-success" id="care-review-success" style="display:none;">
+              ✅ Vielen Dank! Ihre Bewertung wurde erfolgreich eingereicht und wird bald geprüft.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -360,6 +360,175 @@ var CareScrollTop = (function() {
   return { init: init };
 })();
 
+// ---- Promo Bar ----
+var CarePromoBar = (function() {
+  "use strict";
+  var MSGS_KEY = "care_promo_closed";
+  var current = 0;
+  var interval;
+
+  function init() {
+    var bar = document.getElementById("care-promo-bar");
+    if (!bar) return;
+
+    // Already closed this session?
+    if (sessionStorage.getItem(MSGS_KEY)) { bar.style.display = "none"; return; }
+
+    var msgs = bar.querySelectorAll(".care-promo-msg");
+    if (msgs.length > 1) {
+      interval = setInterval(function() {
+        msgs[current].classList.remove("active");
+        current = (current + 1) % msgs.length;
+        msgs[current].classList.add("active");
+      }, 4000);
+    }
+
+    var closeBtn = document.getElementById("care-promo-close");
+    if (closeBtn) closeBtn.addEventListener("click", function() {
+      bar.classList.add("closing");
+      clearInterval(interval);
+      setTimeout(function() { bar.style.display = "none"; }, 300);
+      sessionStorage.setItem(MSGS_KEY, "1");
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Coupon Codes ----
+var CareCoupon = (function() {
+  "use strict";
+  var CODES = {
+    "WILLKOMMEN10": { type: "percent", value: 10, label: "10 % Rabatt" },
+    "SOMMER15":     { type: "percent", value: 15, label: "15 % Rabatt" },
+    "PFLEGE5":      { type: "fixed",   value: 5,  label: "5,00 € Rabatt" }
+  };
+
+  var active = null;
+
+  function apply(code) {
+    var found = CODES[code.toUpperCase()];
+    active = found || null;
+    return active;
+  }
+
+  function discount(subtotal) {
+    if (!active) return 0;
+    if (active.type === "percent") return subtotal * active.value / 100;
+    return Math.min(active.value, subtotal);
+  }
+
+  function init() {
+    var btn = document.getElementById("care-coupon-btn");
+    var input = document.getElementById("care-coupon-input");
+    var msg = document.getElementById("care-coupon-msg");
+    if (!btn || !input) return;
+
+    btn.addEventListener("click", function() {
+      var result = apply(input.value.trim());
+      if (result) {
+        msg.textContent = "✓ Gutschein eingelöst: " + result.label;
+        msg.className = "care-coupon-msg care-coupon-success";
+        input.disabled = true;
+        btn.textContent = "Eingelöst";
+        btn.disabled = true;
+      } else {
+        msg.textContent = "✗ Ungültiger Gutscheincode";
+        msg.className = "care-coupon-msg care-coupon-error";
+      }
+      CareCart.refreshTotals && CareCart.refreshTotals();
+    });
+  }
+
+  return { init: init, discount: discount, active: function() { return active; } };
+})();
+
+// ---- Star Picker (Review Form) ----
+var CareReviewForm = (function() {
+  "use strict";
+
+  function init() {
+    var picker = document.getElementById("care-star-picker");
+    var ratingInput = document.getElementById("care-review-rating");
+    var submitBtn = document.getElementById("care-btn-submit-review");
+    var successEl = document.getElementById("care-review-success");
+
+    if (!picker) return;
+
+    var stars = picker.querySelectorAll(".care-star-pick");
+    var selected = 0;
+
+    function highlight(n) {
+      stars.forEach(function(s, i) {
+        s.classList.toggle("filled", i < n);
+      });
+    }
+
+    stars.forEach(function(star, idx) {
+      star.addEventListener("mouseover", function() { highlight(idx + 1); });
+      star.addEventListener("mouseleave", function() { highlight(selected); });
+      star.addEventListener("click", function() {
+        selected = idx + 1;
+        ratingInput.value = selected;
+        highlight(selected);
+      });
+    });
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function() {
+        var name = (document.getElementById("care-review-name") || {}).value || "";
+        var text = (document.getElementById("care-review-text") || {}).value || "";
+
+        if (!selected) {
+          alert("Bitte wählen Sie eine Sternebewertung.");
+          return;
+        }
+        if (!name.trim()) {
+          alert("Bitte geben Sie Ihren Namen ein.");
+          return;
+        }
+        if (text.trim().length < 20) {
+          alert("Bitte schreiben Sie mindestens 20 Zeichen.");
+          return;
+        }
+
+        // Simulate submit
+        submitBtn.textContent = "Wird gesendet …";
+        submitBtn.disabled = true;
+        setTimeout(function() {
+          document.getElementById("care-review-form").style.display = "none";
+          if (successEl) successEl.style.display = "block";
+        }, 900);
+      });
+    }
+  }
+
+  return { init: init };
+})();
+
+// Extend CareCart to support coupon totals
+(function() {
+  var orig = CareCart.init;
+  CareCart.refreshTotals = function() {
+    var items = CareCart.load();
+    var subtotal = items.reduce(function(s, i) {
+      return s + (parseFloat(i.price.replace(",", ".").replace(/[^0-9.]/g, "")) || 0) * (i.qty || 1);
+    }, 0);
+    var discountAmt = CareCoupon.discount(subtotal);
+    var total = Math.max(0, subtotal - discountAmt);
+
+    var subEl = document.getElementById("care-cart-subtotal");
+    var totEl = document.getElementById("care-cart-total");
+    var discRow = document.getElementById("care-cart-discount-row");
+    var discVal = document.getElementById("care-cart-discount-val");
+
+    if (subEl) subEl.textContent = subtotal.toFixed(2).replace(".", ",") + " €";
+    if (totEl) totEl.textContent = total.toFixed(2).replace(".", ",") + " €";
+    if (discRow) discRow.style.display = discountAmt > 0 ? "flex" : "none";
+    if (discVal) discVal.textContent = "−" + discountAmt.toFixed(2).replace(".", ",") + " €";
+  };
+})();
+
 // ---- Bootstrap ----
 $(document).on("turbolinks:load", function() {
   CareCart.init();
@@ -367,4 +536,7 @@ $(document).on("turbolinks:load", function() {
   CareSearch.init();
   CareSaleCountdown.init();
   CareScrollTop.init();
+  CarePromoBar.init();
+  CareCoupon.init();
+  CareReviewForm.init();
 });

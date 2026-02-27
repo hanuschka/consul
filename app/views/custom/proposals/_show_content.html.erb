@@ -133,7 +133,7 @@
         <%= render Sidebar::ResourceAuthorComponent.new(resource: proposal) %>
         <% if can?(:dashboard, proposal) || proposal.editable_by?(current_user) %>
           <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.author"), icon_name: "user-edit")) do |c| %>
-            <div class="u-flex u-flex-column u-gap-7">
+            <div class="u-flex u-flex-column">
               <% if can?(:dashboard, proposal) %>
                 <%= link_to proposal_dashboard_path(proposal),
                   class: "button hollow u-full-width",

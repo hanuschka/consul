@@ -22,6 +22,13 @@ de:
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Diskussionen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
+      comments:
+        feature:
+          general:
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
       proposals:
         feature:
           general:
@@ -31,6 +38,10 @@ de:
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
             require_admin_acceptance: Adminfreigabe
             require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.
@@ -130,6 +141,10 @@ de:
             browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
             browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.

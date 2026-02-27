@@ -64,6 +64,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.require_admin_acceptance": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -110,6 +112,8 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::BudgetPhase" => {
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -134,6 +138,11 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": ""
+        },
+
+        "ProjektPhase::CommentPhase" => {
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": ""
         },
 
         "ProjektPhase::QuestionPhase" => {

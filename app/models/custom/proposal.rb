@@ -70,9 +70,11 @@ class Proposal < ApplicationRecord
   scope :sort_by_alphabet, -> {
     with_translations(I18n.locale).
     select("proposals.*, LOWER(proposal_translations.title)").
-    reorder("LOWER(proposal_translations.title) ASC")
+    reorder("LOWER(proposal_translations.title) ASC, proposals.id ASC")
   }
-  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc) }
+  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc, id: :desc) }
+  scope :sort_by_hot_score, -> { reorder(hot_score: :desc, id: :desc) }
+  scope :sort_by_created_at, -> { reorder(created_at: :desc, id: :desc) }
 
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }

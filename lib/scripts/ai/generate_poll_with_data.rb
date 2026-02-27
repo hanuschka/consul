@@ -97,7 +97,7 @@ class Ai::GeneratePollWithData
 
       Create varied question types:
       - 4 yes/no questions
-      - 4 multiple choice questions (3-4 options)
+      - 4 multiple choice questions (each with a DIFFERENT number of answers varying from 3 to 8, every answer must be exactly two words long)
       - 2 rating questions
 
       All text in English. Keep titles short (max 80 chars), descriptions brief (1-2 sentences).
@@ -113,7 +113,7 @@ class Ai::GeneratePollWithData
           "title": "Question text?",
           "description": "Brief context",
           "type": "multiple",
-          "answers": ["Option 1", "Option 2", "Option 3"]
+          "answers": ["First Option", "Second Option", "Third Option"]
         },
         {
           "title": "Question text?",
@@ -164,14 +164,21 @@ class Ai::GeneratePollWithData
 
     question.save!
 
-    answers = case data['type']
-              when 'yes_no'
-                ['Yes', 'No']
-              when 'rating'
-                ['1', '2', '3', '4', '5']
-              else
-                data['answers'] || ['Option A', 'Option B', 'Option C']
-              end
+    fallback_answers = [
+      'Strong Agreement', 'Mild Support', 'Neutral Stance',
+      'Slight Concern', 'Firm Opposition', 'No Opinion',
+      'Other Perspective', 'Needs Discussion'
+    ]
+
+    answers =
+      case data['type']
+      when 'yes_no'
+        ['Yes', 'No']
+      when 'rating'
+        ['1', '2', '3', '4', '5', '6', '7', '8']
+      else
+        data['answers'] || fallback_answers.first(rand(3..8))
+      end
 
     answers.each_with_index do |answer_title, idx|
       Poll::Question::Answer.create!(

@@ -100,6 +100,14 @@
     }
   }
 
+  body:has(.projekt-page--admin-topbar) & .proposal-navigation {
+    top: $topbar-height + $admin-topbar-height;
+
+    @media(max-width: $small-tablet-viewport-start) {
+      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height + $admin-topbar-height;
+    }
+  }
+
   .proposal-navigation--button-wrapper {
     width: 100%;
   }

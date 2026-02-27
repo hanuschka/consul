@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_19_120001) do
+ActiveRecord::Schema.define(version: 2026_02_26_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1589,6 +1589,20 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
     t.index ["user_id"], name: "index_moderators_on_user_id"
   end
 
+  create_table "navbar_items", force: :cascade do |t|
+    t.integer "kind"
+    t.string "preset"
+    t.bigint "projekt_id"
+    t.string "external_title"
+    t.string "external_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "parent_id"
+    t.integer "position", default: 0, null: false
+    t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
+    t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
+  end
+
   create_table "newsletters", id: :serial, force: :cascade do |t|
     t.string "subject"
     t.string "segment_recipient"
@@ -2049,16 +2063,6 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
     t.datetime "updated_at", null: false
     t.index ["geozone_id"], name: "index_projekt_phase_geozones_on_geozone_id"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_geozones_on_projekt_phase_id"
-  end
-
-  create_table "projekt_phase_proposal_criteria", force: :cascade do |t|
-    t.bigint "projekt_phase_id", null: false
-    t.text "text", null: false
-    t.integer "position", default: 0, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
-    t.index ["projekt_phase_id"], name: "index_projekt_phase_proposal_criteria_on_projekt_phase_id"
   end
 
   create_table "projekt_phase_settings", force: :cascade do |t|
@@ -2805,6 +2809,16 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
   end
 
+  create_table "user_resource_criteria", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "text", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
+    t.index ["projekt_phase_id"], name: "index_user_resource_criteria_on_projekt_phase_id"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
@@ -3108,6 +3122,8 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
+  add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
@@ -3150,7 +3166,6 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
-  add_foreign_key "projekt_phase_proposal_criteria", "projekt_phases"
   add_foreign_key "projekt_phase_settings", "projekt_phases"
   add_foreign_key "projekt_phase_stat_questions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
@@ -3182,6 +3197,7 @@ ActiveRecord::Schema.define(version: 2026_02_19_120001) do
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
+  add_foreign_key "user_resource_criteria", "projekt_phases"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "users", "registered_addresses"

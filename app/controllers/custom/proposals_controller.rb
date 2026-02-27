@@ -48,6 +48,7 @@ class ProposalsController
     @resources =
       @resources
         .where(admin_accepted: true)
+        .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -120,7 +121,8 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
-      redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
+      redirect_to user_path(@proposal.author, filter: "proposals"),
+notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
@@ -175,8 +177,8 @@ class ProposalsController
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
                                 .page(params[:page]).per(5)
 
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
-    @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
     landing_page_slug = params[:landing_page_slug]
     if landing_page_slug.present?
@@ -228,14 +230,14 @@ class ProposalsController
   end
 
   def created
-    @resource_name = 'proposal'
+    @resource_name = "proposal"
     @affiliated_geozones = []
     @restricted_geozones = []
-
   end
 
   def flag
-    Flag.flag(current_user, @proposal)
+    flag = Flag.flag(current_user, @proposal)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @proposal.update!(ignored_flag_at: nil)
 
     redirect_to @proposal
@@ -254,10 +256,10 @@ class ProposalsController
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,
                     projekt_label_ids: [],
-                    image_attributes: image_attributes,
+                    image_attributes:,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],
-                    map_location_attributes: map_location_attributes]
+                    map_location_attributes:]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
     end

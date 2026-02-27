@@ -6,6 +6,6 @@
 
 <%= render UserResources::FormComponent.new(
   @proposal,
-  url: proposals_path,
+  url: proposal_path(@proposal),
   title: t("proposals.edit.editing")
 ) %>

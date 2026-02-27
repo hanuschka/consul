@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  App.ProjektPhaseProposalCriteria = {
+  App.UserResourceCriteria = {
     initialize() {
       if (!$(".js-criteria-sortable").length) return;
       this.initSortable();
@@ -48,7 +48,7 @@
         const $input = $("<input>", { type: "text", value: currentText, class: "js-criteria-edit-input" });
         $span.replaceWith($input);
         $input.focus();
-        $input.on("blur", App.ProjektPhaseProposalCriteria.saveInlineEdit);
+        $input.on("blur", App.UserResourceCriteria.saveInlineEdit);
       });
     },
 
@@ -57,7 +57,7 @@
       const url = $input.closest(".js-criteria-item").data("updateUrl");
       const text = $input.val().trim();
       App.Ajax
-        .patch(url, { projekt_phase_proposal_criterion: { text: text } })
+        .patch(url, { user_resource_criterion: { text: text } })
         .then(() => {
           $input.replaceWith($("<span>", { class: "js-criteria-text", text: text }));
         });
@@ -73,9 +73,9 @@
         const text = $input.val().trim();
         if (!text) return;
         App.Ajax
-          .post(url, { projekt_phase_proposal_criterion: { text: text } })
+          .post(url, { user_resource_criterion: { text: text } })
           .then((data) => {
-            App.ProjektPhaseProposalCriteria.appendCriterion(data, $form);
+            App.UserResourceCriteria.appendCriterion(data, $form);
             $input.val("");
           });
       });

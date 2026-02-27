@@ -6,20 +6,20 @@ class ProjektEventRegistrationsController < ApplicationController
 
   def create
     if current_user
-      registration = @projekt_event.projekt_event_registrations.new(user: current_user)
-    elsif guest_registered?(@projekt_event.id)
-      flash[:alert] = t("custom.projekt_events.registration.already_registered")
-      return respond_to do |format|
-        format.html { redirect_back(fallback_location: root_path) }
-        format.js { @guest_registered_event_id = @projekt_event.id }
-      end
+      registration = find_existing_registration(current_user.email) ||
+                     @projekt_event.projekt_event_registrations.new(user: current_user)
     else
-      registration = @projekt_event.projekt_event_registrations.new(guest_params)
+      email = guest_params[:email]
+      registration = find_existing_registration(email) ||
+                     @projekt_event.projekt_event_registrations.new(guest_params)
     end
 
-    if registration.save
+    if registration.persisted?
+      mark_guest_registered(@projekt_event.id)
+    elsif registration.save
       mark_guest_registered(@projekt_event.id) if registration.guest?
       Mailer.projekt_event_registration_email(registration).deliver_later
+
       if registration.status == "confirmed"
         flash[:notice] = t("custom.projekt_events.registration.confirmed")
       else
@@ -62,8 +62,13 @@ class ProjektEventRegistrationsController < ApplicationController
       params.require(:projekt_event_registration).permit(:first_name, :last_name, :email)
     end
 
-    def guest_registered?(event_id)
-      Array(session[:guest_registered_event_ids]).include?(event_id)
+    def find_existing_registration(email)
+      return nil if email.blank?
+
+      @projekt_event.projekt_event_registrations.find_by(
+        "LOWER(email) = :email OR user_id IN (SELECT id FROM users WHERE LOWER(email) = :email)",
+        email: email.downcase
+      )
     end
 
     def mark_guest_registered(event_id)

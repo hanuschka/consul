@@ -20,11 +20,11 @@
   <% if projekt_phase_feature?(proposal.projekt_phase, "resource.allow_voting") %>
     <% if projekt_phase_feature?(proposal.projekt_phase, "resource.enable_up_and_down_voting") %>
       <div class="votes">
-        <%= render Shared::InFavorAgainstComponent.new(proposal) %>
+        <%= render Shared::InFavorAgainstComponent.new(proposal, show_share_popup: @show_share_popup) %>
       </div>
 
     <% else %>
-      <% if voted? %>
+      <% if voted? && @show_share_popup %>
         <%= render "shared/vote_share_popup",
           title: proposal.title,
           url: proposal_url(proposal) %>

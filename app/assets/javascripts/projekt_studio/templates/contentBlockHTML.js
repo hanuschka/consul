@@ -130,11 +130,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
-                data-tooltip
-                data-position="left"
-                data-hover-delay="800"
                 tabindex="0"
-                title="Löschen&#10;Entfernt diesen Inhaltsblock endgültig aus dem Projekt. Warnung: Diese Aktion kann nicht rückgängig gemacht werden"
                 class="js-delete-projekt-content-block -delete projekt-frame-icon-button"
               >
                 <i class="fas fa-trash-alt">

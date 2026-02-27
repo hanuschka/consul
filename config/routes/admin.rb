@@ -139,7 +139,7 @@ as: :destroy_user_resource_criterion
     member do
       post :send_notifications
     end
-    resources :projekt_event_registrations, only: [:destroy]
+    resources :projekt_event_registrations, only: [:index, :destroy]
   end
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]

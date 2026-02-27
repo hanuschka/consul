@@ -180,7 +180,7 @@ namespace :projekt_management do
     member do
       post :send_notifications
     end
-    resources :projekt_event_registrations, only: [:destroy]
+    resources :projekt_event_registrations, only: [:index, :destroy]
   end
 
   resources :proposals, only: :index do

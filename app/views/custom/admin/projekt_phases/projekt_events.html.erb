@@ -94,6 +94,11 @@
           <% if event.registration_enabled? && event.projekt_event_registrations.any? %>
             <details>
               <summary><%= t("custom.admin.projekt_phases.projekt_events.registrations_details") %></summary>
+              <p class="margin-top">
+                <%= link_to t("custom.admin.projekt_phases.projekt_events.export_csv"),
+                      polymorphic_path([@namespace, event, :projekt_event_registrations], format: :csv),
+                      class: "button small hollow" %>
+              </p>
               <table class="margin-top">
                 <thead>
                   <tr>

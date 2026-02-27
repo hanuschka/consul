@@ -16,9 +16,18 @@
     <!-- Font Awesome for icon selection (temporary until frontend migrates to Material) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <%= javascript_include_tag "application-kern", "data-turbo-track": "reload", type: "module", crossorigin: "anonymous" %>
+    <script>
+      document.addEventListener("turbo:before-render", function(event) {
+        if (document.cookie.match(/(?:^|; )kern_dark_mode=1(?:;|$)/)) {
+          event.detail.newBody.classList.add("kern-dark");
+        } else {
+          event.detail.newBody.classList.remove("kern-dark");
+        }
+      });
+    </script>
   </head>
 
-  <body class="" data-controller="adm-sidebar">
+  <body class="<%= 'kern-dark' if cookies[:kern_dark_mode] == '1' %>" data-controller="adm-sidebar">
     <div class="adm-sidebar-toggle d-lg-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
       <span class="material-symbols-outlined" aria-hidden="true">menu</span>
     </div>
@@ -44,9 +53,10 @@
       <aside id="adm-sidebar" class="d-none d-lg-block position-absolute top-0 position-lg-static" data-adm-sidebar-target="sidebar">
         <%= render adm_menu_component %>
 
-        <div class="kern-form-check" data-controller="mode-switcher" style="margin-top: 5rem;">
-          <%= check_box_tag 'mode_switcher', '1', cookies[:mode_switcher] == '1', class: 'kern-form-check__checkbox', id: 'mode_switcher', data: { action: 'change->mode-switcher#toggle' } %>
-          <%= label_tag 'mode_switcher', 'Dunkelmodus', class: 'kern-label kern-form-check__label' %>
+        <div data-controller="mode-switcher" style="margin-top: 5rem; padding: 0 1rem;">
+          <button type="button" class="kern-link d-flex align-items-center gap-2" data-action="click->mode-switcher#toggle">
+            <span class="material-symbols-outlined" data-mode-switcher-target="icon" aria-hidden="true"><%= cookies[:kern_dark_mode] == '1' ? 'light_mode' : 'dark_mode' %></span>
+          </button>
         </div>
       </aside>
 

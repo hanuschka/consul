@@ -87,7 +87,7 @@ class Mailer < ApplicationMailer
     @email_to = @proposal.author.email
 
     with_user(@proposal.author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_created.subject"))
+      mail(to: @email_to, subject: t("mailers.proposal_created.subject"))
     end
   end
 

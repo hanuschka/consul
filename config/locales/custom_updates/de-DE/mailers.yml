@@ -80,8 +80,31 @@ de:
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     proposal_created:
+      subject: "Vielen Dank für Ihren eingereichten Vorschlag!"
       hi: "Hallo %{username},"
-      text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+      intro_html: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+      thanks: "Vielen Dank für Ihr Engagement – wir freuen uns sehr, dass Sie sich an der Themenwahl beteiligen!"
+      next_steps_title: "Wie es jetzt weitergeht"
+      next_steps_intro: "Die Themenwahl verläuft in drei Stufen:"
+      stage1_title: "1. Stufe: 10 Unterstützungsstimmen sammeln"
+      stage1_p1: "Zunächst ist Ihr Thema noch nicht öffentlich. Nur wer den obigen Link von Ihnen bekommt, kann den Vorschlag sehen und unterstützen."
+      stage1_tip: "Tipp: Damit Ihr Vorschlag schnell die ersten 10 Stimmen erreicht, hilft es sehr, wenn Sie ihn direkt mit Freundinnen, Freunden und Bekannten teilen – zum Beispiel über WhatsApp, Signal oder in sozialen Medien. Nutzen Sie dafür einfach den Link zu Ihrem Vorschlag oder die Teilen-Symbole auf Ihrer Themenseite."
+      stage1_template_intro: "Unten finden Sie einen kurzen Textvorschlag, den Sie dafür verwenden können."
+      stage2_title: "2. Stufe: Themenwahl"
+      stage2_p1: "Sobald Sie für Ihr Thema 10 Stimmen gesammelt haben, erscheint es in der Gesamtübersicht und alle Besucherinnen und Besucher können es unterstützen."
+      stage2_p2: "Die 20 Themen mit den meisten Stimmen ziehen in die Finalrunde vom 1. bis 15. April ein."
+      stage2_p3_html: "Kurz vor Beginn der Finalrunde prüfen wir die aussichtsreichen Themen genauer darauf, ob sie unseren Zulassungskriterien entsprechen (z.B. Zuständigkeit des Bundestages, konkrete Forderung vorhanden). Um spätere Überraschungen zu vermeiden, empfehlen wir Ihnen, Ihren Vorschlag noch einmal durchzugehen und ihn gegebenenfalls bis zum 31. März anzupassen (%{faq_link})."
+      stage3_title: "3. Stufe: Finalrunde im April"
+      stage3_p1: "Erreicht Ihr Thema am Ende einen Platz unter den Top 3, erscheint es auf dem Stimmzettel für die Volksabstimmung im Herbst. Für die weitere Ausarbeitung der Abstimmungsvorlage setzen wir uns persönlich mit Ihnen in Verbindung."
+      contact_html: "Bei Fragen stehen wir Ihnen gerne unter %{email_link} zur Verfügung."
+      closing: "Viel Erfolg und herzliche Grüße"
+      signature: "Ihr Team von ABSTIMMUNG21"
+      share_title: "Textvorschlag zum Teilen"
+      share_greeting: "Hallo,"
+      share_text: "ich habe mein Thema \u201E%{proposal_title}\u201C bei ABSTIMMUNG21 eingereicht, damit er die Chance hat, auf den Stimmzettel für die fünfte bundesweite Volksabstimmung im Herbst 2026 zu kommen. Dafür braucht es die Unterstützung vieler Menschen, denn nur die drei Themen mit den meisten Unterzeichnungen schaffen es in die Volksabstimmung."
+      share_link_text: "Hier kannst du mehr über das Thema und die Themenwahl erfahren – und meinen Vorschlag unterzeichen:"
+      share_closing: "Viele Grüße"
+      share_signature: "Ihr Name"
     new_valuator_assignment:
       subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
       hi: "Hallo %{username},"

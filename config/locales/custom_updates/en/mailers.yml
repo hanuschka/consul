@@ -78,8 +78,31 @@ en:
       projekt_link_text: Project
       sincerely: Kind regards
     proposal_created:
+      subject: "Thank you for submitting your proposal!"
       hi: "Hello %{username},"
-      text1: "Your proposal has been successfully submitted: %{proposal_link}"
+      intro_html: "Your proposal has been successfully received: %{proposal_link}"
+      thanks: "Thank you for your commitment – we are very pleased that you are participating in the topic selection!"
+      next_steps_title: "What happens next"
+      next_steps_intro: "The topic selection process has three stages:"
+      stage1_title: "Stage 1: Collect 10 support votes"
+      stage1_p1: "Initially, your topic is not yet public. Only those who receive the link above from you can see and support the proposal."
+      stage1_tip: "Tip: To help your proposal quickly reach the first 10 votes, it helps a lot if you share it directly with friends and acquaintances – for example via WhatsApp, Signal, or on social media. Simply use the link to your proposal or the sharing icons on your topic page."
+      stage1_template_intro: "Below you will find a short text suggestion that you can use for this purpose."
+      stage2_title: "Stage 2: Topic selection"
+      stage2_p1: "Once you have collected 10 votes for your topic, it will appear in the overall overview and all visitors can support it."
+      stage2_p2: "The 20 topics with the most votes will advance to the final round from April 1 to 15."
+      stage2_p3_html: "Shortly before the final round begins, we will review the most promising topics more closely to ensure they meet our admission criteria (e.g., federal parliament jurisdiction, specific demand present). To avoid later surprises, we recommend that you review your proposal once more and adjust it if necessary by March 31 (%{faq_link})."
+      stage3_title: "Stage 3: Final round in April"
+      stage3_p1: "If your topic reaches a place among the top 3 at the end, it will appear on the ballot for the referendum in autumn. For the further elaboration of the voting proposal, we will contact you personally."
+      contact_html: "If you have any questions, please contact us at %{email_link}."
+      closing: "Best of luck and kind regards"
+      signature: "Your ABSTIMMUNG21 Team"
+      share_title: "Text suggestion for sharing"
+      share_greeting: "Hello,"
+      share_text: "I have submitted my topic \"%{proposal_title}\" at ABSTIMMUNG21, so it has a chance to appear on the ballot for the fifth nationwide referendum in autumn 2026. It needs the support of many people, because only the three topics with the most signatures make it to the referendum."
+      share_link_text: "Here you can learn more about the topic and the topic selection – and sign my proposal:"
+      share_closing: "Best regards"
+      share_signature: "Your Name"
     new_valuator_assignment:
       subject: New valuation assignment
       hi: "Hello %{username},"

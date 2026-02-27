@@ -2,6 +2,7 @@ class ProjektsController < ApplicationController
   include CustomHelper
   include ProposalsHelper
   include Search
+  include LandingPageResolvable
 
   skip_authorization_check
   before_action :raise_flag_feature_disabled, except: [:map_html]
@@ -9,21 +10,20 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    if params[:landing_page_slug].present?
+    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
+    if landing_page_slug.present?
       @landing_page =
         SiteCustomization::Page
           .published
           .landing
           .where(landing_show_projekts_overview: true)
-          .find_by(slug: params[:landing_page_slug])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.nil?
         raise ActionController::RoutingError.new('Not Found')
       end
 
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      end
+      set_landing_page_topbar_ui_variables(@landing_page)
     end
 
     base_projekts =

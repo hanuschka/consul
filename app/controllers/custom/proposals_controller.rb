@@ -8,6 +8,7 @@ class ProposalsController
   include RandomSeed
   include GuestUsers
   include CustomHelper
+  include LandingPageResolvable
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -169,19 +170,7 @@ class ProposalsController
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to proposal_path(@proposal) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently

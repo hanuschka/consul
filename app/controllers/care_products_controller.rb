@@ -46,6 +46,7 @@ class CareProductsController < ApplicationController
       name: "Feuchtigkeitscreme Premium",
       category: "hautpflege",
       price: "24,99 €",
+      price_cents: 2499,
       rating: 4.8,
       reviews: 142,
       badge: "Bestseller",
@@ -56,6 +57,7 @@ class CareProductsController < ApplicationController
       name: "Nährendes Haarshampoo",
       category: "haarpflege",
       price: "12,49 €",
+      price_cents: 1249,
       rating: 4.6,
       reviews: 98,
       badge: "Neu",
@@ -66,6 +68,7 @@ class CareProductsController < ApplicationController
       name: "Verwöhn-Duschgel",
       category: "koerperpflege",
       price: "8,99 €",
+      price_cents: 899,
       rating: 4.5,
       reviews: 231,
       badge: nil,
@@ -76,6 +79,7 @@ class CareProductsController < ApplicationController
       name: "Whitening Zahnpasta",
       category: "mundpflege",
       price: "6,99 €",
+      price_cents: 699,
       rating: 4.7,
       reviews: 187,
       badge: "Bestseller",
@@ -86,6 +90,7 @@ class CareProductsController < ApplicationController
       name: "Sonnenschutz LSF 50",
       category: "sonnenpflege",
       price: "18,99 €",
+      price_cents: 1899,
       rating: 4.9,
       reviews: 304,
       badge: "Top-Bewertet",
@@ -96,6 +101,7 @@ class CareProductsController < ApplicationController
       name: "Baby Pflegelotion",
       category: "babypflege",
       price: "9,99 €",
+      price_cents: 999,
       rating: 4.8,
       reviews: 156,
       badge: "Sanfte Formel",
@@ -106,6 +112,7 @@ class CareProductsController < ApplicationController
       name: "Anti-Aging Serum",
       category: "hautpflege",
       price: "39,99 €",
+      price_cents: 3999,
       rating: 4.7,
       reviews: 89,
       badge: "Premium",
@@ -116,6 +123,7 @@ class CareProductsController < ApplicationController
       name: "Intensive Haarkur",
       category: "haarpflege",
       price: "16,99 €",
+      price_cents: 1699,
       rating: 4.6,
       reviews: 73,
       badge: "Neu",
@@ -123,14 +131,60 @@ class CareProductsController < ApplicationController
     }
   ].freeze
 
+  SALE_PRODUCTS = [
+    {
+      id: 1,
+      product_ref: 3,
+      name: "Verwöhn-Duschgel",
+      category: "koerperpflege",
+      icon: "🧴",
+      original_price: "8,99 €",
+      sale_price: "5,99 €",
+      discount: 33
+    },
+    {
+      id: 2,
+      product_ref: 2,
+      name: "Nährendes Haarshampoo",
+      category: "haarpflege",
+      icon: "✨",
+      original_price: "12,49 €",
+      sale_price: "8,99 €",
+      discount: 28
+    },
+    {
+      id: 3,
+      product_ref: 4,
+      name: "Whitening Zahnpasta",
+      category: "mundpflege",
+      icon: "🦷",
+      original_price: "6,99 €",
+      sale_price: "4,49 €",
+      discount: 36
+    },
+    {
+      id: 4,
+      product_ref: 6,
+      name: "Baby Pflegelotion",
+      category: "babypflege",
+      icon: "🌸",
+      original_price: "9,99 €",
+      sale_price: "6,99 €",
+      discount: 30
+    }
+  ].freeze
+
   def index
     @categories = CATEGORIES
-    @featured_products = PRODUCTS.first(6)
     @all_products = PRODUCTS
+    @sale_products = SALE_PRODUCTS
 
     if params[:category].present?
       @selected_category = params[:category]
       @filtered_products = PRODUCTS.select { |p| p[:category] == @selected_category }
+      @featured_products = @filtered_products
+    else
+      @featured_products = PRODUCTS
     end
   end
 

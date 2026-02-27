@@ -2,6 +2,9 @@
 <% content_for :body_class, "care-products-page" %>
 <%= render "care_products/cart" %>
 
+<!-- Scroll-to-Top -->
+<button class="care-scroll-top" id="care-scroll-top" title="Nach oben">↑</button>
+
 <!-- Hero-Bereich -->
 <section class="care-hero">
   <div class="care-hero-overlay">
@@ -12,11 +15,56 @@
           Entdecken Sie unsere sorgfältig ausgewählten Pflegeprodukte –
           für Ihr tägliches Wohlbefinden
         </p>
-        <a href="#produkte" class="button care-btn-primary">
-          Jetzt entdecken
+        <a href="#angebote" class="button care-btn-primary care-btn-hero-sale">
+          🏷 Aktuelle Angebote
+        </a>
+        <a href="#produkte" class="button care-btn-primary care-btn-hero-ghost">
+          Alle Produkte
         </a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- Sale / Angebote -->
+<section class="care-sale" id="angebote">
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-sale-header">
+        <div class="care-sale-label">🏷 Aktuelle Angebote</div>
+        <h2 class="care-section-title">Wochendeal – Bis zu 36 % sparen</h2>
+        <div class="care-sale-countdown" id="care-countdown">
+          Angebot endet in: <span id="care-countdown-timer">--:--:--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-2 large-up-4 care-sale-grid">
+    <% @sale_products.each do |item| %>
+      <div class="column">
+        <div class="care-sale-card">
+          <div class="care-sale-discount-badge">−<%= item[:discount] %>%</div>
+          <div class="care-sale-image">
+            <span class="care-sale-emoji"><%= item[:icon] %></span>
+          </div>
+          <div class="care-sale-body">
+            <h3 class="care-sale-name"><%= item[:name] %></h3>
+            <div class="care-sale-prices">
+              <span class="care-sale-original"><%= item[:original_price] %></span>
+              <span class="care-sale-price"><%= item[:sale_price] %></span>
+            </div>
+            <button class="care-btn-sale-cart"
+                    data-care-add-cart="true"
+                    data-product-id="sale-<%= item[:id] %>"
+                    data-product-name="<%= item[:name] %> (Sale)"
+                    data-product-price="<%= item[:sale_price] %>"
+                    data-product-emoji="<%= item[:icon] %>">
+              In den Warenkorb
+            </button>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </section>
 
@@ -41,53 +89,86 @@
   </div>
 </section>
 
-<!-- Produkte -->
-<section class="care-products" id="produkte">
+<!-- Such- und Sortierleiste -->
+<section class="care-search-bar" id="produkte">
   <div class="row">
-    <div class="small-12 column">
-      <% if @selected_category %>
-        <% cat = @categories.find { |c| c[:id] == @selected_category } %>
-        <h2 class="care-section-title"><%= cat&.dig(:name) || "Produkte" %></h2>
-        <p class="care-section-subtitle">
-          <%= @filtered_products.length %> Produkte gefunden &nbsp;
-          <%= link_to "Alle anzeigen", care_products_path, class: "care-filter-reset" %>
-        </p>
-      <% else %>
-        <h2 class="care-section-title">Empfohlene Produkte</h2>
-        <p class="care-section-subtitle">Unsere meistverkauften Pflegeartikel</p>
-      <% end %>
+    <div class="small-12 medium-7 column">
+      <div class="care-search-wrap">
+        <span class="care-search-icon">🔍</span>
+        <input type="text"
+               id="care-search-input"
+               class="care-search-input"
+               placeholder="Produkt suchen …"
+               autocomplete="off">
+        <button class="care-search-clear" id="care-search-clear" style="display:none;">✕</button>
+      </div>
+    </div>
+    <div class="small-12 medium-3 column">
+      <select class="care-sort-select" id="care-sort-select">
+        <option value="default">Sortierung</option>
+        <option value="price-asc">Preis aufsteigend</option>
+        <option value="price-desc">Preis absteigend</option>
+        <option value="rating-desc">Beste Bewertung</option>
+        <option value="reviews-desc">Meiste Bewertungen</option>
+        <option value="name-asc">Name A–Z</option>
+      </select>
+    </div>
+    <div class="small-12 medium-2 column">
+      <div class="care-results-count" id="care-results-count">
+        <%= @featured_products.length %> Produkte
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="row small-up-1 medium-up-2 large-up-3 care-products-grid">
-    <% products = @selected_category ? @filtered_products : @featured_products %>
-    <% products.each do |product| %>
-      <div class="column">
+<!-- Produkte -->
+<section class="care-products">
+  <% if @selected_category %>
+    <div class="row">
+      <div class="small-12 column">
+        <% cat = @categories.find { |c| c[:id] == @selected_category } %>
+        <p class="care-active-filter">
+          Kategorie: <strong><%= cat&.dig(:name) %></strong>
+          <%= link_to "× Zurücksetzen", care_products_path, class: "care-filter-reset" %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row small-up-1 medium-up-2 large-up-3 care-products-grid" id="care-products-grid">
+    <% @featured_products.each do |product| %>
+      <% cat_icon = @categories.find { |c| c[:id] == product[:category] }&.dig(:icon) %>
+      <% cat_name = @categories.find { |c| c[:id] == product[:category] }&.dig(:name) %>
+      <div class="column care-product-col"
+           data-name="<%= product[:name].downcase %>"
+           data-category="<%= product[:category] %>"
+           data-price="<%= product[:price_cents] %>"
+           data-rating="<%= product[:rating] %>"
+           data-reviews="<%= product[:reviews] %>">
         <div class="care-product-card">
           <% if product[:badge] %>
             <span class="care-product-badge"><%= product[:badge] %></span>
           <% end %>
+          <!-- Wunschliste-Herz -->
+          <button class="care-wishlist-btn"
+                  data-product-id="<%= product[:id] %>"
+                  data-product-name="<%= product[:name] %>"
+                  title="Zur Wunschliste hinzufügen">
+            ♡
+          </button>
           <div class="care-product-image">
             <div class="care-product-image-placeholder">
-              <% cat_icon = @categories.find { |c| c[:id] == product[:category] }&.dig(:icon) %>
               <span class="care-product-emoji"><%= cat_icon || "🧴" %></span>
             </div>
           </div>
           <div class="care-product-body">
-            <span class="care-product-category">
-              <% cat_name = @categories.find { |c| c[:id] == product[:category] }&.dig(:name) %>
-              <%= cat_name %>
-            </span>
+            <span class="care-product-category"><%= cat_name %></span>
             <h3 class="care-product-name"><%= product[:name] %></h3>
             <p class="care-product-description"><%= product[:description] %></p>
             <div class="care-product-rating">
               <% stars = product[:rating].round %>
-              <% stars.times do %>
-                <span class="care-star care-star-filled">★</span>
-              <% end %>
-              <% (5 - stars).times do %>
-                <span class="care-star">☆</span>
-              <% end %>
+              <% stars.times do %><span class="care-star care-star-filled">★</span><% end %>
+              <% (5 - stars).times do %><span class="care-star">☆</span><% end %>
               <span class="care-rating-value"><%= product[:rating] %></span>
               <span class="care-rating-count">(<%= product[:reviews] %> Bewertungen)</span>
             </div>
@@ -99,7 +180,7 @@
                         data-product-id="<%= product[:id] %>"
                         data-product-name="<%= product[:name] %>"
                         data-product-price="<%= product[:price] %>"
-                        data-product-emoji="<%= @categories.find { |c| c[:id] == product[:category] }&.dig(:icon) %>">
+                        data-product-emoji="<%= cat_icon %>">
                   In den Warenkorb
                 </button>
                 <%= link_to "Details", care_product_path(product[:id]), class: "care-btn-outline care-btn-detail-link" %>
@@ -110,7 +191,28 @@
       </div>
     <% end %>
   </div>
+
+  <!-- Keine Ergebnisse -->
+  <div class="row" id="care-no-results" style="display:none;">
+    <div class="small-12 column text-center care-no-results">
+      <span class="care-no-results-icon">🔍</span>
+      <h3>Keine Produkte gefunden</h3>
+      <p>Versuchen Sie einen anderen Suchbegriff oder setzen Sie die Filter zurück.</p>
+      <button class="care-btn-reset-search" id="care-btn-reset-search">Suche zurücksetzen</button>
+    </div>
+  </div>
 </section>
+
+<!-- Wunschliste-Panel -->
+<div class="care-wishlist-panel" id="care-wishlist-panel">
+  <div class="care-wishlist-header">
+    <h3>Meine Wunschliste</h3>
+    <button class="care-cart-close" id="care-wishlist-close">✕</button>
+  </div>
+  <div class="care-wishlist-items" id="care-wishlist-items">
+    <p class="care-cart-empty">Ihre Wunschliste ist leer.</p>
+  </div>
+</div>
 
 <!-- Vorteile / USPs -->
 <section class="care-benefits">

@@ -114,6 +114,7 @@
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
+//= require care_products
 //= require custom
 //= require_tree ./custom
 

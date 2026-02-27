@@ -1,0 +1,286 @@
+<% content_for :title, "#{@product[:name]} – Pflegeartikel" %>
+<% content_for :body_class, "care-products-page" %>
+<%= render "care_products/cart" %>
+
+<!-- Breadcrumb -->
+<section class="care-breadcrumb-bar">
+  <div class="row">
+    <div class="small-12 column">
+      <nav class="care-breadcrumb">
+        <%= link_to "Startseite", root_path %> &rsaquo;
+        <%= link_to "Pflegeartikel", care_products_path %> &rsaquo;
+        <span><%= @product[:name] %></span>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- Produkt-Detail -->
+<section class="care-product-detail">
+  <div class="row">
+    <!-- Produktbild -->
+    <div class="small-12 medium-5 column">
+      <div class="care-detail-image-wrap">
+        <% cat_icon = CareProductsController::CATEGORIES.find { |c| c[:id] == @product[:category] }&.dig(:icon) %>
+        <span class="care-detail-emoji"><%= cat_icon || "🧴" %></span>
+        <% if @product[:badge] %>
+          <span class="care-product-badge care-detail-badge"><%= @product[:badge] %></span>
+        <% end %>
+      </div>
+
+      <!-- Thumbnail-Leiste (dekorativ) -->
+      <div class="care-detail-thumbs">
+        <% 3.times do |i| %>
+          <div class="care-detail-thumb <%= "active" if i == 0 %>">
+            <span style="font-size: 1.4rem;"><%= cat_icon %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Produktinfo -->
+    <div class="small-12 medium-7 column">
+      <div class="care-detail-info">
+        <% cat_name = CareProductsController::CATEGORIES.find { |c| c[:id] == @product[:category] }&.dig(:name) %>
+        <span class="care-product-category"><%= cat_name %></span>
+
+        <h1 class="care-detail-title"><%= @product[:name] %></h1>
+
+        <!-- Bewertung -->
+        <div class="care-product-rating care-detail-rating">
+          <% stars = @product[:rating].round %>
+          <% stars.times do %>
+            <span class="care-star care-star-filled">★</span>
+          <% end %>
+          <% (5 - stars).times do %>
+            <span class="care-star">☆</span>
+          <% end %>
+          <span class="care-rating-value"><%= @product[:rating] %></span>
+          <span class="care-rating-count">(<%= @product[:reviews] %> Bewertungen)</span>
+        </div>
+
+        <!-- Preis -->
+        <div class="care-detail-price-block">
+          <span class="care-detail-price"><%= @product[:price] %></span>
+          <span class="care-detail-tax">inkl. MwSt., zzgl. Versand</span>
+        </div>
+
+        <!-- Beschreibung -->
+        <p class="care-detail-description"><%= @product[:description] %></p>
+
+        <!-- Eigenschaften -->
+        <ul class="care-detail-features">
+          <li>✓ Dermatologisch getestet</li>
+          <li>✓ Ohne Parabene und Silikone</li>
+          <li>✓ Nachhaltig verpackt</li>
+          <li>✓ Vegan &amp; tierversuchsfrei</li>
+        </ul>
+
+        <!-- Menge + Warenkorb -->
+        <div class="care-detail-actions">
+          <div class="care-qty-selector">
+            <button class="care-qty-btn" id="care-qty-minus">−</button>
+            <input type="number" class="care-qty-input" id="care-qty-input" value="1" min="1" max="99" readonly>
+            <button class="care-qty-btn" id="care-qty-plus">+</button>
+          </div>
+          <button class="care-btn-add-cart care-btn-detail-cart"
+                  data-product-id="<%= @product[:id] %>"
+                  data-product-name="<%= @product[:name] %>"
+                  data-product-price="<%= @product[:price] %>"
+                  data-product-emoji="<%= cat_icon %>"
+                  id="care-add-to-cart">
+            In den Warenkorb
+          </button>
+        </div>
+
+        <!-- Lieferhinweis -->
+        <div class="care-detail-shipping">
+          <span class="care-shipping-icon">🚚</span>
+          Kostenloser Versand ab 25 € &nbsp;|&nbsp; Lieferung in 2–3 Werktagen
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tab-Bereich: Beschreibung / Inhaltsstoffe / Bewertungen -->
+<section class="care-detail-tabs">
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-tabs-nav">
+        <button class="care-tab-btn active" data-tab="beschreibung">Beschreibung</button>
+        <button class="care-tab-btn" data-tab="inhaltsstoffe">Inhaltsstoffe</button>
+        <button class="care-tab-btn" data-tab="bewertungen">Bewertungen (<%= @product[:reviews] %>)</button>
+      </div>
+
+      <div class="care-tab-content active" id="tab-beschreibung">
+        <h3>Produktbeschreibung</h3>
+        <p><%= @product[:description] %></p>
+        <p>
+          Unser Produkt ist sorgfältig aus hochwertigen, natürlichen Inhaltsstoffen hergestellt.
+          Wir verzichten bewusst auf synthetische Duftstoffe, Parabene und Mineralöle.
+          Die dermatologisch geprüfte Formel ist für alle Hauttypen geeignet und besonders
+          schonend für empfindliche Haut.
+        </p>
+        <h4>Anwendung</h4>
+        <p>
+          Auf die gereinigte Haut auftragen und sanft einmassieren bis das Produkt
+          vollständig eingezogen ist. Für optimale Ergebnisse täglich anwenden.
+        </p>
+      </div>
+
+      <div class="care-tab-content" id="tab-inhaltsstoffe">
+        <h3>Inhaltsstoffe</h3>
+        <p class="care-ingredients-text">
+          Aqua, Glycerin, Cetearyl Alcohol, Caprylic/Capric Triglyceride,
+          Sodium Hyaluronate, Tocopheryl Acetate (Vitamin E), Aloe Barbadensis Leaf Juice,
+          Panthenol (Pro-Vitamin B5), Allantoin, Bisabolol, Xanthan Gum,
+          Sodium PCA, Citric Acid, Phenoxyethanol, Ethylhexylglycerin.
+        </p>
+        <div class="care-ingredients-highlights">
+          <div class="care-ingredient-item">
+            <span class="care-ingredient-icon">💧</span>
+            <strong>Hyaluronsäure</strong>
+            <span>Bindet Feuchtigkeit und polstert die Haut auf</span>
+          </div>
+          <div class="care-ingredient-item">
+            <span class="care-ingredient-icon">🌿</span>
+            <strong>Aloe Vera</strong>
+            <span>Beruhigt und kühlt gereizte Haut</span>
+          </div>
+          <div class="care-ingredient-item">
+            <span class="care-ingredient-icon">✨</span>
+            <strong>Vitamin E</strong>
+            <span>Schützt vor freien Radikalen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="care-tab-content" id="tab-bewertungen">
+        <h3>Kundenbewertungen</h3>
+        <div class="care-reviews-summary">
+          <div class="care-reviews-score">
+            <span class="care-score-big"><%= @product[:rating] %></span>
+            <div class="care-product-rating">
+              <% @product[:rating].round.times do %>
+                <span class="care-star care-star-filled">★</span>
+              <% end %>
+            </div>
+            <span class="care-score-label">von 5 Sternen</span>
+          </div>
+          <div class="care-reviews-bars">
+            <% [[5, 68], [4, 22], [3, 7], [2, 2], [1, 1]].each do |star, pct| %>
+              <div class="care-bar-row">
+                <span class="care-bar-label"><%= star %> ★</span>
+                <div class="care-bar-track">
+                  <div class="care-bar-fill" style="width:<%= pct %>%"></div>
+                </div>
+                <span class="care-bar-pct"><%= pct %>%</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Beispiel-Bewertungen -->
+        <% [
+          { name: "Maria S.", date: "15. Januar 2026", stars: 5,
+            text: "Absolut begeistert! Das Produkt hat meine Erwartungen weit übertroffen. Bereits nach einer Woche habe ich eine deutliche Verbesserung gespürt." },
+          { name: "Thomas K.", date: "3. Februar 2026", stars: 4,
+            text: "Sehr gute Qualität und angenehmer Duft. Bin bereits beim zweiten Kauf und werde es weiterhin bestellen." },
+          { name: "Anna L.", date: "20. Februar 2026", stars: 5,
+            text: "Endlich ein Produkt, das hält, was es verspricht. Die Haut fühlt sich nach der Anwendung wunderbar weich an." }
+        ].each do |review| %>
+          <div class="care-review-item">
+            <div class="care-review-header">
+              <span class="care-review-avatar"><%= review[:name][0] %></span>
+              <div>
+                <strong class="care-review-name"><%= review[:name] %></strong>
+                <span class="care-review-date"><%= review[:date] %></span>
+              </div>
+              <div class="care-review-stars">
+                <% review[:stars].times do %><span class="care-star care-star-filled">★</span><% end %>
+              </div>
+            </div>
+            <p class="care-review-text"><%= review[:text] %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Ähnliche Produkte -->
+<section class="care-related">
+  <div class="row">
+    <div class="small-12 column">
+      <h2 class="care-section-title">Das könnte Ihnen auch gefallen</h2>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-2 large-up-4">
+    <% related = CareProductsController::PRODUCTS.reject { |p| p[:id] == @product[:id] }.first(4) %>
+    <% related.each do |product| %>
+      <div class="column">
+        <div class="care-product-card">
+          <% if product[:badge] %>
+            <span class="care-product-badge"><%= product[:badge] %></span>
+          <% end %>
+          <div class="care-product-image">
+            <div class="care-product-image-placeholder">
+              <% rel_icon = CareProductsController::CATEGORIES.find { |c| c[:id] == product[:category] }&.dig(:icon) %>
+              <span class="care-product-emoji"><%= rel_icon || "🧴" %></span>
+            </div>
+          </div>
+          <div class="care-product-body">
+            <h3 class="care-product-name"><%= product[:name] %></h3>
+            <div class="care-product-footer">
+              <span class="care-product-price"><%= product[:price] %></span>
+              <%= link_to "Details", care_product_path(product[:id]), class: "care-btn-outline" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= javascript_tag do %>
+  // Tab-Wechsel
+  document.querySelectorAll(".care-tab-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll(".care-tab-btn").forEach(function(b) { b.classList.remove("active"); });
+      document.querySelectorAll(".care-tab-content").forEach(function(c) { c.classList.remove("active"); });
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  // Mengenselektor
+  var qtyInput = document.getElementById("care-qty-input");
+  document.getElementById("care-qty-minus").addEventListener("click", function() {
+    var v = parseInt(qtyInput.value);
+    if (v > 1) qtyInput.value = v - 1;
+  });
+  document.getElementById("care-qty-plus").addEventListener("click", function() {
+    var v = parseInt(qtyInput.value);
+    if (v < 99) qtyInput.value = v + 1;
+  });
+
+  // Warenkorb
+  document.getElementById("care-add-to-cart").addEventListener("click", function() {
+    var btn = this;
+    var qty = parseInt(qtyInput.value);
+    CareCart.add({
+      id: btn.dataset.productId,
+      name: btn.dataset.productName,
+      price: btn.dataset.productPrice,
+      emoji: btn.dataset.productEmoji,
+      qty: qty
+    });
+    btn.textContent = "✓ Hinzugefügt!";
+    btn.style.background = "#357a62";
+    setTimeout(function() {
+      btn.textContent = "In den Warenkorb";
+      btn.style.background = "";
+    }, 2000);
+  });
+<% end %>

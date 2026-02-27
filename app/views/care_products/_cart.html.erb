@@ -1,0 +1,29 @@
+<!-- Warenkorb-Icon (nur auf Pflegeartikel-Seiten) -->
+<div class="care-cart-wrapper">
+  <button class="care-cart-trigger" id="care-cart-trigger" title="Warenkorb">
+    🛒
+    <span class="care-cart-badge" id="care-cart-badge" style="display:none;">0</span>
+  </button>
+
+  <!-- Slide-In Panel -->
+  <div class="care-cart-panel" id="care-cart-panel">
+    <div class="care-cart-panel-header">
+      <h3>Ihr Warenkorb</h3>
+      <button class="care-cart-close" id="care-cart-close">✕</button>
+    </div>
+    <div class="care-cart-panel-items" id="care-cart-panel-items">
+      <p class="care-cart-empty">Ihr Warenkorb ist leer.</p>
+    </div>
+    <div class="care-cart-panel-footer">
+      <div class="care-cart-total-row">
+        <span>Gesamt:</span>
+        <strong id="care-cart-total">0,00 €</strong>
+      </div>
+      <button class="care-btn-checkout">Zur Kasse</button>
+    </div>
+  </div>
+  <div class="care-cart-overlay" id="care-cart-overlay"></div>
+</div>
+
+<!-- Toast-Benachrichtigung -->
+<div class="care-toast" id="care-toast"></div>

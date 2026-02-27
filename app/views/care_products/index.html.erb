@@ -1,5 +1,6 @@
 <% content_for :title, "Pflegeartikel – Naturpflege für Ihr Wohlbefinden" %>
 <% content_for :body_class, "care-products-page" %>
+<%= render "care_products/cart" %>
 
 <!-- Hero-Bereich -->
 <section class="care-hero">
@@ -92,7 +93,17 @@
             </div>
             <div class="care-product-footer">
               <span class="care-product-price"><%= product[:price] %></span>
-              <button class="care-btn-add-cart">In den Warenkorb</button>
+              <div class="care-product-actions">
+                <button class="care-btn-add-cart"
+                        data-care-add-cart="true"
+                        data-product-id="<%= product[:id] %>"
+                        data-product-name="<%= product[:name] %>"
+                        data-product-price="<%= product[:price] %>"
+                        data-product-emoji="<%= @categories.find { |c| c[:id] == product[:category] }&.dig(:icon) %>">
+                  In den Warenkorb
+                </button>
+                <%= link_to "Details", care_product_path(product[:id]), class: "care-btn-outline care-btn-detail-link" %>
+              </div>
             </div>
           </div>
         </div>

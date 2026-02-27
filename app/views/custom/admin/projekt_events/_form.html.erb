@@ -31,6 +31,12 @@
 
   <div class="row">
     <div class='column small-12 medium-6'>
+      <%= f.number_field :max_attendees, min: 1, placeholder: t("custom.admin.projekt_events.edit.max_attendees_placeholder") %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='column small-12 medium-6'>
       <%= f.text_field :language %>
     </div>
   </div>

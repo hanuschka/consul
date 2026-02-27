@@ -10,3 +10,20 @@ en:
         past: Past
       list_item_component:
         cta_button: Show more
+      registration:
+        confirmed: "You have been successfully registered for the event."
+        waitlisted: "The event is fully booked. You have been added to the waitlist."
+        cancelled: "Your registration has been cancelled."
+        error: "Registration failed."
+        fully_booked: "Fully booked"
+        spots_available: "%{available} of %{total} spots available"
+        register: "Register"
+        cancel: "Cancel registration"
+        login_to_register: "Log in to register"
+        first_name: "First name"
+        last_name: "Last name"
+        email: "Email"
+        guest_registered: "You have been successfully registered for the event."
+        already_registered: "You have already registered for this event."
+        status_confirmed: "Registered"
+        status_waitlisted: "Waitlisted"

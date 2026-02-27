@@ -672,6 +672,7 @@ de:
         edit:
           title: Veranstaltung bearbeiten
           accessibility_features: Barrierefreiheit
+          max_attendees_placeholder: "Leer lassen für unbegrenzt"
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite
@@ -859,6 +860,15 @@ de:
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
+          registrations_confirmed: "%{confirmed} / %{max} bestätigt"
+          registrations_waitlisted:
+            one: "%{count} auf Warteliste"
+            other: "%{count} auf Warteliste"
+          registrations_details: "Anmeldungen anzeigen"
+          registration_user: "Benutzer"
+          registration_status: "Status"
+          registration_date: "Anmeldedatum"
+          registration_deleted: "Anmeldung wurde gelöscht."
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen

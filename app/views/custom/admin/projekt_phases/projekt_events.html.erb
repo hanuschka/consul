@@ -69,12 +69,64 @@
                 <strong><%= t("custom.admin.projekt_phases.projekt_events.event_created_at") %>:</strong>
                 <%= event.created_at.to_date %>
               </p>
+              <% if event.registration_enabled? %>
+                <p>
+                  <span class="label success">
+                    <%= t("custom.admin.projekt_phases.projekt_events.registrations_confirmed",
+                          confirmed: event.projekt_event_registrations.confirmed.count,
+                          max: event.max_attendees) %>
+                  </span>
+                  <% waitlisted_count = event.projekt_event_registrations.waitlisted.count %>
+                  <% if waitlisted_count > 0 %>
+                    <span class="label warning">
+                      <%= t("custom.admin.projekt_phases.projekt_events.registrations_waitlisted",
+                            count: waitlisted_count) %>
+                    </span>
+                  <% end %>
+                </p>
+              <% end %>
             </div>
             <div class="column medium-6">
               <%= image_tag event.image.variant(:projekt_event_thumb) if event.image.present? %>
             </div>
 
           </div>
+          <% if event.registration_enabled? && event.projekt_event_registrations.any? %>
+            <details>
+              <summary><%= t("custom.admin.projekt_phases.projekt_events.registrations_details") %></summary>
+              <table class="margin-top">
+                <thead>
+                  <tr>
+                    <th><%= t("custom.admin.projekt_phases.projekt_events.registration_user") %></th>
+                    <th><%= t("custom.admin.projekt_phases.projekt_events.registration_status") %></th>
+                    <th><%= t("custom.admin.projekt_phases.projekt_events.registration_date") %></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% event.projekt_event_registrations.order(:created_at).each do |registration| %>
+                    <tr>
+                      <td>
+                        <%= registration.display_name %>
+                        <% if registration.guest? %>
+                          <br><small><%= registration.email %></small>
+                        <% end %>
+                      </td>
+                      <td><%= registration.status %></td>
+                      <td><%= l(registration.created_at, format: :short) %></td>
+                      <td>
+                        <%= link_to "",
+                              polymorphic_path([@namespace, event, registration]),
+                              method: :delete,
+                              class: "destroy-icon",
+                              data: { confirm: t("custom.shared.destroy_confirmation") } %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </details>
+          <% end %>
           <%= link_to t("custom.admin.projekt_phases.projekt_events.send_notifications_button"), polymorphic_path([@namespace, event], action: :send_notifications), method: :post, class: "float-left" %>
           <%= link_to "", polymorphic_path([@namespace, event]), method: :delete, class: "destroy-icon float-right", data: { confirm: t("custom.shared.destroy_confirmation") } %>
           <%= link_to "", polymorphic_path([@namespace, event], action: :edit), class: "edit-icon float-right" %>

@@ -272,6 +272,10 @@ de:
         comments_enabled: Offene Antwort aktiviert
       projekt_question/translation:
         title: Frage
+      projekt_event_registration:
+        first_name: Vorname
+        last_name: Nachname
+        email: E-Mail
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

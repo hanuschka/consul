@@ -420,6 +420,7 @@ en:
         edit:
           title: Edit event
           accessibility_features: Accessibility Features
+          max_attendees_placeholder: "Leave empty for unlimited"
       projekt_phases:
         nav_bar:
           duration: Duration
@@ -558,6 +559,15 @@ en:
           page_title: Events
           send_notifications_button: Send notifications
           notifications_sent_notice: Notifications sent sucessfully
+          registrations_confirmed: "%{confirmed} / %{max} confirmed"
+          registrations_waitlisted:
+            one: "%{count} waitlisted"
+            other: "%{count} waitlisted"
+          registrations_details: "Show registrations"
+          registration_user: "User"
+          registration_status: "Status"
+          registration_date: "Registered at"
+          registration_deleted: "Registration has been deleted."
         projekt_livestreams:
           page_title: Livestreams
           all_livestreams: All Livestreams

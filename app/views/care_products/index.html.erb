@@ -22,6 +22,9 @@
         <a href="#produkte" class="button care-btn-primary care-btn-hero-ghost">
           Alle Produkte
         </a>
+        <div class="care-hero-quiz-hint">
+          Noch unsicher? <button class="care-quiz-trigger" id="care-quiz-trigger">✨ Hauttyp-Quiz starten</button>
+        </div>
       </div>
     </div>
   </div>
@@ -342,3 +345,15 @@
     </div>
   </div>
 </section>
+
+<!-- Zuletzt angesehen -->
+<section class="care-recently-viewed" id="care-recently-viewed" style="display:none;">
+  <div class="row">
+    <div class="small-12 column">
+      <h2 class="care-section-title">Zuletzt angesehen</h2>
+    </div>
+  </div>
+  <div class="row" id="care-recently-viewed-grid"></div>
+</section>
+
+<%= render "care_products/quiz" %>

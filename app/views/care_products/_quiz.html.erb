@@ -1,0 +1,118 @@
+<!-- Hauttyp-Quiz Modal -->
+<div class="care-quiz-backdrop" id="care-quiz-backdrop"></div>
+<div class="care-quiz-modal" id="care-quiz-modal" role="dialog" aria-modal="true" aria-label="Hauttyp-Quiz">
+  <button class="care-quiz-close" id="care-quiz-close">✕</button>
+
+  <!-- Fortschrittsbalken -->
+  <div class="care-quiz-progress">
+    <div class="care-quiz-progress-bar" id="care-quiz-progress-bar" style="width:0%"></div>
+  </div>
+
+  <!-- Schritte -->
+  <div class="care-quiz-steps">
+
+    <!-- Schritt 0: Intro -->
+    <div class="care-quiz-step active" data-step="0">
+      <div class="care-quiz-icon">💆</div>
+      <h2 class="care-quiz-title">Finden Sie Ihre perfekte Pflege</h2>
+      <p class="care-quiz-subtitle">
+        Beantworten Sie 4 kurze Fragen – wir empfehlen Ihnen passende Produkte
+        aus unserem Sortiment.
+      </p>
+      <button class="care-quiz-btn-start care-btn-quiz-primary" data-next="1">
+        Quiz starten →
+      </button>
+    </div>
+
+    <!-- Schritt 1 -->
+    <div class="care-quiz-step" data-step="1">
+      <div class="care-quiz-step-label">Frage 1 von 4</div>
+      <h3 class="care-quiz-question">Wie fühlt sich Ihre Haut nach dem Waschen an?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="1" data-val="trocken">
+          🏜 Trocken und gespannt
+        </button>
+        <button class="care-quiz-option" data-q="1" data-val="normal">
+          🌤 Normal – weder zu trocken noch zu fettig
+        </button>
+        <button class="care-quiz-option" data-q="1" data-val="fettig">
+          💦 Glänzend und fettig
+        </button>
+        <button class="care-quiz-option" data-q="1" data-val="gemischt">
+          🌓 Unterschiedlich – T-Zone fettig, Wangen trocken
+        </button>
+      </div>
+    </div>
+
+    <!-- Schritt 2 -->
+    <div class="care-quiz-step" data-step="2">
+      <div class="care-quiz-step-label">Frage 2 von 4</div>
+      <h3 class="care-quiz-question">Haben Sie empfindliche Haut?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="2" data-val="ja">
+          🌺 Ja – reagiert schnell auf neue Produkte
+        </button>
+        <button class="care-quiz-option" data-q="2" data-val="manchmal">
+          🌼 Manchmal – bei bestimmten Inhaltsstoffen
+        </button>
+        <button class="care-quiz-option" data-q="2" data-val="nein">
+          💪 Nein – verträgt fast alles
+        </button>
+      </div>
+    </div>
+
+    <!-- Schritt 3 -->
+    <div class="care-quiz-step" data-step="3">
+      <div class="care-quiz-step-label">Frage 3 von 4</div>
+      <h3 class="care-quiz-question">Was ist Ihr Hauptpflegeziel?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="3" data-val="feuchtigkeit">
+          💧 Feuchtigkeit und Strahlen
+        </button>
+        <button class="care-quiz-option" data-q="3" data-val="antiaging">
+          ⏳ Anti-Aging und Faltenreduktion
+        </button>
+        <button class="care-quiz-option" data-q="3" data-val="klärend">
+          ✨ Poren klären und Unreinheiten reduzieren
+        </button>
+        <button class="care-quiz-option" data-q="3" data-val="schutz">
+          🛡 Schutz und Stärkung der Hautbarriere
+        </button>
+      </div>
+    </div>
+
+    <!-- Schritt 4 -->
+    <div class="care-quiz-step" data-step="4">
+      <div class="care-quiz-step-label">Frage 4 von 4</div>
+      <h3 class="care-quiz-question">Welche Textur bevorzugen Sie?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="4" data-val="leicht">
+          🪶 Leichtes Gel oder Fluid
+        </button>
+        <button class="care-quiz-option" data-q="4" data-val="mittel">
+          🧴 Mittelschwere Lotion
+        </button>
+        <button class="care-quiz-option" data-q="4" data-val="reich">
+          🍯 Reichhaltige Creme oder Balsam
+        </button>
+      </div>
+    </div>
+
+    <!-- Schritt 5: Ergebnis -->
+    <div class="care-quiz-step" data-step="5">
+      <div class="care-quiz-icon">🎯</div>
+      <h2 class="care-quiz-title" id="care-quiz-result-title">Ihr Hauttyp</h2>
+      <p class="care-quiz-result-desc" id="care-quiz-result-desc"></p>
+      <div class="care-quiz-recommendations" id="care-quiz-recommendations"></div>
+      <div class="care-quiz-result-actions">
+        <button class="care-quiz-btn-restart care-btn-quiz-secondary" id="care-quiz-restart">
+          Quiz wiederholen
+        </button>
+        <button class="care-quiz-btn-close care-btn-quiz-primary" id="care-quiz-finish">
+          Produkte ansehen
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -320,4 +320,13 @@
       btn.style.background = "";
     }, 2000);
   });
+
+  // Zuletzt angesehen – dieses Produkt speichern
+  CareRecentlyViewed.track({
+    id: "<%= @product[:id] %>",
+    name: "<%= j @product[:name] %>",
+    price: "<%= @product[:price] %>",
+    emoji: "<%= CareProductsController::CATEGORIES.find { |c| c[:id] == @product[:category] }&.dig(:icon) %>",
+    url: "<%= care_product_path(@product[:id]) %>"
+  });
 <% end %>

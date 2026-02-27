@@ -529,6 +529,197 @@ var CareReviewForm = (function() {
   };
 })();
 
+// ---- Hauttyp-Quiz ----
+var CareQuiz = (function() {
+  "use strict";
+
+  var answers = {};
+  var currentStep = 0;
+  var totalQuestions = 4;
+
+  var RESULTS = {
+    "trocken-reich":    { type: "Trockene Haut",    desc: "Ihre Haut braucht intensive Pflege und viel Feuchtigkeit. Wir empfehlen reichhaltige Cremes mit Hyaluron und Sheabutter.", products: [1, 7] },
+    "fettig-leicht":   { type: "Fettige Haut",     desc: "Ihre Haut produziert viel Talg. Leichte, nicht-komedogene Produkte sind ideal.", products: [3, 4] },
+    "gemischt-mittel": { type: "Mischhaut",         desc: "T-Zone und Wangen brauchen unterschiedliche Pflege. Ausgewogene Produkte für jeden Bereich.", products: [1, 3] },
+    "normal-mittel":   { type: "Normale Haut",      desc: "Sie haben die ideale Basis! Erhalten Sie das Gleichgewicht mit leichter täglicher Pflege.", products: [5, 2] },
+    "empfindlich":     { type: "Empfindliche Haut", desc: "Ihre Haut reagiert sensibel. Parfümfreie Produkte mit beruhigenden Inhaltsstoffen sind perfekt.", products: [6, 1] }
+  };
+
+  var ALL_PRODUCTS = [
+    { id: 1, name: "Feuchtigkeitscreme Premium", price: "24,99 €", emoji: "💧", url: "/pflegeartikel/1" },
+    { id: 2, name: "Nährendes Haarshampoo",      price: "12,49 €", emoji: "✨", url: "/pflegeartikel/2" },
+    { id: 3, name: "Verwöhn-Duschgel",           price: "8,99 €",  emoji: "🧴", url: "/pflegeartikel/3" },
+    { id: 4, name: "Whitening Zahnpasta",         price: "6,99 €",  emoji: "🦷", url: "/pflegeartikel/4" },
+    { id: 5, name: "Sonnenschutz LSF 50",         price: "18,99 €", emoji: "☀️", url: "/pflegeartikel/5" },
+    { id: 6, name: "Baby Pflegelotion",           price: "9,99 €",  emoji: "🌸", url: "/pflegeartikel/6" },
+    { id: 7, name: "Anti-Aging Serum",            price: "39,99 €", emoji: "💧", url: "/pflegeartikel/7" }
+  ];
+
+  function getResult() {
+    var sensitivity = answers[2] || "nein";
+    if (sensitivity === "ja") return RESULTS["empfindlich"];
+    var skinType = answers[1] || "normal";
+    var texture = answers[4] || "mittel";
+    var key = skinType + "-" + texture;
+    return RESULTS[key] || RESULTS["normal-mittel"];
+  }
+
+  function showStep(n) {
+    document.querySelectorAll(".care-quiz-step").forEach(function(s) {
+      s.classList.remove("active");
+    });
+    var step = document.querySelector("[data-step='" + n + "']");
+    if (step) step.classList.add("active");
+
+    var pct = n === 0 ? 0 : Math.round((n / (totalQuestions + 1)) * 100);
+    var bar = document.getElementById("care-quiz-progress-bar");
+    if (bar) bar.style.width = pct + "%";
+    currentStep = n;
+  }
+
+  function showResult() {
+    var result = getResult();
+    var titleEl = document.getElementById("care-quiz-result-title");
+    var descEl  = document.getElementById("care-quiz-result-desc");
+    var recEl   = document.getElementById("care-quiz-recommendations");
+
+    if (titleEl) titleEl.textContent = "Ihr Hauttyp: " + result.type;
+    if (descEl)  descEl.textContent  = result.desc;
+
+    if (recEl) {
+      var html = "<h4>Empfohlene Produkte für Sie:</h4><div class='care-quiz-rec-grid'>";
+      result.products.forEach(function(pid) {
+        var p = ALL_PRODUCTS.find(function(x) { return x.id === pid; });
+        if (!p) return;
+        html += "<div class='care-quiz-rec-card'>";
+        html += "<span class='care-quiz-rec-emoji'>" + p.emoji + "</span>";
+        html += "<div class='care-quiz-rec-info'>";
+        html += "<strong>" + p.name + "</strong>";
+        html += "<span>" + p.price + "</span>";
+        html += "</div>";
+        html += "<a href='" + p.url + "' class='care-quiz-rec-btn'>Details</a>";
+        html += "</div>";
+      });
+      html += "</div>";
+      recEl.innerHTML = html;
+    }
+
+    showStep(5);
+  }
+
+  function open() {
+    document.getElementById("care-quiz-modal").classList.add("open");
+    document.getElementById("care-quiz-backdrop").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function close() {
+    document.getElementById("care-quiz-modal").classList.remove("open");
+    document.getElementById("care-quiz-backdrop").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function reset() {
+    answers = {};
+    currentStep = 0;
+    document.querySelectorAll(".care-quiz-option").forEach(function(o) {
+      o.classList.remove("selected");
+    });
+    showStep(0);
+  }
+
+  function init() {
+    var trigger = document.getElementById("care-quiz-trigger");
+    if (trigger) trigger.addEventListener("click", open);
+
+    var closeBtn = document.getElementById("care-quiz-close");
+    if (closeBtn) closeBtn.addEventListener("click", close);
+
+    var backdrop = document.getElementById("care-quiz-backdrop");
+    if (backdrop) backdrop.addEventListener("click", close);
+
+    var startBtn = document.querySelector("[data-next='1']");
+    if (startBtn) startBtn.addEventListener("click", function() { showStep(1); });
+
+    var restartBtn = document.getElementById("care-quiz-restart");
+    if (restartBtn) restartBtn.addEventListener("click", reset);
+
+    var finishBtn = document.getElementById("care-quiz-finish");
+    if (finishBtn) finishBtn.addEventListener("click", close);
+
+    document.querySelectorAll(".care-quiz-option").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var q = parseInt(btn.dataset.q);
+        answers[q] = btn.dataset.val;
+
+        // Highlight selected
+        document.querySelectorAll("[data-q='" + q + "']").forEach(function(b) {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+
+        // Kurze Pause, dann weiter
+        setTimeout(function() {
+          if (q < totalQuestions) {
+            showStep(q + 1);
+          } else {
+            showResult();
+          }
+        }, 350);
+      });
+    });
+  }
+
+  return { init: init, open: open };
+})();
+
+// ---- Recently Viewed ----
+var CareRecentlyViewed = (function() {
+  "use strict";
+  var KEY = "care_recently_viewed";
+  var MAX = 4;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function track(product) {
+    var items = load().filter(function(i) { return String(i.id) !== String(product.id); });
+    items.unshift(product);
+    if (items.length > MAX) items = items.slice(0, MAX);
+    localStorage.setItem(KEY, JSON.stringify(items));
+  }
+
+  function render() {
+    var section = document.getElementById("care-recently-viewed");
+    var grid    = document.getElementById("care-recently-viewed-grid");
+    if (!section || !grid) return;
+
+    var items = load();
+    if (items.length === 0) return;
+
+    section.style.display = "block";
+
+    var html = "";
+    items.forEach(function(item) {
+      html += "<div class='small-12 medium-6 large-3 column'>";
+      html += "<div class='care-recent-card'>";
+      html += "<div class='care-recent-image'><span class='care-recent-emoji'>" + (item.emoji || "🧴") + "</span></div>";
+      html += "<div class='care-recent-body'>";
+      html += "<h4 class='care-recent-name'>" + item.name + "</h4>";
+      html += "<span class='care-recent-price'>" + item.price + "</span>";
+      html += "<a href='" + item.url + "' class='care-btn-outline care-recent-link'>Ansehen</a>";
+      html += "</div></div></div>";
+    });
+    grid.innerHTML = html;
+  }
+
+  function init() { render(); }
+
+  return { init: init, track: track };
+})();
+
 // ---- Bootstrap ----
 $(document).on("turbolinks:load", function() {
   CareCart.init();
@@ -539,4 +730,6 @@ $(document).on("turbolinks:load", function() {
   CarePromoBar.init();
   CareCoupon.init();
   CareReviewForm.init();
+  CareQuiz.init();
+  CareRecentlyViewed.init();
 });

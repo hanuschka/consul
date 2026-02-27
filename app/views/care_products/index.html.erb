@@ -1,0 +1,158 @@
+<% content_for :title, "Pflegeartikel – Naturpflege für Ihr Wohlbefinden" %>
+<% content_for :body_class, "care-products-page" %>
+
+<!-- Hero-Bereich -->
+<section class="care-hero">
+  <div class="care-hero-overlay">
+    <div class="row">
+      <div class="small-12 column text-center">
+        <h1 class="care-hero-title">Natürliche Pflegeartikel</h1>
+        <p class="care-hero-subtitle">
+          Entdecken Sie unsere sorgfältig ausgewählten Pflegeprodukte –
+          für Ihr tägliches Wohlbefinden
+        </p>
+        <a href="#produkte" class="button care-btn-primary">
+          Jetzt entdecken
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Kategorien -->
+<section class="care-categories">
+  <div class="row">
+    <div class="small-12 column">
+      <h2 class="care-section-title">Unsere Kategorien</h2>
+      <p class="care-section-subtitle">Finden Sie die perfekte Pflege für jeden Bedarf</p>
+    </div>
+  </div>
+  <div class="row small-up-2 medium-up-3 large-up-6 care-categories-grid">
+    <% @categories.each do |category| %>
+      <div class="column">
+        <%= link_to care_products_path(category: category[:id]), class: "care-category-card #{"active" if params[:category] == category[:id]}" do %>
+          <span class="care-category-icon"><%= category[:icon] %></span>
+          <h3 class="care-category-name"><%= category[:name] %></h3>
+          <p class="care-category-desc"><%= category[:description] %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- Produkte -->
+<section class="care-products" id="produkte">
+  <div class="row">
+    <div class="small-12 column">
+      <% if @selected_category %>
+        <% cat = @categories.find { |c| c[:id] == @selected_category } %>
+        <h2 class="care-section-title"><%= cat&.dig(:name) || "Produkte" %></h2>
+        <p class="care-section-subtitle">
+          <%= @filtered_products.length %> Produkte gefunden &nbsp;
+          <%= link_to "Alle anzeigen", care_products_path, class: "care-filter-reset" %>
+        </p>
+      <% else %>
+        <h2 class="care-section-title">Empfohlene Produkte</h2>
+        <p class="care-section-subtitle">Unsere meistverkauften Pflegeartikel</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row small-up-1 medium-up-2 large-up-3 care-products-grid">
+    <% products = @selected_category ? @filtered_products : @featured_products %>
+    <% products.each do |product| %>
+      <div class="column">
+        <div class="care-product-card">
+          <% if product[:badge] %>
+            <span class="care-product-badge"><%= product[:badge] %></span>
+          <% end %>
+          <div class="care-product-image">
+            <div class="care-product-image-placeholder">
+              <% cat_icon = @categories.find { |c| c[:id] == product[:category] }&.dig(:icon) %>
+              <span class="care-product-emoji"><%= cat_icon || "🧴" %></span>
+            </div>
+          </div>
+          <div class="care-product-body">
+            <span class="care-product-category">
+              <% cat_name = @categories.find { |c| c[:id] == product[:category] }&.dig(:name) %>
+              <%= cat_name %>
+            </span>
+            <h3 class="care-product-name"><%= product[:name] %></h3>
+            <p class="care-product-description"><%= product[:description] %></p>
+            <div class="care-product-rating">
+              <% stars = product[:rating].round %>
+              <% stars.times do %>
+                <span class="care-star care-star-filled">★</span>
+              <% end %>
+              <% (5 - stars).times do %>
+                <span class="care-star">☆</span>
+              <% end %>
+              <span class="care-rating-value"><%= product[:rating] %></span>
+              <span class="care-rating-count">(<%= product[:reviews] %> Bewertungen)</span>
+            </div>
+            <div class="care-product-footer">
+              <span class="care-product-price"><%= product[:price] %></span>
+              <button class="care-btn-add-cart">In den Warenkorb</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- Vorteile / USPs -->
+<section class="care-benefits">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <h2 class="care-section-title care-section-title-light">Warum uns wählen?</h2>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-2 large-up-4">
+    <div class="column">
+      <div class="care-benefit-card">
+        <div class="care-benefit-icon">🌿</div>
+        <h3>Natürliche Inhaltsstoffe</h3>
+        <p>Alle Produkte bestehen aus sorgfältig ausgewählten, natürlichen Rohstoffen ohne schädliche Zusätze.</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-benefit-card">
+        <div class="care-benefit-icon">🔬</div>
+        <h3>Dermatologisch getestet</h3>
+        <p>Jedes Produkt wurde durch unabhängige Dermatologinnen und Dermatologen geprüft und zertifiziert.</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-benefit-card">
+        <div class="care-benefit-icon">♻️</div>
+        <h3>Nachhaltig verpackt</h3>
+        <p>Wir verwenden recycelbare und umweltfreundliche Verpackungen für eine bessere Zukunft.</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-benefit-card">
+        <div class="care-benefit-icon">🚚</div>
+        <h3>Schnelle Lieferung</h3>
+        <p>Kostenloser Versand ab 25 € – Ihre Bestellung kommt innerhalb von 2–3 Werktagen an.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="care-newsletter">
+  <div class="row">
+    <div class="small-12 medium-8 medium-centered column text-center">
+      <h2 class="care-newsletter-title">Bleiben Sie informiert</h2>
+      <p class="care-newsletter-text">
+        Melden Sie sich für unseren Newsletter an und erhalten Sie exklusive Angebote,
+        Pflegetipps und als Willkommensgeschenk 10 % Rabatt auf Ihre erste Bestellung.
+      </p>
+      <div class="care-newsletter-form">
+        <input type="email" class="care-newsletter-input" placeholder="Ihre E-Mail-Adresse">
+        <button class="care-btn-newsletter">Jetzt anmelden</button>
+      </div>
+    </div>
+  </div>
+</section>

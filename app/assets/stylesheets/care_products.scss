@@ -1,0 +1,397 @@
+// ============================================================
+// Pflegeartikel – Care Products Page Styles
+// ============================================================
+
+// Variables
+$care-primary:    #4a9d7f;
+$care-primary-dk: #357a62;
+$care-secondary:  #f5a623;
+$care-light:      #f9fafb;
+$care-dark:       #2c3e50;
+$care-gray:       #718096;
+$care-border:     #e2e8f0;
+$care-radius:     12px;
+$care-shadow:     0 4px 20px rgba(0, 0, 0, 0.08);
+$care-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.15);
+
+// ---- Hero ----
+.care-hero {
+  position: relative;
+  background: linear-gradient(135deg, $care-primary 0%, darken($care-primary, 15%) 100%);
+  padding: 100px 0 80px;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 120%;
+    height: 200%;
+    background: radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .care-hero-overlay {
+    position: relative;
+    z-index: 1;
+  }
+
+  .care-hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+    @media (max-width: 640px) { font-size: 2rem; }
+  }
+
+  .care-hero-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.9);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+}
+
+// ---- Shared section styles ----
+.care-section-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: $care-dark;
+  margin-bottom: 8px;
+  text-align: center;
+
+  &.care-section-title-light { color: #fff; }
+}
+
+.care-section-subtitle {
+  text-align: center;
+  color: $care-gray;
+  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+// ---- Buttons ----
+.care-btn-primary {
+  display: inline-block;
+  background: #fff;
+  color: $care-primary;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+
+  &:hover {
+    background: $care-secondary;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    text-decoration: none;
+  }
+}
+
+.care-btn-add-cart {
+  background: $care-primary;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: $care-primary-dk;
+    transform: translateY(-1px);
+  }
+}
+
+.care-btn-newsletter {
+  background: $care-primary;
+  color: #fff;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+
+  &:hover { background: $care-primary-dk; }
+}
+
+.care-filter-reset {
+  font-size: 0.875rem;
+  color: $care-primary;
+  text-decoration: underline;
+
+  &:hover { color: $care-primary-dk; }
+}
+
+// ---- Categories ----
+.care-categories {
+  padding: 64px 0 40px;
+  background: $care-light;
+
+  .care-categories-grid {
+    margin-top: 8px;
+  }
+}
+
+.care-category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 16px 24px;
+  background: #fff;
+  border-radius: $care-radius;
+  border: 2px solid transparent;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: $care-shadow;
+
+  &:hover, &.active {
+    border-color: $care-primary;
+    box-shadow: $care-shadow-hover;
+    transform: translateY(-4px);
+    text-decoration: none;
+  }
+
+  &.active {
+    background: lighten($care-primary, 48%);
+  }
+
+  .care-category-icon {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .care-category-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $care-dark;
+    margin-bottom: 6px;
+  }
+
+  .care-category-desc {
+    font-size: 0.8rem;
+    color: $care-gray;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// ---- Products Grid ----
+.care-products {
+  padding: 56px 0 64px;
+  background: #fff;
+}
+
+.care-products-grid {
+  margin-top: 8px;
+}
+
+.care-product-card {
+  position: relative;
+  background: #fff;
+  border-radius: $care-radius;
+  border: 1px solid $care-border;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: $care-shadow;
+  transition: all 0.25s ease;
+
+  &:hover {
+    box-shadow: $care-shadow-hover;
+    transform: translateY(-4px);
+  }
+}
+
+.care-product-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: $care-secondary;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  z-index: 1;
+  letter-spacing: 0.03em;
+}
+
+.care-product-image {
+  background: linear-gradient(135deg, lighten($care-primary, 42%) 0%, lighten($care-primary, 52%) 100%);
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-product-image-placeholder {
+  text-align: center;
+}
+
+.care-product-emoji {
+  font-size: 4rem;
+  display: block;
+}
+
+.care-product-body {
+  padding: 20px;
+}
+
+.care-product-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $care-primary;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.care-product-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $care-dark;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.care-product-description {
+  font-size: 0.875rem;
+  color: $care-gray;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.care-product-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.care-star {
+  color: #d1d5db;
+  font-size: 1rem;
+
+  &.care-star-filled {
+    color: $care-secondary;
+  }
+}
+
+.care-rating-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: $care-dark;
+  margin-left: 4px;
+}
+
+.care-rating-count {
+  font-size: 0.8rem;
+  color: $care-gray;
+}
+
+.care-product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.care-product-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: $care-primary;
+}
+
+// ---- Benefits ----
+.care-benefits {
+  padding: 72px 0;
+  background: linear-gradient(135deg, $care-primary 0%, darken($care-primary, 12%) 100%);
+}
+
+.care-benefit-card {
+  text-align: center;
+  padding: 32px 20px;
+
+  .care-benefit-icon {
+    font-size: 2.8rem;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+// ---- Newsletter ----
+.care-newsletter {
+  padding: 72px 0;
+  background: $care-light;
+}
+
+.care-newsletter-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $care-dark;
+  margin-bottom: 12px;
+}
+
+.care-newsletter-text {
+  font-size: 1rem;
+  color: $care-gray;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.care-newsletter-form {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.care-newsletter-input {
+  flex: 1;
+  border: 1px solid $care-border;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  outline: none;
+
+  &:focus {
+    border-color: $care-primary;
+    box-shadow: none;
+  }
+}

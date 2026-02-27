@@ -4,7 +4,13 @@
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.resource_hidden.text1", text: @resource_text) %>
+    <%= sanitize(
+      t("mailers.resource_hidden.text1_html",
+        text_link: link_to(content_tag(:b, @resource_text), polymorphic_url(@resource))
+      ),
+      tags: %w[a b],
+      attributes: %w[href]
+    ) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

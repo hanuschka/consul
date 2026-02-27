@@ -40,7 +40,7 @@ en:
     resource_hidden:
       subject: Your proposal violates the admission conditions.
       hi: "Hello %{username},"
-      text1: "We have checked your topic proposal: %{text}."
+      text1_html: "We have checked your topic proposal: %{text_link}."
       text2: "Unfortunately, it violates the admission conditions of our topic selection. We have therefore removed your proposal."
       text3: You can read the admission conditions %{netiquette_link}.
       netiquette_link_text: here

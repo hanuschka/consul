@@ -42,7 +42,7 @@ de:
     resource_hidden:
       subject: Ihr Vorschlag verstößt gegen die Zulassungsbedingungen.
       hi: "Hallo %{username},"
-      text1: "wir haben Ihren Themenvorschlag %{text} geprüft."
+      text1_html: "wir haben Ihren Themenvorschlag %{text_link} geprüft."
       text2: "Leider verstößt er gegen die Zulassungsbedingungen unserer Themenwahl. Wir haben Ihren Vorschlag daher entfernt."
       text3: Die Zulassungsbedingungen können Sie %{netiquette_link} nachlesen.
       netiquette_link_text: hier

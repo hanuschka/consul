@@ -23,7 +23,8 @@ module ApplicationHelper
       sentiment_id: sentiment_id || params[:sentiment_id],
       category_ids: category_ids || params[:category_ids],
       section: section || params[:section],
-      annotation_id: params[:annotation_id]
+      annotation_id: params[:annotation_id],
+      proposal_view_mode: params[:proposal_view_mode]
     }
 
     url_options.reject! { |k, v| k == :sentiment_id && v == 0 }

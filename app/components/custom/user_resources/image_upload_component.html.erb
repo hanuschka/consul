@@ -21,6 +21,10 @@
           <div class="user-resource-image-upload--hint">
             <%= t("custom.user_resources.image_upload.max_image_size", size: Setting["uploads.images.max_size"]) %>
           </div>
+          <div class="user-resource-image-upload--hint">
+            <%= t("custom.user_resources.image_upload.supported_formats",
+                  formats: Setting.accepted_content_types_for("images").join(", ")) %>
+          </div>
         </div>
       </div>
     </div>

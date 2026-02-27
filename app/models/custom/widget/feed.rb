@@ -16,7 +16,7 @@ class Widget::Feed < ApplicationRecord
   end
 
   def proposals
-    Proposal.published.not_archived.with_current_projekt.visible_on_overview.sort_by_created_at
+    Proposal.published.not_archived.with_current_projekt.meets_minimum_supports.sort_by_created_at
   end
 
   def debates
@@ -28,6 +28,6 @@ class Widget::Feed < ApplicationRecord
   end
 
   def self.by_kind(kind)
-    find{ |feed| feed.kind == 'expired_projekts' }
+    find { |feed| feed.kind == "expired_projekts" }
   end
 end

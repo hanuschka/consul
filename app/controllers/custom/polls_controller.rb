@@ -144,12 +144,11 @@ class PollsController < ApplicationController
     @projekt_phase = @poll.projekt_phase
 
     is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    can_view_report = is_admin_or_manager || (@poll.report_visible_for_citizens? && @poll.projekt.visible_for?(current_user))
 
-    if !is_admin_or_manager
+    if !can_view_report
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "pages/forbidden", layout: false
-    else
-      render
     end
   end
 

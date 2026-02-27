@@ -141,7 +141,15 @@ class Ai::GeneratePollWithData
   def create_question(data, order)
     author = @users.sample
 
-    question = Poll::Question.create!(
+    vote_type =
+      case data['type']
+      when 'yes_no' then 'unique'
+      when 'multiple' then 'multiple'
+      when 'rating' then 'rating_scale'
+      else 'unique'
+      end
+
+    question = Poll::Question.new(
       poll: @poll,
       author: author,
       title: data['title'],
@@ -149,18 +157,12 @@ class Ai::GeneratePollWithData
       given_order: order
     )
 
-    vote_type = case data['type']
-                when 'yes_no' then 'unique'
-                when 'multiple' then 'multiple'
-                when 'rating' then 'rating_scale'
-                else 'unique'
-                end
-
-    VotationType.create!(
-      questionable: question,
+    question.build_votation_type(
       vote_type: vote_type,
       max_votes: vote_type == 'multiple' ? 2 : nil
     )
+
+    question.save!
 
     answers = case data['type']
               when 'yes_no'

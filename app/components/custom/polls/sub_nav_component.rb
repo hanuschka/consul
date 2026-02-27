@@ -9,6 +9,12 @@ class Polls::SubNavComponent < ApplicationComponent
   end
 
   def render?
-    can?(:stats, poll) || can?(:results, poll)
+    can?(:stats, poll) || can?(:results, poll) || can?(:report, poll) || report_visible?
+  end
+
+  private
+
+  def report_visible?
+    poll.report_visible_for_citizens? || can?(:edit, poll.projekt) || helpers.current_user&.administrator?
   end
 end

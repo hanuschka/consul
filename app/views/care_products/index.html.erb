@@ -2,6 +2,7 @@
 <% content_for :body_class, "care-products-page" %>
 <%= render "care_products/cart" %>
 <%= render "care_products/promo_bar" %>
+<%= render "care_products/compare" %>
 
 <!-- Scroll-to-Top -->
 <button class="care-scroll-top" id="care-scroll-top" title="Nach oben">↑</button>
@@ -96,7 +97,7 @@
 <!-- Such- und Sortierleiste -->
 <section class="care-search-bar" id="produkte">
   <div class="row">
-    <div class="small-12 medium-7 column">
+    <div class="small-12 medium-6 column">
       <div class="care-search-wrap">
         <span class="care-search-icon">🔍</span>
         <input type="text"
@@ -118,8 +119,63 @@
       </select>
     </div>
     <div class="small-12 medium-2 column">
+      <button class="care-filter-toggle" id="care-filter-toggle">
+        🎛 Filter
+        <span class="care-filter-badge" id="care-filter-badge" style="display:none;">0</span>
+      </button>
+    </div>
+    <div class="small-12 medium-1 column">
       <div class="care-results-count" id="care-results-count">
         <%= @featured_products.length %> Produkte
+      </div>
+    </div>
+  </div>
+
+  <!-- Erweiterte Filter -->
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-advanced-filter-panel" id="care-advanced-filter-panel">
+        <div class="care-filter-grid">
+          <!-- Preis-Filter -->
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Preis (€)</span>
+            <div class="care-price-range">
+              <input type="number" id="care-filter-min-price" placeholder="Von" min="0" max="100" step="1">
+              <span class="care-price-sep">–</span>
+              <input type="number" id="care-filter-max-price" placeholder="Bis" min="0" max="100" step="1">
+            </div>
+            <div class="care-price-vals">
+              Von <span id="care-filter-min-val">0 €</span> bis <span id="care-filter-max-val">∞</span>
+            </div>
+          </div>
+
+          <!-- Mindest-Bewertung -->
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Mindestbewertung</span>
+            <div class="care-rating-filter-btns">
+              <% (1..5).each do |n| %>
+                <button class="care-rating-filter-btn" data-rating="<%= n %>">
+                  <%= "★" * n %> <%= n %>+
+                </button>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Nur mit Badge -->
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Weitere Filter</span>
+            <label class="care-badge-toggle-wrap">
+              <input type="checkbox" id="care-filter-badge-toggle">
+              Nur Produkte mit Auszeichnung
+            </label>
+          </div>
+        </div>
+
+        <div class="care-filter-actions">
+          <button class="care-btn-filter-reset" id="care-filter-reset-btn">
+            Alle Filter zurücksetzen
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -148,7 +204,8 @@
            data-category="<%= product[:category] %>"
            data-price="<%= product[:price_cents] %>"
            data-rating="<%= product[:rating] %>"
-           data-reviews="<%= product[:reviews] %>">
+           data-reviews="<%= product[:reviews] %>"
+           data-badge="<%= product[:badge] || "" %>">
         <div class="care-product-card">
           <% if product[:badge] %>
             <span class="care-product-badge"><%= product[:badge] %></span>
@@ -188,6 +245,20 @@
                   In den Warenkorb
                 </button>
                 <%= link_to "Details", care_product_path(product[:id]), class: "care-btn-outline care-btn-detail-link" %>
+              </div>
+              <div style="margin-top:8px;">
+                <button class="care-compare-btn"
+                        data-product-id="<%= product[:id] %>"
+                        data-product-name="<%= product[:name] %>"
+                        data-product-price="<%= product[:price] %>"
+                        data-product-emoji="<%= cat_icon || "🧴" %>"
+                        data-product-rating="<%= product[:rating] %>"
+                        data-product-reviews="<%= product[:reviews] %>"
+                        data-product-category="<%= cat_name %>"
+                        data-product-badge="<%= product[:badge] || "" %>"
+                        data-product-desc="<%= product[:description] %>">
+                  <span class="care-compare-label">⇌ Vergleichen</span>
+                </button>
               </div>
             </div>
           </div>
@@ -325,6 +396,99 @@
           <a href="#" class="care-tip-link">Weiterlesen →</a>
         </div>
       </article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ-Bereich -->
+<section class="care-faq">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <h2 class="care-section-title">Häufige Fragen</h2>
+      <p class="care-section-subtitle">Alles, was Sie über unsere Pflegeprodukte wissen möchten</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-faq-list">
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Sind alle Produkte dermatologisch getestet?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Ja, alle unsere Pflegeprodukte wurden von unabhängigen Dermatologen geprüft
+            und zertifiziert. Wir legen größten Wert auf Sicherheit und Verträglichkeit –
+            besonders für empfindliche Haut.
+          </div>
+        </div>
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Ab welchem Bestellwert ist der Versand kostenlos?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Ab einem Bestellwert von 25 € liefern wir kostenlos innerhalb Deutschlands.
+            Für kleinere Bestellungen berechnen wir eine pauschale Versandgebühr von 3,99 €.
+            Die Lieferzeit beträgt 2–3 Werktage.
+          </div>
+        </div>
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Kann ich Produkte zurücksenden?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Selbstverständlich! Sie haben 30 Tage Zeit, unbenutzte Produkte in der
+            Originalverpackung zurückzusenden. Der Rückversand ist für Sie völlig
+            kostenlos. Nach Eingang der Rücksendung erstatten wir den Kaufpreis
+            innerhalb von 5 Werktagen.
+          </div>
+        </div>
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Sind die Produkte vegan und tierversuchsfrei?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Alle unsere Produkte sind 100 % vegan und werden nicht an Tieren getestet.
+            Wir verzichten konsequent auf tierische Inhaltsstoffe wie Lanolin, Bienenwachs
+            oder Kollagen und setzen ausschließlich auf pflanzliche Alternativen.
+          </div>
+        </div>
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Wie funktionieren die Gutscheincodes?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Gutscheincodes können Sie direkt im Warenkorb einlösen. Klicken Sie auf das
+            Warenkorb-Symbol, geben Sie Ihren Code im Feld „Gutscheincode eingeben" ein
+            und klicken Sie auf „Einlösen". Der Rabatt wird sofort vom Gesamtbetrag
+            abgezogen. Aktuell gültige Codes finden Sie in unserem Newsletter.
+          </div>
+        </div>
+
+        <div class="care-faq-item">
+          <button class="care-faq-question">
+            Welche Inhaltsstoffe werden in Ihren Produkten verwendet?
+            <span class="care-faq-icon">+</span>
+          </button>
+          <div class="care-faq-answer">
+            Wir verwenden ausschließlich hochwertige, natürliche Wirkstoffe wie
+            Hyaluronsäure, Aloe Vera, Arganöl, Sheabutter, Vitamin E und Panthenol.
+            Auf synthetische Duftstoffe, Parabene, Silikone und Mineralöle verzichten
+            wir vollständig. Die vollständige Inhaltsstoffliste finden Sie auf jeder
+            Produktdetailseite.
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>

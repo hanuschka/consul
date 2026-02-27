@@ -720,11 +720,334 @@ var CareRecentlyViewed = (function() {
   return { init: init, track: track };
 })();
 
+// ---- Produktvergleich ----
+var CareCompare = (function() {
+  "use strict";
+  var KEY = "care_compare";
+  var MAX = 3;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch(e) { return []; }
+  }
+
+  function save(items) { localStorage.setItem(KEY, JSON.stringify(items)); }
+
+  function showToast(msg) {
+    var toast = document.getElementById("care-toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("visible");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function() { toast.classList.remove("visible"); }, 3000);
+  }
+
+  function refreshButtons() {
+    document.querySelectorAll(".care-compare-btn").forEach(function(btn) {
+      var on = load().some(function(i) { return String(i.id) === String(btn.dataset.productId); });
+      btn.classList.toggle("active", on);
+      btn.querySelector(".care-compare-label").textContent = on ? "✓ Im Vergleich" : "⇌ Vergleichen";
+    });
+  }
+
+  function refreshBar() {
+    var bar = document.getElementById("care-compare-bar");
+    if (!bar) return;
+    var items = load();
+    if (items.length === 0) { bar.classList.remove("visible"); return; }
+    bar.classList.add("visible");
+
+    var miniEl = document.getElementById("care-compare-bar-items");
+    if (miniEl) {
+      var html = "";
+      items.forEach(function(p) {
+        html += "<div class='care-cbar-item'>";
+        html += "<span class='care-cbar-emoji'>" + (p.emoji || "🧴") + "</span>";
+        html += "<span class='care-cbar-name'>" + p.name + "</span>";
+        html += "<button class='care-cbar-remove' data-id='" + p.id + "'>✕</button>";
+        html += "</div>";
+      });
+      miniEl.innerHTML = html;
+      miniEl.querySelectorAll(".care-cbar-remove").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          save(load().filter(function(i) { return String(i.id) !== btn.dataset.id; }));
+          refreshBar(); refreshButtons();
+        });
+      });
+    }
+
+    var countEl = document.getElementById("care-cbar-count");
+    if (countEl) countEl.textContent = items.length + " / " + MAX + " ausgewählt";
+
+    var nowBtn = document.getElementById("care-compare-now");
+    if (nowBtn) nowBtn.disabled = items.length < 2;
+  }
+
+  function toggle(product) {
+    var items = load();
+    var idx = items.findIndex(function(i) { return String(i.id) === String(product.id); });
+    if (idx > -1) {
+      items.splice(idx, 1);
+    } else {
+      if (items.length >= MAX) { showToast("⚠️ Maximal " + MAX + " Produkte vergleichen"); return; }
+      items.push(product);
+    }
+    save(items);
+    refreshBar();
+    refreshButtons();
+  }
+
+  function openModal() {
+    var items = load();
+    if (items.length < 2) { showToast("⚠️ Bitte mindestens 2 Produkte auswählen"); return; }
+
+    var modal = document.getElementById("care-compare-modal");
+    if (!modal) return;
+
+    var ATTRS = [
+      { key: "price",    label: "Preis" },
+      { key: "rating",   label: "Bewertung" },
+      { key: "reviews",  label: "Bewertungen" },
+      { key: "category", label: "Kategorie" },
+      { key: "badge",    label: "Auszeichnung" },
+      { key: "desc",     label: "Beschreibung" }
+    ];
+
+    var head = "<tr><th>Eigenschaft</th>";
+    items.forEach(function(p) {
+      head += "<th><span style='font-size:2.2rem;display:block'>" + (p.emoji || "🧴") + "</span>" +
+              p.name + "<br><strong class='care-compare-th-price'>" + p.price + "</strong></th>";
+    });
+    head += "</tr>";
+
+    var rows = "";
+    ATTRS.forEach(function(attr) {
+      rows += "<tr><td class='care-compare-attr'>" + attr.label + "</td>";
+      items.forEach(function(p) {
+        var val = p[attr.key] || "–";
+        if (attr.key === "rating") {
+          val = "★".repeat(Math.round(parseFloat(val))) + "☆".repeat(5 - Math.round(parseFloat(val))) + " " + val;
+        }
+        rows += "<td>" + val + "</td>";
+      });
+      rows += "</tr>";
+    });
+
+    var tbl = document.getElementById("care-compare-table-body");
+    if (tbl) tbl.innerHTML = head + rows;
+
+    modal.classList.add("open");
+    document.getElementById("care-compare-backdrop").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("care-compare-modal");
+    if (modal) modal.classList.remove("open");
+    var bd = document.getElementById("care-compare-backdrop");
+    if (bd) bd.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function init() {
+    document.querySelectorAll(".care-compare-btn").forEach(function(btn) {
+      if (btn._compareBound) return;
+      btn._compareBound = true;
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        toggle({
+          id: btn.dataset.productId,
+          name: btn.dataset.productName,
+          price: btn.dataset.productPrice,
+          emoji: btn.dataset.productEmoji,
+          rating: btn.dataset.productRating,
+          reviews: btn.dataset.productReviews,
+          category: btn.dataset.productCategory,
+          badge: btn.dataset.productBadge || "–",
+          desc: btn.dataset.productDesc
+        });
+      });
+    });
+
+    var nowBtn = document.getElementById("care-compare-now");
+    if (nowBtn) nowBtn.addEventListener("click", openModal);
+
+    var clearBtn = document.getElementById("care-compare-clear");
+    if (clearBtn) clearBtn.addEventListener("click", function() { save([]); refreshBar(); refreshButtons(); });
+
+    var closeBtn = document.getElementById("care-compare-modal-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    var bd = document.getElementById("care-compare-backdrop");
+    if (bd) bd.addEventListener("click", closeModal);
+
+    refreshBar();
+    refreshButtons();
+  }
+
+  return { init: init };
+})();
+
+// ---- Erweiterte Filter ----
+var CareAdvancedFilter = (function() {
+  "use strict";
+  var minPrice = 0, maxPrice = 9999, minRating = 0, onlyBadge = false;
+
+  function applyFilters() {
+    var query = (document.getElementById("care-search-input") || {}).value || "";
+    query = query.toLowerCase().trim();
+    var sort  = (document.getElementById("care-sort-select") || {}).value || "default";
+    var cards = Array.from(document.querySelectorAll(".care-product-col"));
+    var clearBtn = document.getElementById("care-search-clear");
+    if (clearBtn) clearBtn.style.display = query ? "inline-block" : "none";
+
+    var visible = [];
+    cards.forEach(function(card) {
+      var name   = (card.dataset.name || "").toLowerCase();
+      var price  = parseInt(card.dataset.price) || 0;
+      var rating = parseFloat(card.dataset.rating) || 0;
+      var badge  = (card.dataset.badge || "").trim();
+
+      var ok = (!query || name.indexOf(query) > -1) &&
+               price >= minPrice * 100 && price <= maxPrice * 100 &&
+               rating >= minRating &&
+               (!onlyBadge || badge !== "");
+
+      card.style.display = ok ? "" : "none";
+      if (ok) visible.push(card);
+    });
+
+    if (sort !== "default" && visible.length > 1) {
+      var grid = document.getElementById("care-products-grid");
+      if (grid) {
+        visible.sort(function(a, b) {
+          if (sort === "price-asc")    return parseInt(a.dataset.price)  - parseInt(b.dataset.price);
+          if (sort === "price-desc")   return parseInt(b.dataset.price)  - parseInt(a.dataset.price);
+          if (sort === "rating-desc")  return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          if (sort === "reviews-desc") return parseInt(b.dataset.reviews) - parseInt(a.dataset.reviews);
+          if (sort === "name-asc")     return (a.dataset.name || "").localeCompare(b.dataset.name || "");
+          return 0;
+        });
+        visible.forEach(function(card) { grid.appendChild(card); });
+      }
+    }
+
+    var countEl = document.getElementById("care-results-count");
+    if (countEl) countEl.textContent = visible.length + " Produkte";
+    var noEl = document.getElementById("care-no-results");
+    if (noEl) noEl.style.display = visible.length === 0 ? "block" : "none";
+    updateBadgeCount();
+  }
+
+  function updateBadgeCount() {
+    var n = (minRating > 0 ? 1 : 0) + (onlyBadge ? 1 : 0) +
+            (minPrice > 0 || maxPrice < 9999 ? 1 : 0);
+    var badge = document.getElementById("care-filter-badge");
+    if (badge) { badge.textContent = n; badge.style.display = n > 0 ? "inline-block" : "none"; }
+    var toggleBtn = document.getElementById("care-filter-toggle");
+    if (toggleBtn) toggleBtn.classList.toggle("has-filters", n > 0);
+  }
+
+  function init() {
+    var panel = document.getElementById("care-advanced-filter-panel");
+    if (!panel) return;
+
+    var toggleBtn = document.getElementById("care-filter-toggle");
+    if (toggleBtn) toggleBtn.addEventListener("click", function() {
+      panel.classList.toggle("open");
+    });
+
+    var minP = document.getElementById("care-filter-min-price");
+    var maxP = document.getElementById("care-filter-max-price");
+    var minValEl = document.getElementById("care-filter-min-val");
+    var maxValEl = document.getElementById("care-filter-max-val");
+
+    if (minP) minP.addEventListener("input", function() {
+      minPrice = parseFloat(this.value) || 0;
+      if (minValEl) minValEl.textContent = minPrice > 0 ? minPrice + " €" : "0 €";
+      applyFilters();
+    });
+    if (maxP) maxP.addEventListener("input", function() {
+      maxPrice = parseFloat(this.value) || 9999;
+      if (maxValEl) maxValEl.textContent = maxPrice < 9999 ? maxPrice + " €" : "∞";
+      applyFilters();
+    });
+
+    document.querySelectorAll(".care-rating-filter-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var val = parseInt(btn.dataset.rating);
+        if (minRating === val) {
+          minRating = 0;
+          document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) { b.classList.remove("active"); });
+        } else {
+          minRating = val;
+          document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) {
+            b.classList.toggle("active", parseInt(b.dataset.rating) <= val);
+          });
+        }
+        applyFilters();
+      });
+    });
+
+    var badgeTog = document.getElementById("care-filter-badge-toggle");
+    if (badgeTog) badgeTog.addEventListener("change", function() { onlyBadge = this.checked; applyFilters(); });
+
+    var resetBtn = document.getElementById("care-filter-reset-btn");
+    if (resetBtn) resetBtn.addEventListener("click", function() {
+      minPrice = 0; maxPrice = 9999; minRating = 0; onlyBadge = false;
+      if (minP) { minP.value = ""; if (minValEl) minValEl.textContent = "0 €"; }
+      if (maxP) { maxP.value = ""; if (maxValEl) maxValEl.textContent = "∞"; }
+      document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) { b.classList.remove("active"); });
+      if (badgeTog) badgeTog.checked = false;
+      var si = document.getElementById("care-search-input");
+      var ss = document.getElementById("care-sort-select");
+      if (si) si.value = "";
+      if (ss) ss.value = "default";
+      applyFilters();
+    });
+
+    // Hook existing search + sort
+    var si = document.getElementById("care-search-input");
+    var ss = document.getElementById("care-sort-select");
+    var clearBtn = document.getElementById("care-search-clear");
+    var rstBtn = document.getElementById("care-btn-reset-search");
+    if (si) si.addEventListener("input", applyFilters);
+    if (ss) ss.addEventListener("change", applyFilters);
+    if (clearBtn) clearBtn.addEventListener("click", function() { si.value = ""; applyFilters(); si.focus(); });
+    if (rstBtn) rstBtn.addEventListener("click", function() {
+      if (si) si.value = ""; if (ss) ss.value = "default"; applyFilters();
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- FAQ-Accordion ----
+var CareFAQ = (function() {
+  "use strict";
+  function init() {
+    document.querySelectorAll(".care-faq-question").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var item = btn.closest(".care-faq-item");
+        var wasOpen = item.classList.contains("open");
+        document.querySelectorAll(".care-faq-item").forEach(function(i) { i.classList.remove("open"); });
+        if (!wasOpen) item.classList.add("open");
+      });
+    });
+  }
+  return { init: init };
+})();
+
 // ---- Bootstrap ----
 $(document).on("turbolinks:load", function() {
   CareCart.init();
   CareWishlist.init();
-  CareSearch.init();
+  // Advanced filter supersedes basic search when panel is present
+  if (document.getElementById("care-advanced-filter-panel")) {
+    CareAdvancedFilter.init();
+  } else {
+    CareSearch.init();
+  }
   CareSaleCountdown.init();
   CareScrollTop.init();
   CarePromoBar.init();
@@ -732,4 +1055,6 @@ $(document).on("turbolinks:load", function() {
   CareReviewForm.init();
   CareQuiz.init();
   CareRecentlyViewed.init();
+  CareCompare.init();
+  CareFAQ.init();
 });

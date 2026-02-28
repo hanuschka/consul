@@ -1,0 +1,6078 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pflegeartikel – Naturpflege für Ihr Wohlbefinden</title>
+  <!-- Foundation CSS Grid -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
+  <style>
+@charset "UTF-8";
+.care-hero {
+  position: relative;
+  background: linear-gradient(135deg, #4a9d7f 0%, rgb(49.4935064935, 105.0064935065, 84.9415584416) 100%);
+  padding: 100px 0 80px;
+  overflow: hidden;
+}
+.care-hero::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -10%;
+  width: 120%;
+  height: 200%;
+  background: radial-gradient(ellipse at 70% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.care-hero .care-hero-overlay {
+  position: relative;
+  z-index: 1;
+}
+.care-hero .care-hero-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+@media (max-width: 640px) {
+  .care-hero .care-hero-title {
+    font-size: 2rem;
+  }
+}
+.care-hero .care-hero-subtitle {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+.care-section-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.care-section-title.care-section-title-light {
+  color: #fff;
+}
+
+.care-section-subtitle {
+  text-align: center;
+  color: #718096;
+  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+.care-btn-primary {
+  display: inline-block;
+  background: #fff;
+  color: #4a9d7f;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+.care-btn-primary:hover {
+  background: #f5a623;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.care-btn-add-cart {
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.care-btn-add-cart:hover {
+  background: #357a62;
+  transform: translateY(-1px);
+}
+
+.care-btn-newsletter {
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.care-btn-newsletter:hover {
+  background: #357a62;
+}
+
+.care-filter-reset {
+  font-size: 0.875rem;
+  color: #4a9d7f;
+  text-decoration: underline;
+}
+.care-filter-reset:hover {
+  color: #357a62;
+}
+
+.care-categories {
+  padding: 64px 0 40px;
+  background: #f9fafb;
+}
+.care-categories .care-categories-grid {
+  margin-top: 8px;
+}
+
+.care-category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 16px 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+.care-category-card:hover, .care-category-card.active {
+  border-color: #4a9d7f;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+.care-category-card.active {
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+}
+.care-category-card .care-category-icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  display: block;
+}
+.care-category-card .care-category-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+.care-category-card .care-category-desc {
+  font-size: 0.8rem;
+  color: #718096;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.care-products {
+  padding: 56px 0 64px;
+  background: #fff;
+}
+
+.care-products-grid {
+  margin-top: 8px;
+}
+
+.care-product-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+.care-product-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.care-product-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #f5a623;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  z-index: 1;
+  letter-spacing: 0.03em;
+}
+
+.care-product-image {
+  background: linear-gradient(135deg, rgb(210.9584415584, 234.2415584416, 225.825974026) 0%, rgb(245.6207792208, 250.5792207792, 248.787012987) 100%);
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-product-image-placeholder {
+  text-align: center;
+}
+
+.care-product-emoji {
+  font-size: 4rem;
+  display: block;
+}
+
+.care-product-body {
+  padding: 20px;
+}
+
+.care-product-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4a9d7f;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.care-product-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.care-product-description {
+  font-size: 0.875rem;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.care-product-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.care-star {
+  color: #d1d5db;
+  font-size: 1rem;
+}
+.care-star.care-star-filled {
+  color: #f5a623;
+}
+
+.care-rating-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-left: 4px;
+}
+
+.care-rating-count {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.care-product-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #4a9d7f;
+}
+
+.care-product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.care-btn-detail-link {
+  font-size: 0.8rem;
+  padding: 5px 12px;
+}
+
+.care-benefits {
+  padding: 72px 0;
+  background: linear-gradient(135deg, #4a9d7f 0%, rgb(54.3948051948, 115.4051948052, 93.3532467532) 100%);
+}
+
+.care-benefit-card {
+  text-align: center;
+  padding: 32px 20px;
+}
+.care-benefit-card .care-benefit-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+}
+.care-benefit-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.care-benefit-card p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.care-newsletter {
+  padding: 72px 0;
+  background: #f9fafb;
+}
+
+.care-newsletter-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 12px;
+}
+
+.care-newsletter-text {
+  font-size: 1rem;
+  color: #718096;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.care-newsletter-form {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.care-newsletter-input {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  outline: none;
+}
+.care-newsletter-input:focus {
+  border-color: #4a9d7f;
+  box-shadow: none;
+}
+
+.care-cart-wrapper {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1000;
+}
+
+.care-cart-trigger {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #4a9d7f;
+  color: #fff;
+  font-size: 1.5rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background 0.2s;
+  position: relative;
+}
+.care-cart-trigger:hover {
+  background: #357a62;
+  transform: scale(1.08);
+}
+
+.care-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #f5a623;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.care-cart-panel {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: 370px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease;
+}
+.care-cart-panel.open {
+  right: 0;
+}
+@media (max-width: 480px) {
+  .care-cart-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+  .care-cart-panel.open {
+    right: 0;
+  }
+}
+
+.care-cart-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.care-cart-panel-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.care-cart-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #718096;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.care-cart-close:hover {
+  background: #f9fafb;
+}
+
+.care-cart-panel-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+}
+
+.care-cart-empty {
+  color: #718096;
+  text-align: center;
+  padding: 40px 0;
+  font-size: 0.95rem;
+}
+
+.care-cart-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.care-cart-item-emoji {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.care-cart-item-info {
+  flex: 1;
+}
+.care-cart-item-info .care-cart-item-name {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 2px;
+}
+.care-cart-item-info .care-cart-item-price {
+  display: block;
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-cart-remove {
+  background: none;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.care-cart-remove:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.care-cart-panel-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.care-cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+.care-cart-total-row strong {
+  font-size: 1.2rem;
+  color: #4a9d7f;
+}
+
+.care-btn-checkout {
+  width: 100%;
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.care-btn-checkout:hover {
+  background: #357a62;
+}
+
+.care-toast {
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  background: #2c3e50;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 1200;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  max-width: 280px;
+}
+.care-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.care-breadcrumb-bar {
+  background: #f9fafb;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 0;
+}
+
+.care-breadcrumb {
+  font-size: 0.875rem;
+  color: #718096;
+}
+.care-breadcrumb a {
+  color: #4a9d7f;
+  text-decoration: none;
+}
+.care-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.care-product-detail {
+  padding: 48px 0 40px;
+  background: #fff;
+}
+
+.care-detail-image-wrap {
+  position: relative;
+  background: linear-gradient(135deg, rgb(210.9584415584, 234.2415584416, 225.825974026) 0%, rgb(245.6207792208, 250.5792207792, 248.787012987) 100%);
+  border-radius: 12px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.care-detail-emoji {
+  font-size: 7rem;
+}
+
+.care-detail-badge {
+  top: 16px;
+  left: 16px;
+}
+
+.care-detail-thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.care-detail-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  background: rgb(224.8233766234, 240.7766233766, 235.0103896104);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.care-detail-thumb.active, .care-detail-thumb:hover {
+  border-color: #4a9d7f;
+}
+
+.care-detail-info {
+  padding-left: 24px;
+}
+@media (max-width: 640px) {
+  .care-detail-info {
+    padding-left: 0;
+    margin-top: 24px;
+  }
+}
+
+.care-detail-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 8px 0 12px;
+  line-height: 1.3;
+}
+
+.care-detail-rating {
+  margin-bottom: 20px;
+}
+
+.care-detail-price-block {
+  margin-bottom: 20px;
+}
+
+.care-detail-price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #4a9d7f;
+  display: block;
+}
+
+.care-detail-tax {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-detail-description {
+  font-size: 0.95rem;
+  color: #718096;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.care-detail-features {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+}
+.care-detail-features li {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  padding: 5px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.care-detail-features li:last-child {
+  border-bottom: none;
+}
+
+.care-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.care-qty-selector {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.care-qty-btn {
+  background: #f9fafb;
+  border: none;
+  width: 38px;
+  height: 44px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #2c3e50;
+  transition: background 0.15s;
+}
+.care-qty-btn:hover {
+  background: rgb(233.7, 237.25, 240.8);
+}
+
+.care-qty-input {
+  width: 52px;
+  height: 44px;
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  -moz-appearance: textfield;
+}
+.care-qty-input::-webkit-inner-spin-button, .care-qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.care-btn-detail-cart {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+.care-detail-shipping {
+  font-size: 0.875rem;
+  color: #718096;
+  padding: 12px 16px;
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+  border-radius: 8px;
+}
+.care-detail-shipping .care-shipping-icon {
+  margin-right: 6px;
+}
+
+.care-detail-tabs {
+  padding: 48px 0;
+  background: #f9fafb;
+}
+
+.care-tabs-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.care-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.care-tab-btn:hover {
+  color: #4a9d7f;
+}
+.care-tab-btn.active {
+  color: #4a9d7f;
+  border-bottom-color: #4a9d7f;
+}
+
+.care-tab-content {
+  display: none;
+}
+.care-tab-content.active {
+  display: block;
+}
+.care-tab-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 16px;
+}
+.care-tab-content h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 20px 0 8px;
+}
+.care-tab-content p {
+  color: #718096;
+  line-height: 1.7;
+}
+
+.care-ingredients-text {
+  font-family: monospace;
+  font-size: 0.82rem;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.care-ingredients-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.care-ingredient-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.care-ingredient-item .care-ingredient-icon {
+  font-size: 1.5rem;
+}
+.care-ingredient-item strong {
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+.care-ingredient-item span {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-reviews-summary {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.care-reviews-score {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.care-score-big {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #4a9d7f;
+  display: block;
+}
+
+.care-score-label {
+  font-size: 0.8rem;
+  color: #718096;
+  display: block;
+}
+
+.care-reviews-bars {
+  flex: 1;
+  min-width: 200px;
+}
+
+.care-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.care-bar-label {
+  font-size: 0.8rem;
+  color: #718096;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.care-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.care-bar-fill {
+  height: 100%;
+  background: #f5a623;
+  border-radius: 4px;
+}
+
+.care-bar-pct {
+  font-size: 0.8rem;
+  color: #718096;
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.care-review-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.care-review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.care-review-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4a9d7f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.care-review-name {
+  display: block;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.care-review-date {
+  display: block;
+  font-size: 0.78rem;
+  color: #718096;
+}
+
+.care-review-stars {
+  margin-left: auto;
+}
+
+.care-review-text {
+  font-size: 0.9rem;
+  color: #718096;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.care-related {
+  padding: 56px 0;
+  background: #fff;
+}
+
+.care-btn-outline {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 2px solid #4a9d7f;
+  color: #4a9d7f;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.care-btn-outline:hover {
+  background: #4a9d7f;
+  color: #fff;
+  text-decoration: none;
+}
+
+.care-btn-hero-sale {
+  margin-right: 12px;
+  margin-bottom: 12px;
+}
+
+.care-btn-hero-ghost {
+  background: transparent !important;
+  border: 2px solid #fff;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  display: inline-block;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+.care-btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  text-decoration: none;
+  color: #fff !important;
+}
+
+.care-sale {
+  padding: 56px 0 48px;
+  background: linear-gradient(135deg, #fff5eb 0%, #fff 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.care-sale-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.care-sale-label {
+  display: inline-block;
+  background: #f5a623;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.care-sale-countdown {
+  font-size: 0.95rem;
+  color: #718096;
+  margin-top: 8px;
+}
+.care-sale-countdown #care-countdown-timer {
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.care-sale-grid {
+  margin-top: 8px;
+}
+
+.care-sale-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+.care-sale-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.care-sale-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 50px;
+  z-index: 1;
+}
+
+.care-sale-image {
+  background: linear-gradient(135deg, #fff5eb 0%, #fff 100%);
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-sale-emoji {
+  font-size: 3.5rem;
+}
+
+.care-sale-body {
+  padding: 16px;
+}
+
+.care-sale-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.care-sale-prices {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.care-sale-original {
+  font-size: 0.875rem;
+  color: #718096;
+  text-decoration: line-through;
+}
+
+.care-sale-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #dc2626;
+}
+
+.care-btn-sale-cart {
+  width: 100%;
+  background: #f5a623;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.care-btn-sale-cart:hover {
+  background: rgb(219.0434782609, 140.3869565217, 9.9565217391);
+}
+
+.care-search-bar {
+  background: #f9fafb;
+  padding: 20px 0;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.care-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.care-search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.care-search-input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 40px 12px 42px;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.care-search-input:focus {
+  border-color: #4a9d7f;
+  box-shadow: 0 0 0 3px rgba(74, 157, 127, 0.15);
+}
+
+.care-search-clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #718096;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.care-search-clear:hover {
+  color: #2c3e50;
+}
+
+.care-sort-select {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #2c3e50;
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.care-sort-select:focus {
+  border-color: #4a9d7f;
+  box-shadow: 0 0 0 3px rgba(74, 157, 127, 0.15);
+}
+
+.care-results-count {
+  font-size: 0.875rem;
+  color: #718096;
+  padding: 14px 0;
+  font-weight: 600;
+}
+
+.care-active-filter {
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 24px;
+  padding: 10px 16px;
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+  border-radius: 8px;
+  border-left: 4px solid #4a9d7f;
+}
+
+.care-no-results {
+  padding: 60px 0;
+}
+.care-no-results .care-no-results-icon {
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+.care-no-results h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+.care-no-results p {
+  color: #718096;
+  margin-bottom: 24px;
+}
+
+.care-btn-reset-search {
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.care-btn-reset-search:hover {
+  background: #357a62;
+}
+
+.care-wishlist-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.care-wishlist-btn:hover {
+  transform: scale(1.15);
+  border-color: #f43f5e;
+}
+.care-wishlist-btn.active {
+  border-color: #f43f5e;
+  background: #fff0f3;
+}
+
+.care-wishlist-panel {
+  position: fixed;
+  top: 0;
+  right: -340px;
+  width: 320px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease;
+}
+.care-wishlist-panel.open {
+  right: 370px;
+}
+@media (max-width: 768px) {
+  .care-wishlist-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+  .care-wishlist-panel.open {
+    right: 0;
+  }
+}
+
+.care-wishlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.care-wishlist-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.care-wishlist-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+}
+
+.care-wishlist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.care-wishlist-remove {
+  background: none;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.care-wishlist-remove:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.care-scroll-top {
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+}
+.care-scroll-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.care-scroll-top:hover {
+  background: #4a9d7f;
+}
+
+.care-promo-bar {
+  background: #2c3e50;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  position: relative;
+  z-index: 200;
+  transition: opacity 0.3s, max-height 0.3s;
+  max-height: 48px;
+  overflow: hidden;
+}
+.care-promo-bar.closing {
+  opacity: 0;
+  max-height: 0;
+}
+
+.care-promo-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 48px 12px 16px;
+  min-height: 44px;
+  position: relative;
+}
+
+.care-promo-messages {
+  position: relative;
+}
+
+.care-promo-msg {
+  display: none;
+}
+.care-promo-msg.active {
+  display: block;
+}
+.care-promo-msg strong {
+  color: #f5a623;
+}
+
+.care-promo-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+}
+.care-promo-close:hover {
+  color: #fff;
+}
+
+.care-tips {
+  padding: 64px 0;
+  background: #f9fafb;
+}
+
+.care-tips-grid {
+  margin-top: 8px;
+}
+
+.care-tip-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+.care-tip-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.care-tip-image {
+  background: linear-gradient(135deg, rgb(197.0935064935, 227.7064935065, 216.6415584416) 0%, rgb(238.6883116883, 247.3116883117, 244.1948051948) 100%);
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.care-tip-image.care-tip-image-green {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+.care-tip-image.care-tip-image-sun {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.care-tip-emoji {
+  font-size: 3rem;
+}
+
+.care-tip-body {
+  padding: 20px;
+}
+
+.care-tip-tag {
+  display: inline-block;
+  background: rgb(224.8233766234, 240.7766233766, 235.0103896104);
+  color: #4a9d7f;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+}
+
+.care-tip-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.care-tip-excerpt {
+  font-size: 0.875rem;
+  color: #718096;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+.care-tip-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: #718096;
+  margin-bottom: 14px;
+}
+
+.care-tip-read::before {
+  content: "·  ";
+}
+
+.care-tip-link {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #4a9d7f;
+  text-decoration: none;
+}
+.care-tip-link:hover {
+  text-decoration: underline;
+  color: #357a62;
+}
+
+.care-review-form-wrap {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #e2e8f0;
+}
+.care-review-form-wrap h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 24px;
+}
+
+.care-review-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) {
+  .care-review-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.care-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.care-form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.care-form-input {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.care-form-input:focus {
+  border-color: #4a9d7f;
+  box-shadow: 0 0 0 3px rgba(74, 157, 127, 0.12);
+}
+
+.care-form-textarea {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.care-form-textarea:focus {
+  border-color: #4a9d7f;
+  box-shadow: 0 0 0 3px rgba(74, 157, 127, 0.12);
+}
+
+.care-star-picker {
+  display: flex;
+  gap: 4px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.care-star-pick {
+  color: #e2e8f0;
+  transition: color 0.1s, transform 0.1s;
+  user-select: none;
+}
+.care-star-pick.filled {
+  color: #f5a623;
+}
+.care-star-pick:hover {
+  transform: scale(1.15);
+}
+
+.care-review-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.care-form-hint {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-btn-submit-review {
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.care-btn-submit-review:hover {
+  background: #357a62;
+}
+.care-btn-submit-review:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.care-review-success {
+  margin-top: 16px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.care-coupon-wrap {
+  display: flex;
+  gap: 0;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.care-coupon-input {
+  flex: 1;
+  border: none;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  outline: none;
+  margin-bottom: 0;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.care-coupon-input::placeholder {
+  text-transform: none;
+  letter-spacing: normal;
+}
+.care-coupon-input:disabled {
+  background: #f9fafb;
+  color: #718096;
+}
+
+.care-coupon-btn {
+  background: #f9fafb;
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4a9d7f;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.care-coupon-btn:hover {
+  background: rgb(236.76, 239.8, 242.84);
+}
+.care-coupon-btn:disabled {
+  color: #718096;
+  cursor: default;
+}
+
+.care-coupon-msg {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  min-height: 1em;
+}
+.care-coupon-msg.care-coupon-success {
+  color: #166534;
+}
+.care-coupon-msg.care-coupon-error {
+  color: #dc2626;
+}
+
+.care-cart-subtotal-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #718096;
+  margin-bottom: 4px;
+}
+
+.care-cart-discount-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.care-discount-val {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.care-trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.care-trust-badge {
+  font-size: 0.72rem;
+  color: #718096;
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.care-hero-quiz-hint {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.care-quiz-trigger {
+  background: none;
+  border: none;
+  color: #f5a623;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.care-quiz-trigger:hover {
+  color: rgb(247.2173913043, 185.7347826087, 83.7826086957);
+}
+
+.care-quiz-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.care-quiz-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.care-quiz-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  width: min(560px, 95vw);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  z-index: 1600;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.care-quiz-modal.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translate(-50%, -50%);
+}
+
+.care-quiz-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f9fafb;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #718096;
+  z-index: 1;
+  transition: background 0.2s;
+}
+.care-quiz-close:hover {
+  background: #e2e8f0;
+  color: #2c3e50;
+}
+
+.care-quiz-progress {
+  height: 4px;
+  background: #e2e8f0;
+}
+.care-quiz-progress .care-quiz-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4a9d7f, #f5a623);
+  transition: width 0.4s ease;
+}
+
+.care-quiz-steps {
+  padding: 36px 32px 32px;
+  overflow-y: auto;
+  max-height: calc(90vh - 4px);
+}
+
+.care-quiz-step {
+  display: none;
+  animation: quizFadeIn 0.3s ease;
+}
+.care-quiz-step.active {
+  display: block;
+}
+
+@keyframes quizFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.care-quiz-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.care-quiz-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.care-quiz-subtitle {
+  font-size: 0.95rem;
+  color: #718096;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.care-quiz-step-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4a9d7f;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.care-quiz-question {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.care-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care-quiz-option {
+  background: #f9fafb;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+.care-quiz-option:hover {
+  border-color: #4a9d7f;
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+}
+.care-quiz-option.selected {
+  border-color: #4a9d7f;
+  background: rgb(217.8909090909, 237.5090909091, 230.4181818182);
+  color: #357a62;
+  font-weight: 700;
+}
+
+.care-btn-quiz-primary {
+  display: inline-block;
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.care-btn-quiz-primary:hover {
+  background: #357a62;
+  transform: translateY(-1px);
+}
+
+.care-btn-quiz-secondary {
+  display: inline-block;
+  background: #f9fafb;
+  color: #2c3e50;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+  margin-right: 10px;
+}
+.care-btn-quiz-secondary:hover {
+  border-color: #4a9d7f;
+  color: #4a9d7f;
+}
+
+.care-quiz-result-desc {
+  font-size: 0.95rem;
+  color: #718096;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.care-quiz-rec-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+.care-quiz-rec-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.care-quiz-rec-emoji {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.care-quiz-rec-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.care-quiz-rec-info strong {
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+.care-quiz-rec-info span {
+  font-size: 0.8rem;
+  color: #4a9d7f;
+  font-weight: 700;
+}
+
+.care-quiz-rec-btn {
+  padding: 6px 14px;
+  border: 2px solid #4a9d7f;
+  border-radius: 8px;
+  color: #4a9d7f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.care-quiz-rec-btn:hover {
+  background: #4a9d7f;
+  color: #fff;
+  text-decoration: none;
+}
+
+.care-quiz-result-actions {
+  text-align: center;
+}
+
+.care-recently-viewed {
+  padding: 48px 0;
+  background: #f9fafb;
+  border-top: 1px solid #e2e8f0;
+}
+
+.care-recent-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+.care-recent-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+.care-recent-image {
+  background: linear-gradient(135deg, rgb(217.8909090909, 237.5090909091, 230.4181818182) 0%, rgb(245.6207792208, 250.5792207792, 248.787012987) 100%);
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-recent-emoji {
+  font-size: 3rem;
+}
+
+.care-recent-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.care-recent-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.care-recent-price {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #4a9d7f;
+}
+
+.care-recent-link {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.care-compare-btn {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #2c3e50;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.care-compare-btn:hover {
+  border-color: #4a9d7f;
+  color: #4a9d7f;
+  background: rgb(245.6207792208, 250.5792207792, 248.787012987);
+}
+.care-compare-btn.active {
+  background: #4a9d7f;
+  color: #fff;
+  border-color: #4a9d7f;
+}
+
+.care-compare-bar {
+  position: fixed;
+  bottom: -100px;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background: #2c3e50;
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  transition: bottom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.care-compare-bar.visible {
+  bottom: 0;
+}
+@media (max-width: 640px) {
+  .care-compare-bar {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+  }
+}
+
+.care-cbar-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgb(134.7012987013, 198.2987012987, 175.3116883117);
+  white-space: nowrap;
+}
+
+.care-compare-bar-items {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.care-cbar-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.care-cbar-emoji {
+  font-size: 1.2rem;
+}
+
+.care-cbar-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.care-cbar-remove {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.care-cbar-remove:hover {
+  color: #fff;
+}
+
+.care-cbar-count {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+}
+
+.care-cbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.care-btn-compare-now {
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.care-btn-compare-now:hover:not(:disabled) {
+  background: #357a62;
+}
+.care-btn-compare-now:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.care-btn-compare-clear {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.care-btn-compare-clear:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.care-compare-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1200;
+}
+.care-compare-backdrop.open {
+  display: block;
+}
+
+.care-compare-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1300;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 90vw;
+  max-width: 860px;
+  max-height: 85vh;
+  overflow: hidden;
+  flex-direction: column;
+}
+.care-compare-modal.open {
+  display: flex;
+}
+
+.care-compare-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.care-compare-modal-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+.care-compare-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #718096;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.care-compare-modal-close:hover {
+  background: #f0f0f0;
+}
+
+.care-compare-modal-body {
+  overflow: auto;
+  flex: 1;
+  padding: 20px 28px;
+}
+
+.care-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.care-compare-table th, .care-compare-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+.care-compare-table th {
+  background: rgb(238.6883116883, 247.3116883117, 244.1948051948);
+  color: #2c3e50;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.4;
+}
+.care-compare-table td:first-child {
+  font-weight: 600;
+  color: #718096;
+  white-space: nowrap;
+  background: #fafafa;
+  width: 120px;
+}
+.care-compare-table td {
+  text-align: center;
+}
+.care-compare-table tr:last-child td {
+  border-bottom: none;
+}
+.care-compare-table tr:hover td {
+  background: rgb(252.5532467532, 253.8467532468, 253.3792207792);
+}
+.care-compare-table tr:hover td:first-child {
+  background: #f0f0f0;
+}
+
+.care-compare-th-price {
+  color: #4a9d7f;
+  font-size: 1rem;
+  display: block;
+  margin-top: 4px;
+}
+
+.care-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.care-filter-toggle {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.care-filter-toggle:hover, .care-filter-toggle.has-filters {
+  border-color: #4a9d7f;
+  color: #4a9d7f;
+}
+
+.care-filter-badge {
+  display: none;
+  background: #4a9d7f;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.care-advanced-filter-panel {
+  display: none;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+.care-advanced-filter-panel.open {
+  display: block;
+}
+
+.care-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.care-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care-filter-group-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.care-price-range {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.care-price-range input[type=number] {
+  width: 80px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  color: #2c3e50;
+}
+.care-price-range input[type=number]:focus {
+  outline: none;
+  border-color: #4a9d7f;
+}
+.care-price-range .care-price-sep {
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.care-price-vals {
+  font-size: 0.75rem;
+  color: #718096;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.care-price-vals span {
+  color: #4a9d7f;
+  font-weight: 700;
+}
+
+.care-rating-filter-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.care-rating-filter-btn {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.care-rating-filter-btn:hover {
+  border-color: #4a9d7f;
+  color: #4a9d7f;
+}
+.care-rating-filter-btn.active {
+  background: #4a9d7f;
+  color: #fff;
+  border-color: #4a9d7f;
+}
+
+.care-badge-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #2c3e50;
+  cursor: pointer;
+}
+.care-badge-toggle-wrap input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  accent-color: #4a9d7f;
+  cursor: pointer;
+}
+
+.care-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.care-btn-filter-reset {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.care-btn-filter-reset:hover {
+  border-color: #c00;
+  color: #c00;
+}
+
+.care-faq {
+  background: #f9fafb;
+  padding: 60px 0;
+}
+
+.care-faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.care-faq-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.care-faq-item.open {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.care-faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 22px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: color 0.2s;
+}
+.care-faq-question:hover {
+  color: #4a9d7f;
+}
+.care-faq-question .care-faq-icon {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #4a9d7f;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+.care-faq-item.open .care-faq-question .care-faq-icon {
+  transform: rotate(45deg);
+}
+
+.care-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.2s;
+  padding: 0 22px;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: rgb(80.1935483871, 113, 145.8064516129);
+}
+.care-faq-item.open .care-faq-answer {
+  max-height: 300px;
+  padding: 0 22px 20px;
+}
+
+.care-bundles {
+  background: #fff;
+  padding: 70px 0;
+}
+
+.care-bundles-label {
+  display: inline-block;
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+  color: #4a9d7f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-bundles-grid {
+  margin-top: 36px;
+}
+
+.care-bundle-card {
+  position: relative;
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: box-shadow 0.25s, transform 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.care-bundle-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.care-bundle-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f5a623;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.care-bundle-icon {
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
+
+.care-bundle-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.care-bundle-desc {
+  font-size: 0.88rem;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.care-bundle-items {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+.care-bundle-items li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.88rem;
+  color: #2c3e50;
+}
+.care-bundle-items li:last-child {
+  border-bottom: none;
+}
+
+.care-bundle-item-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.care-bundle-pricing {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.care-bundle-original {
+  font-size: 0.85rem;
+  color: #718096;
+  text-decoration: line-through;
+}
+
+.care-bundle-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #4a9d7f;
+}
+
+.care-bundle-savings {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e53e3e;
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 20px;
+  padding: 3px 12px;
+}
+
+.care-bundle-add-btn {
+  width: 100%;
+  padding: 14px;
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: auto;
+}
+.care-bundle-add-btn:hover {
+  background: #357a62;
+  transform: translateY(-1px);
+}
+
+.care-stats-strip {
+  background: #2c3e50;
+  padding: 50px 0;
+}
+
+.care-stat-item {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.care-stat-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #f5a623;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.care-stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.care-social-proof-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c05621;
+  background: #fffaf0;
+  border: 1px solid #fbd38d;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.care-popup-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9000;
+  backdrop-filter: blur(3px);
+}
+.care-popup-backdrop.open {
+  display: block;
+}
+
+.care-newsletter-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: min(480px, 92vw);
+  background: #fff;
+  border-radius: 20px;
+  padding: 44px 36px 36px;
+  z-index: 9001;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+  opacity: 0;
+}
+.care-newsletter-popup.open {
+  display: block;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.care-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #718096;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.care-popup-close:hover {
+  background: #f9fafb;
+}
+
+.care-popup-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.care-popup-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.care-popup-subtitle {
+  font-size: 0.9rem;
+  color: #718096;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.care-popup-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 480px) {
+  .care-popup-input-row {
+    flex-direction: column;
+  }
+}
+
+.care-popup-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.care-popup-input:focus {
+  border-color: #4a9d7f;
+}
+.care-popup-input.care-popup-input-error {
+  border-color: #e53e3e;
+  animation: care-shake 0.35s ease;
+}
+
+@keyframes care-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+.care-popup-submit {
+  padding: 12px 22px;
+  background: #4a9d7f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.care-popup-submit:hover:not(:disabled) {
+  background: #357a62;
+}
+.care-popup-submit:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.care-popup-skip {
+  background: none;
+  border: none;
+  color: #718096;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.care-popup-skip:hover {
+  color: #2c3e50;
+}
+
+.care-popup-success-area {
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.care-popup-success-icon {
+  width: 56px;
+  height: 56px;
+  background: #4a9d7f;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  line-height: 56px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.care-popup-success-text {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  line-height: 1.65;
+}
+.care-popup-success-text strong {
+  color: #4a9d7f;
+}
+
+.care-testimonials {
+  background: #f9fafb;
+  padding: 70px 0;
+}
+
+.care-testimonials-label {
+  display: inline-block;
+  background: rgb(231.7558441558, 244.0441558442, 239.6025974026);
+  color: #4a9d7f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-testimonials-grid {
+  margin-top: 36px;
+}
+
+.care-testimonial-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 30px 28px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+}
+.care-testimonial-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.care-testimonial-card-featured {
+  border: 2px solid #4a9d7f;
+  position: relative;
+  background: linear-gradient(135deg, #fff 80%, rgb(238.6883116883, 247.3116883117, 244.1948051948));
+}
+
+.care-testimonial-featured-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4a9d7f;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.care-testimonial-stars {
+  color: #f5a623;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.care-testimonial-quote {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: rgb(90.1214574899, 102.995951417, 121.8785425101);
+  font-style: italic;
+  margin: 0;
+  flex: 1;
+  border: none;
+  padding: 0;
+}
+
+.care-testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
+}
+
+.care-testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #4a9d7f, #357a62);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.care-testimonial-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.care-testimonial-meta {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 2px;
+}
+
+.care-loyalty {
+  background: linear-gradient(135deg, #2c3e50 0%, rgb(25.9032258065, 36.5, 47.0967741935) 100%);
+  padding: 70px 0 56px;
+}
+
+.care-loyalty-label {
+  display: inline-block;
+  background: rgba(245, 166, 35, 0.2);
+  color: #f5a623;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-section-title-light {
+  color: #fff;
+}
+
+.care-section-subtitle-light {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.care-loyalty-tiers {
+  margin-top: 36px;
+  margin-bottom: 36px;
+}
+
+.care-loyalty-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 32px 26px;
+  text-align: center;
+  height: 100%;
+  position: relative;
+  transition: background 0.2s, transform 0.2s;
+}
+.care-loyalty-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+.care-loyalty-card-gold {
+  border-color: rgba(245, 166, 35, 0.5);
+  background: rgba(245, 166, 35, 0.08);
+}
+
+.care-loyalty-card-platinum {
+  border-color: rgba(167, 139, 250, 0.5);
+  background: rgba(167, 139, 250, 0.06);
+}
+
+.care-loyalty-tier-badge {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f5a623;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.care-loyalty-tier-icon {
+  font-size: 2.6rem;
+  margin-bottom: 12px;
+}
+
+.care-loyalty-tier-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.care-loyalty-tier-range {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.care-loyalty-perks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.care-loyalty-perks li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+}
+
+.care-loyalty-cta-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.care-btn-loyalty-join {
+  background: #f5a623;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+.care-btn-loyalty-join:hover {
+  background: rgb(219.0434782609, 140.3869565217, 9.9565217391);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.care-footer {
+  background: rgb(29.5225806452, 41.6, 53.6774193548);
+  padding: 60px 0 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.care-footer-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.care-footer-tagline {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.care-footer-certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.care-cert-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.care-footer-heading {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.care-footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.care-footer-links a {
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.care-footer-links a:hover {
+  color: #fff;
+}
+
+.care-footer-social {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  width: fit-content;
+}
+.care-social-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.care-footer-payments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.care-payment-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.care-footer-bottom {
+  margin-top: 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 0;
+}
+
+.care-footer-copy {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  margin: 0;
+}
+.care-footer-copy a {
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+}
+.care-footer-copy a:hover {
+  color: #fff;
+}
+
+.care-checkout {
+  background: #f9fafb;
+  min-height: 100vh;
+  padding: 40px 0 80px;
+}
+
+.care-checkout-breadcrumb {
+  margin-bottom: 28px;
+}
+
+.care-checkout-steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 36px;
+  gap: 0;
+}
+
+.care-checkout-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.care-checkout-step .care-step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  color: #718096;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.care-checkout-step .care-step-label {
+  font-size: 0.85rem;
+  color: #718096;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+@media (max-width: 480px) {
+  .care-checkout-step .care-step-label {
+    display: none;
+  }
+}
+.care-checkout-step.active .care-step-num {
+  background: #4a9d7f;
+  border-color: #4a9d7f;
+  color: #fff;
+}
+.care-checkout-step.active .care-step-label {
+  color: #2c3e50;
+}
+.care-checkout-step.done .care-step-num {
+  background: rgb(204.025974026, 230.974025974, 221.2337662338);
+  border-color: #4a9d7f;
+  color: #4a9d7f;
+}
+.care-checkout-step.done .care-step-num::before {
+  content: "✓";
+}
+.care-checkout-step.done .care-step-num {
+  font-size: 0;
+}
+.care-checkout-step.done .care-step-num::before {
+  font-size: 0.85rem;
+}
+.care-checkout-step.done .care-step-label {
+  color: #4a9d7f;
+}
+
+.care-checkout-step-divider {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 12px;
+  min-width: 20px;
+}
+@media (max-width: 480px) {
+  .care-checkout-step-divider {
+    min-width: 10px;
+    margin: 0 6px;
+  }
+}
+
+.care-checkout-panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 28px;
+  margin-bottom: 20px;
+}
+
+.care-checkout-panel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.care-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .care-form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.care-checkout-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: #2c3e50;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.care-checkout-input:focus {
+  border-color: #4a9d7f;
+}
+.care-checkout-input.care-input-error {
+  border-color: #e53e3e;
+  background: #fff5f5;
+  animation: care-shake 0.35s ease;
+}
+
+.care-checkout-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23718096' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.care-payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.care-payment-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.15s;
+}
+.care-payment-option input[type=radio] {
+  display: none;
+}
+.care-payment-option.active {
+  border-color: #4a9d7f;
+  background: rgb(245.6207792208, 250.5792207792, 248.787012987);
+}
+.care-payment-option:hover:not(.active) {
+  border-color: rgb(169.3636363636, 214.6363636364, 198.2727272727);
+}
+
+.care-payment-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.care-payment-info {
+  flex: 1;
+}
+.care-payment-info strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+.care-payment-info span {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.care-payment-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4a9d7f;
+  color: #fff;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.care-payment-option.active .care-payment-check {
+  opacity: 1;
+}
+
+.care-card-fields {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+  margin-bottom: 8px;
+}
+
+.care-review-address-box,
+.care-review-payment-box {
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #2c3e50;
+}
+
+.care-review-section-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.care-review-email {
+  color: #4a9d7f;
+  margin-top: 4px;
+}
+
+.care-checkout-terms {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  transition: border-color 0.2s;
+}
+.care-checkout-terms.care-terms-error {
+  border-color: #e53e3e;
+  background: #fff5f5;
+}
+
+.care-terms-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: #2c3e50;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.care-terms-label input[type=checkbox] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #4a9d7f;
+}
+.care-terms-label a {
+  color: #4a9d7f;
+}
+
+.care-checkout-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.care-btn-checkout-back {
+  background: none;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+.care-btn-checkout-back:hover {
+  border-color: #2c3e50;
+  color: #2c3e50;
+}
+
+.care-btn-checkout-next {
+  background: #4a9d7f;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.15s;
+}
+.care-btn-checkout-next:hover:not(:disabled) {
+  background: #357a62;
+  transform: translateY(-1px);
+  color: #fff;
+}
+.care-btn-checkout-next:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.care-btn-order-submit {
+  background: #f5a623;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 30px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.care-btn-order-submit:hover:not(:disabled) {
+  background: rgb(219.0434782609, 140.3869565217, 9.9565217391);
+  transform: translateY(-1px);
+}
+.care-btn-order-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.care-order-summary {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 26px 24px;
+  position: sticky;
+  top: 20px;
+}
+
+.care-order-summary-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.care-order-summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.care-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.care-summary-item-emoji {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.care-summary-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.care-summary-item-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.care-summary-item-qty {
+  font-size: 0.78rem;
+  color: #718096;
+}
+
+.care-summary-item-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #2c3e50;
+  flex-shrink: 0;
+}
+
+.care-order-summary-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: #718096;
+}
+
+.care-summary-total {
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 700;
+  padding-top: 10px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 4px;
+}
+
+.care-checkout-trust {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.care-checkout-trust span {
+  font-size: 0.78rem;
+  color: #718096;
+}
+
+.care-checkout-success {
+  text-align: center;
+  padding: 56px 32px;
+}
+
+.care-success-icon {
+  width: 72px;
+  height: 72px;
+  background: #4a9d7f;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 2rem;
+  line-height: 72px;
+  text-align: center;
+  margin: 0 auto 24px;
+}
+
+.care-success-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 14px;
+}
+
+.care-success-text {
+  font-size: 0.95rem;
+  color: #718096;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.care-success-order-num {
+  display: inline-block;
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 28px;
+}
+
+.care-success-actions {
+  margin-top: 4px;
+}
+
+  </style>
+</head>
+<body class="care-products-page">
+
+<!-- Cart Widget -->
+<div class="care-cart-wrapper">
+  <button class="care-cart-trigger" id="care-cart-trigger" title="Warenkorb">
+    🛒
+    <span class="care-cart-badge" id="care-cart-badge" style="display:none;">0</span>
+  </button>
+  <div class="care-cart-panel" id="care-cart-panel">
+    <div class="care-cart-panel-header">
+      <h3>Ihr Warenkorb</h3>
+      <button class="care-cart-close" id="care-cart-close">✕</button>
+    </div>
+    <div class="care-cart-panel-items" id="care-cart-panel-items">
+      <p class="care-cart-empty">Ihr Warenkorb ist leer.</p>
+    </div>
+    <div class="care-cart-panel-footer">
+      <div class="care-coupon-wrap">
+        <input type="text" class="care-coupon-input" id="care-coupon-input" placeholder="Gutscheincode eingeben …">
+        <button class="care-coupon-btn" id="care-coupon-btn">Einlösen</button>
+      </div>
+      <div class="care-coupon-msg" id="care-coupon-msg"></div>
+      <div class="care-cart-subtotal-row">
+        <span>Zwischensumme:</span>
+        <span id="care-cart-subtotal">0,00 €</span>
+      </div>
+      <div class="care-cart-discount-row" id="care-cart-discount-row" style="display:none;">
+        <span id="care-cart-discount-label">Rabatt:</span>
+        <span id="care-cart-discount-val" class="care-discount-val">−0,00 €</span>
+      </div>
+      <div class="care-cart-total-row">
+        <span>Gesamt:</span>
+        <strong id="care-cart-total">0,00 €</strong>
+      </div>
+      <a href="#checkout" class="care-btn-checkout" id="care-btn-checkout">Zur Kasse →</a>
+      <div class="care-trust-badges">
+        <span class="care-trust-badge" title="Sichere Zahlung">🔒 Sicher</span>
+        <span class="care-trust-badge" title="Kostenlose Rückgabe">↩ Gratis Rückgabe</span>
+        <span class="care-trust-badge" title="Schneller Versand">🚚 2–3 Tage</span>
+      </div>
+    </div>
+  </div>
+  <div class="care-cart-overlay" id="care-cart-overlay"></div>
+</div>
+
+<!-- Toast -->
+<div class="care-toast" id="care-toast"></div>
+
+<!-- Promo Bar -->
+<div class="care-promo-bar" id="care-promo-bar">
+  <div class="care-promo-bar-inner">
+    <div class="care-promo-messages" id="care-promo-messages">
+      <span class="care-promo-msg active">🚚 Kostenloser Versand ab 25 € – Schnell und zuverlässig zu Ihnen</span>
+      <span class="care-promo-msg">🌿 Alle Produkte vegan &amp; ohne Tierversuche zertifiziert</span>
+      <span class="care-promo-msg">🎁 10 % Rabatt bei Newsletter-Anmeldung – Code: <strong>WILLKOMMEN10</strong></span>
+      <span class="care-promo-msg">⭐ Über 50.000 zufriedene Kundinnen und Kunden</span>
+    </div>
+    <button class="care-promo-close" id="care-promo-close" title="Schließen">✕</button>
+  </div>
+</div>
+
+<!-- Compare Bar -->
+<div class="care-compare-bar" id="care-compare-bar">
+  <span class="care-cbar-label">Vergleichen:</span>
+  <div class="care-compare-bar-items" id="care-compare-bar-items"></div>
+  <span class="care-cbar-count" id="care-cbar-count"></span>
+  <div class="care-cbar-actions">
+    <button class="care-btn-compare-now" id="care-compare-now" disabled>Jetzt vergleichen →</button>
+    <button class="care-btn-compare-clear" id="care-compare-clear">Auswahl löschen</button>
+  </div>
+</div>
+<div class="care-compare-backdrop" id="care-compare-backdrop"></div>
+<div class="care-compare-modal" id="care-compare-modal">
+  <div class="care-compare-modal-header">
+    <h3>Produktvergleich</h3>
+    <button class="care-compare-modal-close" id="care-compare-modal-close">✕</button>
+  </div>
+  <div class="care-compare-modal-body">
+    <table class="care-compare-table"><tbody id="care-compare-table-body"></tbody></table>
+  </div>
+</div>
+
+<!-- Scroll-to-Top -->
+<button class="care-scroll-top" id="care-scroll-top" title="Nach oben">↑</button>
+
+<!-- Hero -->
+<section class="care-hero">
+  <div class="care-hero-overlay">
+    <div class="row">
+      <div class="small-12 column text-center">
+        <h1 class="care-hero-title">Natürliche Pflegeartikel</h1>
+        <p class="care-hero-subtitle">Entdecken Sie unsere sorgfältig ausgewählten Pflegeprodukte – für Ihr tägliches Wohlbefinden</p>
+        <a href="#angebote" class="button care-btn-primary care-btn-hero-sale">🏷 Aktuelle Angebote</a>
+        <a href="#produkte" class="button care-btn-primary care-btn-hero-ghost">Alle Produkte</a>
+        <div class="care-hero-quiz-hint">
+          Noch unsicher? <button class="care-quiz-trigger" id="care-quiz-trigger">✨ Hauttyp-Quiz starten</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sale / Angebote -->
+<section class="care-sale" id="angebote">
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-sale-header">
+        <div class="care-sale-label">🏷 Aktuelle Angebote</div>
+        <h2 class="care-section-title">Wochendeal – Bis zu 36 % sparen</h2>
+        <div class="care-sale-countdown" id="care-countdown">
+          Angebot endet in: <span id="care-countdown-timer">--:--:--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-2 large-up-4 care-sale-grid">
+    <div class="column">
+      <div class="care-sale-card">
+        <div class="care-sale-discount-badge">−33%</div>
+        <div class="care-sale-image"><span class="care-sale-emoji">🧴</span></div>
+        <div class="care-sale-body">
+          <h3 class="care-sale-name">Verwöhn-Duschgel</h3>
+          <div class="care-sale-prices">
+            <span class="care-sale-original">8,99 €</span>
+            <span class="care-sale-price">5,99 €</span>
+          </div>
+          <button class="care-btn-sale-cart" data-care-add-cart="true" data-product-id="sale-1" data-product-name="Verwöhn-Duschgel (Sale)" data-product-price="5,99 €" data-product-emoji="🧴">In den Warenkorb</button>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-sale-card">
+        <div class="care-sale-discount-badge">−28%</div>
+        <div class="care-sale-image"><span class="care-sale-emoji">✨</span></div>
+        <div class="care-sale-body">
+          <h3 class="care-sale-name">Nährendes Haarshampoo</h3>
+          <div class="care-sale-prices">
+            <span class="care-sale-original">12,49 €</span>
+            <span class="care-sale-price">8,99 €</span>
+          </div>
+          <button class="care-btn-sale-cart" data-care-add-cart="true" data-product-id="sale-2" data-product-name="Nährendes Haarshampoo (Sale)" data-product-price="8,99 €" data-product-emoji="✨">In den Warenkorb</button>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-sale-card">
+        <div class="care-sale-discount-badge">−36%</div>
+        <div class="care-sale-image"><span class="care-sale-emoji">🦷</span></div>
+        <div class="care-sale-body">
+          <h3 class="care-sale-name">Whitening Zahnpasta</h3>
+          <div class="care-sale-prices">
+            <span class="care-sale-original">6,99 €</span>
+            <span class="care-sale-price">4,49 €</span>
+          </div>
+          <button class="care-btn-sale-cart" data-care-add-cart="true" data-product-id="sale-3" data-product-name="Whitening Zahnpasta (Sale)" data-product-price="4,49 €" data-product-emoji="🦷">In den Warenkorb</button>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-sale-card">
+        <div class="care-sale-discount-badge">−30%</div>
+        <div class="care-sale-image"><span class="care-sale-emoji">🌸</span></div>
+        <div class="care-sale-body">
+          <h3 class="care-sale-name">Baby Pflegelotion</h3>
+          <div class="care-sale-prices">
+            <span class="care-sale-original">9,99 €</span>
+            <span class="care-sale-price">6,99 €</span>
+          </div>
+          <button class="care-btn-sale-cart" data-care-add-cart="true" data-product-id="sale-4" data-product-name="Baby Pflegelotion (Sale)" data-product-price="6,99 €" data-product-emoji="🌸">In den Warenkorb</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Kategorien -->
+<section class="care-categories">
+  <div class="row">
+    <div class="small-12 column">
+      <h2 class="care-section-title">Unsere Kategorien</h2>
+      <p class="care-section-subtitle">Finden Sie die perfekte Pflege für jeden Bedarf</p>
+    </div>
+  </div>
+  <div class="row small-up-2 medium-up-3 large-up-6 care-categories-grid">
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">💧</span><h3 class="care-category-name">Hautpflege</h3><p class="care-category-desc">Cremes, Lotionen und Seren für strahlende Haut</p></a></div>
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">✨</span><h3 class="care-category-name">Haarpflege</h3><p class="care-category-desc">Shampoos, Spülungen und Haarkuren für gesundes Haar</p></a></div>
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">🧴</span><h3 class="care-category-name">Körperpflege</h3><p class="care-category-desc">Duschgele, Badeöle und Körperlotionen</p></a></div>
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">🦷</span><h3 class="care-category-name">Mundpflege</h3><p class="care-category-desc">Zahnpasten, Mundspülungen und Zahnbürsten</p></a></div>
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">☀️</span><h3 class="care-category-name">Sonnenpflege</h3><p class="care-category-desc">Sonnencreme, After-Sun und Selbstbräuner</p></a></div>
+    <div class="column"><a href="#produkte" class="care-category-card"><span class="care-category-icon">🌸</span><h3 class="care-category-name">Babypflege</h3><p class="care-category-desc">Sanfte Pflegeprodukte für die zarte Babyhaut</p></a></div>
+  </div>
+</section>
+
+<!-- Such- und Sortierleiste -->
+<section class="care-search-bar" id="produkte">
+  <div class="row">
+    <div class="small-12 medium-6 column">
+      <div class="care-search-wrap">
+        <span class="care-search-icon">🔍</span>
+        <input type="text" id="care-search-input" class="care-search-input" placeholder="Produkt suchen …" autocomplete="off">
+        <button class="care-search-clear" id="care-search-clear" style="display:none;">✕</button>
+      </div>
+    </div>
+    <div class="small-12 medium-3 column">
+      <select class="care-sort-select" id="care-sort-select">
+        <option value="default">Sortierung</option>
+        <option value="price-asc">Preis aufsteigend</option>
+        <option value="price-desc">Preis absteigend</option>
+        <option value="rating-desc">Beste Bewertung</option>
+        <option value="reviews-desc">Meiste Bewertungen</option>
+        <option value="name-asc">Name A–Z</option>
+      </select>
+    </div>
+    <div class="small-12 medium-2 column">
+      <button class="care-filter-toggle" id="care-filter-toggle">
+        🎛 Filter
+        <span class="care-filter-badge" id="care-filter-badge" style="display:none;">0</span>
+      </button>
+    </div>
+    <div class="small-12 medium-1 column">
+      <div class="care-results-count" id="care-results-count">8 Produkte</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-advanced-filter-panel" id="care-advanced-filter-panel">
+        <div class="care-filter-grid">
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Preis (€)</span>
+            <div class="care-price-range">
+              <input type="number" id="care-filter-min-price" placeholder="Von" min="0" max="100" step="1">
+              <span class="care-price-sep">–</span>
+              <input type="number" id="care-filter-max-price" placeholder="Bis" min="0" max="100" step="1">
+            </div>
+            <div class="care-price-vals">Von <span id="care-filter-min-val">0 €</span> bis <span id="care-filter-max-val">∞</span></div>
+          </div>
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Mindestbewertung</span>
+            <div class="care-rating-filter-btns">
+              <button class="care-rating-filter-btn" data-rating="1">★ 1+</button>
+              <button class="care-rating-filter-btn" data-rating="2">★★ 2+</button>
+              <button class="care-rating-filter-btn" data-rating="3">★★★ 3+</button>
+              <button class="care-rating-filter-btn" data-rating="4">★★★★ 4+</button>
+              <button class="care-rating-filter-btn" data-rating="5">★★★★★ 5+</button>
+            </div>
+          </div>
+          <div class="care-filter-group">
+            <span class="care-filter-group-label">Weitere Filter</span>
+            <label class="care-badge-toggle-wrap">
+              <input type="checkbox" id="care-filter-badge-toggle">
+              Nur Produkte mit Auszeichnung
+            </label>
+          </div>
+        </div>
+        <div class="care-filter-actions">
+          <button class="care-btn-filter-reset" id="care-filter-reset-btn">Alle Filter zurücksetzen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Produkte -->
+<section class="care-products">
+  <div class="row small-up-1 medium-up-2 large-up-3 care-products-grid" id="care-products-grid">
+
+    <div class="column care-product-col" data-name="feuchtigkeitscreme premium" data-category="hautpflege" data-price="2499" data-rating="4.8" data-reviews="142" data-badge="Bestseller">
+      <div class="care-product-card">
+        <span class="care-product-badge">Bestseller</span>
+        <button class="care-wishlist-btn" data-product-id="1" data-product-name="Feuchtigkeitscreme Premium" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">💧</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Hautpflege</span>
+          <h3 class="care-product-name">Feuchtigkeitscreme Premium</h3>
+          <p class="care-product-description">Intensive Feuchtigkeitspflege mit Hyaluron und Vitamin E für 24h Feuchtigkeit.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.8</span><span class="care-rating-count">(142 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">24,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="1" data-product-name="Feuchtigkeitscreme Premium" data-product-price="24,99 €" data-product-emoji="💧">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="1" data-product-name="Feuchtigkeitscreme Premium" data-product-price="24,99 €" data-product-emoji="💧" data-product-rating="4.8" data-product-reviews="142" data-product-category="Hautpflege" data-product-badge="Bestseller" data-product-desc="Intensive Feuchtigkeitspflege mit Hyaluron und Vitamin E für 24h Feuchtigkeit."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="nährendes haarshampoo" data-category="haarpflege" data-price="1249" data-rating="4.6" data-reviews="98" data-badge="Neu">
+      <div class="care-product-card">
+        <span class="care-product-badge">Neu</span>
+        <button class="care-wishlist-btn" data-product-id="2" data-product-name="Nährendes Haarshampoo" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">✨</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Haarpflege</span>
+          <h3 class="care-product-name">Nährendes Haarshampoo</h3>
+          <p class="care-product-description">Pflegendes Shampoo mit Keratin und Arganöl für glänzendes, gesundes Haar.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.6</span><span class="care-rating-count">(98 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">12,49 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="2" data-product-name="Nährendes Haarshampoo" data-product-price="12,49 €" data-product-emoji="✨">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="2" data-product-name="Nährendes Haarshampoo" data-product-price="12,49 €" data-product-emoji="✨" data-product-rating="4.6" data-product-reviews="98" data-product-category="Haarpflege" data-product-badge="Neu" data-product-desc="Pflegendes Shampoo mit Keratin und Arganöl für glänzendes, gesundes Haar."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="verwöhn-duschgel" data-category="koerperpflege" data-price="899" data-rating="4.5" data-reviews="231" data-badge="">
+      <div class="care-product-card">
+        <button class="care-wishlist-btn" data-product-id="3" data-product-name="Verwöhn-Duschgel" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">🧴</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Körperpflege</span>
+          <h3 class="care-product-name">Verwöhn-Duschgel</h3>
+          <p class="care-product-description">Cremiges Duschgel mit Mandel- und Jojobaöl für samtweiche Haut.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.5</span><span class="care-rating-count">(231 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">8,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="3" data-product-name="Verwöhn-Duschgel" data-product-price="8,99 €" data-product-emoji="🧴">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="3" data-product-name="Verwöhn-Duschgel" data-product-price="8,99 €" data-product-emoji="🧴" data-product-rating="4.5" data-product-reviews="231" data-product-category="Körperpflege" data-product-badge="" data-product-desc="Cremiges Duschgel mit Mandel- und Jojobaöl für samtweiche Haut."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="whitening zahnpasta" data-category="mundpflege" data-price="699" data-rating="4.7" data-reviews="187" data-badge="Bestseller">
+      <div class="care-product-card">
+        <span class="care-product-badge">Bestseller</span>
+        <button class="care-wishlist-btn" data-product-id="4" data-product-name="Whitening Zahnpasta" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">🦷</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Mundpflege</span>
+          <h3 class="care-product-name">Whitening Zahnpasta</h3>
+          <p class="care-product-description">Aufhellende Zahnpasta mit natürlichem Aktivkohle-Komplex.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.7</span><span class="care-rating-count">(187 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">6,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="4" data-product-name="Whitening Zahnpasta" data-product-price="6,99 €" data-product-emoji="🦷">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="4" data-product-name="Whitening Zahnpasta" data-product-price="6,99 €" data-product-emoji="🦷" data-product-rating="4.7" data-product-reviews="187" data-product-category="Mundpflege" data-product-badge="Bestseller" data-product-desc="Aufhellende Zahnpasta mit natürlichem Aktivkohle-Komplex."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="sonnenschutz lsf 50" data-category="sonnenpflege" data-price="1899" data-rating="4.9" data-reviews="304" data-badge="Top-Bewertet">
+      <div class="care-product-card">
+        <span class="care-product-badge">Top-Bewertet</span>
+        <button class="care-wishlist-btn" data-product-id="5" data-product-name="Sonnenschutz LSF 50" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">☀️</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Sonnenpflege</span>
+          <h3 class="care-product-name">Sonnenschutz LSF 50</h3>
+          <p class="care-product-description">Leichte Sonnencreme mit hohem UV-Schutz und feuchtigkeitsspendender Formel.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.9</span><span class="care-rating-count">(304 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">18,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="5" data-product-name="Sonnenschutz LSF 50" data-product-price="18,99 €" data-product-emoji="☀️">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="5" data-product-name="Sonnenschutz LSF 50" data-product-price="18,99 €" data-product-emoji="☀️" data-product-rating="4.9" data-product-reviews="304" data-product-category="Sonnenpflege" data-product-badge="Top-Bewertet" data-product-desc="Leichte Sonnencreme mit hohem UV-Schutz und feuchtigkeitsspendender Formel."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="baby pflegelotion" data-category="babypflege" data-price="999" data-rating="4.8" data-reviews="156" data-badge="Sanfte Formel">
+      <div class="care-product-card">
+        <span class="care-product-badge">Sanfte Formel</span>
+        <button class="care-wishlist-btn" data-product-id="6" data-product-name="Baby Pflegelotion" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">🌸</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Babypflege</span>
+          <h3 class="care-product-name">Baby Pflegelotion</h3>
+          <p class="care-product-description">Zarte Pflegelotion ohne Parfüm und Farbstoffe, dermatologisch getestet.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.8</span><span class="care-rating-count">(156 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">9,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="6" data-product-name="Baby Pflegelotion" data-product-price="9,99 €" data-product-emoji="🌸">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="6" data-product-name="Baby Pflegelotion" data-product-price="9,99 €" data-product-emoji="🌸" data-product-rating="4.8" data-product-reviews="156" data-product-category="Babypflege" data-product-badge="Sanfte Formel" data-product-desc="Zarte Pflegelotion ohne Parfüm und Farbstoffe, dermatologisch getestet."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="anti-aging serum" data-category="hautpflege" data-price="3999" data-rating="4.7" data-reviews="89" data-badge="Premium">
+      <div class="care-product-card">
+        <span class="care-product-badge">Premium</span>
+        <button class="care-wishlist-btn" data-product-id="7" data-product-name="Anti-Aging Serum" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">💧</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Hautpflege</span>
+          <h3 class="care-product-name">Anti-Aging Serum</h3>
+          <p class="care-product-description">Hochkonzentriertes Serum mit Retinol und Peptiden gegen Falten.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.7</span><span class="care-rating-count">(89 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">39,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="7" data-product-name="Anti-Aging Serum" data-product-price="39,99 €" data-product-emoji="💧">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="7" data-product-name="Anti-Aging Serum" data-product-price="39,99 €" data-product-emoji="💧" data-product-rating="4.7" data-product-reviews="89" data-product-category="Hautpflege" data-product-badge="Premium" data-product-desc="Hochkonzentriertes Serum mit Retinol und Peptiden gegen Falten."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column care-product-col" data-name="intensive haarkur" data-category="haarpflege" data-price="1699" data-rating="4.6" data-reviews="73" data-badge="Neu">
+      <div class="care-product-card">
+        <span class="care-product-badge">Neu</span>
+        <button class="care-wishlist-btn" data-product-id="8" data-product-name="Intensive Haarkur" title="Zur Wunschliste">♡</button>
+        <div class="care-product-image"><div class="care-product-image-placeholder"><span class="care-product-emoji">✨</span></div></div>
+        <div class="care-product-body">
+          <span class="care-product-category">Haarpflege</span>
+          <h3 class="care-product-name">Intensive Haarkur</h3>
+          <p class="care-product-description">Tief wirkende Haarkur mit Sheabutter und Arganöl für trockenes Haar.</p>
+          <div class="care-product-rating">
+            <span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span><span class="care-star care-star-filled">★</span>
+            <span class="care-rating-value">4.6</span><span class="care-rating-count">(73 Bewertungen)</span>
+          </div>
+          <div class="care-product-footer">
+            <span class="care-product-price">16,99 €</span>
+            <div class="care-product-actions">
+              <button class="care-btn-add-cart" data-care-add-cart="true" data-product-id="8" data-product-name="Intensive Haarkur" data-product-price="16,99 €" data-product-emoji="✨">In den Warenkorb</button>
+              <a href="#" class="care-btn-outline care-btn-detail-link">Details</a>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="care-compare-btn" data-product-id="8" data-product-name="Intensive Haarkur" data-product-price="16,99 €" data-product-emoji="✨" data-product-rating="4.6" data-product-reviews="73" data-product-category="Haarpflege" data-product-badge="Neu" data-product-desc="Tief wirkende Haarkur mit Sheabutter und Arganöl für trockenes Haar."><span class="care-compare-label">⇌ Vergleichen</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row" id="care-no-results" style="display:none;">
+    <div class="small-12 column text-center care-no-results">
+      <span class="care-no-results-icon">🔍</span>
+      <h3>Keine Produkte gefunden</h3>
+      <p>Versuchen Sie einen anderen Suchbegriff oder setzen Sie die Filter zurück.</p>
+      <button class="care-btn-reset-search" id="care-btn-reset-search">Suche zurücksetzen</button>
+    </div>
+  </div>
+</section>
+
+<!-- Wunschliste-Panel -->
+<div class="care-wishlist-panel" id="care-wishlist-panel">
+  <div class="care-wishlist-header">
+    <h3>Meine Wunschliste</h3>
+    <button class="care-cart-close" id="care-wishlist-close">✕</button>
+  </div>
+  <div class="care-wishlist-items" id="care-wishlist-items">
+    <p class="care-cart-empty">Ihre Wunschliste ist leer.</p>
+  </div>
+</div>
+
+<!-- Vorteile -->
+<section class="care-benefits">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <h2 class="care-section-title care-section-title-light">Warum uns wählen?</h2>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-2 large-up-4">
+    <div class="column"><div class="care-benefit-card"><div class="care-benefit-icon">🌿</div><h3>Natürliche Inhaltsstoffe</h3><p>Alle Produkte bestehen aus sorgfältig ausgewählten, natürlichen Rohstoffen ohne schädliche Zusätze.</p></div></div>
+    <div class="column"><div class="care-benefit-card"><div class="care-benefit-icon">🔬</div><h3>Dermatologisch getestet</h3><p>Jedes Produkt wurde durch unabhängige Dermatologinnen und Dermatologen geprüft und zertifiziert.</p></div></div>
+    <div class="column"><div class="care-benefit-card"><div class="care-benefit-icon">♻️</div><h3>Nachhaltig verpackt</h3><p>Wir verwenden recycelbare und umweltfreundliche Verpackungen für eine bessere Zukunft.</p></div></div>
+    <div class="column"><div class="care-benefit-card"><div class="care-benefit-icon">🚚</div><h3>Schnelle Lieferung</h3><p>Kostenloser Versand ab 25 € – Ihre Bestellung kommt innerhalb von 2–3 Werktagen an.</p></div></div>
+  </div>
+</section>
+
+<!-- Kundenstimmen -->
+<section class="care-testimonials">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <div class="care-testimonials-label">💬 Was unsere Kunden sagen</div>
+      <h2 class="care-section-title">Echte Erfahrungen, echte Ergebnisse</h2>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-3 care-testimonials-grid">
+    <div class="column">
+      <div class="care-testimonial-card">
+        <div class="care-testimonial-stars">★★★★★</div>
+        <blockquote class="care-testimonial-quote">„Ich habe unzählige Cremes ausprobiert – diese hier ist die erste, die meine trockene Haut wirklich dauerhaft mit Feuchtigkeit versorgt. Ich bestelle seit einem Jahr und werde nie wieder wechseln."</blockquote>
+        <div class="care-testimonial-author">
+          <div class="care-testimonial-avatar">M</div>
+          <div><div class="care-testimonial-name">Martina W.</div><div class="care-testimonial-meta">Stammkundin seit 2023 · Feuchtigkeitscreme Premium</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-testimonial-card care-testimonial-card-featured">
+        <div class="care-testimonial-featured-badge">Beliebteste Bewertung</div>
+        <div class="care-testimonial-stars">★★★★★</div>
+        <blockquote class="care-testimonial-quote">„Als Mutter eines Kleinkindes ist mir bei Pflegeprodukten die Sicherheit das Wichtigste. Die Baby Pflegelotion ist sanft, ohne Parfüm und mein Kind liebt es. Kein Vergleich zu Markenartikeln im Supermarkt!"</blockquote>
+        <div class="care-testimonial-author">
+          <div class="care-testimonial-avatar">S</div>
+          <div><div class="care-testimonial-name">Sandra K.</div><div class="care-testimonial-meta">Verifizierter Kauf · Baby Pflegelotion</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-testimonial-card">
+        <div class="care-testimonial-stars">★★★★★</div>
+        <blockquote class="care-testimonial-quote">„Das Anti-Aging Serum zeigt nach drei Wochen bereits sichtbare Wirkung. Fältchen um die Augen sind weniger geworden, die Haut wirkt straffer. Für den Preis absolute Topqualität."</blockquote>
+        <div class="care-testimonial-author">
+          <div class="care-testimonial-avatar">R</div>
+          <div><div class="care-testimonial-name">Renate H.</div><div class="care-testimonial-meta">Verifizierter Kauf · Anti-Aging Serum</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pflegetipps -->
+<section class="care-tips">
+  <div class="row">
+    <div class="small-12 column">
+      <h2 class="care-section-title">Pflegetipps &amp; Wissen</h2>
+      <p class="care-section-subtitle">Expertenwissen für Ihre tägliche Pflegeroutine</p>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-3 care-tips-grid">
+    <div class="column">
+      <article class="care-tip-card">
+        <div class="care-tip-image"><span class="care-tip-emoji">💧</span></div>
+        <div class="care-tip-body">
+          <span class="care-tip-tag">Hautpflege</span>
+          <h3 class="care-tip-title">Die richtige Feuchtigkeitspflege für jeden Hauttyp</h3>
+          <p class="care-tip-excerpt">Ob trockene, fettige oder Mischhaut – die richtige Creme macht den Unterschied.</p>
+          <div class="care-tip-meta"><span class="care-tip-date">15. Februar 2026</span><span class="care-tip-read">5 Min Lesezeit</span></div>
+          <a href="#" class="care-tip-link">Weiterlesen →</a>
+        </div>
+      </article>
+    </div>
+    <div class="column">
+      <article class="care-tip-card">
+        <div class="care-tip-image care-tip-image-green"><span class="care-tip-emoji">🌿</span></div>
+        <div class="care-tip-body">
+          <span class="care-tip-tag">Inhaltsstoffe</span>
+          <h3 class="care-tip-title">Natürliche Inhaltsstoffe: Was steckt in Ihren Pflegeprodukten?</h3>
+          <p class="care-tip-excerpt">Hyaluronsäure, Retinol, Ceramide – wir erklären, welche Wirkstoffe wirklich funktionieren.</p>
+          <div class="care-tip-meta"><span class="care-tip-date">8. Februar 2026</span><span class="care-tip-read">7 Min Lesezeit</span></div>
+          <a href="#" class="care-tip-link">Weiterlesen →</a>
+        </div>
+      </article>
+    </div>
+    <div class="column">
+      <article class="care-tip-card">
+        <div class="care-tip-image care-tip-image-sun"><span class="care-tip-emoji">☀️</span></div>
+        <div class="care-tip-body">
+          <span class="care-tip-tag">Sonnenpflege</span>
+          <h3 class="care-tip-title">Sonnenschutz: Das müssen Sie das ganze Jahr über beachten</h3>
+          <p class="care-tip-excerpt">UV-Strahlung schadet auch im Winter. Erfahren Sie, warum täglicher Sonnenschutz wichtig ist.</p>
+          <div class="care-tip-meta"><span class="care-tip-date">1. Februar 2026</span><span class="care-tip-read">4 Min Lesezeit</span></div>
+          <a href="#" class="care-tip-link">Weiterlesen →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Bundles -->
+<section class="care-bundles">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <div class="care-bundles-label">📦 Vorteilspakete</div>
+      <h2 class="care-section-title">Spare mehr mit unseren Bundles</h2>
+      <p class="care-section-subtitle">Aufeinander abgestimmte Produkte – zu einem unschlagbaren Paketpreis</p>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-3 care-bundles-grid">
+    <div class="column">
+      <div class="care-bundle-card">
+        <span class="care-bundle-badge">Beliebt</span>
+        <div class="care-bundle-icon">🌿</div>
+        <h3 class="care-bundle-name">Starter Pflege-Set</h3>
+        <p class="care-bundle-desc">Die perfekte Einführung in natürliche Pflege – alles was Sie zum Start brauchen.</p>
+        <ul class="care-bundle-items">
+          <li><span class="care-bundle-item-icon">💧</span> Feuchtigkeitscreme Premium</li>
+          <li><span class="care-bundle-item-icon">🧴</span> Verwöhn-Duschgel</li>
+          <li><span class="care-bundle-item-icon">🦷</span> Whitening Zahnpasta</li>
+        </ul>
+        <div class="care-bundle-pricing">
+          <span class="care-bundle-original">40,97 €</span>
+          <span class="care-bundle-price">29,99 €</span>
+          <span class="care-bundle-savings">Sie sparen 10,98 €</span>
+        </div>
+        <button class="care-bundle-add-btn" data-bundle-id="1" data-product-ids="1|3|4" data-product-names="Feuchtigkeitscreme Premium|Verwöhn-Duschgel|Whitening Zahnpasta" data-product-prices="24,99 €|8,99 €|6,99 €" data-product-emojis="💧|🧴|🦷">Paket in den Warenkorb</button>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-bundle-card">
+        <span class="care-bundle-badge">Bestseller</span>
+        <div class="care-bundle-icon">✨</div>
+        <h3 class="care-bundle-name">Premium Hautpflege-Paket</h3>
+        <p class="care-bundle-desc">Das Beste für Ihre Haut: Anti-Aging Serum und intensive Feuchtigkeitspflege kombiniert.</p>
+        <ul class="care-bundle-items">
+          <li><span class="care-bundle-item-icon">💧</span> Feuchtigkeitscreme Premium</li>
+          <li><span class="care-bundle-item-icon">💧</span> Anti-Aging Serum</li>
+          <li><span class="care-bundle-item-icon">☀️</span> Sonnenschutz LSF 50</li>
+        </ul>
+        <div class="care-bundle-pricing">
+          <span class="care-bundle-original">83,97 €</span>
+          <span class="care-bundle-price">59,99 €</span>
+          <span class="care-bundle-savings">Sie sparen 23,98 €</span>
+        </div>
+        <button class="care-bundle-add-btn" data-bundle-id="2" data-product-ids="1|7|5" data-product-names="Feuchtigkeitscreme Premium|Anti-Aging Serum|Sonnenschutz LSF 50" data-product-prices="24,99 €|39,99 €|18,99 €" data-product-emojis="💧|💧|☀️">Paket in den Warenkorb</button>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-bundle-card">
+        <span class="care-bundle-badge">Neu</span>
+        <div class="care-bundle-icon">🌸</div>
+        <h3 class="care-bundle-name">Familienpaket Rundumpflege</h3>
+        <p class="care-bundle-desc">Für die ganze Familie: von Babypflege bis Haarpflege – alle optimal versorgt.</p>
+        <ul class="care-bundle-items">
+          <li><span class="care-bundle-item-icon">🌸</span> Baby Pflegelotion</li>
+          <li><span class="care-bundle-item-icon">🧴</span> Verwöhn-Duschgel</li>
+          <li><span class="care-bundle-item-icon">✨</span> Intensive Haarkur</li>
+        </ul>
+        <div class="care-bundle-pricing">
+          <span class="care-bundle-original">35,97 €</span>
+          <span class="care-bundle-price">24,99 €</span>
+          <span class="care-bundle-savings">Sie sparen 10,98 €</span>
+        </div>
+        <button class="care-bundle-add-btn" data-bundle-id="3" data-product-ids="6|3|8" data-product-names="Baby Pflegelotion|Verwöhn-Duschgel|Intensive Haarkur" data-product-prices="9,99 €|8,99 €|16,99 €" data-product-emojis="🌸|🧴|✨">Paket in den Warenkorb</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="care-faq">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <h2 class="care-section-title">Häufige Fragen</h2>
+      <p class="care-section-subtitle">Alles, was Sie über unsere Pflegeprodukte wissen möchten</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 column">
+      <div class="care-faq-list">
+        <div class="care-faq-item">
+          <button class="care-faq-question">Sind alle Produkte dermatologisch getestet?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Ja, alle unsere Pflegeprodukte wurden von unabhängigen Dermatologen geprüft und zertifiziert. Wir legen größten Wert auf Sicherheit und Verträglichkeit – besonders für empfindliche Haut.</div>
+        </div>
+        <div class="care-faq-item">
+          <button class="care-faq-question">Ab welchem Bestellwert ist der Versand kostenlos?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Ab einem Bestellwert von 25 € liefern wir kostenlos innerhalb Deutschlands. Für kleinere Bestellungen berechnen wir eine pauschale Versandgebühr von 3,99 €. Die Lieferzeit beträgt 2–3 Werktage.</div>
+        </div>
+        <div class="care-faq-item">
+          <button class="care-faq-question">Kann ich Produkte zurücksenden?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Selbstverständlich! Sie haben 30 Tage Zeit, unbenutzte Produkte in der Originalverpackung zurückzusenden. Der Rückversand ist für Sie völlig kostenlos.</div>
+        </div>
+        <div class="care-faq-item">
+          <button class="care-faq-question">Sind die Produkte vegan und tierversuchsfrei?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Alle unsere Produkte sind 100 % vegan und werden nicht an Tieren getestet. Wir verzichten konsequent auf tierische Inhaltsstoffe und setzen ausschließlich auf pflanzliche Alternativen.</div>
+        </div>
+        <div class="care-faq-item">
+          <button class="care-faq-question">Wie funktionieren die Gutscheincodes?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Gutscheincodes können Sie direkt im Warenkorb einlösen. Der Rabatt wird sofort vom Gesamtbetrag abgezogen. Aktuell gültige Codes finden Sie in unserem Newsletter.</div>
+        </div>
+        <div class="care-faq-item">
+          <button class="care-faq-question">Welche Inhaltsstoffe werden in Ihren Produkten verwendet?<span class="care-faq-icon">+</span></button>
+          <div class="care-faq-answer">Wir verwenden ausschließlich hochwertige, natürliche Wirkstoffe wie Hyaluronsäure, Aloe Vera, Arganöl, Sheabutter, Vitamin E und Panthenol. Auf synthetische Duftstoffe, Parabene und Silikone verzichten wir vollständig.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Treueprogramm -->
+<section class="care-loyalty">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <div class="care-loyalty-label">⭐ Treueprogramm</div>
+      <h2 class="care-section-title care-section-title-light">Sammeln Sie Punkte, genießen Sie Vorteile</h2>
+      <p class="care-section-subtitle care-section-subtitle-light">Mit jedem Einkauf kommen Sie Ihrer nächsten Belohnung näher</p>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-3 care-loyalty-tiers">
+    <div class="column">
+      <div class="care-loyalty-card">
+        <div class="care-loyalty-tier-icon">🌱</div>
+        <div class="care-loyalty-tier-name">Starter</div>
+        <div class="care-loyalty-tier-range">0 – 499 Punkte</div>
+        <ul class="care-loyalty-perks">
+          <li>✓ 1 Punkt pro 1 € Einkauf</li>
+          <li>✓ Geburtstagsrabatt 5 %</li>
+          <li>✓ Frühzeitiger Zugang zu Sales</li>
+        </ul>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-loyalty-card care-loyalty-card-gold">
+        <div class="care-loyalty-tier-badge">Beliebt</div>
+        <div class="care-loyalty-tier-icon">🌟</div>
+        <div class="care-loyalty-tier-name">Gold</div>
+        <div class="care-loyalty-tier-range">500 – 1.999 Punkte</div>
+        <ul class="care-loyalty-perks">
+          <li>✓ 1,5 Punkte pro 1 € Einkauf</li>
+          <li>✓ Geburtstagsrabatt 10 %</li>
+          <li>✓ Kostenlose Proben bei jeder Bestellung</li>
+          <li>✓ Exklusive Gold-Angebote</li>
+        </ul>
+      </div>
+    </div>
+    <div class="column">
+      <div class="care-loyalty-card care-loyalty-card-platinum">
+        <div class="care-loyalty-tier-icon">💎</div>
+        <div class="care-loyalty-tier-name">Platin</div>
+        <div class="care-loyalty-tier-range">2.000+ Punkte</div>
+        <ul class="care-loyalty-perks">
+          <li>✓ 2 Punkte pro 1 € Einkauf</li>
+          <li>✓ Geburtstagsrabatt 15 %</li>
+          <li>✓ Kostenloser Expressversand</li>
+          <li>✓ Persönliche Pflegeberatung</li>
+          <li>✓ Vorabzugang zu Neuprodukten</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 column text-center">
+      <p class="care-loyalty-cta-text">Bereits Mitglied? Punkte werden automatisch mit Ihrem Konto verknüpft.</p>
+      <a href="#" class="button care-btn-loyalty-join">Jetzt kostenlos beitreten</a>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="care-newsletter">
+  <div class="row">
+    <div class="small-12 medium-8 medium-centered column text-center">
+      <h2 class="care-newsletter-title">Bleiben Sie informiert</h2>
+      <p class="care-newsletter-text">Melden Sie sich für unseren Newsletter an und erhalten Sie exklusive Angebote, Pflegetipps und als Willkommensgeschenk 10 % Rabatt auf Ihre erste Bestellung.</p>
+      <div class="care-newsletter-form">
+        <input type="email" class="care-newsletter-input" placeholder="Ihre E-Mail-Adresse">
+        <button class="care-btn-newsletter">Jetzt anmelden</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Zuletzt angesehen -->
+<section class="care-recently-viewed" id="care-recently-viewed" style="display:none;">
+  <div class="row">
+    <div class="small-12 column"><h2 class="care-section-title">Zuletzt angesehen</h2></div>
+  </div>
+  <div class="row" id="care-recently-viewed-grid"></div>
+</section>
+
+<!-- Stats Strip -->
+<section class="care-stats-strip" id="care-stats-strip">
+  <div class="row">
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item"><div class="care-stat-num" data-target="12400" data-suffix="+">0</div><div class="care-stat-label">Zufriedene Kunden</div></div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item"><div class="care-stat-num" data-target="98" data-suffix="%">0</div><div class="care-stat-label">Würden uns empfehlen</div></div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item"><div class="care-stat-num" data-target="48" data-suffix="">0</div><div class="care-stat-label">Produkte im Sortiment</div></div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item"><div class="care-stat-num" data-target="5" data-suffix=" Jahre">0</div><div class="care-stat-label">Erfahrung in Naturpflege</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="care-footer">
+  <div class="row">
+    <div class="small-12 medium-4 column">
+      <div class="care-footer-brand">
+        <div class="care-footer-logo">🌿 NaturPflege</div>
+        <p class="care-footer-tagline">Natürliche Pflegeprodukte, dermatologisch geprüft und nachhaltig hergestellt – für Ihr tägliches Wohlbefinden.</p>
+        <div class="care-footer-certs">
+          <span class="care-cert-badge">🌱 Vegan</span>
+          <span class="care-cert-badge">🔬 Derma-Test</span>
+          <span class="care-cert-badge">♻️ Öko-Verpackung</span>
+        </div>
+      </div>
+    </div>
+    <div class="small-6 medium-2 column">
+      <h4 class="care-footer-heading">Produkte</h4>
+      <ul class="care-footer-links">
+        <li><a href="#">Hautpflege</a></li>
+        <li><a href="#">Haarpflege</a></li>
+        <li><a href="#">Körperpflege</a></li>
+        <li><a href="#">Mundpflege</a></li>
+        <li><a href="#">Sonnenpflege</a></li>
+        <li><a href="#">Babypflege</a></li>
+      </ul>
+    </div>
+    <div class="small-6 medium-2 column">
+      <h4 class="care-footer-heading">Service</h4>
+      <ul class="care-footer-links">
+        <li><a href="#">Mein Konto</a></li>
+        <li><a href="#">Bestellverfolgung</a></li>
+        <li><a href="#">Rückgabe &amp; Umtausch</a></li>
+        <li><a href="#">Versandinformationen</a></li>
+        <li><a href="#">Kontakt</a></li>
+      </ul>
+    </div>
+    <div class="small-12 medium-4 column">
+      <h4 class="care-footer-heading">Folgen Sie uns</h4>
+      <div class="care-footer-social">
+        <a href="#" class="care-social-btn" aria-label="Instagram">📸 Instagram</a>
+        <a href="#" class="care-social-btn" aria-label="Facebook">👍 Facebook</a>
+        <a href="#" class="care-social-btn" aria-label="Pinterest">📌 Pinterest</a>
+      </div>
+      <h4 class="care-footer-heading" style="margin-top:24px;">Sicher bezahlen</h4>
+      <div class="care-footer-payments">
+        <span class="care-payment-badge">💳 Kreditkarte</span>
+        <span class="care-payment-badge">🏦 Überweisung</span>
+        <span class="care-payment-badge">📱 PayPal</span>
+      </div>
+    </div>
+  </div>
+  <div class="care-footer-bottom">
+    <div class="row">
+      <div class="small-12 column">
+        <p class="care-footer-copy">
+          © 2026 NaturPflege GmbH &nbsp;·&nbsp;
+          <a href="#">Datenschutz</a> &nbsp;·&nbsp;
+          <a href="#">Impressum</a> &nbsp;·&nbsp;
+          <a href="#">AGB</a> &nbsp;·&nbsp;
+          <a href="#">Cookie-Einstellungen</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Newsletter-Popup -->
+<div class="care-popup-backdrop" id="care-popup-backdrop"></div>
+<div class="care-newsletter-popup" id="care-newsletter-popup" role="dialog" aria-modal="true" aria-label="Newsletter anmelden">
+  <button class="care-popup-close" id="care-popup-close" aria-label="Schließen">✕</button>
+  <div class="care-popup-icon">🎁</div>
+  <h2 class="care-popup-title">10 % Rabatt sichern!</h2>
+  <p class="care-popup-subtitle">Melden Sie sich jetzt für unseren Newsletter an und erhalten Sie sofort einen Willkommensrabatt auf Ihre erste Bestellung.</p>
+  <div id="care-popup-form-area">
+    <div class="care-popup-input-row">
+      <input type="email" id="care-popup-email" class="care-popup-input" placeholder="Ihre E-Mail-Adresse" autocomplete="email">
+      <button class="care-popup-submit" id="care-popup-submit">Jetzt sparen</button>
+    </div>
+    <button class="care-popup-skip" id="care-popup-skip">Nein danke, ich verzichte auf 10 % Rabatt</button>
+  </div>
+  <div id="care-popup-success" style="display:none;" class="care-popup-success-area">
+    <div class="care-popup-success-icon">✓</div>
+    <p class="care-popup-success-text">Super! Ihr Rabattcode <strong>WILLKOMMEN10</strong> wartet in Ihrem Postfach.</p>
+  </div>
+</div>
+
+<!-- Hauttyp-Quiz -->
+<div class="care-quiz-backdrop" id="care-quiz-backdrop"></div>
+<div class="care-quiz-modal" id="care-quiz-modal" role="dialog" aria-modal="true" aria-label="Hauttyp-Quiz">
+  <button class="care-quiz-close" id="care-quiz-close">✕</button>
+  <div class="care-quiz-progress"><div class="care-quiz-progress-bar" id="care-quiz-progress-bar" style="width:0%"></div></div>
+  <div class="care-quiz-steps">
+    <div class="care-quiz-step active" data-step="0">
+      <div class="care-quiz-icon">💆</div>
+      <h2 class="care-quiz-title">Finden Sie Ihre perfekte Pflege</h2>
+      <p class="care-quiz-subtitle">Beantworten Sie 4 kurze Fragen – wir empfehlen Ihnen passende Produkte aus unserem Sortiment.</p>
+      <button class="care-quiz-btn-start care-btn-quiz-primary" data-next="1">Quiz starten →</button>
+    </div>
+    <div class="care-quiz-step" data-step="1">
+      <div class="care-quiz-step-label">Frage 1 von 4</div>
+      <h3 class="care-quiz-question">Wie fühlt sich Ihre Haut nach dem Waschen an?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="1" data-val="trocken">🏜 Trocken und gespannt</button>
+        <button class="care-quiz-option" data-q="1" data-val="normal">🌤 Normal – weder zu trocken noch zu fettig</button>
+        <button class="care-quiz-option" data-q="1" data-val="fettig">💦 Glänzend und fettig</button>
+        <button class="care-quiz-option" data-q="1" data-val="gemischt">🌓 Unterschiedlich – T-Zone fettig, Wangen trocken</button>
+      </div>
+    </div>
+    <div class="care-quiz-step" data-step="2">
+      <div class="care-quiz-step-label">Frage 2 von 4</div>
+      <h3 class="care-quiz-question">Haben Sie empfindliche Haut?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="2" data-val="ja">🌺 Ja – reagiert schnell auf neue Produkte</button>
+        <button class="care-quiz-option" data-q="2" data-val="manchmal">🌼 Manchmal – bei bestimmten Inhaltsstoffen</button>
+        <button class="care-quiz-option" data-q="2" data-val="nein">💪 Nein – verträgt fast alles</button>
+      </div>
+    </div>
+    <div class="care-quiz-step" data-step="3">
+      <div class="care-quiz-step-label">Frage 3 von 4</div>
+      <h3 class="care-quiz-question">Was ist Ihr Hauptpflegeziel?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="3" data-val="feuchtigkeit">💧 Feuchtigkeit und Strahlen</button>
+        <button class="care-quiz-option" data-q="3" data-val="antiaging">⏳ Anti-Aging und Faltenreduktion</button>
+        <button class="care-quiz-option" data-q="3" data-val="klärend">✨ Poren klären und Unreinheiten reduzieren</button>
+        <button class="care-quiz-option" data-q="3" data-val="schutz">🛡 Schutz und Stärkung der Hautbarriere</button>
+      </div>
+    </div>
+    <div class="care-quiz-step" data-step="4">
+      <div class="care-quiz-step-label">Frage 4 von 4</div>
+      <h3 class="care-quiz-question">Welche Textur bevorzugen Sie?</h3>
+      <div class="care-quiz-options">
+        <button class="care-quiz-option" data-q="4" data-val="leicht">🪶 Leichtes Gel oder Fluid</button>
+        <button class="care-quiz-option" data-q="4" data-val="mittel">🧴 Mittelschwere Lotion</button>
+        <button class="care-quiz-option" data-q="4" data-val="reich">🍯 Reichhaltige Creme oder Balsam</button>
+      </div>
+    </div>
+    <div class="care-quiz-step" data-step="5">
+      <div class="care-quiz-icon">🎯</div>
+      <h2 class="care-quiz-title" id="care-quiz-result-title">Ihr Hauttyp</h2>
+      <p class="care-quiz-result-desc" id="care-quiz-result-desc"></p>
+      <div class="care-quiz-recommendations" id="care-quiz-recommendations"></div>
+      <div class="care-quiz-result-actions">
+        <button class="care-quiz-btn-restart care-btn-quiz-secondary" id="care-quiz-restart">Quiz wiederholen</button>
+        <button class="care-quiz-btn-close care-btn-quiz-primary" id="care-quiz-finish">Produkte ansehen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// Care Products – Cart, Wishlist, Search, Sort, Countdown
+// ============================================================
+
+// ---- Cart ----
+var CareCart = (function() {
+  "use strict";
+  var STORAGE_KEY = "care_cart";
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function save(items) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }
+
+  function add(product) {
+    var items = load();
+    var existing = items.find(function(i) { return i.id === product.id; });
+    if (existing) {
+      existing.qty = (existing.qty || 1) + (product.qty || 1);
+    } else {
+      items.push({ id: product.id, name: product.name, price: product.price,
+                   emoji: product.emoji, qty: product.qty || 1 });
+    }
+    save(items);
+    updateBadge();
+    showToast("🛒 \"" + product.name + "\" zum Warenkorb hinzugefügt");
+  }
+
+  function remove(productId) {
+    save(load().filter(function(i) { return i.id !== productId; }));
+    updateBadge();
+    renderCartPanel();
+  }
+
+  function totalCount() {
+    return load().reduce(function(sum, i) { return sum + (i.qty || 1); }, 0);
+  }
+
+  function updateBadge() {
+    var badge = document.getElementById("care-cart-badge");
+    if (!badge) return;
+    var count = totalCount();
+    badge.textContent = count;
+    badge.style.display = count > 0 ? "flex" : "none";
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById("care-toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("visible");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function() { toast.classList.remove("visible"); }, 3000);
+  }
+
+  function renderCartPanel() {
+    var panel = document.getElementById("care-cart-panel-items");
+    if (!panel) return;
+    var items = load();
+
+    if (items.length === 0) {
+      panel.innerHTML = '<p class="care-cart-empty">Ihr Warenkorb ist leer.</p>';
+      var tot = document.getElementById("care-cart-total");
+      if (tot) tot.textContent = "0,00 €";
+      return;
+    }
+
+    var html = "";
+    var total = 0;
+    items.forEach(function(item) {
+      var priceNum = parseFloat(item.price.replace(",", ".").replace(/[^0-9.]/g, "")) || 0;
+      total += priceNum * (item.qty || 1);
+      html += '<div class="care-cart-item">';
+      html += '<span class="care-cart-item-emoji">' + (item.emoji || "🧴") + '</span>';
+      html += '<div class="care-cart-item-info">';
+      html += '<span class="care-cart-item-name">' + item.name + '</span>';
+      html += '<span class="care-cart-item-price">' + item.qty + ' × ' + item.price + '</span>';
+      html += '</div>';
+      html += '<button class="care-cart-remove" data-id="' + item.id + '">✕</button>';
+      html += '</div>';
+    });
+    panel.innerHTML = html;
+
+    var totEl = document.getElementById("care-cart-total");
+    if (totEl) totEl.textContent = total.toFixed(2).replace(".", ",") + " €";
+
+    panel.querySelectorAll(".care-cart-remove").forEach(function(btn) {
+      btn.addEventListener("click", function() { remove(btn.dataset.id); });
+    });
+  }
+
+  function togglePanel() {
+    var panel = document.getElementById("care-cart-panel");
+    if (!panel) return;
+    panel.classList.toggle("open");
+    if (panel.classList.contains("open")) renderCartPanel();
+  }
+
+  function initButtons() {
+    document.querySelectorAll("[data-care-add-cart]").forEach(function(btn) {
+      if (btn._careCartBound) return;
+      btn._careCartBound = true;
+      btn.addEventListener("click", function() {
+        add({ id: btn.dataset.productId, name: btn.dataset.productName,
+              price: btn.dataset.productPrice, emoji: btn.dataset.productEmoji, qty: 1 });
+        var orig = btn.textContent;
+        btn.textContent = "✓ Hinzugefügt!";
+        btn.style.background = "#357a62";
+        setTimeout(function() { btn.textContent = orig; btn.style.background = ""; }, 2000);
+      });
+    });
+  }
+
+  function init() {
+    updateBadge();
+    var trigger = document.getElementById("care-cart-trigger");
+    if (trigger) trigger.addEventListener("click", function(e) { e.preventDefault(); togglePanel(); });
+    var closeBtn = document.getElementById("care-cart-close");
+    if (closeBtn) closeBtn.addEventListener("click", function() {
+      document.getElementById("care-cart-panel").classList.remove("open");
+    });
+    initButtons();
+  }
+
+  return { add: add, remove: remove, load: load, init: init, initButtons: initButtons };
+})();
+
+// ---- Wishlist ----
+var CareWishlist = (function() {
+  "use strict";
+  var STORAGE_KEY = "care_wishlist";
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function save(items) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }
+
+  function toggle(product) {
+    var items = load();
+    var idx = items.findIndex(function(i) { return i.id === product.id; });
+    if (idx > -1) {
+      items.splice(idx, 1);
+      CareCart.init && CareCart.init();   // refresh toast system
+      showToast("💔 \"" + product.name + "\" von der Wunschliste entfernt");
+    } else {
+      items.push(product);
+      showToast("❤️ \"" + product.name + "\" zur Wunschliste hinzugefügt");
+    }
+    save(items);
+    renderPanel();
+    return idx === -1;   // true = now on list
+  }
+
+  function isOn(productId) {
+    return load().some(function(i) { return String(i.id) === String(productId); });
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById("care-toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("visible");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function() { toast.classList.remove("visible"); }, 3000);
+  }
+
+  function renderPanel() {
+    var panel = document.getElementById("care-wishlist-items");
+    if (!panel) return;
+    var items = load();
+    if (items.length === 0) {
+      panel.innerHTML = '<p class="care-cart-empty">Ihre Wunschliste ist leer.</p>';
+      return;
+    }
+    var html = "";
+    items.forEach(function(item) {
+      html += '<div class="care-wishlist-item">';
+      html += '<span class="care-cart-item-emoji">' + (item.emoji || "🧴") + '</span>';
+      html += '<span class="care-cart-item-name">' + item.name + '</span>';
+      html += '<button class="care-wishlist-remove" data-id="' + item.id + '">✕</button>';
+      html += '</div>';
+    });
+    panel.innerHTML = html;
+    panel.querySelectorAll(".care-wishlist-remove").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var its = load().filter(function(i) { return String(i.id) !== btn.dataset.id; });
+        save(its);
+        renderPanel();
+        refreshHearts();
+      });
+    });
+  }
+
+  function refreshHearts() {
+    document.querySelectorAll(".care-wishlist-btn").forEach(function(btn) {
+      var pid = btn.dataset.productId;
+      btn.textContent = isOn(pid) ? "❤️" : "♡";
+      btn.classList.toggle("active", isOn(pid));
+    });
+  }
+
+  function init() {
+    refreshHearts();
+
+    document.querySelectorAll(".care-wishlist-btn").forEach(function(btn) {
+      if (btn._wishlistBound) return;
+      btn._wishlistBound = true;
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        var icon = btn.dataset.productEmoji || "🧴";
+        var added = toggle({ id: btn.dataset.productId, name: btn.dataset.productName, emoji: icon });
+        btn.textContent = added ? "❤️" : "♡";
+        btn.classList.toggle("active", added);
+      });
+    });
+
+    // Wunschliste-Panel öffnen/schließen
+    var wishBtn = document.getElementById("care-wishlist-trigger");
+    if (wishBtn) wishBtn.addEventListener("click", function() {
+      document.getElementById("care-wishlist-panel").classList.toggle("open");
+      renderPanel();
+    });
+
+    var closeBtn = document.getElementById("care-wishlist-close");
+    if (closeBtn) closeBtn.addEventListener("click", function() {
+      document.getElementById("care-wishlist-panel").classList.remove("open");
+    });
+  }
+
+  return { init: init, isOn: isOn };
+})();
+
+// ---- Live Search & Sort ----
+var CareSearch = (function() {
+  "use strict";
+
+  function getCards() {
+    return Array.from(document.querySelectorAll(".care-product-col"));
+  }
+
+  function filter() {
+    var query = (document.getElementById("care-search-input") || {}).value || "";
+    query = query.toLowerCase().trim();
+    var sort = (document.getElementById("care-sort-select") || {}).value || "default";
+    var cards = getCards();
+    var clearBtn = document.getElementById("care-search-clear");
+
+    if (clearBtn) clearBtn.style.display = query ? "inline-block" : "none";
+
+    // Filter visibility
+    var visible = [];
+    cards.forEach(function(card) {
+      var name = (card.dataset.name || "").toLowerCase();
+      var matches = !query || name.indexOf(query) > -1;
+      card.style.display = matches ? "" : "none";
+      if (matches) visible.push(card);
+    });
+
+    // Sort
+    if (sort !== "default" && visible.length > 1) {
+      var grid = document.getElementById("care-products-grid");
+      if (grid) {
+        visible.sort(function(a, b) {
+          if (sort === "price-asc")  return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+          if (sort === "price-desc") return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+          if (sort === "rating-desc") return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          if (sort === "reviews-desc") return parseInt(b.dataset.reviews) - parseInt(a.dataset.reviews);
+          if (sort === "name-asc") return (a.dataset.name || "").localeCompare(b.dataset.name || "");
+          return 0;
+        });
+        visible.forEach(function(card) { grid.appendChild(card); });
+      }
+    }
+
+    // Count + no-results
+    var countEl = document.getElementById("care-results-count");
+    if (countEl) countEl.textContent = visible.length + " Produkte";
+    var noResults = document.getElementById("care-no-results");
+    if (noResults) noResults.style.display = visible.length === 0 ? "block" : "none";
+  }
+
+  function init() {
+    var input = document.getElementById("care-search-input");
+    var select = document.getElementById("care-sort-select");
+    var clearBtn = document.getElementById("care-search-clear");
+    var resetBtn = document.getElementById("care-btn-reset-search");
+
+    if (input) input.addEventListener("input", filter);
+    if (select) select.addEventListener("change", filter);
+    if (clearBtn) clearBtn.addEventListener("click", function() {
+      input.value = "";
+      filter();
+      input.focus();
+    });
+    if (resetBtn) resetBtn.addEventListener("click", function() {
+      if (input) input.value = "";
+      if (select) select.value = "default";
+      filter();
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Countdown ----
+var CareSaleCountdown = (function() {
+  "use strict";
+
+  function init() {
+    var el = document.getElementById("care-countdown-timer");
+    if (!el) return;
+
+    // Enddatum: nächsten Sonntag 23:59:59
+    var now = new Date();
+    var end = new Date(now);
+    end.setDate(now.getDate() + (7 - now.getDay()) % 7 || 7);
+    end.setHours(23, 59, 59, 0);
+
+    var interval = setInterval(function() {
+      var diff = end - new Date();
+      if (diff <= 0) { el.textContent = "Abgelaufen"; clearInterval(interval); return; }
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      el.textContent =
+        String(h).padStart(2, "0") + ":" +
+        String(m).padStart(2, "0") + ":" +
+        String(s).padStart(2, "0");
+    }, 1000);
+  }
+
+  return { init: init };
+})();
+
+// ---- Scroll-to-Top ----
+var CareScrollTop = (function() {
+  "use strict";
+
+  function init() {
+    var btn = document.getElementById("care-scroll-top");
+    if (!btn) return;
+
+    window.addEventListener("scroll", function() {
+      btn.classList.toggle("visible", window.scrollY > 400);
+    });
+
+    btn.addEventListener("click", function() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Promo Bar ----
+var CarePromoBar = (function() {
+  "use strict";
+  var MSGS_KEY = "care_promo_closed";
+  var current = 0;
+  var interval;
+
+  function init() {
+    var bar = document.getElementById("care-promo-bar");
+    if (!bar) return;
+
+    // Already closed this session?
+    if (sessionStorage.getItem(MSGS_KEY)) { bar.style.display = "none"; return; }
+
+    var msgs = bar.querySelectorAll(".care-promo-msg");
+    if (msgs.length > 1) {
+      interval = setInterval(function() {
+        msgs[current].classList.remove("active");
+        current = (current + 1) % msgs.length;
+        msgs[current].classList.add("active");
+      }, 4000);
+    }
+
+    var closeBtn = document.getElementById("care-promo-close");
+    if (closeBtn) closeBtn.addEventListener("click", function() {
+      bar.classList.add("closing");
+      clearInterval(interval);
+      setTimeout(function() { bar.style.display = "none"; }, 300);
+      sessionStorage.setItem(MSGS_KEY, "1");
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Coupon Codes ----
+var CareCoupon = (function() {
+  "use strict";
+  var STORAGE_KEY = "care_active_coupon";
+  var CODES = {
+    "WILLKOMMEN10": { type: "percent", value: 10, label: "10 % Rabatt" },
+    "SOMMER15":     { type: "percent", value: 15, label: "15 % Rabatt" },
+    "PFLEGE5":      { type: "fixed",   value: 5,  label: "5,00 € Rabatt" }
+  };
+
+  var active = null;
+
+  function restore() {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && CODES[saved]) { active = CODES[saved]; }
+  }
+
+  function apply(code) {
+    var found = CODES[code.toUpperCase()];
+    active = found || null;
+    if (active) {
+      localStorage.setItem(STORAGE_KEY, code.toUpperCase());
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    return active;
+  }
+
+  function clear() {
+    active = null;
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function discount(subtotal) {
+    if (!active) return 0;
+    if (active.type === "percent") return subtotal * active.value / 100;
+    return Math.min(active.value, subtotal);
+  }
+
+  function init() {
+    restore();
+    var btn   = document.getElementById("care-coupon-btn");
+    var input = document.getElementById("care-coupon-input");
+    var msg   = document.getElementById("care-coupon-msg");
+    if (!btn || !input) return;
+
+    // Bereits eingelösten Code wiederherstellen
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && CODES[saved]) {
+      input.value    = saved;
+      input.disabled = true;
+      btn.textContent = "Eingelöst";
+      btn.disabled   = true;
+      if (msg) {
+        msg.textContent = "✓ Gutschein eingelöst: " + CODES[saved].label;
+        msg.className   = "care-coupon-msg care-coupon-success";
+      }
+      CareCart.refreshTotals && CareCart.refreshTotals();
+    }
+
+    btn.addEventListener("click", function() {
+      var result = apply(input.value.trim());
+      if (result) {
+        msg.textContent = "✓ Gutschein eingelöst: " + result.label;
+        msg.className   = "care-coupon-msg care-coupon-success";
+        input.disabled  = true;
+        btn.textContent = "Eingelöst";
+        btn.disabled    = true;
+      } else {
+        msg.textContent = "✗ Ungültiger Gutscheincode";
+        msg.className   = "care-coupon-msg care-coupon-error";
+      }
+      CareCart.refreshTotals && CareCart.refreshTotals();
+    });
+  }
+
+  return { init: init, apply: apply, clear: clear, discount: discount, active: function() { return active; }, codes: CODES };
+})();
+
+// ---- Star Picker (Review Form) ----
+var CareReviewForm = (function() {
+  "use strict";
+
+  function init() {
+    var picker = document.getElementById("care-star-picker");
+    var ratingInput = document.getElementById("care-review-rating");
+    var submitBtn = document.getElementById("care-btn-submit-review");
+    var successEl = document.getElementById("care-review-success");
+
+    if (!picker) return;
+
+    var stars = picker.querySelectorAll(".care-star-pick");
+    var selected = 0;
+
+    function highlight(n) {
+      stars.forEach(function(s, i) {
+        s.classList.toggle("filled", i < n);
+      });
+    }
+
+    stars.forEach(function(star, idx) {
+      star.addEventListener("mouseover", function() { highlight(idx + 1); });
+      star.addEventListener("mouseleave", function() { highlight(selected); });
+      star.addEventListener("click", function() {
+        selected = idx + 1;
+        ratingInput.value = selected;
+        highlight(selected);
+      });
+    });
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function() {
+        var name = (document.getElementById("care-review-name") || {}).value || "";
+        var text = (document.getElementById("care-review-text") || {}).value || "";
+
+        if (!selected) {
+          alert("Bitte wählen Sie eine Sternebewertung.");
+          return;
+        }
+        if (!name.trim()) {
+          alert("Bitte geben Sie Ihren Namen ein.");
+          return;
+        }
+        if (text.trim().length < 20) {
+          alert("Bitte schreiben Sie mindestens 20 Zeichen.");
+          return;
+        }
+
+        // Simulate submit
+        submitBtn.textContent = "Wird gesendet …";
+        submitBtn.disabled = true;
+        setTimeout(function() {
+          document.getElementById("care-review-form").style.display = "none";
+          if (successEl) successEl.style.display = "block";
+        }, 900);
+      });
+    }
+  }
+
+  return { init: init };
+})();
+
+// Extend CareCart to support coupon totals
+(function() {
+  var orig = CareCart.init;
+  CareCart.refreshTotals = function() {
+    var items = CareCart.load();
+    var subtotal = items.reduce(function(s, i) {
+      return s + (parseFloat(i.price.replace(",", ".").replace(/[^0-9.]/g, "")) || 0) * (i.qty || 1);
+    }, 0);
+    var discountAmt = CareCoupon.discount(subtotal);
+    var total = Math.max(0, subtotal - discountAmt);
+
+    var subEl = document.getElementById("care-cart-subtotal");
+    var totEl = document.getElementById("care-cart-total");
+    var discRow = document.getElementById("care-cart-discount-row");
+    var discVal = document.getElementById("care-cart-discount-val");
+
+    if (subEl) subEl.textContent = subtotal.toFixed(2).replace(".", ",") + " €";
+    if (totEl) totEl.textContent = total.toFixed(2).replace(".", ",") + " €";
+    if (discRow) discRow.style.display = discountAmt > 0 ? "flex" : "none";
+    if (discVal) discVal.textContent = "−" + discountAmt.toFixed(2).replace(".", ",") + " €";
+  };
+})();
+
+// ---- Hauttyp-Quiz ----
+var CareQuiz = (function() {
+  "use strict";
+
+  var answers = {};
+  var currentStep = 0;
+  var totalQuestions = 4;
+
+  var RESULTS = {
+    "trocken-reich":    { type: "Trockene Haut",    desc: "Ihre Haut braucht intensive Pflege und viel Feuchtigkeit. Wir empfehlen reichhaltige Cremes mit Hyaluron und Sheabutter.", products: [1, 7] },
+    "fettig-leicht":   { type: "Fettige Haut",     desc: "Ihre Haut produziert viel Talg. Leichte, nicht-komedogene Produkte sind ideal.", products: [3, 4] },
+    "gemischt-mittel": { type: "Mischhaut",         desc: "T-Zone und Wangen brauchen unterschiedliche Pflege. Ausgewogene Produkte für jeden Bereich.", products: [1, 3] },
+    "normal-mittel":   { type: "Normale Haut",      desc: "Sie haben die ideale Basis! Erhalten Sie das Gleichgewicht mit leichter täglicher Pflege.", products: [5, 2] },
+    "empfindlich":     { type: "Empfindliche Haut", desc: "Ihre Haut reagiert sensibel. Parfümfreie Produkte mit beruhigenden Inhaltsstoffen sind perfekt.", products: [6, 1] }
+  };
+
+  var ALL_PRODUCTS = [
+    { id: 1, name: "Feuchtigkeitscreme Premium", price: "24,99 €", emoji: "💧", url: "/pflegeartikel/1" },
+    { id: 2, name: "Nährendes Haarshampoo",      price: "12,49 €", emoji: "✨", url: "/pflegeartikel/2" },
+    { id: 3, name: "Verwöhn-Duschgel",           price: "8,99 €",  emoji: "🧴", url: "/pflegeartikel/3" },
+    { id: 4, name: "Whitening Zahnpasta",         price: "6,99 €",  emoji: "🦷", url: "/pflegeartikel/4" },
+    { id: 5, name: "Sonnenschutz LSF 50",         price: "18,99 €", emoji: "☀️", url: "/pflegeartikel/5" },
+    { id: 6, name: "Baby Pflegelotion",           price: "9,99 €",  emoji: "🌸", url: "/pflegeartikel/6" },
+    { id: 7, name: "Anti-Aging Serum",            price: "39,99 €", emoji: "💧", url: "/pflegeartikel/7" }
+  ];
+
+  function getResult() {
+    var sensitivity = answers[2] || "nein";
+    if (sensitivity === "ja") return RESULTS["empfindlich"];
+    var skinType = answers[1] || "normal";
+    var texture = answers[4] || "mittel";
+    var key = skinType + "-" + texture;
+    return RESULTS[key] || RESULTS["normal-mittel"];
+  }
+
+  function showStep(n) {
+    document.querySelectorAll(".care-quiz-step").forEach(function(s) {
+      s.classList.remove("active");
+    });
+    var step = document.querySelector("[data-step='" + n + "']");
+    if (step) step.classList.add("active");
+
+    var pct = n === 0 ? 0 : Math.round((n / (totalQuestions + 1)) * 100);
+    var bar = document.getElementById("care-quiz-progress-bar");
+    if (bar) bar.style.width = pct + "%";
+    currentStep = n;
+  }
+
+  function showResult() {
+    var result = getResult();
+    var titleEl = document.getElementById("care-quiz-result-title");
+    var descEl  = document.getElementById("care-quiz-result-desc");
+    var recEl   = document.getElementById("care-quiz-recommendations");
+
+    if (titleEl) titleEl.textContent = "Ihr Hauttyp: " + result.type;
+    if (descEl)  descEl.textContent  = result.desc;
+
+    if (recEl) {
+      var html = "<h4>Empfohlene Produkte für Sie:</h4><div class='care-quiz-rec-grid'>";
+      result.products.forEach(function(pid) {
+        var p = ALL_PRODUCTS.find(function(x) { return x.id === pid; });
+        if (!p) return;
+        html += "<div class='care-quiz-rec-card'>";
+        html += "<span class='care-quiz-rec-emoji'>" + p.emoji + "</span>";
+        html += "<div class='care-quiz-rec-info'>";
+        html += "<strong>" + p.name + "</strong>";
+        html += "<span>" + p.price + "</span>";
+        html += "</div>";
+        html += "<a href='" + p.url + "' class='care-quiz-rec-btn'>Details</a>";
+        html += "</div>";
+      });
+      html += "</div>";
+      recEl.innerHTML = html;
+    }
+
+    showStep(5);
+  }
+
+  function open() {
+    document.getElementById("care-quiz-modal").classList.add("open");
+    document.getElementById("care-quiz-backdrop").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function close() {
+    document.getElementById("care-quiz-modal").classList.remove("open");
+    document.getElementById("care-quiz-backdrop").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function reset() {
+    answers = {};
+    currentStep = 0;
+    document.querySelectorAll(".care-quiz-option").forEach(function(o) {
+      o.classList.remove("selected");
+    });
+    showStep(0);
+  }
+
+  function init() {
+    var trigger = document.getElementById("care-quiz-trigger");
+    if (trigger) trigger.addEventListener("click", open);
+
+    var closeBtn = document.getElementById("care-quiz-close");
+    if (closeBtn) closeBtn.addEventListener("click", close);
+
+    var backdrop = document.getElementById("care-quiz-backdrop");
+    if (backdrop) backdrop.addEventListener("click", close);
+
+    var startBtn = document.querySelector("[data-next='1']");
+    if (startBtn) startBtn.addEventListener("click", function() { showStep(1); });
+
+    var restartBtn = document.getElementById("care-quiz-restart");
+    if (restartBtn) restartBtn.addEventListener("click", reset);
+
+    var finishBtn = document.getElementById("care-quiz-finish");
+    if (finishBtn) finishBtn.addEventListener("click", close);
+
+    document.querySelectorAll(".care-quiz-option").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var q = parseInt(btn.dataset.q);
+        answers[q] = btn.dataset.val;
+
+        // Highlight selected
+        document.querySelectorAll("[data-q='" + q + "']").forEach(function(b) {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+
+        // Kurze Pause, dann weiter
+        setTimeout(function() {
+          if (q < totalQuestions) {
+            showStep(q + 1);
+          } else {
+            showResult();
+          }
+        }, 350);
+      });
+    });
+  }
+
+  return { init: init, open: open };
+})();
+
+// ---- Recently Viewed ----
+var CareRecentlyViewed = (function() {
+  "use strict";
+  var KEY = "care_recently_viewed";
+  var MAX = 4;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function track(product) {
+    var items = load().filter(function(i) { return String(i.id) !== String(product.id); });
+    items.unshift(product);
+    if (items.length > MAX) items = items.slice(0, MAX);
+    localStorage.setItem(KEY, JSON.stringify(items));
+  }
+
+  function render() {
+    var section = document.getElementById("care-recently-viewed");
+    var grid    = document.getElementById("care-recently-viewed-grid");
+    if (!section || !grid) return;
+
+    var items = load();
+    if (items.length === 0) return;
+
+    section.style.display = "block";
+
+    var html = "";
+    items.forEach(function(item) {
+      html += "<div class='small-12 medium-6 large-3 column'>";
+      html += "<div class='care-recent-card'>";
+      html += "<div class='care-recent-image'><span class='care-recent-emoji'>" + (item.emoji || "🧴") + "</span></div>";
+      html += "<div class='care-recent-body'>";
+      html += "<h4 class='care-recent-name'>" + item.name + "</h4>";
+      html += "<span class='care-recent-price'>" + item.price + "</span>";
+      html += "<a href='" + item.url + "' class='care-btn-outline care-recent-link'>Ansehen</a>";
+      html += "</div></div></div>";
+    });
+    grid.innerHTML = html;
+  }
+
+  function init() { render(); }
+
+  return { init: init, track: track };
+})();
+
+// ---- Produktvergleich ----
+var CareCompare = (function() {
+  "use strict";
+  var KEY = "care_compare";
+  var MAX = 3;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch(e) { return []; }
+  }
+
+  function save(items) { localStorage.setItem(KEY, JSON.stringify(items)); }
+
+  function showToast(msg) {
+    var toast = document.getElementById("care-toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("visible");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function() { toast.classList.remove("visible"); }, 3000);
+  }
+
+  function refreshButtons() {
+    document.querySelectorAll(".care-compare-btn").forEach(function(btn) {
+      var on = load().some(function(i) { return String(i.id) === String(btn.dataset.productId); });
+      btn.classList.toggle("active", on);
+      btn.querySelector(".care-compare-label").textContent = on ? "✓ Im Vergleich" : "⇌ Vergleichen";
+    });
+  }
+
+  function refreshBar() {
+    var bar = document.getElementById("care-compare-bar");
+    if (!bar) return;
+    var items = load();
+    if (items.length === 0) { bar.classList.remove("visible"); return; }
+    bar.classList.add("visible");
+
+    var miniEl = document.getElementById("care-compare-bar-items");
+    if (miniEl) {
+      var html = "";
+      items.forEach(function(p) {
+        html += "<div class='care-cbar-item'>";
+        html += "<span class='care-cbar-emoji'>" + (p.emoji || "🧴") + "</span>";
+        html += "<span class='care-cbar-name'>" + p.name + "</span>";
+        html += "<button class='care-cbar-remove' data-id='" + p.id + "'>✕</button>";
+        html += "</div>";
+      });
+      miniEl.innerHTML = html;
+      miniEl.querySelectorAll(".care-cbar-remove").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          save(load().filter(function(i) { return String(i.id) !== btn.dataset.id; }));
+          refreshBar(); refreshButtons();
+        });
+      });
+    }
+
+    var countEl = document.getElementById("care-cbar-count");
+    if (countEl) countEl.textContent = items.length + " / " + MAX + " ausgewählt";
+
+    var nowBtn = document.getElementById("care-compare-now");
+    if (nowBtn) nowBtn.disabled = items.length < 2;
+  }
+
+  function toggle(product) {
+    var items = load();
+    var idx = items.findIndex(function(i) { return String(i.id) === String(product.id); });
+    if (idx > -1) {
+      items.splice(idx, 1);
+    } else {
+      if (items.length >= MAX) { showToast("⚠️ Maximal " + MAX + " Produkte vergleichen"); return; }
+      items.push(product);
+    }
+    save(items);
+    refreshBar();
+    refreshButtons();
+  }
+
+  function openModal() {
+    var items = load();
+    if (items.length < 2) { showToast("⚠️ Bitte mindestens 2 Produkte auswählen"); return; }
+
+    var modal = document.getElementById("care-compare-modal");
+    if (!modal) return;
+
+    var ATTRS = [
+      { key: "price",    label: "Preis" },
+      { key: "rating",   label: "Bewertung" },
+      { key: "reviews",  label: "Bewertungen" },
+      { key: "category", label: "Kategorie" },
+      { key: "badge",    label: "Auszeichnung" },
+      { key: "desc",     label: "Beschreibung" }
+    ];
+
+    var head = "<tr><th>Eigenschaft</th>";
+    items.forEach(function(p) {
+      head += "<th><span style='font-size:2.2rem;display:block'>" + (p.emoji || "🧴") + "</span>" +
+              p.name + "<br><strong class='care-compare-th-price'>" + p.price + "</strong></th>";
+    });
+    head += "</tr>";
+
+    var rows = "";
+    ATTRS.forEach(function(attr) {
+      rows += "<tr><td class='care-compare-attr'>" + attr.label + "</td>";
+      items.forEach(function(p) {
+        var val = p[attr.key] || "–";
+        if (attr.key === "rating") {
+          val = "★".repeat(Math.round(parseFloat(val))) + "☆".repeat(5 - Math.round(parseFloat(val))) + " " + val;
+        }
+        rows += "<td>" + val + "</td>";
+      });
+      rows += "</tr>";
+    });
+
+    var tbl = document.getElementById("care-compare-table-body");
+    if (tbl) tbl.innerHTML = head + rows;
+
+    modal.classList.add("open");
+    document.getElementById("care-compare-backdrop").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("care-compare-modal");
+    if (modal) modal.classList.remove("open");
+    var bd = document.getElementById("care-compare-backdrop");
+    if (bd) bd.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function init() {
+    document.querySelectorAll(".care-compare-btn").forEach(function(btn) {
+      if (btn._compareBound) return;
+      btn._compareBound = true;
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        toggle({
+          id: btn.dataset.productId,
+          name: btn.dataset.productName,
+          price: btn.dataset.productPrice,
+          emoji: btn.dataset.productEmoji,
+          rating: btn.dataset.productRating,
+          reviews: btn.dataset.productReviews,
+          category: btn.dataset.productCategory,
+          badge: btn.dataset.productBadge || "–",
+          desc: btn.dataset.productDesc
+        });
+      });
+    });
+
+    var nowBtn = document.getElementById("care-compare-now");
+    if (nowBtn) nowBtn.addEventListener("click", openModal);
+
+    var clearBtn = document.getElementById("care-compare-clear");
+    if (clearBtn) clearBtn.addEventListener("click", function() { save([]); refreshBar(); refreshButtons(); });
+
+    var closeBtn = document.getElementById("care-compare-modal-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    var bd = document.getElementById("care-compare-backdrop");
+    if (bd) bd.addEventListener("click", closeModal);
+
+    refreshBar();
+    refreshButtons();
+  }
+
+  return { init: init };
+})();
+
+// ---- Erweiterte Filter ----
+var CareAdvancedFilter = (function() {
+  "use strict";
+  var minPrice = 0, maxPrice = 9999, minRating = 0, onlyBadge = false;
+
+  function applyFilters() {
+    var query = (document.getElementById("care-search-input") || {}).value || "";
+    query = query.toLowerCase().trim();
+    var sort  = (document.getElementById("care-sort-select") || {}).value || "default";
+    var cards = Array.from(document.querySelectorAll(".care-product-col"));
+    var clearBtn = document.getElementById("care-search-clear");
+    if (clearBtn) clearBtn.style.display = query ? "inline-block" : "none";
+
+    var visible = [];
+    cards.forEach(function(card) {
+      var name   = (card.dataset.name || "").toLowerCase();
+      var price  = parseInt(card.dataset.price) || 0;
+      var rating = parseFloat(card.dataset.rating) || 0;
+      var badge  = (card.dataset.badge || "").trim();
+
+      var ok = (!query || name.indexOf(query) > -1) &&
+               price >= minPrice * 100 && price <= maxPrice * 100 &&
+               rating >= minRating &&
+               (!onlyBadge || badge !== "");
+
+      card.style.display = ok ? "" : "none";
+      if (ok) visible.push(card);
+    });
+
+    if (sort !== "default" && visible.length > 1) {
+      var grid = document.getElementById("care-products-grid");
+      if (grid) {
+        visible.sort(function(a, b) {
+          if (sort === "price-asc")    return parseInt(a.dataset.price)  - parseInt(b.dataset.price);
+          if (sort === "price-desc")   return parseInt(b.dataset.price)  - parseInt(a.dataset.price);
+          if (sort === "rating-desc")  return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          if (sort === "reviews-desc") return parseInt(b.dataset.reviews) - parseInt(a.dataset.reviews);
+          if (sort === "name-asc")     return (a.dataset.name || "").localeCompare(b.dataset.name || "");
+          return 0;
+        });
+        visible.forEach(function(card) { grid.appendChild(card); });
+      }
+    }
+
+    var countEl = document.getElementById("care-results-count");
+    if (countEl) countEl.textContent = visible.length + " Produkte";
+    var noEl = document.getElementById("care-no-results");
+    if (noEl) noEl.style.display = visible.length === 0 ? "block" : "none";
+    updateBadgeCount();
+  }
+
+  function updateBadgeCount() {
+    var n = (minRating > 0 ? 1 : 0) + (onlyBadge ? 1 : 0) +
+            (minPrice > 0 || maxPrice < 9999 ? 1 : 0);
+    var badge = document.getElementById("care-filter-badge");
+    if (badge) { badge.textContent = n; badge.style.display = n > 0 ? "inline-block" : "none"; }
+    var toggleBtn = document.getElementById("care-filter-toggle");
+    if (toggleBtn) toggleBtn.classList.toggle("has-filters", n > 0);
+  }
+
+  function init() {
+    var panel = document.getElementById("care-advanced-filter-panel");
+    if (!panel) return;
+
+    var toggleBtn = document.getElementById("care-filter-toggle");
+    if (toggleBtn) toggleBtn.addEventListener("click", function() {
+      panel.classList.toggle("open");
+    });
+
+    var minP = document.getElementById("care-filter-min-price");
+    var maxP = document.getElementById("care-filter-max-price");
+    var minValEl = document.getElementById("care-filter-min-val");
+    var maxValEl = document.getElementById("care-filter-max-val");
+
+    if (minP) minP.addEventListener("input", function() {
+      minPrice = parseFloat(this.value) || 0;
+      if (minValEl) minValEl.textContent = minPrice > 0 ? minPrice + " €" : "0 €";
+      applyFilters();
+    });
+    if (maxP) maxP.addEventListener("input", function() {
+      maxPrice = parseFloat(this.value) || 9999;
+      if (maxValEl) maxValEl.textContent = maxPrice < 9999 ? maxPrice + " €" : "∞";
+      applyFilters();
+    });
+
+    document.querySelectorAll(".care-rating-filter-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var val = parseInt(btn.dataset.rating);
+        if (minRating === val) {
+          minRating = 0;
+          document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) { b.classList.remove("active"); });
+        } else {
+          minRating = val;
+          document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) {
+            b.classList.toggle("active", parseInt(b.dataset.rating) <= val);
+          });
+        }
+        applyFilters();
+      });
+    });
+
+    var badgeTog = document.getElementById("care-filter-badge-toggle");
+    if (badgeTog) badgeTog.addEventListener("change", function() { onlyBadge = this.checked; applyFilters(); });
+
+    var resetBtn = document.getElementById("care-filter-reset-btn");
+    if (resetBtn) resetBtn.addEventListener("click", function() {
+      minPrice = 0; maxPrice = 9999; minRating = 0; onlyBadge = false;
+      if (minP) { minP.value = ""; if (minValEl) minValEl.textContent = "0 €"; }
+      if (maxP) { maxP.value = ""; if (maxValEl) maxValEl.textContent = "∞"; }
+      document.querySelectorAll(".care-rating-filter-btn").forEach(function(b) { b.classList.remove("active"); });
+      if (badgeTog) badgeTog.checked = false;
+      var si = document.getElementById("care-search-input");
+      var ss = document.getElementById("care-sort-select");
+      if (si) si.value = "";
+      if (ss) ss.value = "default";
+      applyFilters();
+    });
+
+    // Hook existing search + sort
+    var si = document.getElementById("care-search-input");
+    var ss = document.getElementById("care-sort-select");
+    var clearBtn = document.getElementById("care-search-clear");
+    var rstBtn = document.getElementById("care-btn-reset-search");
+    if (si) si.addEventListener("input", applyFilters);
+    if (ss) ss.addEventListener("change", applyFilters);
+    if (clearBtn) clearBtn.addEventListener("click", function() { si.value = ""; applyFilters(); si.focus(); });
+    if (rstBtn) rstBtn.addEventListener("click", function() {
+      if (si) si.value = ""; if (ss) ss.value = "default"; applyFilters();
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- FAQ-Accordion ----
+var CareFAQ = (function() {
+  "use strict";
+  function init() {
+    document.querySelectorAll(".care-faq-question").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var item = btn.closest(".care-faq-item");
+        var wasOpen = item.classList.contains("open");
+        document.querySelectorAll(".care-faq-item").forEach(function(i) { i.classList.remove("open"); });
+        if (!wasOpen) item.classList.add("open");
+      });
+    });
+  }
+  return { init: init };
+})();
+
+// ---- Pflegepakete / Bundles ----
+var CareBundles = (function() {
+  "use strict";
+
+  function init() {
+    document.querySelectorAll(".care-bundle-add-btn").forEach(function(btn) {
+      if (btn._bundleBound) return;
+      btn._bundleBound = true;
+      btn.addEventListener("click", function() {
+        var ids    = btn.dataset.productIds.split("|");
+        var names  = btn.dataset.productNames.split("|");
+        var prices = btn.dataset.productPrices.split("|");
+        var emojis = btn.dataset.productEmojis.split("|");
+        var bid    = btn.dataset.bundleId;
+
+        ids.forEach(function(id, i) {
+          CareCart.add({
+            id:    "bundle" + bid + "-" + id,
+            name:  names[i]  || "Produkt",
+            price: prices[i] || "0,00 €",
+            emoji: emojis[i] || "🧴",
+            qty:   1
+          });
+        });
+
+        btn.textContent = "✓ Paket hinzugefügt!";
+        btn.style.background = "#357a62";
+        setTimeout(function() {
+          btn.textContent = "Paket in den Warenkorb";
+          btn.style.background = "";
+        }, 2200);
+      });
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Newsletter-Popup ----
+var CareNewsletterPopup = (function() {
+  "use strict";
+  var SESSION_KEY = "care_popup_shown";
+  var DELAY_MS = 12000;
+  var timer;
+
+  function show() {
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+    var popup = document.getElementById("care-newsletter-popup");
+    var bd    = document.getElementById("care-popup-backdrop");
+    if (!popup || !bd) return;
+    popup.classList.add("open");
+    bd.classList.add("open");
+    document.body.style.overflow = "hidden";
+    sessionStorage.setItem(SESSION_KEY, "1");
+  }
+
+  function hide() {
+    var popup = document.getElementById("care-newsletter-popup");
+    var bd    = document.getElementById("care-popup-backdrop");
+    if (popup) popup.classList.remove("open");
+    if (bd)    bd.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function init() {
+    if (!document.getElementById("care-newsletter-popup")) return;
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+
+    timer = setTimeout(show, DELAY_MS);
+
+    var closeBtn = document.getElementById("care-popup-close");
+    var skipBtn  = document.getElementById("care-popup-skip");
+    var bd       = document.getElementById("care-popup-backdrop");
+    if (closeBtn) closeBtn.addEventListener("click", hide);
+    if (skipBtn)  skipBtn.addEventListener("click", hide);
+    if (bd)       bd.addEventListener("click", hide);
+
+    var submitBtn   = document.getElementById("care-popup-submit");
+    var emailInput  = document.getElementById("care-popup-email");
+    var formArea    = document.getElementById("care-popup-form-area");
+    var successArea = document.getElementById("care-popup-success");
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function() {
+        var email = (emailInput || {}).value || "";
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+          if (emailInput) emailInput.classList.add("care-popup-input-error");
+          return;
+        }
+        submitBtn.textContent = "Wird angemeldet …";
+        submitBtn.disabled = true;
+        if (emailInput) emailInput.disabled = true;
+        setTimeout(function() {
+          if (formArea)    formArea.style.display = "none";
+          if (successArea) successArea.style.display = "flex";
+          setTimeout(hide, 3500);
+        }, 900);
+      });
+    }
+    if (emailInput) {
+      emailInput.addEventListener("input", function() {
+        emailInput.classList.remove("care-popup-input-error");
+      });
+      emailInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && submitBtn) submitBtn.click();
+      });
+    }
+  }
+
+  return { init: init };
+})();
+
+// ---- Social Proof ----
+var CareSocialProof = (function() {
+  "use strict";
+
+  function init() {
+    // Live-Besucherzähler auf Produktkarten
+    document.querySelectorAll(".care-product-col").forEach(function(card) {
+      var el = card.querySelector(".care-social-proof-badge");
+      if (!el) return;
+      var n = Math.floor(Math.random() * 17) + 4;
+      el.textContent = "🔥 " + n + " Personen sehen das gerade";
+      el.style.display = "block";
+    });
+
+    // Stats-Counter animieren
+    var triggered = false;
+    var statsStrip = document.getElementById("care-stats-strip");
+    if (!statsStrip) return;
+
+    function animateCounters() {
+      if (triggered) return;
+      triggered = true;
+      statsStrip.querySelectorAll(".care-stat-num").forEach(function(el) {
+        var target = parseInt(el.dataset.target) || 0;
+        var suffix = el.dataset.suffix || "";
+        var duration = 1600;
+        var steps = 50;
+        var increment = target / steps;
+        var current = 0;
+        var i = 0;
+        var interval = setInterval(function() {
+          i++;
+          current = Math.min(Math.round(increment * i), target);
+          el.textContent = current.toLocaleString("de-DE") + suffix;
+          if (i >= steps) clearInterval(interval);
+        }, duration / steps);
+      });
+    }
+
+    // Trigger when stats strip enters viewport
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { animateCounters(); observer.disconnect(); }
+      }, { threshold: 0.3 });
+      observer.observe(statsStrip);
+    } else {
+      animateCounters();
+    }
+  }
+
+  return { init: init };
+})();
+
+// ---- Bootstrap ----
+$(document).on("turbolinks:load", function() {
+  CareCart.init();
+  CareWishlist.init();
+  // Advanced filter supersedes basic search when panel is present
+  if (document.getElementById("care-advanced-filter-panel")) {
+    CareAdvancedFilter.init();
+  } else {
+    CareSearch.init();
+  }
+  CareSaleCountdown.init();
+  CareScrollTop.init();
+  CarePromoBar.init();
+  CareCoupon.init();
+  CareReviewForm.init();
+  CareQuiz.init();
+  CareRecentlyViewed.init();
+  CareCompare.init();
+  CareFAQ.init();
+  CareBundles.init();
+  CareNewsletterPopup.init();
+  CareSocialProof.init();
+});
+
+</script>
+</body>
+</html>

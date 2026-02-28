@@ -39,7 +39,11 @@ Rails.application.routes.draw do
   resources :remote_translations, only: [:create]
 
   # Pflegeartikel / Care Products
-  resources :care_products, only: [:index, :show], path: "pflegeartikel"
+  resources :care_products, only: [:index, :show], path: "pflegeartikel" do
+    collection do
+      get :checkout, path: "kasse"
+    end
+  end
 
   # More info pages
   get "help",             to: "pages#show", id: "help/index",             as: "help"

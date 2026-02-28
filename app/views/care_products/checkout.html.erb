@@ -1,0 +1,480 @@
+<% content_for :title, "Kasse – NaturPflege" %>
+<% content_for :body_class, "care-products-page" %>
+<%= render "care_products/cart" %>
+
+<!-- Checkout -->
+<section class="care-checkout">
+  <div class="row">
+
+    <!-- Linke Spalte: Schritte -->
+    <div class="small-12 large-7 column">
+
+      <!-- Breadcrumb -->
+      <nav class="care-breadcrumb care-checkout-breadcrumb">
+        <%= link_to "Pflegeartikel", care_products_path %> &rsaquo;
+        <span>Kasse</span>
+      </nav>
+
+      <!-- Schritte-Indikator -->
+      <div class="care-checkout-steps" id="care-checkout-steps">
+        <div class="care-checkout-step active" data-step="1">
+          <div class="care-step-num">1</div>
+          <div class="care-step-label">Lieferadresse</div>
+        </div>
+        <div class="care-checkout-step-divider"></div>
+        <div class="care-checkout-step" data-step="2">
+          <div class="care-step-num">2</div>
+          <div class="care-step-label">Zahlung</div>
+        </div>
+        <div class="care-checkout-step-divider"></div>
+        <div class="care-checkout-step" data-step="3">
+          <div class="care-step-num">3</div>
+          <div class="care-step-label">Bestätigen</div>
+        </div>
+      </div>
+
+      <!-- Schritt 1: Lieferadresse -->
+      <div class="care-checkout-panel" id="care-step-1">
+        <h2 class="care-checkout-panel-title">Lieferadresse</h2>
+        <div class="care-checkout-form">
+          <div class="care-form-row-2">
+            <div class="care-form-group">
+              <label class="care-form-label">Vorname *</label>
+              <input type="text" class="care-checkout-input" id="co-firstname" placeholder="Maria" autocomplete="given-name">
+            </div>
+            <div class="care-form-group">
+              <label class="care-form-label">Nachname *</label>
+              <input type="text" class="care-checkout-input" id="co-lastname" placeholder="Mustermann" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="care-form-group">
+            <label class="care-form-label">E-Mail-Adresse *</label>
+            <input type="email" class="care-checkout-input" id="co-email" placeholder="maria@beispiel.de" autocomplete="email">
+          </div>
+          <div class="care-form-group">
+            <label class="care-form-label">Telefon (optional)</label>
+            <input type="tel" class="care-checkout-input" id="co-phone" placeholder="+49 123 456789" autocomplete="tel">
+          </div>
+          <div class="care-form-group">
+            <label class="care-form-label">Straße und Hausnummer *</label>
+            <input type="text" class="care-checkout-input" id="co-street" placeholder="Musterstraße 12" autocomplete="street-address">
+          </div>
+          <div class="care-form-row-2">
+            <div class="care-form-group">
+              <label class="care-form-label">PLZ *</label>
+              <input type="text" class="care-checkout-input" id="co-zip" placeholder="12345" maxlength="5" autocomplete="postal-code">
+            </div>
+            <div class="care-form-group">
+              <label class="care-form-label">Stadt *</label>
+              <input type="text" class="care-checkout-input" id="co-city" placeholder="Berlin" autocomplete="address-level2">
+            </div>
+          </div>
+          <div class="care-form-group">
+            <label class="care-form-label">Land</label>
+            <select class="care-checkout-input care-checkout-select" id="co-country" autocomplete="country">
+              <option value="DE" selected>Deutschland</option>
+              <option value="AT">Österreich</option>
+              <option value="CH">Schweiz</option>
+            </select>
+          </div>
+          <div class="care-checkout-actions">
+            <%= link_to "← Zurück zum Shop", care_products_path, class: "care-btn-checkout-back" %>
+            <button class="care-btn-checkout-next" id="co-next-1">Weiter zur Zahlung →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schritt 2: Zahlungsart -->
+      <div class="care-checkout-panel" id="care-step-2" style="display:none;">
+        <h2 class="care-checkout-panel-title">Zahlungsart</h2>
+        <div class="care-payment-options">
+          <label class="care-payment-option active" id="co-pay-card">
+            <input type="radio" name="payment" value="card" checked>
+            <div class="care-payment-icon">💳</div>
+            <div class="care-payment-info">
+              <strong>Kreditkarte</strong>
+              <span>Visa, Mastercard, American Express</span>
+            </div>
+            <div class="care-payment-check">✓</div>
+          </label>
+          <label class="care-payment-option" id="co-pay-paypal">
+            <input type="radio" name="payment" value="paypal">
+            <div class="care-payment-icon">📱</div>
+            <div class="care-payment-info">
+              <strong>PayPal</strong>
+              <span>Schnell und sicher bezahlen</span>
+            </div>
+            <div class="care-payment-check">✓</div>
+          </label>
+          <label class="care-payment-option" id="co-pay-invoice">
+            <input type="radio" name="payment" value="invoice">
+            <div class="care-payment-icon">🏦</div>
+            <div class="care-payment-info">
+              <strong>Rechnung / Überweisung</strong>
+              <span>Zahlung innerhalb von 14 Tagen</span>
+            </div>
+            <div class="care-payment-check">✓</div>
+          </label>
+        </div>
+
+        <!-- Kreditkartenfelder (sichtbar wenn Karte gewählt) -->
+        <div class="care-card-fields" id="co-card-fields">
+          <div class="care-form-group">
+            <label class="care-form-label">Karteninhaber</label>
+            <input type="text" class="care-checkout-input" id="co-card-name" placeholder="Maria Mustermann" autocomplete="cc-name">
+          </div>
+          <div class="care-form-group">
+            <label class="care-form-label">Kartennummer</label>
+            <input type="text" class="care-checkout-input" id="co-card-num" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number">
+          </div>
+          <div class="care-form-row-2">
+            <div class="care-form-group">
+              <label class="care-form-label">Gültig bis</label>
+              <input type="text" class="care-checkout-input" id="co-card-exp" placeholder="MM/JJ" maxlength="5" autocomplete="cc-exp">
+            </div>
+            <div class="care-form-group">
+              <label class="care-form-label">CVV</label>
+              <input type="text" class="care-checkout-input" id="co-card-cvv" placeholder="123" maxlength="4" autocomplete="cc-csc">
+            </div>
+          </div>
+        </div>
+
+        <div class="care-checkout-actions">
+          <button class="care-btn-checkout-back" id="co-back-2">← Zurück</button>
+          <button class="care-btn-checkout-next" id="co-next-2">Weiter zur Übersicht →</button>
+        </div>
+      </div>
+
+      <!-- Schritt 3: Bestellübersicht -->
+      <div class="care-checkout-panel" id="care-step-3" style="display:none;">
+        <h2 class="care-checkout-panel-title">Bestellung bestätigen</h2>
+        <div class="care-review-address-box" id="co-review-address"></div>
+        <div class="care-review-payment-box" id="co-review-payment"></div>
+        <div class="care-checkout-terms">
+          <label class="care-terms-label">
+            <input type="checkbox" id="co-terms">
+            Ich habe die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a> gelesen und akzeptiert. *
+          </label>
+        </div>
+        <div class="care-checkout-actions">
+          <button class="care-btn-checkout-back" id="co-back-3">← Zurück</button>
+          <button class="care-btn-order-submit" id="co-submit">
+            🛒 Jetzt kostenpflichtig bestellen
+          </button>
+        </div>
+      </div>
+
+      <!-- Schritt 4: Bestellbestätigung -->
+      <div class="care-checkout-panel care-checkout-success" id="care-step-success" style="display:none;">
+        <div class="care-success-icon">✓</div>
+        <h2 class="care-success-title">Vielen Dank für Ihre Bestellung!</h2>
+        <p class="care-success-text">
+          Ihre Bestellung wurde erfolgreich aufgegeben. Sie erhalten in Kürze eine
+          Bestätigungs-E-Mail mit allen Details.
+        </p>
+        <div class="care-success-order-num" id="co-order-num"></div>
+        <div class="care-success-actions">
+          <%= link_to "Zurück zum Shop", care_products_path, class: "care-btn-checkout-next" %>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Rechte Spalte: Bestellzusammenfassung -->
+    <div class="small-12 large-5 column">
+      <div class="care-order-summary" id="care-order-summary">
+        <h3 class="care-order-summary-title">Ihre Bestellung</h3>
+        <div class="care-order-summary-items" id="co-summary-items">
+          <p class="care-cart-empty">Warenkorb wird geladen …</p>
+        </div>
+        <div class="care-order-summary-footer">
+          <div class="care-summary-row">
+            <span>Zwischensumme</span>
+            <span id="co-summary-subtotal">–</span>
+          </div>
+          <div class="care-summary-row" id="co-summary-discount-row" style="display:none;">
+            <span id="co-summary-discount-label">Rabatt</span>
+            <span id="co-summary-discount-val" class="care-discount-val">–</span>
+          </div>
+          <div class="care-summary-row">
+            <span>Versand</span>
+            <span id="co-summary-shipping">–</span>
+          </div>
+          <div class="care-summary-row care-summary-total">
+            <span>Gesamt (inkl. MwSt.)</span>
+            <strong id="co-summary-total">–</strong>
+          </div>
+        </div>
+        <div class="care-checkout-trust">
+          <span>🔒 SSL-verschlüsselt</span>
+          <span>↩ 30 Tage Rückgabe</span>
+          <span>🚚 2–3 Tage Lieferung</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  "use strict";
+
+  var CART_KEY    = "care_cart";
+  var COUPON_KEY  = "care_active_coupon";
+  var COUPONS     = { "WILLKOMMEN10": 10, "SOMMER15": 15, "CARE20": 20 };
+  var currentStep = 1;
+  var addressData = {};
+  var paymentData = {};
+
+  // ---- Warenkorb laden ----
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+    catch(e) { return []; }
+  }
+
+  function getDiscount() {
+    var code = localStorage.getItem(COUPON_KEY);
+    return (code && COUPONS[code]) ? { code: code, pct: COUPONS[code] } : null;
+  }
+
+  function renderSummary() {
+    var items    = loadCart();
+    var itemsEl  = document.getElementById("co-summary-items");
+    var subtotEl = document.getElementById("co-summary-subtotal");
+    var shipEl   = document.getElementById("co-summary-shipping");
+    var totalEl  = document.getElementById("co-summary-total");
+    var discRow  = document.getElementById("co-summary-discount-row");
+    var discLbl  = document.getElementById("co-summary-discount-label");
+    var discVal  = document.getElementById("co-summary-discount-val");
+
+    if (items.length === 0) {
+      itemsEl.innerHTML = '<p class="care-cart-empty">Ihr Warenkorb ist leer. <a href="<%= care_products_path %>">Zum Shop →</a></p>';
+      return;
+    }
+
+    var subtotal = 0;
+    var html = "";
+    items.forEach(function(item) {
+      var price = parseFloat(item.price.replace(",", ".").replace(/[^0-9.]/g, "")) || 0;
+      subtotal += price * (item.qty || 1);
+      html += '<div class="care-summary-item">';
+      html += '<span class="care-summary-item-emoji">' + (item.emoji || "🧴") + '</span>';
+      html += '<div class="care-summary-item-info">';
+      html += '<span class="care-summary-item-name">' + item.name + '</span>';
+      html += '<span class="care-summary-item-qty">Menge: ' + (item.qty || 1) + '</span>';
+      html += '</div>';
+      html += '<span class="care-summary-item-price">' + (price * (item.qty || 1)).toFixed(2).replace(".", ",") + ' €</span>';
+      html += '</div>';
+    });
+    itemsEl.innerHTML = html;
+
+    var discount   = getDiscount();
+    var discAmount = discount ? (subtotal * discount.pct / 100) : 0;
+    var shipping   = (subtotal - discAmount) >= 25 ? 0 : 3.99;
+    var total      = subtotal - discAmount + shipping;
+
+    subtotEl.textContent = subtotal.toFixed(2).replace(".", ",") + " €";
+    shipEl.textContent   = shipping === 0 ? "Kostenlos" : "3,99 €";
+    totalEl.textContent  = total.toFixed(2).replace(".", ",") + " €";
+
+    if (discount) {
+      discRow.style.display = "";
+      discLbl.textContent   = "Rabatt (" + discount.code + " −" + discount.pct + "%)";
+      discVal.textContent   = "−" + discAmount.toFixed(2).replace(".", ",") + " €";
+    } else {
+      discRow.style.display = "none";
+    }
+  }
+
+  // ---- Schritte ----
+  function showStep(n) {
+    [1, 2, 3].forEach(function(i) {
+      var panel = document.getElementById("care-step-" + i);
+      var ind   = document.querySelector(".care-checkout-step[data-step='" + i + "']");
+      if (panel) panel.style.display = (i === n) ? "" : "none";
+      if (ind) {
+        ind.classList.toggle("active", i === n);
+        ind.classList.toggle("done",   i < n);
+      }
+    });
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ---- Validierung Schritt 1 ----
+  function validateStep1() {
+    var fields = ["co-firstname","co-lastname","co-email","co-street","co-zip","co-city"];
+    var ok = true;
+    fields.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var empty = !el.value.trim();
+      el.classList.toggle("care-input-error", empty);
+      if (empty) ok = false;
+    });
+    var emailEl = document.getElementById("co-email");
+    if (emailEl && emailEl.value && !/\S+@\S+\.\S+/.test(emailEl.value)) {
+      emailEl.classList.add("care-input-error");
+      ok = false;
+    }
+    return ok;
+  }
+
+  function collectAddress() {
+    ["co-firstname","co-lastname","co-email","co-phone","co-street","co-zip","co-city","co-country"].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) addressData[id] = el.value;
+    });
+  }
+
+  // ---- Validierung Schritt 2 ----
+  function validateStep2() {
+    var method = document.querySelector("input[name='payment']:checked");
+    if (!method) return false;
+    paymentData.method = method.value;
+    if (method.value === "card") {
+      var numEl = document.getElementById("co-card-num");
+      if (!numEl || numEl.value.replace(/\s/g,"").length < 13) {
+        if (numEl) numEl.classList.add("care-input-error");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // ---- Review rendern ----
+  function renderReview() {
+    var addrEl = document.getElementById("co-review-address");
+    var payEl  = document.getElementById("co-review-payment");
+    if (addrEl) {
+      addrEl.innerHTML =
+        '<div class="care-review-section-label">📦 Lieferadresse</div>' +
+        '<p>' + (addressData["co-firstname"] || "") + " " + (addressData["co-lastname"] || "") + '<br>' +
+        (addressData["co-street"] || "") + '<br>' +
+        (addressData["co-zip"] || "") + " " + (addressData["co-city"] || "") + '<br>' +
+        (addressData["co-country"] || "") + '</p>' +
+        '<p class="care-review-email">✉ ' + (addressData["co-email"] || "") + '</p>';
+    }
+    var payLabels = { card: "💳 Kreditkarte", paypal: "📱 PayPal", invoice: "🏦 Rechnung / Überweisung" };
+    if (payEl) {
+      payEl.innerHTML =
+        '<div class="care-review-section-label">💰 Zahlungsart</div>' +
+        '<p>' + (payLabels[paymentData.method] || paymentData.method) + '</p>';
+    }
+  }
+
+  // ---- Bestellung abschicken ----
+  function submitOrder() {
+    var termsEl = document.getElementById("co-terms");
+    if (!termsEl || !termsEl.checked) {
+      termsEl && termsEl.closest(".care-checkout-terms").classList.add("care-terms-error");
+      return;
+    }
+    var btn = document.getElementById("co-submit");
+    if (btn) { btn.disabled = true; btn.textContent = "Wird verarbeitet …"; }
+
+    setTimeout(function() {
+      // Warenkorb leeren
+      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem(COUPON_KEY);
+
+      // Erfolgsmeldung
+      [1,2,3].forEach(function(i) {
+        var p = document.getElementById("care-step-" + i);
+        if (p) p.style.display = "none";
+      });
+      var steps = document.getElementById("care-checkout-steps");
+      if (steps) steps.style.display = "none";
+
+      var success = document.getElementById("care-step-success");
+      if (success) success.style.display = "";
+
+      var orderNum = "CP-" + Date.now().toString().slice(-8);
+      var onEl = document.getElementById("co-order-num");
+      if (onEl) onEl.textContent = "Bestellnummer: " + orderNum;
+
+      // Badge im Warenkorb aktualisieren
+      var badge = document.getElementById("care-cart-badge");
+      if (badge) { badge.textContent = "0"; badge.style.display = "none"; }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 1200);
+  }
+
+  // ---- Zahlungsart-Umschalter ----
+  function initPaymentOptions() {
+    document.querySelectorAll(".care-payment-option").forEach(function(lbl) {
+      lbl.addEventListener("click", function() {
+        document.querySelectorAll(".care-payment-option").forEach(function(l) { l.classList.remove("active"); });
+        lbl.classList.add("active");
+        var val = lbl.querySelector("input[type=radio]").value;
+        var cardFields = document.getElementById("co-card-fields");
+        if (cardFields) cardFields.style.display = (val === "card") ? "" : "none";
+      });
+    });
+  }
+
+  // ---- Kreditkarten-Formatierung ----
+  function initCardFormatting() {
+    var numEl = document.getElementById("co-card-num");
+    if (numEl) {
+      numEl.addEventListener("input", function() {
+        var v = numEl.value.replace(/\D/g, "").substring(0, 16);
+        numEl.value = v.replace(/(.{4})/g, "$1 ").trim();
+      });
+    }
+    var expEl = document.getElementById("co-card-exp");
+    if (expEl) {
+      expEl.addEventListener("input", function() {
+        var v = expEl.value.replace(/\D/g, "").substring(0, 4);
+        expEl.value = v.length > 2 ? v.substring(0,2) + "/" + v.substring(2) : v;
+      });
+    }
+  }
+
+  // ---- Fehler-Klasse entfernen bei Eingabe ----
+  function initErrorClear() {
+    document.querySelectorAll(".care-checkout-input").forEach(function(el) {
+      el.addEventListener("input", function() { el.classList.remove("care-input-error"); });
+    });
+  }
+
+  // ---- Events ----
+  document.addEventListener("DOMContentLoaded", function() {
+    renderSummary();
+    initPaymentOptions();
+    initCardFormatting();
+    initErrorClear();
+
+    var next1 = document.getElementById("co-next-1");
+    if (next1) next1.addEventListener("click", function() {
+      if (validateStep1()) { collectAddress(); showStep(2); }
+    });
+
+    var back2 = document.getElementById("co-back-2");
+    if (back2) back2.addEventListener("click", function() { showStep(1); });
+
+    var next2 = document.getElementById("co-next-2");
+    if (next2) next2.addEventListener("click", function() {
+      if (validateStep2()) { renderReview(); showStep(3); }
+    });
+
+    var back3 = document.getElementById("co-back-3");
+    if (back3) back3.addEventListener("click", function() { showStep(2); });
+
+    var submit = document.getElementById("co-submit");
+    if (submit) submit.addEventListener("click", submitOrder);
+
+    var terms = document.getElementById("co-terms");
+    if (terms) terms.addEventListener("change", function() {
+      terms.closest(".care-checkout-terms").classList.remove("care-terms-error");
+    });
+
+    // Leerer Warenkorb → Redirect
+    if (loadCart().length === 0) {
+      document.getElementById("co-next-1") && (document.getElementById("co-next-1").disabled = true);
+    }
+  });
+})();
+</script>

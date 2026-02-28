@@ -229,4 +229,7 @@ class CareProductsController < ApplicationController
     @product = PRODUCTS.find { |p| p[:id] == params[:id].to_i }
     head :not_found unless @product
   end
+
+  def checkout
+  end
 end

@@ -37,7 +37,7 @@
         <span>Gesamt:</span>
         <strong id="care-cart-total">0,00 €</strong>
       </div>
-      <button class="care-btn-checkout">Zur Kasse →</button>
+      <%= link_to "Zur Kasse →", checkout_care_products_path, class: "care-btn-checkout", id: "care-btn-checkout" %>
       <div class="care-trust-badges">
         <span class="care-trust-badge" title="Sichere Zahlung">🔒 Sicher</span>
         <span class="care-trust-badge" title="Kostenlose Rückgabe">↩ Gratis Rückgabe</span>

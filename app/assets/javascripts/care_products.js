@@ -398,6 +398,7 @@ var CarePromoBar = (function() {
 // ---- Coupon Codes ----
 var CareCoupon = (function() {
   "use strict";
+  var STORAGE_KEY = "care_active_coupon";
   var CODES = {
     "WILLKOMMEN10": { type: "percent", value: 10, label: "10 % Rabatt" },
     "SOMMER15":     { type: "percent", value: 15, label: "15 % Rabatt" },
@@ -406,10 +407,25 @@ var CareCoupon = (function() {
 
   var active = null;
 
+  function restore() {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && CODES[saved]) { active = CODES[saved]; }
+  }
+
   function apply(code) {
     var found = CODES[code.toUpperCase()];
     active = found || null;
+    if (active) {
+      localStorage.setItem(STORAGE_KEY, code.toUpperCase());
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
     return active;
+  }
+
+  function clear() {
+    active = null;
+    localStorage.removeItem(STORAGE_KEY);
   }
 
   function discount(subtotal) {
@@ -419,28 +435,43 @@ var CareCoupon = (function() {
   }
 
   function init() {
-    var btn = document.getElementById("care-coupon-btn");
+    restore();
+    var btn   = document.getElementById("care-coupon-btn");
     var input = document.getElementById("care-coupon-input");
-    var msg = document.getElementById("care-coupon-msg");
+    var msg   = document.getElementById("care-coupon-msg");
     if (!btn || !input) return;
+
+    // Bereits eingelösten Code wiederherstellen
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && CODES[saved]) {
+      input.value    = saved;
+      input.disabled = true;
+      btn.textContent = "Eingelöst";
+      btn.disabled   = true;
+      if (msg) {
+        msg.textContent = "✓ Gutschein eingelöst: " + CODES[saved].label;
+        msg.className   = "care-coupon-msg care-coupon-success";
+      }
+      CareCart.refreshTotals && CareCart.refreshTotals();
+    }
 
     btn.addEventListener("click", function() {
       var result = apply(input.value.trim());
       if (result) {
         msg.textContent = "✓ Gutschein eingelöst: " + result.label;
-        msg.className = "care-coupon-msg care-coupon-success";
-        input.disabled = true;
+        msg.className   = "care-coupon-msg care-coupon-success";
+        input.disabled  = true;
         btn.textContent = "Eingelöst";
-        btn.disabled = true;
+        btn.disabled    = true;
       } else {
         msg.textContent = "✗ Ungültiger Gutscheincode";
-        msg.className = "care-coupon-msg care-coupon-error";
+        msg.className   = "care-coupon-msg care-coupon-error";
       }
       CareCart.refreshTotals && CareCart.refreshTotals();
     });
   }
 
-  return { init: init, discount: discount, active: function() { return active; } };
+  return { init: init, apply: apply, clear: clear, discount: discount, active: function() { return active; }, codes: CODES };
 })();
 
 // ---- Star Picker (Review Form) ----

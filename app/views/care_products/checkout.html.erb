@@ -220,9 +220,13 @@
 (function() {
   "use strict";
 
-  var CART_KEY    = "care_cart";
-  var COUPON_KEY  = "care_active_coupon";
-  var COUPONS     = { "WILLKOMMEN10": 10, "SOMMER15": 15, "CARE20": 20 };
+  var CART_KEY   = "care_cart";
+  var COUPON_KEY = "care_active_coupon";
+  var COUPONS    = {
+    "WILLKOMMEN10": { type: "percent", value: 10, label: "10 % Rabatt" },
+    "SOMMER15":     { type: "percent", value: 15, label: "15 % Rabatt" },
+    "PFLEGE5":      { type: "fixed",   value: 5,  label: "5,00 € Rabatt" }
+  };
   var currentStep = 1;
   var addressData = {};
   var paymentData = {};
@@ -235,7 +239,14 @@
 
   function getDiscount() {
     var code = localStorage.getItem(COUPON_KEY);
-    return (code && COUPONS[code]) ? { code: code, pct: COUPONS[code] } : null;
+    var def  = code && COUPONS[code];
+    return def ? { code: code, type: def.type, value: def.value, label: def.label } : null;
+  }
+
+  function calcDiscountAmount(discount, subtotal) {
+    if (!discount) return 0;
+    if (discount.type === "fixed") return Math.min(discount.value, subtotal);
+    return subtotal * discount.value / 100;
   }
 
   function renderSummary() {
@@ -270,7 +281,7 @@
     itemsEl.innerHTML = html;
 
     var discount   = getDiscount();
-    var discAmount = discount ? (subtotal * discount.pct / 100) : 0;
+    var discAmount = calcDiscountAmount(discount, subtotal);
     var shipping   = (subtotal - discAmount) >= 25 ? 0 : 3.99;
     var total      = subtotal - discAmount + shipping;
 
@@ -280,7 +291,7 @@
 
     if (discount) {
       discRow.style.display = "";
-      discLbl.textContent   = "Rabatt (" + discount.code + " −" + discount.pct + "%)";
+      discLbl.textContent   = "Rabatt (" + discount.code + " – " + discount.label + ")";
       discVal.textContent   = "−" + discAmount.toFixed(2).replace(".", ",") + " €";
     } else {
       discRow.style.display = "none";

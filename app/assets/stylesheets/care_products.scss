@@ -2911,3 +2911,370 @@ $care-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.15);
 
   strong { color: $care-primary; }
 }
+
+// =====================================================
+// Kundenstimmen / Testimonials
+// =====================================================
+.care-testimonials {
+  background: $care-light;
+  padding: 70px 0;
+}
+
+.care-testimonials-label {
+  display: inline-block;
+  background: lighten($care-primary, 48%);
+  color: $care-primary;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-testimonials-grid {
+  margin-top: 36px;
+}
+
+.care-testimonial-card {
+  background: #fff;
+  border: 1px solid $care-border;
+  border-radius: 16px;
+  padding: 30px 28px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: $care-shadow; }
+}
+
+.care-testimonial-card-featured {
+  border: 2px solid $care-primary;
+  position: relative;
+  background: linear-gradient(135deg, #fff 80%, lighten($care-primary, 50%));
+}
+
+.care-testimonial-featured-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $care-primary;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.care-testimonial-stars {
+  color: $care-secondary;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.care-testimonial-quote {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: darken($care-gray, 10%);
+  font-style: italic;
+  margin: 0;
+  flex: 1;
+  border: none;
+  padding: 0;
+}
+
+.care-testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid $care-border;
+  padding-top: 18px;
+}
+
+.care-testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, $care-primary, $care-primary-dk);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.care-testimonial-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: $care-dark;
+}
+
+.care-testimonial-meta {
+  font-size: 0.75rem;
+  color: $care-gray;
+  margin-top: 2px;
+}
+
+// =====================================================
+// Treueprogramm / Loyalty
+// =====================================================
+.care-loyalty {
+  background: linear-gradient(135deg, $care-dark 0%, darken($care-dark, 10%) 100%);
+  padding: 70px 0 56px;
+}
+
+.care-loyalty-label {
+  display: inline-block;
+  background: rgba($care-secondary, 0.2);
+  color: $care-secondary;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-section-title-light { color: #fff; }
+.care-section-subtitle-light { color: rgba(255,255,255,0.65); }
+
+.care-loyalty-tiers {
+  margin-top: 36px;
+  margin-bottom: 36px;
+}
+
+.care-loyalty-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 32px 26px;
+  text-align: center;
+  height: 100%;
+  position: relative;
+  transition: background 0.2s, transform 0.2s;
+
+  &:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-4px);
+  }
+}
+
+.care-loyalty-card-gold {
+  border-color: rgba($care-secondary, 0.5);
+  background: rgba($care-secondary, 0.08);
+}
+
+.care-loyalty-card-platinum {
+  border-color: rgba(167,139,250,0.5);
+  background: rgba(167,139,250,0.06);
+}
+
+.care-loyalty-tier-badge {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $care-secondary;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.care-loyalty-tier-icon {
+  font-size: 2.6rem;
+  margin-bottom: 12px;
+}
+
+.care-loyalty-tier-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.care-loyalty-tier-range {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 20px;
+}
+
+.care-loyalty-perks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+  }
+}
+
+.care-loyalty-cta-text {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.care-btn-loyalty-join {
+  background: $care-secondary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    background: darken($care-secondary, 10%);
+    transform: translateY(-2px);
+    color: #fff;
+  }
+}
+
+// =====================================================
+// Care Footer
+// =====================================================
+.care-footer {
+  background: darken($care-dark, 8%);
+  padding: 60px 0 0;
+  color: rgba(255,255,255,0.75);
+}
+
+.care-footer-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.care-footer-tagline {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  color: rgba(255,255,255,0.55);
+}
+
+.care-footer-certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.care-cert-badge {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.care-footer-heading {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.care-footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  a {
+    font-size: 0.86rem;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.15s;
+    &:hover { color: #fff; }
+  }
+}
+
+.care-footer-social {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  width: fit-content;
+
+  &:hover {
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+  }
+}
+
+.care-footer-payments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.care-payment-badge {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.care-footer-bottom {
+  margin-top: 50px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 0;
+}
+
+.care-footer-copy {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin: 0;
+
+  a {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    &:hover { color: #fff; }
+  }
+}

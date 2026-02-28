@@ -149,4 +149,13 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
       response = Ai::RubyLlmFactory.chat.ask(prompt)
       response.content.strip
     end
+
+    def fetch_prompt
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
+          :ai_analytics_projekt_phase_summary,
+          resource_type: "projekt_phase"
+        ).parsed_response
+      parsed_response.dig("consul_ai_prompt", "prompt")
+    end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_20_155939) do
+ActiveRecord::Schema.define(version: 2026_02_26_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -407,10 +407,15 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.time "email_on_feasibility_sent_at"
     t.time "email_on_selected_sent_at"
     t.boolean "preselected", default: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
+    t.index ["draft"], name: "index_budget_investments_on_draft"
     t.index ["group_id"], name: "index_budget_investments_on_group_id"
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
@@ -1584,6 +1589,20 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.index ["user_id"], name: "index_moderators_on_user_id"
   end
 
+  create_table "navbar_items", force: :cascade do |t|
+    t.integer "kind"
+    t.string "preset"
+    t.bigint "projekt_id"
+    t.string "external_title"
+    t.string "external_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "parent_id"
+    t.integer "position", default: 0, null: false
+    t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
+    t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
+  end
+
   create_table "newsletters", id: :serial, force: :cascade do |t|
     t.string "subject"
     t.string "segment_recipient"
@@ -2118,6 +2137,7 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.string "ai_stats_refresh_status"
     t.datetime "ai_stats_refreshed_at"
     t.datetime "stats_refreshed_at"
+    t.jsonb "stats", default: {}, null: false
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2273,8 +2293,9 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.string "preview_code"
     t.boolean "on_global_overview", default: false
     t.boolean "from_dt", default: false
-    t.string "build_file_import_status"
-    t.jsonb "build_file_import_data"
+    t.string "import_file_status"
+    t.jsonb "import_file_data"
+    t.boolean "show_content_background", default: true
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2337,12 +2358,17 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.integer "cached_votes_down", default: 0
     t.integer "officing_bulk_votes", default: 0
     t.boolean "admin_accepted", default: true, null: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
     t.index ["community_id"], name: "index_proposals_on_community_id"
     t.index ["confidence_score"], name: "index_proposals_on_confidence_score"
+    t.index ["draft"], name: "index_proposals_on_draft"
     t.index ["geozone_id"], name: "index_proposals_on_geozone_id"
     t.index ["hidden_at"], name: "index_proposals_on_hidden_at"
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
@@ -2783,6 +2809,16 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
   end
 
+  create_table "user_resource_criteria", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "text", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
+    t.index ["projekt_phase_id"], name: "index_user_resource_criteria_on_projekt_phase_id"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
@@ -3086,6 +3122,8 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
+  add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
@@ -3159,6 +3197,7 @@ ActiveRecord::Schema.define(version: 2026_01_20_155939) do
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
+  add_foreign_key "user_resource_criteria", "projekt_phases"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "users", "registered_addresses"

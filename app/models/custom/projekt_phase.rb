@@ -60,7 +60,8 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
 
-  has_many :age_range_projekt_phases_for_stats, -> { where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
+  has_many :age_range_projekt_phases_for_stats, -> {
+ where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
   has_many :age_ranges_for_stats, through: :age_range_projekt_phases_for_stats, source: :age_range
 
   belongs_to :age_restriction, class_name: "AgeRange", foreign_key: :age_range_id,
@@ -92,6 +93,7 @@ class ProjektPhase < ApplicationRecord
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
+  has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -143,7 +145,7 @@ class ProjektPhase < ApplicationRecord
     where(id: ids_with_resources)
   }
 
-  scope :sorted, ->  {order(:given_order) }
+  scope :sorted, -> { order(:given_order) }
 
   scope :with_feature, ->(feature_key, state = "on") {
     joins(:settings)
@@ -193,7 +195,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id: id).exists?
+    self.class.current(timestamp).where(id:).exists?
   end
 
   def not_current?
@@ -490,15 +492,17 @@ class ProjektPhase < ApplicationRecord
       return if projekt_phase_settings.nil?
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
-        settings.create!(key: key, value: value)
+        settings.create!(key:, value:)
       end
     end
 
     def type_must_be_valid
       if type.blank?
-        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
       elsif !PROJEKT_PHASES_TYPES.include?(type)
-        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
       end
     end
 end

@@ -38,7 +38,7 @@ module Abilities
       end
 
       can [:report, :download_report_section, :download_all_report_sections], Poll do |poll|
-        poll.evaluation_enabled? && poll.projekt&.visible_for?(user)
+        poll.report_visible_for_citizens? && poll.projekt&.visible_for?(user)
       end
 
       can [:retire_form, :retire], Proposal, author_id: user.id

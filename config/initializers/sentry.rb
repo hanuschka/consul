@@ -1,6 +1,7 @@
 Sentry.init do |config|
   config.dsn = Rails.application.secrets.sentry_key
   config.breadcrumbs_logger = [:active_support_logger]
+  # config.rails.report_rescued_exceptions = true
 
   # To activate performance monitoring, set one of these options.
   # We recommend adjusting the value in production:

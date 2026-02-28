@@ -6,7 +6,7 @@ class DtApi::Resources::Clients
   end
 
   def connect(**params)
-    @client.post_with_auth(
+    @client.post(
       "#{BASE_PATH}/connect",
       multipart: true,
       body: {

@@ -7,13 +7,22 @@ class ParticapationStats::TopicClusteringComponent < ApplicationComponent
 
   def categories_component
     @categories_component ||= AiStats::CategoriesClusteringComponent.new(
-      clustering_data:,
+      clustering_data: clustering_data,
       title_key: "custom.ai_stats.topic_clustering",
-      resource_class:
+      resource_class: resource_class
     )
   end
 
+  def show_export_buttons?
+    categories.any?
+  end
+
   private
+
+    def categories
+      return clustering_data if clustering_data.is_a?(Array)
+      clustering_data.values
+    end
 
     def clustering_data
       @projekt_phase.ai_stats&.dig("topic_clustering") || {}

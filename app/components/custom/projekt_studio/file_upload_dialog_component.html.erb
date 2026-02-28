@@ -1,0 +1,119 @@
+<input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
+
+<!-- Image Management Dialog -->
+<dialog class="file-upload-manager-dialog js-file-upload-manager-dialog">
+  <div class="file-upload-manager-dialog--overlay js-file-upload-manager-dialog-close"></div>
+  <div class="file-upload-manager-dialog--content">
+    <div class="file-upload-manager-dialog--header">
+      <h3>Bildergalerie</h3>
+      <button class="close-button round-icon-button js-file-upload-manager-dialog-close" data-close="" aria-label="Close Accessible Modal" type="button">
+        <i class="fa fa-xmark">
+        </i>
+      </button>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="file-upload-manager-dialog--toolbar">
+      <div class="file-upload-manager-dialog--toolbar-left">
+        <div class="file-upload-manager-dialog--search-wrapper">
+          <input type="text" class="file-upload-manager-dialog--search-input js-file-upload-manager-search" placeholder="Suchen...">
+          <button type="button" class="file-upload-manager-dialog--search-clear js-file-upload-manager-search-clear" style="display: none;">×</button>
+          <span class="file-upload-manager-dialog--search-icon"></span>
+        </div>
+
+        <%# <div class="file-upload-manager-dialog--filter-wrapper"> %>
+          <%#   <span>Filter:</span> %>
+          <%#   <button type="button" class="button js-file-upload-manager-filter active" data-type="picture"> %>
+            <%#     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> %>
+              <%#       <path d="M21.75 3.75H2.25C1.83516 3.75 1.5 4.08516 1.5 4.5V19.5C1.5 19.9148 1.83516 20.25 2.25 20.25H21.75C22.1648 20.25 22.5 19.9148 22.5 19.5V4.5C22.5 4.08516 22.1648 3.75 21.75 3.75Z" fill="currentColor"/> %>
+              <%#     </svg> %>
+            <%#     Bilder %>
+            <%#   </button> %>
+          <%# </div> %>
+      </div>
+
+      <div class="file-upload-manager-dialog--toolbar-right">
+        <button type="button" class="button js-file-upload-manager-edit" style="display: none;">Bild editieren</button>
+        <button type="button" class="button js-file-upload-manager-upload">Neues Bild hochladen</button>
+      </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="file-upload-manager-dialog--body js-file-upload-manager-dialog--body">
+      <div class="file-upload-manager-dialog--grid-wrapper">
+        <div class="file-upload-manager-dialog--grid js-file-upload-manager-grid">
+        </div>
+        <div class="file-upload-manager-dialog--loading-overlay js-file-upload-manager-loading-overlay" style="display: none;">
+          <div class="loading-spinner-inline"></div>
+          <%# <span>Wird geladen...</span> %>
+        </div>
+      </div>
+      <div class="file-upload-manager-dialog--pagination js-file-upload-manager-pagination"></div>
+    </div>
+
+    <!-- Template for temporary uploading images -->
+    <template id="file-upload-manager-uploading-template">
+      <div class="file-upload-manager-dialog--item -uploading" data-id="">
+        <div class="file-upload-manager-dialog--item-thumb">
+          <div class="file-upload-manager-dialog--item-uploading">
+            <div class="file-upload-manager-dialog--item-thumb-overlay-backdrop"></div>
+            <div class="file-upload-manager-dialog--item-preview" style="background-image: url('');"></div>
+            <div class="loading-spinner-inline"></div>
+          </div>
+         <img class="js-file-upload-manager-dialog_item-image" src="" alt="">
+        </div>
+        <div class="file-upload-manager-dialog--item-meta">
+          <p class="file-upload-manager-dialog--item-title" title=""></p>
+          <div class="file-upload-manager-dialog--item-alt">Wird hochgeladen...</div>
+        </div>
+      </div>
+    </template>
+
+    <div class="file-upload-manager-dialog--footer">
+      <button type="button" class="button image-upload-gallery--select-image-btn js-file-upload-manager-select">
+        Wählen
+      </button>
+    </div>
+
+    <!-- Hidden file input for uploads -->
+    <input type="file" class="js-file-upload-manager-file-input" accept="image/*" style="display: none;">
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="file-upload-manager-edit-modal js-file-upload-manager-edit-modal">
+    <div class="file-upload-manager-edit-modal__overlay js-file-upload-manager-edit-close"></div>
+    <div class="file-upload-manager-edit-modal__content">
+      <div class="file-upload-manager-edit-modal__header">
+        <span>Einstellungen zum Bild</span>
+        <button class="close-button round-icon-button js-file-upload-manager-edit-close" data-close="" aria-label="Close Accessible Modal" type="button">
+          <i class="fa fa-xmark">
+          </i>
+        </button>
+      </div>
+      <div class="file-upload-manager-edit-modal__body">
+        <div class="file-upload-manager-edit-modal__field">
+          <label>Titel</label>
+          <input type="text" class="js-file-upload-manager-edit-title" placeholder="Titel">
+        </div>
+        <div class="file-upload-manager-edit-modal__field">
+          <label>Beschreibung</label>
+          <textarea class="js-file-upload-manager-edit-description" placeholder="Beschreibung"></textarea>
+        </div>
+        <div class="file-upload-manager-edit-modal__field">
+          <label>Alternativer Text</label>
+          <input type="text" class="js-file-upload-manager-edit-alt" placeholder="Alternativer Text (empfohlen)">
+        </div>
+      </div>
+      <div class="file-upload-manager-edit-modal__footer">
+        <button type="button" class="file-upload-manager-dialog--btn-danger js-file-upload-manager-delete">
+          <i class="fa fa-trash"></i>
+          Löschen
+        </button>
+        <button type="button" class="file-upload-manager-dialog--btn-primary js-file-upload-manager-update">
+          <i class="fa fa-save"></i>
+          Aktualisieren
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>

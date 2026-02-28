@@ -1,0 +1,9 @@
+en:
+  custom:
+    moderation_mailer:
+      flag_report:
+        subject: "A proposal has been reported"
+        greeting: "Hello,"
+        body_prefix: "the proposal"
+        body_suffix: "on Consul has been reported."
+        review_link: Go to proposal moderation.

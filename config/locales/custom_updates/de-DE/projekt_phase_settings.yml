@@ -128,8 +128,10 @@ de:
             stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
             advanced_stats_enabled: Erweiterte Statistiken
             advanced_stats_enabled_description: Zeit erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
-            evaluation_enabled: Report für Bürger anzeigen
-            evaluation_enabled_description: Zeigt eine automatisch erstellte, zusammenfassende Auswertung der Abstimmungsergebnisse für Bürger an.
+            report_visible_for_citizens: Report-Tab für Bürger sichtbar
+            report_visible_for_citizens_description: Macht den Report-Tab mit der KI-generierten Zusammenfassung der Abstimmungsergebnisse für Bürger sichtbar. Admins und Projektmanager sehen den Tab immer.
+            evaluation_enabled: Bewertung für Bürger anzeigen
+            evaluation_enabled_description: Zeigt den Bewertung-Tab mit der detaillierten Auswertung der Abstimmungsergebnisse für Bürger an.
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
             show_open_answer_author_name: Name veröffentlichen

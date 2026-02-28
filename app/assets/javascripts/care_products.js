@@ -1038,6 +1038,171 @@ var CareFAQ = (function() {
   return { init: init };
 })();
 
+// ---- Pflegepakete / Bundles ----
+var CareBundles = (function() {
+  "use strict";
+
+  function init() {
+    document.querySelectorAll(".care-bundle-add-btn").forEach(function(btn) {
+      if (btn._bundleBound) return;
+      btn._bundleBound = true;
+      btn.addEventListener("click", function() {
+        var ids    = btn.dataset.productIds.split("|");
+        var names  = btn.dataset.productNames.split("|");
+        var prices = btn.dataset.productPrices.split("|");
+        var emojis = btn.dataset.productEmojis.split("|");
+        var bid    = btn.dataset.bundleId;
+
+        ids.forEach(function(id, i) {
+          CareCart.add({
+            id:    "bundle" + bid + "-" + id,
+            name:  names[i]  || "Produkt",
+            price: prices[i] || "0,00 €",
+            emoji: emojis[i] || "🧴",
+            qty:   1
+          });
+        });
+
+        btn.textContent = "✓ Paket hinzugefügt!";
+        btn.style.background = "#357a62";
+        setTimeout(function() {
+          btn.textContent = "Paket in den Warenkorb";
+          btn.style.background = "";
+        }, 2200);
+      });
+    });
+  }
+
+  return { init: init };
+})();
+
+// ---- Newsletter-Popup ----
+var CareNewsletterPopup = (function() {
+  "use strict";
+  var SESSION_KEY = "care_popup_shown";
+  var DELAY_MS = 12000;
+  var timer;
+
+  function show() {
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+    var popup = document.getElementById("care-newsletter-popup");
+    var bd    = document.getElementById("care-popup-backdrop");
+    if (!popup || !bd) return;
+    popup.classList.add("open");
+    bd.classList.add("open");
+    document.body.style.overflow = "hidden";
+    sessionStorage.setItem(SESSION_KEY, "1");
+  }
+
+  function hide() {
+    var popup = document.getElementById("care-newsletter-popup");
+    var bd    = document.getElementById("care-popup-backdrop");
+    if (popup) popup.classList.remove("open");
+    if (bd)    bd.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function init() {
+    if (!document.getElementById("care-newsletter-popup")) return;
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+
+    timer = setTimeout(show, DELAY_MS);
+
+    var closeBtn = document.getElementById("care-popup-close");
+    var skipBtn  = document.getElementById("care-popup-skip");
+    var bd       = document.getElementById("care-popup-backdrop");
+    if (closeBtn) closeBtn.addEventListener("click", hide);
+    if (skipBtn)  skipBtn.addEventListener("click", hide);
+    if (bd)       bd.addEventListener("click", hide);
+
+    var submitBtn   = document.getElementById("care-popup-submit");
+    var emailInput  = document.getElementById("care-popup-email");
+    var formArea    = document.getElementById("care-popup-form-area");
+    var successArea = document.getElementById("care-popup-success");
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function() {
+        var email = (emailInput || {}).value || "";
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+          if (emailInput) emailInput.classList.add("care-popup-input-error");
+          return;
+        }
+        submitBtn.textContent = "Wird angemeldet …";
+        submitBtn.disabled = true;
+        if (emailInput) emailInput.disabled = true;
+        setTimeout(function() {
+          if (formArea)    formArea.style.display = "none";
+          if (successArea) successArea.style.display = "flex";
+          setTimeout(hide, 3500);
+        }, 900);
+      });
+    }
+    if (emailInput) {
+      emailInput.addEventListener("input", function() {
+        emailInput.classList.remove("care-popup-input-error");
+      });
+      emailInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && submitBtn) submitBtn.click();
+      });
+    }
+  }
+
+  return { init: init };
+})();
+
+// ---- Social Proof ----
+var CareSocialProof = (function() {
+  "use strict";
+
+  function init() {
+    // Live-Besucherzähler auf Produktkarten
+    document.querySelectorAll(".care-product-col").forEach(function(card) {
+      var el = card.querySelector(".care-social-proof-badge");
+      if (!el) return;
+      var n = Math.floor(Math.random() * 17) + 4;
+      el.textContent = "🔥 " + n + " Personen sehen das gerade";
+      el.style.display = "block";
+    });
+
+    // Stats-Counter animieren
+    var triggered = false;
+    var statsStrip = document.getElementById("care-stats-strip");
+    if (!statsStrip) return;
+
+    function animateCounters() {
+      if (triggered) return;
+      triggered = true;
+      statsStrip.querySelectorAll(".care-stat-num").forEach(function(el) {
+        var target = parseInt(el.dataset.target) || 0;
+        var suffix = el.dataset.suffix || "";
+        var duration = 1600;
+        var steps = 50;
+        var increment = target / steps;
+        var current = 0;
+        var i = 0;
+        var interval = setInterval(function() {
+          i++;
+          current = Math.min(Math.round(increment * i), target);
+          el.textContent = current.toLocaleString("de-DE") + suffix;
+          if (i >= steps) clearInterval(interval);
+        }, duration / steps);
+      });
+    }
+
+    // Trigger when stats strip enters viewport
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { animateCounters(); observer.disconnect(); }
+      }, { threshold: 0.3 });
+      observer.observe(statsStrip);
+    } else {
+      animateCounters();
+    }
+  }
+
+  return { init: init };
+})();
+
 // ---- Bootstrap ----
 $(document).on("turbolinks:load", function() {
   CareCart.init();
@@ -1057,4 +1222,7 @@ $(document).on("turbolinks:load", function() {
   CareRecentlyViewed.init();
   CareCompare.init();
   CareFAQ.init();
+  CareBundles.init();
+  CareNewsletterPopup.init();
+  CareSocialProof.init();
 });

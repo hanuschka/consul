@@ -131,6 +131,42 @@ class CareProductsController < ApplicationController
     }
   ].freeze
 
+  BUNDLES = [
+    {
+      id: 1,
+      name: "Starter Pflege-Set",
+      icon: "🌿",
+      description: "Die perfekte Einführung in natürliche Pflege – alles was Sie zum Start brauchen.",
+      product_ids: [1, 3, 4],
+      original_price: "40,97 €",
+      bundle_price: "29,99 €",
+      savings: "10,98 €",
+      badge: "Beliebt"
+    },
+    {
+      id: 2,
+      name: "Premium Hautpflege-Paket",
+      icon: "✨",
+      description: "Das Beste für Ihre Haut: Anti-Aging Serum und intensive Feuchtigkeitspflege kombiniert.",
+      product_ids: [1, 7, 5],
+      original_price: "83,97 €",
+      bundle_price: "59,99 €",
+      savings: "23,98 €",
+      badge: "Bestseller"
+    },
+    {
+      id: 3,
+      name: "Familienpaket Rundumpflege",
+      icon: "🌸",
+      description: "Für die ganze Familie: von Babypflege bis Haarpflege – alle optimal versorgt.",
+      product_ids: [6, 3, 8],
+      original_price: "35,97 €",
+      bundle_price: "24,99 €",
+      savings: "10,98 €",
+      badge: "Neu"
+    }
+  ].freeze
+
   SALE_PRODUCTS = [
     {
       id: 1,
@@ -178,6 +214,7 @@ class CareProductsController < ApplicationController
     @categories = CATEGORIES
     @all_products = PRODUCTS
     @sale_products = SALE_PRODUCTS
+    @bundles = BUNDLES
 
     if params[:category].present?
       @selected_category = params[:category]

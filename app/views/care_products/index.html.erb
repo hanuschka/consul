@@ -233,6 +233,7 @@
               <span class="care-rating-value"><%= product[:rating] %></span>
               <span class="care-rating-count">(<%= product[:reviews] %> Bewertungen)</span>
             </div>
+            <div class="care-social-proof-badge" style="display:none;"></div>
             <div class="care-product-footer">
               <span class="care-product-price"><%= product[:price] %></span>
               <div class="care-product-actions">
@@ -400,6 +401,49 @@
   </div>
 </section>
 
+<!-- Pflegepakete / Bundles -->
+<section class="care-bundles">
+  <div class="row">
+    <div class="small-12 column text-center">
+      <div class="care-bundles-label">📦 Vorteilspakete</div>
+      <h2 class="care-section-title">Spare mehr mit unseren Bundles</h2>
+      <p class="care-section-subtitle">Aufeinander abgestimmte Produkte – zu einem unschlagbaren Paketpreis</p>
+    </div>
+  </div>
+  <div class="row small-up-1 medium-up-3 care-bundles-grid">
+    <% @bundles.each do |bundle| %>
+      <% bp = bundle[:product_ids].map { |pid| @all_products.find { |p| p[:id] == pid } }.compact %>
+      <% cat_icons = bp.map { |p| @categories.find { |c| c[:id] == p[:category] }&.dig(:icon) || "🧴" } %>
+      <div class="column">
+        <div class="care-bundle-card">
+          <span class="care-bundle-badge"><%= bundle[:badge] %></span>
+          <div class="care-bundle-icon"><%= bundle[:icon] %></div>
+          <h3 class="care-bundle-name"><%= bundle[:name] %></h3>
+          <p class="care-bundle-desc"><%= bundle[:description] %></p>
+          <ul class="care-bundle-items">
+            <% bp.each_with_index do |p, i| %>
+              <li><span class="care-bundle-item-icon"><%= cat_icons[i] %></span> <%= p[:name] %></li>
+            <% end %>
+          </ul>
+          <div class="care-bundle-pricing">
+            <span class="care-bundle-original"><%= bundle[:original_price] %></span>
+            <span class="care-bundle-price"><%= bundle[:bundle_price] %></span>
+            <span class="care-bundle-savings">Sie sparen <%= bundle[:savings] %></span>
+          </div>
+          <button class="care-bundle-add-btn"
+                  data-bundle-id="<%= bundle[:id] %>"
+                  data-product-ids="<%= bp.map { |p| p[:id] }.join("|") %>"
+                  data-product-names="<%= bp.map { |p| p[:name] }.join("|") %>"
+                  data-product-prices="<%= bp.map { |p| p[:price] }.join("|") %>"
+                  data-product-emojis="<%= cat_icons.join("|") %>">
+            Paket in den Warenkorb
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
 <!-- FAQ-Bereich -->
 <section class="care-faq">
   <div class="row">
@@ -519,5 +563,62 @@
   </div>
   <div class="row" id="care-recently-viewed-grid"></div>
 </section>
+
+<!-- Stats Strip -->
+<section class="care-stats-strip" id="care-stats-strip">
+  <div class="row">
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item">
+        <div class="care-stat-num" data-target="12400" data-suffix="+">0</div>
+        <div class="care-stat-label">Zufriedene Kunden</div>
+      </div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item">
+        <div class="care-stat-num" data-target="98" data-suffix="%">0</div>
+        <div class="care-stat-label">Würden uns empfehlen</div>
+      </div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item">
+        <div class="care-stat-num" data-target="48" data-suffix="">0</div>
+        <div class="care-stat-label">Produkte im Sortiment</div>
+      </div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <div class="care-stat-item">
+        <div class="care-stat-num" data-target="5" data-suffix=" Jahre">0</div>
+        <div class="care-stat-label">Erfahrung in Naturpflege</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter-Popup -->
+<div class="care-popup-backdrop" id="care-popup-backdrop"></div>
+<div class="care-newsletter-popup" id="care-newsletter-popup" role="dialog" aria-modal="true" aria-label="Newsletter anmelden">
+  <button class="care-popup-close" id="care-popup-close" aria-label="Schließen">✕</button>
+  <div class="care-popup-icon">🎁</div>
+  <h2 class="care-popup-title">10 % Rabatt sichern!</h2>
+  <p class="care-popup-subtitle">
+    Melden Sie sich jetzt für unseren Newsletter an und erhalten Sie sofort einen
+    Willkommensrabatt auf Ihre erste Bestellung.
+  </p>
+  <div id="care-popup-form-area">
+    <div class="care-popup-input-row">
+      <input type="email"
+             id="care-popup-email"
+             class="care-popup-input"
+             placeholder="Ihre E-Mail-Adresse"
+             autocomplete="email">
+      <button class="care-popup-submit" id="care-popup-submit">Jetzt sparen</button>
+    </div>
+    <button class="care-popup-skip" id="care-popup-skip">Nein danke, ich verzichte auf 10 % Rabatt</button>
+  </div>
+  <div id="care-popup-success" style="display:none;" class="care-popup-success-area">
+    <div class="care-popup-success-icon">✓</div>
+    <p class="care-popup-success-text">Super! Ihr Rabattcode <strong>WILLKOMMEN10</strong> wartet in Ihrem Postfach.</p>
+  </div>
+</div>
 
 <%= render "care_products/quiz" %>

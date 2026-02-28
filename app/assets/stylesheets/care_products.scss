@@ -2559,3 +2559,355 @@ $care-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.15);
     padding: 0 22px 20px;
   }
 }
+
+// =====================================================
+// Pflegepakete / Bundles
+// =====================================================
+.care-bundles {
+  background: #fff;
+  padding: 70px 0;
+}
+
+.care-bundles-label {
+  display: inline-block;
+  background: lighten($care-primary, 48%);
+  color: $care-primary;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.care-bundles-grid {
+  margin-top: 36px;
+}
+
+.care-bundle-card {
+  position: relative;
+  background: $care-light;
+  border: 1px solid $care-border;
+  border-radius: 18px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: box-shadow 0.25s, transform 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:hover {
+    box-shadow: $care-shadow-hover;
+    transform: translateY(-4px);
+  }
+}
+
+.care-bundle-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $care-secondary;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.care-bundle-icon {
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
+
+.care-bundle-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: $care-dark;
+  margin-bottom: 10px;
+}
+
+.care-bundle-desc {
+  font-size: 0.88rem;
+  color: $care-gray;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.care-bundle-items {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid $care-border;
+    font-size: 0.88rem;
+    color: $care-dark;
+
+    &:last-child { border-bottom: none; }
+  }
+}
+
+.care-bundle-item-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.care-bundle-pricing {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.care-bundle-original {
+  font-size: 0.85rem;
+  color: $care-gray;
+  text-decoration: line-through;
+}
+
+.care-bundle-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: $care-primary;
+}
+
+.care-bundle-savings {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e53e3e;
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 20px;
+  padding: 3px 12px;
+}
+
+.care-bundle-add-btn {
+  width: 100%;
+  padding: 14px;
+  background: $care-primary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: auto;
+
+  &:hover {
+    background: $care-primary-dk;
+    transform: translateY(-1px);
+  }
+}
+
+// =====================================================
+// Stats Strip
+// =====================================================
+.care-stats-strip {
+  background: $care-dark;
+  padding: 50px 0;
+}
+
+.care-stat-item {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.care-stat-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: $care-secondary;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.care-stat-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.75);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+// =====================================================
+// Social Proof Badge
+// =====================================================
+.care-social-proof-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c05621;
+  background: #fffaf0;
+  border: 1px solid #fbd38d;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+// =====================================================
+// Newsletter Popup
+// =====================================================
+.care-popup-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9000;
+  backdrop-filter: blur(3px);
+
+  &.open { display: block; }
+}
+
+.care-newsletter-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: min(480px, 92vw);
+  background: #fff;
+  border-radius: 20px;
+  padding: 44px 36px 36px;
+  z-index: 9001;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  text-align: center;
+  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  opacity: 0;
+
+  &.open {
+    display: block;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.care-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: $care-gray;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 50%;
+  transition: background 0.15s;
+  &:hover { background: $care-light; }
+}
+
+.care-popup-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.care-popup-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: $care-dark;
+  margin-bottom: 10px;
+}
+
+.care-popup-subtitle {
+  font-size: 0.9rem;
+  color: $care-gray;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.care-popup-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+
+  @media (max-width: 480px) { flex-direction: column; }
+}
+
+.care-popup-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid $care-border;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus { border-color: $care-primary; }
+
+  &.care-popup-input-error {
+    border-color: #e53e3e;
+    animation: care-shake 0.35s ease;
+  }
+}
+
+@keyframes care-shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+.care-popup-submit {
+  padding: 12px 22px;
+  background: $care-primary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  &:hover:not(:disabled) { background: $care-primary-dk; }
+  &:disabled { opacity: 0.65; cursor: default; }
+}
+
+.care-popup-skip {
+  background: none;
+  border: none;
+  color: $care-gray;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+  transition: color 0.15s;
+  &:hover { color: $care-dark; }
+}
+
+.care-popup-success-area {
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.care-popup-success-icon {
+  width: 56px;
+  height: 56px;
+  background: $care-primary;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  line-height: 56px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.care-popup-success-text {
+  font-size: 0.95rem;
+  color: $care-dark;
+  line-height: 1.65;
+
+  strong { color: $care-primary; }
+}

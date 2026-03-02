@@ -236,6 +236,7 @@ var destroy_non_idempotent_modules = function() {
   App.Map.destroy();
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
+  App.PollsCustom.destroy();
 };
 
 

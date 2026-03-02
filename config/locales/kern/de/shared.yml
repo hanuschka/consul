@@ -8,6 +8,8 @@ de:
     cancel: "Abbrechen"
     delete: "Löschen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
+    toggle_submenu: "Untermenü für %{title} umschalten"
+    navbar_more: "Mehr"
     table:
       id: "ID"
       username: "Benutzername"

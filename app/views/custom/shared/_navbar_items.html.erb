@@ -1,0 +1,16 @@
+<div data-navbar data-navbar-more-label="<%= t('shared.navbar_more') %>" style="display: contents;">
+  <% NavbarItem.top_level.includes(:projekt, children: [:projekt, children: [:projekt, :children]]).each do |item| %>
+    <% has_children = item.children.any? %>
+    <li class="nav-element top-level-item"
+        <%= "aria-haspopup=true aria-expanded=false" if has_children %>>
+      <a href="<%= navbar_item_url(item) %>"<%= navbar_item_link_attrs(item).html_safe %>><%= item.title %></a>
+      <% if has_children %>
+        <button aria-expanded="false"
+                aria-label="<%= t('shared.toggle_submenu', title: item.title) %>"
+                class="nav-toggle-arrow"
+                data-navbar-toggle>&#9660;</button>
+        <%= render partial: "shared/navbar_item_children", locals: { children: item.children.order(:position), depth: 1 } %>
+      <% end %>
+    </li>
+  <% end %>
+</div>

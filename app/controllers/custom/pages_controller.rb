@@ -9,6 +9,7 @@ class PagesController < ApplicationController
   include RandomSeed
   include HasEmbeddableShortcodes
   include GuestUsers
+  include LandingPageResolvable
 
   has_orders %w[most_voted newest oldest], only: :show
 
@@ -48,19 +49,7 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      landing_page_slug = params[:landing_page_slug]
-      if landing_page_slug.present?
-        @landing_page =
-          @projekt
-            .landing_pages
-            .find_by(slug: landing_page_slug)
-
-        if @landing_page.present?
-          set_landing_page_topbar_ui_variables(@landing_page)
-        else
-          redirect_to page_path(@custom_page.slug) and return
-        end
-      end
+      resolve_landing_page_for_projekt(@projekt)
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
@@ -120,8 +109,7 @@ class PagesController < ApplicationController
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
         unless current_user&.has_pm_permission_to?(:manage, @projekt)
-          redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id,
-anchor: "projekt-footer")
+          redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
           redirect_to redirect_path and return
         end
 
@@ -149,7 +137,7 @@ anchor: "projekt-footer")
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       end
     end
@@ -200,10 +188,9 @@ anchor: "projekt-footer")
       @resources = @projekt_phase.proposals
                                  .base_selection
                                  .with_min_supports(min_supports)
-                                 .includes([:image, :projekt_labels, :translations,
-  author: [:image, :organization], sentiment: [:translations]])
+                                 .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       else
         if params[:search].present?
@@ -328,7 +315,7 @@ anchor: "projekt-footer")
 
       if params[:section] == "results" && can?(:read_results, @budget)
         @investments = Budget::Result.new(@budget, @budget.heading).investments
-      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget)
+      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
         @investments = @budget.investments
       else
@@ -506,5 +493,17 @@ feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_na
       @projekt_phase.user_status == "verified" &&
         current_user.verified_at.nil? &&
         helpers.projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
+    end
+
+    def can_view_stats_section?(section, phase)
+      return true if current_user&.administrator? || current_user&.projekt_manager?
+
+      if section == "key_metrics"
+        phase.feature?("general.public_kpi_stats")
+      elsif section == "analysis"
+        phase.feature?("general.public_ai_stats")
+      else
+        false
+      end
     end
 end

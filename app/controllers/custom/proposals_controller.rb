@@ -8,6 +8,7 @@ class ProposalsController
   include RandomSeed
   include GuestUsers
   include CustomHelper
+  include LandingPageResolvable
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -121,26 +122,15 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
-      redirect_to user_path(@proposal.author, filter: "proposals"),
-notice: I18n.t("flash.actions.create.proposal")
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
 
       Mailer.proposal_created(@proposal).deliver_later
 
-      if @proposal.projekt_phase.active?
-        redirect_to page_path(
-          @proposal.projekt_phase.projekt.page.slug,
-          anchor: "filter-subnav",
-          projekt_phase_id: @proposal.projekt_phase.id,
-          order: params[:order]
-        ), notice: t("proposals.notice.published")
-      else
-        redirect_to proposals_path(
-          resources_order: params[:order]
-        ), notice: t("proposals.notice.published")
-      end
+      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
@@ -180,19 +170,7 @@ notice: I18n.t("flash.actions.create.proposal")
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to proposal_path(@proposal) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently

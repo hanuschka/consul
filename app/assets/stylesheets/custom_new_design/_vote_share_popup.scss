@@ -22,6 +22,10 @@ $share-color-copy-link: #555;
   overflow: visible;
 }
 
+.proposal-page--votes .vote-share-popup-container {
+  display: none;
+}
+
 .vote-share-popup-container--button {
   display: flex;
   align-items: center;

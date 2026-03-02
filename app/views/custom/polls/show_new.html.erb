@@ -70,11 +70,13 @@
                     <%= t("custom.polls.questions.prev_question") %>
                   </button>
 
-                  <button type="button" class="button margin-left hollow js-question-wizard-next">
+                  <% single_question = @questions.where(contextualize_by_poll_question_id: nil).count <= 1 %>
+
+                  <button type="button" class="<%= 'd-none' if single_question %> button margin-left hollow js-question-wizard-next">
                     <%= t("custom.polls.questions.next_question") %>
                   </button>
 
-                  <button type="button" class="d-none button margin-left js-poll-closing-note">
+                  <button type="button" class="<%= 'd-none' unless single_question %> button margin-left js-poll-closing-note">
                     <%= t("custom.polls.questions.closing_note") %>
                   </button>
                 </div>

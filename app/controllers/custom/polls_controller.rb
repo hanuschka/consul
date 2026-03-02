@@ -6,6 +6,7 @@ class PollsController < ApplicationController
   include ProjektControllerHelper
   include Takeable
   include GuestUsers
+  include LandingPageResolvable
 
   before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation]
 
@@ -91,20 +92,7 @@ class PollsController < ApplicationController
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt_phase
-          .projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to poll_path(@poll) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt_phase&.projekt)
 
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
@@ -144,12 +132,11 @@ class PollsController < ApplicationController
     @projekt_phase = @poll.projekt_phase
 
     is_admin_or_manager = current_user&.administrator? || can?(:edit, @poll.projekt)
+    can_view_report = is_admin_or_manager || (@poll.report_visible_for_citizens? && @poll.projekt.visible_for?(current_user))
 
-    if !is_admin_or_manager
+    if !can_view_report
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "pages/forbidden", layout: false
-    else
-      render
     end
   end
 

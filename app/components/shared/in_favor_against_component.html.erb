@@ -1,4 +1,4 @@
-<% if voted_in_favor? %>
+<% if voted_in_favor? && @show_share_popup %>
   <%= render "shared/vote_share_popup",
     title: votable.title,
     url: polymorphic_url(votable) %>

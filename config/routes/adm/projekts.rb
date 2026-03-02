@@ -2,6 +2,11 @@ namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "projekts#index"
 
+    resources :landing_pages do
+      patch :toggle_active, on: :member
+      patch :reorder, on: :collection
+    end
+
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
       patch :toggle_manage_all_projekts, on: :member

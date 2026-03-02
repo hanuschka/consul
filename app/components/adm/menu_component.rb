@@ -16,7 +16,6 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def application_subitems
       [
         { label: t("adm.menu.items.application_subitems.homepage"),              path: adm_homepage_path },
-        { label: t("adm.menu.items.application_subitems.landing_pages"),         path: adm_landing_pages_path },
         { label: t("adm.menu.items.application_subitems.documents"),             path: adm_documents_path },
         { label: t("adm.menu.items.application_subitems.navbar"),                path: adm_navbar_path },
         { label: t("adm.menu.items.application_subitems.metadata_settings"),     path: metadata_adm_settings_path },

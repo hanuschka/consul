@@ -7,7 +7,26 @@ de:
         items:
           projekts: Projekte
           managers: Projektmanager*innen
+          landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
+      landing_pages:
+        index:
+          title: Themenseiten
+          hint_title: Hinweis zu den Themenseiten
+          hint_text: >
+            Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile einer Gemeinde erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Die Gestaltungsmöglichkeiten ähneln denen der allgemeinen Startseite und schaffen Raum für visuelle und sprachliche Differenzierung.
+          table:
+            header:
+              name: Themenseiten
+              url: URL
+              status: Status
+            no_landing_pages: Es wurden noch keine Themenseiten erstellt.
+        edit:
+          title: Themenseite bearbeiten
+          slug_label: URL der Themenseite
+          slug_hint: Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung". Die URL darf keine Leer- oder Sonderzeichen enthalten.
+        update:
+          success: Der Wert wurde erfolgreich aktualisiert.
       projekts:
         index:
           title: Projekte

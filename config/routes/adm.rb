@@ -5,10 +5,6 @@ namespace :adm do
 
   # application
   resource :homepage, controller: "homepage", only: [:show]
-  resources :landing_pages do
-    patch :toggle_active, on: :member
-    patch :reorder, on: :collection
-  end
   resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
   resources :navbar_items, only: [:new, :create, :destroy] do

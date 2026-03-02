@@ -5,11 +5,11 @@
     <%= render Adm::AttributeEditors::BooleanComponent.new(
       landing_page,
       :status,
-      path: toggle_active_adm_landing_page_path(landing_page)
+      path: toggle_active_adm_projekts_landing_page_path(landing_page)
     ) %>
   </td>
   <td class="kern-table__cell">
-    <%= link_to edit_adm_landing_page_path(landing_page) do %>
+    <%= link_to edit_adm_projekts_landing_page_path(landing_page) do %>
       <%= tag.span(class: "material-symbols-outlined") { "edit" } %>
     <% end %>
   </td>

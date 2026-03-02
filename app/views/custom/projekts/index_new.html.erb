@@ -38,7 +38,6 @@
           current_filter: @current_projekts_filter,
           text_search_enabled: true,
           filters: @active_projekts_filters,
-          resource_link_additional_url_params: (@landing_page.present? ? { landing_page: @landing_page&.slug } : nil),
         ) do |c| %>
           <% c.with_items_remark do %>
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>

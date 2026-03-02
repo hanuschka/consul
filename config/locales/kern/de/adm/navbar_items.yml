@@ -3,6 +3,8 @@ de:
     navbar_items:
       new:
         title: Navigationsleisten-Element erstellen
+      destroy:
+        success_notice: Navigationsleisten-Element gelöscht
       form:
         kinds:
           presets: Systemseiten

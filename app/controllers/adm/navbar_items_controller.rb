@@ -28,8 +28,8 @@ module Adm
 
       @navbar_item.destroy!
 
-      redirect_to adm_documents_path,
-        notice: t("admin.documents.destroy.success_notice")
+      redirect_to adm_navbar_path,
+        notice: t(".success_notice")
     end
 
     def reorder

@@ -1,0 +1,19 @@
+<tr id="<%= dom_id(proposal) %>" class="kern-table__row">
+  <td class="kern-table__cell"><%= proposal.id %></td>
+  <% if projekt_phase.feature?("general.require_admin_acceptance") %>
+    <td class="kern-table__cell">
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        proposal,
+        :admin_accepted,
+        path: toggle_admin_accepted_adm_projekts_phase_proposal_path(projekt_phase, proposal)
+      ) %>
+    </td>
+  <% end %>
+  <th scope="row" class="kern-table__header"><%= proposal.title %></th>
+  <td class="kern-table__cell"><%= proposal.author.username %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal)) %>
+    <% end %>
+  </td>
+</tr>

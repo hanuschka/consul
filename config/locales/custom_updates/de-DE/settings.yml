@@ -3,8 +3,6 @@ de:
     settings:
       extended_feature:
         projekts_overview_page_navigation:
-          show_in_navigation: Projektübersichtsseite in Navigation anzeigen
-          show_in_navigation_description: Zeigt die Projektübersichtsseite in der Navigation an
           show_index_order_all: Alle Projekte
           show_index_order_all_description: Zeigt Tab "Alle Projekte" an
           show_index_order_underway: Aktive Beteiligung

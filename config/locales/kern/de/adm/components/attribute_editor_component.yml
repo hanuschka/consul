@@ -1,0 +1,6 @@
+de:
+  adm:
+    components:
+      attribute_editors:
+        image_component:
+          remove: Bild entfernen

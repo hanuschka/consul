@@ -22,7 +22,7 @@ module ProjektsHelper
   end
 
   def show_archived_projekts_in_sidebar?
-    Setting["projekts.show_archived.sidebar"].present? ? true : false
+    true
   end
 
   def show_affiliation_filter_in_sidebar?

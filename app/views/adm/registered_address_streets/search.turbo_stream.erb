@@ -1,0 +1,11 @@
+<%= turbo_stream.update "street-selector-results" do %>
+  <% if @streets.any? %>
+    <% @streets.each do |street| %>
+      <%= render "adm/registered_address_streets/available_street", street: street %>
+    <% end %>
+  <% else %>
+    <div class="street-selector__no-results">
+      <%= t("adm.registered_address_streets.search.no_results") %>
+    </div>
+  <% end %>
+<% end %>

@@ -564,7 +564,6 @@
       });
 
       this.map.on('pm:create', function(e) {
-        console.log("pm:create")
         if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
           self.map.removeLayer(self.editableLayers.pop());
         }

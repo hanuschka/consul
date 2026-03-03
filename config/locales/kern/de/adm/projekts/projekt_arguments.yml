@@ -1,0 +1,26 @@
+de:
+  adm:
+    projekts:
+      projekt_arguments:
+        new:
+          title: Stimme erstellen
+        create:
+          success: Stimme wurde erfolgreich erstellt.
+        edit:
+          title: Stimme bearbeiten
+        update:
+          success: Stimme wurde erfolgreich aktualisiert.
+        destroy:
+          success: Stimme wurde erfolgreich gelöscht.
+        send_notifications:
+          success: Benachrichtigungen wurden erfolgreich gesendet.
+        form:
+          type_label: Typ
+          pro: Pro
+          contra: Contra
+          name_label: Name
+          party_label: Partei
+          position_label: Position
+          note_label: Anmerkung
+          image_label: Bild
+          submit: Speichern

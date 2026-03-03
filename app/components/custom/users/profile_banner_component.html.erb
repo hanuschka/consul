@@ -60,15 +60,18 @@
     <p class="users-profile-banner--info-line">
       <%= t("custom.users.banner.registered_at", date: l(@user.created_at, format: :date_only)) %>
     </p>
-    <p class="users-profile-banner--info-line">
-      <% if @user.data_complete? %>
-        <span class="icon-check"></span>
-        <%= t("custom.account.show.data_complete") %>
-      <% else %>
-        <span class="icon-x"></span>
-        <%= t("custom.account.show.data_missing") %>
-      <% end %>
-    </p>
+
+    <% if Setting["extra_fields.verification.show_data_completeness_status"].present? %>
+      <p class="users-profile-banner--info-line">
+        <% if @user.data_complete? %>
+          <span class="icon-check"></span>
+          <%= t("custom.account.show.data_complete") %>
+        <% else %>
+          <span class="icon-x"></span>
+          <%= t("custom.account.show.data_missing") %>
+        <% end %>
+      </p>
+    <% end %>
 
     <% if Setting["extra_fields.verification.show_verification_status"].present? %>
       <p class="users-profile-banner--info-line">

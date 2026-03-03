@@ -1,0 +1,13 @@
+de:
+  adm:
+    deficiency_report_managers:
+      index:
+        title: Mängelmelder (Admin)
+        new_link: Neuer Mängelmelder (Admin)
+        no_deficiency_report_managers: Keine Mängelmelder (Admin) vorhanden.
+      new:
+        title: Neuer Mängelmelder (Admin)
+        search_label: Nutzer durchsuchen
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Profile</a> gelistet sind. Diese können Sie anschließend als Mängelmelder (Admin) hinzufügen.
+      search:
+        no_results: Keine Benutzer gefunden mit diesen Kriterien.

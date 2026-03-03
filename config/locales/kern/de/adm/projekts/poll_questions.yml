@@ -1,0 +1,37 @@
+de:
+  adm:
+    projekts:
+      poll_questions:
+        new:
+          title: Neue Frage erstellen
+        edit:
+          title: Frage bearbeiten
+        show:
+          edit_question: Frage bearbeiten
+          edit_bundle: Fragenbündel bearbeiten
+          answers_title: Antworten
+          add_answer: Neue Antwort erstellen
+          no_answers: Keine Antworten vorhanden.
+          nested_questions_title: Verschachtelte Fragen
+          add_nested_question: Verschachtelte Frage erstellen
+          no_nested_questions: Keine verschachtelten Fragen vorhanden.
+          table:
+            answer_title: Titel
+            description: Beschreibung
+            images: Bilder
+            documents: Dokumente
+            videos: Videos
+            vote_type: Antwortoptionen
+            show_answers: Antworten anzeigen
+            actions: Aktionen
+        destroy:
+          success: Frage wurde erfolgreich gelöscht.
+        form:
+          bundle_title: Themenkomplex
+          no_contextualization: Keine Kontextualisierung
+          votation_type_hint_title: Information
+          votation_type_hints:
+            unique: Nutzer*innen können je Frage eine Stimme vergeben.
+            multiple: Nutzer*innen können je Frage ihre Stimmen auf mehrere Antworten gleichmäßig verteilen.
+            multiple_with_weight: Nutzer*innen können je Frage ihre Stimmen auf mehrere Antworten gewichtet verteilen.
+            rating_scale: Nutzer*innen können eine Stimme pro Bewertungsskala abgeben.

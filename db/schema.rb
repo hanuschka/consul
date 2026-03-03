@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_26_120000) do
+ActiveRecord::Schema.define(version: 2026_03_03_213743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1206,15 +1206,6 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.index ["service_api_token"], name: "index_internal_api_clients_on_service_api_token"
   end
 
-  create_table "landing_pages_projekts", force: :cascade do |t|
-    t.bigint "site_customization_page_id", null: false
-    t.bigint "projekt_id", null: false
-    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
-    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
-    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
-    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
-  end
-
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
     t.string "quote"
     t.text "ranges"
@@ -1481,7 +1472,7 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.datetime "updated_at", null: false
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
-    t.integer "protocol", default: 0
+    t.integer "protocol", default: 1
     t.string "mappable_type"
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
@@ -2042,6 +2033,7 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all_projekts", default: false, null: false
     t.index ["user_id"], name: "index_projekt_managers_on_user_id"
   end
 
@@ -2296,6 +2288,8 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.string "import_file_status"
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
+    t.bigint "landing_page_id"
+    t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -3177,6 +3171,7 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
   add_foreign_key "projekts", "projekts", column: "parent_id"
+  add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"

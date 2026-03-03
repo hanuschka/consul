@@ -9,6 +9,7 @@
 
 <%= csrf_meta_tags %>
 <%= favicon_link_tag "favicon.ico" %>
+<script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
 <%= stylesheet_link_tag "application" %>
@@ -41,6 +42,7 @@
 <meta name="turbolinks-cache-control" content="no-cache">
 
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+
 <!--
 <script type="module" src="/upload-files.js"></script>
 -->

@@ -132,7 +132,7 @@ de:
         zoom: Zoom
         show_admin_shape: In Projektübersicht anzeigen
       projekt:
-        total_duration_start: Anfangsdatum
+        total_duration_start: Startdatum
         total_duration_end: Enddatum
         show_start_date_in_frontend: Im Frontend angezeigt
         show_end_date_in_frontend: Im Frontend angezeigt

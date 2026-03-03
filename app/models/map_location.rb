@@ -65,6 +65,14 @@ class MapLocation < ApplicationRecord
     latitude.present? && longitude.present? && zoom.present? || shape.present?
   end
 
+  def map_layers
+    if mappable.respond_to?(:map_layers)
+      mappable.map_layers
+    else
+      MapLayer.general
+    end
+  end
+
   def to_geo_json
     @geo_json ||= begin
       if features.present? && features["type"] == "FeatureCollection"

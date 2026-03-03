@@ -504,6 +504,7 @@ de:
             tags: Tags
             tags_hint: Klicken Sie auf einen oder mehrere Tags, um Sie für dieses Projekt dem/der Nutzer:in anzubieten.
             refresh_page: Sollten Sie die Funktionen bereits aktiviert haben, sie werden aber hier nicht angezeigt, dann laden Sie diese Seite bitte neu.
+          no_landing_page: "— Keine Themenseite —"
           flash:
             update_notice: Projekt wurde erfolgreich aktualisiert.
         edit_projekt: Editieren

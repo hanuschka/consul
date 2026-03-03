@@ -1,0 +1,15 @@
+<%= content_for :title, [@projekt.name, t("adm.projekts.projekts.index.title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+
+<div class="kern-container mb-5">
+  <% if @projekt_manager_assignments.any? %>
+    <% @projekt_manager_assignments.each do |assignment| %>
+      <%= render 'adm/projekts/projekts/projekt_managers/assignment', projekt: @projekt, assignment: assignment %>
+    <% end %>
+  <% else %>
+    <p class="kern-body"><%= t('.no_managers') %></p>
+  <% end %>
+</div>

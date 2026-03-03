@@ -1,0 +1,212 @@
+de:
+  projekt_phase_setting:
+    budget_phase:
+      feature:
+        general:
+          browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+          browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+          browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+          browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+        form:
+          allow_attached_image: Titelbild
+          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          labels: Labels
+          labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
+          sentiments: Sentimente
+          sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
+          show_map: Karte
+          show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
+          enable_geoman_controls_in_maps: Polygone in Karte
+          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          allow_attached_documents: Dokumente
+          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          enable_external_video: Video
+          enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+          show_implementation_option_fields: Umsetzung
+          show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
+          show_user_cost_estimate: Preisschätzung
+          show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+          voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
+          voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+        resource:
+          users_can_create_investment_proposals: Vorschläge einreichen
+          users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen
+          show_report_button_in_sidebar: Melden
+          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
+          show_follow_button_in_sidebar: Folgen
+          show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
+          show_community_button_in_sidebar: Arbeitskreise
+          show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Arbeitskreise” für Investitionsvorschläge
+          show_related_content: Verwandte Inhalte
+          show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+          conditional_balloting: Vereinfachte Stimmabgabe
+          conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
+          show_video_as_link: Videos als Link
+          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Investitionsvorschläge
+          hide_ballots_count_description: Aktuelle Stimmenanzahl wird während der Abstimmungsphase nicht angezeigt um Beeinflussung zu vermeiden
+      option:
+        form:
+          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+          description_max_length: Maximale Zeichenlänge der Beschreibung
+          description_max_length_description: Legt die maximale Anzahl der Zeichen für die Beschreibung fest.
+      selectable_setting:
+        general:
+          default_order: Standardsortierung
+          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+          default_order_options:
+            random: Zufällig
+            total_votes: Aktuelles Ranking
+            ballot_line_weight: Aktuelle Stimmenverteilung
+            newest: Neueste zuerst
+            comments_count: Meist Kommentiert
+    formular_phase:
+      option:
+        general:
+          submissions_limit: Maximale Anzahl an Einsendungen pro Nutzer
+          submissions_limit_description: Legt fest, wie oft ein Nutzer das Formular ausfüllen darf.
+          primary_formular_cutoff_date: Ende der 1. Phase
+          primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
+    iframe_phase:
+      option:
+        general:
+          iframe_url: Iframe URL
+          iframe_url_description: Bitte geben Sie hier die URL ein
+          iframe_width: Breite des Iframes
+          iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
+          iframe_height: Höhe des Iframes
+          iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"
+    question_phase:
+      feature:
+        general:
+          show_questions_list: Aktivieren Sie eine Übersicht aller Fragen
+          show_questions_list_description: Zeigt eine Übersichtsseite mit allen Fragen der Kurzumfrage an
+    point_of_interest_phase:
+      feature:
+        general:
+          users_can_create_pins: Pins setzen
+          users_can_create_pins_description: Nutzer können Pins erstellen
+      option:
+        form:
+          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+        general:
+          max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
+          max_number_of_pins_per_user_description: Legt die maximale Anzahl an Pins fest, die ein Nutzer erstellen kann.
+    milestone_phase:
+      feature:
+        general:
+          newest_first: Neueste Meilensteine zuerst anzeigen
+          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
+    event_phase:
+      feature:
+        general:
+          reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
+          reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
+          show_on_home_page: Veranstaltung auf Homepage anzeigen
+          show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
+    newsfeed_phase:
+      option:
+        general:
+          newsfeed_id: Newsfeed ID
+          newsfeed_id_description: Bitte geben Sie hier die ID des News-Feeds ein
+          newsfeed_type: Newsfeed Type
+          newsfeed_type_description: Bitte geben Sie hier den Typ des News-Feeds an
+    proposal_phase:
+      feature:
+        general:
+          browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+          browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+          browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+          browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+          require_admin_acceptance: Adminfreigabe
+          require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+        form:
+          allow_attached_image: Titelbild
+          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          labels: Labels
+          labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
+          sentiments: Sentiments
+          sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
+          show_map: Karte
+          show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
+          enable_geoman_controls_in_maps: Polygone in Karte
+          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          allow_attached_documents: Dokumente
+          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          enable_external_video: Video
+          enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+          anonimize_authors: Beiträge anonym erstellen
+          anonimize_authors_description: Autorenkacheln werden im Frontend nicht angezeigt.
+          voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
+          voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+        resource:
+          show_video_as_link: Videos als Link
+          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          enable_proposal_notifications_tab: Benachrichtigungen
+          enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+          enable_proposal_milestones_tab: Meilensteine
+          enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+          users_can_create_proposals: Vorschläge einreichen
+          users_can_create_proposals_description: Nutzer können Vorschläge erstellen
+          allow_voting: Unterstützung
+          allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
+          quorum_for_proposals: Quorum
+          quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
+          enable_up_and_down_voting: Daumen hoch | runter
+          enable_up_and_down_voting_description: Aktivieren Sie Daumen hoch | runter
+          show_report_button_in_sidebar: Melden
+          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
+          show_follow_button_in_proposal_sidebar: Folgen
+          show_follow_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Vorschlag folgen"
+          show_community_button_in_proposal_sidebar: Arbeitskreise
+          show_community_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Arbeitskreise" für Vorschläge
+          show_related_content: Verwandte Inhalte
+          show_related_content_description: Aktivieren Sie die Funktion "Verwandte Inhalte" für Vorschläge
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+      option:
+        form:
+          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+          description_max_length: Maximale Zeichenlänge der Beschreibung
+          description_max_length_description: Legt die maximale Anzahl der Zeichen für die Beschreibung fest.
+        resource:
+          votes_for_proposal_success: Anzahl der notwendigen Stimmen
+          votes_for_proposal_success_description: Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr unterstützt werden und gilt als erfolgreich
+      selectable_setting:
+        general:
+          default_order: Standardsortierung
+          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+          default_order_options:
+            hot_score: Aktivste
+            created_at: Neueste zuerst
+            alphabet: Alphabetisch
+            votes_up: Am meisten gewählt
+            random: Zufällig
+    voting_phase:
+      feature:
+        resource:
+          wizard_mode: Sequentielle Abstimmung
+          wizard_mode_description: Die Abstimmung wird im Modus von sequentiellen Fragen angezeigt
+          show_on_home_page: Sichtbarkeit Homepage
+          show_on_home_page_description: Zeigt die Abstimmung auf der Homepage an
+          show_on_index_page: Sichtbarkeit Übersichtsseite
+          show_on_index_page_description: Zeigt die Abstimmung auf der Übersichtsseite aller Abstimmungen an
+          results_enabled: Ergebnisse
+          results_enabled_description: Zeigt die Ergebnisse der Abstimmung am Ende der Abstimmung an
+          intermediate_poll_results_for_admins: Zwischenergebnisse (Admins / Projektmanager)
+          intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
+          stats_enabled: Statistiken
+          stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
+          advanced_stats_enabled: Erweiterte Statistiken
+          advanced_stats_enabled_description: Zeigt erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
+          evaluation_enabled: Report für Bürger anzeigen
+          evaluation_enabled_description: Zeigt eine automatisch erstellte, zusammenfassende Auswertung der Abstimmungsergebnisse für Bürger an.
+          show_comments: Kommentare
+          show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
+          show_open_answer_author_name: Name veröffentlichen
+          show_open_answer_author_name_description: Zeigt den Benutzername der offenen Antworten an

@@ -1,0 +1,26 @@
+de:
+  adm:
+    projekts:
+      milestone_statuses:
+        index:
+          title: Statuses
+          create_button: Neuen Status erstellen
+          no_statuses: Es wurde noch kein Status definiert
+          table:
+            name: Name
+            description: Beschreibung
+            actions: Aktionen
+        new:
+          title: Status erstellen
+        create:
+          success: Status erfolgreich erstellt
+        edit:
+          title: Status bearbeiten
+        update:
+          success: Status erfolgreich aktualisiert
+        destroy:
+          success: Status erfolgreich gelöscht
+        form:
+          name_label: Name
+          description_label: Beschreibung (optional)
+          submit: Speichern

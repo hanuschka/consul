@@ -42,6 +42,43 @@ class Setting < ApplicationRecord
 
     def defaults
       {
+        # homepage
+        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
+        "extended_option.general.subtitle": "in der Stadt CONSUL",
+
+        "welcomepage.usage_stats": true,
+        "welcomepage.platform_activity": true,
+        "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
+        # homepage
+
+        # metadata
+        "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
+        "url": "http://example.com", # Public-facing URL of the app.
+        "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_name": "CONSUL",
+        "meta_title": nil,
+        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
+        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
+        "facebook_handle": nil,
+        "instagram_handle": nil,
+        "twitter_handle": nil,
+        "twitter_hashtag": nil,
+        "telegram_handle": nil,
+        "youtube_handle": nil,
+        # metadata
+
+        # gdpr
+        "extended_feature.gdpr.gdpr_conformity": true,
+        "extended_feature.gdpr.link_out_warning": true,
+        "extended_feature.gdpr.two_click_iframe_solution": true,
+        "extended_option.gdpr.devise_timeout_min": 30,
+        "extended_option.gdpr.devise_verification_token_validity_days": 3,
+        # gdpr
+
+
+        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
         "feature.google_login": true,
@@ -112,44 +149,31 @@ class Setting < ApplicationRecord
         "uploads.documents.content_types": "application/pdf",
         # Names for the moderation console, as a hint for moderators
         # to know better how to assign users with official positions
-        official_level_1_name: I18n.t("seeds.settings.official_level_1_name"),
-        official_level_2_name: I18n.t("seeds.settings.official_level_2_name"),
-        official_level_3_name: I18n.t("seeds.settings.official_level_3_name"),
-        official_level_4_name: I18n.t("seeds.settings.official_level_4_name"),
-        official_level_5_name: I18n.t("seeds.settings.official_level_5_name"),
-        max_ratio_anon_votes_on_debates: 50,
-        max_votes_for_debate_edit: 1000,
-        max_votes_for_proposal_edit: 1000,
-        comments_body_max_length: 1000,
-        proposal_code_prefix: "CONSUL",
-        votes_for_proposal_success: 10000,
-        months_to_archive_proposals: 12,
+        "official_level_1_name": I18n.t("seeds.settings.official_level_1_name"),
+        "official_level_2_name": I18n.t("seeds.settings.official_level_2_name"),
+        "official_level_3_name": I18n.t("seeds.settings.official_level_3_name"),
+        "official_level_4_name": I18n.t("seeds.settings.official_level_4_name"),
+        "official_level_5_name": I18n.t("seeds.settings.official_level_5_name"),
+        "max_ratio_anon_votes_on_debates": 50,
+        "max_votes_for_debate_edit": 1000,
+        "max_votes_for_proposal_edit": 1000,
+        "comments_body_max_length": 1000,
+        "proposal_code_prefix": "CONSUL",
+        "votes_for_proposal_success": 10000,
+        "months_to_archive_proposals": 12,
         # Users with this email domain will automatically be marked as level 1 officials
         # Emails under the domain's subdomains will also be included
-        email_domain_for_officials: "",
-        facebook_handle: nil,
-        instagram_handle: nil,
-        telegram_handle: nil,
-        twitter_handle: nil,
-        twitter_hashtag: nil,
-        youtube_handle: nil,
-        url: "http://example.com", # Public-facing URL of the app.
+        "email_domain_for_officials": "",
         # CONSUL installation's organization name
-        org_name: "CONSUL",
-        newsletter_brand_color: "#004a83",
-        meta_title: nil,
-        meta_description: "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
-        meta_keywords: "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
-        proposal_notification_minimum_interval_in_days: 3,
-        direct_message_max_per_day: 3,
-        mailer_from_name: "CONSUL",
-        mailer_from_address: "noreply@consul.dev",
-        mailer_from_deficiency_report_address: "noreply@consul.dev",
+        "newsletter_brand_color": "#004a83",
+        "proposal_notification_minimum_interval_in_days": 3,
+        "direct_message_max_per_day": 3,
+        "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "moderation.reports_notification_email": nil,
-        min_age_to_participate: 16,
-        hot_score_period_in_days: 31,
-        related_content_score_threshold: -0.3,
-        featured_proposals_number: 3,
+        "min_age_to_participate": 16,
+        "hot_score_period_in_days": 31,
+        "related_content_score_threshold": -0.3,
+        "featured_proposals_number": 3,
         "feature.dashboard.notification_emails": nil,
         "machine_learning.comments_summary": false,
         "machine_learning.related_content": false,
@@ -158,7 +182,7 @@ class Setting < ApplicationRecord
         "ai.llm_model": nil,
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
-        postal_codes: "",
+        "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",
         "remote_census.request.structure": "",
@@ -185,11 +209,6 @@ class Setting < ApplicationRecord
         "welcomepage.newsletter_subscription": false,
         "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
-
-        "projekts.show_archived.sidebar": true,
-        "projekts.second_level_projekts_in_active_filter": false,
-        "projekts.second_level_projekts_in_archived_filter": false,
-        "projekts.set_default_sorting_to_newest": false,
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
@@ -231,18 +250,9 @@ class Setting < ApplicationRecord
         "extended_feature.general.show_guest_login_links": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
-        "extended_option.general.city_name": "CONSUL",
-        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
-        "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",
-
-        "extended_feature.gdpr.gdpr_conformity": true,
-        "extended_feature.gdpr.link_out_warning": true,
-        "extended_feature.gdpr.two_click_iframe_solution": true,
-        "extended_option.gdpr.devise_timeout_min": 30,
-        "extended_option.gdpr.devise_verification_token_validity_days": 3,
 
         "extended_feature.modulewide.enable_categories": true,
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,
@@ -271,7 +281,6 @@ class Setting < ApplicationRecord
 
         "extended_feature.deficiency_reports.enable_my_posts_filter": true,
 
-        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_all": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_underway": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_ongoing": true,
@@ -291,6 +300,7 @@ class Setting < ApplicationRecord
         "extra_fields.registration.check_documents": false,
 
         "extra_fields.verification.check_documents": false,
+        "extra_fields.verification.show_data_completeness_status": true,
         "extra_fields.verification.show_verification_status": true
       }
     end
@@ -300,7 +310,7 @@ class Setting < ApplicationRecord
     end
 
     def destroy_obsolete
-      Setting.all.each { |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
+      Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
     end
 
     def old_design_enabled?

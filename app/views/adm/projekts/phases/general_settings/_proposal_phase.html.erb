@@ -1,0 +1,4 @@
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.browse_mode_in_phase_footer"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.browse_mode_in_phase_footer_by_default"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.require_admin_acceptance"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "selectable_setting.general.default_order"), :value, :select, select_options: Proposal.proposals_orders) %>

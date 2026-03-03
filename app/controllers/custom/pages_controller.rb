@@ -9,6 +9,7 @@ class PagesController < ApplicationController
   include RandomSeed
   include HasEmbeddableShortcodes
   include GuestUsers
+  include LandingPageResolvable
 
   has_orders %w[most_voted newest oldest], only: :show
 
@@ -48,19 +49,7 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
-      landing_page_slug = params[:landing_page_slug]
-      if landing_page_slug.present?
-        @landing_page =
-          @projekt
-            .landing_pages
-            .find_by(slug: landing_page_slug)
-
-        if @landing_page.present?
-          set_landing_page_topbar_ui_variables(@landing_page)
-        else
-          redirect_to page_path(@custom_page.slug) and return
-        end
-      end
+      resolve_landing_page_for_projekt(@projekt)
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)

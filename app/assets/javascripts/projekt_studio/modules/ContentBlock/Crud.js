@@ -100,6 +100,7 @@ ProjektStudio.ContentBlock.Crud = {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       $(newContentBlockContainer).find('.projekt-content-block').foundation()
+      $(newContentBlockContainer).find('[data-tooltip]').foundation()
       App.ImageGallery.initialize()
     }, 0)
 

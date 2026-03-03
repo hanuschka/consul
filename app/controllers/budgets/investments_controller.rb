@@ -9,6 +9,7 @@ module Budgets
     include MapLocationAttributes
     include Translatable
     include CustomHelper
+    include LandingPageResolvable
 
     PER_PAGE = 10
 
@@ -73,20 +74,7 @@ module Budgets
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)
 
-      landing_page_slug = params[:landing_page_slug]
-      if landing_page_slug.present?
-        @landing_page =
-          @investment
-          .projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-        if @landing_page.present?
-          set_landing_page_topbar_ui_variables(@landing_page)
-        else
-          redirect_to budget_investment_path(@budget, @investment) and return
-        end
-      end
+      resolve_landing_page_for_projekt(@investment.projekt)
 
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)

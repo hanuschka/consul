@@ -7,8 +7,6 @@ class Admin::ProjektsController < Admin::BaseController
     @new_projekt = Projekt.new
     @overview_page_projekt = Projekt.overview_page
 
-    @projekts_settings = Setting.all.group_by(&:type)["projekts"]
-
     @projekts_overview_page_navigation_settings = Setting.all.select do |setting|
       setting.key.start_with?("extended_feature.projekts_overview_page_navigation")
     end

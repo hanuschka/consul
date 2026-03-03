@@ -43,6 +43,9 @@ en:
           submit_button: Submit deficiency
         edit:
           submit_button: Update deficiency
+        submit_button_new_design: Submit now
+      create:
+        flash_success: Your report has been successfully submitted.
       index:
         title: Mängelmelder
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.

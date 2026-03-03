@@ -1,0 +1,17 @@
+<%= form_with model: @letter, url: url do |f| %>
+
+
+  <%= render Kern::FormFieldComponent.new(label: t(".subject_label"), hint: t(".subject_hint")) do %>
+    <%= f.text_field :subject, label: false, placeholder: t(".subject_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint")) do %>
+    <%= f.text_area :body, label: false, rows: 12 %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".show_follow_up_button_label"), hint: t(".show_follow_up_button_hint")) do %>
+    <%= f.check_box :show_follow_up_button %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

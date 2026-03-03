@@ -23,7 +23,7 @@ class ProjektPhase::QuestionPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions settings].push(resources_name)
+    %w[duration naming restrictions general_settings projekt_questions]
   end
 
   def safe_to_destroy?

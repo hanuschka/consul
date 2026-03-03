@@ -1,0 +1,123 @@
+de:
+  adm:
+    projekt_phases:
+      index:
+        intro_title: Hinweis zu den Beteiligungsphasen
+        intro_text_p1: "In der nachfolgenden Tabelle verwalten Sie die einzelnen Beteiligungsphasen eines Projekts. Jede Phase ist einem eigenen Tab in der Fußzeile des Projekts zugeordnet und kann individuell ein- oder ausgeblendet werden. Drei zentrale Schieberegler helfen dabei, das Verhalten und die Sichtbarkeit der Phasen zu steuern:"
+        intro_text_standard_title: Standard
+        intro_text_standard_description: Es kann immer nur eine Phase als Standard markiert sein. Diese Phase wird für neu ankommende Nutzer automatisch geöffnet und beim Aufruf der Projektseite im Vordergrund angezeigt.
+        intro_text_active_title: Aktiviert
+        intro_text_active_description: Wenn dieser Regler aktiviert ist, ist die jeweilige Beteiligungsphase technisch aktiv und im Frontend für Nutzer direkt aufrufbar.
+        intro_text_visible_title: Sichtbarkeit im Projekt
+        intro_text_visible_description: Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.
+        intro_text_p2: Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.
+        title: Beteiligungsphasen
+        new_phase: Neue Phase erstellen
+        table:
+          phase_tab_name: Beteiligungsphasen
+          start_date: Start
+          end_date: Ende
+          restriction: Beschränkung
+          default: Standard
+          active: Aktiv
+          visible: Sichtbar
+          actions: Aktionen
+      new:
+        title: Neue Beteiligungsphase erstellen
+        intro_title: Beteiligungsmodul auswählen
+        intro_text: Wählen Sie ein Beteiligungsmodul aus, um eine neue Phase für dieses Projekt zu erstellen. Jedes Modul bietet unterschiedliche Funktionen für die Bürgerbeteiligung.
+        phase_type_label: Beteiligungsmodul
+        phase_type_hint: Wählen Sie das gewünschte Modul für die neue Beteiligungsphase aus.
+        select_phase_type: Bitte wählen...
+        create_phase: Phase erstellen
+      create:
+        success: Die Beteiligungsphase wurde erfolgreich erstellt.
+      update:
+        success: Die Beteiligungsphase wurde erfolgreich aktualisiert.
+      duration:
+        title: Laufzeit
+        dates_label: Laufzeit der Phase
+        dates_description: Wann soll die Phase beginnen und enden?
+      naming:
+        title: Benennung
+      restrictions:
+        title: Beteiligungsbeschränkung
+        intro_title: Hinweis zur Beteiligungsbeschränkung
+        intro_text: |
+          <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
+          <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
+        user_status_label: Teilnahme nach Nutzerstatus
+        user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+        geozone_label: Gebietsbeschränkung der Teilnahme
+        geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+        age_label: Altersbeschränkung der Teilnahme
+        age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden.“
+        individual_groups_label: Beschränkung auf starke Gruppen
+        individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+        user_status:
+          guest: Gäste (keine Registrierung erforderlich)
+          registered: Registrierte Nutzer
+          verified: Verifizierte Nutzer
+        geozone:
+          no_restriction: Keine Einschränkung
+          only_citizens: Nur Bürger
+          only_geozones: Nur bestimmte Bezirke
+          only_streets: Nur bestimmte Straßen
+          search_street: Straße suchen...
+        extended_geozone:
+          no_restriction: Keine Einschränkung
+        age:
+          no_restriction: Keine Einschränkung
+
+      general_settings:
+        title: Funktionen
+      form_author:
+        title: Formular Autor
+      user_functions:
+        title: Nutzerfunktionen
+      proposals:
+        title: Vorschläge
+        no_proposals: Keine Vorschläge vorhanden.
+        table:
+          id: ID
+          admin_accepted: Freigegeben
+          title: Titel
+          author: Autor
+          actions: Aktionen
+          view: Anzeigen
+      projekt_labels:
+        title: Labels
+        create_button: Neues Label erstellen
+        no_labels: Keine Labels vorhanden.
+        table:
+          icon: Icon
+          name: Name
+          actions: Aktionen
+      sentiments:
+        title: Sentimente
+        create_button: Neues Sentiment erstellen
+        no_sentiments: Keine Sentimente vorhanden.
+        table:
+          color: Farbe
+          name: Name
+          actions: Aktionen
+      map:
+        title: Karte
+      officing_managers:
+        title: Abstimmungshelfer
+        lock_on: Sperrdatum
+        lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
+        select_managers: Abstimmungshelfer zuordnen
+        select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+      projekt_phase:
+        duration: Laufzeit
+        naming: Benennung
+        restrictions: Beteiligungsbeschränkung
+        general_settings: Funktionen
+        form_author: Formular Autor
+        user_functions: Nutzerfunktionen
+        proposals: Vorschläge
+        projekt_labels: Labels
+        sentiments: Sentimente
+        map: Karte
+        officing_managers: Abstimmungshelfer

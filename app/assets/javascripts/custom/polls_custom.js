@@ -1,55 +1,87 @@
 (function() {
   "use strict";
   App.PollsCustom = {
+    resizeDebounceTimer: null,
 
-    showOpenAnswers: function() {
-      $('.poll-results-open-answers').each( function() {
-        if ( sessionStorage.getItem($(this).attr('id')) !== 'true' ) {
-          $(this).addClass('hide-open-answers')
-        } else {
-          $(this).addClass('rotate-toggle-arrow')
-        }
-      })
-    },
+    initialize: function() {
+      this.destroy();
 
-    formatRatingScale: function(element) {
-      const $answersContainer = $(element).find('.rating-scale-answer-container');
-      const $parentContainer = $(element).parent();
+      App.PollsCustom.showOpenAnswers();
 
-      if ($answersContainer.width() > $parentContainer.width()) {
-        $(element).addClass('vertical-rating-scale-answers');
+      $("body").on("click.pollsCustom", ".js-show-open-answers", this.handleOpenAnswersToggle.bind(this));
+
+      this.formatVisibleRatingScales();
+
+      $("body").on(
+        "click.pollsCustom",
+        ".js-question-wizard-next, .js-question-wizard-prev, .js-question-wizard-go-to-start",
+        this.formatVisibleRatingScalesAfterRepaint.bind(this)
+      );
+
+      if ($(".js-rating-scale").length > 0) {
+        $(window).on("resize.pollsCustom", this.handleWindowResize);
       }
     },
 
-    initialize: function() {
-      App.PollsCustom.showOpenAnswers()
+    // ".pollsCustom" is a jQuery event namespace — it tags bindings
+    // so .off(".pollsCustom") removes only this module's handlers
+    // without affecting other modules on the same elements.
+    destroy: function() {
+      $("body").off(".pollsCustom");
+      $(window).off(".pollsCustom");
+      clearTimeout(App.PollsCustom.resizeDebounceTimer);
+    },
 
-      $("body").on("click", ".js-show-open-answers", function() {
-        var $wrapper = $(this).closest('.poll-results-open-answers')
-        var $questionList = $(this).siblings('.poll-results-open-answers-list')
-        var currentSessionStorageWrapperValue = sessionStorage.getItem($wrapper.attr('id'))
+    showOpenAnswers: function() {
+      $('.poll-results-open-answers').each(function() {
+        const $element = $(this);
+        const isOpen = sessionStorage.getItem($element.attr('id')) === 'true';
 
-        if ( currentSessionStorageWrapperValue === 'true' ) {
-          sessionStorage.setItem( $wrapper.attr('id'), 'false' );
-          $wrapper.removeClass('rotate-toggle-arrow')
-          $questionList.hide('fast');
-        } else {
-          sessionStorage.setItem( $wrapper.attr('id'), 'true' )
-          $wrapper.addClass('rotate-toggle-arrow')
-          $questionList.show('fast');
-        }
-
+        $element.addClass(isOpen ? 'rotate-toggle-arrow' : 'hide-open-answers');
       });
+    },
 
-      $(".js-rating-scale:visible").each( function() {
-        App.PollsCustom.formatRatingScale(this)
-      });
+    formatRatingScale: function(element) {
+      const $element = $(element);
+      const $answersContainer = $element.find('.rating-scale-answer-container');
+      const $parentContainer = $element.parent();
 
-      $("body").on("click", ".js-question-wizard-next", function() {
-        $(".js-rating-scale:visible").each( function() {
-          App.PollsCustom.formatRatingScale(this)
-        });
+      if ($answersContainer.width() > $parentContainer.width()) {
+        $element.addClass('vertical-rating-scale-answers');
+      } else {
+        $element.removeClass('vertical-rating-scale-answers');
+      }
+    },
+
+    formatVisibleRatingScales: function() {
+      $(".js-rating-scale:visible").each(function() {
+        App.PollsCustom.formatRatingScale(this);
       });
+    },
+
+    formatVisibleRatingScalesAfterRepaint: function() {
+      requestAnimationFrame(function() {
+        App.PollsCustom.formatVisibleRatingScales();
+      });
+    },
+
+    handleOpenAnswersToggle: function(event) {
+      const $wrapper = $(event.currentTarget).closest('.poll-results-open-answers');
+      const $questionList = $(event.currentTarget).siblings('.poll-results-open-answers-list');
+      const wrapperId = $wrapper.attr('id');
+      const isOpen = sessionStorage.getItem(wrapperId) === 'true';
+
+      sessionStorage.setItem(wrapperId, String(!isOpen));
+      $wrapper.toggleClass('rotate-toggle-arrow', !isOpen);
+      isOpen ? $questionList.hide('fast') : $questionList.show('fast');
+    },
+
+    handleWindowResize: function() {
+      clearTimeout(App.PollsCustom.resizeDebounceTimer);
+
+      App.PollsCustom.resizeDebounceTimer = setTimeout(function() {
+        App.PollsCustom.formatVisibleRatingScales();
+      }, 200);
     }
-  }
+  };
 }).call(this);

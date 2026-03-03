@@ -1,0 +1,12 @@
+@use "../abstracts/mappings" as mappings;
+@use "../abstracts/breakpoints" as breakpoints;
+
+@each $size, $value in mappings.$font-sizes {
+  .fs-#{$size} { font-size: $value !important; }
+
+  @each $bp, $bp-width in breakpoints.$grid-breakpoints {
+    @media (min-width: $bp-width) {
+      .fs-#{$bp}-#{$size} { font-size: $value !important; }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <div id="admin-proposal-info">
-  <% if projekt_phase_feature?(@proposal.projekt_phase, "form.show_map") && map_location_available?(@proposal) %>
+  <% if false && projekt_phase_feature?(@proposal.projekt_phase, "form.show_map") && map_location_available?(@proposal) %>
     <% if @proposal.projekt.vc_map_enabled? %>
       <div class="margin-bottom not-print">
         <%= render Shared::VCMapComponent.new(

@@ -1,0 +1,36 @@
+.navbar-items {
+  .navbar-item {
+    border: 1px solid #808080;
+    padding: 10px;
+    position: relative;
+    border-radius: 5px;
+    background-color: #eee;
+
+    span[data-sortable-handle] {
+      font-size: 32px !important;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: grab;
+    }
+
+    .navbar-item-delete {
+      position: absolute;
+      top: 80px;
+      right: 8px;
+      color: #808080;
+
+      .material-symbols-outlined {
+        font-size: 24px !important;
+      }
+
+      &:hover {
+        color: #c00;
+      }
+    }
+
+    .navbar-item {
+      background-color: #e3e3e3;
+    }
+  }
+}

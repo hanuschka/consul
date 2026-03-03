@@ -1,0 +1,12 @@
+<%= form_with model: @status, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label")) do %>
+    <%= f.text_field :name, label: false, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label")) do %>
+    <%= f.text_area :description, label: false, rows: 4 %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

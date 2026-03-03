@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_16_142308) do
+ActiveRecord::Schema.define(version: 2026_02_26_131436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -432,10 +432,15 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.time "email_on_feasibility_sent_at"
     t.time "email_on_selected_sent_at"
     t.boolean "preselected", default: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
+    t.index ["draft"], name: "index_budget_investments_on_draft"
     t.index ["group_id"], name: "index_budget_investments_on_group_id"
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
@@ -1501,7 +1506,7 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.datetime "updated_at", null: false
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
-    t.integer "protocol", default: 0
+    t.integer "protocol", default: 1
     t.string "layer_defs"
     t.string "mappable_type"
     t.bigint "mappable_id"
@@ -1608,6 +1613,20 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
   create_table "moderators", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.index ["user_id"], name: "index_moderators_on_user_id"
+  end
+
+  create_table "navbar_items", force: :cascade do |t|
+    t.integer "kind"
+    t.string "preset"
+    t.bigint "projekt_id"
+    t.string "external_title"
+    t.string "external_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "parent_id"
+    t.integer "position", default: 0, null: false
+    t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
+    t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
   end
 
   create_table "newsletters", id: :serial, force: :cascade do |t|
@@ -1922,6 +1941,9 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
     t.boolean "wizard_mode", default: false
+    t.jsonb "ai_stats", default: {}
+    t.string "ai_stats_refresh_status"
+    t.datetime "ai_stats_refreshed_at"
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1976,6 +1998,14 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.string "summary"
     t.bigint "projekt_phase_id"
     t.boolean "open_ended", default: false
+    t.string "language"
+    t.boolean "wheelchair_accessible", default: false
+    t.boolean "accessible_toilet", default: false
+    t.boolean "disabled_parking_nearby", default: false
+    t.boolean "tactile_guidance_systems", default: false
+    t.boolean "induction_loop_available", default: false
+    t.boolean "assistance_dogs_welcome", default: false
+    t.boolean "sign_language_interpreter", default: false
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 
@@ -2040,6 +2070,7 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all_projekts", default: false, null: false
     t.index ["user_id"], name: "index_projekt_managers_on_user_id"
   end
 
@@ -2069,6 +2100,17 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.string "value"
     t.index ["key", "projekt_phase_id"], name: "index_projekt_phase_settings_on_key_and_projekt_phase_id", unique: true
     t.index ["projekt_phase_id"], name: "index_projekt_phase_settings_on_projekt_phase_id"
+  end
+
+  create_table "projekt_phase_stat_questions", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "question", null: false
+    t.text "answer"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "created_at"], name: "idx_stat_questions_phase_created"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_stat_questions_on_projekt_phase_id"
   end
 
   create_table "projekt_phase_subscriptions", force: :cascade do |t|
@@ -2120,6 +2162,11 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.integer "user_status", default: 1
     t.date "lock_on"
     t.boolean "frontend_visibility", default: true, null: false
+    t.jsonb "ai_stats", default: {}, null: false
+    t.string "ai_stats_refresh_status"
+    t.datetime "ai_stats_refreshed_at"
+    t.datetime "stats_refreshed_at"
+    t.jsonb "stats", default: {}, null: false
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2275,6 +2322,9 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.string "preview_code"
     t.boolean "on_global_overview", default: false
     t.boolean "from_dt", default: false
+    t.string "import_file_status"
+    t.jsonb "import_file_data"
+    t.boolean "show_content_background", default: true
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2337,12 +2387,17 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.integer "cached_votes_down", default: 0
     t.integer "officing_bulk_votes", default: 0
     t.boolean "admin_accepted", default: true, null: false
+    t.boolean "draft", default: false, null: false
+    t.text "ai_idea_text"
+    t.jsonb "ai_evaluation_result"
+    t.text "ai_image_prompt"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
     t.index ["community_id"], name: "index_proposals_on_community_id"
     t.index ["confidence_score"], name: "index_proposals_on_confidence_score"
+    t.index ["draft"], name: "index_proposals_on_draft"
     t.index ["geozone_id"], name: "index_proposals_on_geozone_id"
     t.index ["hidden_at"], name: "index_proposals_on_hidden_at"
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
@@ -2497,6 +2552,8 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_saved_content_blocks_on_user_id"
   end
 
   create_table "sdg_goals", force: :cascade do |t|
@@ -2626,6 +2683,7 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.string "key"
     t.integer "projekt_id"
     t.integer "position"
+    t.integer "margin_bottom"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
@@ -2778,6 +2836,16 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
     t.index ["individual_group_value_id"], name: "index_user_individual_group_values_on_individual_group_value_id"
     t.index ["user_id", "individual_group_value_id"], name: "index_user_ig_values_on_user_id_and_ig_value_id", unique: true
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
+  end
+
+  create_table "user_resource_criteria", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.text "text", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
+    t.index ["projekt_phase_id"], name: "index_user_resource_criteria_on_projekt_phase_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -3098,6 +3166,8 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
+  add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
@@ -3141,6 +3211,7 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phase_settings", "projekt_phases"
+  add_foreign_key "projekt_phase_stat_questions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "users"
   add_foreign_key "projekt_phases", "age_ranges"
@@ -3164,11 +3235,13 @@ ActiveRecord::Schema.define(version: 2025_12_16_142308) do
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "resource_sentiments", "sentiments"
+  add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
+  add_foreign_key "user_resource_criteria", "projekt_phases"
   add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"

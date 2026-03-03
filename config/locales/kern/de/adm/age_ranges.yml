@@ -1,0 +1,33 @@
+de:
+  adm:
+    age_ranges:
+      index:
+        title: Altersgruppen
+        new_age_range: Neue Altersgruppe erstellen
+        filters:
+          for_restrictions: Altersbeschränkung
+          for_stats: Altersgruppen für Statistiken
+        table:
+          name: Name
+          range: Altersgruppe
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Altersgruppe löschen möchten?
+      new:
+        title: Neue Altersgruppe erstellen
+      edit:
+        title: Altersgruppe bearbeiten
+      create:
+        success: Altersgruppe erfolgreich erstellt.
+      update:
+        success: Altersgruppe erfolgreich aktualisiert.
+      destroy:
+        success: Altersgruppe erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        hints:
+          name: Name des Altersgruppes, wie er den Benutzern angezeigt wird.
+          min_age: Das Mindestalter für diesen Bereich.
+          max_age: Das Maximalalter für diesen Bereich.
+          only_for_stats: Wenn aktiviert, wird dieser Altersgruppe nur für Statistiken verwendet, nicht für Beschränkungen.

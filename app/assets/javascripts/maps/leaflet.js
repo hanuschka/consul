@@ -331,6 +331,12 @@
       });
       this.map.addControl(searchControl);
 
+      const searchInput = this.element.querySelector('.leaflet-control-geosearch input[type="text"]');
+      if (searchInput) {
+        searchInput.setAttribute('title', 'Nach Adresse suchen');
+        searchInput.setAttribute('aria-label', 'Nach Adresse suchen');
+      }
+
       this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
       // Leaflet.Deflate plugin
@@ -558,7 +564,6 @@
       });
 
       this.map.on('pm:create', function(e) {
-        console.log("pm:create")
         if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
           self.map.removeLayer(self.editableLayers.pop());
         }

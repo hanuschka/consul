@@ -85,8 +85,7 @@
   }
 
   .homepage-image-header--title {
-    opacity: 0.77;
-    background: white;
+    background: #ffffffcc;
     display: inline-block;
     padding: 20px 30px;
     line-height: 1.3;
@@ -96,13 +95,14 @@
     border-radius: 4px;
     word-wrap: break-word;
     max-width: 100%;
+    backdrop-filter: blur(5px);
   }
 
   .homepage-image-header--title-wrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 1245px;
+    max-width: $topbar-max-width;
     padding-top: 240px;
     margin: auto;
 
@@ -147,13 +147,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     margin-top: 0.65rem;
 
     label {
-      color: $dark
+      color: $dark;
     }
 
     .locale-switcher {
 
       &:focus {
-        outline: 3px solid #ffbf47 !important
+        outline: 3px solid #ffbf47 !important;
       }
     }
   }
@@ -177,8 +177,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: black !important;
-    color: white !important;
+    background: #dedede !important;
+    color: black !important;
   }
 
   .locale .locale-form select {
@@ -393,6 +393,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     color: white;
     height: 25px;
     background: #58a958;
+    background-color: #4a894a;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -764,6 +765,72 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       font-weight: bold;
       font-size: 18px;
       margin-bottom: -7px;
+    }
+  }
+}
+
+// -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------
+
+[data-navbar] {
+  display: contents;
+
+  // Desktop: hide toggle buttons — flyouts open on hover via existing CSS
+  @media screen and (min-width: $small-tablet-viewport-start) {
+    button[data-navbar-toggle] {
+      display: none;
+    }
+
+    li.nav-element[aria-expanded="true"] > ul.nav-flyout-block {
+      display: block;
+    }
+  }
+
+  // Mobile: style toggle buttons (renders outside #responsive-menu so old
+  // .nav-toggle-arrow rules don't apply)
+  @media screen and (max-width: $small-tablet-viewport-start - 1) {
+    button[data-navbar-toggle] {
+      background: none;
+      border: none;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      cursor: pointer;
+      padding: 0;
+      color: inherit;
+      font-size: 0;
+
+      &::after {
+        content: "\f078";
+        font-family: "Font Awesome 5 Free";
+        font-weight: bold;
+        font-size: 0.75rem;
+        position: absolute;
+        transition: transform 0.25s;
+      }
+    }
+
+    .top-level-item > button[data-navbar-toggle] {
+      top: 9px;
+      right: 0;
+
+      &::after {
+        top: -9px;
+        left: 3px;
+      }
+    }
+
+    .flyout-item > button[data-navbar-toggle] {
+      top: 9px;
+      right: 0;
+
+      &::after {
+        top: -2px;
+        left: 3px;
+      }
+    }
+
+    li[aria-expanded="true"] > button[data-navbar-toggle]::after {
+      transform: rotate(180deg);
     }
   }
 }

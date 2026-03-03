@@ -1,0 +1,8 @@
+de:
+  adm:
+    projekts:
+      budgets:
+        calculate_winners:
+          notice: Die bestbewerteten Vorschläge werden ermittelt. Dies kann einen Moment dauern.
+        recalculate_winners:
+          notice: Gewinner wurden erfolgreich neu berechnet.

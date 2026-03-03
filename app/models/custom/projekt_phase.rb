@@ -8,6 +8,25 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
+  # Ordered list of projekt phases
+  PROJEKT_PHASES_TYPES = [
+    "ProjektPhase::CommentPhase",
+    "ProjektPhase::ProposalPhase",
+    "ProjektPhase::PointOfInterestPhase",
+    "ProjektPhase::QuestionPhase",
+    "ProjektPhase::VotingPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::BudgetPhase",
+    "ProjektPhase::LegislationPhase",
+    "ProjektPhase::FormularPhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
@@ -16,18 +35,6 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ArgumentPhase",
     "ProjektPhase::NewsfeedPhase"
   ].freeze
-
-  PROJEKT_PHASES_TYPES = [
-    "ProjektPhase::CommentPhase",
-    "ProjektPhase::ProposalPhase",
-    "ProjektPhase::QuestionPhase",
-    "ProjektPhase::VotingPhase",
-    "ProjektPhase::BudgetPhase",
-    "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
-  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -53,7 +60,8 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
 
-  has_many :age_range_projekt_phases_for_stats, -> { where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
+  has_many :age_range_projekt_phases_for_stats, -> {
+ where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
   has_many :age_ranges_for_stats, through: :age_range_projekt_phases_for_stats, source: :age_range
 
   belongs_to :age_restriction, class_name: "AgeRange", foreign_key: :age_range_id,
@@ -78,9 +86,14 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :stat_questions,
+           class_name: "ProjektPhaseStatQuestion",
+           foreign_key: :projekt_phase_id,
+           dependent: :destroy
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
+  has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -89,6 +102,13 @@ class ProjektPhase < ApplicationRecord
     registered: 1,
     verified: 2
   }
+
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
 
   validates :projekt, presence: true
   validate :type_must_be_valid
@@ -125,7 +145,7 @@ class ProjektPhase < ApplicationRecord
     where(id: ids_with_resources)
   }
 
-  scope :sorted, ->  {order(:given_order) }
+  scope :sorted, -> { order(:given_order) }
 
   scope :with_feature, ->(feature_key, state = "on") {
     joins(:settings)
@@ -175,7 +195,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id: id).exists?
+    self.class.current(timestamp).where(id:).exists?
   end
 
   def not_current?
@@ -263,6 +283,22 @@ class ProjektPhase < ApplicationRecord
 
   def title
     phase_tab_name.presence || model_name.human
+  end
+
+  def default_phase
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    setting&.value == id.to_s
+  end
+
+  def default_phase=(value)
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    return unless setting
+
+    if ActiveModel::Type::Boolean.new.cast(value)
+      setting.update!(value: id.to_s)
+    elsif setting.value == id.to_s
+      setting.update!(value: "")
+    end
   end
 
   def all_settings
@@ -387,6 +423,11 @@ class ProjektPhase < ApplicationRecord
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
   end
 
+  def generate_ai_stats
+    stats = AiAnalytics::GenerateAllStats.call(self)
+    update_column(:ai_stats, stats)
+  end
+
   def regular?
     ProjektPhase.regular_phases.include?(self)
   end
@@ -467,15 +508,17 @@ class ProjektPhase < ApplicationRecord
       return if projekt_phase_settings.nil?
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
-        settings.create!(key: key, value: value)
+        settings.create!(key:, value:)
       end
     end
 
     def type_must_be_valid
       if type.blank?
-        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
       elsif !PROJEKT_PHASES_TYPES.include?(type)
-        errors.add(:type, "is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(', ')}")
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
       end
     end
 end

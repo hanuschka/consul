@@ -1,6 +1,6 @@
 class ProjektPhase::VotingPhase < ProjektPhase
   has_many :polls, foreign_key: :projekt_phase_id,
-    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+    dependent: :destroy, inverse_of: :projekt_phase
 
   accepts_nested_attributes_for :polls
 
@@ -19,7 +19,7 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions settings
+    %w[duration naming restrictions general_settings
        poll_questions
        officing_managers officing_manager_audits
        age_ranges_for_stats]

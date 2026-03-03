@@ -6,7 +6,7 @@ class Proposal < ApplicationRecord
   include OnBehalfOfSubmittable
   include Memoable
 
-  belongs_to :old_projekt, class_name: 'Projekt', foreign_key: :projekt_id # TODO: remove column after data migration con1538
+  belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase, allow_nil: true
   belongs_to :projekt_phase
@@ -24,6 +24,35 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :with_min_supports, ->(min_supports) {
+    if min_supports.to_i > 0
+      where("proposals.cached_votes_up >= ?", min_supports.to_i)
+    else
+      all
+    end
+  }
+  scope :meets_minimum_supports, -> {
+    restricted = ProjektPhaseSetting
+      .where(key: "option.resource.minimum_supports_to_show")
+      .where.not(value: ["0", "", nil])
+      .pluck(:projekt_phase_id, :value)
+
+    if restricted.empty?
+      all
+    else
+      restricted_phase_ids = restricted.map(&:first)
+      conditions = restricted.map do |phase_id, val|
+        sanitize_sql_array(
+          ["(proposals.projekt_phase_id = ? AND proposals.cached_votes_up >= ?)", phase_id, val.to_i]
+        )
+      end
+
+      where(
+        sanitize_sql_array(["proposals.projekt_phase_id NOT IN (?)", restricted_phase_ids]) +
+        " OR " + conditions.join(" OR ")
+      )
+    end
+  }
   scope :base_selection, -> {
     published
       .not_archived
@@ -41,13 +70,16 @@ class Proposal < ApplicationRecord
   scope :sort_by_alphabet, -> {
     with_translations(I18n.locale).
     select("proposals.*, LOWER(proposal_translations.title)").
-    reorder("LOWER(proposal_translations.title) ASC")
+    reorder("LOWER(proposal_translations.title) ASC, proposals.id ASC")
   }
-  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc) }
+  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc, id: :desc) }
+  scope :sort_by_hot_score, -> { reorder(hot_score: :desc, id: :desc) }
+  scope :sort_by_created_at, -> { reorder(created_at: :desc, id: :desc) }
 
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }
 
+  default_scope { where(draft: false) }
   scope :discard_draft,            -> { published }
   scope :discard_archived,         -> { not_archived }
 
@@ -77,8 +109,9 @@ class Proposal < ApplicationRecord
   # TODO: REFACTOR FOR NEW DESIGN
   def self.scoped_projekt_ids_for_footer(projekt)
     projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-        projekt.all_children_projekts.unshift(projekt).any? { |p| p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? }
+      ProjektSetting.find_by(projekt:, key: "projekt_feature.main.activate").value.present? &&
+        projekt.all_children_projekts.unshift(projekt).any? do |p|
+ p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? end
     end.pluck(:id)
   end
 
@@ -89,12 +122,13 @@ class Proposal < ApplicationRecord
   def self.successful
     ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
-	end
+  end
 
   def self.unsuccessful
-    ids = Proposal.includes([:projekt_phase]).select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal.includes([:projekt_phase]).select do |p|
+ p.cached_votes_up < p.custom_votes_needed_for_success end.pluck(:id)
     Proposal.where(id: ids)
-	end
+  end
 
   def custom_votes_needed_for_success
     return Proposal.votes_needed_for_success unless projekt_phase.present?
@@ -129,9 +163,17 @@ class Proposal < ApplicationRecord
     projekt_phase.feature?("form.anonimize_authors")
   end
 
+  after_commit :enqueue_stats_refresh
+
   protected
 
     def set_responsible_name
-      self.responsible_name = 'unregistriered'
+      self.responsible_name = "unregistriered"
+    end
+
+    def enqueue_stats_refresh
+      return unless projekt_phase_id
+
+      ProjektPhase::StatsRefreshJob.perform_later(projekt_phase_id)
     end
 end

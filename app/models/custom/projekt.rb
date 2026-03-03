@@ -128,6 +128,15 @@ class Projekt < ApplicationRecord
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+  attribute :show_content_background, :boolean, default: false
+
+  enum import_file_status: {
+    never_run: "never_run",
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: true, _default: "never_run"
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -525,7 +534,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process

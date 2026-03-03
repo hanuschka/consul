@@ -2,6 +2,7 @@ class ProjektsController < ApplicationController
   include CustomHelper
   include ProposalsHelper
   include Search
+  include LandingPageResolvable
 
   skip_authorization_check
   before_action :raise_flag_feature_disabled, except: [:map_html]
@@ -9,21 +10,20 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    if params[:landing_page_slug].present?
+    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
+    if landing_page_slug.present?
       @landing_page =
         SiteCustomization::Page
           .published
           .landing
           .where(landing_show_projekts_overview: true)
-          .find_by(slug: params[:landing_page_slug])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.nil?
         raise ActionController::RoutingError.new('Not Found')
       end
 
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      end
+      set_landing_page_topbar_ui_variables(@landing_page)
     end
 
     base_projekts =
@@ -48,7 +48,7 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-    @geozones = Geozone.all
+    @geozones = Geozone.all.order(:name)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
@@ -56,6 +56,11 @@ class ProjektsController < ApplicationController
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
     @tag_cloud = tag_cloud
     take_only_by_tag_names unless @search_terms.present?
+
+    @used_phases = @projekts.flat_map(&:active_and_visible_projekt_phases).map(&:type).uniq.compact
+    @phases = ProjektPhase.where(type: @used_phases).group_by(&:type).map { |type, phases| phases.first }.reject { |p| p.type == "ProjektPhase::DebatePhase" }.sort_by { |p| ProjektPhase::PROJEKT_PHASES_TYPES.index(p.type) || 999 }
+    @selected_phase_type = params[:phase_type] || 'all_phases'
+    take_by_phase_type unless @search_terms.present?
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
@@ -166,6 +171,13 @@ class ProjektsController < ApplicationController
         @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
       end
     end
+  end
+
+  def take_by_phase_type
+    return if @selected_phase_type == 'all_phases'
+
+    projekt_ids = @projekts.joins(:active_and_visible_projekt_phases).where(projekt_phases: { type: @selected_phase_type }).pluck(:id).uniq
+    @projekts = @projekts.where(id: projekt_ids)
   end
 
   def tag_cloud

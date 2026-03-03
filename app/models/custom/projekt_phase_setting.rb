@@ -64,6 +64,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.require_admin_acceptance": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -91,6 +93,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
+          "option.resource.minimum_supports_to_show": "0"
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -101,6 +104,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.intermediate_poll_results_for_admins": "active",
           "feature.resource.stats_enabled": "",
           "feature.resource.advanced_stats_enabled": "",
+          "feature.resource.report_visible_for_citizens": "",
+          "feature.resource.evaluation_enabled": "",
           "feature.resource.show_comments": "active",
           "feature.resource.show_open_answer_author_name": ""
         },
@@ -108,6 +113,8 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::BudgetPhase" => {
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -132,6 +139,11 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": ""
+        },
+
+        "ProjektPhase::CommentPhase" => {
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": ""
         },
 
         "ProjektPhase::QuestionPhase" => {
@@ -169,8 +181,8 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
           "option.general.max_number_of_pins_per_user": "",
-          "option.form.map_features_limit": "1",
-        },
+          "option.form.map_features_limit": "1"
+        }
       }
     end
 
@@ -180,7 +192,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
         phase_class.to_s.constantize.all.find_each do |phase|
           phase_default_settings.each do |key, value|
-            phase.settings.create!(key: key, value: value) unless phase.settings.find_by(key: key)
+            phase.settings.create!(key:, value:) unless phase.settings.find_by(key:)
           end
         end
       end

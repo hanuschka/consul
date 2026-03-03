@@ -22,6 +22,13 @@ de:
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Diskussionen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
+      comments:
+        feature:
+          general:
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
       proposals:
         feature:
           general:
@@ -31,6 +38,10 @@ de:
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
             require_admin_acceptance: Adminfreigabe
             require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -84,6 +95,8 @@ de:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
             votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+            minimum_supports_to_show: "Mindestanzahl Unterstützungen zur Sichtbarkeit"
+            minimum_supports_to_show_description: "Vorschläge werden erst ab dieser Anzahl von Unterstützungen angezeigt (0 = immer sichtbar)"
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
@@ -115,6 +128,10 @@ de:
             stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
             advanced_stats_enabled: Erweiterte Statistiken
             advanced_stats_enabled_description: Zeit erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
+            report_visible_for_citizens: Report-Tab für Bürger sichtbar
+            report_visible_for_citizens_description: Macht den Report-Tab mit der KI-generierten Zusammenfassung der Abstimmungsergebnisse für Bürger sichtbar. Admins und Projektmanager sehen den Tab immer.
+            evaluation_enabled: Bewertung für Bürger anzeigen
+            evaluation_enabled_description: Zeigt den Bewertung-Tab mit der detaillierten Auswertung der Abstimmungsergebnisse für Bürger an.
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
             show_open_answer_author_name: Name veröffentlichen
@@ -126,6 +143,10 @@ de:
             browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
             browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.

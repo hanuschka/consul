@@ -1,0 +1,33 @@
+de:
+  adm:
+    projekts:
+      projekt_livestreams:
+        show:
+          add_question: Frage hinzufügen
+          no_questions: Keine Kurzumfragen vorhanden.
+          table:
+            question: Frage
+            options: Antworten
+            actions: Aktionen
+        new:
+          title: Livestream hinzufügen
+        create:
+          success: Livestream wurde erfolgreich erstellt.
+        edit:
+          title: Livestream bearbeiten
+        update:
+          success: Livestream wurde erfolgreich aktualisiert.
+        destroy:
+          success: Livestream wurde erfolgreich gelöscht.
+        send_notifications:
+          success: Benachrichtigungen wurden erfolgreich gesendet.
+        form:
+          url_label: URL
+          url_hint: YouTube- oder Vimeo-URL des Livestreams
+          title_label: Titel
+          title_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
+          starts_at_label: Startzeit
+          starts_at_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
+          description_label: Beschreibung
+          description_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
+          submit: Speichern

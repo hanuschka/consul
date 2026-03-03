@@ -2,19 +2,55 @@ en:
   custom:
     projekt_phases:
       subnav:
-        stats: Statistics
+        key_metrics: Key Metrics
+        analysis: Analysis
+        full_stats: Full Evaluation
         overview:
           proposal_phase: Proposals
+          budget_phase: Investments
+          comment_phase: Comments
       stats:
+        title: Statistics
+        banner_title: "Evaluation of %{phase_title}"
+        back_to_phase: Back to projekt
+        refresh_stats_button: "Refresh statistics"
+        refresh_stats_last_updated: "Statistics last updated: %{time}"
+        processing_stats: "Processing..."
+        refresh_ai_stats_button: "Refresh AI statistics"
+        refresh_ai_stats_last_updated: "AI statistics last updated: %{time}"
+        refresh_ai_stats_loading: "Please wait, AI statistics are being updated..."
+        refresh_ai_stats_loading_note: "This may take a couple of minutes depending on the amount of resources and comments."
+        refresh_ai_stats_error: "Error updating AI statistics. Please try again."
+        generate_ai_summary_button: "Generate AI summary"
+        ai_summary_generated: "AI summary was successfully generated"
         proposal_phase:
-          total_proposals_title: Proposals
-          total_proposals: "Total proposals"
-          total_authors_title: "Authors"
-          total_authors: "Autoren"
-          total_supports_title: "Unterstützungen"
-          total_supports: "Gesamtzahl der Unterstützungen"
-          total_supports_weight_title: "Unterstützungsgewicht"
-          total_supports_weight: "Gesamtunterstützungsgewicht"
+          total_unique_participants_count:
+            title: Total Participants
+            tooltip: Count of unique users who actively participated in the process. Includes proposal authors, users who supported proposals, and users who posted comments. Each user is counted once, even if they performed multiple actions.
+          visible_proposals_count:
+            title: Submitted Proposals
+            tooltip: Total number of proposals created within the phase, excluding proposals that are currently hidden.
+          proposal_authors_count:
+            title: Active Authors
+            tooltip: Count of unique users who have created at least one visible proposal. Each author is counted once, regardless of the number of proposals.
+          unique_supporters_count:
+            title: Supporters
+            tooltip: Count of unique users who have supported or voted on at least one proposal.
+          total_votes_count:
+            title: Total Supports
+            tooltip: Total number of all votes cast across all proposals. A single user may cast multiple votes.
+          online_votes_count:
+            title: Online Supports
+            tooltip: Total number of votes submitted via the online platform.
+          offline_votes_count:
+            title: Offline Supports
+            tooltip: Total number of votes that were collected offline and manually entered into the system.
+          visible_comments_count:
+            title: Public Comments
+            tooltip: Total number of published comments associated with proposals. Hidden comments are excluded.
+          reported_proposals_count:
+            title: Reported Proposals
+            tooltip: Total number of proposals that have received at least one user report.
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht

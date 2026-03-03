@@ -1,0 +1,29 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
+
+<div class="kern-container mb-5">
+  <%= render Adm::AttributeEditorComponent.new(@idea, :title, :string, label: t(".labels.title")) %>
+  <%= render Adm::AttributeEditorComponent.new(@idea, :description, :rich_text, label: t(".labels.description")) %>
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.image")) do %>
+    <%= render "adm/ideas/ideas/edit/image", idea: @idea %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.documents")) do %>
+    <%= render "adm/ideas/ideas/edit/documents", idea: @idea %>
+  <% end %>
+
+  <%= render Adm::AttributeEditorComponent.new(@idea, :video_url, :string, label: t(".labels.video_url")) %>
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.category")) do %>
+    <%= render "adm/ideas/ideas/edit/category", idea: @idea %>
+  <% end %>
+
+  <%= render Adm::MapSettingComponent.new(
+    map_location: @idea.map_location,
+    path: adm_ideas_idea_map_location_path(@idea)
+  ) %>
+
+  <%= render Adm::AttributeEditorComponent.new(@idea, :on_behalf_of, :string, label: t(".labels.on_behalf_of")) %>
+</div>

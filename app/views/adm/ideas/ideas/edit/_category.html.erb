@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "edit__category" do %>
+  <%= form_with model: idea, url: adm_ideas_idea_path(idea), method: :patch do |f| %>
+    <% category_options = [["", t("adm.ideas.ideas.edit.no_category")]] +
+                          Idea::Category.all.map { |c| [c.id, c.name] } %>
+    <div class="kern-fieldset__body mb-4">
+      <%= f.collection_radio_buttons(:idea_category_id, category_options, :first, :last) do |b| %>
+        <div class="kern-form-check">
+          <%= b.radio_button(class: "kern-form-check__radio") %>
+          <%= b.label(class: "kern-label") %>
+        </div>
+      <% end %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

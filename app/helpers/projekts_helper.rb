@@ -22,7 +22,7 @@ module ProjektsHelper
   end
 
   def show_archived_projekts_in_sidebar?
-    Setting["projekts.show_archived.sidebar"].present? ? true : false
+    true
   end
 
   def show_affiliation_filter_in_sidebar?
@@ -31,12 +31,13 @@ module ProjektsHelper
 
   def prepare_projekt_name(projekt, placement = nil)
     classes = []
-    # classes.push("draft-projekt") unless projekt.activated?
+
+    url = projekt.page.url
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, projekt.page.url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
-      link_to projekt.page.title, projekt.page.url, class: classes.join(" ")
+      link_to projekt.page.title, url, class: classes.join(" ")
     else
       projekt.page.title
     end

@@ -3,11 +3,15 @@
     <%= "tabindex=0" if placement == 'desktop' %>
 >
   <div class="flyout-item-name projekt-name">
-    <% use_landing_projekts_for_overview_link = @custom_page.present? && @custom_page.landing? && @custom_page.landing_show_projekts_overview? %>
+    <%
+      use_landing_projekts_for_overview_link =
+        (@custom_page.present? && @custom_page.landing? && @custom_page.landing_show_projekts_overview?) ||
+        @ui_landing_page.present?
+    %>
     <%
         projekt_link_path =
           if use_landing_projekts_for_overview_link
-            landing_page_projekts_path(@custom_page.slug)
+            landing_page_projekts_path(@ui_landing_page&.slug || @custom_page&.slug)
           else
             projekts_path
           end

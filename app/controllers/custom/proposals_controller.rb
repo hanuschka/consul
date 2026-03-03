@@ -8,6 +8,7 @@ class ProposalsController
   include RandomSeed
   include GuestUsers
   include CustomHelper
+  include LandingPageResolvable
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -47,6 +48,8 @@ class ProposalsController
 
     @resources =
       @resources
+        .where(admin_accepted: true)
+        .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -119,25 +122,15 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
-      redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
 
       Mailer.proposal_created(@proposal).deliver_later
 
-      if @proposal.projekt_phase.active?
-        redirect_to page_path(
-          @proposal.projekt_phase.projekt.page.slug,
-          anchor: "filter-subnav",
-          projekt_phase_id: @proposal.projekt_phase.id,
-          order: params[:order]
-        ), notice: t("proposals.notice.published")
-      else
-        redirect_to proposals_path(
-          resources_order: params[:order]
-        ), notice: t("proposals.notice.published")
-      end
+      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
@@ -162,6 +155,11 @@ class ProposalsController
   def show
     super
     @projekt = @proposal.projekt_phase.projekt
+
+    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+      head :not_found, content_type: "text/html" and return
+    end
+
     # @notifications = @proposal.notifications
     @notifications = @proposal.notifications.not_moderated
     @milestones = @proposal.milestones
@@ -169,19 +167,10 @@ class ProposalsController
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
                                 .page(params[:page]).per(5)
 
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
-    @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
-    if params[:page_ref].present?
-      @landing_page =
-        @projekt
-          .landing_pages
-          .find_by(slug: params[:page_ref])
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
@@ -219,14 +208,14 @@ class ProposalsController
   end
 
   def created
-    @resource_name = 'proposal'
+    @resource_name = "proposal"
     @affiliated_geozones = []
     @restricted_geozones = []
-
   end
 
   def flag
-    Flag.flag(current_user, @proposal)
+    flag = Flag.flag(current_user, @proposal)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @proposal.update!(ignored_flag_at: nil)
 
     redirect_to @proposal
@@ -245,10 +234,10 @@ class ProposalsController
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,
                     projekt_label_ids: [],
-                    image_attributes: image_attributes,
+                    image_attributes:,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],
-                    map_location_attributes: map_location_attributes]
+                    map_location_attributes:]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
     end

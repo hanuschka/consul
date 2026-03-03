@@ -1,0 +1,7 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: poll_questions_adm_projekts_phase_path(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <%= render "form", question: @question, url: adm_projekts_phase_poll_question_path(@projekt_phase, @question) %>
+</div>

@@ -1,0 +1,17 @@
+de:
+  adm:
+    documents:
+      index:
+        title: Eigene Dokumente
+        new_document: Neues Dokument hinzufügen
+        table:
+          title: Titel
+          format: Format
+          size: Größe
+          url: URL
+          actions: Aktionen
+      new:
+        title: Neues Dokument erstellen
+        form:
+          submit: Dokument erstellen
+

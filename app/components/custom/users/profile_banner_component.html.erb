@@ -57,21 +57,24 @@
     <div class="users-profile-banner--name">
       <%= render Users::Account::UsernameComponent.new(user: @user, edit_mode: @edit_mode) %>
     </div>
-    <div class="users-profile-banner--info-line">
+    <p class="users-profile-banner--info-line">
       <%= t("custom.users.banner.registered_at", date: l(@user.created_at, format: :date_only)) %>
-    </div>
-    <div class="users-profile-banner--info-line">
-      <% if @user.data_complete? %>
-        <span class="icon-check"></span>
-        <%= t("custom.account.show.data_complete") %>
-      <% else %>
-        <span class="icon-x"></span>
-        <%= t("custom.account.show.data_missing") %>
-      <% end %>
-    </div>
+    </p>
+
+    <% if Setting["extra_fields.verification.show_data_completeness_status"].present? %>
+      <p class="users-profile-banner--info-line">
+        <% if @user.data_complete? %>
+          <span class="icon-check"></span>
+          <%= t("custom.account.show.data_complete") %>
+        <% else %>
+          <span class="icon-x"></span>
+          <%= t("custom.account.show.data_missing") %>
+        <% end %>
+      </p>
+    <% end %>
 
     <% if Setting["extra_fields.verification.show_verification_status"].present? %>
-      <div class="users-profile-banner--info-line">
+      <p class="users-profile-banner--info-line">
         <% if @user.level_three_verified? %>
           <span class="icon-check"></span>
           <%= t("account.show.verified_account") %>
@@ -79,7 +82,7 @@
           <span class="icon-x"></span>
           <%= t("custom.account.show.not_verified_account") %>
         <% end %>
-      </div>
+      </p>
     <% end %>
 
     <%= render Shared::OfficialPositionBadgeComponent.new(user: @user) %>

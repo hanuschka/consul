@@ -222,6 +222,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def csv_download_ready(user, download_url)
+    @email_to = user.email
+    @user = user
+    @download_url = download_url
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.csv_download_ready.subject"))
+    end
+  end
+
   def file_ready(user, file_name, file_path)
     @email_to = user.email
     @user = user

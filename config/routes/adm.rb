@@ -56,6 +56,7 @@ namespace :adm do
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member
+    get :csv_download, on: :collection
   end
   # profiles
 

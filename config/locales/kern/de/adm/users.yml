@@ -3,8 +3,12 @@ de:
     users:
       index:
         title: Benutzer verwalten
+        csv_export_button: CSV Export
+        csv_export_notice: Der Export wird vorbereitet. Sie erhalten eine E-Mail mit einem Download-Link.
         table:
           actions:
             verify: Verifizieren
             unverify: Verifizierung aufheben
             edit: Bearbeiten
+      csv_download:
+        not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.

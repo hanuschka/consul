@@ -27,7 +27,7 @@
       <% end %>
 
       <% if @ui_landing_page %>
-        <% Projekt.top_level.includes([page: :translations]).for_navigation(current_user).assigned_to_landing_page(@ui_landing_page).each do |active_projekt| %>
+        <% @ui_landing_page.landing_projekts.top_level.includes([page: :translations]).for_navigation(current_user).each do |active_projekt| %>
           <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
               <%= "tabindex=0" if placement == "desktop" %>
               aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'>

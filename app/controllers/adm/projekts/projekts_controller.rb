@@ -150,7 +150,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :name, :total_duration_start, :total_duration_end,
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated,
-        landing_page_ids: [],
+        :landing_page_id,
         geozone_affiliation_ids: [],
         individual_group_value_ids: []
       )

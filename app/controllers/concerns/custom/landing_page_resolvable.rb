@@ -6,7 +6,7 @@ module LandingPageResolvable
   def resolve_landing_page_for_projekt(projekt)
     return if projekt.blank?
 
-    landing_page = projekt.landing_pages.first
+    landing_page = projekt.landing_page
     return if landing_page.blank?
 
     @landing_page = landing_page

@@ -195,6 +195,7 @@ en:
             tags: Tags
             tags_hint: Click on one or more tags to make them available to the user in this project.
             refresh_page: If you have already activated the functions but they are not displayed here, please reload this page.
+          no_landing_page: "— No landing page —"
           flash:
             update_notice: Projekt was successfully updated
           description: Projekt description

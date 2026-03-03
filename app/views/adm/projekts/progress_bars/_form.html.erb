@@ -1,0 +1,16 @@
+<%= form_with model: @progress_bar, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".kind_label")) do %>
+    <%= f.select :kind, ProgressBar.kinds.keys.map { |k| [t(".kinds.#{k}"), k] }, {}, { label: false } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+    <%= f.text_field :title, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".percentage_label")) do %>
+    <%= f.number_field :percentage, label: false, in: 0..100 %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

@@ -19,6 +19,7 @@ class SiteCustomization::Page < ApplicationRecord
     association_foreign_key: 'projekt_id',
     class_name: "Projekt"
 
+  has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
   has_one_attached :landing_site_logo_for_transparent_background

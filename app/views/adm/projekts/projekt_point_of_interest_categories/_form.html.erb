@@ -1,0 +1,28 @@
+<%= form_with model: @category, url: url do |f| %>
+
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
+    <div data-controller="adm-color-picker">
+      <div class="color-picker" data-adm-color-picker-target="picker"></div>
+      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint")) do %>
+    <div class="icon-selector">
+      <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
+        <% icon = icon_array.first %>
+        <label class="icon-option">
+          <%= f.radio_button :icon, icon, checked: @category.icon == icon %>
+          <i class="fas fa-<%= icon %>"></i>
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

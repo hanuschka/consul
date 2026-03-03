@@ -31,6 +31,9 @@ en:
     newsletter_subscription_for_existing_user:
       subject: Subscribe to the newsletter
       p1_html: There was an attempt to sign up for our newsletter using your email address. Since you already have a Consul account, we would like to ask you to log in and activate the option to receive the newsletter in your <a href=%{link}>Account Settings</a>.
+    csv_download_ready:
+      subject: Data Export
+      p1_html: 'You have requested an export. The data has been exported and is ready for download: <a href="%{url}">Download CSV</a>'
     file_ready:
       subject: Data-Export
       p1_html: You have requested an export. The data has now been exported and is attached.
@@ -38,15 +41,15 @@ en:
       subject: Upload of CSV data completed successfully.
       p1_html: "Your data was added successfully: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
-      subject: Your post violates the netiquette.
-      title: Your post violates the netiquette.
+      subject: Your proposal violates the admission conditions.
       hi: "Hello %{username},"
-      text1: "We have checked your post: %{text}"
-      text2: "Unfortunately, it violates the netiquette of this platform. We have therefore removed your post."
-      text3: You can read the rules of netiquette %{netiquette_link}.
+      text1: "We have checked your topic proposal: %{text}."
+      text2: "Unfortunately, it violates the admission conditions of our topic selection. We have therefore removed your proposal."
+      text3: You can read the admission conditions %{netiquette_link}.
       netiquette_link_text: here
-      text4: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
+      text4: If you have any questions, please contact us. You are cordially invited to create a new post that complies with the admission conditions.
       sincerely: Kind regards
+      signature: Your ABSTIMMUNG21 Team
     comment:
       subject: Your	proposal  has been  commented on.
       title: Your proposal has been commented on.

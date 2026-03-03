@@ -7,7 +7,7 @@
           <%= render "shared/elasticsearch_form" %>
         </div>
       <% end %>
-      <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } if Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? %>
+      <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } %>
       <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' %>
       <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' %>
       <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } %>

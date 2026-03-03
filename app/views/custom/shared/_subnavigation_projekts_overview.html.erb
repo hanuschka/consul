@@ -11,7 +11,7 @@
     <%
         projekt_link_path =
           if use_landing_projekts_for_overview_link
-            landing_page_projekts_path(@ui_landing_page&.slug || @custom_page.slug)
+            landing_page_projekts_path(@ui_landing_page&.slug || @custom_page&.slug)
           else
             projekts_path
           end

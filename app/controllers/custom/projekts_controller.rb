@@ -2,28 +2,27 @@ class ProjektsController < ApplicationController
   include CustomHelper
   include ProposalsHelper
   include Search
+  include LandingPageResolvable
 
   skip_authorization_check
-  before_action :raise_flag_feature_disabled, except: [:map_html]
 
   include ProjektControllerHelper
 
   def index
-    if params[:landing_page_slug].present?
+    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
+    if landing_page_slug.present?
       @landing_page =
         SiteCustomization::Page
           .published
           .landing
           .where(landing_show_projekts_overview: true)
-          .find_by(slug: params[:landing_page_slug])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.nil?
         raise ActionController::RoutingError.new('Not Found')
       end
 
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      end
+      set_landing_page_topbar_ui_variables(@landing_page)
     end
 
     base_projekts =
@@ -184,9 +183,6 @@ class ProjektsController < ApplicationController
     TagCloud.new(Projekt.all, params[:tags])
   end
 
-  def raise_flag_feature_disabled
-    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting["extended_feature.projekts_overview_page_navigation.show_in_navigation"]
-  end
 
   def set_variables_for_footer_comments
     @valid_orders = %w[most_voted newest oldest]

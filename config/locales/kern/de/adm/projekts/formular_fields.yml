@@ -1,0 +1,34 @@
+de:
+  adm:
+    projekts:
+      formular_fields:
+        new:
+          title: Neues Formularfeld erstellen
+        create:
+          success: Formularfeld wurde erfolgreich erstellt.
+        edit:
+          title: Formularfeld bearbeiten
+        update:
+          success: Formularfeld wurde erfolgreich aktualisiert.
+        destroy:
+          success: Formularfeld wurde erfolgreich gelöscht.
+        form:
+          name_label: Name
+          name_hint: Der Name des Formularfelds, wie er im Formular angezeigt wird.
+          description_label: Beschreibung
+          description_hint: Optionale Beschreibung oder Hilfetext für das Feld.
+          kind_label: Feldtyp
+          kind_hint: Der Typ des Formularfelds. Kann nach dem Erstellen nicht mehr geändert werden.
+          drop_down_options_label: Dropdown-Optionen
+          drop_down_options_hint: Kommagetrennte Liste der Auswahlmöglichkeiten.
+          email_for_confirmation_label: Bestätigungsmail
+          email_for_confirmation_hint: Soll an diese E-Mail-Adresse eine Bestätigungsmail gesendet werden?
+          email_for_confirmation_subject_label: Betreff der Bestätigungsmail
+          email_for_confirmation_subject_hint: Der Betreff der Bestätigungsmail.
+          email_for_confirmation_text_label: Text der Bestätigungsmail
+          email_for_confirmation_text_hint: Der Inhalt der Bestätigungsmail.
+          required_label: Pflichtfeld
+          required_hint: Muss dieses Feld ausgefüllt werden?
+          follow_up_label: Follow-up Feld
+          follow_up_hint: Wird dieses Feld nur in der Follow-up Phase angezeigt?
+          submit: Speichern

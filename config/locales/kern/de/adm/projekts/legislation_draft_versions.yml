@@ -1,0 +1,26 @@
+de:
+  adm:
+    projekts:
+      legislation_draft_versions:
+        new:
+          title: Neuen Textentwurf erstellen
+        create:
+          success: Textentwurf wurde erfolgreich erstellt.
+        edit:
+          title: Textentwurf bearbeiten
+        update:
+          success: Textentwurf wurde erfolgreich aktualisiert.
+        destroy:
+          success: Textentwurf wurde erfolgreich gelöscht.
+        form:
+          title_label: Titel
+          title_hint: Geben Sie den Titel des Textentwurfs ein.
+          changelog_label: Änderungsprotokoll
+          changelog_hint: Beschreiben Sie die Änderungen in dieser Version.
+          body_label: Text
+          body_hint: Geben Sie den Text des Entwurfs ein. Markdown wird unterstützt.
+          status_label: Status dieser Version
+          status_hint: Entwurf ist nur intern sichtbar, während Veröffentlicht für alle Nutzer sichtbar ist.
+          final_version_label: Endgültige Version
+          final_version_hint: Kommentierung nicht mehr möglich
+          submit: Speichern

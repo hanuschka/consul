@@ -19,11 +19,11 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
 
   private
 
-    def projekts_path(...)
+    def projekts_path(**kwargs)
       if @custom_page.present? && @custom_page.landing?
-        landing_page_projekts_path(@custom_page.slug, ...)
+        landing_page_projekts_path(@custom_page.slug, **kwargs)
       else
-        helpers.projekts_path(...)
+        helpers.projekts_path(**kwargs)
       end
     end
 

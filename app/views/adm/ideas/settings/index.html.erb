@@ -1,0 +1,15 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <% if @settings.present? %>
+    <% @settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  <% else %>
+    <div class="callout primary margin">
+      <%= t(".no_settings") %>
+    </div>
+  <% end %>
+</div>

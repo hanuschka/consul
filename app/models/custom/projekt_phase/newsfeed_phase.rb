@@ -8,7 +8,7 @@ class ProjektPhase::NewsfeedPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming settings]
+    %w[naming general_settings]
   end
 
   def safe_to_destroy?

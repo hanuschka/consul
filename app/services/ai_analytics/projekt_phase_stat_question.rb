@@ -18,7 +18,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     stat_question.update!(status: :processing)
 
     answer = generate_answer(resources)
-    stat_question.update!(status: :completed, answer: answer)
+    stat_question.update!(status: :completed, answer:)
 
     Rails.logger.info("[AI Analytics] ProjektPhaseStatQuestion: Completed for question ##{stat_question.id}")
   rescue => e
@@ -55,9 +55,9 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def generate_answer(resources)
       items_text =
-        resources.map { |item|
+        resources.map do |item|
           build_item_text(item)
-        }.join("\n\n")
+        end.join("\n\n")
 
       prompt = build_prompt(items_text, resources)
 
@@ -73,9 +73,9 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       text += "\nDescription: #{item.description&.truncate(500)}" if item.description.present?
 
       if item.respond_to?(:comments) && item.comments.any?
-        comments_text = item.comments.first(5).map { |c|
+        comments_text = item.comments.first(5).map do |c|
           "- #{c.body&.truncate(100)}"
-        }.join("\n")
+        end.join("\n")
         text += "\nComments:\n#{comments_text}"
       end
 
@@ -87,30 +87,26 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       projekt_title = projekt_phase.projekt.page.title
       projekt_subtitle = projekt_phase.projekt.page.subtitle
 
+      fetched_prompt = fetch_prompt
+
       <<~TEXT
-        You are an assistant helping project managers analyze citizen participation #{resource_type} in #{projekt_title} with subtitle #{projekt_subtitle}.
+        #{fetched_prompt}
+        Output response in #{target_language} language.
 
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
 
         #{resource_type.capitalize}:
         #{items_text}
-
-        Instructions:
-        - Provide a synthesized, analytical answer in #{target_language}
-        - Base your answer only on the provided #{resource_type}
-        - If the question cannot be answered from the #{resource_type}, clearly state that
-        - Focus on patterns, trends, and dominant themes across the #{resource_type}
-        - Do NOT list or enumerate all #{resource_type}
-        - Mention individual #{resource_type} only as illustrative examples when necessary
-        - Write in narrative, prosaic style (similar to an executive summary)
-        - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful
-        - Dont add spaces before <li> items.
-        - Use lists only to summarize key insights, not individual entries
-        - Structure your answer clearly with paragraphs
-        - Dont use br html tags
-
-        Your goal is to produce a synthesized, human-readable analysis, not a raw data dump.
       TEXT
+    end
+
+    def fetch_prompt
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
+          :ai_analytics_projekt_phase_question,
+          resource_type: "projekt_phase"
+        ).parsed_response
+      parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

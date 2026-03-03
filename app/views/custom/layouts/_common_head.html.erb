@@ -14,6 +14,7 @@
 
 <%= csrf_meta_tags %>
 <%= favicon_link_tag "favicon.ico" %>
+<script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
 <%= stylesheet_link_tag "application" %>
@@ -26,6 +27,7 @@
 <%= stylesheet_link_tag "print", media: 'print' %>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
 <%= content_for :additional_plugin_scripts %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
@@ -38,12 +40,10 @@
 
 <meta name="external-links" content="<%= Setting["extended_feature.gdpr.link_out_warning"].present? %>" />
 <meta name="two-click-iframes" content="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? %>" />
-<meta name="expand-active-projekts" content=<%= Setting["projekts.second_level_projekts_in_active_filter"] %> />
-<meta name="expand-archived-projekts" content=<%= Setting["projekts.second_level_projekts_in_archived_filter"] %> />
-
 <meta name="turbolinks-cache-control" content="no-cache">
 
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+
 <!--
 <script type="module" src="/upload-files.js"></script>
 -->

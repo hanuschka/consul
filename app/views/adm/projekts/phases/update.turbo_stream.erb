@@ -1,0 +1,8 @@
+<% attribute = params[:attribute].to_sym %>
+<%= turbo_stream.update dom_id(@projekt_phase, attribute) do %>
+  <%= render Adm::AttributeEditors::BooleanComponent.new(
+    @projekt_phase,
+    attribute,
+    path: adm_projekts_projekt_phase_path(@projekt_phase.projekt, @projekt_phase)
+  ) %>
+<% end %>

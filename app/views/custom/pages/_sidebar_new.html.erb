@@ -1,9 +1,9 @@
 <aside class="sidebar">
-  <% if show_admin_controls_for_projekt?(@projekt) %>
-    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
-      <%= render partial: 'pages/sidebar/admin_controls' %>
-    <% end %>
-  <% end %>
+  <%# <% if show_admin_controls_for_projekt?(@projekt) %1> %>
+  <%#   <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %1> %>
+  <%#     <%= render partial: 'pages/sidebar/admin_controls' %1> %>
+  <%#   <% end %1> %>
+  <%# <% end %1> %>
 
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_admin_controls_for_projekt?(@projekt) %>
@@ -29,13 +29,19 @@
 
     <% other_conditions_for_phases_section_are_met = (
       projekt.total_duration_start.present? || projekt.total_duration_end.present?) &&
-    projekt.projekt_phases.active.any?
-  %>
+      projekt.projekt_phases.active.any?
+    %>
     <% if ((projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") &&
         other_conditions_for_phases_section_are_met)) || (other_conditions_for_phases_section_are_met && show_admin_controls_for_projekt?(@projekt))
       %>
     <div class="hide-on-small-tablet u-width-100">
-      <%= render Projekts::ToggleSectionWithSettingComponent.new(enable: show_admin_controls_for_projekt?(@projekt), projekt: @projekt, setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"), other_conditions_are_met: other_conditions_for_phases_section_are_met) do %>
+      <%= render Projekts::ToggleSectionWithSettingComponent.new(
+        enable: show_admin_controls_for_projekt?(@projekt),
+        projekt: @projekt,
+        setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar",
+        setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"),
+        other_conditions_are_met: other_conditions_for_phases_section_are_met
+      ) do %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.phases.title"), icon_name: "pager") do |c| %>
           <%= render Pages::Projekts::SidebarPhasesComponent.new(projekt) %>
         <% end %>

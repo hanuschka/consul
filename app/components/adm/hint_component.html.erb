@@ -1,0 +1,28 @@
+<div data-controller="components-adm-hint" class="adm-hint">
+  <button type="button"
+          class="adm-hint__toggle"
+          data-action="click->components-adm-hint#toggle"
+          aria-expanded="false"
+          aria-controls="adm-hint-sidebar">
+    <%= t(".link_text") %>
+  </button>
+
+  <div id="adm-hint-sidebar"
+       class="adm-hint__sidebar"
+       data-components-adm-hint-target="sidebar"
+       role="complementary"
+       aria-hidden="true">
+    <div class="adm-hint__sidebar-header">
+      <span class="adm-hint__sidebar-title"><%= t(".link_text") %></span>
+      <button type="button"
+              class="adm-hint__close"
+              data-action="click->components-adm-hint#close"
+              aria-label="<%= t(".close") %>">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+    <div class="adm-hint__sidebar-content">
+      <%= content %>
+    </div>
+  </div>
+</div>

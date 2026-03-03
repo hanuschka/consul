@@ -128,8 +128,9 @@ class Projekt < ApplicationRecord
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+  attribute :show_content_background, :boolean, default: false
 
-  enum build_file_import_status: {
+  enum import_file_status: {
     never_run: "never_run",
     pending: "pending",
     processing: "processing",
@@ -533,7 +534,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process

@@ -175,6 +175,9 @@
       if (App.AreaChartComponent) {
         App.AreaChartComponent.initialize();
       }
+      if (App.PieChartComponent) {
+        App.PieChartComponent.initialize();
+      }
       if (App.HeatmapComponent) {
         App.HeatmapComponent.initialize();
       }
@@ -183,6 +186,7 @@
     resetInitializedFlags: function() {
       $("[data-bar-chart]").removeAttr("data-chart-initialized");
       $("[data-area-chart]").removeAttr("data-chart-initialized");
+      $("[data-pie-chart]").removeAttr("data-chart-initialized");
       $("[data-heatmap]").removeAttr("data-heatmap-initialized");
     },
 

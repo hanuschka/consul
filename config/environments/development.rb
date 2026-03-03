@@ -95,3 +95,5 @@ Rails.application.configure do
   require_relative "../../lib/middleware/vc_maps_middleware"
   config.middleware.insert_before 0, VcMapsMiddleware
 end
+
+Rack::MiniProfiler.config.position = 'bottom-right'

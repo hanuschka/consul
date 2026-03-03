@@ -93,7 +93,7 @@ class ProjektPhase < ApplicationRecord
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
-  has_many :proposal_criteria, class_name: "ProjektPhase::ProposalCriteria", dependent: :destroy
+  has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -283,6 +283,22 @@ class ProjektPhase < ApplicationRecord
 
   def title
     phase_tab_name.presence || model_name.human
+  end
+
+  def default_phase
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    setting&.value == id.to_s
+  end
+
+  def default_phase=(value)
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    return unless setting
+
+    if ActiveModel::Type::Boolean.new.cast(value)
+      setting.update!(value: id.to_s)
+    elsif setting.value == id.to_s
+      setting.update!(value: "")
+    end
   end
 
   def all_settings

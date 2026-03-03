@@ -47,11 +47,11 @@ class IdeasController < ApplicationController
     @idea = Idea.new(idea_params.merge(author: current_user))
     authorize! :create, @idea
 
-    @idea.officer = @idea.get_default_officer
+    @idea.officer = @idea.district&.default_idea_officer || @idea.category&.default_idea_officer
 
     if @idea.save
       if @idea.officer.present?
-        IdeaMailer.notify_officer(@idea, Idea::Officer.last).deliver_later
+        IdeaMailer.notify_officer(@idea, @idea.officer).deliver_later
         Notification.add(@idea.officer.user, @idea)
         Activity.log(@idea.officer.user, "email", @idea)
       end

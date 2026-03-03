@@ -120,7 +120,17 @@ projekt_id: @projekt)
     end
 
     def show_ai_flow_link?
-      @projekt_phase.is_a?(ProjektPhase::ProposalPhase) && Ai::Settings.ai_available?
+      return false if !@projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+
+      if Ai::Settings.ai_available?
+        true
+      else
+        current_user&.administrator? || current_user&.projekt_manager?
+      end
+    end
+
+    def ai_flow_disabled?
+      !Ai::Settings.ai_available?
     end
 
     def ai_flow_link_path

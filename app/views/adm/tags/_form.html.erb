@@ -1,0 +1,7 @@
+<%= form_with model: [:adm, @tag] do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: Tag.human_attribute_name(:name), hint: t(".hints.name")) do %>
+    <%= f.text_field :name, label: false, placeholder: Tag.human_attribute_name(:name) %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

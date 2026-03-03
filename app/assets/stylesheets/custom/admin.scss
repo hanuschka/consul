@@ -3,13 +3,13 @@
   padding: 1.5rem;
 }
 
-.projekt-phase-criteria--list {
+.user-resource-criteria--list {
   list-style: none;
   margin: 0 0 1.5rem;
   padding: 0;
 }
 
-.projekt-phase-criteria--item {
+.user-resource-criteria--item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -21,19 +21,19 @@
   justify-content: space-between;
 }
 
-.projekt-phase-criteria--drag-handle {
+.user-resource-criteria--drag-handle {
   cursor: grab;
   color: #aaa;
   font-size: 1.1rem;
   flex-shrink: 0;
 }
 
-.projekt-phase-criteria--text {
+.user-resource-criteria--text {
   flex: 1;
   cursor: text;
 }
 
-.projekt-phase-criteria--delete-btn {
+.user-resource-criteria--delete-btn {
   background: none;
   border: none;
   color: #e74c3c;

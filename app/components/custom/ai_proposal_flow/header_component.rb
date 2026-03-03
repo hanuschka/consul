@@ -12,7 +12,7 @@ class AiProposalFlow::HeaderComponent < ApplicationComponent
   end
 
   def steps
-    available_steps = has_proposal_criteria? ? STEPS : STEPS.reject { |s| s[:n] == 3 }
+    available_steps = has_user_resource_criteria? ? STEPS : STEPS.reject { |s| s[:n] == 3 }
     available_steps.each_with_index.map do |s, index|
       renumbered_n = index + 1
       state =
@@ -30,8 +30,8 @@ class AiProposalFlow::HeaderComponent < ApplicationComponent
 
   private
 
-    def has_proposal_criteria?
-      @projekt_phase.proposal_criteria.exists?
+    def has_user_resource_criteria?
+      @projekt_phase.user_resource_criteria.exists?
     end
 
     attr_reader :projekt_phase, :current_step

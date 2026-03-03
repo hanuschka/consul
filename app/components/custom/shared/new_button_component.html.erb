@@ -1,9 +1,20 @@
 <%= new_button_html %>
 
 <% if show_ai_flow_link? %>
-  <%= link_to t("ai_proposal_flow.entry_button"), ai_flow_link_path,
-        class: "button expanded new-resource-button ai-flow-button",
-        data: { turbolinks: false } %>
+  <% if ai_flow_disabled? %>
+    <button
+      class="button expanded new-resource-button ai-flow-button ai-feature-disabled"
+      disabled
+      data-tooltip
+      title="<%= t('ai.disabled_tooltip') %>"
+    >
+      <%= t("ai_proposal_flow.entry_button") %>
+    </button>
+  <% else %>
+    <%= link_to t("ai_proposal_flow.entry_button"), ai_flow_link_path,
+          class: "button expanded new-resource-button ai-flow-button",
+          data: { turbolinks: false } %>
+  <% end %>
 <% end %>
 
 <% if permission_problem_key.present? %>

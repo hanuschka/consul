@@ -100,6 +100,7 @@ ProjektStudio.ContentBlock.Crud = {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       $(newContentBlockContainer).find('.projekt-content-block').foundation()
+      $(newContentBlockContainer).find('[data-tooltip]').foundation()
       App.ImageGallery.initialize()
     }, 0)
 
@@ -206,7 +207,7 @@ ProjektStudio.ContentBlock.Crud = {
     const scrollTo = nextContentBlockSection || prevContentBlockSection
 
     // Clean up tooltips on content block destroy
-    contentBlockWrapper.querySelectorAll("[data-tooltip]").each((element) => {
+    contentBlockWrapper.querySelectorAll("[data-tooltip]").forEach((element) => {
       const instance = $(element).data("zf.tooltip");
       if (instance) instance.destroy();
     })

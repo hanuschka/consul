@@ -1,0 +1,23 @@
+de:
+  adm:
+    projekts:
+      projekt_point_of_interest_categories:
+        new:
+          title: Neue Kategorie erstellen
+        edit:
+          title: Kategorie bearbeiten
+        create:
+          success: Kategorie erfolgreich erstellt.
+        update:
+          success: Kategorie erfolgreich aktualisiert.
+        destroy:
+          success: Kategorie erfolgreich gelöscht.
+          has_pins: Kategorie kann nicht gelöscht werden, da noch Pins zugeordnet sind.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen der Kategorie ein.
+          color_label: Farbe
+          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
+          submit: Speichern

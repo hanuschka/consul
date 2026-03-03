@@ -24,6 +24,35 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :with_min_supports, ->(min_supports) {
+    if min_supports.to_i > 0
+      where("proposals.cached_votes_up >= ?", min_supports.to_i)
+    else
+      all
+    end
+  }
+  scope :meets_minimum_supports, -> {
+    restricted = ProjektPhaseSetting
+      .where(key: "option.resource.minimum_supports_to_show")
+      .where.not(value: ["0", "", nil])
+      .pluck(:projekt_phase_id, :value)
+
+    if restricted.empty?
+      all
+    else
+      restricted_phase_ids = restricted.map(&:first)
+      conditions = restricted.map do |phase_id, val|
+        sanitize_sql_array(
+          ["(proposals.projekt_phase_id = ? AND proposals.cached_votes_up >= ?)", phase_id, val.to_i]
+        )
+      end
+
+      where(
+        sanitize_sql_array(["proposals.projekt_phase_id NOT IN (?)", restricted_phase_ids]) +
+        " OR " + conditions.join(" OR ")
+      )
+    end
+  }
   scope :base_selection, -> {
     published
       .not_archived
@@ -41,9 +70,11 @@ class Proposal < ApplicationRecord
   scope :sort_by_alphabet, -> {
     with_translations(I18n.locale).
     select("proposals.*, LOWER(proposal_translations.title)").
-    reorder("LOWER(proposal_translations.title) ASC")
+    reorder("LOWER(proposal_translations.title) ASC, proposals.id ASC")
   }
-  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc) }
+  scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc, id: :desc) }
+  scope :sort_by_hot_score, -> { reorder(hot_score: :desc, id: :desc) }
+  scope :sort_by_created_at, -> { reorder(created_at: :desc, id: :desc) }
 
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }

@@ -1,0 +1,37 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.notify_author_about_submission.hi", username: @deficiency_report.author.username) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p1",
+      deficiency_report_link: link_to(t("custom.deficiency_reports.mailers.notify_author_about_submission.deficiency_report_link_text"), deficiency_report_url(@deficiency_report))) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p2") %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize(
+      t("custom.deficiency_reports.mailers.notify_author_about_submission.p3",
+        account_link: link_to(
+          t("custom.deficiency_reports.mailers.notify_author_about_submission.account_link_text"),
+          account_url
+        ))
+    ) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.closing") %><br>
+    <%= t("custom.deficiency_reports.mailers.signature") %>
+  </p>
+
+  <% if Setting["mailer_from_deficiency_report_address"].present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>
+    </p>
+  <% end %>
+
+</td>

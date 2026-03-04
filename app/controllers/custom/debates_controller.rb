@@ -8,6 +8,7 @@ class DebatesController < ApplicationController
   include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
+  include LandingPageResolvable
 
   before_action :authenticate_user!, except: [:index, :show], unless: -> { current_user&.guest? }
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
@@ -92,11 +93,19 @@ class DebatesController < ApplicationController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
     @selected_projekt = @debate&.projekt_phase&.projekt
     params[:projekt_phase_id] = @debate&.projekt_phase&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def create
@@ -128,6 +137,12 @@ class DebatesController < ApplicationController
       end
     else
       @selected_projekt = @debate&.projekt_phase&.projekt
+      @projekt_phase = @debate&.projekt_phase
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end
@@ -163,6 +178,7 @@ class DebatesController < ApplicationController
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != debate_path(@debate)
       redirect_to debate_path(@debate), status: :moved_permanently

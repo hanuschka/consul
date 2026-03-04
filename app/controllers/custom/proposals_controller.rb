@@ -99,6 +99,10 @@ class ProposalsController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
@@ -106,6 +110,10 @@ class ProposalsController
 
     params[:projekt_phase_id] = @proposal&.projekt_phase&.id
     params[:projekt_id] = @selected_projekt&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def update
@@ -135,6 +143,11 @@ class ProposalsController
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end

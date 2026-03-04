@@ -121,6 +121,7 @@ projekt_id: @projekt)
 
     def show_ai_flow_link?
       return false if !@projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+      return false if !@projekt_phase.feature?("resource.create_proposal_with_ai")
 
       if Ai::Settings.ai_available?
         true

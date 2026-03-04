@@ -11,6 +11,12 @@ class RegisteredAddress::District < ApplicationRecord
                                      inverse_of: :district,
                                      dependent: :nullify
 
+  has_and_belongs_to_many :affiliated_projekts,
+    class_name: "Projekt",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "registered_address_district_id",
+    association_foreign_key: "projekt_id"
+
   default_scope { order(name: :asc) }
 
   def self.table_name_prefix

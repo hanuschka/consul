@@ -288,6 +288,7 @@ class Setting < ApplicationRecord
         "extended_feature.projekts_overview_page_navigation.show_index_order_expired": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_individual_list": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_drafts": true,
+        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
 
         "extended_feature.projekts_overview_page_footer.show_in_index_order_all": true,
         "extended_feature.projekts_overview_page_footer.show_in_index_order_underway": true,

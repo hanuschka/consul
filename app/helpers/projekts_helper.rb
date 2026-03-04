@@ -110,10 +110,10 @@ module ProjektsHelper
 
   def get_projekt_affiliation_name(projekt, only_name = false )
     affiliation_name = projekt.geozone_affiliated || "no_affiliation"
-    geozone_affiliations = projekt.geozone_affiliations
+    district_affiliations = projekt.registered_address_district_affiliations
 
-    if geozone_affiliations.exists? && affiliation_name == 'only_geozones'
-      return geozone_affiliations.pluck(:name).join(', ')
+    if district_affiliations.exists? && affiliation_name == 'only_geozones'
+      return district_affiliations.pluck(:name).join(', ')
     end
 
     return affiliation_name if only_name

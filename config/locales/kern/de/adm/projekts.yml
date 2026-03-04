@@ -71,6 +71,8 @@ de:
             geozone_affiliated_no_affiliation: Keine Gebietszuordnung
             geozone_affiliated_entire_city: Stadtweit
             geozone_affiliated_only_geozones: Zuordnung zu Stadtteil
+            geozones_label: Gebiete
+            districts_label: Stadtteile
         visibility:
           title: Sichtbarkeit & Darstellung
           individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken

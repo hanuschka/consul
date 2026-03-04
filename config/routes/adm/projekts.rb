@@ -56,6 +56,7 @@ namespace :adm do
         get :sentiments
 
         # Users & permissions
+        get :user_resource_criteria
         get :officing_managers
         get :officing_manager_audits
         get :age_ranges_for_stats

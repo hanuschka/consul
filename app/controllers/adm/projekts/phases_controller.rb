@@ -120,6 +120,18 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def user_resource_criteria
+    authorize_phase(:update?)
+    @criteria = @projekt_phase.user_resource_criteria
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
   def proposal_criteria
     authorize_phase(:update?)
     @criteria = @projekt_phase.proposal_criteria

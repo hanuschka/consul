@@ -48,7 +48,7 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-    @districts = RegisteredAddress::District.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?

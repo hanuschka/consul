@@ -3,6 +3,8 @@ class RegisteredAddress::District < ApplicationRecord
 
   has_many :registered_addresses, dependent: :restrict_with_exception, inverse_of: :district,
     class_name: "RegisteredAddress", foreign_key: :registered_address_district_id
+  has_many :cities, -> { distinct }, through: :registered_addresses,
+    class_name: "RegisteredAddress::City", source: :registered_address_city
   belongs_to :default_deficiency_report_responsible, polymorphic: true
   belongs_to :default_idea_officer, class_name: "Idea::Officer", foreign_key: :idea_officer_id, optional: true
 
@@ -21,6 +23,15 @@ class RegisteredAddress::District < ApplicationRecord
 
   def self.table_name_prefix
     "registered_address_"
+  end
+
+  def name_for_display
+    if RegisteredAddress::City.count > 1
+      city_name = cities.first&.name
+      city_name ? "#{city_name} / #{name}" : name
+    else
+      name
+    end
   end
 
   def district

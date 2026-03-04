@@ -241,7 +241,7 @@ class ProjektPhase < ApplicationRecord
   def geozone_restrictions_formatted
     return geozone_restrictions.map(&:name).flatten.join(", ") if geozone_restrictions.any?
 
-    registered_address_districts.map(&:name).flatten.join(", ")
+    registered_address_districts.sort_by(&:name_for_display).map(&:name_for_display).join(", ")
   end
 
   def street_restrictions_formatted

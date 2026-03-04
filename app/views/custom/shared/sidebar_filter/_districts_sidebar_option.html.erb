@@ -4,7 +4,7 @@
 <li class="<%= "#{show_district} #{selected_label_class}" %>">
   <%= label_tag "district_#{filter_block}_#{district.id}", class: 'label_class' do %>
     <%= radio_button_tag "district_#{filter_block}", district.id, selected_districts.include?(district.id), { class: 'js-filter-geozones' }  %>
-    <%= district.name %>
+    <%= district.name_for_display %>
     <span class="checkmark"></span>
   <% end %>
 </li>

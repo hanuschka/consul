@@ -18,7 +18,7 @@ class PollsController < ApplicationController
     @tag_cloud = tag_cloud
 
     @geozones = Geozone.all
-    @districts = RegisteredAddress::District.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'

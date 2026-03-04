@@ -18,8 +18,9 @@ class PollsController < ApplicationController
     @tag_cloud = tag_cloud
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
@@ -355,7 +356,7 @@ class PollsController < ApplicationController
 
   def set_geo_limitations
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)

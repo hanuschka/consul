@@ -47,9 +47,9 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-    @geozones = Geozone.all.order(:name)
+    @districts = RegisteredAddress::District.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
@@ -164,10 +164,10 @@ class ProjektsController < ApplicationController
       @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
       @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
-      if @affiliated_geozones.present?
-        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
+      if @affiliated_districts.present?
+        @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
       else
-        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
+        @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
       end
     end
   end

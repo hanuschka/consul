@@ -152,6 +152,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :geozone_affiliated,
         landing_page_ids: [],
         geozone_affiliation_ids: [],
+        registered_address_district_affiliation_ids: [],
         individual_group_value_ids: []
       )
     end

@@ -69,6 +69,7 @@ class ProjektPhase < ApplicationRecord
 
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,
            after_add: :touch_updated_at, after_remove: :touch_updated_at
 

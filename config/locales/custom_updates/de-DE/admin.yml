@@ -458,6 +458,8 @@ de:
             information_block_title: Informationen
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
+            geo_affiliation_geozones_label: Gebiete
+            geo_affiliation_districts_label: Stadtteile
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
             landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:

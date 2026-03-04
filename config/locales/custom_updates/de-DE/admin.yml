@@ -613,6 +613,8 @@ de:
             title: Inhaltskarten für %{page_title}
             link: Inhaltskarten
           form:
+            landing_desktop_header_image: Titelbild (Desktop)
+            landing_mobile_header_image: Titelbild (Mobil)
             landing_site_logo_for_transparent_background: Individuelles Logo für diese Landingpage auf transparentem Hintergrund
             landing_site_logo_for_white_background: Individuelles Logo für diese Landingpage auf weißem Hintergrund
         pages:

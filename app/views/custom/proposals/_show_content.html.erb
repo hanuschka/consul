@@ -22,7 +22,13 @@
     <div class="flex-layout">
       <div class="main-column" id="proposal-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: proposals_path) %>
+          <% if proposal.projekt_phase.present? %>
+            <%= link_to page_path(proposal.projekt_phase.projekt.page.slug, projekt_phase_id: proposal.projekt_phase.id), class: "back" do %>
+              <span class="icon-angle-left"></span><%= t("shared.back") %>
+            <% end %>
+          <% else %>
+            <%= resources_back_link(fallback_path: proposals_path) %>
+          <% end %>
         <% end %>
 
         <% if proposal.retired? %>

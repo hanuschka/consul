@@ -2,10 +2,12 @@
 
 <% if show_admin_controls_for_projekt?(@projekt) %>
   <%= content_for :additional_styles do %>
-    <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+    <%# <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %1> %>
+    <%= stylesheet_link_tag "projekt_studio" %>
   <% end %>
   <%= content_for :additional_scripts do %>
-    <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
+    <%# <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %1> %>
+    <%= javascript_include_tag "packs/projekt_studio" %>
   <% end %>
 <% end %>
 

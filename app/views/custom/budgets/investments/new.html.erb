@@ -1,4 +1,4 @@
-<% if projekt_feature?(@proposal.projekt_phase.projekt, "general.vc_map_enabled") %>
+<% if projekt_feature?(@budget.projekt, "general.vc_map_enabled") %>
   <% provide :vc_maps do %>
     <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
   <% end %>
@@ -8,8 +8,4 @@
   <%= render "pages/brand_color_styles", page: @landing_page %>
 <% end %>
 
-<%= render UserResources::FormComponent.new(
-  @proposal,
-  url: proposal_path(@proposal),
-  title: t("proposals.edit.editing")
-) %>
+<%= render Budgets::Investments::NewComponent.new(@budget) %>

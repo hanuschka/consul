@@ -83,7 +83,20 @@
       <% if @page.landing? %>
         <div class="margin-bottom  small-12 column ">
           <div class="margin-bottom">
-            <%= f.file_field :landing_mobile_header_image %>
+            <%= f.label :landing_desktop_header_image, t("custom.admin.site_customization.landing_pages.form.landing_desktop_header_image") %>
+            <%= f.file_field :landing_desktop_header_image, label: false %>
+          </div>
+
+          <% if @page.landing_desktop_header_image.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_desktop_header_image, width: 640 %>
+            </div>
+          <% end %>
+        </div>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.label :landing_mobile_header_image, t("custom.admin.site_customization.landing_pages.form.landing_mobile_header_image") %>
+            <%= f.file_field :landing_mobile_header_image, label: false %>
           </div>
 
           <% if @page.landing_mobile_header_image.attached? %>

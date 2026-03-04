@@ -66,6 +66,8 @@ de:
           resource:
             users_can_create_proposals: Vorschläge einreichen
             users_can_create_proposals_description: Nutzer können Vorschläge erstellen
+            create_proposal_with_ai: Vorschlag mit KI erstellen
+            create_proposal_with_ai_description: Zeigt die Schaltfläche "Vorschlag mit KI erstellen" an
             allow_voting: Unterstützung
             allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
             enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen

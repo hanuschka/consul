@@ -96,6 +96,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :landing_show_projekts_overview,
         :landing_navigation_link_color,
         :landing_site_logo_follow_to_landing_page,
+        :landing_desktop_header_image,
         :landing_mobile_header_image,
         :landing_site_logo_for_transparent_background,
         :landing_site_logo_for_white_background,

@@ -10,6 +10,7 @@ class Poll < ApplicationRecord
 
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
 
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true

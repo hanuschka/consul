@@ -150,6 +150,8 @@ en:
             information_block_title: Information
             duration_block_title: Duration
             geo_affiliation_block_title: Geozones
+            geo_affiliation_geozones_label: Geozones
+            geo_affiliation_districts_label: Districts
             individual_groups_block_title: Visibility restriction to strong groups
           projekt_page_tab:
             name: Project page

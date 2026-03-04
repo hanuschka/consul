@@ -1,0 +1,10 @@
+<% show_district = ( selected_districts.any? && !selected_districts.include?(district.id) ) ? 'hide' : '' %>
+<% selected_label_class = selected_districts.include?(district.id) ? 'label-selected' : '' %>
+
+<li class="<%= "#{show_district} #{selected_label_class}" %>">
+  <%= label_tag "district_#{filter_block}_#{district.id}", class: 'label_class' do %>
+    <%= radio_button_tag "district_#{filter_block}", district.id, selected_districts.include?(district.id), { class: 'js-filter-geozones' }  %>
+    <%= district.name %>
+    <span class="checkmark"></span>
+  <% end %>
+</li>

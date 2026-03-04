@@ -1948,6 +1948,21 @@ ActiveRecord::Schema.define(version: 2026_03_03_213743) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
+  create_table "projekt_event_registrations", force: :cascade do |t|
+    t.bigint "projekt_event_id", null: false
+    t.bigint "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "status", default: "confirmed", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_event_id", "email"], name: "index_projekt_event_registrations_on_event_and_email", unique: true, where: "((user_id IS NULL) AND (email IS NOT NULL))"
+    t.index ["projekt_event_id", "user_id"], name: "index_projekt_event_registrations_on_event_and_user", unique: true, where: "(user_id IS NOT NULL)"
+    t.index ["projekt_event_id"], name: "index_projekt_event_registrations_on_projekt_event_id"
+    t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
+  end
+
   create_table "projekt_events", force: :cascade do |t|
     t.string "title"
     t.string "location"
@@ -1969,6 +1984,9 @@ ActiveRecord::Schema.define(version: 2026_03_03_213743) do
     t.boolean "induction_loop_available", default: false
     t.boolean "assistance_dogs_welcome", default: false
     t.boolean "sign_language_interpreter", default: false
+    t.integer "max_attendees"
+    t.text "confirmation_email_text"
+    t.text "waitlist_email_text"
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 
@@ -2293,6 +2311,12 @@ ActiveRecord::Schema.define(version: 2026_03_03_213743) do
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
+  end
+
+  create_table "projekts_registered_address_districts", id: false, force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.bigint "registered_address_district_id", null: false
+    t.index ["projekt_id", "registered_address_district_id"], name: "idx_projekts_ra_districts_on_projekt_and_district", unique: true
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -3148,6 +3172,8 @@ ActiveRecord::Schema.define(version: 2026_03_03_213743) do
   add_foreign_key "polls", "projekt_phases"
   add_foreign_key "polls", "projekts"
   add_foreign_key "projekt_arguments", "projekt_phases"
+  add_foreign_key "projekt_event_registrations", "projekt_events"
+  add_foreign_key "projekt_event_registrations", "users"
   add_foreign_key "projekt_events", "projekt_phases"
   add_foreign_key "projekt_labelings", "projekt_labels"
   add_foreign_key "projekt_labels", "projekt_phases"

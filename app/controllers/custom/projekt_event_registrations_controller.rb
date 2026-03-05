@@ -1,23 +1,14 @@
 class ProjektEventRegistrationsController < ApplicationController
-  before_action :authenticate_user!, only: [:destroy]
   skip_authorization_check
 
   before_action :set_projekt_event
 
   def create
-    if current_user
-      registration = find_existing_registration(current_user.email) ||
-                     @projekt_event.projekt_event_registrations.new(user: current_user)
-    else
-      email = guest_params[:email]
-      registration = find_existing_registration(email) ||
-                     @projekt_event.projekt_event_registrations.new(guest_params)
-    end
+    registration = @projekt_event.projekt_event_registrations.new(registration_params)
+    registration.user = current_user if current_user
 
-    if registration.persisted?
-      mark_guest_registered(@projekt_event.id)
-    elsif registration.save
-      mark_guest_registered(@projekt_event.id) if registration.guest?
+    if registration.save
+      track_registration(registration)
       Mailer.projekt_event_registration_email(registration).deliver_later
 
       if registration.status == "confirmed"
@@ -26,24 +17,24 @@ class ProjektEventRegistrationsController < ApplicationController
         flash[:notice] = t("custom.projekt_events.registration.waitlisted")
       end
     else
-      flash[:alert] = t("custom.projekt_events.registration.error")
+      flash[:alert] = registration.errors.full_messages.first || t("custom.projekt_events.registration.error")
     end
 
     respond_to do |format|
       format.html { redirect_back(fallback_location: root_path) }
-      format.js do
-        @projekt_event.reload
-        @guest_registered_event_id = registration.persisted? && registration.guest? ? @projekt_event.id : nil
-      end
+      format.js { @projekt_event.reload }
     end
   end
 
   def destroy
-    registration = @projekt_event.registration_for(current_user)
+    registration = @projekt_event.projekt_event_registrations.find(params[:id])
 
-    if registration
+    if owned_registration?(registration)
       registration.destroy
+      untrack_registration(registration)
       flash[:notice] = t("custom.projekt_events.registration.cancelled")
+    else
+      flash[:alert] = t("custom.projekt_events.registration.error")
     end
 
     respond_to do |format|
@@ -58,21 +49,32 @@ class ProjektEventRegistrationsController < ApplicationController
       @projekt_event = ProjektEvent.find(params[:projekt_event_id])
     end
 
-    def guest_params
+    def registration_params
       params.require(:projekt_event_registration).permit(:first_name, :last_name, :email)
     end
 
-    def find_existing_registration(email)
-      return nil if email.blank?
-
-      @projekt_event.projekt_event_registrations.find_by(
-        "LOWER(email) = :email OR user_id IN (SELECT id FROM users WHERE LOWER(email) = :email)",
-        email: email.downcase
-      )
+    def owned_registration?(registration)
+      if current_user
+        registration.user_id == current_user.id
+      else
+        session_registration_ids.include?(registration.id)
+      end
     end
 
-    def mark_guest_registered(event_id)
-      session[:guest_registered_event_ids] ||= []
-      session[:guest_registered_event_ids] << event_id
+    def track_registration(registration)
+      return if current_user
+
+      session[:registered_registration_ids] ||= []
+      session[:registered_registration_ids] << registration.id
+    end
+
+    def untrack_registration(registration)
+      return if current_user
+
+      session[:registered_registration_ids]&.delete(registration.id)
+    end
+
+    def session_registration_ids
+      Array(session[:registered_registration_ids])
     end
 end

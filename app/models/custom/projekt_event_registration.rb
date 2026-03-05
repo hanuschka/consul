@@ -2,10 +2,8 @@ class ProjektEventRegistration < ApplicationRecord
   belongs_to :projekt_event
   belongs_to :user, optional: true
 
-  validates :user_id, uniqueness: { scope: :projekt_event_id }, allow_nil: true
-  validates :first_name, :last_name, :email, presence: true, if: -> { user_id.blank? }
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
-  validates :email, uniqueness: { scope: :projekt_event_id, case_sensitive: false }, if: -> { user_id.blank? && email.present? }
+  validates :first_name, :last_name, :email, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   scope :confirmed, -> { where(status: "confirmed") }
   scope :waitlisted, -> { where(status: "waitlisted") }
@@ -18,7 +16,7 @@ class ProjektEventRegistration < ApplicationRecord
   end
 
   def display_name
-    guest? ? "#{first_name} #{last_name}" : user.name
+    "#{first_name} #{last_name}"
   end
 
   private

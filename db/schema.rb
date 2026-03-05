@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_27_130000) do
+ActiveRecord::Schema.define(version: 2026_03_05_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1994,8 +1994,6 @@ ActiveRecord::Schema.define(version: 2026_02_27_130000) do
     t.string "status", default: "confirmed", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_event_id", "email"], name: "index_projekt_event_registrations_on_event_and_email", unique: true, where: "((user_id IS NULL) AND (email IS NOT NULL))"
-    t.index ["projekt_event_id", "user_id"], name: "index_projekt_event_registrations_on_event_and_user", unique: true, where: "(user_id IS NOT NULL)"
     t.index ["projekt_event_id"], name: "index_projekt_event_registrations_on_projekt_event_id"
     t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
   end
@@ -2343,9 +2341,17 @@ ActiveRecord::Schema.define(version: 2026_02_27_130000) do
     t.string "import_file_status"
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
+    t.bigint "landing_page_id"
+    t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
+  end
+
+  create_table "projekts_registered_address_districts", id: false, force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.bigint "registered_address_district_id", null: false
+    t.index ["projekt_id", "registered_address_district_id"], name: "idx_projekts_ra_districts_on_projekt_and_district", unique: true
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -3241,6 +3247,7 @@ ActiveRecord::Schema.define(version: 2026_02_27_130000) do
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
   add_foreign_key "projekts", "projekts", column: "parent_id"
+  add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"

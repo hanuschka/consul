@@ -113,9 +113,7 @@
                     <tr>
                       <td>
                         <%= registration.display_name %>
-                        <% if registration.guest? %>
-                          <br><small><%= registration.email %></small>
-                        <% end %>
+                        <br><small><%= registration.email %></small>
                       </td>
                       <td><%= registration.status %></td>
                       <td><%= l(registration.created_at, format: :short) %></td>

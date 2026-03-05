@@ -325,7 +325,7 @@ class Mailer < ApplicationMailer
   end
 
   def projekt_event_registration_email(registration)
-    @email_to = registration.user&.email || registration.email
+    @email_to = registration.email
     return if @email_to.blank?
 
     event = registration.projekt_event

@@ -32,7 +32,7 @@ module CsvServices
         [
           registration.user_id,
           sanitize_for_csv(registration.display_name),
-          sanitize_for_csv(registration.user&.email || registration.email),
+          sanitize_for_csv(registration.email),
           registration.status,
           I18n.l(registration.created_at, format: "%d.%m.%Y %H:%M")
         ]

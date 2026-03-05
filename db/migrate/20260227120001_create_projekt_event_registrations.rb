@@ -11,14 +11,9 @@ class CreateProjektEventRegistrations < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :projekt_event_registrations, [:projekt_event_id, :user_id],
-              unique: true,
-              where: "user_id IS NOT NULL",
-              name: "index_projekt_event_registrations_on_event_and_user"
-
     add_index :projekt_event_registrations, [:projekt_event_id, :email],
               unique: true,
-              where: "user_id IS NULL AND email IS NOT NULL",
+              where: "email IS NOT NULL",
               name: "index_projekt_event_registrations_on_event_and_email"
   end
 end

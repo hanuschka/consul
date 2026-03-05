@@ -52,15 +52,9 @@ class ProjektEvent < ApplicationRecord
     registration_enabled? && spots_available <= 0
   end
 
-  def registered?(user)
-    return false unless user
+  def registrations_by(user)
+    return projekt_event_registrations.none unless user
 
-    projekt_event_registrations.exists?(user: user)
-  end
-
-  def registration_for(user)
-    return nil unless user
-
-    projekt_event_registrations.find_by(user: user)
+    projekt_event_registrations.where(user: user)
   end
 end

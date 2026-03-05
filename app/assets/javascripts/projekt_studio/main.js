@@ -9,6 +9,7 @@ window.ProjektStudio = {
 
   initialize() {
     if (this.initialized) return
+    if (!this.isProjektPage()) return
 
     this.loadConfig();
 
@@ -62,7 +63,10 @@ window.ProjektStudio = {
   },
 
   reinitializeUI() {
-    // console.log("reinitialize ProjektStudio")
+    if (!this.isProjektPage()) return
+
+    this.initialized = false;
+    this.initialize();
   },
 
   isProjektPage() {

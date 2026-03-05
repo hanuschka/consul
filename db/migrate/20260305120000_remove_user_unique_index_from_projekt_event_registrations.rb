@@ -1,10 +1,14 @@
 class RemoveUserUniqueIndexFromProjektEventRegistrations < ActiveRecord::Migration[6.1]
   def up
-    remove_index :projekt_event_registrations,
-                 name: "index_projekt_event_registrations_on_event_and_user"
+    if index_exists?(:projekt_event_registrations, name: "index_projekt_event_registrations_on_event_and_user")
+      remove_index :projekt_event_registrations,
+                   name: "index_projekt_event_registrations_on_event_and_user"
+    end
 
-    remove_index :projekt_event_registrations,
-                 name: "index_projekt_event_registrations_on_event_and_email"
+    if index_exists?(:projekt_event_registrations, name: "index_projekt_event_registrations_on_event_and_email")
+      remove_index :projekt_event_registrations,
+                   name: "index_projekt_event_registrations_on_event_and_email"
+    end
   end
 
   def down

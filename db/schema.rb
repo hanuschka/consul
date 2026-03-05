@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_05_120000) do
+ActiveRecord::Schema.define(version: 2026_03_05_120001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2022,6 +2022,7 @@ ActiveRecord::Schema.define(version: 2026_03_05_120000) do
     t.integer "max_attendees"
     t.text "confirmation_email_text"
     t.text "waitlist_email_text"
+    t.text "admin_emails"
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

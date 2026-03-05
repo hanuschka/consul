@@ -51,7 +51,7 @@ module ProjektEventAdminActions
         .permit(
           :projekt_phase_id, :title, :description, :location, :datetime, :end_datetime, :weblink,
           :open_ended, :language, :max_attendees,
-          :confirmation_email_text, :waitlist_email_text,
+          :confirmation_email_text, :waitlist_email_text, :admin_emails,
           :wheelchair_accessible, :accessible_toilet, :disabled_parking_nearby,
           :tactile_guidance_systems, :induction_loop_available,
           :assistance_dogs_welcome, :sign_language_interpreter,

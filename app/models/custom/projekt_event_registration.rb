@@ -4,6 +4,7 @@ class ProjektEventRegistration < ApplicationRecord
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validate :email_uniqueness_per_event, on: :create
 
   scope :confirmed, -> { where(status: "confirmed") }
   scope :waitlisted, -> { where(status: "waitlisted") }
@@ -43,6 +44,20 @@ class ProjektEventRegistration < ApplicationRecord
   end
 
   private
+
+    def email_uniqueness_per_event
+      return if email.blank? || projekt_event.blank?
+      return if projekt_event.admin_emails_include?(email)
+
+      existing = projekt_event.projekt_event_registrations
+                   .where("LOWER(email) = ?", email.downcase)
+                   .where.not(status: "cancelled")
+      existing = existing.where.not(id: id) if persisted?
+
+      if existing.exists?
+        errors.add(:email, :taken)
+      end
+    end
 
     def generate_confirmation_token
       self.confirmation_token = SecureRandom.urlsafe_base64(32)

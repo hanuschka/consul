@@ -15,11 +15,11 @@
 
     <div class="projekt-event-item-new-body--registration">
       <% if user_signed_in? %>
-        <% my_registrations = projekt_event.registrations_by(current_user) %>
+        <% my_registrations = projekt_event.registrations_by(current_user).order(:id) %>
       <% else %>
         <% my_registration_ids = Array(session[:registered_registration_ids]) %>
         <% my_registrations = my_registration_ids.any? ?
-              projekt_event.projekt_event_registrations.where(id: my_registration_ids) :
+              projekt_event.projekt_event_registrations.where(id: my_registration_ids).order(:id) :
               ProjektEventRegistration.none %>
       <% end %>
 

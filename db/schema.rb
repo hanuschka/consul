@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_05_120001) do
+ActiveRecord::Schema.define(version: 2026_03_05_120002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1994,6 +1994,9 @@ ActiveRecord::Schema.define(version: 2026_03_05_120001) do
     t.string "status", default: "confirmed", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.index ["confirmation_token"], name: "index_projekt_event_registrations_on_confirmation_token", unique: true
     t.index ["projekt_event_id"], name: "index_projekt_event_registrations_on_projekt_event_id"
     t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
   end

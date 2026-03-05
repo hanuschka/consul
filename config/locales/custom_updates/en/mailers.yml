@@ -94,6 +94,9 @@ en:
       hi: "Hello,"
       p1: Please use the email address you originally registered with to log in to your account.
       p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.
+    projekt_event_registration_confirmation:
+      body: "Hello %{name}, please confirm your registration for the event \"%{event}\" by clicking the link below."
+      confirm_link: "Confirm registration"
     user_verification_failed:
       subject: Verification attempt failed
       hi: "Hello %{username},"

@@ -324,6 +324,17 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def projekt_event_registration_confirmation_email(registration)
+    @email_to = registration.email
+    return if @email_to.blank?
+
+    @registration = registration
+    @event = registration.projekt_event
+    @confirmation_url = confirm_projekt_event_registration_url(token: registration.confirmation_token)
+
+    mail(to: @email_to, subject: @event.title, template_name: "projekt_event_registration_confirmation")
+  end
+
   def projekt_event_registration_email(registration)
     @email_to = registration.email
     return if @email_to.blank?

@@ -565,6 +565,9 @@ en:
           registrations_waitlisted:
             one: "%{count} waitlisted"
             other: "%{count} waitlisted"
+          registrations_pending:
+            one: "%{count} pending confirmation"
+            other: "%{count} pending confirmation"
           registrations_details: "Show registrations"
           export_csv: "Export CSV"
           registration_user_id: "User ID"

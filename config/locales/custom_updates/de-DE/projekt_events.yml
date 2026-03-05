@@ -32,3 +32,7 @@ de:
         email: "E-Mail"
         status_confirmed: "Angemeldet"
         status_waitlisted: "Warteliste"
+        status_pending_confirmation: "Bestätigung ausstehend"
+        confirmation_email_sent: "Eine Bestätigungs-E-Mail wurde gesendet. Bitte prüfen Sie Ihren Posteingang und klicken Sie auf den Link, um Ihre Anmeldung abzuschließen."
+        already_confirmed: "Diese Anmeldung wurde bereits bestätigt."
+        invalid_token: "Ungültiger oder abgelaufener Bestätigungslink."

@@ -7,7 +7,10 @@ class ProjektEventRegistration < ApplicationRecord
 
   scope :confirmed, -> { where(status: "confirmed") }
   scope :waitlisted, -> { where(status: "waitlisted") }
+  scope :pending_confirmation, -> { where(status: "pending_confirmation") }
+  scope :active, -> { where(status: %w[confirmed waitlisted]) }
 
+  before_create :generate_confirmation_token
   before_create :assign_status
   after_destroy :promote_next_waitlisted
 
@@ -19,9 +22,41 @@ class ProjektEventRegistration < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def pending_confirmation?
+    status == "pending_confirmation"
+  end
+
+  def email_requires_confirmation?(current_user)
+    return false if current_user && email.downcase == current_user.email.downcase
+    return false if projekt_event.admin_emails_include?(email)
+
+    true
+  end
+
+  def confirm_email!
+    return unless pending_confirmation?
+
+    self.confirmed_at = Time.current
+    assign_final_status
+    save!
+    self
+  end
+
   private
 
+    def generate_confirmation_token
+      self.confirmation_token = SecureRandom.urlsafe_base64(32)
+    end
+
     def assign_status
+      if @skip_email_confirmation
+        assign_final_status
+      else
+        self.status = "pending_confirmation"
+      end
+    end
+
+    def assign_final_status
       projekt_event.lock!
 
       if projekt_event.max_attendees.nil? ||
@@ -42,5 +77,11 @@ class ProjektEventRegistration < ApplicationRecord
           Mailer.projekt_event_registration_email(next_registration).deliver_later
         end
       end
+    end
+
+  public
+
+    def skip_email_confirmation!
+      @skip_email_confirmation = true
     end
 end

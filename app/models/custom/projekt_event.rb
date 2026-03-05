@@ -57,4 +57,10 @@ class ProjektEvent < ApplicationRecord
 
     projekt_event_registrations.where(user: user)
   end
+
+  def admin_emails_include?(email)
+    return false if admin_emails.blank?
+
+    admin_emails.split(",").map { |e| e.strip.downcase }.include?(email.downcase)
+  end
 end

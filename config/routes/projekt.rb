@@ -20,6 +20,10 @@ resources :projekt_events, only: [] do
   resources :projekt_event_registrations, only: [:create, :destroy]
 end
 
+get "projekt_event_registrations/confirm/:token",
+    to: "projekt_event_registrations#confirm",
+    as: :confirm_projekt_event_registration
+
 resources :projekt_livestreams, only: [:show] do
   member do
     post :new_questions

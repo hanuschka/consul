@@ -27,15 +27,17 @@
         <div class="projekt-event-registrations-list">
           <% my_registrations.each do |registration| %>
             <div class="projekt-event-registration-entry">
-              <span class="label <%= registration.status == 'confirmed' ? 'success' : 'warning' %>">
+              <span class="label <%= registration.status == 'confirmed' ? 'success' : (registration.status == 'pending_confirmation' ? 'secondary' : 'warning') %>">
                 <%= t("custom.projekt_events.registration.status_#{registration.status}") %>
               </span>
               <span><%= registration.display_name %></span>
-              <%= button_to t("custom.projekt_events.registration.cancel"),
-                    projekt_event_projekt_event_registration_path(projekt_event, registration),
-                    method: :delete,
-                    remote: true,
-                    class: "button small hollow alert" %>
+              <% unless registration.pending_confirmation? %>
+                <%= button_to t("custom.projekt_events.registration.cancel"),
+                      projekt_event_projekt_event_registration_path(projekt_event, registration),
+                      method: :delete,
+                      remote: true,
+                      class: "button small hollow alert" %>
+              <% end %>
             </div>
           <% end %>
         </div>

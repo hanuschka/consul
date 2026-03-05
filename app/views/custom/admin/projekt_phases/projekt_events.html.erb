@@ -83,6 +83,13 @@
                             count: waitlisted_count) %>
                     </span>
                   <% end %>
+                  <% pending_count = event.projekt_event_registrations.pending_confirmation.count %>
+                  <% if pending_count > 0 %>
+                    <span class="label secondary">
+                      <%= t("custom.admin.projekt_phases.projekt_events.registrations_pending",
+                            count: pending_count) %>
+                    </span>
+                  <% end %>
                 </p>
               <% end %>
             </div>

@@ -866,6 +866,9 @@ de:
           registrations_waitlisted:
             one: "%{count} auf Warteliste"
             other: "%{count} auf Warteliste"
+          registrations_pending:
+            one: "%{count} Bestätigung ausstehend"
+            other: "%{count} Bestätigungen ausstehend"
           registrations_details: "Anmeldungen anzeigen"
           export_csv: "CSV exportieren"
           registration_user_id: "Benutzer-ID"

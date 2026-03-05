@@ -1,20 +1,29 @@
 class ProjektEventRegistrationsController < ApplicationController
   skip_authorization_check
 
-  before_action :set_projekt_event
+  before_action :set_projekt_event, except: [:confirm]
 
   def create
     registration = @projekt_event.projekt_event_registrations.new(registration_params)
     registration.user = current_user if current_user
 
-    if registration.save
-      track_registration(registration)
-      Mailer.projekt_event_registration_email(registration).deliver_later
+    unless registration.email_requires_confirmation?(current_user)
+      registration.skip_email_confirmation!
+    end
 
-      if registration.status == "confirmed"
-        flash[:notice] = t("custom.projekt_events.registration.confirmed")
+    if registration.save
+      if registration.pending_confirmation?
+        Mailer.projekt_event_registration_confirmation_email(registration).deliver_later
+        flash[:notice] = t("custom.projekt_events.registration.confirmation_email_sent")
       else
-        flash[:notice] = t("custom.projekt_events.registration.waitlisted")
+        track_registration(registration)
+        Mailer.projekt_event_registration_email(registration).deliver_later
+
+        if registration.status == "confirmed"
+          flash[:notice] = t("custom.projekt_events.registration.confirmed")
+        else
+          flash[:notice] = t("custom.projekt_events.registration.waitlisted")
+        end
       end
     else
       flash[:alert] = registration.errors.full_messages.first || t("custom.projekt_events.registration.error")
@@ -24,6 +33,30 @@ class ProjektEventRegistrationsController < ApplicationController
       format.html { redirect_back(fallback_location: root_path) }
       format.js { @projekt_event.reload }
     end
+  end
+
+  def confirm
+    registration = ProjektEventRegistration.find_by!(confirmation_token: params[:token])
+    @projekt_event = registration.projekt_event
+
+    if registration.pending_confirmation?
+      registration.confirm_email!
+      track_registration(registration)
+      Mailer.projekt_event_registration_email(registration).deliver_later
+
+      if registration.status == "confirmed"
+        flash[:notice] = t("custom.projekt_events.registration.confirmed")
+      else
+        flash[:notice] = t("custom.projekt_events.registration.waitlisted")
+      end
+    else
+      flash[:notice] = t("custom.projekt_events.registration.already_confirmed")
+    end
+
+    redirect_back(fallback_location: root_path)
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = t("custom.projekt_events.registration.invalid_token")
+    redirect_to root_path
   end
 
   def destroy

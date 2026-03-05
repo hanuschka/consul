@@ -16,15 +16,8 @@ class ProjektEventRegistrationsController < ApplicationController
 
       if registration.pending_confirmation?
         Mailer.projekt_event_registration_confirmation_email(registration).deliver_later
-        @registration_notice = t("custom.projekt_events.registration.confirmation_email_sent")
       else
         Mailer.projekt_event_registration_email(registration).deliver_later
-
-        if registration.status == "confirmed"
-          @registration_notice = t("custom.projekt_events.registration.confirmed")
-        else
-          @registration_notice = t("custom.projekt_events.registration.waitlisted")
-        end
       end
     else
       @registration_alert = registration.errors.full_messages.first || t("custom.projekt_events.registration.error")
@@ -32,7 +25,6 @@ class ProjektEventRegistrationsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:notice] = @registration_notice if @registration_notice
         flash[:alert] = @registration_alert if @registration_alert
         redirect_back(fallback_location: root_path)
       end
@@ -70,14 +62,12 @@ class ProjektEventRegistrationsController < ApplicationController
     if owned_registration?(registration)
       registration.destroy
       untrack_registration(registration)
-      @registration_notice = t("custom.projekt_events.registration.cancelled")
     else
       @registration_alert = t("custom.projekt_events.registration.error")
     end
 
     respond_to do |format|
       format.html do
-        flash[:notice] = @registration_notice if @registration_notice
         flash[:alert] = @registration_alert if @registration_alert
         redirect_back(fallback_location: root_path)
       end

@@ -78,6 +78,7 @@
               <span><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></span>
             </div>
           <% end %>
+          <%= render "custom/projekt_event_registrations/registration_section", projekt_event: projekt_event %>
         </div>
       </div>
 

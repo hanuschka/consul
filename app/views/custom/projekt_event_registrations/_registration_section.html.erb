@@ -13,6 +13,13 @@
       </span>
     </div>
 
+    <% if local_assigns[:registration_notice].present? %>
+      <div class="callout success"><%= registration_notice %></div>
+    <% end %>
+    <% if local_assigns[:registration_alert].present? %>
+      <div class="callout alert"><%= registration_alert %></div>
+    <% end %>
+
     <div class="projekt-event-item-new-body--registration">
       <% if user_signed_in? %>
         <% my_registrations = projekt_event.registrations_by(current_user).order(:id) %>

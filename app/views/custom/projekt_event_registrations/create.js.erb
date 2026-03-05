@@ -1,2 +1,2 @@
 $("#projekt-event-registration-<%= @projekt_event.id %>")
-  .replaceWith("<%= j render 'custom/projekt_event_registrations/registration_section', projekt_event: @projekt_event %>");
+  .replaceWith("<%= j render 'custom/projekt_event_registrations/registration_section', projekt_event: @projekt_event, registration_notice: @registration_notice, registration_alert: @registration_alert %>");

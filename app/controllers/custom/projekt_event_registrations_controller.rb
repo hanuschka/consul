@@ -12,25 +12,30 @@ class ProjektEventRegistrationsController < ApplicationController
     end
 
     if registration.save
+      track_registration(registration)
+
       if registration.pending_confirmation?
         Mailer.projekt_event_registration_confirmation_email(registration).deliver_later
-        flash[:notice] = t("custom.projekt_events.registration.confirmation_email_sent")
+        @registration_notice = t("custom.projekt_events.registration.confirmation_email_sent")
       else
-        track_registration(registration)
         Mailer.projekt_event_registration_email(registration).deliver_later
 
         if registration.status == "confirmed"
-          flash[:notice] = t("custom.projekt_events.registration.confirmed")
+          @registration_notice = t("custom.projekt_events.registration.confirmed")
         else
-          flash[:notice] = t("custom.projekt_events.registration.waitlisted")
+          @registration_notice = t("custom.projekt_events.registration.waitlisted")
         end
       end
     else
-      flash[:alert] = registration.errors.full_messages.first || t("custom.projekt_events.registration.error")
+      @registration_alert = registration.errors.full_messages.first || t("custom.projekt_events.registration.error")
     end
 
     respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path) }
+      format.html do
+        flash[:notice] = @registration_notice if @registration_notice
+        flash[:alert] = @registration_alert if @registration_alert
+        redirect_back(fallback_location: root_path)
+      end
       format.js { @projekt_event.reload }
     end
   end
@@ -65,13 +70,17 @@ class ProjektEventRegistrationsController < ApplicationController
     if owned_registration?(registration)
       registration.destroy
       untrack_registration(registration)
-      flash[:notice] = t("custom.projekt_events.registration.cancelled")
+      @registration_notice = t("custom.projekt_events.registration.cancelled")
     else
-      flash[:alert] = t("custom.projekt_events.registration.error")
+      @registration_alert = t("custom.projekt_events.registration.error")
     end
 
     respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path) }
+      format.html do
+        flash[:notice] = @registration_notice if @registration_notice
+        flash[:alert] = @registration_alert if @registration_alert
+        redirect_back(fallback_location: root_path)
+      end
       format.js { @projekt_event.reload }
     end
   end

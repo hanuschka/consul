@@ -12,11 +12,7 @@ class SiteCustomization::Page < ApplicationRecord
 
   has_many :comments, through: :projekt
 
-  has_and_belongs_to_many :landing_projekts,
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'site_customization_page_id',
-    association_foreign_key: 'projekt_id',
-    class_name: "Projekt"
+  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
 
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image

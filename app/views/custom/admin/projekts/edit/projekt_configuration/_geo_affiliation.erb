@@ -16,7 +16,13 @@
     <%= f.radio_button :geozone_affiliated, "only_geozones", label: t("custom.geozones.sidebar_filter.affiliations.only_geozones"), class: "with-related-options" %>
 
     <div class="options-group">
+      <strong><%= t("custom.admin.projekts.edit.projekt_configuration_tab.geo_affiliation_geozones_label") %></strong>
       <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) do |cb| %>
+        <%= cb.label(class: "checkbox-label checkbox-label--inline") { cb.check_box + cb.text } %>
+      <% end %>
+      <br>
+      <strong><%= t("custom.admin.projekts.edit.projekt_configuration_tab.geo_affiliation_districts_label") %></strong>
+      <%= f.collection_check_boxes(:registered_address_district_affiliation_ids, RegisteredAddress::District.all, :id, :name) do |cb| %>
         <%= cb.label(class: "checkbox-label checkbox-label--inline") { cb.check_box + cb.text } %>
       <% end %>
     </div>

@@ -1,7 +1,7 @@
 <% if page.brand_color.present? %>
   <%= content_for :additional_styles do %>
-    <%# <style data-turbolinks-track="reload"> %>
-    <style>
+    <style data-turbolinks-track="reload">
+    <%# <style> %>
       :root {
         --page-brand-color: <%= page.brand_color %>;
         --page-brand-color-lighter: rgb(from var(--page-brand-color) r g b / 0.1);

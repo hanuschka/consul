@@ -201,7 +201,6 @@ User.class_eval do
     self.public_interests = false
     self.email_on_comment = false
     self.email_on_comment_reply = false
-    self.newsletter = false
     self.email_digest = false
     self.email_on_direct_message = false
   end

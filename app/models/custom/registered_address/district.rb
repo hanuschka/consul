@@ -28,9 +28,9 @@ class RegisteredAddress::District < ApplicationRecord
   def name_for_display
     if RegisteredAddress::City.count > 1
       city_name = cities.first&.name
-      city_name ? "#{city_name} / #{name}" : name
+      city_name ? "#{city_name} / #{name}" : name.to_s
     else
-      name
+      name.to_s
     end
   end
 

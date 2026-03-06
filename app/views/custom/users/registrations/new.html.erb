@@ -100,13 +100,29 @@
                              placeholder: t("devise_views.users.registrations.new.password_confirmation_label"),
                              "aria-label": t("devise_views.users.registrations.new.password_confirmation_label") %>
 
+        <div class="newsletter-choice margin-top">
+          <label class="checkbox-label checkbox-label--aligned" for="user_newsletter_true">
+            <%= radio_button_tag "user[newsletter]", "1", params.dig(:user, :newsletter) == "1", id: "user_newsletter_true", style: "height: auto !important;" %>
+            <span class="checkbox"><%= t("custom.devise_views.users.registrations.new.newsletter_yes") %></span>
+          </label>
+
+          <label class="checkbox-label checkbox-label--aligned" for="user_newsletter_false">
+            <%= radio_button_tag "user[newsletter]", "0", params.dig(:user, :newsletter) == "0", id: "user_newsletter_false", style: "height: auto !important;" %>
+            <span class="checkbox"><%= t("custom.devise_views.users.registrations.new.newsletter_no") %></span>
+          </label>
+
+          <% if resource.errors[:newsletter_chosen].any? %>
+            <small class="form-error is-visible"><%= resource.errors[:newsletter_chosen].first %></small>
+          <% end %>
+        </div>
+
         <% if resource.use_redeemable_code %>
           <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
         <% end %>
 
         <%= f.check_box :terms_data_storage,
-          title: t("custom.terms.data_storage.title"),
-          label: "Mit der Registrierung akzeptieren Sie die <a href='/conditions'>Allgemeinen Nutzungsbedingungen</a>. Informationen zur Verarbeitung Ihrer Daten finden Sie in den <a href='/privacy'>Datenschutzhinweisen</a>.",
+          label: false,
+          checked: true, style: "display: none;", onclick: "event.preventDefault();",
           class: "checkbox-label--aligned" %>
 
         <%= f.check_box :terms_data_protection,
@@ -148,6 +164,10 @@
         <div class="small-12 small-centered margin-top">
           <%= f.submit t("custom.devise_views.users.registrations.new.submit"), class: "button expanded -green" %>
         </div>
+
+        <p class="terms-notice" style="text-align: left; font-size: 0.85rem; color: #666;">
+          Mit der Registrierung akzeptieren Sie die <a href="/conditions">Allgemeinen Nutzungsbedingungen</a>. Informationen zur Verarbeitung Ihrer Daten finden Sie in den <a href="/privacy">Datenschutzhinweisen</a>.
+        </p>
       </div>
     </div>
   <% end %>

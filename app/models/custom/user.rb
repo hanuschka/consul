@@ -22,7 +22,8 @@ User.class_eval do
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
-                :form_registered_address_id
+                :form_registered_address_id,
+                :newsletter_chosen
 
   before_validation :strip_whitespace
 
@@ -81,6 +82,7 @@ User.class_eval do
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
+  validates :newsletter_chosen, presence: true, on: :create, if: :registering_from_web
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create

@@ -6,6 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
     resource.registering_from_web = true
+    resource.newsletter_chosen = params[:user][:newsletter].present? if params[:user].present?
     process_temp_attributes_for(resource)
 
     if resource.valid?
@@ -69,6 +70,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :gender, :date_of_birth,
                                    :document_type, :document_last_digits,
                                    :password, :password_confirmation,
+                                   :newsletter,
                                    :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general,
                                    :locale,
                                    :redeemable_code,

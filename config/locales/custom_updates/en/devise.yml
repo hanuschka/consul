@@ -20,6 +20,8 @@ en:
             form_registered_address_label: Address
             form_registered_address_city_label: City/Town
             form_registered_address_street_label: Street
+            newsletter_yes: "Yes, I would like to continue to be informed about the vote. I can revoke this consent at any time."
+            newsletter_no: "No, I do not wish to be informed further about the vote."
             submit: Create a new account
             organization_signup_link: Register as an organization or collective
           sign_in_guest:

@@ -113,6 +113,8 @@ de:
           attributes:
             password:
               low_complexity: "muss mindestens drei der nachfolgenden Kriterien erfüllen: Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen."
+            newsletter_chosen:
+              blank: "muss ausgewählt werden."
         unregistered_newsletter_subscriber:
           attributes:
             email:
@@ -213,6 +215,7 @@ de:
           regular: default
           wms: WMS
       user:
+        newsletter_chosen: Newsletter-Option
         first_name: Vorname
         last_name: Nachname
         city_street_id: Straße

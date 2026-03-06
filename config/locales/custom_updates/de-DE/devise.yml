@@ -20,6 +20,8 @@ de:
             form_registered_address_label: Adresse
             form_registered_address_city_label: Wohnort
             form_registered_address_street_label: Straße
+            newsletter_yes: "Ja, ich möchte über die Abstimmung weiter informiert werden. Diese Einwilligung kann ich jederzeit widerrufen."
+            newsletter_no: "Nein, ich möchte über die Abstimmung nicht weiter informiert werden."
             submit: Registrieren
             organization_signup_link: Als Organisation oder Kollektiv registrieren
           sign_in_guest:

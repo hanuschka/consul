@@ -13,23 +13,13 @@
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    Um Ihre Registrierung abzuschließen, bestätigen Sie bitte Ihre E-Mail-Adresse durch einen Klick auf einen der Links. Anschließend gelangen Sie direkt auf unsere Themenwahlseite. Melden Sie sich dort einfach mit Ihrer E-Mail-Adresse und Ihrem Passwort an - und schon können Sie starten.
+    Um Ihre Registrierung abzuschließen, bestätigen Sie bitte Ihre E-Mail-Adresse durch einen Klick auf den folgenden Link. Sie werden automatisch angemeldet und gelangen direkt auf unsere Themenwahlseite.
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    Wir möchten Sie auch künftig per Newsletter über die Abstimmung informieren. Selbstverständlich können Sie den Newsletter jederzeit abbestellen.
-  </p>
-
-  <p style="<%= css_for_mailer_text %>">
-    <%= link_to "Ich bestätige meine E-Mail-Adresse zur Registrierung und möchte gleichzeitig den Newsletter von ABSTIMMUNG21 erhalten.",
-                confirmation_url(@resource, confirmation_token: @token, newsletter: "true"),
-                style: ("background-color:#ffc857;font-weight:bold;" + css_for_mailer_link) %>
-  </p>
-
-  <p style="<%= css_for_mailer_text %>">
-    <%= link_to "Ich bestätige meine E-Mail-Adresse zur Registrierung und verzichte auf den Newsletter von ABSTIMMUNG21.",
+    <%= link_to "E-Mail-Adresse bestätigen",
                 confirmation_url(@resource, confirmation_token: @token),
-                style: ("background-color:#d1d1d1;" + css_for_mailer_link) %>
+                style: ("background-color:#ffc857;font-weight:bold;" + css_for_mailer_link) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

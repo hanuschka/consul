@@ -1,0 +1,23 @@
+de:
+  adm:
+    projekts:
+      progress_bars:
+        new:
+          title: Fortschrittsbalken erstellen
+        create:
+          success: Fortschrittsbalken wurde erfolgreich erstellt.
+        edit:
+          title: Fortschrittsbalken bearbeiten
+        update:
+          success: Fortschrittsbalken wurde erfolgreich aktualisiert.
+        destroy:
+          success: Fortschrittsbalken wurde erfolgreich gelöscht.
+        form:
+          kind_label: Typ
+          title_label: Titel
+          title_hint: Pflichtfeld für sekundäre Fortschrittsbalken.
+          percentage_label: Aktueller Fortschritt
+          submit: Speichern
+          kinds:
+            primary: Primär
+            secondary: Sekundär

@@ -1,0 +1,11 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <%= new_resource_link(new_adm_navbar_item_path, t('.new_item')) %>
+
+  <div class="navbar-items" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_navbar_items_path %>">
+    <%= render @navbar_items %>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<%= turbo_frame_tag dom_id(map_location, :editor) do %>
+  <div class="mb-5">
+    <div class="kern-title kern-title--small mb-3">
+      <%= t('components.adm.map_setting_component.map_label') %>
+    </div>
+
+    <p class="kern-body mb-3 mb-md-0"><%= t('components.adm.map_setting_component.map_description') %></p>
+
+    <%= form_with model: map_location, url: path, method: :patch do |form| %>
+      <%= render Kern::MapComponent.new(
+        map_location: map_location,
+        form: form,
+        editable: true,
+        admin_editor: true,
+        height: 500
+      ) %>
+
+      <%= form_submit_button %>
+    <% end %>
+
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2">
+        <%= flash[:success] %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

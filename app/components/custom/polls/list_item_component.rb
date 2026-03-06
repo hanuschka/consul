@@ -4,10 +4,9 @@ class Polls::ListItemComponent < ApplicationComponent
   delegate :link_to_poll, to: :helpers
   attr_reader :poll, :projekt_phase
 
-  def initialize(poll:, additional_url_params: nil)
+  def initialize(poll:)
     @poll = poll
     @projekt_phase = poll.projekt_phase
-    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -25,14 +24,7 @@ class Polls::ListItemComponent < ApplicationComponent
   private
 
     def poll_path
-      if @additional_url_params.present? && @additional_url_params[:landing_page].present?
-        helpers.landing_page_poll_path(
-          landing_page_slug: @additional_url_params[:landing_page],
-          id: poll.id
-        )
-      else
-        helpers.poll_path(poll.id)
-      end
+      helpers.poll_path(poll.id)
     end
 
     def button_text

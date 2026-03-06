@@ -1,0 +1,20 @@
+de:
+  adm:
+    projekts:
+      sentiments:
+        new:
+          title: Neues Sentiment erstellen
+        edit:
+          title: Sentiment bearbeiten
+        create:
+          success: Stimmung erfolgreich erstellt.
+        update:
+          success: Stimmung erfolgreich aktualisiert.
+        destroy:
+          success: Stimmung erfolgreich gelöscht.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen des Sentiments ein.
+          color_label: Farbe
+          color_hint: Wählen Sie eine Farbe für das Sentiment aus.
+          submit: Speichern

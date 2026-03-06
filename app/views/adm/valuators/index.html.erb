@@ -1,0 +1,15 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+  <%= new_resource_link(new_adm_valuator_path, t('.new_link')) %>
+
+  <% if @valuators.any? %>
+    <%= render 'adm/role_assignments/roles', roles: @valuators, pagy: @pagy %>
+  <% else %>
+    <div class="callout primary margin">
+      <%= t(".no_valuators") %>
+    </div>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_26_120000) do
+ActiveRecord::Schema.define(version: 2026_03_05_120002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1985,6 +1985,22 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
+  create_table "projekt_event_registrations", force: :cascade do |t|
+    t.bigint "projekt_event_id", null: false
+    t.bigint "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "status", default: "confirmed", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.index ["confirmation_token"], name: "index_projekt_event_registrations_on_confirmation_token", unique: true
+    t.index ["projekt_event_id"], name: "index_projekt_event_registrations_on_projekt_event_id"
+    t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
+  end
+
   create_table "projekt_events", force: :cascade do |t|
     t.string "title"
     t.string "location"
@@ -2006,6 +2022,10 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.boolean "induction_loop_available", default: false
     t.boolean "assistance_dogs_welcome", default: false
     t.boolean "sign_language_interpreter", default: false
+    t.integer "max_attendees"
+    t.text "confirmation_email_text"
+    t.text "waitlist_email_text"
+    t.text "admin_emails"
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 
@@ -2070,6 +2090,7 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all_projekts", default: false, null: false
     t.index ["user_id"], name: "index_projekt_managers_on_user_id"
   end
 
@@ -2324,9 +2345,17 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
     t.string "import_file_status"
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
+    t.bigint "landing_page_id"
+    t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
+  end
+
+  create_table "projekts_registered_address_districts", id: false, force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.bigint "registered_address_district_id", null: false
+    t.index ["projekt_id", "registered_address_district_id"], name: "idx_projekts_ra_districts_on_projekt_and_district", unique: true
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -3197,6 +3226,8 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
   add_foreign_key "polls", "projekt_phases"
   add_foreign_key "polls", "projekts"
   add_foreign_key "projekt_arguments", "projekt_phases"
+  add_foreign_key "projekt_event_registrations", "projekt_events"
+  add_foreign_key "projekt_event_registrations", "users"
   add_foreign_key "projekt_events", "projekt_phases"
   add_foreign_key "projekt_labelings", "projekt_labels"
   add_foreign_key "projekt_labels", "projekt_phases"
@@ -3220,6 +3251,7 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
   add_foreign_key "projekts", "projekts", column: "parent_id"
+  add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
@@ -3240,11 +3272,8 @@ ActiveRecord::Schema.define(version: 2026_02_26_120000) do
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
-<<<<<<< HEAD
-  add_foreign_key "users", "bam_streets"
-=======
   add_foreign_key "user_resource_criteria", "projekt_phases"
->>>>>>> new-connection
+  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "users", "registered_addresses"

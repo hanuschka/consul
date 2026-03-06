@@ -4,11 +4,10 @@ class Proposals::ListItemComponent < ApplicationComponent
   delegate :projekt_phase_feature?, to: :helpers
   attr_reader :proposal
 
-  def initialize(proposal:, voted: nil, additional_url_params: nil)
+  def initialize(proposal:, voted: nil)
     @proposal = proposal
     @sentiment = proposal.sentiment
     @voted = voted
-    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -27,14 +26,7 @@ class Proposals::ListItemComponent < ApplicationComponent
   end
 
   def proposal_path
-    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
-      helpers.landing_page_proposal_path(
-        landing_page_slug: @additional_url_params[:landing_page],
-        id: proposal.id
-      )
-    else
-      helpers.proposal_path(proposal)
-    end
+    helpers.proposal_path(proposal)
   end
 
   def date_formated

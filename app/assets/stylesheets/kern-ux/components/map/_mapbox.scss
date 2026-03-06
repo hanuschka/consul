@@ -1,0 +1,48 @@
+// Mapbox styles
+
+// Horizontal layout for top-left controls (zoom, search, locator)
+.mapboxgl-ctrl-top-left {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+
+  > .mapboxgl-ctrl {
+    margin: 10px 0 0 10px !important;
+  }
+}
+
+.mapboxgl-ctrl-group button {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+// Expand, layers, select mode, and set center control buttons
+.mapboxgl-ctrl-group button.mapbox-expand-control-button,
+.mapboxgl-ctrl-group button.mapbox-layer-control-button,
+.mapboxgl-ctrl-group button.mapbox-switch-to-simple-select-control-button,
+.mapboxgl-ctrl-group button.mapbox-set-center-control-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 35px !important;
+  height: 35px !important;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  .material-symbols-outlined {
+    font-weight: 700;
+    font-size: 20px;
+  }
+}
+
+// Search control styling
+.mapboxgl-ctrl-geocoder {
+  min-width: 200px;
+  max-width: 300px;
+
+  input {
+    font-family: inherit;
+  }
+}

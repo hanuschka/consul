@@ -84,6 +84,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.enable_proposal_notifications_tab": "",
           "feature.resource.enable_proposal_milestones_tab": "",
           "feature.resource.users_can_create_proposals": "active",
+          "feature.resource.create_proposal_with_ai": "",
           "feature.resource.allow_voting": "active",
           "feature.resource.quorum_for_proposals": "",
           "feature.resource.enable_up_and_down_voting": "",

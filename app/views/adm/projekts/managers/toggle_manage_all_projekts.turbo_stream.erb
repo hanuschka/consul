@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@projekt_manager) do %>
+  <%= render "projekt_manager", projekt_manager: @projekt_manager.reload %>
+<% end %>

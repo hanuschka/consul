@@ -1,0 +1,40 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <%= link_to t(".back"), audits_adm_ideas_idea_path(@audit.auditable), class: "kern-link mb-4 inline-block" %>
+
+  <div class="kern-card p-5">
+    <h3 class="text-xl font-bold mb-4"><%= t(".audit_details") %></h3>
+
+    <p class="mb-2">
+      <strong><%= t(".edited_at") %>:</strong>
+      <%= l @audit.created_at.to_date %>
+    </p>
+
+    <p class="mb-4">
+      <strong><%= t(".edited_by") %>:</strong>
+      <%= @audit.user&.name %>
+    </p>
+
+    <h4 class="text-lg font-bold mb-3"><%= t(".changes") %></h4>
+
+    <% @audit.audited_changes.each do |field, (old_value, new_value)| %>
+      <div class="mb-4 p-3 bg-gray-50 rounded">
+        <p class="mb-1">
+          <strong><%= t(".field") %>:</strong>
+          <%= @audit.auditable.class.human_attribute_name(field) %>
+        </p>
+        <p class="mb-1">
+          <strong><%= t(".old_value") %>:</strong>
+          <%= audit_value(@audit.auditable, field, old_value) %>
+        </p>
+        <p>
+          <strong><%= t(".new_value") %>:</strong>
+          <%= audit_value(@audit.auditable, field, new_value) %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

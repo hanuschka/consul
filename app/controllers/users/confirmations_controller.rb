@@ -53,8 +53,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
         update_newsletter_subscription(resource) # cli line
         MarketplaceServices::BrevoContactExportJob.perform_later(resource.id, "create") if resource.is_a?(User)
         set_flash_message(:notice, :confirmed) if is_flashing_format?
-        sign_in(resource_name, resource)
-        respond_with_navigational(resource) { redirect_to "/themenwahl-2026" }
+        respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
       else
         respond_with_navigational(resource.errors, status: :unprocessable_entity) { render :new, status: :unprocessable_entity }
       end

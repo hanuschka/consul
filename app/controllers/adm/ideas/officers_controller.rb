@@ -10,6 +10,7 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
   end
 
   def search
+    authorize Idea::Officer, :create?, policy_class: Adm::Ideas::OfficerPolicy
     @user = User.find_by(email: params[:search])
 
     respond_to do |format|

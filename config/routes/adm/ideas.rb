@@ -4,7 +4,7 @@ namespace :adm do
 
     # Define specific resources first (matched before /:id)
     resources :officers, only: [:index, :create, :destroy] do
-      get :search, on: :collection
+      post :search, on: :collection
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do

@@ -8,7 +8,7 @@
       <table class="kern-table">
         <thead class="kern-table__head">
           <tr class="kern-table__row">
-            <th scope="col" class="kern-table__header"><%= RegisteredAddress::District.human_attribute_name(:name) %></th>
+            <th scope="col" class="kern-table__header"><%= ::RegisteredAddress::District.human_attribute_name(:name) %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.default_officer") %></th>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
           </tr>

@@ -149,9 +149,10 @@ de:
             default_officer: Standard-Sachbearbeiter
         edit:
           title: Bezirk bearbeiten
-          back: Zurück
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
+        update:
+          success: Bezirk wurde erfolgreich aktualisiert.
       idea_audits:
         show:
           title: Änderungsdetails

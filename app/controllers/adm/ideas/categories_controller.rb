@@ -1,5 +1,4 @@
 class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
-  include Translatable
 
   def index
     @categories = policy_scope(Idea::Category, policy_scope_class: Adm::Ideas::CategoryPolicy::Scope)
@@ -9,11 +8,15 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
   def new
     @category = Idea::Category.new
     authorize @category, policy_class: Adm::Ideas::CategoryPolicy
+
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
   def edit
     @category = Idea::Category.find(params[:id])
     authorize @category, policy_class: Adm::Ideas::CategoryPolicy
+
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
   def create
@@ -21,8 +24,9 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
     authorize @category, policy_class: Adm::Ideas::CategoryPolicy
 
     if @category.save
-      redirect_to adm_ideas_categories_path
+      redirect_to adm_ideas_categories_path, notice: t(".success")
     else
+      @breadcrumbs = breadcrumbs_for_action(t("adm.ideas.categories.new.title"))
       render :new
     end
   end
@@ -32,8 +36,9 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
     authorize @category, policy_class: Adm::Ideas::CategoryPolicy
 
     if @category.update(category_params)
-      redirect_to adm_ideas_categories_path
+      redirect_to adm_ideas_categories_path, notice: t(".success")
     else
+      @breadcrumbs = breadcrumbs_for_action(t("adm.ideas.categories.edit.title"))
       render :edit
     end
   end
@@ -44,9 +49,9 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
 
     if @category.safe_to_destroy?
       @category.destroy!
-      redirect_to adm_ideas_categories_path, notice: t("custom.admin.ideas.categories.destroy.destroyed_successfully")
+      redirect_to adm_ideas_categories_path, notice: t(".success")
     else
-      redirect_to adm_ideas_categories_path, alert: t("custom.admin.ideas.categories.destroy.cannot_be_destroyed")
+      redirect_to adm_ideas_categories_path, alert: t(".cannot_destroy")
     end
   end
 
@@ -58,10 +63,14 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
 
   private
 
+    def breadcrumbs_for_action(action_title)
+      [
+        { name: t("adm.ideas.categories.index.title"), url: adm_ideas_categories_path },
+        { name: action_title }
+      ]
+    end
+
     def category_params
-      params.require(:idea_category).permit(
-        :color, :icon, :idea_officer_id,
-        translation_params(Idea::Category)
-      )
+      params.require(:idea_category).permit(:name, :color, :icon, :idea_officer_id)
     end
 end

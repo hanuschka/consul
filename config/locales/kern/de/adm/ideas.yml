@@ -97,15 +97,31 @@ de:
           new_category: Neue Kategorie
           no_categories: Keine Kategorien vorhanden
           table:
-            icon: Symbol
-            color: Farbe
             name: Name
+            color: Farbe
+            icon: Symbol
             officer: Standard-Sachbearbeiter
+            actions: Aktionen
         new:
           title: Neue Kategorie
+        create:
+          success: Kategorie wurde erfolgreich erstellt.
         edit:
           title: Kategorie bearbeiten
-        _form:
+        update:
+          success: Kategorie wurde erfolgreich aktualisiert.
+        destroy:
+          success: Kategorie wurde erfolgreich gelöscht.
+          cannot_destroy: Kategorie kann nicht gelöscht werden, da sie noch Ideen enthält.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen der Kategorie ein.
+          color_label: Farbe
+          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
+          officer_label: Standard-Sachbearbeiter
+          officer_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
       officers:

@@ -7,6 +7,8 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
         .joins(:user)
         .order("users.username ASC")
     )
+
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.officers") }]
   end
 
   def search

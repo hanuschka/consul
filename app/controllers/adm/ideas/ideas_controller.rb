@@ -49,6 +49,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     @idea = Idea.find(params[:id])
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy
 
+    unless turbo_frame_request?
+      redirect_to adm_ideas_idea_path(@idea)
+      return
+    end
+
     @idea.build_image(user: current_user) unless @idea.image
     @idea.create_map_location unless @idea.map_location
 
@@ -64,19 +69,15 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
 
     if @idea.update(idea_params)
       notify_new_officer(@idea)
-
-      if turbo_frame_request?
-        flash.now[:success] = t("adm.attribute.update.success")
-        render turbo_stream: turbo_stream.replace(
-          turbo_frame_request_id,
-          partial: "adm/ideas/ideas/#{frame_partial_path}",
-          locals: { idea: @idea }
-        )
-      else
-        redirect_to edit_adm_ideas_idea_path(@idea), notice: t("adm.attribute.update.success")
-      end
+      redirect_to adm_ideas_idea_path(@idea), notice: t("adm.attribute.update.success")
     else
-      render :edit
+      @idea.build_image(user: current_user) unless @idea.image
+      @idea.create_map_location unless @idea.map_location
+      @breadcrumbs = [
+        { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+        { name: @idea.title }
+      ]
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -115,14 +116,14 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
 
     @idea.image.toggle!(:concealed)
-    redirect_to edit_adm_ideas_idea_path(@idea)
+    redirect_to adm_ideas_idea_path(@idea)
   end
 
   def update_official_answer
     @idea = Idea.find(params[:id])
     authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
 
-    if @idea.update(params.require(:idea).permit(translation_params(Idea)))
+    if @idea.update(params.require(:idea).permit(:official_answer))
       flash.now[:success] = t(".success")
     end
 
@@ -142,13 +143,13 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   private
 
     def idea_params
-      attributes = [:video_url, :on_behalf_of,
+      attributes = [:title, :description, :video_url, :on_behalf_of,
                     :votes_needed_for_success, :timeframe,
                     :idea_category_id, :idea_officer_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
-      params.require(:idea).permit(attributes, translation_params(Idea))
+      params.require(:idea).permit(attributes)
     end
 
     def filter_assigned_ideas_only(scope)

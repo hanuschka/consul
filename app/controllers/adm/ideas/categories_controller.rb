@@ -3,6 +3,8 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
   def index
     @categories = policy_scope(Idea::Category, policy_scope_class: Adm::Ideas::CategoryPolicy::Scope)
                     .order(:given_order)
+
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.categories") }]
   end
 
   def new

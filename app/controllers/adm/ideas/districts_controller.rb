@@ -1,6 +1,8 @@
 class Adm::Ideas::DistrictsController < Adm::Ideas::BaseController
   def index
     @districts = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::Ideas::DistrictPolicy::Scope)
+
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.districts") }]
   end
 
   def edit

@@ -41,6 +41,7 @@ de:
           audits: Änderungslog
         show:
           title: Idee
+          edit: Bearbeiten
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
           admin_accepted_status: Status der Freigabe
@@ -63,14 +64,21 @@ de:
           hidden_at: Ausgeblendet am
           created_at: Erstellt am
           updated_at: Zuletzt aktualisiert
+          title_label: Titel
+          description_label: Beschreibung
+          image_label: Bild
+          documents_label: Dokumente
           category: Kategorie
-          officer: Sachbearbeiter
+          map_label: Karte
+          on_behalf_of_label: Im Auftrag von
           video_url: Video-URL
           address: Adresse
+          officer: Sachbearbeiter
           author: Autor
-          on_behalf_of: im Auftrag von
           official_answer: Offizielle Antwort
           official_answer_hint: Bitte geben Sie die offizielle Antwort für diese Idee ein.
+        update_official_answer:
+          success: Offizielle Antwort wurde erfolgreich aktualisiert.
         administer:
           title: Administrieren
           votes_needed_for_success: Benötigte Stimmen

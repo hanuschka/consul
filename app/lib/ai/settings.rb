@@ -91,12 +91,10 @@ module Ai::Settings
 
     if current_llm_provider == "ollama"
       Setting["ai.llm_custom_model"]
+    elsif current_llm_provider == "openai"
+      "gpt-5.2"
     else
-      if current_llm_provider == "openai" && Setting["ai.llm_model"].blank?
-        "gpt-5.2"
-      else
-        Setting["ai.llm_model"]
-      end
+      Setting["ai.llm_model"]
     end
   end
 

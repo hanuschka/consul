@@ -128,8 +128,6 @@ de:
             intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
             stats_enabled: Statistiken
             stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
-            advanced_stats_enabled: Erweiterte Statistiken
-            advanced_stats_enabled_description: Zeit erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
             report_visible_for_citizens: Report-Tab für Bürger sichtbar
             report_visible_for_citizens_description: Macht den Report-Tab mit der KI-generierten Zusammenfassung der Abstimmungsergebnisse für Bürger sichtbar. Admins und Projektmanager sehen den Tab immer.
             evaluation_enabled: Bewertung für Bürger anzeigen

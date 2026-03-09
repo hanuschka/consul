@@ -84,7 +84,7 @@ class Poll < ApplicationRecord
   end
 
   def advanced_stats_enabled?
-    projekt_phase.feature?("resource.advanced_stats_enabled")
+    true
   end
 
   def report_visible_for_citizens?

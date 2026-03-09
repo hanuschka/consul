@@ -17,6 +17,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas") }]
   end
 
+  def settings
+    authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings") }]
+  end
+
   def show
     @idea = Idea.find(params[:id])
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy

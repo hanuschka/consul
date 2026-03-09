@@ -78,6 +78,8 @@ de:
           officer: Sachbearbeiter
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
+        settings:
+          title: Einstellungen
         audits:
           title: Änderungslog
           audits_title: Änderungen
@@ -123,10 +125,6 @@ de:
             email: E-Mail
         user_not_found:
           user_not_found: Benutzer nicht gefunden
-      settings:
-        index:
-          title: Einstellungen
-          no_settings: Keine Einstellungen vorhanden
       districts:
         index:
           title: Bezirke

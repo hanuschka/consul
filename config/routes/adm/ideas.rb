@@ -11,8 +11,8 @@ namespace :adm do
       post :order_categories, on: :collection
     end
 
-    resources :settings, only: :index
     resources :districts, only: [:index, :edit, :update]
+    get :settings, to: "ideas#settings", as: :settings
 
     # Ideas resource with path: "" (matched after specific resources)
     resources :ideas, only: [:show, :edit, :update, :destroy], path: "" do

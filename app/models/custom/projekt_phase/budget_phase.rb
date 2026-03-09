@@ -116,7 +116,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     %w[
       budget_phases
       naming restrictions
-      budget_edit budget_investments
+      budget_edit budget_investments user_resource_criteria
       general_settings form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
@@ -126,7 +126,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[ officing_managers])
+    admin_nav_bar_items.excluding(%w[officing_managers])
   end
 
   def safe_to_destroy?
@@ -156,7 +156,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      return :organization if user.organization?
+      :organization if user.organization?
     end
 
     def create_budget
@@ -173,7 +173,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       )
 
       group = Budget::Group.create!(
-        budget: budget,
+        budget:,
         name: "default_group",
         slug: "default_group"
       )
@@ -181,7 +181,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       Budget::Heading.create!(
         name: "default_heading",
         slug: "default_heading",
-        group: group,
+        group:,
         population: 1000,
         price: 1000
       )

@@ -9,6 +9,7 @@
 
 <%= csrf_meta_tags %>
 <%= favicon_link_tag "favicon.ico" %>
+<script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
 <%= stylesheet_link_tag "application" %>
@@ -34,26 +35,26 @@
 
 <meta name="external-links" content="<%= Setting["extended_feature.gdpr.link_out_warning"].present? %>" />
 <meta name="two-click-iframes" content="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? %>" />
-<meta name="expand-active-projekts" content=<%= Setting["projekts.second_level_projekts_in_active_filter"] %> />
-<meta name="expand-archived-projekts" content=<%= Setting["projekts.second_level_projekts_in_archived_filter"] %> />
-
 <meta name="turbolinks-cache-control" content="no-cache">
 
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
-<!--
-<script type="module" src="/upload-files.js"></script>
--->
 
-<% unless embedded? %>
-  <% unless Rails.env.development? %>
-    <% if Rails.application.secrets.matomo_site_id.present? %>
-      <%= render "layouts/matomo" %>
-    <% end %>
-  <% end %>
-
-  <%= javascript_include_tag "klaro/config.js", defer: true %>
-  <%= javascript_include_tag "klaro/klaro.js", defer: true %>
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
 <% end %>
+
+<% unless Rails.env.development? %>
+  <% if Rails.application.secrets.matomo_site_id.present? %>
+    <%= render "layouts/matomo" %>
+  <% end %>
+<% end %>
+
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
+<% end %>
+
+<%= javascript_include_tag "klaro/config.js", defer: true %>
+<%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
 <% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
   <script>

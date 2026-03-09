@@ -296,6 +296,8 @@ de:
           only_citizens: Nur Bürger:innen
           only_geozones: Nur Bürger:innen des Stadtteils
     proposals:
+      vote_share:
+        share_button: Teilen
       form:
         tags_custom: Nutzer-Tags
         tags_placeholder: Trennen Sie die Tags mit einem Komma (',')

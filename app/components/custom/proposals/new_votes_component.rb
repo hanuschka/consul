@@ -5,11 +5,12 @@ class Proposals::NewVotesComponent < ApplicationComponent
   attr_reader :proposal, :vote_url
   delegate :current_user, :link_to_verify_account, to: :helpers
 
-  def initialize(proposal, voted: nil, vote_url: nil)
+  def initialize(proposal, voted: nil, vote_url: nil, show_share_popup: false)
     @proposal = proposal
     @proposal_phase = @proposal.projekt_phase
     @vote_url = vote_url
     @voted = voted
+    @show_share_popup = show_share_popup
   end
 
   def vote_url

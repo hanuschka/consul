@@ -93,13 +93,14 @@ ProjektStudio.ContentBlock.Crud = {
 
     $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
     $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
-    $(".js-delete-all-content-blocks").toggle(hasNoContentBlocks)
+    $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       $(newContentBlockContainer).find('.projekt-content-block').foundation()
+      $(newContentBlockContainer).find('[data-tooltip]').foundation()
       App.ImageGallery.initialize()
     }, 0)
 
@@ -204,6 +205,12 @@ ProjektStudio.ContentBlock.Crud = {
     const nextContentBlockSection = contentBlockWrapper.nextElementSibling
     const prevContentBlockSection = contentBlockWrapper.previousElementSibling
     const scrollTo = nextContentBlockSection || prevContentBlockSection
+
+    // Clean up tooltips on content block destroy
+    contentBlockWrapper.querySelectorAll("[data-tooltip]").forEach((element) => {
+      const instance = $(element).data("zf.tooltip");
+      if (instance) instance.destroy();
+    })
 
     contentBlockWrapper.remove()
 

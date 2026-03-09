@@ -33,6 +33,7 @@ en:
         success: All content blocks deleted
     projekt:
       content_block_templates_selector:
+        fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
         tabs:
           internal_content_blocks: Internal content blocks
           own_content_blocks: Own content blocks
@@ -48,6 +49,9 @@ en:
           html_code_hint: Add HTML code here
           save: Save
           cancel: Cancel
+    proposals:
+      vote_share:
+        share_button: Share
     projekts:
       new:
         first_level: 'First level'

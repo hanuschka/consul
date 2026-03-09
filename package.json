@@ -2,11 +2,18 @@
   "name": "consuldemocracy",
   "dependencies": {
     "@geoman-io/leaflet-geoman-free": "^2.15.0",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.18",
+    "@kern-ux/native": "^2.3.1",
+    "@rails/activestorage": "^8.1.100",
+    "@simonwep/pickr": "^1.9.1",
+    "Leaflet.Deflate": "^2.1.0",
     "ace-builds": "^1.43.3",
     "chart.js": "^4.5.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
+    "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
@@ -14,16 +21,21 @@
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^3.11.0",
     "leaflet-gesture-handling": "^1.2.2",
-    "Leaflet.Deflate": "^2.1.0",
     "leaflet.locatecontrol": "^0.79.0",
     "leaflet.markercluster": "^1.5.3",
     "mapbox-gl": "^3.12.0",
+    "material-symbols": "^0.37.0",
     "redoc": "^3.0.0-rc.0",
+    "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
-    "sortablejs": "^1.15.6"
+    "sortablejs": "^1.15.6",
+    "esbuild": "^0.25.10"
   },
-  "devDependencies": {
+  "scripts": {
+    "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css": "npm run build:css:adm --",
+    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed",
     "@redocly/cli": "^2.9.0"
   }
 }

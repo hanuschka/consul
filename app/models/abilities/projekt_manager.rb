@@ -147,10 +147,10 @@ module Abilities
       end
 
       # Comment as moderator
-      can :comment_as_moderator, [ProjektPhase, Debate, Proposal, Budget::Investment, Poll, ProjektQuestion] do |resource|
+      can :comment_as_moderator,
+[ProjektPhase, Debate, Proposal, Budget::Investment, Poll, ProjektQuestion] do |resource|
         user.projekt_manager.allowed_to?("moderate", resource.projekt)
       end
-
 
       can [:read, :create, :update, :destroy], Budget do |budget|
         user.projekt_manager.allowed_to?("manage", budget&.projekt)
@@ -165,7 +165,8 @@ module Abilities
       end
       can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
 
-      can [:admin_update, :toggle_selection, :add_memo, :people, :milestones, :progress_bars, :audits], Budget::Investment do |investment|
+      can [:admin_update, :toggle_selection, :add_memo, :people, :milestones, :progress_bars, :audits],
+Budget::Investment do |investment|
         can?(:create, investment.budget)
       end
 
@@ -205,7 +206,8 @@ module Abilities
       can :destroy, RelatedContent do |related_content|
         return false unless related_content.parent_relationable.respond_to?(:projekt_phase) && related_content.child_relationable.respond_to?(:projekt_phase)
 
-        user.projekt_manager.allowed_to?("manage", related_content.parent_relationable.projekt_phase.projekt) ||
+        user.projekt_manager.allowed_to?("manage",
+related_content.parent_relationable.projekt_phase.projekt) ||
           user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase.projekt)
       end
 
@@ -214,6 +216,8 @@ module Abilities
       end
 
       can :send_notification, Memo, user_id: user.id
+
+      can :index, :projekt_content_block_templates
     end
   end
 end

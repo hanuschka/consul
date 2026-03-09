@@ -1,0 +1,15 @@
+<%= content_for :title, t("adm.projekts.overview_page.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.overview_page.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: overview_page_tabs) %>
+
+<div class="kern-container">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_all"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_underway"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_ongoing"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_upcoming"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_expired"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_individual_list"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.projekts_overview_page_navigation.show_index_order_drafts"), :value, :boolean) %>
+</div>

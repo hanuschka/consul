@@ -40,6 +40,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
+      get    :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#index"
+      post   :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#create",
+as: :create_user_resource_criterion
+      patch  "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
+as: :update_user_resource_criterion
+      delete "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
+as: :destroy_user_resource_criterion
+      patch  :reorder_user_resource_criteria,        to: "projekt_phases/user_resource_criteria#reorder"
     end
 
     resources :formular, only: [] do
@@ -131,6 +139,7 @@ namespace :admin do
     member do
       post :send_notifications
     end
+    resources :projekt_event_registrations, only: [:index, :destroy]
   end
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
@@ -496,9 +505,12 @@ namespace :admin do
     end
     resources :images, only: [:index, :update, :destroy]
     resources :content_blocks, except: [:show]
-    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",as: "delete_heading_content_block"
-    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block", as: "edit_heading_content_block"
-    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block", as: "update_heading_content_block"
+    delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",
+as: "delete_heading_content_block"
+    get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block",
+as: "edit_heading_content_block"
+    put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block",
+as: "update_heading_content_block"
     resources :information_texts, only: [:index] do
       post :update, on: :collection
     end

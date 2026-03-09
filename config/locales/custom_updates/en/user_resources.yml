@@ -14,4 +14,5 @@ en:
         title_default: Add an image
         bottom_line_default: "An image with a format of 490 x 290 pixels would be best"
         max_image_size: Maximum image size is %{size} MB.
+        supported_formats: "File format: %{formats}"
         credits_field_placeholder: Click here to add image credits

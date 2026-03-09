@@ -1,5 +1,6 @@
 class Ai::GenerateContentBlock < ApplicationService
-  def initialize(instructions, content_block_html, title = nil, subtitle = nil, projekt: nil, use_full_projekt_context: false, allow_text_modification: false)
+  def initialize(instructions, content_block_html, title = nil, subtitle = nil, projekt: nil,
+use_full_projekt_context: false, allow_text_modification: false)
     @instructions = instructions
     @content_block_html = content_block_html
     @title = title
@@ -58,22 +59,22 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_prompt
-    cache_key = "dt_api/consul_ai_prompts/content_block_ai_edit"
-
-    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-      DtApi::Client.new.consul_ai_prompts.get(:content_block_ai_edit)
-    end
+    parsed_response =
+      DtApi::Client.new(use_cache: true)
+        .consul_ai_prompts
+        .get(:content_block_ai_edit)
+        .parsed_response
 
     parsed_response.dig("consul_ai_prompt", "prompt")
   end
 
   def output_schema
     {
-      type: 'object',
+      type: "object",
       properties: {
-        html: { type: 'string' },
+        html: { type: "string" }
       },
-      required: ['html'],
+      required: ["html"],
       additionalProperties: false
     }
   end

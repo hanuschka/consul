@@ -1,0 +1,11 @@
+<tr class="kern-table__row" id="<%= dom_id(moderator) %>">
+  <th scope="row" class="kern-table__header"><%= moderator.id %></th>
+  <td class="kern-table__cell"><%= moderator.name %></td>
+  <td class="kern-table__cell"><%= moderator.email %></td>
+  <td class="kern-table__cell">
+    <%= link_to t('shared.delete'),
+                adm_moderator_path(moderator),
+                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                class: "kern-link" %>
+  </td>
+</tr>

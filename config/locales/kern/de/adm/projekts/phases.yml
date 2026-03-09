@@ -1,0 +1,375 @@
+de:
+  adm:
+    projekts:
+      phases:
+        index:
+          intro_title: Hinweis zu den Beteiligungsphasen
+          intro_text_p1: "In der nachfolgenden Tabelle verwalten Sie die einzelnen Beteiligungsphasen eines Projekts. Jede Phase ist einem eigenen Tab in der Fußzeile des Projekts zugeordnet und kann individuell ein- oder ausgeblendet werden. Drei zentrale Schieberegler helfen dabei, das Verhalten und die Sichtbarkeit der Phasen zu steuern:"
+          intro_text_standard_title: Standard
+          intro_text_standard_description: Es kann immer nur eine Phase als Standard markiert sein. Diese Phase wird für neu ankommende Nutzer automatisch geöffnet und beim Aufruf der Projektseite im Vordergrund angezeigt.
+          intro_text_active_title: Aktiviert
+          intro_text_active_description: Wenn dieser Regler aktiviert ist, ist die jeweilige Beteiligungsphase technisch aktiv und im Frontend für Nutzer direkt aufrufbar.
+          intro_text_visible_title: Sichtbarkeit im Projekt
+          intro_text_visible_description: Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.
+          intro_text_p2: Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.
+          title: Beteiligungsphasen
+          new_phase: Neue Phase erstellen
+          table:
+            phase_tab_name: Beteiligungsphasen
+            start_date: Start
+            end_date: Ende
+            restriction: Beschränkung
+            default: Standard
+            active: Aktiv
+            visible: Sichtbar
+            actions: Aktionen
+        new:
+          title: Neue Beteiligungsphase erstellen
+          intro_title: Beteiligungsmodul auswählen
+          intro_text: Wählen Sie ein Beteiligungsmodul aus, um eine neue Phase für dieses Projekt zu erstellen. Jedes Modul bietet unterschiedliche Funktionen für die Bürgerbeteiligung.
+          phase_type_label: Beteiligungsmodul
+          phase_type_hint: Wählen Sie das gewünschte Modul für die neue Beteiligungsphase aus.
+          select_phase_type: Bitte wählen...
+          create_phase: Phase erstellen
+        create:
+          success: Die Beteiligungsphase wurde erfolgreich erstellt.
+        update:
+          success: Die Beteiligungsphase wurde erfolgreich aktualisiert.
+        duration:
+          title: Laufzeit
+          dates_label: Laufzeit der Phase
+          dates_description: Wann soll die Phase beginnen und enden?
+        naming:
+          title: Benennung
+        restrictions:
+          title: Beteiligungsbeschränkung
+          intro_title: Hinweis zur Beteiligungsbeschränkung
+          intro_text: |
+            <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
+            <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
+          user_status_label: Teilnahme nach Nutzerstatus
+          user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+          geozone_label: Gebietsbeschränkung der Teilnahme
+          geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+          age_label: Altersbeschränkung der Teilnahme
+          age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden."
+          individual_groups_label: Beschränkung auf starke Gruppen
+          individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+          extended_geozone_label: Erweiterte Gebietsbeschränkung
+          extended_geozone_hint: Erweiterte Gebietsbeschränkung nach registrierten Adressgruppen.
+          user_status:
+            guest: Gäste (keine Registrierung erforderlich)
+            registered: Registrierte Nutzer
+            verified: Verifizierte Nutzer
+          geozone:
+            no_restriction: Keine Einschränkung
+            only_citizens: Nur Bürger
+            only_geozones: Nur bestimmte Bezirke
+            only_streets: Nur bestimmte Straßen
+            search_street: Straße suchen...
+          extended_geozone:
+            no_restriction: Keine Einschränkung
+          age:
+            no_restriction: Keine Einschränkung
+        general_settings:
+          title: Funktionen
+        form_author:
+          title: Formular Autor
+        user_functions:
+          title: Nutzerfunktionen
+        proposals:
+          title: Vorschläge
+          no_proposals: Keine Vorschläge vorhanden.
+          table:
+            id: ID
+            admin_accepted: Freigegeben
+            title: Titel
+            author: Autor
+            actions: Aktionen
+            view: Anzeigen
+        projekt_labels:
+          title: Labels
+          create_button: Neues Label erstellen
+          no_labels: Keine Labels vorhanden.
+          table:
+            icon: Icon
+            name: Name
+            actions: Aktionen
+        sentiments:
+          title: Sentimente
+          create_button: Neues Sentiment erstellen
+          no_sentiments: Keine Sentimente vorhanden.
+          table:
+            color: Farbe
+            name: Name
+            actions: Aktionen
+        map:
+          title: Karte
+        officing_managers:
+          title: Abstimmungshelfer
+          lock_on: Sperrdatum
+          lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
+          select_managers: Abstimmungshelfer zuordnen
+          select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+        poll_questions:
+          title: Fragen
+          create_question: Normale Frage erstellen
+          create_bundle_question: Fragenbündel erstellen
+          no_questions: Dieser Abstimmung sind keine Fragen zugeordnet.
+          table:
+            title: Titel
+            type: Typ
+            contextualized_by: "Kontextualisiert durch:"
+            bundle_question: Fragenbündel
+            edit_answers: Antwortliste
+            edit_questions: Fragenliste
+            actions: Aktionen
+        officing_manager_audits:
+          title: Änderungslog Abstimmungshelfer
+          no_audits: Keine Einträge vorhanden.
+          table:
+            id: ID
+            changes: Änderungen
+            created_at: Aufgenommen am
+        projekt_point_of_interest_categories:
+          title: Kategorien
+          create_button: Neue Kategorie erstellen
+          no_categories: Keine Kategorien vorhanden.
+          table:
+            name: Name
+            icon: Icon
+            color: Farbe
+            actions: Aktionen
+        projekt_point_of_interest_pins:
+          title: Pins
+          no_pins: Keine Pins vorhanden.
+          table:
+            id: ID
+            address: Adresse
+            author: Autor
+            category: Kategorie
+            created_at: Erstellt am
+        map_resources_overview:
+          title: Kartenübersicht
+          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+        projekt_questions:
+          title: Kurzumfragen
+          create_button: Frage erstellen
+          send_notifications_button: Benachrichtigungen senden
+          send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+          no_questions: Keine Kurzumfragen vorhanden.
+          table:
+            title: Titel
+            question_options: Antworten
+            comments_count: Kommentare
+            actions: Aktionen
+        projekt_events:
+          title: Veranstaltungen
+          create_button: Neue Veranstaltung erstellen
+          no_events: Keine Veranstaltungen vorhanden.
+          table:
+            title: Titel
+            location: Veranstaltungsort
+            datetime: Datum
+            actions: Aktionen
+            open_ended: Offenes Ende
+            send_notifications: Benachrichtigungen senden
+            send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+        milestones:
+          title: Meilensteine
+          create_button: Meilenstein hinzufügen
+          no_milestones: Keine Meilensteine vorhanden.
+          table:
+            description: Beschreibung
+            publication_date: Veröffentlichung
+            status: Status
+            image: Bild
+            show_image: Bild anzeigen
+            actions: Aktionen
+        progress_bars:
+          title: Fortschrittsbalken
+          create_button: Neuen Fortschrittsbalken erstellen
+          no_progress_bars: Keine Fortschrittsbalken vorhanden.
+          table:
+            title: Titel
+            kind: Typ
+            percentage: Fortschritt
+            actions: Aktionen
+            primary: Primär
+            secondary: Sekundär
+        projekt_arguments:
+          title: Stimmen
+          create_button: Stimme erstellen
+          send_notifications_button: Benachrichtigungen senden
+          send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+          pro: Pro
+          contra: Contra
+          no_arguments: Keine Stimmen vorhanden.
+          table:
+            name: Name
+            party: Partei
+            position: Position
+            image: Bild
+            show_image: Bild anzeigen
+            actions: Aktionen
+        projekt_livestreams:
+          title: Livestreams
+          create_button: Neuen Livestream hinzufügen
+          no_livestreams: Keine Livestreams vorhanden.
+          table:
+            title: Titel
+            url: URL
+            platform: Plattform
+            starts_at: Startzeit
+            actions: Aktionen
+            show: Anzeigen
+            send_notifications: Benachrichtigungen senden
+            send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
+        projekt_notifications:
+          title: Benachrichtigungen
+          create_button: Neue Benachrichtigung erstellen
+          no_notifications: Keine Benachrichtigungen vorhanden.
+          table:
+            title: Titel
+            body: Nachricht
+            created_at: Erstellt am
+            actions: Aktionen
+        user_resource_criteria:
+          title: Bewertungskriterien
+        ai_settings:
+          title: KI Anweisung
+          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+        legislation_process_draft_versions:
+          title: Textentwürfe
+          create_button: Neuen Textentwurf erstellen
+          no_draft_versions: Keine Textentwürfe vorhanden.
+          table:
+            title: Titel
+            created_at: Erstellt am
+            status: Status
+            comments: Kommentare
+            final_version: Endversion
+            actions: Aktionen
+        formular:
+          title: Formularfelder
+          create_button: Neues Feld erstellen
+          primary_fields_title: Primäre Felder
+          follow_up_fields_title: Follow-up Felder
+          no_fields: Keine primären Felder vorhanden.
+          no_follow_up_fields: Keine Follow-up Felder vorhanden.
+          table:
+            name: Name
+            kind: Typ
+            required: Pflichtfeld
+            actions: Aktionen
+          kinds:
+            string: Textfeld
+            textarea: Textbereich
+            email: E-Mail
+            date: Datum
+            dropdown: Dropdown
+            image: Bild
+            document: Dokument
+            description: Beschreibung
+        formular_answers:
+          title: Einsendungen
+          emails_title: Follow-up E-Mails
+          new_email_title: Einsendungen & neue E-Mail erstellen
+          download_csv: CSV herunterladen
+          create_email_draft: E-Mail-Entwurf erstellen
+          no_answers: Keine Einsendungen vorhanden.
+          table:
+            submitter: Einsender-ID
+            email: E-Mail
+            submitted_at: Eingereicht am
+          letters_table:
+            subject: Betreff
+            recipients: Empfänger
+            status: Status
+            actions: Aktionen
+            no_subject: "(Kein Betreff)"
+            draft: Entwurf
+            sent_at: "Gesendet am %{date}"
+            follow_up_emails: Follow-up E-Mail(s)
+            send_emails: E-Mails versenden
+            send_confirm: Möchten Sie die E-Mails wirklich versenden?
+            delete_confirm: Möchten Sie diesen Entwurf wirklich löschen?
+        budget_phases:
+          title: Phasen
+          table:
+            name: Phase
+            starts_at: Start
+            ends_at: Ende
+            enabled: Aktiviert
+            current: Aktuelle Phase
+            actions: Aktionen
+        budget_edit:
+          title: Editieren
+          administrators: Administratoren
+          administrators_hint: Wählen Sie die Administratoren aus, die für dieses Budget zuständig sind.
+          valuators: Gutachter
+          valuators_hint: Wählen Sie die Gutachter aus, die für dieses Budget zuständig sind.
+        budget_investments:
+          title: Vorschläge
+          calculate_winners: Gewinner ermitteln
+          calculate_winners_confirm: Bestbewertete Vorschläge werden im Hintergrund ermittelt. Fortfahren?
+          recalculate_winners: Gewinner neu ermitteln
+          recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
+          download_csv: CSV herunterladen
+          no_investments: Keine Investitionsvorschläge vorhanden.
+          table:
+            id: ID
+            created_at: Eingereicht
+            title: Titel
+            feasibility: Kriterien
+            valuation_finished: Bewertung beendet
+            total_votes: Unterstützung
+            preselected: Vorausgewählt
+            selected: Ausgewählt
+            price: Preis
+            balloters: Anzahl Wähler
+            total_ballot_votes: Anzahl Stimmen
+            district: Bezirk
+            winner: Gewinner
+            admin: Administrator
+            author: Autor
+            valuator: Gutachter
+            pdf_link: PDF
+            actions: Aktionen
+        age_ranges_for_stats:
+          title: Altersgruppen für Statistiken
+          hint: Wählen Sie die Altersgruppen aus, die für die statistische Auswertung der Beteiligung an dieser Phase berücksichtigt werden sollen.
+        projekt_phase:
+          duration: Laufzeit
+          naming: Benennung
+          restrictions: Beteiligungsbeschränkung
+          general_settings: Funktionen
+          form_author: Formular Autor
+          user_functions: Nutzerfunktionen
+          proposals: Vorschläge
+          budget_phases: Phasen
+          budget_edit: Editieren
+          budget_investments: Vorschläge
+          age_ranges_for_stats: Alterskohorten
+          projekt_labels: Labels
+          sentiments: Sentimente
+          map: Karte
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Änderungslog
+          poll_questions: Fragen
+          projekt_questions: Kurzumfragen
+          ai_settings: KI Anweisung
+          projekt_point_of_interest_categories: Kategorien
+          projekt_point_of_interest_pins: Pins
+          map_resources_overview: Kartenübersicht
+          legislation_process_draft_versions: Textentwürfe
+          formular: Formularfelder
+          formular_answers: Einsendungen
+          projekt_arguments: Stimmen
+          projekt_notifications: Benachrichtigungen
+          projekt_livestreams: Livestreams
+          projekt_events: Veranstaltungen
+          milestones: Meilensteine
+          progress_bars: Fortschrittsbalken
+          settings: Einstellungen
+          user_resource_criteria: Bewertungskriterien

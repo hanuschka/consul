@@ -6,6 +6,6 @@ class DtApi::Resources::ContentBlockTemplates
   end
 
   def all
-    @client.get_with_auth(BASE_PATH)
+    @client.get(BASE_PATH)
   end
 end

@@ -257,7 +257,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
         <div class="projekt-content-block--toolbar-border js-projekt-content-block--toolbar-anchor js-projekt-studio-hide-on-preview"></div>
 
-        <div class="projekt-content-block js-projekt-content-block">
+        <div class="projekt-content-block js-projekt-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
         </div>
 

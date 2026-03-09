@@ -8,6 +8,12 @@
     padding: 0;
     z-index: 1000;
     margin-bottom: 0;
+    max-width: auto;
+    height: 90px;
+
+    @media(max-width: $small-tablet-viewport-start) {
+      height: $topbar-height-mobile;
+    }
 
     @media(max-width: $mobile-viewport-start) {
       z-index: 1002;
@@ -589,6 +595,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     header, .wrapper > header {
+      height: 70px !important;
       max-width: auto;
     }
 

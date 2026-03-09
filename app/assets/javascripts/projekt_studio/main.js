@@ -93,9 +93,13 @@ else {
   })
 }
 
-// Add event listener to reinit ProjektStudio UI on turbolinks page load
+// Reinit ProjektStudio UI on turbolinks navigation (not initial page load)
 // Use capture option to ensure this event will fire before any other
 // "turbolinks:load" events
 document.addEventListener("turbolinks:load", () => {
-  ProjektStudio.reinitializeUI()
+  if (ProjektStudio.initialLoadComplete) {
+    ProjektStudio.reinitializeUI()
+  }
+
+  ProjektStudio.initialLoadComplete = true
 }, { capture: true })

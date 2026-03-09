@@ -31,6 +31,18 @@
 
   <div class="row">
     <div class='column small-12 medium-6'>
+      <%= f.number_field :max_attendees, min: 1, placeholder: t("custom.admin.projekt_events.edit.max_attendees_placeholder") %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='column small-12 medium-6'>
+      <%= f.text_field :admin_emails %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='column small-12 medium-6'>
       <%= f.text_field :language %>
     </div>
   </div>
@@ -69,6 +81,26 @@
         rows: 10,
         id: "projekt-event-description-#{event.id}",
         class: "html-area #{ck_editor_class(current_user)}" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
+      <%= f.text_area :confirmation_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(event.confirmation_email_text),
+        rows: 6,
+        id: "projekt-event-confirmation-email-#{event.id}",
+        class: "html-area regular" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
+      <%= f.text_area :waitlist_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(event.waitlist_email_text),
+        rows: 6,
+        id: "projekt-event-waitlist-email-#{event.id}",
+        class: "html-area regular" %>
     </div>
   </div>
 

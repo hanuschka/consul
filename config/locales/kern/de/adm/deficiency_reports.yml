@@ -5,7 +5,7 @@ de:
         aria_label: Mängelmelder Navigation
         items:
           deficiency_reports: Mängelmelder
-          officers: Sachbearbeiter
+          officers: Sachbearbeiter*inen
           categories: Kategorien
           statuses: Status
           settings: Einstellungen
@@ -79,7 +79,7 @@ de:
           status: Status
           responsible: Sachbearbeiter*in
           no_status: Kein Status
-          officers: Sachbearbeiter
+          officers: Sachbearbeiter*inen
           officer_groups: Sachbearbeitergruppen
         audits:
           title: Änderungslog
@@ -121,7 +121,7 @@ de:
           default_responsible_label: Standard-Sachbearbeiter*in
           default_responsible_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter
+          officers: Sachbearbeiter*in
           submit: Speichern
       statuses:
         index:
@@ -155,10 +155,10 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter
+          title: Sachbearbeiter*inen
           search_label: Benutzer suchen
           search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
-          no_officers: Keine Sachbearbeiter vorhanden
+          no_officers: Keine Sachbearbeiter*inen vorhanden
           table:
             name: Name
             email: E-Mail
@@ -180,7 +180,8 @@ de:
           title: Bezirk bearbeiten
           default_responsible_label: Standard-Sachbearbeiter*in
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter
+          officers: Sachbearbeiter*in
+          no_responsible: "-- Kein Sachbearbeiter*in --"
           submit: Speichern
         update:
           success: Bezirk wurde erfolgreich aktualisiert.
@@ -211,7 +212,7 @@ de:
           no_officer_groups: Keine Sachbearbeitergruppen vorhanden
           table:
             name: Name
-            officers: Sachbearbeiter
+            officers: Sachbearbeiter*inen
             default_email: Standard-E-Mail
         new:
           title: Neue Sachbearbeitergruppe
@@ -226,7 +227,7 @@ de:
         form:
           name_label: Name
           default_email_label: Standard-E-Mail
-          officers_label: Sachbearbeiter
+          officers_label: Sachbearbeiter*inen
           submit: Speichern
       stats:
         show:

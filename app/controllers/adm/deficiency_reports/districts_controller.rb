@@ -16,17 +16,21 @@ class Adm::DeficiencyReports::DistrictsController < Adm::DeficiencyReports::Base
     @district = ::RegisteredAddress::District.find(params[:id])
     authorize @district, policy_class: Adm::DeficiencyReports::DistrictPolicy
 
-    deficiency_report_responsible = if params["default_deficiency_report_officer_id"].present?
-                                      DeficiencyReport::Officer.find(params["default_deficiency_report_officer_id"])
-                                    elsif params["default_deficiency_report_officer_group_id"].present?
-                                      DeficiencyReport::OfficerGroup.find(params["default_deficiency_report_officer_group_id"])
-                                    end
-
-    @district.update!(default_deficiency_report_responsible: deficiency_report_responsible)
+    @district.update!(default_deficiency_report_responsible: resolve_responsible)
     redirect_to adm_deficiency_reports_districts_path, notice: t(".success")
   end
 
   private
+
+    def resolve_responsible
+      return nil if params[:default_responsible].blank?
+
+      type, id = params[:default_responsible].split(":")
+      case type
+      when "OfficerGroup" then DeficiencyReport::OfficerGroup.find(id)
+      when "Officer" then DeficiencyReport::Officer.find(id)
+      end
+    end
 
     def breadcrumbs_for_action(action_title)
       [

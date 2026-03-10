@@ -64,7 +64,7 @@ de:
           geozone:
             no_restriction: Keine Einschränkung
             only_citizens: Nur Bürger
-            only_geozones: Nur bestimmte Bezirke
+            only_geozones: Nur bestimmte Gebiete
             only_streets: Nur bestimmte Straßen
             search_street: Straße suchen...
           extended_geozone:

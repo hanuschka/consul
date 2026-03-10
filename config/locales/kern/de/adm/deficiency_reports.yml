@@ -10,7 +10,7 @@ de:
           statuses: Status
           settings: Einstellungen
           official_answer_templates: Antwortvorlagen
-          districts: Bezirke
+          districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
           ai_settings: KI-Einstellungen
@@ -172,8 +172,8 @@ de:
           user_not_found: Benutzer nicht gefunden
       districts:
         index:
-          title: Bezirke
-          no_districts: Keine Bezirke vorhanden
+          title: Gebiete
+          no_districts: Keine Gebiete vorhanden
           table:
             default_responsible: Standard-Sachbearbeiter*in
         edit:

@@ -68,6 +68,7 @@ de:
           no_status: Kein Status
           officers: Sachbearbeiter*inen
           officer_groups: Sachbearbeitergruppen
+          no_responsible: "-- Kein Sachbearbeiter*in --"
         audits:
           title: Änderungslog
         feedback_form:

@@ -109,6 +109,26 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     ]
   end
 
+  def update_administer
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    update_responsible
+
+    if @deficiency_report.update(deficiency_report_params)
+      notify_new_officer(@deficiency_report)
+      notify_author_about_status_change(@deficiency_report)
+      update_status_change_date(@deficiency_report)
+      flash.now[:success] = t("adm.attribute.update.success")
+    end
+
+    @breadcrumbs = [
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: @deficiency_report.title }
+    ]
+    render :administer
+  end
+
   def audits
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
@@ -238,16 +258,23 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     end
 
     def update_responsible
-      if params[:deficiency_report]["officer_id"].present?
-        new_responsible = DeficiencyReport::Officer.find(params[:deficiency_report]["officer_id"])
-      elsif params[:deficiency_report]["officer_group_id"].present?
-        new_responsible = DeficiencyReport::OfficerGroup.find(params[:deficiency_report]["officer_group_id"])
-      end
+      responsible_param = params.dig(:deficiency_report, :responsible)
+      return if responsible_param.nil?
 
-      return unless new_responsible
-
+      new_responsible = resolve_responsible(responsible_param)
       current_responsible = @deficiency_report.responsible
       @deficiency_report.responsible = new_responsible
       @deficiency_report.assigned_at = Time.zone.now unless current_responsible == new_responsible
     end
+
+    def resolve_responsible(value = params[:default_responsible])
+      return nil if value.blank?
+
+      type, id = value.split(":")
+      case type
+      when "OfficerGroup" then DeficiencyReport::OfficerGroup.find(id)
+      when "Officer" then DeficiencyReport::Officer.find(id)
+      end
+    end
+
 end

@@ -33,6 +33,7 @@ namespace :adm do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       member do
         get :administer
+        patch :update_administer
         get :audits
         get :feedback_form
         patch :accept

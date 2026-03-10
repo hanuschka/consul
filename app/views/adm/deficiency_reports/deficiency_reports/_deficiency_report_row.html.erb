@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header">
-    <%= link_to truncate(deficiency_report.title, length: 60), deficiency_report_path(deficiency_report), target: "_blank", class: "kern-link", title: deficiency_report.title %>
+  <th scope="row" class="kern-table__header" style="min-width: 250px; width: 250px; max-width: 250px;">
+    <%= link_to truncate(deficiency_report.title, length: 25), deficiency_report_path(deficiency_report), target: "_blank", class: "kern-link", title: deficiency_report.title %>
   </th>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
     <td class="kern-table__cell">
@@ -14,7 +14,6 @@
   <td class="kern-table__cell"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
   <td class="kern-table__cell"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
   <td class="kern-table__cell"><%= deficiency_report.status&.title %></td>
-  <td class="kern-table__cell"><%= deficiency_report.map_location&.approximated_address %></td>
   <td class="kern-table__cell"><%= deficiency_report.district&.name %></td>
   <td class="kern-table__cell"><%= deficiency_report.category&.name %></td>
   <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>

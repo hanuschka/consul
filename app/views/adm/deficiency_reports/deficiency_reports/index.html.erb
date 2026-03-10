@@ -15,7 +15,6 @@
             <%= render Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <%= render Kern::Table::HeaderComponent.new(:deficiency_report_status_id, t(".table.status"), **@status_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.location") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.district") %></th>
             <%= render Kern::Table::HeaderComponent.new(:deficiency_report_category_id, t(".table.category"), **@category_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.responsible") %></th>

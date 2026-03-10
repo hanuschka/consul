@@ -1,7 +1,3 @@
-<%= turbo_stream.replace dom_id(@deficiency_report, :admin_accepted) do %>
-  <%= render Adm::AttributeEditors::BooleanComponent.new(
-    @deficiency_report,
-    :admin_accepted,
-    path: accept_adm_deficiency_reports_deficiency_report_path(@deficiency_report)
-  ) %>
+<%= turbo_stream.replace dom_id(@deficiency_report) do %>
+  <%= render "deficiency_report_row", deficiency_report: @deficiency_report %>
 <% end %>

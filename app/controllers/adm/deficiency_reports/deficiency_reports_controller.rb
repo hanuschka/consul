@@ -166,13 +166,13 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   private
 
     def deficiency_report_params
-      attributes = [:video_url, :on_behalf_of,
+      attributes = [:title, :description, :video_url, :on_behalf_of,
                     :deficiency_report_category_id,
                     :deficiency_report_status_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
-      params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+      params.require(:deficiency_report).permit(attributes)
     end
 
     def filter_assigned_reports_only(scope)

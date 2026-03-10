@@ -34,6 +34,20 @@ de:
         notifications: Notification
         stats: Statistics
         apps: Apps
+    deficiency_reports:
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          deficiency_reports: Mängelmelder
+          officers: Sachbearbeiter*inen
+          categories: Kategorien
+          statuses: Status
+          settings: Funktionen
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI prompt
     ideas:
       menu:
         aria_label: Ideenplattform Menü
@@ -41,5 +55,5 @@ de:
           ideas: Ideen
           officers: Sachbearbeiter
           categories: Kategorien
-          settings: Einstellungen
+          settings: Funktionen
           districts: Gebiete

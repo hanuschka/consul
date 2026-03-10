@@ -87,7 +87,7 @@ de:
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
         settings:
-          title: Einstellungen
+          title: Funktionen
         audits:
           title: Änderungslog
           audits_title: Änderungen

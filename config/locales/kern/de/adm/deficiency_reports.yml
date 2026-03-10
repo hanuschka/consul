@@ -1,19 +1,6 @@
 de:
   adm:
     deficiency_reports:
-      menu:
-        aria_label: Mängelmelder Navigation
-        items:
-          deficiency_reports: Mängelmelder
-          officers: Sachbearbeiter*inen
-          categories: Kategorien
-          statuses: Status
-          settings: Einstellungen
-          official_answer_templates: Antwortvorlagen
-          districts: Gebiete
-          officer_groups: Sachbearbeitergruppen
-          stats: Statistiken
-          ai_settings: KI-Einstellungen
       deficiency_reports:
         index:
           title: Mängelmelder
@@ -88,7 +75,7 @@ de:
           created_at: Erstellt am
           for_report: Für
         settings:
-          title: Einstellungen
+          title: Funktionen
       categories:
         index:
           title: Kategorien
@@ -250,7 +237,7 @@ de:
           total_row: Gesamt
       ai_settings:
         show:
-          title: KI-Einstellungen
+          title: KI-prompt
           questions: Fragen
           criteria: Kriterien
           parting_words: Abschlussworte

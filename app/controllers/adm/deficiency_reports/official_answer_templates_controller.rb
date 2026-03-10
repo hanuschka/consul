@@ -47,7 +47,7 @@ class Adm::DeficiencyReports::OfficialAnswerTemplatesController < Adm::Deficienc
     @official_answer_template = DeficiencyReport::OfficialAnswerTemplate.find(params[:id])
     authorize @official_answer_template, policy_class: Adm::DeficiencyReports::OfficialAnswerTemplatePolicy
 
-    @official_answer_template.destroy! if @official_answer_template.safe_to_destroy?
+    @official_answer_template.destroy!
     redirect_to adm_deficiency_reports_official_answer_templates_path
   end
 

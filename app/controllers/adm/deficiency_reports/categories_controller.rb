@@ -18,7 +18,6 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
   def edit
     @category = DeficiencyReport::Category.find(params[:id])
     authorize @category, policy_class: Adm::DeficiencyReports::CategoryPolicy
-    set_current_default_responsible
 
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
@@ -26,7 +25,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
   def create
     @category = DeficiencyReport::Category.new(category_params)
     authorize @category, policy_class: Adm::DeficiencyReports::CategoryPolicy
-    update_default_responsible
+    @category.default_responsible = resolve_responsible
 
     if @category.save
       redirect_to adm_deficiency_reports_categories_path, notice: t(".success")
@@ -39,7 +38,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
   def update
     @category = DeficiencyReport::Category.find(params[:id])
     authorize @category, policy_class: Adm::DeficiencyReports::CategoryPolicy
-    update_default_responsible
+    @category.default_responsible = resolve_responsible
 
     if @category.update(category_params)
       redirect_to adm_deficiency_reports_categories_path, notice: t(".success")
@@ -78,24 +77,17 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
 
     def category_params
       params.require(:deficiency_report_category).permit(
-        :color, :icon, :warning_text,
-        translation_params(DeficiencyReport::Category)
+        :name, :color, :icon, :warning_text
       )
     end
 
-    def set_current_default_responsible
-      if @category.default_responsible.is_a?(DeficiencyReport::Officer)
-        @category.default_officer_id = @category.default_responsible.id
-      elsif @category.default_responsible.is_a?(DeficiencyReport::OfficerGroup)
-        @category.default_officer_group_id = @category.default_responsible.id
-      end
-    end
+    def resolve_responsible
+      return nil if params[:default_responsible].blank?
 
-    def update_default_responsible
-      if params[:deficiency_report_category]["default_officer_id"].present?
-        @category.default_responsible = DeficiencyReport::Officer.find(params[:deficiency_report_category]["default_officer_id"])
-      elsif params[:deficiency_report_category]["default_officer_group_id"].present?
-        @category.default_responsible = DeficiencyReport::OfficerGroup.find(params[:deficiency_report_category]["default_officer_group_id"])
+      type, id = params[:default_responsible].split(":")
+      case type
+      when "OfficerGroup" then DeficiencyReport::OfficerGroup.find(id)
+      when "Officer" then DeficiencyReport::Officer.find(id)
       end
     end
 end

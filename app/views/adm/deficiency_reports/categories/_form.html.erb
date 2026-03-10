@@ -25,29 +25,25 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), hint: t(".default_responsible_hint")) do %>
-    <div class="mb-2">
-      <strong class="kern-body kern-body--small"><%= t(".officer_groups") %></strong>
-      <% DeficiencyReport::OfficerGroup.all.order(:name).each do |group| %>
-        <div>
-          <%= f.radio_button :default_officer_group_id, group.id,
-            checked: @category.default_officer_group_id == group.id,
-            onclick: "document.querySelectorAll('input[name=\"deficiency_report_category[default_officer_id]\"]').forEach(r => r.checked = false)" %>
-          <%= f.label "default_officer_group_id_#{group.id}", group.name %>
-        </div>
-      <% end %>
+    <% grouped_options = {
+      t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] },
+      t(".officers") => DeficiencyReport::Officer.all.map { |o| [o.name, "Officer:#{o.id}"] }
+    } %>
+    <% selected = if @category.default_responsible.is_a?(DeficiencyReport::OfficerGroup)
+                    "OfficerGroup:#{@category.default_responsible.id}"
+                  elsif @category.default_responsible.is_a?(DeficiencyReport::Officer)
+                    "Officer:#{@category.default_responsible.id}"
+                  end %>
+    <div class="kern-form-input">
+      <%= select_tag :default_responsible,
+        grouped_options_for_select(grouped_options, selected),
+        include_blank: t(".no_responsible"),
+        class: "kern-form-input__input" %>
     </div>
+  <% end %>
 
-    <div class="mb-2">
-      <strong class="kern-body kern-body--small"><%= t(".officers") %></strong>
-      <% DeficiencyReport::Officer.all.each do |officer| %>
-        <div>
-          <%= f.radio_button :default_officer_id, officer.id,
-            checked: @category.default_officer_id == officer.id,
-            onclick: "document.querySelectorAll('input[name=\"deficiency_report_category[default_officer_group_id]\"]').forEach(r => r.checked = false)" %>
-          <%= f.label "default_officer_id_#{officer.id}", officer.name %>
-        </div>
-      <% end %>
-    </div>
+  <%= render Kern::FormFieldComponent.new(label: t(".warning_text_label")) do %>
+    <%= f.rich_text_area :warning_text, label: false %>
   <% end %>
 
   <%= form_submit_button(text: t(".submit")) %>

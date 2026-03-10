@@ -86,6 +86,7 @@ de:
             color: Farbe
             icon: Symbol
             default_responsible: Standard-Sachbearbeiter*in
+            warning_text: Popup
             actions: Aktionen
         new:
           title: Neue Kategorie
@@ -109,6 +110,8 @@ de:
           default_responsible_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
           officer_groups: Sachbearbeitergruppen
           officers: Sachbearbeiter*in
+          no_responsible: "-- Kein Sachbearbeiter*in --"
+          warning_text_label: Popup
           submit: Speichern
       statuses:
         index:

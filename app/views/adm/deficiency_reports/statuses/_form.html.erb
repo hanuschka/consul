@@ -33,7 +33,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".notice_text_label")) do %>
-    <%= f.rich_text_area :notice_text, label: false %>
+    <%= f.rich_text_area :notice_text, label: false, toolbar: "regular" %>
   <% end %>
 
   <%= form_submit_button(text: t(".submit")) %>

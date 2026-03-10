@@ -119,8 +119,8 @@ de:
             title: Titel
             icon: Symbol
             color: Farbe
-            reminder_delay: Erinnerungsverzögerung
-            archive_reports: Mängelmelder archivieren
+            reminder_delay: Erinnerung (Tage)
+            archive_reports: Archivieren
         new:
           title: Neuer Status
         create:
@@ -136,9 +136,9 @@ de:
           title_label: Titel
           color_label: Farbe
           icon_label: Symbol
-          reminder_delay_label: Erinnerungsverzögerung (Tage)
-          archive_reports_label: Mängelmelder archivieren
-          notice_text_label: Hinweistext
+          reminder_delay_label: Erinnerung (Tage)
+          archive_reports_label: Archivieren
+          notice_text_label: E-Mail-Benachrichtigungstext
           submit: Speichern
       officers:
         index:

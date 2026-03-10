@@ -11,8 +11,8 @@
         <thead class="kern-table__head">
           <tr class="kern-table__row">
             <th scope="col" class="kern-table__header"><%= t(".table.title") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.icon") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.color") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.icon") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.reminder_delay") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.archive_reports") %></th>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
@@ -24,13 +24,13 @@
             <tr id="<%= dom_id(status) %>" class="kern-table__row" data-sortable-id="<%= status.id %>">
               <th scope="row" class="kern-table__header"><%= status.title %></th>
               <td class="kern-table__cell">
-                <% if status.icon.present? %>
-                  <i class="fas fa-<%= status.icon %>" style="color: <%= status.color %>"></i>
+                <% if status.color.present? %>
+                  <span class="color-preview" style="background-color: <%= status.color %>; display: inline-block; width: 20px; height: 20px; border-radius: 4px;"></span>
                 <% end %>
               </td>
               <td class="kern-table__cell">
-                <% if status.color.present? %>
-                  <span class="color-preview" style="background-color: <%= status.color %>; display: inline-block; width: 20px; height: 20px; border-radius: 4px;"></span>
+                <% if status.icon.present? %>
+                  <i class="fas fa-<%= status.icon %>"></i>
                 <% end %>
               </td>
               <td class="kern-table__cell"><%= status.reminder_delay %></td>

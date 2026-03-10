@@ -10,12 +10,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".officers_label")) do %>
-    <% DeficiencyReport::Officer.all.each do |officer| %>
-      <div>
-        <%= f.check_box :officer_ids, { multiple: true, checked: @officer_group.officer_ids.include?(officer.id) }, officer.id, nil %>
-        <%= f.label "officer_ids_#{officer.id}", officer.name %>
-      </div>
-    <% end %>
+    <%= f.collection_check_boxes :officer_ids, DeficiencyReport::Officer.all, :id, :name %>
   <% end %>
 
   <%= form_submit_button(text: t(".submit")) %>

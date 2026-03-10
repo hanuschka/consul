@@ -132,6 +132,11 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   def audits
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @breadcrumbs = [
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: @deficiency_report.title }
+    ]
   end
 
   def accept

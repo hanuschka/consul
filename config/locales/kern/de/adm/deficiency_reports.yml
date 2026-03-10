@@ -1,0 +1,268 @@
+de:
+  adm:
+    deficiency_reports:
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          deficiency_reports: Mängelmelder
+          officers: Sachbearbeiter
+          categories: Kategorien
+          statuses: Status
+          settings: Einstellungen
+          official_answer_templates: Antwortvorlagen
+          districts: Bezirke
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI-Einstellungen
+      deficiency_reports:
+        index:
+          title: Mängelmelder
+          no_deficiency_reports: Keine Mängelmelder vorhanden
+          table:
+            id: ID
+            admin_accepted: Sichtbarkeit
+            created_at: Erstellungsdatum
+            title: Titel
+            author: Autor
+            status: Status
+            location: Standort
+            district: Bezirk
+            category: Kategorie
+            responsible: Sachbearbeiter*in
+        tabs:
+          show: Anzeigen
+          administer: Administrieren
+          edit: Bearbeiten
+          audits: Änderungslog
+          feedback_form: Feedback
+        show:
+          title: Mängelmelder
+          edit: Bearbeiten
+          download_pdf: PDF herunterladen
+          view_on_site: Auf der Website anzeigen
+          admin_accepted_status: Status der Freigabe
+          accepted: Freigegeben
+          not_accepted: Nicht freigegeben
+          status: Status
+          hidden_at: Ausgeblendet am
+          created_at: Erstellt am
+          updated_at: Zuletzt aktualisiert
+          title_label: Titel
+          description_label: Beschreibung
+          image_label: Bild
+          documents_label: Dokumente
+          category: Kategorie
+          map_label: Karte
+          on_behalf_of_label: Im Auftrag von
+          video_url: Video-URL
+          address: Adresse
+          responsible_label: Sachbearbeiter*in
+          author: Autor
+          official_answer: Offizielle Antwort
+          official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
+        update_official_answer:
+          success: Offizielle Antwort wurde erfolgreich aktualisiert.
+        edit:
+          title: Mängelmelder bearbeiten
+          no_category: "-- Keine Kategorie --"
+          labels:
+            title: Titel
+            description: Beschreibung
+            image: Bild
+            documents: Dokumente
+            video_url: Video-URL
+            category: Kategorie
+            map_location: Kartenstandort
+            on_behalf_of: Im Auftrag von
+        administer:
+          title: Administrieren
+          status: Status
+          responsible: Sachbearbeiter*in
+          no_status: Kein Status
+          officers: Sachbearbeiter
+          officer_groups: Sachbearbeitergruppen
+        audits:
+          title: Änderungslog
+        feedback_form:
+          title: Feedback-Formular
+          created_at: Erstellt am
+          for_report: Für
+        settings:
+          title: Einstellungen
+      categories:
+        index:
+          title: Kategorien
+          new_category: Neue Kategorie
+          no_categories: Keine Kategorien vorhanden
+          table:
+            name: Name
+            color: Farbe
+            icon: Symbol
+            default_responsible: Standard-Sachbearbeiter*in
+            actions: Aktionen
+        new:
+          title: Neue Kategorie
+        create:
+          success: Kategorie wurde erfolgreich erstellt.
+        edit:
+          title: Kategorie bearbeiten
+        update:
+          success: Kategorie wurde erfolgreich aktualisiert.
+        destroy:
+          success: Kategorie wurde erfolgreich gelöscht.
+          cannot_destroy: Kategorie kann nicht gelöscht werden, da sie noch Mängelmelder enthält.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen der Kategorie ein.
+          color_label: Farbe
+          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
+          default_responsible_label: Standard-Sachbearbeiter*in
+          default_responsible_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
+          officer_groups: Sachbearbeitergruppen
+          officers: Sachbearbeiter
+          submit: Speichern
+      statuses:
+        index:
+          title: Status
+          new_status: Neuer Status
+          no_statuses: Keine Status vorhanden
+          table:
+            title: Titel
+            icon: Symbol
+            color: Farbe
+            reminder_delay: Erinnerungsverzögerung
+            archive_reports: Mängelmelder archivieren
+        new:
+          title: Neuer Status
+        create:
+          success: Status wurde erfolgreich erstellt.
+        edit:
+          title: Status bearbeiten
+        update:
+          success: Status wurde erfolgreich aktualisiert.
+        destroy:
+          success: Status wurde erfolgreich gelöscht.
+          cannot_destroy: Status kann nicht gelöscht werden, da er noch Mängelmelder enthält.
+        form:
+          title_label: Titel
+          color_label: Farbe
+          icon_label: Symbol
+          reminder_delay_label: Erinnerungsverzögerung (Tage)
+          archive_reports_label: Mängelmelder archivieren
+          notice_text_label: Hinweistext
+          submit: Speichern
+      officers:
+        index:
+          title: Sachbearbeiter
+          search_label: Benutzer suchen
+          search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
+          no_officers: Keine Sachbearbeiter vorhanden
+          table:
+            name: Name
+            email: E-Mail
+        _officer:
+          add: Hinzufügen
+        search:
+          table:
+            name: Name
+            email: E-Mail
+        user_not_found:
+          user_not_found: Benutzer nicht gefunden
+      districts:
+        index:
+          title: Bezirke
+          no_districts: Keine Bezirke vorhanden
+          table:
+            default_responsible: Standard-Sachbearbeiter*in
+        edit:
+          title: Bezirk bearbeiten
+          default_responsible_label: Standard-Sachbearbeiter*in
+          officer_groups: Sachbearbeitergruppen
+          officers: Sachbearbeiter
+          submit: Speichern
+        update:
+          success: Bezirk wurde erfolgreich aktualisiert.
+      official_answer_templates:
+        index:
+          title: Antwortvorlagen
+          new_template: Neue Antwortvorlage
+          no_templates: Keine Antwortvorlagen vorhanden
+          table:
+            title: Titel
+            text: Text
+        new:
+          title: Neue Antwortvorlage
+        create:
+          success: Antwortvorlage wurde erfolgreich erstellt.
+        edit:
+          title: Antwortvorlage bearbeiten
+        update:
+          success: Antwortvorlage wurde erfolgreich aktualisiert.
+        form:
+          title_label: Titel
+          text_label: Text
+          submit: Speichern
+      officer_groups:
+        index:
+          title: Sachbearbeitergruppen
+          new_officer_group: Neue Sachbearbeitergruppe
+          no_officer_groups: Keine Sachbearbeitergruppen vorhanden
+          table:
+            name: Name
+            officers: Sachbearbeiter
+            default_email: Standard-E-Mail
+        new:
+          title: Neue Sachbearbeitergruppe
+        create:
+          success: Sachbearbeitergruppe wurde erfolgreich erstellt.
+        edit:
+          title: Sachbearbeitergruppe bearbeiten
+        update:
+          success: Sachbearbeitergruppe wurde erfolgreich aktualisiert.
+        destroy:
+          success: Sachbearbeitergruppe wurde erfolgreich gelöscht.
+        form:
+          name_label: Name
+          default_email_label: Standard-E-Mail
+          officers_label: Sachbearbeiter
+          submit: Speichern
+      stats:
+        show:
+          title: Statistiken
+          type:
+            status: Status
+            category: Kategorie
+            responsible: Sachbearbeiter*in
+          total: Gesamtzeit
+          this_week: Diese Woche
+          last_week: Letzte Woche
+          this_month: Diesen Monat
+          last_month: Letzten Monat
+          this_year: Dieses Jahr
+          last_year: Letztes Jahr
+          satisfaction: Zufriedenheit
+          response_time: Reaktionszeit
+          communication: Höflichkeit
+          without_status: Ohne Status
+          total_row: Gesamt
+      ai_settings:
+        show:
+          title: KI-Einstellungen
+          questions: Fragen
+          criteria: Kriterien
+          parting_words: Abschlussworte
+          update_button: Speichern
+          not_connected: Die KI-App ist nicht verbunden
+      deficiency_report_audits:
+        show:
+          title: Änderungsdetails
+          back: Zurück
+          audit_details: Änderungsdetails
+          edited_at: Geändert am
+          edited_by: Geändert von
+          changes: Änderungen
+          field: Feld
+          old_value: Alter Wert
+          new_value: Neuer Wert

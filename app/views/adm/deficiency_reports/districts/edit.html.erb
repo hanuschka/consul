@@ -1,0 +1,35 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @district.name, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_districts_path) %>
+
+<div class="kern-container my-5">
+  <%= form_with model: @district, url: adm_deficiency_reports_district_path(@district), method: :put do |f| %>
+    <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), inline: true) do %>
+      <div class="mb-2">
+        <strong class="kern-body kern-body--small"><%= t(".officer_groups") %></strong>
+        <% DeficiencyReport::OfficerGroup.all.order(:name).each do |group| %>
+          <% checked = @district.default_deficiency_report_responsible == group %>
+          <div>
+            <%= radio_button_tag :default_deficiency_report_officer_group_id, group.id, checked,
+              onclick: "document.querySelectorAll('input[name=\"default_deficiency_report_officer_id\"]').forEach(r => r.checked = false)" %>
+            <%= label_tag "default_deficiency_report_officer_group_id_#{group.id}", group.name %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <strong class="kern-body kern-body--small"><%= t(".officers") %></strong>
+        <% DeficiencyReport::Officer.all.each do |officer| %>
+          <% checked = @district.default_deficiency_report_responsible == officer %>
+          <div>
+            <%= radio_button_tag :default_deficiency_report_officer_id, officer.id, checked,
+              onclick: "document.querySelectorAll('input[name=\"default_deficiency_report_officer_group_id\"]').forEach(r => r.checked = false)" %>
+            <%= label_tag "default_deficiency_report_officer_id_#{officer.id}", officer.name %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= form_submit_button(text: t(".submit")) %>
+  <% end %>
+</div>

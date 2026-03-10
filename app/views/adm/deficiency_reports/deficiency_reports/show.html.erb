@@ -1,0 +1,185 @@
+<%= content_for :title, @deficiency_report.title %>
+
+<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
+
+<article class="kern-container mb-5">
+  <p class="kern-body kern-body--small mb-1">
+    <strong><%= t(".admin_accepted_status") %>:</strong>
+    <%= @deficiency_report.admin_accepted ? t(".accepted") : t(".not_accepted") %>
+  </p>
+  <p class="kern-body kern-body--small mb-1">
+    <strong><%= t(".status") %>:</strong>
+    <%= @deficiency_report.status&.title %>
+  </p>
+  <% if @deficiency_report.hidden_at.present? %>
+    <p class="kern-body kern-body--small mb-3">
+      <strong><%= t(".hidden_at") %>:</strong> <%= l(@deficiency_report.hidden_at, format: :long) %>
+    </p>
+  <% end %>
+
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".author") %>:</strong>
+    <%= @deficiency_report.author.username %>
+  </p>
+
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".created_at") %>:</strong> <%= l(@deficiency_report.created_at, format: :long) %>
+    <strong><%= t(".updated_at") %>:</strong> <%= l(@deficiency_report.updated_at, format: :long) %>
+  </p>
+
+  <% if @deficiency_report.approximated_address.present? %>
+    <p class="kern-body mb-3">
+      <strong><%= t(".address") %>:</strong>
+      <%= @deficiency_report.approximated_address %>
+    </p>
+  <% end %>
+
+  <p class="kern-body kern-body--small">
+    <%= link_to t(".view_on_site"), deficiency_report_path(@deficiency_report), target: "_blank", data: { turbo: false } %>
+  </p>
+  <p class="kern-body kern-body--small mb-3">
+    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @deficiency_report.cached_votes_up %>
+    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @deficiency_report.comments_count %>
+  </p>
+
+  <%= turbo_frame_tag "deficiency_report_content" do %>
+
+    <div class="d-flex gap-2 mb-4 justify-content-end">
+      <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+            text: t(".edit"), icon: "edit", data: { turbo_frame: "deficiency_report_content" }) %>
+      <%= kern_link_button(adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
+            text: t(".download_pdf"), icon: "download", style: :secondary,
+            data: @deficiency_report.map_location.present? ? {
+              turbo: false,
+              controller: "map-screenshot",
+              map_screenshot_container_value: dom_id(@deficiency_report, "map"),
+              action: "click->map-screenshot#capture"
+            } : { turbo: false }) %>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".title_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @deficiency_report.title %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".description_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %></div>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".image_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @image_url.present? %>
+          <%= image_tag(@image_url, style: "width: 100%;") %>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @deficiency_report.documents.any? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".documents_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <ul class="kern-body">
+            <% @deficiency_report.documents.each do |document| %>
+              <li><%= link_to document.title, document.attachment, target: :blank %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <% if @deficiency_report.video_url.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".video_url") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= link_to @deficiency_report.video_url, @deficiency_report.video_url, target: "_blank" %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".on_behalf_of_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @deficiency_report.on_behalf_of %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".category") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @deficiency_report.category.present? %>
+          <span class="map-feature-pill map-feature-pill--sentiment"
+                data-color="<%= @deficiency_report.category.color %>"
+                style="--pill-color:<%= @deficiency_report.category.color %>;--pill-text-color:<%= pick_text_color(@deficiency_report.category.color) %>">
+            <% if @deficiency_report.category.icon.present? %>
+              <i class="fas fa-<%= @deficiency_report.category.icon %>"></i>
+            <% end %>
+            <%= @deficiency_report.category.name %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".responsible_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @deficiency_report.responsible&.name %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @deficiency_report.map_location.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".map_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location) %>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+  <% end %>
+
+  <hr class="kern-divider my-5">
+
+  <%= render Adm::AttributeEditorComponent.new(
+    @deficiency_report,
+    :official_answer,
+    :rich_text,
+    path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+    label: t(".official_answer"),
+    description: t(".official_answer_hint")
+  ) %>
+</article>

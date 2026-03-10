@@ -1,0 +1,9 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <%= render "table", groups: @by_status, all_reports: @all_deficiency_reports, type: :status %>
+  <%= render "table", groups: @by_category, all_reports: @all_deficiency_reports, type: :category %>
+  <%= render "table", groups: @by_responsible, all_reports: @all_deficiency_reports, type: :responsible %>
+</div>

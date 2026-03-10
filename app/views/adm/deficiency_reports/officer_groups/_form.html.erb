@@ -1,0 +1,22 @@
+<% url = @officer_group.persisted? ? adm_deficiency_reports_officer_group_path(@officer_group) : adm_deficiency_reports_officer_groups_path %>
+<%= form_with model: @officer_group, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label")) do %>
+    <%= f.text_field :name, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".default_email_label")) do %>
+    <%= f.email_field :default_email, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".officers_label")) do %>
+    <% DeficiencyReport::Officer.all.each do |officer| %>
+      <div>
+        <%= f.check_box :officer_ids, { multiple: true, checked: @officer_group.officer_ids.include?(officer.id) }, officer.id, nil %>
+        <%= f.label "officer_ids_#{officer.id}", officer.name %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

@@ -1,0 +1,6 @@
+<%= form_with model: deficiency_report, url: adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :patch do |form| %>
+  <%= form.select :deficiency_report_status_id,
+    options_from_collection_for_select(DeficiencyReport::Status.all, :id, :title, deficiency_report.deficiency_report_status_id),
+    { include_blank: "-- #{t('adm.deficiency_reports.deficiency_reports.administer.no_status')} --" },
+    { label: false, onchange: "this.form.requestSubmit()" } %>
+<% end %>

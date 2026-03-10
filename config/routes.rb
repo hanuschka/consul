@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   draw :adm
   draw "adm/ideas"
   draw "adm/projekts"
+  draw "adm/deficiency_reports"
   draw :account
   draw :admin
   draw :budget

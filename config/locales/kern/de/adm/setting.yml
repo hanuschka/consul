@@ -127,6 +127,37 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
       document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
       external_video: Externes Video einbinden
       external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+    deficiency_reports:
+      show_in_main_menu: Mängelmelder in Navigation anzeigen
+      show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
+      admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+      admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
+      officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
+      officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
+      officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
+      officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
+      allow_voting: Nutzer*innen Bewertung pro Mangel
+      allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
+      enable_comments: Kommentarfunktion
+      enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
+      intro_text: Einleitungstext für den Mängelmelder
+      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+      enable_my_posts_filter: Meine Beiträge
+      enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+      enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+      admin_acceptance_required: Bestätigung durch Administratoren
+      admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+      document_upload: Zusätzliche Dokumente
+      document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+      external_video: Externes Video einbinden
+      external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+      voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
+      voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+      send_feedback_form_link: Feedback-Formular
+      send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
+      show_create_report_button: Button zum Einreichen von Mangelmeldungen anzeigen
+      show_create_report_button_description: Zeigt einen Button zum Einreichen von Mängelmeldungen in der Seitenleiste der Mängelübersichtsseite an
 
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
@@ -393,35 +424,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #   general:
     #     external_participation_link: Alternativen Link in den Projektressourcen verwenden
     #     external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
-    # deficiency_reports:
-    #   show_in_main_menu: Mängelmelder in Navigation anzeigen
-    #   show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
-    #   admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
-    #   admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
-    #   officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
-    #   officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
-    #   officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
-    #   officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
-    #   allow_voting: Nutzer*innen Bewertung pro Mangel
-    #   allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
-    #   enable_comments: Kommentarfunktion
-    #   enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
-    #   intro_text: Einleitungstext für den Mängelmelder
-    #   intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
-    #   enable_my_posts_filter: Meine Beiträge
-    #   enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-    #   enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-    #   enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
-    #   admin_acceptance_required: Bestätigung durch Administratoren
-    #   admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
-    #   document_upload: Zusätzliche Dokumente
-    #   document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
-    #   external_video: Externes Video einbinden
-    #   external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
-    #   voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
-    #   voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
-    #   send_feedback_form_link: Feedback-Formular
-    #   send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
 
     # projekt_newsfeed:
     #   id: Newsfeed ID

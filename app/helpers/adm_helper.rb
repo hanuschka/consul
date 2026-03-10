@@ -46,6 +46,28 @@ module AdmHelper
     end
   end
 
+  def deficiency_report_tabs(deficiency_report, current_action: nil)
+    current_action ||= action_name
+
+    tabs = %w[show administer audits].map do |action|
+      {
+        label: I18n.t("adm.deficiency_reports.deficiency_reports.tabs.#{action}"),
+        url: send("#{action == 'show' ? '' : "#{action}_"}adm_deficiency_reports_deficiency_report_path", deficiency_report),
+        current: current_action == action
+      }
+    end
+
+    if deficiency_report.feedback_form.present?
+      tabs << {
+        label: I18n.t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"),
+        url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        current: current_action == "feedback_form"
+      }
+    end
+
+    tabs
+  end
+
   def overview_page_tabs(current_action: nil)
     current_action ||= action_name
 

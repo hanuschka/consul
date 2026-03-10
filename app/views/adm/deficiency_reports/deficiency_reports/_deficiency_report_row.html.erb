@@ -1,0 +1,36 @@
+<tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header">
+    <%= link_to truncate(deficiency_report.title, length: 60), deficiency_report_path(deficiency_report), target: "_blank", class: "kern-link", title: deficiency_report.title %>
+  </th>
+  <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
+    <td class="kern-table__cell">
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        deficiency_report,
+        :admin_accepted,
+        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report)
+      ) %>
+    </td>
+  <% end %>
+  <td class="kern-table__cell"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell"><%= deficiency_report.status&.title %></td>
+  <td class="kern-table__cell"><%= deficiency_report.map_location&.approximated_address %></td>
+  <td class="kern-table__cell"><%= deficiency_report.district&.name %></td>
+  <td class="kern-table__cell"><%= deficiency_report.category&.name %></td>
+  <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.administer"), url: administer_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+      <% if deficiency_report.feedback_form.present? %>
+        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+      <% end %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+      ) %>
+    <% end %>
+  </td>
+</tr>

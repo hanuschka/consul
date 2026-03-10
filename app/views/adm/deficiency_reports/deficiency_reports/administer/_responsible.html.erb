@@ -1,0 +1,27 @@
+<%= form_with model: deficiency_report, url: adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :patch do |form| %>
+  <div class="mb-2">
+    <strong class="kern-body kern-body--small"><%= t("adm.deficiency_reports.deficiency_reports.administer.officer_groups") %></strong>
+    <% DeficiencyReport::OfficerGroup.all.order(:name).each do |group| %>
+      <div>
+        <%= form.radio_button :officer_group_id, group.id,
+          checked: deficiency_report.responsible == group,
+          onclick: "document.querySelectorAll('input[name=\"deficiency_report[officer_id]\"]').forEach(r => r.checked = false)" %>
+        <%= form.label "officer_group_id_#{group.id}", group.name %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <strong class="kern-body kern-body--small"><%= t("adm.deficiency_reports.deficiency_reports.administer.officers") %></strong>
+    <% DeficiencyReport::Officer.joins(:user).order("users.username ASC").each do |officer| %>
+      <div>
+        <%= form.radio_button :officer_id, officer.id,
+          checked: deficiency_report.responsible == officer,
+          onclick: "document.querySelectorAll('input[name=\"deficiency_report[officer_group_id]\"]').forEach(r => r.checked = false)" %>
+        <%= form.label "officer_id_#{officer.id}", officer.name %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= form_submit_button(text: t("shared.submit")) %>
+<% end %>

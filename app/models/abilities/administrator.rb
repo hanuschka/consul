@@ -168,8 +168,7 @@ Poll::Question
       can [:index, :update], RegisteredAddress::District
       can [:index], RegisteredAddress::Street
 
-      can [:results, :stats], Poll,
-projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}
+      can [:results, :stats], Poll
 
       can :manage, Projekt
       can :manage, ProjektSetting

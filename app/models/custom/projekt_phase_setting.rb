@@ -104,7 +104,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.results_enabled": "",
           "feature.resource.intermediate_poll_results_for_admins": "active",
           "feature.resource.stats_enabled": "",
-          "feature.resource.advanced_stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
           "feature.resource.show_comments": "active",

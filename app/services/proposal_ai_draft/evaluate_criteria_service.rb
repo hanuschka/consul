@@ -5,8 +5,15 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
 
   def call
     criteria = @resource.projekt_phase.user_resource_criteria.to_a
-    prompt = build_prompt(criteria)
-    response = Ai::RubyLlmFactory.chat_with_json_output(output_schema).ask(prompt)
+    system_instructions = build_system_instructions
+    user_prompt = build_user_prompt(criteria)
+
+    response =
+      Ai::RubyLlmFactory
+        .chat_with_json_output(output_schema)
+        .with_instructions(system_instructions)
+        .ask(user_prompt)
+
     response.content
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] EvaluateCriteriaService failed: #{e.class} - #{e.message}")
@@ -21,20 +28,23 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 
-    def build_prompt(criteria)
+    def build_system_instructions
       system_prompt = fetch_system_prompt
       raise "[ProposalAiDraft] System prompt not found for proposal_evaluate_criteria" if system_prompt.nil?
 
+      system_prompt
+    end
+
+    def build_user_prompt(criteria)
       criteria_list = criteria.map.with_index(1) { |c, i| "#{i}. #{c.text}" }.join("\n")
-      dynamic_context = <<~CONTEXT
+
+      <<~PROMPT
         Proposal title: #{@resource.title}
         Proposal description: #{@resource.description}
 
         Criteria:
         #{criteria_list}
-      CONTEXT
-
-      system_prompt + "\n" + dynamic_context
+      PROMPT
     end
 
     def output_schema

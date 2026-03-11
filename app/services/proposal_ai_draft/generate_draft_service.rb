@@ -6,8 +6,15 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
   def call
     projekt_name = @projekt_phase.projekt.page.title
-    prompt = build_prompt(projekt_name)
-    response = Ai::RubyLlmFactory.chat_with_json_output(output_schema).ask(prompt)
+    system_instructions = build_system_instructions(projekt_name)
+    user_prompt = build_user_prompt(projekt_name)
+
+    response =
+      Ai::RubyLlmFactory
+        .chat_with_json_output(output_schema)
+        .with_instructions(system_instructions)
+        .ask(user_prompt)
+
     response.content
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GenerateDraftService failed: #{e.class} - #{e.message}")
@@ -22,20 +29,20 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 
-    def build_prompt(projekt_name)
+    def build_system_instructions(projekt_name)
       system_prompt = fetch_system_prompt
       raise "[ProposalAiDraft] System prompt not found for proposal_generate_with_ai" if system_prompt.nil?
 
-      system_prompt = system_prompt.gsub("{{projekt_name}}", projekt_name)
+      system_prompt.gsub("{{projekt_name}}", projekt_name)
+    end
 
-      dynamic_context = <<~CONTEXT
+    def build_user_prompt(projekt_name)
+      <<~PROMPT
         Project name: #{projekt_name}
 
         The citizen described their idea as:
         "#{@idea_text}"
-      CONTEXT
-
-      "#{system_prompt}\n#{dynamic_context}"
+      PROMPT
     end
 
     def output_schema

@@ -6,7 +6,7 @@ class Adm::Moderation::ProposalsController < Adm::Moderation::BaseController
     base_scope = policy_scope([:adm, :moderation, Proposal])
     @current_filter = FILTERS.include?(params[:filter]) ? params[:filter] : FILTERS.first
     base_scope = apply_filter(base_scope)
-    @pagy, @proposals = pagy(Adm::Moderation::ProposalsQuery.call(base_scope, params))
+    @pagy, @proposals = pagy(Adm::ProposalsQuery.call(base_scope, params))
 
     @title_header_options = { search: true }
     @flags_count_header_options = { sort: true }

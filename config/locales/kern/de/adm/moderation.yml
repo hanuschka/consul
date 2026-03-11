@@ -8,6 +8,7 @@ de:
         users: Benutzer blockieren
         proposals: Vorschläge
         budget_investments: Bürgerhaushaltsvorschläge
+        comments: Kommentare
       users:
         index:
           title: Benutzer blockieren
@@ -62,3 +63,20 @@ de:
             ignore_flag: Als gelesen markieren
           confirm_hide: "Sind Sie sicher? Damit wird der Bürgerhaushaltsvorschlag \"%{name}\" herausmoderiert."
         notice_hide: Der Bürgerhaushaltsvorschlag wurde herausmoderiert.
+      comments:
+        index:
+          title: Kommentare moderieren
+          projekt: Projekt
+          author: Autor*in
+          flags_count: Meldungen
+          tabs:
+            pending_flag_review: Gemeldet
+            with_ignored_flag: Ignorierte Meldungen
+            hidden: Herausmoderiert
+            all: Alle
+          actions:
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Als gelesen markieren
+          confirm_hide: "Sind Sie sicher? Damit wird der Kommentar herausmoderiert."
+        notice_hide: Der Kommentar wurde herausmoderiert.

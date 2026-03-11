@@ -23,5 +23,13 @@ namespace :adm do
         put :ignore_flag
       end
     end
+
+    resources :comments, only: :index do
+      member do
+        put :hide
+        put :unhide
+        put :ignore_flag
+      end
+    end
   end
 end

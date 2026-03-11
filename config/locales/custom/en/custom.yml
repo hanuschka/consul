@@ -33,6 +33,7 @@ en:
         success: All content blocks deleted
     projekt:
       content_block_templates_selector:
+        loading: "Loading content block templates..."
         fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
         tabs:
           internal_content_blocks: Internal content blocks

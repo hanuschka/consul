@@ -15,7 +15,8 @@ class ProjektContentBlocks::GenerateFromPrompt < ApplicationService
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(build_prompt(base_prompt, prompt))
+        .with_instructions(build_system_instructions(base_prompt))
+        .ask(build_user_prompt(prompt))
 
     content_blocks_data = response.content
 
@@ -140,22 +141,17 @@ class ProjektContentBlocks::GenerateFromPrompt < ApplicationService
     end
   end
 
-  def build_prompt(base_prompt, user_prompt)
+  def build_system_instructions(base_prompt)
     categories_examples = fetch_categories_examples
     sdg_goals_reference = fetch_sdg_goals_reference
     sdg_targets_info = fetch_sdg_targets_info
 
-    <<~PROMPT
+    <<~INSTRUCTIONS
       #{base_prompt}
       Output response in #{target_language} language.
 
-      Generate structured HTML content blocks based on the following description:
-
-      ```user_prompt
-      #{user_prompt}
-      ```
-
-      Create appropriate HTML content blocks that represent the project described above.
+      Generate structured HTML content blocks based on the user's description.
+      Create appropriate HTML content blocks that represent the project described by the user.
       If dates are mentioned, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
 
       Additionally, identify:
@@ -173,7 +169,11 @@ class ProjektContentBlocks::GenerateFromPrompt < ApplicationService
          #{sdg_targets_info}
 
          Only return codes with clear evidence in the description. If uncertain, leave empty.
-    PROMPT
+    INSTRUCTIONS
+  end
+
+  def build_user_prompt(prompt)
+    prompt
   end
 
   def fetch_categories_examples

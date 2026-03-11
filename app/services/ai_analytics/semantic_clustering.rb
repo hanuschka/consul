@@ -20,14 +20,15 @@ class AiAnalytics::SemanticClustering < ApplicationService
 
       fetched_prompt = fetch_prompt
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         #{fetched_prompt}
         Write all clusters and subcluster names in #{AiAnalytics::ClusteringCore.target_language}.
+        Dont return clusters and subclusters, if there no match of #{resource_type.capitalize}.
+      TEXT
 
+      user_prompt = <<~TEXT
         #{resource_type.capitalize}:
         #{resources_text}
-
-        Dont return clusters and subclusters, if there no match of #{resource_type.capitalize}.
       TEXT
 
         # Your goals:
@@ -42,7 +43,11 @@ class AiAnalytics::SemanticClustering < ApplicationService
         # Ensure topics and subtopics are: meaningful and human-friendly, non-overlapping , comprehensive (cover everything),
         # semantically justified (not based on superficial keywords).
         # Dont include resource name in topics and subtopics.
-      response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema)
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
       response.content["topics"]
     rescue StandardError => e

@@ -24,6 +24,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
   },
 
   openDialog() {
+    App.ContentBlockTemplatesSelector.loadTemplatesContent();
     $('#contentBlockTemplatesModal').foundation('open');
   },
 

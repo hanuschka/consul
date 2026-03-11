@@ -6,6 +6,7 @@ de:
         aria_label: Moderationsmenü
         title: Moderation
         users: Benutzer blockieren
+        proposals: Vorschläge
       users:
         index:
           title: Benutzer blockieren
@@ -21,3 +22,22 @@ de:
           confirm_block: "Sind Sie sicher? Dadurch wird der/die Benutzer*in \"%{name}\" und alle seine/ihre Inhalte ausgeblendet."
         notice_hide: Der/die Benutzer*in wurde ausgeblendet. Inhalte, die von diesem/dieser Benutzer*in verfasst wurden, sind weiterhin verfügbar.
         notice_block: Der/die Benutzer*in wurde blockiert. Alle Inhalte dieses/dieser Benutzers*in wurden ausgeblendet.
+      proposals:
+        index:
+          title: Vorschläge moderieren
+          projekt: Projekt
+          author: Autor*in
+          flags_count: Meldungen
+          tabs:
+            pending_flag_review: Gemeldet
+            with_ignored_flag: Ignorierte Meldungen
+            hidden: Versteckt
+            all: Alle
+          statuses:
+            hide: Versteckt
+            ignored: Als gelesen markiert
+          actions:
+            hide: Verstecken
+            ignore_flag: Als gelesen markieren
+          confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" ausgeblendet."
+        notice_hide: Der Vorschlag wurde ausgeblendet.

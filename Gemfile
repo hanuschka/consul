@@ -55,16 +55,12 @@ gem "social-share-button", "~> 1.2.4"
 gem "sprockets", "~> 4.2.1"
 gem "turbolinks", "~> 5.2.1"
 gem "turnout", "~> 2.5.0"
-gem "uglifier", "~> 4.2.0"
+gem "terser", "~> 1.2"
 gem "uuidtools", "~> 2.2.0"
 gem "view_component", "~> 3.6.0"
 gem "whenever", "~> 1.0.0", require: false
 gem "wicked_pdf", "~> 2.7.0"
 gem "wkhtmltopdf-binary", "~> 0.12.6"
-
-source "https://rails-assets.org" do
-  gem "rails-assets-markdown-it", "~> 9.0.1"
-end
 
 group :development, :test do
   gem "bullet", "~> 7.0.7"

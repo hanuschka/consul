@@ -1,0 +1,9 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @investment.title, breadcrumbs: @breadcrumbs, back_button_url: budget_investments_adm_projekts_phase_path(@projekt_phase)) %>
+
+<%= render Adm::TabsComponent.new(tabs: @tabs) %>
+
+<div class="kern-container mb-5">
+  <%= render "adm/shared/audits", auditable: @investment %>
+</div>

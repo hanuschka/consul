@@ -1,0 +1,43 @@
+<% form_url = @category.persisted? ? adm_ideas_category_path(@category) : adm_ideas_categories_path %>
+
+<%= translatable_form_for @category, url: form_url do |f| %>
+
+  <%= render "shared/globalize_locales", resource: @category %>
+
+  <%= f.translatable_fields do |translations_form| %>
+    <div class="mb-4">
+      <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:name)) do %>
+        <%= translations_form.text_field :name, class: "kern-input" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:color)) do %>
+      <%= f.color_field :color, class: "kern-input", style: "height: 40px; padding: 4px;" %>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:icon)) do %>
+      <div class="admin-deficiency-report-category-icons-selector flex flex-wrap gap-2">
+        <%= f.collection_radio_buttons :icon, Iconable::AVAILABLE_ICONS_SHORT, :first, :first do |rb| %>
+          <label class="cursor-pointer p-2 border rounded hover:bg-gray-100 <%= 'bg-blue-100 border-blue-500' if rb.object.first == @category.icon %>">
+            <%= rb.radio_button(class: "sr-only") %>
+            <i class="fas fa-<%= rb.object.first %>"></i>
+          </label>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:default_idea_officer)) do %>
+      <%= f.collection_select :idea_officer_id, Idea::Officer.all, :id, :name,
+        { include_blank: t(".no_officer") },
+        { class: "kern-select" } %>
+    <% end %>
+  </div>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

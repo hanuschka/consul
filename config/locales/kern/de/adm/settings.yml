@@ -1,0 +1,9 @@
+de:
+  adm:
+    settings:
+      metadata:
+        title: Metadaten & Kommunikation
+      gdpr:
+        title: DSGVO
+      registration:
+        title: Registrierung & Verifizierung

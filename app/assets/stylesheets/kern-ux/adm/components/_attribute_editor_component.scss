@@ -1,0 +1,29 @@
+.attribute-editor-component {
+  .attribute-form.string,
+  .attribute-form.date {
+    form {
+      display: flex;
+      gap: 8px;
+
+      .kern-form-input__input {
+        flex: 1;
+      }
+    }
+  }
+
+  .attribute-form.boolean {
+  }
+
+  .attribute-form.select {
+    form {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .attribute-form.image {
+    .kern-form-input .form-error {
+      display: none;
+    }
+  }
+}

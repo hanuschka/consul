@@ -31,6 +31,9 @@ en:
     newsletter_subscription_for_existing_user:
       subject: Subscribe to the newsletter
       p1_html: There was an attempt to sign up for our newsletter using your email address. Since you already have a Consul account, we would like to ask you to log in and activate the option to receive the newsletter in your <a href=%{link}>Account Settings</a>.
+    csv_download_ready:
+      subject: Data Export
+      p1_html: 'You have requested an export. The data has been exported and is ready for download: <a href="%{url}">Download CSV</a>'
     file_ready:
       subject: Data-Export
       p1_html: You have requested an export. The data has now been exported and is attached.
@@ -94,6 +97,9 @@ en:
       hi: "Hello,"
       p1: Please use the email address you originally registered with to log in to your account.
       p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.
+    projekt_event_registration_confirmation:
+      body: "Hello %{name}, please confirm your registration for the event \"%{event}\" by clicking the link below."
+      confirm_link: "Confirm registration"
     user_verification_failed:
       subject: Verification attempt failed
       hi: "Hello %{username},"

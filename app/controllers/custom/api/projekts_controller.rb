@@ -199,7 +199,7 @@ class Api::ProjektsController < Api::BaseController
     attributes = [
       :name, :parent_id, :total_duration_start, :total_duration_end,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
+      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
       map_location_attributes: map_location_attributes,
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]

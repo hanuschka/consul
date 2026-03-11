@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "administer__officer" do %>
+  <%= form_with model: idea, url: adm_ideas_idea_path(idea), method: :patch do |f| %>
+    <% officer_options = [["", t("adm.ideas.ideas.administer.no_officer")]] +
+                         Idea::Officer.all.map { |o| [o.id, o.name] } %>
+    <div class="kern-fieldset__body mb-4">
+      <%= f.collection_radio_buttons(:idea_officer_id, officer_options, :first, :last) do |b| %>
+        <div class="kern-form-check">
+          <%= b.radio_button(class: "kern-form-check__radio") %>
+          <%= b.label(class: "kern-label") %>
+        </div>
+      <% end %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

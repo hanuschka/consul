@@ -1,0 +1,3 @@
+<%= turbo_stream.update "search_results" do %>
+  <%= render partial: "adm/role_assignments/users", locals: { users: @users, role: :idea_manager } %>
+<% end %>

@@ -1,0 +1,13 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <%= render "adm/shared/milestones_table",
+        milestones: @milestones,
+        new_url: new_adm_projekts_phase_milestone_path(@projekt_phase),
+        edit_url: ->(m) { edit_adm_projekts_phase_milestone_path(@projekt_phase, m) },
+        delete_url: ->(m) { adm_projekts_phase_milestone_path(@projekt_phase, m) } %>
+</div>

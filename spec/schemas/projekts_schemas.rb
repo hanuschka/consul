@@ -130,7 +130,7 @@ module Schemas
             order_number: { type: :integer, nullable: true, description: 'Display order among sibling projekts. Lower numbers appear first. Omit for default ordering.' },
             tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization (e.g., "environment,infrastructure")' },
             related_sdg_list: { type: :string, nullable: true, description: 'Comma-separated list of related Sustainable Development Goal IDs' },
-            landing_page_ids: { type: :array, items: { type: :integer }, description: 'Array of landing page IDs associated with this projekt' },
+            landing_page_id: { type: :integer, nullable: true, description: 'ID of the landing page associated with this projekt' },
             geozone_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Array of geographic zone IDs this projekt belongs to' },
             sdg_goal_ids: { type: :array, items: { type: :integer }, description: 'Array of Sustainable Development Goal IDs this projekt aligns with' },
             individual_group_value_ids: { type: :array, items: { type: :integer }, description: 'Array of individual group/demographic IDs with special restrictions or access' },

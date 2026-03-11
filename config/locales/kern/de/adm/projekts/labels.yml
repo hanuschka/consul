@@ -1,0 +1,20 @@
+de:
+  adm:
+    projekts:
+      labels:
+        new:
+          title: Neues Label erstellen
+        edit:
+          title: Label bearbeiten
+        create:
+          success: Label erfolgreich erstellt.
+        update:
+          success: Label erfolgreich aktualisiert.
+        destroy:
+          success: Label erfolgreich gelöscht.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen des Labels ein.
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein Symbol für das Label aus.
+          submit: Speichern

@@ -1,0 +1,11 @@
+<tr class="kern-table__row" id="<%= dom_id(valuator) %>">
+  <th scope="row" class="kern-table__header"><%= valuator.id %></th>
+  <td class="kern-table__cell"><%= valuator.name %></td>
+  <td class="kern-table__cell"><%= valuator.email %></td>
+  <td class="kern-table__cell">
+    <%= link_to t('shared.delete'),
+                adm_valuator_path(valuator),
+                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                class: "kern-link" %>
+  </td>
+</tr>

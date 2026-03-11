@@ -1,0 +1,106 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <% if @formular_follow_up_letters.any? %>
+    <h3 class="kern-heading kern-heading--md mb-3"><%= t(".emails_title") %></h3>
+
+    <div class="kern-table-responsive mb-5" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".letters_table.subject") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".letters_table.recipients") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".letters_table.status") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".letters_table.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="kern-table__body">
+          <% @formular_follow_up_letters.each do |letter| %>
+            <tr id="<%= dom_id(letter) %>" class="kern-table__row">
+              <td class="kern-table__cell"><%= letter.subject || t(".letters_table.no_subject") %></td>
+              <td class="kern-table__cell"><%= letter.recipients.count %></td>
+              <td class="kern-table__cell">
+                <% if letter.sent_at.present? %>
+                  <%= t(".letters_table.sent_at", date: l(letter.sent_at, format: :long)) %>
+                <% else %>
+                  <%= t(".letters_table.draft") %>
+                <% end %>
+              </td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% if letter.draft? %>
+                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_formular_follow_up_letter_path(@projekt_phase, letter)) %>
+                    <% actions.with_action(label: t(".letters_table.send_emails"), url: send_emails_adm_projekts_phase_formular_follow_up_letter_path(@projekt_phase, letter), data: { turbo_method: :post, turbo_confirm: t(".letters_table.send_confirm") }) %>
+                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_formular_follow_up_letter_path(@projekt_phase, letter), data: { turbo_method: :delete, turbo_confirm: t(".letters_table.delete_confirm") }) %>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <h3 class="kern-heading kern-heading--md mb-3"><%= t(".new_email_title") %></h3>
+
+  <div class="d-flex justify-content-start gap-2 mb-5">
+    <%= kern_link_button formular_answers_adm_projekts_phase_path(@projekt_phase, format: :csv), text: t(".download_csv"), style: :secondary %>
+  </div>
+
+  <% if @formular_answers.any? %>
+    <%= form_with url: adm_projekts_phase_formular_follow_up_letters_path(@projekt_phase), method: :post do |f| %>
+      <div class="mb-3">
+        <%= form_submit_button(text: t(".create_email_draft")) %>
+      </div>
+
+      <div class="kern-table-responsive" tabindex="0" data-controller="check-all">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header">
+                <input type="checkbox" data-check-all-target="selectAll" data-action="check-all#toggle">
+              </th>
+              <th scope="col" class="kern-table__header"><%= t(".letters_table.follow_up_emails") %></th>
+              <% @formular_fields.each do |field| %>
+                <% next if field.kind.in?(["image", "document"]) %>
+                <th scope="col" class="kern-table__header"><%= field.name %></th>
+              <% end %>
+              <th scope="col" class="kern-table__header"><%= t(".table.submitter") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".table.email") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".table.submitted_at") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% @formular_answers.each do |answer| %>
+              <tr id="<%= dom_id(answer) %>" class="kern-table__row">
+                <td class="kern-table__cell">
+                  <%= check_box_tag "formular_answer_ids[]", answer.id, true, data: { check_all_target: "checkbox" } %>
+                </td>
+                <td class="kern-table__cell">
+                  <% answer.formular_follow_up_letter_recipients.order(:id).each do |recipient| %>
+                    <div><%= "#{recipient.formular_follow_up_letter.subject} (#{recipient.formular_follow_up_letter.sent_at ? l(recipient.formular_follow_up_letter.sent_at, format: :short) : t(".letters_table.draft")})" %></div>
+                  <% end %>
+                </td>
+                <% @formular_fields.each do |field| %>
+                  <% next if field.kind.in?(["image", "document"]) %>
+                  <td class="kern-table__cell"><%= answer.answers[field.key] %></td>
+                <% end %>
+                <td class="kern-table__cell"><%= answer.submitter_id %></td>
+                <td class="kern-table__cell"><%= answer.original_submitter_email %></td>
+                <td class="kern-table__cell"><%= l(answer.created_at.to_date, format: :long) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="kern-body"><%= t(".no_answers") %></p>
+  <% end %>
+</div>

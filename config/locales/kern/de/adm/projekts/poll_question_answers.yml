@@ -1,0 +1,17 @@
+de:
+  adm:
+    projekts:
+      poll_question_answers:
+        new:
+          title: Neue Antwort erstellen
+        edit:
+          title: Antwort bearbeiten
+        create:
+          success: Antwort wurde erfolgreich erstellt.
+        destroy:
+          success: Antwort wurde erfolgreich gelöscht.
+          error: Antworten können nicht gelöscht werden, da bereits Stimmen abgegeben wurden.
+        form:
+          image_label: Bild
+          documents_label: Dokumente
+          video_label: Videos

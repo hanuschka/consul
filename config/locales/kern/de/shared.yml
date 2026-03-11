@@ -10,6 +10,10 @@ de:
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
     toggle_submenu: "Untermenü für %{title} umschalten"
     navbar_more: "Mehr"
+    moderation_statuses:
+      flagged: Gemeldet
+      ignored: Meldung ignoriert
+      hidden: Herausmoderiert
     table:
       id: "ID"
       username: "Benutzername"

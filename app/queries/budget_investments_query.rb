@@ -1,7 +1,8 @@
 class BudgetInvestmentsQuery < ApplicationQuery
   SEARCHABLE_FIELDS = %i[title].freeze
-  SORTABLE_FIELDS = %i[total_votes].freeze
+  SORTABLE_FIELDS = %i[total_votes flags_count].freeze
   FILTERABLE_FIELDS = %i[feasibility valuation_finished preselected selected winner].freeze
+  MODERATION_STATUSES = %w[flagged ignored hidden].freeze
 
   def initialize(base_scope, params = {})
     @base_scope = base_scope
@@ -12,6 +13,7 @@ class BudgetInvestmentsQuery < ApplicationQuery
     base_scope
       .then { |scope| apply_search(scope) }
       .then { |scope| apply_filters(scope) }
+      .then { |scope| apply_moderation_filter(scope) }
       .then { |scope| apply_sorting(scope) }
   end
 
@@ -32,15 +34,16 @@ class BudgetInvestmentsQuery < ApplicationQuery
     end
 
     def apply_sorting(scope)
-      return scope unless params[:sort_by]&.to_sym == :total_votes
+      field = params[:sort_by]&.to_sym
+      return scope unless sortable_fields.include?(field)
 
-      direction = params[:sort_direction]&.downcase
-      direction = %w[asc desc].include?(direction) ? direction : "asc"
-
-      scope.reorder(nil)
-        .left_joins(:votes_for)
-        .group("budget_investments.id")
-        .order(Arel.sql("COALESCE(SUM(votes.vote_weight), 0) + budget_investments.physical_votes #{direction}"))
+      if scope.klass.respond_to?(:"sort_by_#{field}")
+        scope.send(:"sort_by_#{field}")
+      else
+        direction = params[:sort_direction]&.downcase
+        direction = %w[asc desc].include?(direction) ? direction : "asc"
+        scope.order(field => direction)
+      end
     end
 
     def apply_filters(scope)
@@ -52,6 +55,29 @@ class BudgetInvestmentsQuery < ApplicationQuery
       end
 
       scope
+    end
+
+    def apply_moderation_filter(scope)
+      statuses = Array(params[:moderation_status]).select { |s| MODERATION_STATUSES.include?(s) }
+      return scope if statuses.blank?
+
+      table = Budget::Investment.arel_table
+      conditions = statuses.map { |s| moderation_condition(table, s) }
+      scope.where(conditions.reduce(:or))
+    end
+
+    def moderation_condition(table, status)
+      case status
+      when "flagged"
+        table[:flags_count].gt(0)
+          .and(table[:ignored_flag_at].eq(nil))
+          .and(table[:hidden_at].eq(nil))
+      when "ignored"
+        table[:ignored_flag_at].not_eq(nil)
+          .and(table[:hidden_at].eq(nil))
+      when "hidden"
+        table[:hidden_at].not_eq(nil)
+      end
     end
 
     def apply_search(scope)

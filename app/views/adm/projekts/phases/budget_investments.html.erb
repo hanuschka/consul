@@ -28,6 +28,7 @@
             <th scope="col" class="kern-table__header"><%= t(".table.id") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.created_at") %></th>
             <%= render Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options) %>
+            <%= render Kern::Table::HeaderComponent.new(:moderation_status, t(".table.moderation"), **@moderation_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:feasibility, t(".table.feasibility"), **@feasibility_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:valuation_finished, t(".table.valuation_finished"), **@valuation_finished_header_options) %>
             <%= render Kern::Table::HeaderComponent.new(:total_votes, t(".table.total_votes"), **@total_votes_header_options) %>
@@ -49,36 +50,7 @@
 
         <tbody class="kern-table__body">
           <% @investments.each do |investment| %>
-            <tr id="<%= dom_id(investment) %>" class="kern-table__row">
-              <td class="kern-table__cell"><%= investment.id %></td>
-              <td class="kern-table__cell"><%= l(investment.created_at, format: "%d.%m.%Y") %></td>
-              <th scope="row" class="kern-table__header"><%= investment.title %></th>
-              <td class="kern-table__cell"><%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %></td>
-              <td class="kern-table__cell"><%= human_boolean(investment.valuation_finished?) %></td>
-              <td class="kern-table__cell"><%= investment.total_votes %></td>
-              <td class="kern-table__cell"><%= human_boolean(investment.preselected?) %></td>
-              <td class="kern-table__cell"><%= human_boolean(investment.selected?) %></td>
-              <% if @budget.show_money? %>
-                <td class="kern-table__cell"><%= investment.formatted_price %></td>
-              <% end %>
-              <td class="kern-table__cell"><%= investment.ballot_lines_count %></td>
-              <td class="kern-table__cell"><%= investment.total_ballot_votes %></td>
-              <td class="kern-table__cell"><%= investment.district&.name %></td>
-              <td class="kern-table__cell"><%= human_boolean(investment.winner?) %></td>
-              <td class="kern-table__cell"><%= investment.administrator&.description_or_name %></td>
-              <td class="kern-table__cell"><%= investment.author&.name %></td>
-              <td class="kern-table__cell">
-                <% valuators = [investment.assigned_valuation_groups, investment.assigned_valuators].compact.presence %>
-                <%= valuators ? valuators.join(", ") : "" %>
-              </td>
-              <td class="kern-table__cell">
-                <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: "Anzeigen", url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment)) %>
-                  <% actions.with_action(label: t(".table.pdf_link"), url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment, format: :pdf)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_budget_investment_path(@projekt_phase, investment), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
-                <% end %>
-              </td>
-            </tr>
+            <%= render "adm/projekts/phases/budget_investments/budget_investment", investment: investment, projekt_phase: @projekt_phase, budget: @budget %>
           <% end %>
         </tbody>
       </table>

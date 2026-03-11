@@ -16,7 +16,7 @@ class ProjektPhase::CommentPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions]
+    %w[duration naming restrictions comments]
   end
 
   def safe_to_destroy?

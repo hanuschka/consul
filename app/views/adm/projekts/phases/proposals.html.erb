@@ -15,6 +15,7 @@
               <th scope="col" class="kern-table__header"><%= t(".table.admin_accepted") %></th>
             <% end %>
             <th scope="col" class="kern-table__header"><%= t(".table.title") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:moderation_status, t(".table.moderation"), **@moderation_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>

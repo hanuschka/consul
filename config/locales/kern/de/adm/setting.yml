@@ -1,0 +1,437 @@
+de:
+  setting:
+    org_name: "Name der Anwendung"
+    org_name_description: "Dieser Name wird z.B. im Browser-Tab, in E-Mails sowie an anderen Stellen der Plattform angezeigt. Er sollte eindeutig und wiedererkennbar sein."
+    url: "Haupt-URL der Applikation"
+    url_description: "Dies ist die Hauptadresse (Top-Level-Domain) der Consul-Instanz, z. B. https://beteiligung.meine-stadt.de. Sie wird verwendet, wenn relative Links auf der Plattform automatisch ergänzt oder in Systembenachrichtigungen eingesetzt werden. Hinweis: Bitte ohne abschließenden Schrägstrich angeben."
+    mailer_from_address: "Absender-E-Mail-Adresse"
+    mailer_from_address_description: "Diese E-Mail-Adresse erscheint als Absender bei allen automatisch versendeten E-Mails der Plattform (z. B. Benachrichtigungen, Bestätigungen).
+Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten Adresse identisch sein. Änderungen sind nicht selbstständig möglich – bitte wenden Sie sich in diesem Fall an den Support von demokratie.today."
+    mailer_from_name: "Anzeigename des E-Mail-Absenders"
+    mailer_from_name_description: "Dieser Name wird den Empfängern als Absender in E-Mails angezeigt, die von der Plattform versendet werden – zum Beispiel „Beteiligungsplattform Stadt Musterstadt“. Der Anzeigename kann unabhängig von der technischen Absenderadresse angepasst werden."
+    meta_title: "Seitentitel (Suchmaschinenoptimierung)"
+    meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet. Ein klar formulierter, suchmaschinenfreundlicher Titel verbessert die Sichtbarkeit Ihrer Anwendung bei Google & Co."
+    meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
+    meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unter dem Titel Ihrer Seite. Sie sollte kurz, präzise und ansprechend sein, um Nutzer zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Sichtbarkeit und Klickrate in den Suchergebnissen."
+    meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
+    meta_keywords_description: "Hier können Sie optionale Stichwörter eintragen, die den Inhalt der Seite thematisch beschreiben. Diese werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag heute kaum noch auswerten, kann er für interne Zwecke oder spezifische SEO-Strategien weiterhin nützlich sein. Begriffe durch Kommas trennen."
+    facebook_handle: "Facebook-Benutzername"
+    facebook_handle_description: "Wenn ausgefüllt, wird ein Facebook-Logo mit Link in der Fußzeile angezeigt."
+    instagram_handle: "Instagram-Benutzername"
+    instagram_handle_description: "Wenn ausgefüllt, wird ein Instagram-Logo mit Link in der Fußzeile angezeigt."
+    twitter_handle: "X-Benutzername (ehemals Twitter)"
+    twitter_handle_description: "Wenn ausgefüllt, wird ein X-Logo mit Link in der Fußzeile angezeigt."
+    twitter_hashtag: "X-Hashtag"
+    twitter_hashtag_description: "Hier kann ein Hashtag eingetragen werden, der mit der Plattform X verlinkt wird – z. B. für Kampagnen oder zentrale Themen. Erscheint ebenfalls in der Fußzeile."
+    telegram_handle: "Telegram-Benutzername"
+    telegram_handle_description: "Wenn ausgefüllt, wird ein Telegram-Logo mit Link in der Fußzeile angezeigt."
+    youtube_handle: "YouTube-Benutzername oder Kanal-ID"
+    youtube_handle_description: "Wenn ausgefüllt, wird ein YouTube-Logo mit Link in der Fußzeile angezeigt."
+    welcomepage:
+      usage_stats: Nutzerübersicht anzeigen
+      usage_stats_description: Zeigt auf der Startseite die Gesamtanzahl registrierter Nutzer an und verlinkt auf eine detaillierte Nutzerübersicht.
+      newsletter_subscription: Plattformstatistik anzeigen
+      newsletter_subscription_description: Zeigt zentrale Kennzahlen zur Plattform an – darunter Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare.
+      platform_activity: Newsletter-Funktion aktivieren
+      platform_activity_description: Bietet eingeloggten Nutzern eine gut sichtbare Möglichkeit zur Newsletter-Anmeldung. Auch nicht angemeldete Nutzer können sich über ein separates Formular anmelden.
+      projekt_search: Projektsuche aktivieren
+      projekt_search_description: Ermöglicht eine Suchleiste auf der Startseite, mit der Nutzer gezielt nach Projekten suchen können. Wenn diese Option aktiviert ist, wird der hervorgehobene Startseiten-Button durch die Suchleiste ersetzt. Beides gleichzeitig ist nicht möglich.
+    extended_feature:
+      projekts_overview_page_navigation:
+        show_index_order_all: Alle Projekte
+        show_index_order_all_description: Zeigt Tab "Alle Projekte" an
+        show_index_order_underway: Aktive Beteiligung
+        show_index_order_underway_description: Zeigt Tab "Aktive Beteiligung" an
+        show_index_order_ongoing: Laufende Projekte
+        show_index_order_ongoing_descrition: Zeigt Tab "Laufende Projekte" an
+        show_index_order_upcoming: Zukünftige Projektvorhaben
+        show_index_order_upcoming_description: Zeigt Tab "Zukünftige Projektvorhaben" an
+        show_index_order_expired: Archivierte Projektvorhaben
+        show_index_order_expired_description: Zeigt Tab "Archivierte Projektvorhaben" an
+        show_index_order_individual_list: Individuelle Liste
+        show_index_order_individual_list_description: Zeigt Tab "Individuelle Liste" an
+        show_index_order_drafts: Entwürfe
+        show_index_order_drafts_description: Zeigt Tab "Entwürfe" an
+      projekts_overview_page_footer:
+        show_in_index_order_all: Beteiligung für "Alle Projekte"
+        show_in_index_order_all_description: Zeigt die Beteiligungsmodule für den Tab "Alle Projekte an"
+        show_in_index_order_underway: Beteiligung für "Aktive Beteiligung"
+        show_in_index_order_underway_description: Zeigt die Beteiligungsmodule für den Tab "Alle Projekte an"
+        show_in_index_order_ongoing: Beteiligung für "Laufende Projekte"
+        show_in_index_order_ongoing_descrition: Zeigt die Beteiligungsmodule für den Tab "Alle Projekte an"
+        show_in_index_order_upcoming: Beteiligung für "Zukünftige Projektvorhaben"
+        show_in_index_order_upcoming_description: Zeigt die Beteiligungsmodule für den Tab "Alle Projekte an"
+        show_in_index_order_expired: Beteiligung für "Archivierte Projektvorhaben"
+        show_in_index_order_expired_description: Zeigt die Beteiligungsmodule für den Tab "Archivierte Projektvorhaben"
+        show_in_index_order_individual_list: Individuelle Liste
+        show_in_index_order_individual_list_description: Zeigt Tab "Individuelle Liste" an
+      gdpr:
+        gdpr_conformity: "DSGVO-konforme Voreinstellungen"
+        gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"
+        link_out_warning: "Warnung bei externen Links"
+        link_out_warning_description: "Wenn diese Option aktiviert ist, erscheint beim Klick auf einen externen Link (außerhalb der Consul-Plattform) ein Hinweis-Popup. Dieses informiert die Nutzer darüber, dass sie die Plattform verlassen und auf eine externe Webseite weitergeleitet werden."
+        two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
+        two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
+    extended_option:
+      general:
+        title: Titel der Anwendung
+        title_description: Dieser Titel wird innerhalb des Hintergrundbildes auf der Startseite angezeigt. Wenn das Feld leer bleibt, wird kein Titel dargestellt.
+        subtitle: Untertitel der Anwendung
+        subtitle_description: Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt.
+      gdpr:
+        devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
+        devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
+        devise_verification_token_validity_days: "Gültigkeit des Verifikationslinks in Tagen"
+        devise_verification_token_validity_days_description: "Legen Sie fest, wie viele Tage lang der Link gültig ist, den Nutzer per E-Mail zur Verifizierung ihres Accounts erhalten."
+    extra_fields:
+      registration:
+        extended: Erweiterte Registrierung
+        extended_description: "Aktiviert zusätzliche Eingabefelder in der Registrierungsmaske: Vorname, Nachname, Geschlecht, Straße, Hausnummer, PLZ, Stadt und Geburtsdatum. Diese Daten können für projektbezogene Einschränkungen genutzt werden."
+        check_documents: Dokumentenabfrage in der Registrierung
+        check_documents_description: "Aktiviert ein zusätzliches Feld in der Registrierungsmaske zur Eingabe der letzten vier Ziffern eines gültigen Dokuments (Personalausweis oder Reisepass).\nDiese Information kann für eine spätere manuelle oder automatisierte Verifizierung verwendet werden."
+      verification:
+        check_documents: Dokumentenprüfung in der Verifizierung
+        check_documents_description: "Aktiviert eine Verifizierungsmethode, bei der die bei der Registrierung hinterlegte Dokumentennummer (letzte vier Ziffern von Personalausweis oder Reisepass) mit einer Referenzliste (z. B. aus dem Melderegister) abgeglichen wird.\nHinweis: Diese Prüfung ist unabhängig von der reinen Erfassung des Dokuments in der Registrierungsmaske. Sie setzt voraus, dass eine API-Verbindung zum Melderegister mit Referenzdaten besteht."
+        show_data_completeness_status: Datenvollständigkeit im Nutzerkonto anzeigen
+        show_data_completeness_status_description: Zeigt im Benutzerkonto, ob alle für bestimmte Beteiligungsphasen erforderlichen Profildaten hinterlegt wurden. Nutzer erkennen so, ob sie noch Angaben ergänzen müssen, um teilnehmen zu können.
+        show_verification_status: Verifizierungsstatus im Konto anzeigen
+        show_verification_status_description: Zeigt den aktuellen Verifizierungsstatus des Nutzers direkt im Profilbereich unterhalb des Nutzerbildes an. Dies schafft Transparenz für die Nutzer und erleichtert die Einschätzung, ob eine Teilnahme an verifizierungsbeschränkten Beteiligungsphasen möglich ist.
+    projekt_feature:
+      general:
+        show_in_overview_page: Projekt auf Projektübersichtsseite anzeigen
+        show_in_overview_page_description: Zeigt das Projekt auf der allgemeinen Projektübersichtsseite an.
+        show_in_homepage: Projekt auf der Startseite anzeigen
+        show_in_homepage_description: Blendet das Projekt unter den weiterführenden Ressourcen auf der Startseite ein - wie z.B. aktuelle Projekte
+        show_in_individual_list: Projekt in individueller Liste anzeigen
+        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer individuellen Liste an. Es erscheint nicht in anderen automatischen Listen wie “Laufende Projekte”.
+        allow_indexing: Projektseite für Suchmaschinen freigeben
+        allow_indexing_description: Erlaubt die Indexierung der Projektseite durch Google und andere Suchmaschinen.
+  site_customization/image:
+    header_image: "Hintergrundbild für Desktop"
+    header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."
+    mobile_header_image: "Hintergrundbild für Mobile"
+    mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
+
+
+
+
+
+
+
+
+
+    # map_latitude: Breitengrad
+    # map_latitude_description: Breitengrad zur Anzeige der Kartenposition
+    # map_longitude: Längengrad
+    # map_longitude_description: Längengrad, um die Position der Karte zu zeigen
+    # map_zoom: Zoom
+    # map_zoom_description: Zoomen, um die Kartenposition anzuzeigen
+    # map_color: Farbe der Kartenmarkierung ändern
+    # map_color_description: Bitte den Farbwert als HEX-code eingeben
+    # feature:
+    #   map: Karten anzeigen
+    #   map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
+    # extended_feature:
+    #   general:
+    #     elasticsearch: "Elasticsearch"
+    #     elasticsearch_description: "Elasticsearch ist die führende verteilte, RESTful, Open-Source-Such- und Analyse-Engine, die auf Geschwindigkeit, horizontale Skalierbarkeit, Zuverlässigkeit und einfache Verwaltung ausgelegt ist."
+    #     extended_editor_for_admins: Erweiterter Editor für den Admin-Panel
+    #     extended_editor_for_admins_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Admin-Panel erstellt werden
+    #     extended_editor_for_users: Erweiterter Editor für Nutzer im Frontend
+    #     extended_editor_for_users_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Frontend von Nutzern erstellt werden
+    #     language_switcher_in_menu: Sprachumschalter in Navigation anbieten
+    #     language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
+    #     enable_projekt_events_page: Veranstaltungskalender anzeigen
+    #     enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
+    #     enable_investments_overview: Budgetübersicht anzeigen
+    #     enable_investments_overview_description: Zeigt die Übersicht aller Budgetvorschläge in der Hauptnavigation an
+    #     enable_google_translate: Google Translate aktivieren
+    #     enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+    #     show_guest_login_links: Zeige Gast-Login an
+    #     show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+    #   gdpr:
+    #     show_cookie_banner: Cookies Banner anzeigen
+    #     show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzer:innen auf Tracking hinzuweisen
+    #   modulewide:
+    #     enable_categories: Tags
+    #     enable_categories_description: Aktivieren Sie die Auswahl vordefinierter Tags
+    #     enable_custom_tags: Nutzer-Tags
+    #     enable_custom_tags_description: Aktivieren Sie die Eingabe individueller Nutzer-Tags
+    #     show_number_of_entries_in_modules: Anzahl der Beteiligungen anzeigen
+    #     show_number_of_entries_in_modules_description: Zeigt die Anzahl der Diskussionsbeiträge, Vorschläge und Abstimmungen an
+    #     hide_comment_replies_by_default: Antworten auf Kommentare standardmäßig einklappen
+    #     hide_comment_replies_by_default_description: Aktivieren Sie das standardmäßige Einklappen von Kommentaren, um Übersichtlichkeit zu schaffen
+    #     custom_help_text_in_modules: Individuelle Hilfstexte zu Modulen
+    #     custom_help_text_in_modules_description: Am unteren Ende der Modulübersicht können individuelle Hilfstexte platziert werden
+    #     show_affiliation_filter_in_index_sidebar: Gebietsfilter anzeigen
+    #     show_affiliation_filter_in_index_sidebar_description: Zeigt den Gebietsfilter in der rechten Seitenleiste der einzelnen Module
+    #   debates:
+    #     intro_text_for_debates: Einleitungstext für Diskussionen
+    #     intro_text_for_debates_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Diskussionsübersicht
+    #     head_image_for_debates: Titelbild für Diskussionen
+    #     head_image_for_debates_description: Aktivieren Sie das Hinzufügen eines Titelbildes für Diskussionen
+    #     enable_projekt_filter: Projektfilter anzeigen
+    #     enable_projekt_filter_description: Zeigt den Projektfilter in der Diskussionsübersichtseite
+    #     enable_my_posts_filter: Meine Beiträge
+    #     enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+    #   verification:
+    #     manual_verifications: Manuelle Nutzer*innen-Verifizierung
+    #     manual_verifications_description: Nutzer*innen müssen manuell verifiziert werden. Beteiligungsformate können auf Nutzer*innen-Gruppen eingeschränkt werden
+
+    #   proposals:
+    #     intro_text_for_proposals: Einleitungstext für Vorschläge
+    #     intro_text_for_proposals_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Vorschlagsübersicht
+    #     show_selected_proposals_in_proposal_sidebar: Ausgewählte Vorschläge
+    #     show_selected_proposals_in_proposal_sidebar_description: "Aktivieren Sie \"Ausgewählte Vorschläge\", um Vorschläge hervorzuheben"
+    #     show_suggested_proposals_in_proposal_sidebar: Weitere Vorschlagslisten
+    #     show_suggested_proposals_in_proposal_sidebar_description: "Aktivieren Sie \"Weitere Vorschlagslisten\", um zusätzliche Vorschlagslisten anzuzeigen"
+    #     enable_projekt_filter: Projektfilter anzeigen
+    #     enable_projekt_filter_description: Zeigt den Projektfilter in der Vorschlagsübersichtseite
+    #     enable_my_posts_filter: Meine Beiträge
+    #     enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Vorschlagsübersichtseite
+    #   polls:
+    #     intro_text_for_polls: Einleitungstext für Abstimmungen
+    #     intro_text_for_polls_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Abstimmungsübersicht
+    #     enable_projekt_filter: Projektfilter anzeigen
+    #     enable_projekt_filter_description: Zeigt den Projektfilter in der Abstimmungsübersichtseite
+
+    # extended_option:
+    #   general:
+    #     city_name: Name der Applikation
+    #     city_name_description: Wird unter anderem bei der BundID-Verifizierung verwendet
+    #     launch_date: Erscheinungsdatum
+    #     launch_date_description: "Bitte geben Sie das Erscheinungsdatum im folgenden Format an: \"dd.mm.yyyy\". So sollte beispielsweise der 3. Oktober 1990 als 03.10.1990 geschrieben werden."
+    #     homepage_button_text: Homepage-Button-Text
+    #     homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
+    #     homepage_button_link: Homepage-Button-Link
+    #     homepage_button_link_description: Link, der über den Button angesteuert werden soll
+
+    #   proposals:
+    #     max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
+    #     max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest
+    #     description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
+    #     description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
+
+
+    # projekts:
+    #   overview_page: Projektübersichtsseite in Navigation anzeigen
+    #   overview_page_description: Zeigt die Projektübersichtsseite in der Navigation an
+    #   show_archived:
+    #     sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
+    #     sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
+    #   second_level_projekts_in_active_filter: Zweite Ebene für aktive Projekte anzeigen
+    #   second_level_projekts_in_active_filter_description: Zeigt eine zweite Ebene im Projektfilter für aktive Projekte standardmäßig an
+    #   second_level_projekts_in_archived_filter: Zweite Ebene für archivierte Projekte anzeigen
+    #   second_level_projekts_in_archived_filter_description: Zeigt eine zweite Ebene im Projektfilter für archivierte Projekte standardmäßig an
+    #   set_default_sorting_to_newest: Standardsortierung auf "Neueste" unstellen
+    #   set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
+
+    # projekt_feature:
+    #   main:
+    #     activate: Projekt aktivieren
+    #     activate_description: Aktivieren Sie das Projekt, sodass es in der Applikation sichtbar ist
+    #   general:
+    #     show_in_navigation: Projekt in Navigation hervorheben
+    #     show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
+    #     show_in_overview_page_navigation: Projekt in Dropdown-Navigation anzeigen
+    #     show_in_overview_page_navigation_description: Zeigt das Projekt in einer Dropdownliste im Navigationsmenü
+    #     allow_downvoting_comments: Downvotes in Kommentaren aktivieren
+    #     allow_downvoting_comments_description: Aktivieren Sie den "Daumen nach unten"-Button in den Kommentaren
+    #     set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
+    #     set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
+    #     show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
+    #     show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf den übersichtsseiten an
+    #     vc_map_enabled: Virtual City 3D Maps aktivieren
+    #     vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
+    #     consider_underway: Projekt als aktive Beteiligung betrachten
+    #     consider_underway_description: Sortiert dieses Projekt in der Projektübersicht immer unter “Aktive Beteiligung”.
+    #   sidebar:
+    #     show_notification_subscription_toggler: Benachrichtigungen
+    #     show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste
+    #     show_phases_in_projekt_page_sidebar: Projektphasen
+    #     show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite
+    #     show_map: Karte einblenden
+    #     show_map_description: Zeigt eine erweiterbare Miniaturkarte in der rechten Seitenleiste der Projektseite
+    #     show_navigator_in_projekts_page_sidebar: Projektverzeichnis
+    #     show_navigator_in_projekts_page_sidebar_description: Zeigt die Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
+    #     projekt_page_sharing: Teilen-Funktion
+    #     projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite
+    #     new_resource_button_in_sidebar: Beteiligungsbutton in der rechten Seitenleiste anzeigen
+    #     new_resource_button_in_sidebar_description: Zeigt eine Schaltfläche zur direkten Beteiligung in der rechten Seitenleiste an.
+    #   debates:
+    #     show_report_button_in_sidebar: Diskussion melden
+    #     show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Diskussionen
+    #     show_related_content: Verwandte Inhalte
+    #     show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Diskussionen
+    #     show_comments: Kommentare
+    #     show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
+    #     allow_attached_documents: Zusätzliche Dokumente
+    #     allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente der Diskussion anzuhängen
+    #     allow_attached_image: Titelbild hinzufügen
+    #     allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+    #     only_admins_create_debates: Nur Admins können neue Diskussionen erstellen
+    #     only_admins_create_debates_description: Die Erstellung von neuen Diskussionen ist auf Admins beschränkt
+    #     allow_downvoting: Downvotes aktivieren
+    #     allow_downvoting_description: Aktivieren Sie den "Daumen nach unten"-Button
+    #     show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
+    #     show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Diskussionsübersichtsseite an
+    #     allow_voting: Unterstützung von Diskussionen
+    #     allow_voting_description: Aktivieren Sie die Unterstützung von Diskussionen mit Daumen hoch und runter
+    #     hide_projekt_selector: Projekt-Selektor ausblenden
+    #     hide_projekt_selector_description: Blendet den Projektselektor in diesem Projekt aus
+    #   proposals:
+    #     quorum_for_proposals: Quorum für Vorschläge
+    #     quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
+    #     enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
+    #     enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Vorschlagsunterstützung
+    #     enable_proposal_notifications_tab: Benachrichtigungen des Autors zu Vorschlägen
+    #     enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+    #     enable_proposal_milestones_tab: Meilensteine in Vorschlägen
+    #     enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+    #     show_report_button_in_proposal_sidebar: Vorschlag melden
+    #     show_report_button_in_proposal_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
+    #     show_follow_button_in_proposal_sidebar: Vorschlag folgen
+    #     show_follow_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion “Vorschlag folgen”
+    #     show_community_button_in_proposal_sidebar: Community
+    #     show_community_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion “Community” für Vorschläge
+    #     show_related_content: Verwandte Inhalte
+    #     show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Vorschläge
+    #     show_comments: Kommentare
+    #     show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+    #     allow_attached_documents: Zusätzliche Dokumente
+    #     allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+    #     allow_attached_image: Titelbild hinzufügen
+    #     allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+    #     only_admins_create_proposals: Nur Admins können neue Vorschläge erstellen
+    #     only_admins_create_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
+    #     show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
+    #     show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Vorschlagsübersichtsseite an
+    #     show_map: Karte für Vorschläge anzeigen
+    #     show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
+    #     enable_summary: "\"Zusammenfassung\" anzeigen"
+    #     enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
+    #     allow_voting: Unterstützung von Vorschlägen
+    #     allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
+    #     enable_external_video: Externes Video einbinden
+    #     enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+    #     enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+    #     enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+    #     hide_projekt_selector: Projekt-Selektor ausblenden
+    #     hide_projekt_selector_description: Blendet den Projektselektor in diesem Projekt aus
+    #   proposal_options:
+    #     votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
+    #     votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+    #   polls:
+    #     intermediate_poll_results_for_admins: Zwischenergebnisse von Abstimmungen für Admins
+    #     intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
+    #     show_comments: Kommentare
+    #     show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
+    #     additional_information: Erweiterte Informationen
+    #     additional_information_description: Aktivieren Sie "Erweiterete Informationen" für das Abstimmungsmodul
+    #     additional_info_for_each_answer: Zusätzliche Informationen je Antwort
+    #     additional_info_for_each_answer_description: Zeigt die "Zusätzliche Informationen" je Antwort an
+    #     show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
+    #     show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Abstimmungsübersichtsseite an
+    #   budgets:
+    #     remove_investments_supports: Zurückziehen von Unterstützungen für Investitionsvorschläge zulassen
+    #     remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
+    #     show_report_button_in_sidebar: Investition melden
+    #     show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
+    #     show_follow_button_in_sidebar: Investition folgen
+    #     show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
+    #     show_community_button_in_sidebar: Community
+    #     show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Investitionsvorschläge
+    #     show_related_content: Verwandte Inhalte
+    #     show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
+    #     show_implementation_option_fields: Umsetzung
+    #     show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
+    #     show_user_cost_estimate: Preisliche Einschätzung
+    #     show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+    #     show_comments: Kommentare
+    #     show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+    #     allow_attached_documents: Zusätzliche Dokumente
+    #     allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+    #     only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
+    #     only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
+    #     show_map: Karte für Investitionsvorschläge anzeigen
+    #     show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
+    #     show_results_after_first_vote: Ergebnisliste nach erster Beteiligungsphase anzeigen
+    #     show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
+    #     enable_summary: "\"Zusammenfassung\" anzeigen"
+    #     enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
+    #     enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+    #     enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+    #     show_relative_ballotting_results: Nur prozentuale Werte anzeigen
+    #     show_relative_ballotting_results_description: Blendet die absoluten Zahlen in den Statistiken aus. Nur prozentuale Werte werden angezeigt
+    #   milestones:
+    #     newest_first: Neueste Meilensteine zuerst anzeigen
+    #     newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
+
+    # projekt_option:
+    #   general:
+    #     external_participation_link: Alternativen Link in den Projektressourcen verwenden
+    #     external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
+    # deficiency_reports:
+    #   show_in_main_menu: Mängelmelder in Navigation anzeigen
+    #   show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
+    #   admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+    #   admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
+    #   officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
+    #   officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
+    #   officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
+    #   officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
+    #   allow_voting: Nutzer*innen Bewertung pro Mangel
+    #   allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
+    #   enable_comments: Kommentarfunktion
+    #   enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
+    #   intro_text: Einleitungstext für den Mängelmelder
+    #   intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+    #   enable_my_posts_filter: Meine Beiträge
+    #   enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+    #   enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+    #   enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+    #   admin_acceptance_required: Bestätigung durch Administratoren
+    #   admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+    #   document_upload: Zusätzliche Dokumente
+    #   document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+    #   external_video: Externes Video einbinden
+    #   external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+    #   voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
+    #   voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+    #   send_feedback_form_link: Feedback-Formular
+    #   send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
+    # ideas:
+    #   show_in_main_menu: Ideen in Navigation anzeigen
+    #   show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
+    #   admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+    #   admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
+    #   officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
+    #   officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
+    #   officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
+    #   officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
+    #   allow_voting: Nutzer*innen Bewertung pro Idee
+    #   allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
+    #   enable_comments: Kommentarfunktion
+    #   enable_comments_description: Nutzer*innen können unterhalb einer Idee kommentieren
+    #   intro_text: Einleitungstext für die Idee
+    #   intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+    #   enable_my_posts_filter: Meine Beiträge
+    #   enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+    #   enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+    #   enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+    #   admin_acceptance_required: Bestätigung durch Administratoren
+    #   admin_acceptance_required_description: Administratoren müssen neue Idee vor der Veröffentlichung zunächst bestätigen.
+    #   document_upload: Zusätzliche Dokumente
+    #   document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
+    #   external_video: Externes Video einbinden
+    #   external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+
+    # projekt_newsfeed:
+    #   id: Newsfeed ID
+    #   id_description:
+    #   type: Newsfeed Type
+    #   type_description:
+
+    # projekt_custom_feature:
+    #   default_footer_tab: Standard-Element
+    #   default_footer_tab_description: Wählen Sie ein Standard-Element aus, welches beim Öffnen der Seite angezeigt wird

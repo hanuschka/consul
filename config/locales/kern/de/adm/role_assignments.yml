@@ -1,0 +1,7 @@
+de:
+  adm:
+    role_assignments:
+      user:
+        add: "Hinzufügen"
+        remove: "Entfernen"
+

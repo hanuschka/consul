@@ -8,6 +8,7 @@ class ProposalsController
   include RandomSeed
   include GuestUsers
   include CustomHelper
+  include LandingPageResolvable
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -19,8 +20,9 @@ class ProposalsController
     @resource_name = "proposal"
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -97,6 +99,10 @@ class ProposalsController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
@@ -104,6 +110,10 @@ class ProposalsController
 
     params[:projekt_phase_id] = @proposal&.projekt_phase&.id
     params[:projekt_id] = @selected_projekt&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def update
@@ -133,6 +143,11 @@ class ProposalsController
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end
@@ -166,22 +181,10 @@ class ProposalsController
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
                                 .page(params[:page]).per(5)
 
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to proposal_path(@proposal) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
@@ -220,7 +223,7 @@ class ProposalsController
 
   def created
     @resource_name = "proposal"
-    @affiliated_geozones = []
+    @affiliated_districts = []
     @restricted_geozones = []
   end
 

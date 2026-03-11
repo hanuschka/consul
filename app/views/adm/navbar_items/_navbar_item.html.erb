@@ -1,0 +1,23 @@
+<div class="<%= navbar_item.parent.present? ? 'mb-2' : 'mb-4' %> navbar-item" data-sortable-id="<%= navbar_item.id %>">
+  <span data-sortable-handle class="material-symbols-outlined">drag_pan</span>
+  <h2><%= navbar_item.title %></h2>
+  <% if navbar_item.kind == 'presets' %>
+    <span><%= public_send(NavbarItem::PRESETS[navbar_item.preset.to_sym]) %></span>
+  <% elsif navbar_item.kind == 'projekts' %>
+    <span><%= navbar_item.projekt.page.url %></span>
+  <% elsif navbar_item.kind == 'external' %>
+    <span><%= navbar_item.external_url %></span>
+  <% end %>
+
+  <%= link_to adm_navbar_item_path(navbar_item),
+              data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+              class: "navbar-item-delete" do %>
+    <span class="material-symbols-outlined">delete</span>
+  <% end %>
+
+  <div data-sortable-children class="<%= navbar_item.children.any? ? 'mt-4' : 'mt-1' %>">
+    <% navbar_item.children.order(:position).each do |child| %>
+      <%= render child %>
+    <% end %>
+  </div>
+</div>

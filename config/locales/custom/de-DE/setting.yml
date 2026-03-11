@@ -134,20 +134,6 @@ de:
           description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
           description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
 
-
-      projekts:
-        overview_page: Projektübersichtsseite in Navigation anzeigen
-        overview_page_description: Zeigt die Projektübersichtsseite in der Navigation an
-        show_archived:
-          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
-          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
-        second_level_projekts_in_active_filter: Zweite Ebene für aktive Projekte anzeigen
-        second_level_projekts_in_active_filter_description: Zeigt eine zweite Ebene im Projektfilter für aktive Projekte standardmäßig an
-        second_level_projekts_in_archived_filter: Zweite Ebene für archivierte Projekte anzeigen
-        second_level_projekts_in_archived_filter_description: Zeigt eine zweite Ebene im Projektfilter für archivierte Projekte standardmäßig an
-        set_default_sorting_to_newest: Standardsortierung auf "Neueste" unstellen
-        set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
-
       extra_fields:
         registration:
           extended: Erweiterte Registrierung

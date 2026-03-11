@@ -17,7 +17,7 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions formular settings formular_answers]
+    %w[duration naming restrictions formular general_settings formular_answers]
   end
 
   def settings_in_tabs

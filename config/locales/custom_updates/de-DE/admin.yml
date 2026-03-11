@@ -466,6 +466,8 @@ de:
             information_block_title: Informationen
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
+            geo_affiliation_geozones_label: Gebiete
+            geo_affiliation_districts_label: Stadtteile
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
             landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
@@ -512,6 +514,7 @@ de:
             tags: Tags
             tags_hint: Klicken Sie auf einen oder mehrere Tags, um Sie für dieses Projekt der Nutzerin oder dem Nutzer anzubieten.
             refresh_page: Sollten Sie die Funktionen bereits aktiviert haben, sie werden aber hier nicht angezeigt, dann laden Sie diese Seite bitte neu.
+          no_landing_page: "— Keine Themenseite —"
           flash:
             update_notice: Projekt wurde erfolgreich aktualisiert.
         edit_projekt: Editieren
@@ -620,6 +623,8 @@ de:
             title: Inhaltskarten für %{page_title}
             link: Inhaltskarten
           form:
+            landing_desktop_header_image: Titelbild (Desktop)
+            landing_mobile_header_image: Titelbild (Mobil)
             landing_site_logo_for_transparent_background: Individuelles Logo für diese Landingpage auf transparentem Hintergrund
             landing_site_logo_for_white_background: Individuelles Logo für diese Landingpage auf weißem Hintergrund
         pages:
@@ -680,6 +685,9 @@ de:
         edit:
           title: Veranstaltung bearbeiten
           accessibility_features: Barrierefreiheit
+          max_attendees_placeholder: "Leer lassen für unbegrenzt"
+          confirmation_email_text: "Bestätigungs-E-Mail-Text"
+          waitlist_email_text: "Wartelisten-E-Mail-Text"
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite
@@ -867,6 +875,21 @@ de:
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
+          registrations_confirmed: "%{confirmed} / %{max} bestätigt"
+          registrations_waitlisted:
+            one: "%{count} auf Warteliste"
+            other: "%{count} auf Warteliste"
+          registrations_pending:
+            one: "%{count} Bestätigung ausstehend"
+            other: "%{count} Bestätigungen ausstehend"
+          registrations_details: "Anmeldungen anzeigen"
+          export_csv: "CSV exportieren"
+          registration_user_id: "Benutzer-ID"
+          registration_user: "Benutzer"
+          registration_email: "E-Mail"
+          registration_status: "Status"
+          registration_date: "Anmeldedatum"
+          registration_deleted: "Anmeldung wurde gelöscht."
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen

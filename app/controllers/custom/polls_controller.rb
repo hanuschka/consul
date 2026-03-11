@@ -6,6 +6,7 @@ class PollsController < ApplicationController
   include ProjektControllerHelper
   include Takeable
   include GuestUsers
+  include LandingPageResolvable
 
   before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation]
 
@@ -17,8 +18,9 @@ class PollsController < ApplicationController
     @tag_cloud = tag_cloud
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
@@ -91,20 +93,7 @@ class PollsController < ApplicationController
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt_phase
-          .projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to poll_path(@poll) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt_phase&.projekt)
 
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
@@ -367,7 +356,7 @@ class PollsController < ApplicationController
 
   def set_geo_limitations
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)

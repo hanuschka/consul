@@ -134,7 +134,7 @@ de:
         zoom: Zoom
         show_admin_shape: In Projektübersicht anzeigen
       projekt:
-        total_duration_start: Anfangsdatum
+        total_duration_start: Startdatum
         total_duration_end: Enddatum
         show_start_date_in_frontend: Im Frontend angezeigt
         show_end_date_in_frontend: Im Frontend angezeigt
@@ -274,6 +274,10 @@ de:
         comments_enabled: Offene Antwort aktiviert
       projekt_question/translation:
         title: Frage
+      projekt_event_registration:
+        first_name: Vorname
+        last_name: Nachname
+        email: E-Mail
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort
@@ -289,6 +293,8 @@ de:
         induction_loop_available: Induktionsanlage vorhanden
         assistance_dogs_welcome: Assistenzhunde willkommen
         sign_language_interpreter: Gebärdensprachdolmetscher:in vorhanden
+        confirmation_email_text: Bestätigungs-E-Mail-Text
+        waitlist_email_text: Wartelisten-E-Mail-Text
       projekt_notification:
         title: Titel
         body: Nachricht

@@ -168,10 +168,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
     }
 
     const instructions = instructionsTextarea.value.trim();
-    const useFullProjektContext =
-      useFullProjektContextCheckbox ? useFullProjektContextCheckbox.checked : false;
-    const allowTextModification =
-      allowTextModificationCheckbox ? allowTextModificationCheckbox.checked : false;
+    const useFullProjektContext = useFullProjektContextCheckbox ? useFullProjektContextCheckbox.checked : false;
+    const allowTextModification = allowTextModificationCheckbox ? allowTextModificationCheckbox.checked : false;
 
     if (!instructionsTextarea.reportValidity()) return
 

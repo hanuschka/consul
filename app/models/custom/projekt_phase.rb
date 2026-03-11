@@ -69,6 +69,7 @@ class ProjektPhase < ApplicationRecord
 
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,
            after_add: :touch_updated_at, after_remove: :touch_updated_at
 
@@ -240,7 +241,7 @@ class ProjektPhase < ApplicationRecord
   def geozone_restrictions_formatted
     return geozone_restrictions.map(&:name).flatten.join(", ") if geozone_restrictions.any?
 
-    registered_address_districts.map(&:name).flatten.join(", ")
+    registered_address_districts.sort_by(&:name_for_display).map(&:name_for_display).join(", ")
   end
 
   def street_restrictions_formatted
@@ -283,6 +284,22 @@ class ProjektPhase < ApplicationRecord
 
   def title
     phase_tab_name.presence || model_name.human
+  end
+
+  def default_phase
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    setting&.value == id.to_s
+  end
+
+  def default_phase=(value)
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    return unless setting
+
+    if ActiveModel::Type::Boolean.new.cast(value)
+      setting.update!(value: id.to_s)
+    elsif setting.value == id.to_s
+      setting.update!(value: "")
+    end
   end
 
   def all_settings

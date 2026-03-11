@@ -22,22 +22,17 @@ module ProjektsHelper
   end
 
   def show_archived_projekts_in_sidebar?
-    Setting["projekts.show_archived.sidebar"].present? ? true : false
+    true
   end
 
   def show_affiliation_filter_in_sidebar?
     Setting["extended_feature.modulewide.show_affiliation_filter_in_index_sidebar"].present? ? true : false
   end
 
-  def prepare_projekt_name(projekt, placement = nil, landing_page: nil)
+  def prepare_projekt_name(projekt, placement = nil)
     classes = []
-    # classes.push("draft-projekt") unless projekt.activated?
 
-    url = if landing_page.present?
-      landing_page_projekt_page_path(landing_page_slug: landing_page, id: projekt.page.slug)
-    else
-      projekt.page.url
-    end
+    url = projekt.page.url
 
     if projekt.page.published? && placement == "desktop"
       link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
@@ -115,10 +110,10 @@ module ProjektsHelper
 
   def get_projekt_affiliation_name(projekt, only_name = false )
     affiliation_name = projekt.geozone_affiliated || "no_affiliation"
-    geozone_affiliations = projekt.geozone_affiliations
+    district_affiliations = projekt.registered_address_district_affiliations
 
-    if geozone_affiliations.exists? && affiliation_name == 'only_geozones'
-      return geozone_affiliations.pluck(:name).join(', ')
+    if district_affiliations.exists? && affiliation_name == 'only_geozones'
+      return district_affiliations.pluck(:name).join(', ')
     end
 
     return affiliation_name if only_name

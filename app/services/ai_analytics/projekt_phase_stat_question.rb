@@ -59,12 +59,15 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
           build_item_text(item)
         end.join("\n\n")
 
-      prompt = build_prompt(items_text, resources)
+      system_instructions = build_system_instructions
+      user_prompt = build_user_prompt(items_text, resources)
 
-      # sleep 15
-      # "test content"
+      response =
+        Ai::RubyLlmFactory
+          .chat
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
-      response = Ai::RubyLlmFactory.chat.ask(prompt)
       response.content.strip
     end
 
@@ -82,17 +85,19 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       text
     end
 
-    def build_prompt(items_text, resources)
-      resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
-      projekt_title = projekt_phase.projekt.page.title
-      projekt_subtitle = projekt_phase.projekt.page.subtitle
-
+    def build_system_instructions
       fetched_prompt = fetch_prompt
 
       <<~TEXT
         #{fetched_prompt}
         Output response in #{target_language} language.
+      TEXT
+    end
 
+    def build_user_prompt(items_text, resources)
+      resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
+
+      <<~TEXT
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
 

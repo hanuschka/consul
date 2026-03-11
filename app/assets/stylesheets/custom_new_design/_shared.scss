@@ -79,10 +79,8 @@
     text-decoration: none;
   }
 
-  $button-orange: #FFA42D;
-
   .button {
-    background-color: $orange-button-color;
+    background-color: $orange-button-color !important;
     color: black;
 
     &:focus, &:active {

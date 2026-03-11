@@ -1,0 +1,45 @@
+de:
+  adm:
+    title: Administration
+    sidebar:
+      toggle: Seitenleiste umschalten
+    menu:
+      aria_label: Administrationsmenü
+      items:
+        home: Home
+        projekts: Projekte
+        application: Applikation
+        application_subitems:
+          homepage: Startseite
+          documents: Eigene Dokumente
+          navbar: Navigationsleiste
+          metadata_settings: Metadaten & Kommunikation
+          gdpr_settings: DSGVO
+          registration_settings: Registrierung & Verifizierung
+          registered_addresses: Registrierte Adressen
+          default_map_location: Karten
+          tags: Tags
+          individual_groups: Individuelle Gruppen
+          age_ranges: Altersgruppen
+        profiles: Profile
+        profiles_subitems:
+          administrators: Globaler Admin
+          projekt_managers: Projektmanager
+          deficiency_report_managers: Mängelmelder (Admin)
+          deficiency_report_officers: Mängelmelder (Sachbearbeiter)
+          idea_managers: Ideenplattform (Admin)
+          moderators: Globale Moderatoren
+          valuators: Budgetgutachter
+          users: Benutzer
+        notifications: Notification
+        stats: Statistics
+        apps: Apps
+    ideas:
+      menu:
+        aria_label: Ideenplattform Menü
+        items:
+          ideas: Ideen
+          officers: Sachbearbeiter
+          categories: Kategorien
+          settings: Einstellungen
+          districts: Bezirke

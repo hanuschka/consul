@@ -28,15 +28,21 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       fetched_prompt = fetch_prompt
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         #{fetched_prompt}
         Write all topic and subtopic names in #{AiAnalytics::ClusteringCore.target_language}.
+      TEXT
 
+      user_prompt = <<~TEXT
         #{resource_type.capitalize}:
         #{resources_text}
       TEXT
 
-      response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema)
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
       response.content["topics"]
     rescue StandardError => e

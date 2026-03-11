@@ -8,6 +8,8 @@ group :development do
   gem 'solargraph'
   # gem 'prosopite'
   # gem 'pg_query'
+
+  gem 'foreman', '~> 0.90.0'
 end
 
 gem 'httparty'
@@ -30,7 +32,17 @@ gem "prawn", "2.5.0"
 gem 'prawn-svg', '~> 0.37.0'
 gem "rqrcode", "~> 2.0"
 
-gem 'ruby_llm', '1.9.1'
+# Adm
+gem 'jsbundling-rails', '~> 1.3', '>= 1.3.1'
+gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
+
+gem 'turbo-rails'
+
+gem 'pundit', '~> 2.5', '>= 2.5.1'
+gem 'pagy', '~> 9.4'
+# /Adm
+
+gem 'ruby_llm', '1.13.2'
 
 gem 'pdf-reader', '2.15.1'
 

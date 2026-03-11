@@ -34,7 +34,6 @@ button {
     }
 
     &.-selected {
-      background-color: #daeeda;
       background-color: rgba($brand, 0.15) !important;
       color: $brand !important;
       outline: 1px solid $brand !important;

@@ -510,6 +510,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     def comments_for_phase
       if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
         Comment.with_hidden.where(commentable: @projekt_phase.proposals.with_hidden)
+      elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        Comment.with_hidden.where(commentable: @projekt_phase.budget.investments.with_hidden)
       else
         @projekt_phase.comments.with_hidden
       end

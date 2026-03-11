@@ -91,4 +91,14 @@ module AdmHelper
       }
     end
   end
+
+  def moderation_status(resource)
+    if resource.hidden?
+      t("shared.moderation_statuses.hidden")
+    elsif resource.ignored_flag?
+      t("shared.moderation_statuses.ignored")
+    elsif resource.flags_count > 0
+      t("shared.moderation_statuses.flagged")
+    end
+  end
 end

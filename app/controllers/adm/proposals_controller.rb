@@ -4,6 +4,7 @@ module Adm
     before_action :find_proposal
 
     def show
+      debugger
       authorize [:adm, @proposal]
 
       @breadcrumbs = [
@@ -17,6 +18,29 @@ module Adm
         resize_to_limit: [500, 500],
         format: "jpeg"
       )
+    end
+
+    def hide
+      authorize [:adm, @proposal], :hide?
+
+      @proposal.hide
+      Activity.log(current_user, :hide, @proposal)
+      @proposal.reload
+    end
+
+    def ignore_flag
+      authorize [:adm, @proposal], :ignore_flag?
+
+      @proposal.ignore_flag
+      @proposal.reload
+    end
+
+    def unhide
+      authorize [:adm, @proposal], :unhide?
+
+      @proposal.restore
+      Activity.log(current_user, :restore, @proposal)
+      @proposal.reload
     end
 
     def toggle_admin_accepted
@@ -52,7 +76,7 @@ module Adm
       end
 
       def find_proposal
-        @proposal = @projekt_phase.proposals.find(params[:id])
+        @proposal = @projekt_phase.proposals.with_hidden.find(params[:id])
       end
 
       def proposal_params

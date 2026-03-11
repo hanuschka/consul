@@ -31,13 +31,13 @@ de:
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen
-            hidden: Versteckt
+            hidden: Herausmoderiert
             all: Alle
           statuses:
-            hide: Versteckt
+            hide: Herausmoderiert
             ignored: Als gelesen markiert
           actions:
-            hide: Verstecken
+            hide: Herausmoderieren
             ignore_flag: Als gelesen markieren
-          confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" ausgeblendet."
-        notice_hide: Der Vorschlag wurde ausgeblendet.
+          confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
+        notice_hide: Der Vorschlag wurde herausmoderiert.

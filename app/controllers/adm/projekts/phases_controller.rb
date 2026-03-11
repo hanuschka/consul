@@ -110,7 +110,25 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def proposals
     authorize_phase(:update?)
-    @pagy, @proposals = pagy(@projekt_phase.proposals.order(id: :desc))
+    base_scope = @projekt_phase.proposals.with_hidden
+    @pagy, @proposals = pagy(Adm::Projekts::ProposalsQuery.call(base_scope, params))
+
+    @moderation_header_options = { filter_options: moderation_filter_options }
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def comments
+    authorize_phase(:update?)
+    base_scope = comments_for_phase
+    @pagy, @comments = pagy(Adm::Projekts::CommentsQuery.call(base_scope, params))
+
+    @moderation_header_options = { filter_options: comments_moderation_filter_options }
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
@@ -481,6 +499,26 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   private
+
+    def moderation_filter_options
+      Adm::Projekts::ProposalsQuery::MODERATION_STATUSES.map do |status|
+        [status, t("shared.moderation_statuses.#{status}")]
+      end
+    end
+
+    def comments_moderation_filter_options
+      Adm::Projekts::CommentsQuery::MODERATION_STATUSES.map do |status|
+        [status, t("shared.moderation_statuses.#{status}")]
+      end
+    end
+
+    def comments_for_phase
+      if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+        Comment.with_hidden.where(commentable: @projekt_phase.proposals.with_hidden)
+      else
+        @projekt_phase.comments.with_hidden
+      end
+    end
 
     def authorize_phase(action = nil)
       if action

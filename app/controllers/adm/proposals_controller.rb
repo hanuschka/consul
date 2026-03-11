@@ -4,7 +4,6 @@ module Adm
     before_action :find_proposal
 
     def show
-      debugger
       authorize [:adm, @proposal]
 
       @breadcrumbs = [

@@ -1,5 +1,5 @@
 <% pagination_html = capture do %>
-  <div class="file-upload-manager-dialog--pagination js-cb-img-pagination">
+  <div class="file-upload-manager-dialog--pagination js-file-upload-manager-pagination">
     <% if @assets.respond_to?(:current_page) && @assets.total_pages > 1 %>
       <%= render 'pagination', remote: false %>
     <% end %>
@@ -9,12 +9,12 @@
 <% if params[:pagination_only] == "true" %>
   <%= pagination_html %>
 <% else %>
-  <div class="file-upload-manager-dialog--body js-cb-img-dialog__body">
+  <div class="file-upload-manager-dialog--body js-file-upload-manager-dialog--body">
     <div class="file-upload-manager-dialog--grid-wrapper">
-      <div class="file-upload-manager-dialog--grid js-cb-img-grid">
+      <div class="file-upload-manager-dialog--grid js-file-upload-manager-grid">
         <%= render 'items' %>
       </div>
-      <div class="file-upload-manager-dialog--loading-overlay js-cb-img-loading-overlay" style="display: none;">
+      <div class="file-upload-manager-dialog--loading-overlay js-file-upload-manager-loading-overlay" style="display: none;">
         <div class="loading-spinner-inline"></div>
         <%# <span>Wird geladen...</span> %>
       </div>

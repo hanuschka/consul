@@ -1,0 +1,151 @@
+de:
+  adm:
+    ideas:
+      ideas:
+        index:
+          title: Ideen
+          no_ideas: Keine Ideen vorhanden
+          table:
+            id: ID
+            admin_accepted: Sichtbarkeit
+            admin_accepted_at: Veröffentlichung
+            created_at: Erstellungsdatum
+            title: Titel
+            author: Autor
+            status: Status
+            location: Standort
+            category: Kategorie
+            officer: Sachbearbeiter*in
+        idea_row:
+          frontend_link: Frontend
+        edit:
+          title: Idee bearbeiten
+          submit: Speichern
+          show_image: Bild einblenden
+          hide_image: Bild ausblenden
+          no_category: "-- Keine Kategorie --"
+          district_placeholder: "-- Bezirk wählen --"
+          labels:
+            title: Titel
+            description: Beschreibung
+            image: Bild
+            documents: Dokumente
+            video_url: Video-URL
+            category: Kategorie
+            map_location: Kartenstandort
+            on_behalf_of: Im Auftrag von
+        tabs:
+          show: Anzeigen
+          administer: Administrieren
+          edit: Bearbeiten
+          audits: Änderungslog
+        show:
+          title: Idee
+          download_pdf: PDF herunterladen
+          view_on_site: Auf der Website anzeigen
+          admin_accepted_status: Status der Freigabe
+          accepted: Freigegeben
+          not_accepted: Nicht freigegeben
+          admin_accepted_at: Freigegeben am
+          status: Status
+          status_active: Aktiv
+          status_archived: Archiviert
+          status_pending: Ausstehend
+          votes_needed_for_success: Benötigte Stimmen
+          timeframe: Zeitrahmen
+          timeframe_days:
+            one: "%{count} Tag"
+            other: "%{count} Tage"
+          remaining_days: Verbleibende Tage
+          remaining_days_count:
+            one: "%{count} Tag"
+            other: "%{count} Tage"
+          hidden_at: Ausgeblendet am
+          created_at: Erstellt am
+          updated_at: Zuletzt aktualisiert
+          category: Kategorie
+          officer: Sachbearbeiter
+          video_url: Video-URL
+          address: Adresse
+          author: Autor
+          on_behalf_of: im Auftrag von
+          official_answer: Offizielle Antwort
+          official_answer_hint: Bitte geben Sie die offizielle Antwort für diese Idee ein.
+        administer:
+          title: Administrieren
+          votes_needed_for_success: Benötigte Stimmen
+          timeframe: Zeitrahmen (Tage)
+          officer: Sachbearbeiter
+          no_officer: "-- Kein Sachbearbeiter --"
+          submit: Speichern
+        audits:
+          title: Änderungslog
+          audits_title: Änderungen
+          empty: Keine Änderungen vorhanden
+          table:
+            id: ID
+            field: Feld
+            old_value: Alter Wert
+            new_value: Neuer Wert
+            edited_at: Geändert am
+            edited_by: Geändert von
+      categories:
+        index:
+          title: Kategorien
+          new_category: Neue Kategorie
+          no_categories: Keine Kategorien vorhanden
+          table:
+            icon: Symbol
+            color: Farbe
+            name: Name
+            officer: Standard-Sachbearbeiter
+        new:
+          title: Neue Kategorie
+        edit:
+          title: Kategorie bearbeiten
+        _form:
+          no_officer: "-- Kein Sachbearbeiter --"
+          submit: Speichern
+      officers:
+        index:
+          title: Sachbearbeiter
+          search_label: Benutzer suchen
+          search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
+          no_officers: Keine Sachbearbeiter vorhanden
+          table:
+            name: Name
+            email: E-Mail
+        _officer:
+          add: Hinzufügen
+        search:
+          table:
+            name: Name
+            email: E-Mail
+        user_not_found:
+          user_not_found: Benutzer nicht gefunden
+      settings:
+        index:
+          title: Einstellungen
+          no_settings: Keine Einstellungen vorhanden
+      districts:
+        index:
+          title: Bezirke
+          no_districts: Keine Bezirke vorhanden
+          table:
+            default_officer: Standard-Sachbearbeiter
+        edit:
+          title: Bezirk bearbeiten
+          back: Zurück
+          no_officer: "-- Kein Sachbearbeiter --"
+          submit: Speichern
+      idea_audits:
+        show:
+          title: Änderungsdetails
+          back: Zurück
+          audit_details: Änderungsdetails
+          edited_at: Geändert am
+          edited_by: Geändert von
+          changes: Änderungen
+          field: Feld
+          old_value: Alter Wert
+          new_value: Neuer Wert

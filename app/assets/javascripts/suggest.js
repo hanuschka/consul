@@ -18,7 +18,8 @@
             url: $this.data("js-url"),
             data: {
               search: $this.val(),
-              projekt_phase_id: $this.data("jsProjektPhaseId")
+              projekt_phase_id: $this.data("jsProjektPhaseId"),
+              exclude_resource_id: $this.data("jsExcludeResourceId")
             },
             type: "GET",
             dataType: "html",

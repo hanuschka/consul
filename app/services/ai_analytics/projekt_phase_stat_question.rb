@@ -18,7 +18,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     stat_question.update!(status: :processing)
 
     answer = generate_answer(resources)
-    stat_question.update!(status: :completed, answer: answer)
+    stat_question.update!(status: :completed, answer:)
 
     Rails.logger.info("[AI Analytics] ProjektPhaseStatQuestion: Completed for question ##{stat_question.id}")
   rescue => e
@@ -55,16 +55,19 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
     def generate_answer(resources)
       items_text =
-        resources.map { |item|
+        resources.map do |item|
           build_item_text(item)
-        }.join("\n\n")
+        end.join("\n\n")
 
-      prompt = build_prompt(items_text, resources)
+      system_instructions = build_system_instructions
+      user_prompt = build_user_prompt(items_text, resources)
 
-      # sleep 15
-      # "test content"
+      response =
+        Ai::RubyLlmFactory
+          .chat
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
-      response = Ai::RubyLlmFactory.chat.ask(prompt)
       response.content.strip
     end
 
@@ -73,26 +76,28 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       text += "\nDescription: #{item.description&.truncate(500)}" if item.description.present?
 
       if item.respond_to?(:comments) && item.comments.any?
-        comments_text = item.comments.first(5).map { |c|
+        comments_text = item.comments.first(5).map do |c|
           "- #{c.body&.truncate(100)}"
-        }.join("\n")
+        end.join("\n")
         text += "\nComments:\n#{comments_text}"
       end
 
       text
     end
 
-    def build_prompt(items_text, resources)
-      resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
-      projekt_title = projekt_phase.projekt.page.title
-      projekt_subtitle = projekt_phase.projekt.page.subtitle
-
+    def build_system_instructions
       fetched_prompt = fetch_prompt
 
       <<~TEXT
         #{fetched_prompt}
         Output response in #{target_language} language.
+      TEXT
+    end
 
+    def build_user_prompt(items_text, resources)
+      resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
+
+      <<~TEXT
         Based on the following #{resource_type}, answer this question:
         #{stat_question.question}
 
@@ -102,15 +107,11 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def fetch_prompt
-      parsed_response = DtApi::Caching.get_with_cache(
-        "dt_api/consul_ai_prompts/ai_analytics_projekt_phase_question/projekt_phase"
-      ) do
-        DtApi::Client.new.consul_ai_prompts.get(
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
           :ai_analytics_projekt_phase_question,
           resource_type: "projekt_phase"
-        )
-      end
-
+        ).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

@@ -1,6 +1,18 @@
 window.App.Ajax = {
+  get: function(url, data) {
+    return this.request({ method: "GET", url: url, data: data })
+  },
+
   post: function(url, data) {
-    return this.request("POST", url, data)
+    return this.request({ method: "POST", url: url, data: data })
+  },
+
+  patch: function(url, data) {
+    return this.request({ method: "PATCH", url: url, data: data })
+  },
+
+  delete: function(url, data) {
+    return this.request({ method: "DELETE", url: url, data: data })
   },
 
   request: function(options) {

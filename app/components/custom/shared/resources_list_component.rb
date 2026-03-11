@@ -24,8 +24,7 @@ class Shared::ResourcesListComponent < ApplicationComponent
     text_search_enabled: false,
     hide_view_mode_button: false,
     projekt_phase: nil,
-    additional_data: {},
-    resource_link_additional_url_params: nil
+    additional_data: {}
   )
     @resources = resources
     @resource_type = resource_type
@@ -42,7 +41,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
     @hide_view_mode_button = hide_view_mode_button
     @projekt_phase = projekt_phase
     @additional_data = additional_data
-    @resource_link_additional_url_params = resource_link_additional_url_params
   end
 
   def filter_title
@@ -118,23 +116,20 @@ class Shared::ResourcesListComponent < ApplicationComponent
   def resource_component(resource)
     case resource
     when Projekt
-      Projekts::ListItemComponent.new(projekt: resource, additional_url_params: @resource_link_additional_url_params)
+      Projekts::ListItemComponent.new(projekt: resource)
     when Proposal
-      Proposals::ListItemComponent.new(proposal: resource, additional_url_params: @resource_link_additional_url_params)
+      Proposals::ListItemComponent.new(proposal: resource)
     when Debate
       Debates::ListItemComponent.new(debate: resource)
     when Poll
-      Polls::ListItemComponent.new(poll: resource, additional_url_params: @resource_link_additional_url_params)
+      Polls::ListItemComponent.new(poll: resource)
     when DeficiencyReport
       DeficiencyReports::ListItemComponent.new(deficiency_report: resource)
     when Budget::Investment
       Budgets::Investments::ListItemComponent.new(
         budget_investment: resource,
         budget_investment_ids: resources.pluck(:id),
-        additional_url_params: @resource_link_additional_url_params,
         ballot: @additional_data[:ballot]
-        # top_level_active_projekts: @additional_data[:top_level_active_projekts],
-        # top_level_archived_projekts: @additional_data[:top_level_archived_projekts]
       )
     when ProjektEvent
       Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)

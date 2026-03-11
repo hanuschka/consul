@@ -10,6 +10,7 @@ class Poll < ApplicationRecord
 
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
 
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
@@ -83,7 +84,11 @@ class Poll < ApplicationRecord
   end
 
   def advanced_stats_enabled?
-    projekt_phase.feature?("resource.advanced_stats_enabled")
+    true
+  end
+
+  def report_visible_for_citizens?
+    projekt_phase.feature?("resource.report_visible_for_citizens")
   end
 
   def evaluation_enabled?

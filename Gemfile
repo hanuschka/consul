@@ -55,7 +55,7 @@ gem "social-share-button", "~> 1.2.4"
 gem "sprockets", "~> 4.2.1"
 gem "turbolinks", "~> 5.2.1"
 gem "turnout", "~> 2.5.0"
-gem "uglifier", "~> 4.2.0"
+gem "terser", "~> 1.2"
 gem "uuidtools", "~> 2.2.0"
 gem "view_component", "~> 3.6.0"
 gem "whenever", "~> 1.0.0", require: false

@@ -1,0 +1,29 @@
+de:
+  adm:
+    projekts:
+      projekt_events:
+        new:
+          title: Veranstaltung erstellen
+        create:
+          success: Veranstaltung wurde erfolgreich erstellt.
+        edit:
+          title: Veranstaltung bearbeiten
+        update:
+          success: Veranstaltung wurde erfolgreich aktualisiert.
+        destroy:
+          success: Veranstaltung wurde erfolgreich gelöscht.
+        send_notifications:
+          success: Benachrichtigungen wurden erfolgreich gesendet.
+        form:
+          title_label: Veranstaltungstitel
+          location_label: Veranstaltungsort
+          datetime_label: Datum
+          end_datetime_label: Endtermin
+          open_ended_label: Offenes Ende
+          open_ended_hint: Kein festes Ende für diese Veranstaltung.
+          weblink_label: Weblink
+          language_label: Sprache
+          accessibility_legend: Barrierefreiheit
+          description_label: Beschreibung
+          image_label: Titelbild
+          submit: Speichern

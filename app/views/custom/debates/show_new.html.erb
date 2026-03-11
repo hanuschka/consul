@@ -1,5 +1,9 @@
 <%= content_for :body_class, "debates-show" %>
 
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <% provide :title do %><%= @debate.title %><% end %>
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: debate_url(@debate) %>

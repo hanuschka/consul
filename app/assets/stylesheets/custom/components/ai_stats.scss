@@ -57,6 +57,7 @@
     flex-grow: 1;
     width: calc(25% - 15px);
     min-width: 150px;
+    max-width: 300px;
 
     @media (max-width: $small-tablet-viewport-start) {
       width: calc(33% - 15px);
@@ -77,6 +78,12 @@
     font-weight: bold;
     color: #000;
     line-height: 1;
+  }
+}
+
+.ai-stats-card--title {
+  i {
+    font-size: 20px;
   }
 }
 
@@ -157,4 +164,21 @@
 }
 
 .stats-button-status {
+}
+
+.kpi-stats-pie-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.budget-phase-stats-section-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 1rem;
+
+  .participation-stats--section-title {
+    margin-top: 0;
+  }
 }

@@ -1,0 +1,85 @@
+de:
+  adm:
+    projekts:
+      budget_investments:
+        tabs:
+          show: Anzeigen
+          administer: Administrieren
+          people: Gutachter & Administratoren
+          edit: Bearbeiten
+          milestones: Meilensteine
+          progress_bars: Fortschrittsbalken
+          audits: Änderungslog
+        people:
+          title: Gutachter & Administratoren
+          administrator: Administrator
+          administrator_hint: Wählen Sie den Administrator aus, der für diesen Vorschlag zuständig ist.
+          valuator_groups: Gutachtergruppen
+          valuator_groups_hint: Wählen Sie die Gutachtergruppen aus, die für die Bewertung dieses Vorschlags zuständig sind.
+          no_administrators: Keine Administratoren für dieses Budget vorhanden.
+          no_valuator_groups: Keine Gutachtergruppen vorhanden.
+          no_valuators: Keine Gutachter für dieses Budget vorhanden.
+          valuators: Gutachter
+          valuators_hint: Wählen Sie die Gutachter aus, die für die Bewertung dieses Vorschlags zuständig sind.
+        milestones:
+          title: Meilensteine
+        progress_bars:
+          title: Fortschrittsbalken
+        show:
+          title: Investitionsvorschlag
+          author: Autor
+          heading: Überschrift
+          created_at: Eingereicht
+          feasibility: Kriterien
+          valuation_finished: Bewertung beendet
+          price: Kosten
+          total_votes: Unterstützung
+          ballot_lines: Anzahl Wähler
+          total_ballot_votes: Anzahl Stimmen
+          preselected: Vorausgewählt
+          selected: Ausgewählt
+          winner: Gewinner
+          district: Bezirk
+          admin: Administrator
+          valuator: Gutachter
+          description: Beschreibung
+          map: Karte
+          edit: Bearbeiten
+          download_pdf: PDF herunterladen
+          back: Zurück zur Liste
+        administer:
+          title: Administrieren
+          phase_2_3_title: "Phase 2 & 3: Prüfung auf Kriterienerfüllung"
+          phase_2_3_hint: "Prüfen Sie, ob der Vorschlag den Kriterien entspricht. In Phase 4 (Unterstützungsphase) und Phase 7 (Abstimmungsphase) werden ausschließlich Vorschläge zur Wahl gestellt, die den Kriterien entsprechen und über ein abgeschlossenes Gutachten verfügen. Erst nach Abschluss des Gutachtens werden die Vorschläge zur Wahl freigegeben und die Erläuterung im Frontend veröffentlicht. Zudem kann ein Vorschlag nach Abschluss des Gutachtens vom Autor nicht mehr bearbeitet werden."
+          phase_5_title: "Phase 5: Preisgestaltung"
+          phase_5_hint: "Definieren Sie den Preis, der ab der Phase 6 öffentlich im Frontend angezeigt wird. Ergänzend dazu können die fortlaufenden Kosten und der Zeitrahmen festgelegt werden, welche ausschließlich für interne Informationen bestimmt sind."
+          phase_6_title: "Phase 6: Zulassung zur Abstimmung"
+          phase_6_hint: "Legen Sie fest, ob dieser Vorschlag für die Phase 7 (Abstimmungsphase) berücksichtigt werden soll."
+          phase_8_title: "Phase 8: Gewinnerliste"
+          phase_8_hint: "Definieren Sie, ob dieser Vorschlag bei der Berechnung der Gewinnervorschläge (Phase 9) unberücksichtigt bleiben soll. In diesem Fall wird der Vorschlag möglicherweise von der Gewinnerliste ausgeschlossen."
+          selected_true: Vorschlag soll für die Abstimmung berücksichtigt werden
+          selected_false: Vorschlag soll nicht für die Abstimmung berücksichtigt werden
+        edit:
+          title: Investitionsvorschlag bearbeiten
+          user_submission_fields: Nutzereingaben
+          documents: Dokumente
+        update:
+          success: Investitionsvorschlag wurde erfolgreich aktualisiert.
+        destroy:
+          success: Investitionsvorschlag wurde erfolgreich gelöscht.
+        form:
+          title_label: Titel
+          description_label: Beschreibung
+          heading_label: Überschrift
+          price_label: Kosten
+          feasibility_label: Kriterien
+          feasibility_hint: "Kriterienstatus: undecided, feasible, unfeasible"
+          selected_label: Ausgewählt
+          winner_label: Gewinner
+          incompatible_label: Inkompatibel
+          visible_to_valuators_label: Sichtbar für Gutachter
+          valuator_explanation_label: Gutachter-Erklärung
+          image_label: Bild
+          submit: Speichern
+        audits:
+          title: Änderungslog

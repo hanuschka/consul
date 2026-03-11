@@ -9,7 +9,7 @@ class Ckeditor::Document < Ckeditor::Asset
     blob = storage_data.blob
     return "" unless blob
 
-    absolute_path?(editor_id) ? ckeditor_asset_url(blob.key, host: Setting["url"]) : ckeditor_asset_path(blob.key, only_path: true)
+    absolute_path?(editor_id) ? blob_asset_url(blob.key, host: Setting["url"]) : blob_asset_path(blob.key, only_path: true)
   end
 
   def url_thumb(editor_id: nil)

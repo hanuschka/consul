@@ -86,19 +86,96 @@
       }
     },
 
+    initPriorityPlus: function() {
+      var $navbar = $('[data-navbar]').not('#responsive-menu [data-navbar]').first();
+      if (!$navbar.length) return;
+
+      var moreLabel = $navbar.attr('data-navbar-more-label') || 'More';
+      var $moreItem = $(
+        '<li class="nav-element top-level-item navbar-more-item" aria-haspopup="true" aria-expanded="false">' +
+          '<a href="#">' + moreLabel + '</a>' +
+          '<button aria-expanded="false" class="nav-toggle-arrow" data-navbar-toggle>&#9660;</button>' +
+          '<ul class="nav-flyout-block"></ul>' +
+        '</li>'
+      );
+      var $moreFlyout = $moreItem.children('ul.nav-flyout-block');
+      var $allItems = $navbar.children('li.nav-element.top-level-item');
+
+      // Insert "More" at the end, hidden initially
+      $navbar.append($moreItem);
+      $moreItem.hide();
+
+      function redistribute() {
+        // Return all overflow items back to the navbar
+        $moreFlyout.children('li').each(function() {
+          $(this).removeClass('flyout-item').addClass('top-level-item');
+          $moreItem.before(this);
+        });
+        $moreItem.hide();
+
+        // Check if anything wraps without "More"
+        var $items = $navbar.children('li.nav-element.top-level-item').not($moreItem);
+        if (!$items.length) return;
+
+        var firstTop = Math.round($items.first()[0].getBoundingClientRect().top);
+        var needsMore = false;
+        $items.each(function() {
+          if (Math.round(this.getBoundingClientRect().top) > firstTop) {
+            needsMore = true;
+            return false;
+          }
+        });
+
+        if (!needsMore) return; // everything fits
+
+        // Show "More" and move items from the end until everything fits on one row
+        $moreItem.show();
+
+        while (true) {
+          var $remaining = $navbar.children('li.nav-element.top-level-item').not($moreItem);
+          if (!$remaining.length) break;
+
+          var rowTop = Math.round($remaining.first()[0].getBoundingClientRect().top);
+          var moreTop = Math.round($moreItem[0].getBoundingClientRect().top);
+          if (moreTop <= rowTop) break;
+
+          var $last = $remaining.last();
+          $last.removeClass('top-level-item').addClass('flyout-item');
+          $moreFlyout.append($last);
+        }
+      }
+
+      redistribute();
+
+      var resizeTimer;
+      $(window).on('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(redistribute, 100);
+      });
+    },
+
     initialize: function() {
 
-      $("body").on("click", ".js-toggle-mobile-flyout-item", function() {
+      $("body").on("click", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         App.ResponsiveMenu.toggleMenu($(this))
       });
 
-      $("body").on("keyup", ".js-toggle-mobile-flyout-item", function() {
+      $("body").on("keyup", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function() {
         var $menuOpen = $(this).closest('.nav-element').attr('aria-expanded') == 'true'
         if ( ( event.which == 40 && !$menuOpen ) || // down arrow
              ( event.which == 38 && $menuOpen )  ) { // up arrow
           App.ResponsiveMenu.toggleMenu($(this))
         }
 
+      });
+
+      $(document).on("click", function(event) {
+        if (!$(event.target).closest("[data-navbar]").length) {
+          $("[data-navbar] li.nav-element[aria-expanded='true']").attr("aria-expanded", "false");
+          $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
+        }
       });
 
       $("body").on("keyup", ".js-toggle-mobile-menu", function() {
@@ -124,6 +201,8 @@
       $(document).on("focusin", function() {
         App.ResponsiveMenu.trapFocus();
       });
+
+      App.ResponsiveMenu.initPriorityPlus();
 
     }
   };

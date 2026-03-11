@@ -38,7 +38,6 @@
           current_filter: @current_projekts_filter,
           text_search_enabled: true,
           filters: @active_projekts_filters,
-          resource_link_additional_url_params: (@landing_page.present? ? { landing_page: @landing_page&.slug } : nil),
         ) do |c| %>
           <% c.with_items_remark do %>
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>
@@ -72,7 +71,7 @@
       <% end %>
 
       <%# <%= render Mobile::FiltersComponent.new do %>
-        <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(geozones: @geozones, resource_name: @resource_name, selected_affiliated_geozones: @affiliated_geozones) %>
+        <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(districts: @districts, resource_name: @resource_name, selected_affiliated_districts: @affiliated_districts) %>
         <%= render Sidebar::CategoriesCardComponent.new(categories: @categories) if @categories.any? %>
         <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
         <%= render Sidebar::Filters::PhasesCardComponent.new(phases: @phases, selected_phase_type: @selected_phase_type) if @phases.any? %>

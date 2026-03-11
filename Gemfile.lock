@@ -1,9 +1,4 @@
 GEM
-  remote: https://rails-assets.org/
-  specs:
-    rails-assets-markdown-it (9.0.1)
-
-GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (2.0.1)
@@ -890,7 +885,6 @@ DEPENDENCIES
   rack-cors
   rack-mini-profiler
   rails (= 6.1.7.6)
-  rails-assets-markdown-it (~> 9.0.1)!
   rb-readline (= 0.5.5)
   recipient_interceptor (~> 0.3.1)
   redcarpet (~> 3.6.0)

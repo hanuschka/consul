@@ -149,6 +149,9 @@ namespace :adm do
           get :milestones
           get :progress_bars
           get :audits
+          put :hide
+          put :unhide
+          put :ignore_flag
         end
       end
     end

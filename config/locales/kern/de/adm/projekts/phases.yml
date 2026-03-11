@@ -350,7 +350,13 @@ de:
             admin: Administrator
             author: Autor
             valuator: Gutachter
+            moderation: Moderation
             pdf_link: PDF
+            view: Anzeigen
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Als gelesen markieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
             actions: Aktionen
         age_ranges_for_stats:
           title: Altersgruppen für Statistiken

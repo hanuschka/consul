@@ -6,7 +6,7 @@ class Adm::Moderation::BudgetInvestmentsController < Adm::Moderation::BaseContro
     base_scope = policy_scope(Budget::Investment, policy_scope_class: Adm::Moderation::BudgetInvestmentPolicy::Scope)
     @current_filter = FILTERS.include?(params[:filter]) ? params[:filter] : FILTERS.first
     base_scope = apply_filter(base_scope)
-    @pagy, @budget_investments = pagy(Adm::BudgetInvestmentsQuery.call(base_scope, params))
+    @pagy, @budget_investments = pagy(BudgetInvestmentsQuery.call(base_scope, params))
 
     @title_header_options = { search: true }
     @flags_count_header_options = { sort: true }

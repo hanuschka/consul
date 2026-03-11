@@ -6,7 +6,7 @@ class Adm::Moderation::CommentsController < Adm::Moderation::BaseController
     base_scope = policy_scope(Comment, policy_scope_class: Adm::Moderation::CommentPolicy::Scope)
     @current_filter = FILTERS.include?(params[:filter]) ? params[:filter] : FILTERS.first
     base_scope = apply_filter(base_scope)
-    @pagy, @comments = pagy(Adm::CommentsQuery.call(base_scope, params))
+    @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
 
     @body_header_options = { search: true }
     @flags_count_header_options = { sort: true }

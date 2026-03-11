@@ -111,7 +111,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def proposals
     authorize_phase(:update?)
     base_scope = @projekt_phase.proposals.with_hidden
-    @pagy, @proposals = pagy(Adm::Projekts::ProposalsQuery.call(base_scope, params))
+    @pagy, @proposals = pagy(ProposalsQuery.call(base_scope, params))
 
     @moderation_header_options = { filter_options: moderation_filter_options }
 
@@ -126,9 +126,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def comments
     authorize_phase(:update?)
     base_scope = comments_for_phase
-    @pagy, @comments = pagy(Adm::Projekts::CommentsQuery.call(base_scope, params))
+    @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
 
-    @moderation_header_options = { filter_options: comments_moderation_filter_options }
+    @moderation_header_options = { filter_options: moderation_filter_options }
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
@@ -191,7 +191,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def budget_investments
     authorize_phase(:update?)
     @budget = @projekt_phase.budget
-    base_scope = BudgetInvestmentsQuery.call(@budget.investments.order(id: :desc), params)
+    base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
     respond_to do |format|
       format.html do
@@ -200,6 +200,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 
         @title_header_options = { search: true }
+        @moderation_header_options = { filter_options: moderation_filter_options }
         @feasibility_header_options = {
           filter_options: Budget::Investment::FEASIBILITIES.map do |value|
             [value, Budget::Investment.human_attribute_name("feasibility_#{value}")]
@@ -501,13 +502,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   private
 
     def moderation_filter_options
-      Adm::Projekts::ProposalsQuery::MODERATION_STATUSES.map do |status|
-        [status, t("shared.moderation_statuses.#{status}")]
-      end
-    end
-
-    def comments_moderation_filter_options
-      Adm::Projekts::CommentsQuery::MODERATION_STATUSES.map do |status|
+      ProposalsQuery::MODERATION_STATUSES.map do |status|
         [status, t("shared.moderation_statuses.#{status}")]
       end
     end

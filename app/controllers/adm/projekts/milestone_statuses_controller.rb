@@ -7,7 +7,7 @@ class Adm::Projekts::MilestoneStatusesController < Adm::Projekts::BaseController
     @statuses = policy_scope(Milestone::Status, policy_scope_class: Adm::Projekts::MilestoneStatusPolicy::Scope)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
   end
@@ -17,7 +17,7 @@ class Adm::Projekts::MilestoneStatusesController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @status], policy_class: Adm::Projekts::MilestoneStatusPolicy
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t("adm.projekts.milestone_statuses.index.title"), url: adm_projekts_milestone_statuses_path },
       { name: t(".title") }
     ]
@@ -31,7 +31,7 @@ class Adm::Projekts::MilestoneStatusesController < Adm::Projekts::BaseController
       redirect_to adm_projekts_milestone_statuses_path, notice: t(".success")
     else
       @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: t("adm.projekts.milestone_statuses.index.title"), url: adm_projekts_milestone_statuses_path },
         { name: t("adm.projekts.milestone_statuses.new.title") }
       ]
@@ -43,7 +43,7 @@ class Adm::Projekts::MilestoneStatusesController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @status], policy_class: Adm::Projekts::MilestoneStatusPolicy
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t("adm.projekts.milestone_statuses.index.title"), url: adm_projekts_milestone_statuses_path },
       { name: t(".title") }
     ]
@@ -56,7 +56,7 @@ class Adm::Projekts::MilestoneStatusesController < Adm::Projekts::BaseController
       redirect_to adm_projekts_milestone_statuses_path, notice: t(".success")
     else
       @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: t("adm.projekts.milestone_statuses.index.title"), url: adm_projekts_milestone_statuses_path },
         { name: t("adm.projekts.milestone_statuses.edit.title") }
       ]

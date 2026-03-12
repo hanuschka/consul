@@ -2,5 +2,15 @@ de:
   adm:
     navbar:
       show:
-        title: Navigationsleiste
-        new_item: "Neuen Eintrag anzeigen"
+        title: Navigation
+        intro_title: Hinweis zur Navigation
+        intro_text_p1: >
+          Hier verwalten Sie die Einträge der Hauptnavigation Ihrer Plattform. Sie können neue
+          Navigationselemente anlegen, bestehende bearbeiten oder löschen. Die Reihenfolge der Einträge
+          lässt sich per Drag & Drop anpassen. Navigationselemente können als direkte Links oder als
+          Kategorien mit Untermenüs strukturiert werden – so entstehen übersichtliche, mehrstufige Menüs.
+        intro_text_p2: >
+          Bitte beachten Sie: Änderungen an der Navigation sind nach dem Speichern sofort für alle
+          Besucher der Plattform sichtbar. Prüfen Sie neue Einträge daher vor der Veröffentlichung
+          sorgfältig auf korrekte Verlinkung und Bezeichnung.
+        new_item: "Neuen Eintrag erstellen"

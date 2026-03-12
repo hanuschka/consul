@@ -59,7 +59,7 @@ module Adm
           if landing_page.present?
             { name: "lp", url: "#" }
           else
-            { name: t("adm.menu.items.home"), url: adm_homepage_path }
+            { name: t("adm.menu.items.home"), icon: "home", url: adm_homepage_path }
           end
         end
     end

@@ -29,13 +29,13 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     youtube_handle_description: "Wenn ausgefüllt, wird ein YouTube-Logo mit Link in der Fußzeile angezeigt."
     welcomepage:
       usage_stats: Nutzerübersicht anzeigen
-      usage_stats_description: Zeigt auf der Startseite die Gesamtanzahl registrierter Nutzer an und verlinkt auf eine detaillierte Nutzerübersicht.
+      usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzerinnen und Nutzer eingeblendet. Zusätzlich wird ein öffentlicher Link zur Nutzerübersichtsseite angezeigt. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Sie kann deaktiviert werden, wenn diese Informationen nicht öffentlich sichtbar sein sollen."
       newsletter_subscription: Plattformstatistik anzeigen
-      newsletter_subscription_description: Zeigt zentrale Kennzahlen zur Plattform an – darunter Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare.
+      newsletter_subscription_description: "Wenn aktiviert, werden auf der Startseite zentrale Kennzahlen zur Plattform eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Zahlen aktualisieren sich automatisch. Diese Funktion gibt Besucherinnen und Besuchern einen schnellen Überblick über die Aktivität der Plattform. Sie kann deaktiviert werden, wenn keine Statistiken öffentlich sichtbar sein sollen."
       platform_activity: Newsletter-Funktion aktivieren
-      platform_activity_description: Bietet eingeloggten Nutzern eine gut sichtbare Möglichkeit zur Newsletter-Anmeldung. Auch nicht angemeldete Nutzer können sich über ein separates Formular anmelden.
+      platform_activity_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzerinnen und Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Formular. So können Interessierte über neue Projekte und Beteiligungsmöglichkeiten auf dem Laufenden gehalten werden. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
       projekt_search: Projektsuche aktivieren
-      projekt_search_description: Ermöglicht eine Suchleiste auf der Startseite, mit der Nutzer gezielt nach Projekten suchen können. Wenn diese Option aktiviert ist, wird der hervorgehobene Startseiten-Button durch die Suchleiste ersetzt. Beides gleichzeitig ist nicht möglich.
+      projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzerinnen und Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus – ist die Suche aktiv, wird der Button automatisch ausgeblendet. Die Projektsuche ist besonders sinnvoll, wenn die Plattform viele Projekte enthält. Sie kann jederzeit wieder deaktiviert werden."
     extended_feature:
       projekts_overview_page_navigation:
         show_index_order_all: Alle Projekte
@@ -75,9 +75,9 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     extended_option:
       general:
         title: Titel der Anwendung
-        title_description: Dieser Titel wird innerhalb des Hintergrundbildes auf der Startseite angezeigt. Wenn das Feld leer bleibt, wird kein Titel dargestellt.
+        title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucherinnen und Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
-        subtitle_description: Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt.
+        subtitle_description: "Der Untertitel erscheint direkt unterhalb des Haupttitels im Hintergrundbild auf der Startseite. Er ermöglicht eine kurze ergänzende Information oder Beschreibung des Beteiligungsangebots. Formulieren Sie ihn als prägnanten Satz, der den Kontext der Plattform auf den Punkt bringt. Wenn das Feld leer bleibt, wird kein Untertitel angezeigt."
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."

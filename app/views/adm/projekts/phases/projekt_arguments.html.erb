@@ -6,7 +6,7 @@
 
 <div class="kern-container mb-5">
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_projekt_argument_path(@projekt_phase), text: t(".create_button") %>
+    <%= kern_link_button new_adm_projekts_phase_projekt_argument_path(@projekt_phase), text: t(".create_button"), style: :primary %>
     <%= kern_link_button send_notifications_adm_projekts_phase_projekt_arguments_path(@projekt_phase), text: t(".send_notifications_button"), style: :secondary, data: { turbo_method: :post, turbo_confirm: t(".send_notifications_confirm") } %>
   </div>
 

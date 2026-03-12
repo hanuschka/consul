@@ -6,7 +6,7 @@
 
 <div class="kern-container mb-5">
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_legislation_draft_version_path(@projekt_phase), text: t(".create_button") %>
+    <%= kern_link_button new_adm_projekts_phase_legislation_draft_version_path(@projekt_phase), text: t(".create_button"), style: :primary %>
   </div>
 
   <% if @process.draft_versions.any? %>

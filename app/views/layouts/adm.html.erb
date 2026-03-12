@@ -61,6 +61,7 @@
       </aside>
 
       <main class="flex-grow-1">
+        <%= render Kern::FlashComponent.new(flash: flash) %>
         <%= yield %>
       </main>
     </div>

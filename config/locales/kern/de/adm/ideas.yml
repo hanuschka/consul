@@ -41,6 +41,7 @@ de:
           audits: Änderungslog
         show:
           title: Idee
+          edit: Bearbeiten
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
           admin_accepted_status: Status der Freigabe
@@ -63,14 +64,21 @@ de:
           hidden_at: Ausgeblendet am
           created_at: Erstellt am
           updated_at: Zuletzt aktualisiert
+          title_label: Titel
+          description_label: Beschreibung
+          image_label: Bild
+          documents_label: Dokumente
           category: Kategorie
-          officer: Sachbearbeiter
+          map_label: Karte
+          on_behalf_of_label: Im Auftrag von
           video_url: Video-URL
           address: Adresse
+          officer: Sachbearbeiter
           author: Autor
-          on_behalf_of: im Auftrag von
           official_answer: Offizielle Antwort
           official_answer_hint: Bitte geben Sie die offizielle Antwort für diese Idee ein.
+        update_official_answer:
+          success: Offizielle Antwort wurde erfolgreich aktualisiert.
         administer:
           title: Administrieren
           votes_needed_for_success: Benötigte Stimmen
@@ -78,6 +86,8 @@ de:
           officer: Sachbearbeiter
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
+        settings:
+          title: Funktionen
         audits:
           title: Änderungslog
           audits_title: Änderungen
@@ -95,15 +105,31 @@ de:
           new_category: Neue Kategorie
           no_categories: Keine Kategorien vorhanden
           table:
-            icon: Symbol
-            color: Farbe
             name: Name
+            color: Farbe
+            icon: Symbol
             officer: Standard-Sachbearbeiter
+            actions: Aktionen
         new:
           title: Neue Kategorie
+        create:
+          success: Kategorie wurde erfolgreich erstellt.
         edit:
           title: Kategorie bearbeiten
-        _form:
+        update:
+          success: Kategorie wurde erfolgreich aktualisiert.
+        destroy:
+          success: Kategorie wurde erfolgreich gelöscht.
+          cannot_destroy: Kategorie kann nicht gelöscht werden, da sie noch Ideen enthält.
+        form:
+          name_label: Name
+          name_hint: Geben Sie den Namen der Kategorie ein.
+          color_label: Farbe
+          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
+          officer_label: Standard-Sachbearbeiter
+          officer_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
       officers:
@@ -123,21 +149,18 @@ de:
             email: E-Mail
         user_not_found:
           user_not_found: Benutzer nicht gefunden
-      settings:
-        index:
-          title: Einstellungen
-          no_settings: Keine Einstellungen vorhanden
       districts:
         index:
-          title: Bezirke
-          no_districts: Keine Bezirke vorhanden
+          title: Gebeite
+          no_districts: Keine Gebiete vorhanden
           table:
             default_officer: Standard-Sachbearbeiter
         edit:
           title: Bezirk bearbeiten
-          back: Zurück
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
+        update:
+          success: Bezirk wurde erfolgreich aktualisiert.
       idea_audits:
         show:
           title: Änderungsdetails

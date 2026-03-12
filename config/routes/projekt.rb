@@ -16,6 +16,14 @@ post "update_selected_parent_projekt", to: "projekts#update_selected_parent_proj
 
 get :events, to: "projekt_events#index", as: :projekt_events
 
+resources :projekt_events, only: [] do
+  resources :projekt_event_registrations, only: [:create, :destroy]
+end
+
+get "projekt_event_registrations/confirm/:token",
+    to: "projekt_event_registrations#confirm",
+    as: :confirm_projekt_event_registration
+
 resources :projekt_livestreams, only: [:show] do
   member do
     post :new_questions

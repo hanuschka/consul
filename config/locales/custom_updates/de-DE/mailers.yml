@@ -99,6 +99,9 @@ de:
       hi: "Hallo,"
       p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
       p2: Wenn Sie Ihre ursprünglich hinterlegte E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor. Sollten Sie den Verifizierungsversuch nicht initiiert haben, dann wenden Sie sich bitte an die Administratoren der Beteiligungssoftware.
+    projekt_event_registration_confirmation:
+      body: "Hallo %{name}, bitte bestätigen Sie Ihre Anmeldung zur Veranstaltung \"%{event}\", indem Sie auf den folgenden Link klicken."
+      confirm_link: "Anmeldung bestätigen"
     user_verification_failed:
       subject: Verifizierungsversuch fehlgeschlagen
       hi: "Hallo %{username},"

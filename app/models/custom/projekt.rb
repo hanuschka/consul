@@ -53,6 +53,12 @@ class Projekt < ApplicationRecord
 
   has_and_belongs_to_many :geozone_affiliations, class_name: "Geozone",
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :registered_address_district_affiliations,
+    class_name: "RegisteredAddress::District",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "projekt_id",
+    association_foreign_key: "registered_address_district_id",
+    after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"

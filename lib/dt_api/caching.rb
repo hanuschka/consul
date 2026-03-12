@@ -4,7 +4,7 @@ module DtApi::Caching
   def update_cache_if_different(cache_key, new_data)
     cached_data = Rails.cache.read(cache_key)
 
-    if cached_data != new_data
+    if cached_data != new_data || cached_data == nil
       Rails.cache.write(cache_key, new_data, expires_in: 5.months)
     end
   end

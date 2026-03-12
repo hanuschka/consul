@@ -63,5 +63,10 @@
         })
       </script>
     <% end %>
+
+    <% if current_user&.administrator? || current_user&.projekt_manager? %>
+      <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+      <%= render Projekts::ContentBlockEditPopupsComponent.new %>
+    <% end %>
   </body>
 </html>

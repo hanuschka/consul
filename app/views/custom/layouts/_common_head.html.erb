@@ -43,17 +43,46 @@
 
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
 
-<!--
-<script type="module" src="/upload-files.js"></script>
--->
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+<% end %>
 
-<% unless embedded? %>
-  <% unless Rails.env.development? %>
-    <% if Rails.application.secrets.matomo_site_id.present? %>
-      <%= render "layouts/matomo" %>
-    <% end %>
+<% unless Rails.env.development? %>
+  <% if Rails.application.secrets.matomo_site_id.present? %>
+    <%= render "layouts/matomo" %>
   <% end %>
+<% end %>
 
-  <%= javascript_include_tag "klaro/config.js", defer: true %>
-  <%= javascript_include_tag "klaro/klaro.js", defer: true %>
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
+<% end %>
+
+<%= javascript_include_tag "klaro/config.js", defer: true %>
+<%= javascript_include_tag "klaro/klaro.js", defer: true %>
+
+<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
+  <script>
+    function loadGoogleTranslateScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(script);
+    }
+
+    function googleTranslateElementInit() {
+      if ( $(".hamburger-menu:visible").length ) {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_mobile');
+      } else {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_desktop');
+      }
+    }
+
+    $(document).on('turbolinks:load', function() {
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+				loadGoogleTranslateScript();
+      } else {
+				googleTranslateElementInit();
+      }
+    });
+  </script>
 <% end %>

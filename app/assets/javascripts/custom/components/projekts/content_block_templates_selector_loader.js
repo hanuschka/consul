@@ -2,16 +2,14 @@
   "use strict";
 
   App.ContentBlockTemplatesSelector = {
-    initialize() {
-      this.loadTemplatesContent();
-    },
+    loaded: false,
+
+    initialize() {},
 
     loadTemplatesContent() {
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      if (this.loaded) return
 
-      if ($container.length === 0) {
-        return;
-      }
+      this.showSpinner();
 
       $.ajax({
         url: "/projekt_content_block_templates",
@@ -20,6 +18,8 @@
         timeout: 7000
       })
         .then((html) => {
+          this.loaded = true;
+
           this.handleLoadSuccess(html);
         })
         .catch(() => {
@@ -28,8 +28,10 @@
     },
 
     handleLoadSuccess(html) {
+      this.hideSpinner();
+
       const $container = $(".js-projekt-content-block-templates-selector--inner");
-      $container.html(html);
+      $container.html(html).show();
 
       this.reinitFoundationComponents($container);
     },
@@ -57,14 +59,25 @@
       }, 50);
     },
 
+    showSpinner() {
+      $(".js-content-block-templates-spinner").show();
+      $(".js-projekt-content-block-templates-selector--inner").hide();
+    },
+
+    hideSpinner() {
+      $(".js-content-block-templates-spinner").hide();
+    },
+
     handleLoadError() {
+      this.hideSpinner();
+
       const $container = $(".js-projekt-content-block-templates-selector--inner");
       const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
 
       if (!fallbackTemplate) return
 
       const fallbackContent = document.importNode(fallbackTemplate.content, true);
-      $container.empty().append(fallbackContent);
+      $container.empty().append(fallbackContent).show();
 
       $(".js-content-block-templates-fallback-note").show();
 

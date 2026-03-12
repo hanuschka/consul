@@ -26,12 +26,12 @@
       <% end %>
 
       <fieldset class="kern-fieldset kern-table__header-filter-menu p-4 d-none" data-table-header-target="filterMenu">
-        <div class='d-flex justify-content-end w-100'>
-          <button type="button" class="kern-btn kern-btn--tertiary" data-action="table-header#toggleFilterMenu">
-            <span class="material-symbols-outlined">close</span>
-            <span class="sr-only">Schließen</span>
-          </button>
-        </div>
+        <button type="button" class="kern-btn kern-btn--tertiary position-absolute top-0 right-0 p-1" style="min-height: auto; line-height: 1" data-action="table-header#toggleFilterMenu">
+          <span class="material-symbols-outlined">close</span>
+          <span class="sr-only">Schließen</span>
+        </button>
+
+        <legend class="kern-fieldset__legend mb-2"><%= @label %></legend>
 
         <div class="kern-fieldset__body">
           <% if @search.present? %>

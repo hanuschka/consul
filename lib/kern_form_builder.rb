@@ -23,7 +23,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
 
   def rich_text_area(field, options = {})
     unless options[:disabled]
-      toolbar = @template.ck_editor_class(@template.current_user)
+      toolbar = options.delete(:toolbar) || @template.ck_editor_class(@template.current_user)
       options[:data] = (options[:data] || {}).merge(controller: "ckeditor", ckeditor_toolbar_value: toolbar)
     end
     text_area(field, options)

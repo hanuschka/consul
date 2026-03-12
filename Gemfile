@@ -62,10 +62,6 @@ gem "whenever", "~> 1.0.0", require: false
 gem "wicked_pdf", "~> 2.7.0"
 gem "wkhtmltopdf-binary", "~> 0.12.6"
 
-source "https://rails-assets.org" do
-  gem "rails-assets-markdown-it", "~> 9.0.1"
-end
-
 group :development, :test do
   gem "bullet", "~> 7.0.7"
   gem "byebug", "~> 11.1.3"

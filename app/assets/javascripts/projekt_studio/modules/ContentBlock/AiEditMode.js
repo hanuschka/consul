@@ -168,10 +168,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
     }
 
     const instructions = instructionsTextarea.value.trim();
-    const useFullProjektContext =
-      useFullProjektContextCheckbox ? useFullProjektContextCheckbox.checked : false;
-    const allowTextModification =
-      allowTextModificationCheckbox ? allowTextModificationCheckbox.checked : false;
+    const useFullProjektContext = useFullProjektContextCheckbox ? useFullProjektContextCheckbox.checked : false;
+    const allowTextModification = allowTextModificationCheckbox ? allowTextModificationCheckbox.checked : false;
 
     if (!instructionsTextarea.reportValidity()) return
 
@@ -179,8 +177,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     this.setLoadingState(contentBlockWrapper, popup, true);
 
+    const aiUrl = contentBlockWrapper.dataset.aiUrl
+      || `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`;
+
     const ajaxRequest = window.App.Ajax.request({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`,
+      url: aiUrl,
       type: "PATCH",
       dataType: "json",
       data: {

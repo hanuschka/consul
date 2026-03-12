@@ -150,6 +150,8 @@ en:
             information_block_title: Information
             duration_block_title: Duration
             geo_affiliation_block_title: Geozones
+            geo_affiliation_geozones_label: Geozones
+            geo_affiliation_districts_label: Districts
             individual_groups_block_title: Visibility restriction to strong groups
           projekt_page_tab:
             name: Project page
@@ -421,6 +423,9 @@ en:
         edit:
           title: Edit event
           accessibility_features: Accessibility Features
+          max_attendees_placeholder: "Leave empty for unlimited"
+          confirmation_email_text: "Confirmation email text"
+          waitlist_email_text: "Waitlist email text"
       projekt_phases:
         nav_bar:
           duration: Duration
@@ -559,6 +564,21 @@ en:
           page_title: Events
           send_notifications_button: Send notifications
           notifications_sent_notice: Notifications sent sucessfully
+          registrations_confirmed: "%{confirmed} / %{max} confirmed"
+          registrations_waitlisted:
+            one: "%{count} waitlisted"
+            other: "%{count} waitlisted"
+          registrations_pending:
+            one: "%{count} pending confirmation"
+            other: "%{count} pending confirmation"
+          registrations_details: "Show registrations"
+          export_csv: "Export CSV"
+          registration_user_id: "User ID"
+          registration_user: "User"
+          registration_email: "Email"
+          registration_status: "Status"
+          registration_date: "Registered at"
+          registration_deleted: "Registration has been deleted."
         projekt_livestreams:
           page_title: Livestreams
           all_livestreams: All Livestreams

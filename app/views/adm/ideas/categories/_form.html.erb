@@ -1,43 +1,35 @@
-<% form_url = @category.persisted? ? adm_ideas_category_path(@category) : adm_ideas_categories_path %>
+<% url = @category.persisted? ? adm_ideas_category_path(@category) : adm_ideas_categories_path %>
+<%= form_with model: @category, url: url do |f| %>
 
-<%= translatable_form_for @category, url: form_url do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
 
-  <%= render "shared/globalize_locales", resource: @category %>
+  <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
+    <div data-controller="adm-color-picker">
+      <div class="color-picker" data-adm-color-picker-target="picker"></div>
+      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+    </div>
+  <% end %>
 
-  <%= f.translatable_fields do |translations_form| %>
-    <div class="mb-4">
-      <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:name)) do %>
-        <%= translations_form.text_field :name, class: "kern-input" %>
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint")) do %>
+    <div class="icon-selector">
+      <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
+        <% icon = icon_array.first %>
+        <label class="icon-option">
+          <%= f.radio_button :icon, icon, checked: @category.icon == icon %>
+          <i class="fas fa-<%= icon %>"></i>
+        </label>
       <% end %>
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:color)) do %>
-      <%= f.color_field :color, class: "kern-input", style: "height: 40px; padding: 4px;" %>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:icon)) do %>
-      <div class="admin-deficiency-report-category-icons-selector flex flex-wrap gap-2">
-        <%= f.collection_radio_buttons :icon, Iconable::AVAILABLE_ICONS_SHORT, :first, :first do |rb| %>
-          <label class="cursor-pointer p-2 border rounded hover:bg-gray-100 <%= 'bg-blue-100 border-blue-500' if rb.object.first == @category.icon %>">
-            <%= rb.radio_button(class: "sr-only") %>
-            <i class="fas fa-<%= rb.object.first %>"></i>
-          </label>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= render Kern::FormFieldComponent.new(label: Idea::Category.human_attribute_name(:default_idea_officer)) do %>
-      <%= f.collection_select :idea_officer_id, Idea::Officer.all, :id, :name,
-        { include_blank: t(".no_officer") },
-        { class: "kern-select" } %>
-    <% end %>
-  </div>
+  <%= render Kern::FormFieldComponent.new(label: t(".officer_label"), hint: t(".officer_hint")) do %>
+    <%= f.select :idea_officer_id,
+      options_from_collection_for_select(Idea::Officer.all, :id, :name, @category.idea_officer_id),
+      { include_blank: t(".no_officer") },
+      { label: false } %>
+  <% end %>
 
   <%= form_submit_button(text: t(".submit")) %>
 <% end %>

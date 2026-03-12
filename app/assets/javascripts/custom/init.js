@@ -37,6 +37,7 @@
       App.ProjektFooterSubnavUrlUpdater.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();
+      App.Studio.SiteContentBlockEditor.initialize();
     }
   };
 }).call(this);

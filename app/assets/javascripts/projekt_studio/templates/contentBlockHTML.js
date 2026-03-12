@@ -22,7 +22,9 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   `
 }
 
-ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex} = {}) {
+ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, aiUrl} = {}) {
+  const isSiteContext = context === 'site';
+
   return `
     <div
       class="js-content-block js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper ${draftContentBlockIndex ? ' -draft' : ''}"
@@ -30,6 +32,9 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
       data-edit-mode=""
+      ${updateUrl ? `data-update-url="${updateUrl}"` : ''}
+      ${aiUrl ? `data-ai-url="${aiUrl}"` : ''}
+      data-context="${context || 'projekt'}"
       >
       <div class="relative">
         <div class="projekt-content-block--toolbar js-projekt-studio-hide-on-preview">
@@ -120,6 +125,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>
+              ${isSiteContext ? '' : `
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
@@ -136,6 +142,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-trash-alt">
                 </i>
               </button>
+              `}
 
             </div>
             <div
@@ -265,7 +272,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         </div>
       </div>
 
-      ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}
+      ${isSiteContext ? '' : showContentBlockTemplatesButton(!!draftContentBlockIndex)}
     </div>
   `.trim()
 }

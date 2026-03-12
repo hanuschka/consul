@@ -149,6 +149,14 @@ ProjektStudio.ContentBlock.Crud = {
     $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", false)
   },
 
+  getUpdateUrl(contentBlockWrapper) {
+    const customUrl = contentBlockWrapper.dataset.updateUrl;
+    if (customUrl) return customUrl;
+
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    return `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`;
+  },
+
   updateContentBlock(contentBlock, newContent, { resetFoundationState = false, saveVersion = true } = {}) {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
@@ -169,7 +177,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
 
     $.ajax({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      url: this.getUpdateUrl(contentBlockWrapper),
       type: "PATCH",
       dataType: "json",
       headers: {

@@ -1407,14 +1407,14 @@ form {
     }
 
     &::before {
-      content: "\43";
+      content: "\43" / "";
     }
   }
 
   &::before {
     background: $body-background;
     color: $brand;
-    content: "\4d";
+    content: "\4d" / "";
     font-family: "icons" !important;
     font-size: $small-font-size;
     height: rem-calc(20);

@@ -53,7 +53,15 @@
       <% end %>
 
       <% banner_image = capture do %>
-        <%= link_to big_projekt_image_url, aria: { hidden: true }, target: "_blank", class: "glightbox", data: { gallery: "banner-#{@custom_page.id}" }, role: "button", aria_label: t("custom.accessibility.banner-image.glightbox-aria-label") do %>
+        <%= link_to big_projekt_image_url,
+          target: "_blank",
+          class: "glightbox",
+          data: {
+            gallery: "banner-#{@custom_page.id}",
+            alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: @custom_page.class.model_name.human, title: @custom_page.title)
+          },
+          role: "button",
+          aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>

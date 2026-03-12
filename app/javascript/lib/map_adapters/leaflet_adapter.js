@@ -337,8 +337,9 @@ export default class LeafletAdapter extends BaseAdapter {
                       feature.properties?.feature_color ||
                       feature.properties?.color ||
                       instance.defaultFeatureColor
+        var markerTitle = feature.properties?.feature_category_name || "Kartenmarkierung"
         return L.marker(latlng, {
-          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name)
+          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name, markerTitle)
         })
       },
 
@@ -426,16 +427,17 @@ export default class LeafletAdapter extends BaseAdapter {
     adminNote.addTo(this.map)
   }
 
-  createMarkerIcon(color, iconName) {
+  createMarkerIcon(color, iconName, title) {
     const L = window.L
     color = color || getBrandColor()
     iconName = iconName || "circle"
+    title = title || "Kartenmarkierung"
 
     return L.divIcon({
       className: "map-marker",
       iconSize: [30, 30],
       iconAnchor: [15, 40],
-      html: `<div class="map-icon icon-${iconName}" style="background-color: ${color}"></div>`
+      html: `<div class="map-icon icon-${iconName}" role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></div>`
     })
   }
 

@@ -1,8 +1,6 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
 <% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
-  <%= render Projekts::ContentBlockEditPopupsComponent.new %>
 <% end %>
 
 <% if @custom_page.landing? %>

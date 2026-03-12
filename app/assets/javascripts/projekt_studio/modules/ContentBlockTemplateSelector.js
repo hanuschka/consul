@@ -1,17 +1,32 @@
 ProjektStudio.ContentBlockTemplateSelector = {
   currentContentBlockId: null,
+  selectionMode: "add",
+  replaceTargetWrapper: null,
 
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.handleOpenTemplateSelector.bind(this));
+    $document.on("click", ".js-open-template-selector-for-replace", this.handleOpenTemplateSelectorForReplace.bind(this));
     $document.on("click", ".js-copy-content-block-template", this.handleCopyTemplate.bind(this));
   },
 
   handleOpenTemplateSelector(e) {
     const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
 
+    this.selectionMode = "add";
+    this.replaceTargetWrapper = null;
+
     ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
     ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+
+    this.openDialog()
+  },
+
+  handleOpenTemplateSelectorForReplace(e) {
+    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+
+    this.selectionMode = "replace";
+    this.replaceTargetWrapper = wrapper;
 
     this.openDialog()
   },

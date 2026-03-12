@@ -8,8 +8,32 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   handleCreateContentBlock(e) {
+    const templateSelector = ProjektStudio.ContentBlockTemplateSelector;
     const contentBlockTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
+
+    if (templateSelector.selectionMode === "replace") {
+      this.replaceContentBlockWithTemplate(templateSelector.replaceTargetWrapper, contentBlockTemplate);
+      return
+    }
+
     this.addContentBlock(this.addContentBlockAfter, contentBlockTemplate)
+  },
+
+  replaceContentBlockWithTemplate(wrapper, contentBlockTemplate) {
+    const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+    const templateHTML = contentBlockTemplate.innerHTML;
+
+    ProjektStudio.ContentBlockTemplateSelector.closeDialog();
+    ProjektStudio.ContentBlockTemplateSelector.selectionMode = "add";
+    ProjektStudio.ContentBlockTemplateSelector.replaceTargetWrapper = null;
+
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
+
+    const updatedContent = ProjektStudio.utils.htmlToDomElement(templateHTML);
+    contentBlock.innerHTML = updatedContent.innerHTML;
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+
+    ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(wrapper);
   },
 
   handleDeleteContentBlock(e) {

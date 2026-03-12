@@ -1,0 +1,40 @@
+<% url = @status.persisted? ? adm_deficiency_reports_status_path(@status) : adm_deficiency_reports_statuses_path %>
+<%= form_with model: @status, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label")) do %>
+    <%= f.text_field :title, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".color_label")) do %>
+    <div data-controller="adm-color-picker">
+      <div class="color-picker" data-adm-color-picker-target="picker"></div>
+      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label")) do %>
+    <div class="icon-selector">
+      <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
+        <% icon = icon_array.first %>
+        <label class="icon-option">
+          <%= f.radio_button :icon, icon, checked: @status.icon == icon %>
+          <i class="fas fa-<%= icon %>"></i>
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".reminder_delay_label")) do %>
+    <%= f.number_field :reminder_delay, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".archive_reports_label")) do %>
+    <%= f.check_box :archive_reports, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".notice_text_label")) do %>
+    <%= f.rich_text_area :notice_text, label: false, toolbar: "regular" %>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

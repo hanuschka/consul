@@ -22,7 +22,7 @@
     <div class="flex-layout">
       <div class="main-column" id="proposal-content">
         <% unless in_projekt_footer %>
-          <% fallback_path = proposal.projekt_phase.present? ? page_path(proposal.projekt_phase.projekt.page.slug, projekt_phase_id: proposal.projekt_phase.id, anchor: "projekt-footer") : proposals_path %>
+          <% fallback_path = proposal.projekt_phase.present? ? page_path(proposal.projekt_phase.projekt.page.slug, projekt_phase_id: proposal.projekt_phase.id, anchor: "filter-subnav") : proposals_path %>
 
           <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>

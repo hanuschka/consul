@@ -808,7 +808,7 @@ export default class LeafletAdapter extends BaseAdapter {
     // Update Geoman global options
     this.map.pm.setGlobalOptions({
       markerStyle: {
-        icon: this.createMarkerIcon(color || this.defaultFeatureColor)
+        icon: this.createMarkerIcon(color || this.defaultFeatureColor, iconName)
       },
       pathOptions: {
         color: color || this.defaultFeatureColor,

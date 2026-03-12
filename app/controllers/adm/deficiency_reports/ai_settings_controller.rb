@@ -1,0 +1,43 @@
+class Adm::DeficiencyReports::AiSettingsController < Adm::DeficiencyReports::BaseController
+  def show
+    authorize :deficiency_report, :settings?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @assistant_codename = "deficiency_report_voice_assistant"
+    @ai_settings = Setting.where(key: "deficiency_reports.voice_assistant")
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config_response =
+      dt_api
+        .ai_assistant_configs
+        .get(
+          codename: @assistant_codename
+        )
+
+    @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.ai_settings") }]
+  end
+
+  def update
+    authorize :deficiency_report, :settings?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    dt_response =
+      DtApi::Client.new
+        .ai_assistant_configs
+        .update(
+          codename: params[:assistant_codename],
+          params: {
+            questions: params[:questions],
+            criteria: params[:criteria],
+            parting_words: params[:parting_words]
+          }
+        )
+
+    if dt_response["status"] == "error"
+      flash[:error] = "Error updating config. #{dt_response["error_message"]}"
+    end
+
+    redirect_to action: :show
+  end
+end

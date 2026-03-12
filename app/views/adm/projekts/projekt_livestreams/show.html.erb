@@ -15,7 +15,7 @@
   <% end %>
 
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_projekt_question_path(@projekt_phase, projekt_livestream_id: @projekt_livestream.id), text: t(".add_question") %>
+    <%= kern_link_button new_adm_projekts_phase_projekt_question_path(@projekt_phase, projekt_livestream_id: @projekt_livestream.id), text: t(".add_question"), style: :primary %>
   </div>
 
   <% if @projekt_livestream.projekt_questions.any? %>

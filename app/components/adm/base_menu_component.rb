@@ -26,7 +26,7 @@ class Adm::BaseMenuComponent < ApplicationComponent
   private
 
     def item_class(item)
-      class_names("nav-item", "active": item_active?(item))
+      class_names("nav-item", "active": item_active?(item), "divider-before": item[:divider])
     end
 
     def link_attributes(item)
@@ -40,7 +40,7 @@ class Adm::BaseMenuComponent < ApplicationComponent
           current: ("page" if item_active?(item)),
           expanded: (subitems_expanded if has_subitems)
         },
-        data: { adm_menu_target: ("expandable" if has_subitems) }
+        data: { adm_menu_target: ("expandable" if has_subitems), adm_menu_id: (item[:icon] if has_subitems) }
       }.compact
     end
 

@@ -8,8 +8,11 @@
   <% if @idea_managers.any? %>
     <%= render 'adm/role_assignments/roles', roles: @idea_managers, pagy: @pagy %>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_idea_managers") %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".no_idea_managers") %></span>
+      </div>
     </div>
   <% end %>
 </div>

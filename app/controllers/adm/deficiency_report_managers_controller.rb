@@ -7,7 +7,7 @@ module Adm
       )
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.deficiency_report_managers") }
       ]
     end
@@ -16,7 +16,7 @@ module Adm
       authorize [:adm, DeficiencyReportManager], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.deficiency_report_managers"),
           url: adm_deficiency_report_managers_path },
         { name: t(".title") }

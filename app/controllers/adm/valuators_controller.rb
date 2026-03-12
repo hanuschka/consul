@@ -5,7 +5,7 @@ module Adm
       @pagy, @valuators = pagy(policy_scope([:adm, Valuator]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.valuators") }
       ]
     end
@@ -14,7 +14,7 @@ module Adm
       authorize [:adm, Valuator], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.valuators"), url: adm_valuators_path },
         { name: t(".title") }
       ]

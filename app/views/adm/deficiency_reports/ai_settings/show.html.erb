@@ -38,12 +38,18 @@
       <%= form_submit_button(text: t(".update_button")) %>
     <% end %>
   <% elsif @ai_assistant_config_response["error"].present? %>
-    <div class="callout alert">
-      <%= @ai_assistant_config_response["error"] %>
+    <div class="kern-alert kern-alert--danger" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+        <span class="kern-title"><%= @ai_assistant_config_response["error"] %></span>
+      </div>
     </div>
   <% else %>
-    <div class="callout primary">
-      <%= t(".not_connected") %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".not_connected") %></span>
+      </div>
     </div>
   <% end %>
 </div>

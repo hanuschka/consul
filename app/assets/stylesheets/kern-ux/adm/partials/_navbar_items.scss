@@ -1,27 +1,92 @@
 .navbar-items {
   .navbar-item {
-    border: 1px solid #808080;
-    padding: 10px;
-    position: relative;
-    border-radius: 5px;
-    background-color: #eee;
+    .navbar-item__card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.15s ease;
 
-    span[data-sortable-handle] {
-      font-size: 32px !important;
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      cursor: grab;
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
     }
 
-    .navbar-item-delete {
-      position: absolute;
-      top: 80px;
-      right: 8px;
-      color: #808080;
+    .navbar-item__handle {
+      font-size: 22px !important;
+      color: #b0bac4;
+      cursor: grab;
+      flex-shrink: 0;
+      user-select: none;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    .navbar-item__content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .navbar-item__title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--kern-color-layout-text-default);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .navbar-item__url {
+      font-size: 0.8125rem;
+      color: #6b7280;
+      font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .navbar-item__badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &--presets {
+        background-color: #e8f0fe;
+        color: #1a56db;
+      }
+
+      &--projekts {
+        background-color: #ecfdf5;
+        color: #059669;
+      }
+
+      &--external {
+        background-color: #fff7ed;
+        color: #c2410c;
+      }
+    }
+
+    .navbar-item__delete {
+      color: #cbd5e1;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s ease;
 
       .material-symbols-outlined {
-        font-size: 24px !important;
+        font-size: 20px !important;
       }
 
       &:hover {
@@ -29,8 +94,19 @@
       }
     }
 
+    .navbar-item__children {
+      margin-top: 6px;
+      margin-left: 34px;
+    }
+
+    // Nested items: slightly muted appearance
     .navbar-item {
-      background-color: #e3e3e3;
+      .navbar-item__card {
+        background-color: #f8fafc;
+        border-color: #e5e7eb;
+        box-shadow: none;
+        padding: 10px 14px;
+      }
     }
   }
 }

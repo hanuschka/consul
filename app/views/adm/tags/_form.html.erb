@@ -3,5 +3,5 @@
     <%= f.text_field :name, label: false, placeholder: Tag.human_attribute_name(:name) %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

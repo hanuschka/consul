@@ -1,3 +1,5 @@
+$sidebar-card-horizontal-padding: 22px;
+
 .sidebar-card {
   position: relative;
   background: white;
@@ -84,7 +86,7 @@
 }
 
 .sidebar-card--section {
-  padding: 18px 25px;
+  padding: 18px $sidebar-card-horizontal-padding;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -116,12 +118,12 @@
   margin-bottom: 0 !important;
   color: black;
   font-weight: 500;
-  padding: 18px 25px;
+  padding: 18px $sidebar-card-horizontal-padding;
   padding-bottom: 15px;
   user-select: none;
 
   @media(max-width: $mobile-viewport-start) {
-    padding: 15px 25px;
+    padding: 15px $sidebar-card-horizontal-padding;
   }
 
   .sidebar--icon {
@@ -145,7 +147,7 @@
 
 .sidebar-card--description {
   // margin-bottom: 10px;
-  padding: 0 25px;
+  padding: 0 $sidebar-card-horizontal-padding;
 }
 
 .sidebar-card--section + .sidebar-card--section {

@@ -143,3 +143,43 @@
 .projekt-content-block-edit--ai-submit {
   min-width: 170px;
 }
+
+aside {
+  .projekt-content-block--toolbar {
+    padding: 3px 5px;
+  }
+}
+
+aside .projekt-frame-icon-button {
+  font-size: 16px;
+  width: 1.7em;
+  height: 1.7em;
+}
+
+aside .content-block-margin-input {
+  display: none !important;
+}
+
+aside .js-content-block-header-dropdown {
+  display: none !important;
+}
+
+aside .content-block-edit-toolbar {
+  gap: 2px;
+}
+
+aside .projekt-content-block-edit--button {
+  font-size: 14px;
+  padding: 7px 5px;
+}
+
+aside .projekt-content-block-edit--buttons-wrapper {
+  margin-right: 5px;
+  gap: 5px;
+}
+
+aside .projekt-content-block-wrapper.-in-edit-mode {
+  .projekt-content-block-edit-main-controlls {
+    display: none !important;
+  }
+}

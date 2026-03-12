@@ -12,16 +12,6 @@ module ContentBlocksHelper
 
     inline_urls = site_content_block_inline_urls(block)
 
-    if block_body.present? && current_user && current_user.email.in?(@partner_emails || [])
-      copy_link = link_to(
-        '<i class="fas fa-code"></i>'.html_safe,
-        '#',
-        class: 'js-copy-source-button',
-        style: "margin-left:10px",
-        data: { target: key }
-      )
-    end
-
     if inline_urls
       sanitized_body = AdminWYSIWYGSanitizer.new.sanitize(block_body)
 
@@ -29,9 +19,9 @@ module ContentBlocksHelper
         sanitized_body = process_iframe_embeds(sanitized_body)
       end
 
-      res = build_inline_editable_block(key, block, sanitized_body, inline_urls, copy_link).html_safe
+      res = build_inline_editable_block(key, block, sanitized_body, inline_urls).html_safe
     else
-      res = build_standard_block(key, block, block_body, projekt, return_path, copy_link)
+      res = build_standard_block(key, block, block_body, projekt, return_path)
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? && res.include?("</iframe>")
         res = process_iframe_embeds(res)
@@ -59,23 +49,17 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls, copy_link)
+  def build_inline_editable_block(key, block, block_body, inline_urls)
     res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
     res << ">#{block_body}</div>"
 
-    if copy_link.present?
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
-      res << copy_link
-      res << "</div>"
-    end
-
     res
   end
 
-  def build_standard_block(key, block, block_body, projekt, return_path, copy_link)
+  def build_standard_block(key, block, block_body, projekt, return_path)
     edit_link = nil
 
     if current_user&.administrator? && block.present?
@@ -92,10 +76,9 @@ module ContentBlocksHelper
 
     res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?}>#{block_body}</div>"
 
-    if edit_link || copy_link
+    if edit_link
       res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
-      res << edit_link if edit_link.present?
-      res << copy_link if copy_link.present?
+      res << edit_link
       res << "</div>"
     end
 
@@ -140,16 +123,11 @@ module ContentBlocksHelper
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
     end
 
-    if block_body.present? && current_user && current_user.email.in?(@partner_emails)
-      copy_link = link_to '<i class="fas fa-code"></i>'.html_safe, '#', class: 'js-copy-source-button', style: "#{'margin-left:10px' if edit_link.present?}", data: { target: key }
-    end
-
     res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
 
-    if edit_link || copy_link
+    if edit_link
       res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
-        res << edit_link if edit_link.present?
-        res << copy_link if copy_link.present?
+      res << edit_link
       res << "</div>"
     end
 

@@ -177,8 +177,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     this.setLoadingState(contentBlockWrapper, popup, true);
 
+    const aiUrl = contentBlockWrapper.dataset.aiUrl
+      || `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`;
+
     const ajaxRequest = window.App.Ajax.request({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`,
+      url: aiUrl,
       type: "PATCH",
       dataType: "json",
       data: {

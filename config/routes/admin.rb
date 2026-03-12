@@ -504,7 +504,12 @@ as: :destroy_user_resource_criterion
       resources :cards, except: [:show], as: :widget_cards
     end
     resources :images, only: [:index, :update, :destroy]
-    resources :content_blocks, except: [:show]
+    resources :content_blocks, except: [:show] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
     delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",
 as: "delete_heading_content_block"
     get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block",

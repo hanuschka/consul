@@ -24,11 +24,12 @@ ProjektStudio.ContentBlockTemplateSelector = {
 
   handleOpenTemplateSelectorForReplace(e) {
     const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+    const section = wrapper.closest("aside") ? "sidebar" : null;
 
     this.selectionMode = "replace";
     this.replaceTargetWrapper = wrapper;
 
-    this.openDialog()
+    this.openDialog(section)
   },
 
   handleCopyTemplate(e) {
@@ -38,8 +39,8 @@ ProjektStudio.ContentBlockTemplateSelector = {
     this.copyContentBlockTemplate(templateItem)
   },
 
-  openDialog() {
-    App.ContentBlockTemplatesSelector.loadTemplatesContent();
+  openDialog(section) {
+    App.ContentBlockTemplatesSelector.loadTemplatesContent(section);
     $('#contentBlockTemplatesModal').foundation('open');
   },
 

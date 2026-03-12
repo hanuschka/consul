@@ -21,10 +21,8 @@ window.ProjektStudio = {
     ProjektStudio.BuildWithPrompt.initialize()
 
     // Initialize ContentBlock submodules
-    ProjektStudio.ContentBlockTemplateSelector.initialize()
     ProjektStudio.ContentBlock.Render.initialize()
     ProjektStudio.ContentBlock.DragDrop.initialize()
-    ProjektStudio.ContentBlock.Crud.initialize()
     ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
     App.Studio.initContentBlockModules()

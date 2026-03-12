@@ -125,7 +125,20 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>
-              ${isSiteContext ? '' : `
+              ${isSiteContext ? `
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
+                class="projekt-frame-icon-button js-open-template-selector-for-replace"
+              >
+                <i class="fas fa-swatchbook">
+                </i>
+              </button>
+              ` : `
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"

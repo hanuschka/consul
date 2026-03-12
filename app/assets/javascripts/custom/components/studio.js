@@ -8,6 +8,8 @@
       if (this.modulesInitialized) return
       if (typeof ProjektStudio === "undefined") return
 
+      ProjektStudio.ContentBlockTemplateSelector.initialize();
+      ProjektStudio.ContentBlock.Crud.initialize();
       ProjektStudio.ContentBlock.ChangeHistory.initialize();
       ProjektStudio.ContentBlock.CKEditorMode.initialize();
       ProjektStudio.ContentBlock.EditModeSwitcher.initialize();

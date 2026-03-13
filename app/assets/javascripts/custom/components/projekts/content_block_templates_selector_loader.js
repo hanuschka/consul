@@ -2,23 +2,32 @@
   "use strict";
 
   App.ContentBlockTemplatesSelector = {
-    loaded: false,
+    loadedSections: {},
 
     initialize() {},
 
-    loadTemplatesContent() {
-      if (this.loaded) return
+    loadTemplatesContent(section) {
+      const cacheKey = section || "default";
+
+      if (this.loadedSections[cacheKey]) return
 
       this.showSpinner();
+
+      const ajaxData = {};
+
+      if (section) {
+        ajaxData.section = section;
+      }
 
       $.ajax({
         url: "/projekt_content_block_templates",
         method: "GET",
         dataType: "html",
+        data: ajaxData,
         timeout: 7000
       })
         .then((html) => {
-          this.loaded = true;
+          this.loadedSections[cacheKey] = true;
 
           this.handleLoadSuccess(html);
         })

@@ -11,12 +11,11 @@
   position: relative;
   z-index: 2;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 3px 10px;
   padding-right: 5px;
   border-radius: 8px;
   align-self: flex-start;
-  flex-direction: row-reverse;
 }
 
 .projekt-content-block-wrapper.-in-edit-mode {

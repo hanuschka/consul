@@ -10,7 +10,7 @@
 }
 
 .projekt-content-block-edit--buttons-wrapper {
-  margin-right: 10px;
+  margin-right: auto;
   display: none;
   align-items: center;
   gap: 5px;
@@ -165,6 +165,7 @@ aside, .sidebar, footer {
 
   .content-block-edit-toolbar {
     gap: 2px;
+    margin-left: 0px;
   }
 
   .projekt-content-block-edit--button {

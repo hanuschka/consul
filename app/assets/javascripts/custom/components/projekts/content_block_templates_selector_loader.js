@@ -2,14 +2,18 @@
   "use strict";
 
   App.ContentBlockTemplatesSelector = {
-    loadedSections: {},
+    cachedSections: {},
+    activeSection: null,
 
     initialize() {},
 
     loadTemplatesContent(section) {
       const cacheKey = section || "default";
 
-      if (this.loadedSections[cacheKey]) return
+      if (this.cachedSections[cacheKey]) {
+        this.restoreFromCache(cacheKey);
+        return
+      }
 
       this.showSpinner();
 
@@ -27,22 +31,35 @@
         timeout: 7000
       })
         .then((html) => {
-          this.loadedSections[cacheKey] = true;
-
-          this.handleLoadSuccess(html);
+          this.handleLoadSuccess(html, cacheKey);
         })
         .catch(() => {
           this.handleLoadError();
         });
     },
 
-    handleLoadSuccess(html) {
+    handleLoadSuccess(html, cacheKey) {
       this.hideSpinner();
 
       const $container = $(".js-projekt-content-block-templates-selector--inner");
       $container.html(html).show();
 
       this.reinitFoundationComponents($container);
+
+      this.cachedSections[cacheKey] = $container.html();
+      this.activeSection = cacheKey;
+    },
+
+    restoreFromCache(cacheKey) {
+      if (this.activeSection === cacheKey) return
+
+      this.hideSpinner();
+
+      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      $container.html(this.cachedSections[cacheKey]).show();
+
+      this.reinitFoundationComponents($container);
+      this.activeSection = cacheKey;
     },
 
     reinitFoundationComponents($container) {

@@ -19,18 +19,27 @@ ProjektStudio.ContentBlockTemplateSelector = {
     ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
     ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
 
-    this.openDialog("projekt_page")
+    const section = this.detectSection(wrapper);
+    this.openDialog(section)
   },
 
   handleOpenTemplateSelectorForReplace(e) {
     const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
-    const section = wrapper.closest("aside, .sidebar") ? "sidebar"
-      : wrapper.closest("footer") ? "footer" : null;
 
     this.selectionMode = "replace";
     this.replaceTargetWrapper = wrapper;
 
+    const section = this.detectSection(wrapper);
     this.openDialog(section)
+  },
+
+  detectSection(wrapper) {
+    if (!wrapper) return "projekt_page"
+
+    if (wrapper.closest("aside, .sidebar")) return "sidebar"
+    if (wrapper.closest("footer")) return "footer"
+
+    return "projekt_page"
   },
 
   handleCopyTemplate(e) {

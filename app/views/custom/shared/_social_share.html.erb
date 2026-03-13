@@ -22,6 +22,7 @@
       class: 'ssb-icon ssb-whatsapp_app',
       data: { site: "whatsapp" },
       role: "button",
+      title: t('custom.accessibility.share-links.whatsapp'),
       aria: { label: t('custom.accessibility.share-links.whatsapp') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.whatsapp') %></span>
     <% end %>
@@ -31,6 +32,7 @@
       data: { site: "facebook" },
       onclick: "return SocialShareButton.share(this);",
       role: "button",
+      title: t('custom.accessibility.share-links.facebook'),
       aria: { label: t('custom.accessibility.share-links.facebook') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.facebook') %></span>
     <% end %>
@@ -40,6 +42,7 @@
       data: { site: "twitter", "twitter-title": twitter_title },
       onclick: "return SocialShareButton.share(this);",
       role: "button",
+      title: t('custom.accessibility.share-links.twitter'),
       aria: { label: t('custom.accessibility.share-links.twitter') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.twitter') %></span>
     <% end %>
@@ -49,6 +52,7 @@
       data: { site: "telegram", "telegram-title": telegram_title },
       onclick: "return SocialShareButton.share(this);",
       role: "button",
+      title: t('custom.accessibility.share-links.telegram'),
       aria: { label: t('custom.accessibility.share-links.telegram') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.telegram') %></span>
     <% end %>
@@ -58,6 +62,7 @@
       data: { site: "linkedin" },
       onclick: "return SocialShareButton.share(this);",
       role: "button",
+      title: t('custom.accessibility.share-links.linkedin'),
       aria: { label: t('custom.accessibility.share-links.linkedin') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.linkedin') %></span>
     <% end %>
@@ -67,6 +72,7 @@
       data: { site: "email" },
       onclick: "return SocialShareButton.share(this);",
       role: "button",
+      title: t('custom.accessibility.share-links.email'),
       aria: { label: t('custom.accessibility.share-links.email') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.email') %></span>
     <% end %>
@@ -75,6 +81,7 @@
       class: 'ssb-icon ssb-copy-link js-copy-data-url',
       data: { url: local_assigns[:url], site: "kopieren" },
       role: "button",
+      title: t('custom.accessibility.share-links.copy-link'),
       aria: { label: t('custom.accessibility.share-links.copy-link') } do %>
       <span class="show-for-sr"><%= t('custom.accessibility.share-links.copy-link') %></span>
     <% end %>

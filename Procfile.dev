@@ -1,3 +1,3 @@
 web: bin/rails server
-js: yarn build --watch
-css: yarn build:css --watch --poll
+js: npm run build -- --watch
+css: npm run build:css -- --watch --poll

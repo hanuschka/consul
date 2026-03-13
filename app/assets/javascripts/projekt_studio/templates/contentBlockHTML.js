@@ -92,16 +92,16 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-code">
                 </i>
               </button>
-              <button
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen"
-                class="projekt-frame-icon-button js-html-edit-content-block"
-              >
-                <i class="fas fa-edit">
-                </i>
-              </button>
+              <!-- <button -->
+              <!--   data-tooltip -->
+              <!--   data-hover-delay="800" -->
+              <!--   tabindex="0" -->
+              <!--   title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen" -->
+              <!--   class="projekt-frame-icon-button js-html-edit-content-block" -->
+              <!-- > -->
+              <!--   <i class="fas fa-edit"> -->
+              <!--   </i> -->
+              <!-- </button> -->
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
@@ -135,7 +135,19 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 title="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
                 class="projekt-frame-icon-button js-open-template-selector-for-replace"
               >
-                <i class="fas fa-swatchbook">
+                <i class="fas fa-exchange-alt">
+                </i>
+              </button>
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Entfernt den gesamten Inhalt dieses Blocks"
+                class="projekt-frame-icon-button -delete js-clear-site-content-block"
+              >
+                <i class="fas fa-eraser">
                 </i>
               </button>
               ` : `

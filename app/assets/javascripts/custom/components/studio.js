@@ -8,6 +8,8 @@
       if (this.modulesInitialized) return
       if (typeof ProjektStudio === "undefined") return
 
+      $(document).on("click", ".js-clear-site-content-block", this.handleClearContentBlock.bind(this));
+
       ProjektStudio.ContentBlockTemplateSelector.initialize();
       ProjektStudio.ContentBlock.Crud.initialize();
       ProjektStudio.ContentBlock.ChangeHistory.initialize();
@@ -26,6 +28,24 @@
       ProjektStudio.ContentBlock.Copy.initialize();
 
       this.modulesInitialized = true;
+    },
+
+    handleClearContentBlock(e) {
+      const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+      const confirmed = confirm("Soll der Inhalt dieses Blocks wirklich gelöscht werden?");
+
+      if (!confirmed) return
+
+      const currentMode = wrapper.dataset.editMode;
+
+      if (currentMode) {
+        ProjektStudio.ContentBlock.EditModeSwitcher.exitCurrentMode(wrapper, currentMode);
+      }
+
+      const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+      const emptyHtml = "<div><p></p></div>";
+
+      ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, emptyHtml);
     },
 
     SiteContentBlockEditor: {

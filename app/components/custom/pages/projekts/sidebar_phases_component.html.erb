@@ -10,7 +10,7 @@
 
   <% if projekt.show_start_date_in_frontend? && projekt.total_duration_start.present? %>
     <div class="sidebar-projekt-phase active" >
-      <div class='sidebar-projekt-phase-status'>
+      <div class='sidebar-projekt-phase-status' aria-hidden="true">
       </div>
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>
@@ -27,8 +27,8 @@
     <% next if phase.name == 'budget_phase' && phase.budget.blank?  %>
 
     <% if phase.active? %>
-      <div class="sidebar-projekt-phase <%= 'active' if phase.current? %>" <%= "aria-expanded=true" if phase.name == 'budget_phase' %>>
-        <div class='sidebar-projekt-phase-status'>
+      <div class="sidebar-projekt-phase <%= 'active' if phase.current? %>" <%= 'aria-expanded="true"' if phase.name == 'budget_phase' %>>
+        <div class='sidebar-projekt-phase-status' aria-hidden="true">
         </div>
         <div class='sidebar-projekt-phase-details'>
           <span class='sidebar-projekt-phase-name'>
@@ -69,7 +69,7 @@
 
   <% if projekt.show_end_date_in_frontend? && projekt.total_duration_end.present? %>
     <div class="sidebar-projekt-phase active">
-      <div class='sidebar-projekt-phase-status'>
+      <div class='sidebar-projekt-phase-status' aria-hidden="true">
       </div>
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>

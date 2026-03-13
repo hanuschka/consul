@@ -64,6 +64,30 @@
           stickyHeader.style.paddingRight = "0";
         }
       });
+      this.lightbox.on('slide_after_load', (data) => {
+        this.applySlideAltText(data);
+      });
+    },
+
+    applySlideAltText(data) {
+      var slideEl = data.slideNode || data.slide;
+      if (!slideEl) return
+
+      var img = slideEl.querySelector('.gslide-media img');
+      if (!img) return
+
+      if (data.trigger) {
+        var altText = data.trigger.getAttribute('data-alt');
+
+        if (altText) {
+          img.setAttribute('alt', altText);
+          return
+        }
+      }
+
+      if (!img.alt || img.alt === '') {
+        img.setAttribute('alt', 'Vergrößerte Ansicht');
+      }
     },
 
     setMissingHrefs: function() {
@@ -74,5 +98,6 @@
         }
       });
     },
+
   };
 }).call(this);

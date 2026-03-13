@@ -1,7 +1,7 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, narrow: true) %>
 
-<div class="kern-container my-5">
+<div class="kern-container kern-container--form my-5">
   <%= render "form", url: adm_projekts_phase_formular_field_path(@projekt_phase, @formular_field) %>
 </div>

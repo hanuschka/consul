@@ -7,7 +7,7 @@ module Adm
       @pagy, @documents = pagy(policy_scope([:adm, Document]))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.documents") }
       ]
     end
@@ -17,7 +17,7 @@ module Adm
       authorize [:adm, @document]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.documents"), url: adm_documents_path },
         { name: t(".title") }
       ]

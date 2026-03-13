@@ -3,7 +3,7 @@ module Adm
     def metadata
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t(".title") }
       ]
     end
@@ -11,7 +11,7 @@ module Adm
     def gdpr
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t(".title") }
       ]
     end
@@ -19,7 +19,7 @@ module Adm
     def registration
       authorize [:adm, Setting], :update?
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t(".title") }
       ]
     end

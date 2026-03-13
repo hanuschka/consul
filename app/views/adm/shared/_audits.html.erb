@@ -1,7 +1,7 @@
 <% auditable = local_assigns[:auditable] %>
 <% audit_show_path = local_assigns[:audit_show_path] %>
 
-<h3 class="text-xl font-bold mb-4"><%= t("adm.shared.audits.title") %></h3>
+<h3 class="fs-4 strong mb-4"><%= t("adm.shared.audits.title") %></h3>
 
 <% if auditable.own_and_associated_audits.empty? %>
   <p><%= t("adm.shared.audits.empty") %></p>

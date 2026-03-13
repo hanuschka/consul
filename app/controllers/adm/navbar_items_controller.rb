@@ -5,7 +5,7 @@ module Adm
       authorize [:adm, @navbar_item]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.navbar"), url: adm_navbar_path },
         { name: t(".title") }
       ]

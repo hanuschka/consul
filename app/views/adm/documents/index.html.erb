@@ -1,6 +1,11 @@
 <%= content_for :title, t("adm.documents.index.title") %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.documents.index.title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t("adm.documents.index.title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
 

@@ -34,8 +34,11 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_deficiency_reports") %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".no_deficiency_reports") %></span>
+      </div>
     </div>
   <% end %>
 </div>

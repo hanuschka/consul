@@ -8,5 +8,5 @@
     <%= f.text_area :description, label: false, rows: 4 %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

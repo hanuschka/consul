@@ -3,37 +3,113 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.home.show.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
-  <div class="kern-alert kern-alert--info" role="alert">
-    <div class="kern-alert__header">
-      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
-      <span class="kern-title">Information</span>
+
+  <%# ── Intro ───────────────────────────────────────────── %>
+  <p class="adm-dashboard__intro">
+    Willkommen im Verwaltungsbereich von <strong><%= Setting["org_name"] %></strong>.
+    Hier sehen Sie eine Übersicht über Nutzer, Projekte und Beteiligungsaktivitäten auf Ihrer Plattform.
+    Über die Navigation auf der linken Seite erreichen Sie alle Verwaltungsbereiche — von der Nutzerverwaltung bis hin zu Einstellungen und Inhalten.
+    Bei Fragen oder technischen Problemen steht Ihnen das demokratie.today-Team über das <%= link_to "Ticketsystem", Dt.ticket_system_url, target: "_blank", rel: "noopener" %> zur Verfügung.
+  </p>
+
+  <%# ── Nutzer ──────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">group</span>
+      <h3>Nutzer</h3>
+    </div>
+    <div class="adm-dashboard__stats">
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_total %></div>
+        <div class="adm-stat-card__label">Gesamt (aktiv)</div>
+      </div>
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_new_week %></div>
+        <div class="adm-stat-card__label">Neu diese Woche</div>
+      </div>
     </div>
   </div>
 
-  <br>
+  <%# ── Mängelanzeigen (nur wenn Modul aktiv) ──────────── %>
+  <% if feature?(:deficiency_reports) %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">report</span>
+        <h3>Mängelanzeigen</h3>
+      </div>
+      <div class="adm-dashboard__stats">
+        <div class="adm-stat-card">
+          <div class="adm-stat-card__value"><%= @reports_total %></div>
+          <div class="adm-stat-card__label">Gesamt</div>
+        </div>
+        <div class="adm-stat-card adm-stat-card--accent">
+          <div class="adm-stat-card__value"><%= @reports_open %></div>
+          <div class="adm-stat-card__label">Offen</div>
+        </div>
+        <div class="adm-stat-card adm-stat-card--warning">
+          <div class="adm-stat-card__value"><%= @reports_unassigned %></div>
+          <div class="adm-stat-card__label">Nicht zugewiesen</div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
-  <div class="kern-alert kern-alert--success" role="alert">
-    <div class="kern-alert__header">
-      <span class="kern-icon kern-icon--success" aria-hidden="true"></span>
-      <span class="kern-title" data-controller="hello">Erfolg</span>
+  <%# ── Projekte ─────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+      <h3>Projekte</h3>
+    </div>
+    <div class="adm-dashboard__stats">
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @projects_total %></div>
+        <div class="adm-stat-card__label">Gesamt</div>
+      </div>
+      <div class="adm-stat-card adm-stat-card--accent">
+        <div class="adm-stat-card__value"><%= @projects_current %></div>
+        <div class="adm-stat-card__label">Aktiv</div>
+      </div>
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @projects_expired %></div>
+        <div class="adm-stat-card__label">Abgelaufen</div>
+      </div>
     </div>
   </div>
 
-  <br>
+  <%# ── Stats-Link ─────────────────────────────────────── %>
+  <div class="adm-dashboard__stats-link">
+    <%= link_to adm_statistics_path, class: "kern-link d-flex align-items-center gap-1" do %>
+      <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>
+      Detaillierte Statistiken
+    <% end %>
+  </div>
 
-  <div class="kern-alert kern-alert--warning" role="alert">
-    <div class="kern-alert__header">
-      <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
-      <span class="kern-title">Warnung</span>
+  <%# ── demokratie.today ────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">language</span>
+      <h3>demokratie.today</h3>
+    </div>
+    <div class="adm-dt-links">
+      <%= link_to Dt.ticket_system_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/ticket_system.jpg", alt: "" %>
+        <span>Ticketsystem</span>
+      <% end %>
+      <%= link_to Dt.meetups_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/meetups.jpg", alt: "" %>
+        <span>Monatliches Consul-Meetup</span>
+      <% end %>
+      <% if Dt.url.present? %>
+        <%= link_to Dt.url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+          <%= image_tag "dt/projekts_overview.jpg", alt: "" %>
+          <span>Beteiligungsprojekte anderer Städte</span>
+        <% end %>
+      <% end %>
+      <%= link_to Dt.newsletter_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/newsletter.jpg", alt: "" %>
+        <span>Newsletter abonnieren</span>
+      <% end %>
     </div>
   </div>
 
-  <br>
-
-  <div class="kern-alert kern-alert--danger" role="alert">
-    <div class="kern-alert__header">
-      <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
-      <span class="kern-title">Fehler</span>
-    </div>
-  </div>
 </div>

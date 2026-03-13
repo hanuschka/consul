@@ -3,6 +3,16 @@ de:
     documents:
       index:
         title: Eigene Dokumente
+        intro_title: Hinweis zu Eigenen Dokumenten
+        intro_text_p1: >
+          In diesem Bereich verwalten Sie Dokumente, die zentral auf der Plattform gespeichert werden.
+          Jede hochgeladene Datei erhält eine eindeutige URL, über die sie an beliebiger Stelle auf der
+          Plattform verlinkt werden kann – etwa in Inhaltsbausteinen, Projekttexten oder der Navigation.
+          So lassen sich Dokumente einmalig hochladen und plattformweit wiederverwenden.
+        intro_text_p2: >
+          Achten Sie bei der Benennung auf aussagekräftige Titel, da der Dateiname in der Übersicht angezeigt
+          wird. Über den Button „Download-Link kopieren" können Sie die direkte Download-URL eines Dokuments
+          in die Zwischenablage übernehmen und andernorts einsetzen.
         new_document: Neues Dokument hinzufügen
         table:
           title: Titel

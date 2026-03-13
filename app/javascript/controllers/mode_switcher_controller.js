@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["icon"]
+  static targets = ["icon", "label"]
 
   connect() {
     const isDark = this.getCookie("kern_dark_mode") === "1"
@@ -20,6 +20,9 @@ export default class extends Controller {
     if (!this.hasIconTarget) return
     const isDark = document.body.classList.contains("kern-dark")
     this.iconTarget.textContent = isDark ? "light_mode" : "dark_mode"
+    if (this.hasLabelTarget) {
+      this.labelTarget.textContent = isDark ? "Light mode" : "Dark mode"
+    }
   }
 
   getCookie(name) {

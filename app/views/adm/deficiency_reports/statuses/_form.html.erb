@@ -36,5 +36,5 @@
     <%= f.rich_text_area :notice_text, label: false, toolbar: "regular" %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

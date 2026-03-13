@@ -3,7 +3,7 @@ module Adm
     def show
       authorize [:adm, :homepage]
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.homepage") }
       ]
     end

@@ -11,7 +11,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @end_date_header_options = { sort: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts") }
+      { name: t("adm.menu.items.projekts"), icon: "folder" }
     ]
   end
 
@@ -19,7 +19,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, Projekt], :create?
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
   end
@@ -38,7 +38,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def details
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.name },
       { name: t(".title") }
     ]
@@ -48,7 +48,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.name },
       { name: t(".title") }
     ]
@@ -64,7 +64,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.name },
       { name: t(".title") }
     ]
@@ -73,7 +73,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def map
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.name },
       { name: t(".title") }
     ]
@@ -88,7 +88,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.name },
       { name: t(".title") }
     ]

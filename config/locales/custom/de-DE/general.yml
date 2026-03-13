@@ -4,7 +4,10 @@ de:
       model_not_configured: "Fehler: KI-Modell nicht konfiguriert"
       generation_failed: "Fehler: Inhaltsblock konnte nicht mit KI generiert werden"
     disabled_tooltip: "KI-Funktionen nicht verfügbar. Wenden Sie sich an einen Administrator."
-    default_context_hint: "Standardmäßig werden Projektseitentitel, Untertitel und Inhaltsblockinhalt als Kontext gesendet"
+    instructions_placeholder: "Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblockes ein. Standardmäßig werden der Projekttitel, der Untertitel sowie der Inhalt dieses Inhaltsblockes als Kontext mitgegeben."
+    submit: Absenden
+    cancel: Abbrechen
+    instructions_hint: "Enter zum Absenden, Umschalt+Enter für neue Zeile"
     allow_text_modification: "Textinhaltsänderung zulassen"
     allow_text_modification_hint: "Wenn nicht aktiviert (Standard), ändert die KI nur die HTML-Struktur, das Styling und das Layout, während alle vorhandenen Textinhalte erhalten bleiben. Wenn aktiviert, kann die KI auch die Textinhalte gemäß Ihren Anweisungen ändern."
     allow_text_modification_hint_short: "Standardmäßig ändert KI nur HTML-Struktur und Styling, nicht Textinhalt"
@@ -436,7 +439,7 @@ de:
       start_new: Neuen Vorschlag erstellen
     notice:
       retired: Vorschlag im Ruhezustand
-      published: Der Vorschlag wurde veröffentlicht
+      published: Ihr Vorschlag ist eingegangen. Vielen Dank! Wir haben Ihnen eine E-Mail mit Informationen zum weiteren Vorgehen geschickt.
     proposal:
       created: "Sie haben einen Vorschlag erstellt!"
       share:

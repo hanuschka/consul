@@ -1,0 +1,185 @@
+<%= content_for :title, @idea.title %>
+
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
+
+<article class="kern-container mb-5">
+  <p class="kern-body kern-body--small mb-1">
+    <strong><%= t(".admin_accepted_status") %>:</strong>
+    <%= @idea.accepted? ? t(".accepted") : t(".not_accepted") %>
+    <% if @idea.admin_accepted_at.present? %>
+      (<%= l(@idea.admin_accepted_at, format: :long) %>)
+    <% end %>
+  </p>
+  <p class="kern-body kern-body--small mb-1">
+    <strong><%= t(".status") %>:</strong>
+    <%= t(".status_#{@idea.status}") %>
+    <% if @idea.remaining_days.present? %>
+      · <strong><%= t(".remaining_days") %>:</strong> <%= t(".remaining_days_count", count: @idea.remaining_days) %>
+    <% end %>
+  </p>
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".votes_needed_for_success") %>:</strong> <%= @idea.votes_needed_for_success %>
+    · <strong><%= t(".timeframe") %>:</strong> <%= t(".timeframe_days", count: @idea.timeframe) %>
+  </p>
+  <% if @idea.hidden_at.present? %>
+    <p class="kern-body kern-body--small mb-3">
+      <strong><%= t(".hidden_at") %>:</strong> <%= l(@idea.hidden_at, format: :long) %>
+    </p>
+  <% end %>
+
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".author") %>:</strong>
+    <%= @idea.author.username %>
+  </p>
+
+  <p class="kern-body kern-body--small mb-3">
+    <strong><%= t(".created_at") %>:</strong> <%= l(@idea.created_at, format: :long) %>
+    <strong><%= t(".updated_at") %>:</strong> <%= l(@idea.updated_at, format: :long) %>
+  </p>
+
+  <% if @idea.approximated_address.present? %>
+    <p class="kern-body mb-3">
+      <strong><%= t(".address") %>:</strong>
+      <%= @idea.approximated_address %>
+    </p>
+  <% end %>
+
+  <p class="kern-body kern-body--small">
+    <%= link_to t(".view_on_site"), idea_path(@idea), target: "_blank", data: { turbo: false } %>
+  </p>
+  <p class="kern-body kern-body--small mb-3">
+    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @idea.cached_votes_up %>
+    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @idea.comments_count %>
+  </p>
+
+  <%= turbo_frame_tag "idea_content" do %>
+
+    <div class="d-flex gap-2 mb-4 justify-content-end">
+      <%= kern_link_button(edit_adm_ideas_idea_path(@idea),
+            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "idea_content" }) %>
+      <%= kern_link_button(adm_ideas_idea_path(@idea, format: :pdf),
+            text: t(".download_pdf"), icon: "download", style: :secondary,
+            data: @idea.map_location.present? ? {
+              turbo: false,
+              controller: "map-screenshot",
+              map_screenshot_container_value: dom_id(@idea, "map"),
+              action: "click->map-screenshot#capture"
+            } : { turbo: false }) %>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".title_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @idea.title %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".description_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@idea.description) %></div>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".image_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @image_url.present? %>
+          <%= image_tag(@image_url, style: "width: 100%;") %>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @idea.documents.any? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".documents_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <ul class="kern-body">
+            <% @idea.documents.each do |document| %>
+              <li><%= link_to document.title, document.attachment, target: :blank %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <% if @idea.video_url.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".video_url") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= link_to @idea.video_url, @idea.video_url, target: "_blank" %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".on_behalf_of_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @idea.on_behalf_of %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".category") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @idea.category.present? %>
+          <span class="map-feature-pill map-feature-pill--sentiment"
+                data-color="<%= @idea.category.color %>"
+                style="--pill-color:<%= @idea.category.color %>;--pill-text-color:<%= pick_text_color(@idea.category.color) %>">
+            <% if @idea.category.icon.present? %>
+              <i class="fas fa-<%= @idea.category.icon %>"></i>
+            <% end %>
+            <%= @idea.category.name %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @idea.map_location.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".map_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <%= render Kern::MapComponent.new(map_location: @idea.map_location) %>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+  <% end %>
+
+  <hr class="kern-divider my-5">
+
+  <%= render Adm::AttributeEditorComponent.new(
+    @idea,
+    :official_answer,
+    :rich_text,
+    path: update_official_answer_adm_ideas_idea_path(@idea),
+    label: t(".official_answer"),
+    description: t(".official_answer_hint")
+  ) %>
+</article>

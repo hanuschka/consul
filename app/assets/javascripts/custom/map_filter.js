@@ -174,10 +174,12 @@
             featureData.features.forEach(function(feature) {
               if (feature.geometry && feature.geometry.type === "Point") {
                 var latlng = [feature.geometry.coordinates[1], feature.geometry.coordinates[0]];
+                var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
                 var marker = L.marker(latlng, {
                   icon: App.Utils.getLeafletMarkerHTML(
                     feature.properties.feature_color || self.mapInstance.defaultFeatureColor,
-                    feature.properties.feature_icon_name
+                    feature.properties.feature_icon_name,
+                    markerTitle
                   )
                 });
 

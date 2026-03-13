@@ -1,0 +1,18 @@
+<%= content_for :title, [@projekt.name, t("adm.projekts.projekts.index.title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+
+<div class="kern-container mb-5">
+  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_overview_page"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
+
+  <% if @individual_groups.any? %>
+    <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_description')) do %>
+      <%= render 'adm/projekts/projekts/visibility/individual_groups', projekt: @projekt %>
+    <% end %>
+  <% end %>
+</div>

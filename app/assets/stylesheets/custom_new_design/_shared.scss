@@ -18,6 +18,12 @@
   }
 }
 
+.hide-on-medium-tablet {
+  @media screen and (max-width: $medium-tablet-viewport-start) {
+    display: none !important;
+  }
+}
+
 .hide-on-small-tablet {
   @media screen and (max-width: $small-tablet-viewport-start) {
     display: none !important;
@@ -73,10 +79,8 @@
     text-decoration: none;
   }
 
-  $button-orange: #FFA42D;
-
   .button {
-    background-color: $orange-button-color;
+    background-color: $orange-button-color !important;
     color: white;
 
     &:focus, &:active {

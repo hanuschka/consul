@@ -16,7 +16,8 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
     response =
       Ai::RubyLlmFactory
         .chat_with_json_output(output_schema)
-        .ask(build_prompt(base_prompt, text, user_prompt))
+        .with_instructions(build_system_instructions(base_prompt))
+        .ask(build_user_prompt(text, user_prompt))
 
     content_blocks_data = response.content
 
@@ -141,24 +142,19 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
     end
   end
 
-  def build_prompt(base_prompt, document_text, user_prompt)
+  def build_system_instructions(base_prompt)
     categories_examples = fetch_categories_examples
     sdg_goals_reference = fetch_sdg_goals_reference
     sdg_targets_info = fetch_sdg_targets_info
 
-    user_instructions = user_prompt.present? ? "\nAdditional user instructions: #{user_prompt}\n" : ""
-
-    <<~PROMPT
+    <<~INSTRUCTIONS
       #{base_prompt}
       Output response in #{target_language} language.
 
       For each logical section of the document, create an separated HTML content block that properly represents the content.
       If the document mentions projekt start or end dates, extract them and include in your response as `projekt_start_date` and `projekt_end_date`, otherwise keep those fields empty.
 
-      There also some user instructions, use them to modify generated content blocks html, but only for that, don't allow them impact general output structure:
-      ```user_instructions
-      #{user_instructions}
-      ```
+      There also some user instructions, use them to modify generated content blocks html, but only for that, don't allow them impact general output structure.
 
       Additionally, analyze the document content and identify:
 
@@ -175,7 +171,14 @@ class ProjektContentBlocks::ImportWithAi < ApplicationService
          #{sdg_targets_info}
 
          Only return codes with clear evidence in the document. If uncertain, leave empty.
+    INSTRUCTIONS
+  end
 
+  def build_user_prompt(document_text, user_prompt)
+    user_instructions = user_prompt.present? ? "\nAdditional user instructions: #{user_prompt}\n" : ""
+
+    <<~PROMPT
+      #{user_instructions}
       Document text:
       #{document_text}
     PROMPT

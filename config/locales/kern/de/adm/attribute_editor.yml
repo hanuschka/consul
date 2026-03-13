@@ -1,0 +1,158 @@
+de:
+  adm:
+    attribute_editor:
+      default_description: Ohne Beschreibung
+      projekt_phase:
+        lock_on_label: Sperrdatum
+        lock_on_description: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
+        phase_tab_name_label: Tab-Bezeichnung
+        phase_tab_name_description: Wie soll der Tab für diese Phase im Frontend angezeigt werden?
+        cta_button_name_label: Button-Beschriftung auf der Projektseite
+        cta_button_name_description: Legt fest, welcher Text im Beteiligungs-Button auf der Projektseite angezeigt wird.
+        resource_form_intro_label: Hinweistext beim Start der Beitragserstellung
+        resource_form_intro_description: Wird oberhalb des Eingabebereichs angezeigt, um Nutzern Hinweise oder Erläuterungen zum Ausfüllen zu geben.
+        resource_form_title_label: Überschrift oberhalb des Eingabebereichs
+        resource_form_title_description: Wird als einleitende Überschrift ganz oben im Bereich zur Beitragserstellung angezeigt (z. B. ‚Neuen Vorschlag erstellen').
+        resource_form_title_placeholder_label: Platzhaltertext für den Titel
+        resource_form_title_placeholder_description: Wird im Eingabefeld für den Titel als Platzhalter angezeigt – z. B. "Geben Sie Ihrem Vorschlag einen aussagekräftigen Titel!"
+        resource_form_description_placeholder_label: Platzhaltertext für die Beschreibung
+        resource_form_description_placeholder_description: Wird im Eingabefeld für die Beschreibung als Platzhalter angezeigt – z. B. "Beschreiben Sie Ihr Anliegen möglichst konkret."
+        labels_name_label: Bezeichnung für Labels
+        labels_name_description: Legt fest, wie der Begriff "Labels" im Frontend angezeigt wird – z. B. "Kategorien" oder "Themenbereiche"
+        sentiments_name_label: Bezeichnung für Sentimente
+        sentiments_name_description: Legt fest, wie der Begriff "Sentimente" im Frontend angezeigt wird – z. B. "Stimmung" oder "Gefühlslage". Sentimente drücken aus, ob ein Vorschlag positiv, neutral oder negativ bewertet wird."
+        welcome_text_in_show_label: Einleitungstext oberhalb der eingereichten Vorschlägen
+        welcome_text_in_show_description: Wird oberhalb der veröffentlichten Vorschläge angezeigt und dient zur inhaltlichen Einführung oder Erläuterung.
+        support_button_text_label: Text des Unterstützungsbuttons
+        support_button_text_description: Legt fest, welcher Text im Button zur Unterstützung eines Vorschlags angezeigt wird – z. B. "Unterstützen" oder "Ich bin dafür"
+        description_label: Description Label 11
+        description_description: Description Description
+        comment_form_title_label: Titel des Kommentarformulars
+        comment_form_title_description: Wird oberhalb des Kommentarformulars angezeigt.
+        comment_form_button_label: Kommentarformular Button
+        comment_form_button_description: Text des Buttons zum Absenden eines Kommentars.
+      poll:
+        closing_note_label: Text der Abschlussseite
+        closing_note_description: Wird auf der Abschlussseite der Umfrage angezeigt, nachdem die Nutzer ihre Antworten eingereicht haben.
+      projekt:
+        total_duration_start_label: Startdatum
+        total_duration_start_description: Startdatum
+        total_duration_end_label: Enddatum
+        total_duration_end_description: Enddatum
+      site_customization/image:
+        header_image_label: Hintergrundbild für Desktop
+        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zur Beteiligungsplattform passen. Empfohlenes Format: 1920 × 760 Pixel."
+        mobile_header_image_label: Hintergrundbild für Mobile
+        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Bitte verwenden Sie ein Bild mit zentriertem Hauptmotiv, da es auf kleinen Bildschirmen beschnitten werden kann. Es sollte thematisch zur Plattform passen und klar auch in kleinen Formaten wirken. Empfohlenes Format: 768 × 400 Pixel."
+      site_customization/page:
+        projekt:
+          title_label: Titel der Startseite
+          title_description: "Der Titel der Startseite wird prominent über dem Hintergrundbild auf der Startseite angezeigt. Er sollte kurz und prägnant sein, um die Aufmerksamkeit der Besucher zu gewinnen."
+          slug_label: URL-Pfad des Projekts
+          slug_description: Legen Sie fest, unter welchem Pfad das Projekt erreichbar ist (z. B. "klimabudget" bei domain.de/klimabudget). Der URL-Pfad darf keine Leer- oder Sonderzeichen enthalten und sollte möglichst kurz und eindeutig sein.
+        landing:
+          slug_label: URL der Themenseite
+          slug_description: 'Definiert den letzten Teil der Webadresse (Slug) dieser Themenseite, z. B. "jugendbeteiligung". Die vollständige URL lautet dann z. B. „ihre-domain.de/jugendbeteiligung“. Die URL darf keine Leer- oder Sonderzeichen enthalten.'
+          landing_site_logo_for_transparent_background_label: Logo auf transparentem Hintergrund
+          landing_site_logo_for_transparent_background_description: "Wird angezeigt, wenn die Top-Navigation noch vor dem Hintergrundbild liegt (z. B. direkt beim Aufrufen der Seite).
+Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es über dem Hintergrundbild angezeigt wird. Optimal ist ein PNG mit transparentem Hintergrund. Sobald Nutzer scrollen, wechselt die Navigation auf weißen Hintergrund – dafür ist das zweite Logo vorgesehen."
+          landing_site_logo_for_white_background_label: Logo auf weißem Hintergrund
+          landing_site_logo_for_white_background_description: "Wird angezeigt, sobald die Seite gescrollt wurde und die Top-Navigation einen weißen Hintergrund hat.<br><br>Dieses Logo sollte in dunkler Farbe vor weißem Hintergrund gut sichtbar sein. Es ersetzt das transparente Logo automatisch, sobald die Navigation fixiert wird. Auch hier empfiehlt sich ein PNG, um scharfe Darstellung auf allen Geräten zu gewährleisten."
+          landing_desktop_header_image_label: Hintergrundbild für Desktop
+          landing_desktop_header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zur Beteiligungsplattform passen. Empfohlenes Format: 1920 × 760 Pixel."
+          landing_mobile_header_image_label: Hintergrundbild für Mobile
+          landing_mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
+          title_label: Titel der Themenseite
+          title_description: "Der Titel der Themenseite wird prominent über dem Hintergrundbild auf der Startseite angezeigt. Er sollte kurz und prägnant sein, um die Aufmerksamkeit der Besucher zu gewinnen."
+          subtitle_label: Untertitel der Themenseite
+          subtitle_description: "Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt."
+          landing_hide_title_and_subtitle_label: Titel und Untertitel auf der Themenseite ausblenden
+          landing_hide_title_and_subtitle_description: "Blendet den Titel und Untertitel der Themenseite im Frontend aus. Diese Angaben dienen dann ausschließlich der internen Konfiguration und werden nicht über dem Hintergrundbild angezeigt."
+          landing_hide_all_top_nav_links_label: Links in der Top-Navigation ausblenden
+          landing_hide_all_top_nav_links_description: "Blendet sämtliche Links aus, die in der Top-Navigation der Startseite enthalten sind. So bleibt die Themen- oder Gebietsseite übersichtlich und frei von globalen Navigationspunkten."
+          landing_show_projekts_overview_label: Projektübersicht in Hauptnavigation anzeigen
+          landing_show_projekts_overview_description: "Zeigt in der Top-Navigation dieser Themenseite eine Projektübersicht – analog zur Startseite. Wenn deaktiviert, wird die Projektübersicht auf allen zugehörigen Projektseiten dieser Themenseite nicht angezeigt."
+          landing_site_logo_follow_to_landing_page_label: Klick auf Logo führt zu dieser Zielseite
+          landing_site_logo_follow_to_landing_page_description: "Wenn aktiviert, führt ein Klick auf das Logo in der Top-Navigation nicht zur allgemeinen Startseite, sondern zur aktuell konfigurierten Themen- oder Gebietsseite."
+          landing_navigation_link_color_label: Farbe der Links in der Top-Navigation
+          landing_navigation_link_color_description: "Legen Sie die Schriftfarbe der Links in der oberen Navigationsleiste fest. Das ist wichtig, da das Hintergrundbild auf dieser Themenseite von dem auf der Startseite abweichen kann und die Lesbarkeit sichergestellt sein muss."
+      budget/phase:
+        name_label: Name
+        name_description: Bezeichnung dieser Budget-Phase.
+        starts_at_label: Startdatum
+        starts_at_description: Wann beginnt diese Budget-Phase?
+        ends_at_label: Enddatum
+        ends_at_description: Wann endet diese Budget-Phase?
+      budget:
+        voting_style_label: Abstimmungsstil
+        voting_style_description: Welcher Abstimmungsstil soll für diese Budget-Phase verwendet werden?
+        voting_style_label_options:
+          knapsack: Knapsack (Mehrere Stimmen bis Budget aufgebraucht ist)
+          approval: Zustimmung (Eine Stimme)
+          distributed: Mehrere Stimmen
+        currency_symbol_label: Währung
+        currency_symbol_description: Welches Währungssymbol soll angezeigt werden?
+        currency_symbol_label_options:
+          "€": "€ (Euro)"
+          "$": "$ (Dollar)"
+          "£": "£ (Pfund)"
+          "¥": "¥ (Yen)"
+        max_preselected_label: Bestenliste (optional)
+        max_preselected_description: Wie viele Vorschläge sollen in die Prüfungsphase gehen
+        hide_money_label: Geld ausblenden
+        hide_money_description: Wenn diese Option aktiviert ist, werden alle Felder, die den Geldbetrag anzeigen, während des gesamten Vorgangs ausgeblendet.
+        max_number_of_winners_label: Maximale Anzahl an Gewinnern
+        results_enabled_label: Ergebnisse
+        results_enabled_description: Zeigt die Ergebnisse des Bürgerhaushalts am Ende der Abstimmung an.
+        show_results_after_first_vote_label: Ergebnisse nach erster Stimme anzeigen
+        show_results_after_first_vote_description: Sollen Zwischenergebnisse nach der ersten Stimmabgabe sichtbar sein?
+        show_percentage_values_only_label: Prozentuale Werte
+        show_percentage_values_only_description: Sollen im Ergebnis nur Prozentwerte statt absoluter Zahlen angezeigt werden?
+        stats_enabled_label: Statistiken
+        stats_enabled_description: Zeigt die Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
+        advanced_stats_enabled_label: Erweiterte Statistiken
+        advanced_stats_enabled_description: Zeigt erweiterte Statistiken zum Bürgerhaushalt am Ende der Abstimmung an.
+      budget/investment:
+        title_label: Titel
+        title_description: Der Titel des Investitionsvorschlags.
+        description_label: Beschreibung
+        description_description: Ausführliche Beschreibung des Investitionsvorschlags.
+        price_label: Kosten
+        price_description: Geschätzter Preis des Investitionsvorschlags.
+        feasibility_label: Kriterien
+        feasibility_description: "Kriterienstatus des Investitionsvorschlags."
+        feasibility_label_options:
+          undecided: Nicht bewertet
+          feasible: Entspricht den Kriterien
+          unfeasible: Entspricht nicht den Kriterien
+        selected_label: Ausgewählt
+        selected_description: Wurde der Vorschlag zur Abstimmung ausgewählt?
+        winner_label: Gewinner
+        winner_description: Hat der Vorschlag die Abstimmung gewonnen?
+        incompatible_label: Inkompatibel
+        incompatible_description: Ist dieser Vorschlag mit einem anderen inkompatibel?
+        visible_to_valuators_label: Sichtbar für Gutachter
+        visible_to_valuators_description: Soll dieser Vorschlag für Gutachter sichtbar sein?
+        valuator_explanation_label: Gutachter-Erklärung
+        valuator_explanation_description: Erläuterung für Gutachter.
+        valuation_finished_label: Bewertung beendet
+        valuation_finished_description: Vorschlag kann vom Autor nicht mehr geändert werden.
+        price_first_year_label: Fortlaufende Kosten pro Jahr (intern)
+        price_first_year_description: Fortlaufende Kosten pro Jahr – nur für interne Informationen.
+        duration_label: Zeitrahmen
+        duration_description: Geschätzter Zeitrahmen für die Umsetzung.
+        video_url_label: Video-URL
+        on_behalf_of_label: Im Auftrag von
+        implementation_performer_label: Umsetzung
+        implementation_performer_label_options:
+          city: Umsetzung durch die Stadtverwaltung
+          user: Ich kann bei der Umsetzung unterstützen
+        implementation_contribution_label: Beitrag zur Umsetzung
+        user_cost_estimate_label: Geschätzte Kosten (Nutzer)
+      budget/heading:
+        section_title: Standardüberschrift
+        price_label: Budget
+        price_description: Gesamtbudget für diese Überschrift.
+        population_label: Bevölkerung (optional)
+        max_ballot_lines_label: Stimmen erlaubt
+        max_ballot_lines_description: Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.

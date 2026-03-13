@@ -28,15 +28,21 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       fetched_prompt = fetch_prompt
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         #{fetched_prompt}
         Write all topic and subtopic names in #{AiAnalytics::ClusteringCore.target_language}.
+      TEXT
 
+      user_prompt = <<~TEXT
         #{resource_type.capitalize}:
         #{resources_text}
       TEXT
 
-      response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema)
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
       response.content["topics"]
     rescue StandardError => e
@@ -45,15 +51,11 @@ class AiAnalytics::TopicClustering < ApplicationService
     end
 
     def fetch_prompt
-      cache_key = "dt_api/consul_ai_prompts/ai_analytics_topic_clustering/projekt_phase"
-
-      parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-        DtApi::Client.new.consul_ai_prompts.get(
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
           :ai_analytics_topic_clustering,
           resource_type: "projekt_phase"
-        )
-      end
-
+        ).parsed_response
       parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

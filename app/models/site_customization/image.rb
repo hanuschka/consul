@@ -1,5 +1,9 @@
 class SiteCustomization::Image < ApplicationRecord
   VALID_IMAGES = {
+    ##################################
+    "header_image" => [1920, 760],
+    "mobile_header_image" => [470, 246],
+    ##################################
     "logo_header" => [80, 80],
     "social_media_icon" => [470, 246],
     "social_media_icon_twitter" => [246, 246],
@@ -9,6 +13,10 @@ class SiteCustomization::Image < ApplicationRecord
     "logo_email" => [400, 80],
     "logo_newsletter_email" => [130, 45]
   }.freeze
+
+  VALID_FORMATS = ["image/jpeg", "image/png"].freeze
+
+  alias_attribute :key, :name
 
   has_one_attached :image
 

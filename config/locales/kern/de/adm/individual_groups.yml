@@ -1,0 +1,47 @@
+de:
+  adm:
+    individual_groups:
+      index:
+        title: Nutzergruppen
+        intro_title: Hinweis zu Nutzergruppen
+        intro_text_p1: >
+          Individuelle Gruppen ermöglichen es, Nutzerinnen und Nutzer in benutzerdefinierte Segmente
+          einzuteilen, die über die standardmäßige Unterscheidung nach Verifikationsstatus hinausgehen.
+          Sie können für projektbezogene Beteiligungsbeschränkungen eingesetzt werden, um die Teilnahme
+          gezielt auf bestimmte Nutzergruppen zu begrenzen.
+        intro_text_p2: >
+          Gruppen vom Typ „Stark" schließen nicht zugeordnete Nutzerinnen und Nutzer explizit von der
+          Teilnahme aus. Gruppen vom Typ „Schwach" dienen als weichere Filter ohne harte Ausschlüsse.
+          Über die Sichtbarkeitseinstellung steuern Sie, ob eine Gruppe in der Benutzeroberfläche
+          sichtbar ist.
+        new_individual_group: Neue Gruppe erstellen
+        table:
+          name: Name der Gruppe
+          kind: Art
+          visible: Sichtbarkeit
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Gruppe löschen möchten?
+          kinds:
+            hard: Stark
+            soft: Schwach
+      new:
+        title: Neue Gruppe erstellen
+      edit:
+        title: Gruppe bearbeiten
+      create:
+        success: Gruppe erfolgreich erstellt.
+      update:
+        success: Gruppe erfolgreich aktualisiert.
+      destroy:
+        success: Gruppe erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        kinds:
+          hard: Stark
+          soft: Schwach
+        hints:
+          name: Name der Gruppe, wie er den Benutzern angezeigt wird.
+          kind: Art der Gruppe (stark oder schwach).
+          visible: Legt fest, ob die Gruppe für Benutzer sichtbar ist.

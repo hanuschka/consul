@@ -43,7 +43,7 @@ class Ckeditor::Picture < Ckeditor::Asset
         storage_data.variant(
           coalesce: true,
           gravity: "center",
-          resize_to_fill: [width, height],
+          resize_to_fit: [width, height],
           saver: { quality: 88 } ,
           loader: { page: nil }
         ),

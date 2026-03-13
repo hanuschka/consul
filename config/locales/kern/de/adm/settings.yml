@@ -1,0 +1,44 @@
+de:
+  adm:
+    settings:
+      metadata:
+        title: Metadaten
+        intro_title: Hinweis zu Metadaten
+        intro_text_p1: >
+          Diese Seite enthält grundlegende Einstellungen für Ihre Plattform: den Anzeigenamen der Anwendung,
+          die Haupt-URL sowie die E-Mail-Absenderdaten für automatisch versendete Benachrichtigungen.
+          Bitte beachten Sie: Änderungen an der Absender-E-Mail-Adresse sind nur in Absprache mit
+          demokratie.today möglich, da diese mit der technischen Mailserver-Konfiguration übereinstimmen muss.
+        intro_text_p2: >
+          Im Bereich Suchmaschinenoptimierung hinterlegen Sie Titel, Beschreibung und Stichwörter, die von
+          Suchmaschinen zur Indexierung Ihrer Plattform genutzt werden. Zudem können Sie Social-Media-Profile
+          verknüpfen: Für jedes ausgefüllte Feld erscheint automatisch ein entsprechendes Icon mit Link
+          in der Fußzeile der Plattform.
+      gdpr:
+        title: DSGVO
+        intro_title: Hinweis zu DSGVO-Einstellungen
+        intro_text_p1: >
+          Auf dieser Seite konfigurieren Sie die datenschutzrelevanten Einstellungen der Plattform.
+          Mit DSGVO-konformen Voreinstellungen aktivieren Sie „Privacy by Design" als Grundprinzip.
+          Die Warnung bei externen Links informiert Nutzer beim Verlassen der Plattform. Die Zwei-Klick-Lösung
+          für eingebettete Inhalte (z. B. Karten oder Videos) stellt sicher, dass keine Daten an
+          Drittanbieter übertragen werden, bevor die Nutzenden aktiv zugestimmt haben.
+        intro_text_p2: >
+          Zusätzlich legen Sie hier die Dauer von Nutzer-Sitzungen in Minuten fest: Nach Ablauf dieser Zeit
+          werden Nutzer automatisch abgemeldet. Außerdem bestimmen Sie, wie viele Tage der per E-Mail
+          versendete Verifikationslink gültig bleibt, bevor er abläuft und ein neuer Link angefordert
+          werden muss.
+      registration:
+        title: Konto & Zugang
+        intro_title: Hinweis zu Konto & Zugang
+        intro_text_p1: >
+          Hier steuern Sie, welche Informationen Nutzerinnen und Nutzer bei der Registrierung angeben müssen.
+          Bei aktivierter erweiterter Registrierung werden zusätzliche Felder abgefragt – darunter Vorname,
+          Nachname, Adresse und Geburtsdatum. Diese Daten stehen anschließend für projektbezogene
+          Teilnahmebeschränkungen zur Verfügung. Optional kann zusätzlich die Eingabe der letzten vier
+          Ziffern eines Ausweisdokuments aktiviert werden.
+        intro_text_p2: >
+          Im Bereich Verifizierung legen Sie fest, wie Nutzer verifiziert werden: durch automatischen
+          Abgleich des Ausweisdokuments mit einer Referenzliste aus dem Melderegister (setzt eine
+          API-Verbindung voraus). Außerdem können Sie steuern, ob der Vollständigkeitsstatus der
+          Profildaten sowie der aktuelle Verifizierungsstatus im Nutzerkonto sichtbar angezeigt werden.

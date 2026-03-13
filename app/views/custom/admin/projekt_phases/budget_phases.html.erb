@@ -28,12 +28,3 @@
     <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
   </div>
 </div>
-
-<% if embedded? %>
-  <% content_for :admin_frame_top_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
-  <% end %>
-  <%= content_for :admin_frame_bottom_navigation do %>
-    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
-  <% end %>
-<% end %>

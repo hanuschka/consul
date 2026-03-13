@@ -123,7 +123,24 @@ module ProjektAdminActions
     @projekt.page.image = image
 
     if @projekt.page.save
-      render json: { status: { message: "Projekt page title image updated" }}
+      attachment = @projekt.page.image.attachment
+      lightbox_variant =
+        attachment
+          .variant(
+            resize_to_limit: [1750, 900],
+            saver: { quality: 80 },
+            strip: true,
+            format: "jpeg"
+          )
+          .processed
+
+      render json: {
+        status: { message: "Projekt page title image updated" },
+        image_url: polymorphic_path(
+          attachment.variant(resize_to_fill: [930, 585], coalesce: true, gravity: "center")
+        ),
+        lightbox_image_url: polymorphic_path(lightbox_variant)
+      }
     else
       render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
     end
@@ -140,13 +157,21 @@ module ProjektAdminActions
                 notice: "Benachrichtigung erfolgreich gesendet"
   end
 
+  def toggle_hide_content_background
+    authorize!(:edit, @projekt)
+
+    @projekt.update!(show_content_background: !@projekt.show_content_background)
+
+    render json: { show_content_background: @projekt.show_content_background }
+  end
+
   private
 
     def projekt_params
       attributes = [
         :name, :parent_id, :total_duration_start, :total_duration_end,
         :show_start_date_in_frontend, :show_end_date_in_frontend,
-        :geozone_affiliated, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
+        :geozone_affiliated, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], registered_address_district_affiliation_ids: [], sdg_goal_ids: [],
         individual_group_value_ids: [],
         map_location_attributes: map_location_attributes,
         image_attributes: image_attributes,

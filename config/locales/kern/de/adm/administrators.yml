@@ -1,0 +1,16 @@
+de:
+  adm:
+    administrators:
+      index:
+        title: Administratoren
+        new_link: Neuer Administrator
+        no_administrators: Keine Administrator*innen vorhanden.
+        hint: Hier verwalten Sie die Plattformadministratoren. Administratoren haben vollen Zugriff auf alle Einstellungen und Verwaltungsbereiche der Plattform. Über „Neuer Administrator" können Sie registrierte Nutzer als Administratoren hinzufügen.
+      new:
+        title: Neuer Administrator
+        search_label: Nutzer durchsuchen
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Profile</a> gelistet sind. Diese können Sie anschließend als Plattformadministratoren hinzufügen.
+      search:
+        no_results: Keine Benutzer gefunden mit diesen Kriterien.
+      administrator:
+        cannot_delete_self: Kann nicht gelöscht werden

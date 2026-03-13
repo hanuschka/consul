@@ -1,0 +1,34 @@
+<div class="<%= navbar_item.parent.present? ? 'mb-2' : 'mb-3' %> navbar-item" data-sortable-id="<%= navbar_item.id %>">
+  <div class="navbar-item__card">
+    <span data-sortable-handle class="navbar-item__handle material-symbols-outlined">drag_indicator</span>
+
+    <div class="navbar-item__content">
+      <span class="navbar-item__title"><%= navbar_item.title %></span>
+      <span class="navbar-item__url">
+        <% if navbar_item.kind == 'presets' %>
+          <%= public_send(NavbarItem::PRESETS[navbar_item.preset.to_sym]) %>
+        <% elsif navbar_item.kind == 'projekts' %>
+          <%= navbar_item.projekt.page.url %>
+        <% elsif navbar_item.kind == 'external' %>
+          <%= navbar_item.external_url %>
+        <% end %>
+      </span>
+    </div>
+
+    <span class="navbar-item__badge navbar-item__badge--<%= navbar_item.kind %>">
+      <%= t("adm.navbar_items.form.kinds.#{navbar_item.kind}") %>
+    </span>
+
+    <%= link_to adm_navbar_item_path(navbar_item),
+                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                class: "navbar-item__delete" do %>
+      <span class="material-symbols-outlined">delete</span>
+    <% end %>
+  </div>
+
+  <div data-sortable-children class="navbar-item__children">
+    <% navbar_item.children.order(:position).each do |child| %>
+      <%= render child %>
+    <% end %>
+  </div>
+</div>

@@ -38,6 +38,12 @@ button {
       margin-bottom: 0;
     }
 
+    &.-selected {
+      background-color: rgba($brand, 0.15) !important;
+      color: $brand !important;
+      outline: 1px solid $brand !important;
+    }
+
     &.-round {
       border-radius: 38px !important;
     }

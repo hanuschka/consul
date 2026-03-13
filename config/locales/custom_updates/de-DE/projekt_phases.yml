@@ -24,14 +24,33 @@ de:
         generate_ai_summary_button: "AI-Summary generieren"
         ai_summary_generated: "AI Summary wurde erfolgreich generiert"
         proposal_phase:
-          proposals: Vorschläge
-          authors: Autoren
-          participants: Teilnehmende
-          supports: Unterstützungen
-          weighted_score: Gewichtete Bewertung
-          comments: Kommentare
-          hidden: Versteckt
-          reported: Gemeldet
+          total_unique_participants_count:
+            title: Gesamtteilnehmer
+            tooltip: Anzahl der eindeutigen Nutzer, die aktiv am Beteiligungsprozess teilgenommen haben. Berücksichtigt werden Autoren von Vorschlägen, Unterstützer sowie Nutzer, die Kommentare verfasst haben.
+          visible_proposals_count:
+            title: Eingereichte Vorschläge
+            tooltip: Anzahl aller eingereichten und aktuell sichtbaren Vorschläge in dieser Beteiligungsphase. Ausgeblendete Vorschläge werden nicht mitgezählt.
+          proposal_authors_count:
+            title: Aktive Autoren
+            tooltip: Anzahl der unterschiedlichen Nutzer, die mindestens einen sichtbaren Vorschlag erstellt haben. Mehrere Vorschläge eines Nutzers werden nur einmal gezählt.
+          unique_supporters_count:
+            title: Unterstützer
+            tooltip: Anzahl der eindeutigen Nutzer, die mindestens einen Vorschlag unterstützt oder bewertet haben.
+          total_votes_count:
+            title: Unterstützungen gesamt
+            tooltip: Gesamtanzahl aller abgegebenen Unterstützungen über alle Vorschläge hinweg. Ein Nutzer kann mehrere Stimmen abgeben.
+          online_votes_count:
+            title: Online-Unterstützungen
+            tooltip: Anzahl aller Unterstützungen, die direkt über die Online-Plattform abgegeben wurden.
+          offline_votes_count:
+            title: Offline-Unterstützungen
+            tooltip: Anzahl aller Unterstützungen, die außerhalb der Plattform erfasst und nachträglich eingepflegt wurden.
+          visible_comments_count:
+            title: Öffentliche Kommentare
+            tooltip: Gesamtanzahl aller veröffentlichten Kommentare zu Vorschlägen. Ausgeblendete Kommentare werden nicht mitgezählt.
+          reported_proposals_count:
+            title: Gemeldete Vorschläge
+            tooltip: Anzahl der Vorschläge, die mindestens einmal von Nutzern gemeldet wurden. Ein Vorschlag wird unabhängig von der Anzahl der Meldungen nur einmal gezählt.
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht

@@ -76,17 +76,15 @@ ProjektStudio.Banner = {
 
       field.firstElementChild.innerHTML = value;
 
-      $.ajax({
-        url: `/admin/projekts/${projektId}/update_page`,
-        type: "PATCH",
-        dataType: "json",
-        headers: {
-          'X-Embedded-Frame': ProjektStudio.isEmbedded
-        },
-        data: {
-          [container.dataset.fieldName]: value
-        }
-      })
+      App.Ajax
+        .request({
+          url: `/admin/projekts/${projektId}/update_page`,
+          method: "PATCH",
+          dataType: "json",
+          data: {
+            [container.dataset.fieldName]: value
+          }
+        })
     }
   },
 
@@ -105,16 +103,29 @@ ProjektStudio.Banner = {
       let formData = new FormData();
       formData.append(imageUploaderContainer.dataset.fieldName, file);
 
-      $.ajax({
-        url: `/admin/projekts/${projektId}/update_title_image`,
-        type: "PATCH",
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-Embedded-Frame': ProjektStudio.isEmbedded
-        },
-        data: formData
-      })
+      App.Ajax
+        .request({
+          url: `/admin/projekts/${projektId}/update_title_image`,
+          method: "PATCH",
+          processData: false,
+          contentType: false,
+          data: formData
+        })
+        .then((response) => {
+          const mainImage = imageUploaderContainer.querySelector(".resource-image--main");
+          const blurImage = imageUploaderContainer.querySelector(".resource-image--blur");
+          const glightboxLink = imageUploaderContainer.querySelector(".glightbox");
+
+          mainImage.src = response.image_url;
+          blurImage.src = response.image_url;
+          glightboxLink.href = response.lightbox_image_url;
+          App.ImageGallery.setupGlighbox();
+
+          mainImage.addEventListener("load", () => {
+            imagePreview.classList.remove("-image-set");
+            imagePreview.src = "";
+          }, { once: true });
+        })
     }
   }
 };

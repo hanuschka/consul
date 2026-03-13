@@ -1,4 +1,6 @@
 ProjektStudio.ContentBlockTemplateSelector = {
+  currentContentBlockId: null,
+
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.handleOpenTemplateSelector.bind(this));
@@ -6,7 +8,11 @@ ProjektStudio.ContentBlockTemplateSelector = {
   },
 
   handleOpenTemplateSelector(e) {
-    ProjektStudio.ContentBlock.Crud.addContentBlockAfter = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+
+    ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
+    ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+
     this.openDialog()
   },
 
@@ -18,6 +24,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
   },
 
   openDialog() {
+    App.ContentBlockTemplatesSelector.loadTemplatesContent();
     $('#contentBlockTemplatesModal').foundation('open');
   },
 

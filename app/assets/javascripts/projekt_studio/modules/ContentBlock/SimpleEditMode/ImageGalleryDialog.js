@@ -198,6 +198,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   async handleFileInputChange(event) {
     await this.navigateToPage(1);
+    if (this._fetchPromise) await this._fetchPromise;
 
     const files = event.target.files;
 
@@ -261,6 +262,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     this.updateImageItem(itemElement, tempImageData)
 
     const grid = document.querySelector('.js-file-upload-manager-grid');
+    if (!grid) return
+
     grid.insertBefore(documentFramgment, grid.firstChild);
 
     this.removeLastItemIfNeeded();
@@ -268,6 +271,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
   updateUploadItemWithData(uploadItemId, imageData) {
     const uploadItemElement = document.querySelector(`[data-id="${uploadItemId}"]`);
+
+    if (!uploadItemElement) {
+      this.fetchImageItems();
+      return
+    }
+
     const image = new Image()
     image.src = imageData.gallery_thumb_url
 
@@ -350,18 +359,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     this.state.isLoading = true;
     this.showLoadingOverlay();
 
-    try {
-      const response = await this.fetchImageData();
-      const html = await response.text();
-      const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
-      dialogBody.innerHTML = html;
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      alert('Fehler beim Laden der Bilder');
-    } finally {
-      this.state.isLoading = false;
-      this.hideLoadingOverlay();
-    }
+    this._fetchPromise = (async () => {
+      try {
+        const response = await this.fetchImageData();
+        const html = await response.text();
+        const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
+        dialogBody.innerHTML = html;
+      } catch (error) {
+        console.error('Error fetching images:', error);
+        alert('Fehler beim Laden der Bilder');
+      } finally {
+        this.state.isLoading = false;
+        this.hideLoadingOverlay();
+      }
+    })();
+
+    await this._fetchPromise;
   },
 
   showLoadingOverlay() {

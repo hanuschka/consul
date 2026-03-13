@@ -31,6 +31,28 @@ en:
         no_prompt: Please enter a prompt
       destroy_all:
         success: All content blocks deleted
+    projekt:
+      content_block_templates_selector:
+        loading: "Loading content block templates..."
+        fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
+        tabs:
+          internal_content_blocks: Internal content blocks
+          own_content_blocks: Own content blocks
+        saved_content_blocks:
+          global_explanation: "Internal content blocks are reusable HTML templates that can be used by all users. They can be edited by administrators and project managers and are available across projects."
+          global_create_title: Create new internal content block template
+          global_add_button: Add new internal content block
+          global_form_heading: Create new internal content block template
+          user_explanation: "Own content blocks are personal HTML templates that are only visible and usable by you. You can create and manage them according to your individual needs."
+          user_create_title: Create new own content block template
+          user_add_button: Add new own content block
+          user_form_heading: Create new own content block template
+          html_code_hint: Add HTML code here
+          save: Save
+          cancel: Cancel
+    proposals:
+      vote_share:
+        share_button: Share
     projekts:
       new:
         first_level: 'First level'
@@ -60,10 +82,10 @@ en:
           description: Create a single content block and design the content and structure completely according to your own specifications.
           action: Get started →
         file_import_preview:
-          select_other_file: Choose another file
+          select_other_file: Choose file
           cancel: Cancel
           additional_instructions: "Additional instructions for the AI (optional):"
-          submit: Import document
+          submit: Get started
         prompt_form:
           header: Enter prompt
           label: "Describe the project and what content should be created:"

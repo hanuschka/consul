@@ -1,0 +1,27 @@
+<%= form_with model: @draft_version, url: url do |f| %>
+
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".title_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".changelog_label"), hint: t(".changelog_hint")) do %>
+    <%= f.text_area :changelog, label: false, rows: 5 %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint")) do %>
+    <%= f.text_area :body, label: false, rows: 20, class: "legislation-draft-version-body" %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".status_label"), hint: t(".status_hint")) do %>
+    <%= f.collection_radio_buttons :status,
+        Legislation::DraftVersion::VALID_STATUSES.map { |s| [s, Legislation::DraftVersion.human_attribute_name("status_#{s}")] },
+        :first, :last %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".final_version_label"), hint: t(".final_version_hint")) do %>
+    <%= f.check_box :final_version %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -4,11 +4,11 @@
       <div style='display:flex;justify-content:end;align-items:end;'>
         <% if show_arrows? %>
           <div class='arrow-controls'>
-            <button type="button" id='left-arrow-control' class='js-left-arrow-control disabled'>
-              <i class="fas fa-chevron-circle-left"></i>
+            <button type="button" id='left-arrow-control' class='js-left-arrow-control disabled' aria-label="<%= t('custom.accessibility.phases.scroll_left') %>">
+              <i class="fas fa-chevron-circle-left" aria-hidden="true"></i>
             </button>
-            <button type="button" id='right-arrow-control' class='js-right-arrow-control'>
-              <i class="fas fa-chevron-circle-right"></i>
+            <button type="button" id='right-arrow-control' class='js-right-arrow-control' aria-label="<%= t('custom.accessibility.phases.scroll_right') %>">
+              <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
             </button>
           </div>
         <% end %>

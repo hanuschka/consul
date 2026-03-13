@@ -1,136 +1,14 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
 <% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= content_for :additional_styles do %>
-    <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
-  <% end %>
-  <%= content_for :additional_scripts do %>
-    <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
-  <% end %>
-<% end %>
-
-<% if show_admin_controls_for_projekt?(@projekt) %>
   <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
-  <div class="js-content-block-link-popup content-block-link-popup">
-    <div>
-      <label class="content-block-link-popup-label" style="display: none">
-        Link text: <textarea type="text" class="js-content-block-text-input"></textarea>
-      </label>
-    </div>
-    <div>
-      <label class="content-block-link-popup-label">
-        Link URL: <textarea type="text" class="js-content-block-url-input"></textarea>
-      </label>
-    </div>
-    <div>
-      <label class="content-block-link-popup-checkbox-label">
-        <input type="checkbox" checked class="js-content-block-url-black-checkbox">
-        In neuem Tab öffnen
-      </label>
-    </div>
-
-    <div class="d-flex justify-between">
-        <div class="d-flex u-gap-10">
-          <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
-            <i class="fas fa-save"></i>
-            Speichern
-          </button>
-
-          <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
-            <i class="fas fa-xmark"></i>
-            Abbrechen
-          </button>
-        </div>
-        <button class="projekt-content-block-edit--button -red -with-background js-content-block-delete-link" style="display: none;">
-          <i class="fas fa-trash"></i>
-          Link entfernen
-        </button>
-    </div>
-  </div>
-
-  <template class="js-ai-edit-popup-template">
-    <div class="content-block-ai-edit-popup js-content-block-ai-edit-popup">
-      <div class="content-block-ai-edit-popup-content">
-
-        <form class="u-width-100" action="">
-          <div class="content-block-ai-edit-popup-header">
-            <h3>Mit KI bearbeiten</h3>
-            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
-            <div
-              class="ai-edit-success-indicator js-ai-edit-success-indicator"
-              style="display: none;"
-            >
-              <i class="fas fa-check"></i>
-            </div>
-          </div>
-          <div class="ai-edit-form">
-            <div class="ai-default-context-hint">
-              <%= t("ai.default_context_hint") %>
-            </div>
-            <textarea
-              name="instructions"
-              rows="4"
-              required
-              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
-              class="ai-instructions-textarea js-ai-instructions-textarea"
-              ></textarea>
-            <div style="color: #999; font-size: 12px; margin-top: 5px;">
-              Enter zum Absenden, Umschalt+Enter für neue Zeile
-            </div>
-          </div>
-          <div class="ai-edit-actions d-flex justify-between">
-            <div>
-              <label
-                class="content-block-ai-edit-popup-checkbox-label"
-                data-tooltip
-                data-position="left"
-                tabindex="0"
-                title="<%= t("ai.allow_text_modification_hint") %>"
-              >
-                <input type="checkbox" class="js-ai-allow-text-modification">
-                <span><%= t("ai.allow_text_modification") %></span>
-              </label>
-              <div class="ai-context-checkbox-hint u-margin-bottom">
-                <%= t("ai.allow_text_modification_hint_short") %>
-              </div>
-
-              <label
-                class="content-block-ai-edit-popup-checkbox-label"
-                data-tooltip
-                data-position="left"
-                tabindex="0"
-                title="<%= t("ai.use_full_projekt_context_hint") %>"
-              >
-                <input type="checkbox" class="js-ai-use-full-projekt-context">
-                <span><%= t("ai.use_full_projekt_context") %></span>
-              </label>
-              <div class="ai-context-checkbox-hint u-margin-bottom">
-                <%= t("ai.use_full_projekt_context_hint_short") %>
-              </div>
-            </div>
-            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
-              <span class="js-submit-state">
-                <i class="fas fa-magic"></i>
-                Absenden
-              </span>
-              <span class="js-cancel-state">
-                <i class="fas fa-times"></i>
-                Abbrechen
-              </span>
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
-  </template>
-
+  <%= render Projekts::ContentBlockEditPopupsComponent.new %>
 <% end %>
 
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
-  <% landing_page = @custom_page&.projekt&.landing_pages&.first %>
+  <% landing_page = @custom_page&.projekt&.landing_page %>
   <% if landing_page.present? %>
     <%= render "pages/brand_color_styles", page: landing_page %>
   <% end %>
@@ -188,27 +66,46 @@
       </div>
     <% end %>
 
-    <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
-
-    <% if native_projekt_studio?(@projekt) %>
-      <button
-        class="projekt-studio--peview-button js-turn-on-preview-mode-button"
-        title="Vorschaumodus umschalten"
-        type="button"
-      >
-        <i class="fas fa-laptop"></i>
-        <span class="js-projekt-studio-preview-button-text">
-          Vorschaumodus
-        </span>
-      </button>
+    <% if show_admin_controls_for_projekt?(@projekt) %>
+      <%= render "pages/topbar/admin_topbar" %>
     <% end %>
 
+    <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
+
     <% if @custom_page.projekt.present? %>
+      <% if native_projekt_studio?(@projekt) %>
+        <div
+          class="js-projekt-studio-hide-on-preview"
+          style="position: relative; height: 1px;"
+        >
+          <div
+            class="projekt-studio--toggle-background-wrapper"
+          >
+            <button
+              type="button"
+              class="js-toggle-content-background"
+              role="switch"
+              aria-pressed="<%= @custom_page.projekt.show_content_background %>"
+              data-projekt-id="<%= @custom_page.projekt.id %>"
+              data-show-background="<%= @custom_page.projekt.show_content_background %>"
+              data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+            ></button>
+            <span
+              class="projekt-studio--toggle-background-label"
+              title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
+              data-tooltip
+              data-hover-delay="500"
+            >
+              <%= t('custom.projekts.page.toggle_background_label') %>
+            </span>
+          </div>
+        </div>
+      <% end %>
       <div class="flex-layout">
         <div class="main-column">
           <div class="js-anchor-navigation-content" id="projekt-body">
             <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
-              <div class="main-content-card">
+              <div class="main-content-card <%= '-hide-background' unless @custom_page.projekt.show_content_background %>">
                 <% if @custom_page.content&.include?('template_projekt_library') %>
                   <%= render "projekt_library", projekt: @custom_page.projekt %>
                 <% else %>

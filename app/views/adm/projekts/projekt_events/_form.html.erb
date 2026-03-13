@@ -1,0 +1,50 @@
+<%= form_with model: @projekt_event, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label")) do %>
+    <%= f.text_field :title, label: false, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".location_label")) do %>
+    <%= f.text_field :location, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".datetime_label")) do %>
+    <%= f.datetime_local_field :datetime, label: false, required: true %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".end_datetime_label")) do %>
+    <%= f.datetime_local_field :end_datetime, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".open_ended_label"), hint: t(".open_ended_hint")) do %>
+    <%= f.check_box :open_ended %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".weblink_label")) do %>
+    <%= f.text_field :weblink, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".language_label")) do %>
+    <%= f.text_field :language, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".accessibility_legend")) do %>
+    <%= f.check_box :wheelchair_accessible %>
+    <%= f.check_box :accessible_toilet %>
+    <%= f.check_box :disabled_parking_nearby %>
+    <%= f.check_box :tactile_guidance_systems %>
+    <%= f.check_box :induction_loop_available %>
+    <%= f.check_box :assistance_dogs_welcome %>
+    <%= f.check_box :sign_language_interpreter %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
+    <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label")) do %>
+    <%= f.rich_text_area :description, label: false, rows: 10 %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -32,7 +32,7 @@
             <p><%= t("proposals.proposal.archived") %></p>
           </div>
         <% elsif helpers.projekt_phase_feature?(proposal.projekt_phase, "resource.allow_voting") %>
-          <%= render Proposals::NewVotesComponent.new(proposal, voted: @voted) %>
+          <%= render Proposals::NewVotesComponent.new(proposal, voted: @voted, show_share_popup: true) %>
         <% end %>
       </div>
     <% end %>

@@ -1,0 +1,38 @@
+<%= form_with model: @projekt_question, url: url do |f| %>
+
+  <% if @projekt_question.projekt_livestream_id.present? %>
+    <%= f.hidden_field :projekt_livestream_id %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".title_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".question_options_label"), hint: t(".question_options_hint")) do %>
+    <div data-controller="adm-nested-fields">
+      <div data-adm-nested-fields-target="container">
+        <%= f.fields_for :question_options do |ff| %>
+          <%= render "adm/projekts/projekt_questions/projekt_question_option_fields", f: ff %>
+        <% end %>
+      </div>
+
+      <template data-adm-nested-fields-target="template">
+        <%= f.fields_for :question_options, ProjektQuestionOption.new, child_index: "NEW_RECORD" do |ff| %>
+          <%= render "adm/projekts/projekt_questions/projekt_question_option_fields", f: ff %>
+        <% end %>
+      </template>
+
+      <%= kern_button icon: "add", text: t(".add_option"), style: :secondary, class: "mt-2", data: { action: "adm-nested-fields#add" } %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".show_answers_count_label"), hint: t(".show_answers_count_hint")) do %>
+    <%= f.check_box :show_answers_count %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".comments_enabled_label"), hint: t(".comments_enabled_hint")) do %>
+    <%= f.check_box :comments_enabled %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

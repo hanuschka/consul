@@ -1,0 +1,19 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @district.name, breadcrumbs: @breadcrumbs, back_button_url: adm_ideas_districts_path) %>
+
+<div class="kern-container my-5">
+
+  <%= form_with model: @district, url: adm_ideas_district_path(@district), method: :put do |f| %>
+    <div class="mb-4">
+      <%= render Kern::FormFieldComponent.new(label: ::RegisteredAddress::District.human_attribute_name(:default_idea_officer), inline: true) do %>
+        <%= f.select :idea_officer_id,
+          options_from_collection_for_select(Idea::Officer.all, :id, :name, @district.idea_officer_id),
+          { include_blank: t(".no_officer") },
+          { label: false } %>
+      <% end %>
+    </div>
+
+    <%= form_submit_button(text: t(".submit")) %>
+  <% end %>
+</div>

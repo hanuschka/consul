@@ -1,0 +1,18 @@
+de:
+  adm:
+    projekts:
+      projekt_notifications:
+        new:
+          title: Benachrichtigung erstellen
+        create:
+          success: Benachrichtigung wurde erfolgreich erstellt.
+        edit:
+          title: Benachrichtigung bearbeiten
+        update:
+          success: Benachrichtigung wurde erfolgreich aktualisiert.
+        destroy:
+          success: Benachrichtigung wurde erfolgreich gelöscht.
+        form:
+          title_label: Titel
+          body_label: Nachricht
+          submit: Nachticht senden

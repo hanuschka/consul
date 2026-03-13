@@ -1,0 +1,58 @@
+<%= form_with model: @formular_field, url: url do |f| %>
+
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint")) do %>
+    <%= f.text_area :description, label: false, rows: 4 %>
+  <% end %>
+
+  <div data-controller="formular-fields--kind">
+    <%= render Kern::FormFieldComponent.new(label: t(".kind_label"), hint: t(".kind_hint")) do %>
+      <%= f.select :kind,
+          FormularField::KINDS.map { |kind| [t("adm.projekts.phases.formular.kinds.#{kind}"), kind] },
+          { include_blank: false },
+          { disabled: @formular_field.persisted?,
+            label: false,
+            data: { action: "change->formular-fields--kind#toggle" } } %>
+    <% end %>
+
+    <div data-formular-fields--kind-target="dropdownFields"
+         style="<%= "display: none;" unless @formular_field.kind == "dropdown" %>">
+      <%= render Kern::FormFieldComponent.new(label: t(".drop_down_options_label"), hint: t(".drop_down_options_hint")) do %>
+        <%= f.text_field :drop_down_options, label: false %>
+      <% end %>
+    </div>
+
+    <div data-formular-fields--kind-target="emailFields"
+         style="<%= "display: none;" unless @formular_field.kind == "email" %>">
+      <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_label"), hint: t(".email_for_confirmation_hint")) do %>
+        <%= f.check_box :email_for_confirmation,
+            data: { action: "change->formular-fields--kind#toggleConfirmation" } %>
+      <% end %>
+
+      <div data-formular-fields--kind-target="confirmationFields"
+           style="<%= "display: none;" unless @formular_field.email_for_confirmation.present? %>">
+        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_subject_label"), hint: t(".email_for_confirmation_subject_hint")) do %>
+          <%= f.text_field :email_for_confirmation_subject, label: false %>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_text_label"), hint: t(".email_for_confirmation_text_hint")) do %>
+          <%= f.text_area :email_for_confirmation_text, label: false, rows: 6 %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".required_label"), hint: t(".required_hint")) do %>
+    <%= f.check_box :required %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".follow_up_label"), hint: t(".follow_up_hint")) do %>
+    <%= f.check_box :follow_up %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

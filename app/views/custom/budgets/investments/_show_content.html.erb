@@ -23,7 +23,8 @@
     <div class="flex-layout">
       <div class="main-column" id="investment-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: url_to_footer_tab) %>
+          <% fallback_path = @investment.projekt_phase.present? ? page_path(@investment.projekt_phase.projekt.page.slug, projekt_phase_id: @investment.projekt_phase.id, anchor: "filter-subnav") : budgets_path %>
+          <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>
 
         <div class="common-page-description">

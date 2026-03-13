@@ -2,23 +2,24 @@
   "use strict";
 
   App.ContentBlockTemplatesSelector = {
-    initialize() {
-      this.loadTemplatesContent();
-    },
+    loaded: false,
+
+    initialize() {},
 
     loadTemplatesContent() {
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      if (this.loaded) return
 
-      if ($container.length === 0) {
-        return;
-      }
+      this.showSpinner();
 
       $.ajax({
         url: "/projekt_content_block_templates",
         method: "GET",
-        dataType: "html"
+        dataType: "html",
+        timeout: 7000
       })
         .then((html) => {
+          this.loaded = true;
+
           this.handleLoadSuccess(html);
         })
         .catch(() => {
@@ -27,14 +28,19 @@
     },
 
     handleLoadSuccess(html) {
+      this.hideSpinner();
+
       const $container = $(".js-projekt-content-block-templates-selector--inner");
-      $container.html(html);
+      $container.html(html).show();
 
+      this.reinitFoundationComponents($container);
+    },
+
+    reinitFoundationComponents($container) {
       this.storeOrbitHeights($container);
-
       $(document).foundation();
-
       this.restoreOrbitHeights($container);
+
       $container.find('[data-tabs]').on('change.zf.tabs', () => this.restoreOrbitHeights($container));
     },
 
@@ -53,9 +59,29 @@
       }, 50);
     },
 
+    showSpinner() {
+      $(".js-content-block-templates-spinner").show();
+      $(".js-projekt-content-block-templates-selector--inner").hide();
+    },
+
+    hideSpinner() {
+      $(".js-content-block-templates-spinner").hide();
+    },
+
     handleLoadError() {
+      this.hideSpinner();
+
       const $container = $(".js-projekt-content-block-templates-selector--inner");
-      $container.html('<p style="text-align: center; padding: 40px; color: red;">Fehler beim Laden der Vorlagen. Bitte versuchen Sie es erneut.</p>');
+      const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
+
+      if (!fallbackTemplate) return
+
+      const fallbackContent = document.importNode(fallbackTemplate.content, true);
+      $container.empty().append(fallbackContent).show();
+
+      $(".js-content-block-templates-fallback-note").show();
+
+      this.reinitFoundationComponents($container);
     }
   };
 }).call(this);

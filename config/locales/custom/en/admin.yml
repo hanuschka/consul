@@ -1,4 +1,31 @@
 en:
+  admin:
+    connection:
+      index:
+        title: "DT API Connection Status"
+        connection_error_label: "Error:"
+        checks:
+          dt_connected:
+            label_ok: "DT API connected"
+            label_fail: "DT API not connected"
+            description_ok: "The DT API client is registered and has a valid service token."
+            description_fail: "No DT API client registered or service token missing."
+            hint: "Local config check only — no HTTP request is made."
+          api_accessible:
+            label_ok: "DT API accessible"
+            label_fail: "DT API not accessible"
+            description_ok: "The DT API endpoint is reachable and responding without server errors."
+            description_fail: "The DT API endpoint timed out or returned a server error (5xx)."
+            hint: "Makes an HTTP request to the status endpoint; passes if response is non-5xx."
+          connection_works:
+            label_ok: "DT connection works"
+            label_fail: "DT connection failed"
+            description_ok: "Authentication is valid and the connection is fully operational."
+            description_fail: "The connection check returned an unexpected response or authentication failed."
+            hint: "Requires HTTP 200 with authenticated: true in the JSON response body."
+  internal_api_clients:
+    connect:
+      success: "Successfully connected to DT."
   activerecord:
     attributes:
       api_client:

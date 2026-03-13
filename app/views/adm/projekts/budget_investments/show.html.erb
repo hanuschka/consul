@@ -23,7 +23,7 @@
 
     <div class="d-flex gap-2 mb-4 justify-content-end">
       <%= kern_link_button(edit_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
-            text: t(".edit"), icon: "edit", data: { turbo_frame: "investment_content" }) %>
+            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "investment_content" }) %>
       <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment, format: :pdf),
             text: t(".download_pdf"), icon: "download", style: :secondary, data: { turbo: false }) %>
     </div>

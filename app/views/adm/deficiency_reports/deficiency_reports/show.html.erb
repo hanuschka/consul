@@ -48,7 +48,7 @@
 
     <div class="d-flex gap-2 mb-4 justify-content-end">
       <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-            text: t(".edit"), icon: "edit", data: { turbo_frame: "deficiency_report_content" }) %>
+            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "deficiency_report_content" }) %>
       <%= kern_link_button(adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
             text: t(".download_pdf"), icon: "download", style: :secondary,
             data: @deficiency_report.map_location.present? ? {

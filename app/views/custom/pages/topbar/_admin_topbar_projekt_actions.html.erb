@@ -1,0 +1,37 @@
+<% namespace = admin_namespace_for_current_user %>
+
+<% if current_user&.email.in?(@partner_emails) %>
+  <%= link_to "#",
+        class: "button hollow projekt-page--admin-topbar-button js-copy-source-button",
+        data: { target: "page-content" } do %>
+    <i class="fas fa-code"></i>
+    <span><%= t("custom.projekts.page.topbar.copy_code") %></span>
+  <% end %>
+<% end %>
+
+<% if current_user&.administrator? %>
+  <%= link_to new_admin_newsletter_path(projekt_id: @projekt),
+        class: "button hollow projekt-page--admin-topbar-button hide-on-small-tablet",
+        target: "_blank" do %>
+    <i class="fas fa-envelope"></i>
+    <span><%= t("custom.projekts.page.topbar.create_newsletter_draft") %></span>
+  <% end %>
+<% end %>
+
+<% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+  <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers),
+        method: "post",
+        role: "button",
+        class: "button hollow projekt-page--admin-topbar-button hide-on-mobile" do %>
+    <i class="fas fa-bell"></i>
+    <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+  <% end %>
+<% end %>
+
+<% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+  <%= link_to polymorphic_path([namespace, @projekt], action: :edit),
+        class: "button hollow projekt-page--admin-topbar-button" do %>
+    <i class="fas fa-cog"></i>
+    <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
+  <% end %>
+<% end %>

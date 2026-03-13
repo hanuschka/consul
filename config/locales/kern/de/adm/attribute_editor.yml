@@ -41,9 +41,9 @@ de:
         total_duration_end_description: Enddatum
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
-        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
+        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zur Beteiligungsplattform passen. Empfohlenes Format: 1920 × 760 Pixel."
         mobile_header_image_label: Hintergrundbild für Mobile
-        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
+        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Bitte verwenden Sie ein Bild mit zentriertem Hauptmotiv, da es auf kleinen Bildschirmen beschnitten werden kann. Es sollte thematisch zur Plattform passen und klar auch in kleinen Formaten wirken. Empfohlenes Format: 768 × 400 Pixel."
       site_customization/page:
         projekt:
           title_label: Titel der Startseite
@@ -59,7 +59,7 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           landing_site_logo_for_white_background_label: Logo auf weißem Hintergrund
           landing_site_logo_for_white_background_description: "Wird angezeigt, sobald die Seite gescrollt wurde und die Top-Navigation einen weißen Hintergrund hat.<br><br>Dieses Logo sollte in dunkler Farbe vor weißem Hintergrund gut sichtbar sein. Es ersetzt das transparente Logo automatisch, sobald die Navigation fixiert wird. Auch hier empfiehlt sich ein PNG, um scharfe Darstellung auf allen Geräten zu gewährleisten."
           landing_desktop_header_image_label: Hintergrundbild für Desktop
-          landing_desktop_header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
+          landing_desktop_header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zur Beteiligungsplattform passen. Empfohlenes Format: 1920 × 760 Pixel."
           landing_mobile_header_image_label: Hintergrundbild für Mobile
           landing_mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
           title_label: Titel der Themenseite

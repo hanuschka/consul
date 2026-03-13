@@ -60,6 +60,9 @@ namespace :adm do
   end
   # profiles
 
+  resource :statistics, controller: "statistics", only: [:show]
+  resource :apps, controller: "apps", only: [:show]
+
   namespace :site_customization do
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member

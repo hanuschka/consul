@@ -59,6 +59,9 @@ en:
           edit_projekt: Edit projekt
           create_newsletter_draft: Create newsletter
           notify_reviewers: Notify reviewers
+          edit_page: Edit page
+          edit_landing: Edit landing page
+          edit_homepage: Edit homepage
           projekt_information:
             title: Project information
         footer:

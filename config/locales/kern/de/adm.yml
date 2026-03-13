@@ -11,15 +11,15 @@ de:
         application: Applikation
         application_subitems:
           homepage: Startseite
-          documents: Eigene Dokumente
-          navbar: Navigationsleiste
-          metadata_settings: Metadaten & Kommunikation
+          documents: Dokumente
+          navbar: Navigation
+          metadata_settings: Metadaten
           gdpr_settings: DSGVO
-          registration_settings: Registrierung & Verifizierung
-          registered_addresses: Registrierte Adressen
-          default_map_location: Karten
+          registration_settings: Konto & Zugang
+          registered_addresses: Adressen
+          default_map_location: Standardkarte
           tags: Tags
-          individual_groups: Individuelle Gruppen
+          individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
         profiles: Profile
         profiles_subitems:
@@ -32,7 +32,7 @@ de:
           valuators: Budgetgutachter
           users: Benutzer
         notifications: Notification
-        stats: Statistics
+        stats: Statistiken
         apps: Apps
     deficiency_reports:
       menu:

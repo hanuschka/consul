@@ -49,14 +49,24 @@
       </div>
     </header>
 
-    <div class="d-flex">
-      <aside id="adm-sidebar" class="d-none d-lg-block position-absolute top-0 position-lg-static" data-adm-sidebar-target="sidebar">
+    <div class="d-flex adm-layout">
+      <aside id="adm-sidebar" class="d-none d-lg-flex position-absolute top-0 position-lg-static" data-adm-sidebar-target="sidebar">
         <%= render adm_menu_component %>
 
-        <div data-controller="mode-switcher" style="margin-top: 5rem; padding: 0 1rem;">
-          <button type="button" class="kern-link d-flex align-items-center gap-2" data-action="click->mode-switcher#toggle">
-            <span class="material-symbols-outlined" data-mode-switcher-target="icon" aria-hidden="true"><%= cookies[:kern_dark_mode] == '1' ? 'light_mode' : 'dark_mode' %></span>
-          </button>
+        <div class="adm-sidebar-footer">
+          <hr class="adm-sidebar-divider">
+          <div data-controller="mode-switcher">
+            <button type="button" class="kern-link adm-sidebar-footer__mode-toggle d-flex align-items-center gap-2" data-action="click->mode-switcher#toggle">
+              <span class="material-symbols-outlined" data-mode-switcher-target="icon" aria-hidden="true"><%= cookies[:kern_dark_mode] == '1' ? 'light_mode' : 'dark_mode' %></span>
+              <span data-mode-switcher-target="label"><%= cookies[:kern_dark_mode] == '1' ? 'Light mode' : 'Dark mode' %></span>
+            </button>
+          </div>
+          <% if defined?(RELEASE_DATE) && RELEASE_DATE %>
+            <div class="adm-sidebar-footer__release">
+              <span class="material-symbols-outlined" aria-hidden="true">deployed_code_update</span>
+              <%= "#{RELEASE_TAG} · #{I18n.l(RELEASE_DATE, format: :short)}" %>
+            </div>
+          <% end %>
         </div>
       </aside>
 

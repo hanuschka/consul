@@ -2,11 +2,14 @@ de:
   adm:
     registered_addresses:
       index:
-        title: Registrierte Adressen
-        intro_title: 'Hinweis zur "Registrierten Adressen"'
-        intro_text_p1: >
+        title: Adressen
+        intro_text_p1_lead: >
           Die registrierten Adressen müssen demokratie.today vorab als CSV-Datei bereitgestellt werden.
-          Die Datei muss sechs Standardspalten enthalten: Stadt, PLZ, Straße, Hausnummer, Hausnummerzusatz und Gebiet (z. B. Stadtteil).
+          Die Datei muss folgende Standardspalten enthalten:
+        intro_list:
+          street_number_extension: Hausnummerzusatz
+          district: Gebiet (z. B. Stadtteil)
+        intro_text_p1_extra: >
           Darüber hinaus können zusätzliche Spalten für weitere geografische Einheiten wie Wahlkreise, Wahlbezirke oder Quartiere ergänzt werden.
         intro_text_p2: >
           Diese Gebietszuordnungen stehen anschließend in den Beteiligungsbeschränkungen (unter „Gebietsbeschränkung") zur Auswahl

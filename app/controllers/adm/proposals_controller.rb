@@ -7,7 +7,7 @@ module Adm
       authorize [:adm, @proposal]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
         { name: @proposal.title }

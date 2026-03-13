@@ -92,9 +92,21 @@
 }
 
 .input-success-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--kern-color-feedback-success) 12%, transparent);
   color: var(--kern-color-feedback-success);
+  font-size: 0.8125rem;
+  font-weight: 500;
   transition: opacity 0.5s ease;
   opacity: 1;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
 }
 
 .no-horizontal-scroll {

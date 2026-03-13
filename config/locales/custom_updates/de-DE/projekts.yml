@@ -59,6 +59,9 @@ de:
           edit_projekt: Projekteinstellungen
           create_newsletter_draft: Newsletter-Entwurf
           notify_reviewers: Prüfer benachrichtigen
+          edit_page: Seite bearbeiten
+          edit_landing: Landingpage bearbeiten
+          edit_homepage: Startseite bearbeiten
         footer:
           sidebar:
             projekt_labels:

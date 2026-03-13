@@ -14,7 +14,7 @@ module Adm
           @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") }}
 
           @breadcrumbs = [
-            { name: t("adm.menu.items.profiles") },
+            { name: t("adm.menu.items.profiles"), icon: "3p" },
             { name: t("adm.menu.items.profiles_subitems.users") }
           ]
         end

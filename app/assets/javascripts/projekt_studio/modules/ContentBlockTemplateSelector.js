@@ -24,7 +24,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
 
   handleOpenTemplateSelectorForReplace(e) {
     const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
-    const section = wrapper.closest("aside") ? "sidebar"
+    const section = wrapper.closest("aside, .sidebar") ? "sidebar"
       : wrapper.closest("footer") ? "footer" : null;
 
     this.selectionMode = "replace";

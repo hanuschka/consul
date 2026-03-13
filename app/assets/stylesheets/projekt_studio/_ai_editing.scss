@@ -79,6 +79,7 @@ body:not(.-ai-enabled) {
 }
 
 .content-block-ai-edit-popup {
+  z-index: 20;
   background: white;
   border: 1px solid #ccc;
   padding: 10px 17px;
@@ -86,6 +87,14 @@ body:not(.-ai-enabled) {
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: 3px 3px 7px 0px #0000001a;
+
+  &.-compact-position {
+    position: relative;
+    float: right;
+    clear: both;
+    max-width: 770px;
+    width: 100vw;
+  }
 
   .content-block-ai-edit-popup-header {
     display: flex;

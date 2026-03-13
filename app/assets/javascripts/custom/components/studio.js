@@ -51,7 +51,7 @@
     SiteContentBlockEditor: {
       initialize() {
         if (typeof ProjektStudio === "undefined") return
-        if (ProjektStudio.initialized) return
+        if (ProjektStudio.isProjektPage()) return
         if (!this.hasSiteContentBlocks()) return
 
         this.wrapContentBlocks();

@@ -40,6 +40,9 @@ en:
         copy-link: "Copy link"
       map:
         marker-label: "Map marker"
+      phases:
+        scroll_left: "Scroll phases left"
+        scroll_right: "Scroll phases right"
       events:
         projekt-aria-label: "Project: %{projekt_name}"
     map:

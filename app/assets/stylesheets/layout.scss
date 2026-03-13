@@ -1407,19 +1407,17 @@ form {
     }
 
     &::before {
-      content: "\43" / "";
+      background-color: darken($brand, 10%);
     }
   }
 
   &::before {
-    background: $body-background;
-    color: $brand;
-    content: "\4d" / "";
-    font-family: "icons" !important;
-    font-size: $small-font-size;
+    content: "";
+    background-color: $brand;
+    border: 2px solid $body-background;
+    border-radius: 50%;
     height: rem-calc(20);
     left: -24px;
-    line-height: rem-calc(20);
     position: absolute;
     text-align: center;
     width: rem-calc(20);

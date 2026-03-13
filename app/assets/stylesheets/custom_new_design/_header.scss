@@ -239,9 +239,9 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
     z-index: 1000;
     background-color: white;
+
 
     .top-bar {
       .header--navigation ul.main-menu li.nav-element a,
@@ -492,7 +492,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     right: 0;
 
     .subnavigation {
-      // z-index: 1005;
       width: 100%;
       max-width: 100%;
     }
@@ -832,6 +831,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     li[aria-expanded="true"] > button[data-navbar-toggle]::after {
       transform: rotate(180deg);
     }
+  }
+}
+
+
+body:has(.projekt-page--admin-topbar) {
+  header.topbar-header {
+    margin-top: var(--admin-topbar-height);
   }
 }
 

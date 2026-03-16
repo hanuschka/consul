@@ -86,3 +86,9 @@ application.register("kern--form--image", KernFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
+import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
+application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
+
+import ClipboardController from "./clipboard_controller"
+application.register("clipboard", ClipboardController)
+

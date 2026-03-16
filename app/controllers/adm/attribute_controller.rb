@@ -34,6 +34,7 @@ module Adm
       def component_options
         options = {}
         options[:select_options] = JSON.parse(params[:select_options]) if params[:select_options].present?
+        options[:wide] = true if params[:wide].present?
         options
       end
   end

@@ -34,6 +34,9 @@ de:
         notifications: Notification
         notifications_subitems:
           modal_notifications: Popup Benachrichtigungen
+          newsletters: Newsletter
+          recipient_groups: Empfängergruppen
+          unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
         apps: Apps
     deficiency_reports:

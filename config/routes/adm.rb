@@ -62,6 +62,24 @@ namespace :adm do
 
   # notifications
   resources :modal_notifications, except: :show
+
+  scope :newsletters do
+    resources :recipient_groups, except: :show do
+      collection do
+        post :select_options
+      end
+    end
+    resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
+  end
+  resources :newsletters do
+    member do
+      post :deliver
+      post :send_test
+    end
+    collection do
+      get :settings
+    end
+  end
   # notifications
 
   resource :statistics, controller: "statistics", only: [:show]

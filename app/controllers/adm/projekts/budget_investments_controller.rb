@@ -109,6 +109,32 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     )
   end
 
+  def hide
+    @investment = @projekt_phase.budget.investments.find(params[:id])
+    authorize [:adm, :projekts, @investment], :hide?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.hide
+    Activity.log(current_user, :hide, @investment)
+    @investment.reload
+  end
+
+  def unhide
+    @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
+    authorize [:adm, :projekts, @investment], :unhide?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.restore
+    Activity.log(current_user, :restore, @investment)
+    @investment.reload
+  end
+
+  def ignore_flag
+    @investment = @projekt_phase.budget.investments.find(params[:id])
+    authorize [:adm, :projekts, @investment], :ignore_flag?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.ignore_flag
+    @investment.reload
+  end
+
   def destroy
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
@@ -160,7 +186,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.budget_investments.title"), url: budget_investments_adm_projekts_phase_path(@projekt_phase) },

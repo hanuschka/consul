@@ -55,6 +55,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:disabled] == true
   end
 
+  def wide?
+    @options[:wide] == true
+  end
+
   private
 
     def i18n_key(type)

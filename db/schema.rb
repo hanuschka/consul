@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_05_120002) do
+ActiveRecord::Schema.define(version: 2026_03_16_145126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1229,6 +1229,23 @@ ActiveRecord::Schema.define(version: 2026_03_05_120002) do
     t.datetime "updated_at", null: false
     t.string "service_api_token"
     t.index ["service_api_token"], name: "index_internal_api_clients_on_service_api_token"
+  end
+
+  create_table "landing_page_manager_assignments", force: :cascade do |t|
+    t.bigint "landing_page_manager_id"
+    t.bigint "page_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["landing_page_manager_id"], name: "idx_lpm_assignments_on_manager_id"
+    t.index ["page_id"], name: "idx_lpm_assignments_on_page_id"
+  end
+
+  create_table "landing_page_managers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.boolean "manage_all_landing_pages", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_landing_page_managers_on_user_id"
   end
 
   create_table "landing_pages_projekts", force: :cascade do |t|
@@ -3183,6 +3200,9 @@ ActiveRecord::Schema.define(version: 2026_03_05_120002) do
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
   add_foreign_key "individual_group_values", "individual_groups"
+  add_foreign_key "landing_page_manager_assignments", "landing_page_managers"
+  add_foreign_key "landing_page_manager_assignments", "site_customization_pages", column: "page_id"
+  add_foreign_key "landing_page_managers", "users"
   add_foreign_key "legislation_draft_versions", "legislation_processes"
   add_foreign_key "legislation_processes", "projekt_phases"
   add_foreign_key "legislation_processes", "projekts"

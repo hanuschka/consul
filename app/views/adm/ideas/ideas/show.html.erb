@@ -29,27 +29,10 @@
     </p>
   <% end %>
 
-  <h1 class="kern-title kern-title--large mb-2"><%= @idea.title %></h1>
-
   <p class="kern-body kern-body--small mb-3">
     <strong><%= t(".author") %>:</strong>
     <%= @idea.author.username %>
-    <% if @idea.on_behalf_of.present? %>
-      (<%= t(".on_behalf_of") %>: <%= @idea.on_behalf_of %>)
-    <% end %>
   </p>
-
-  <% if @idea.category.present? %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".category") %>:</strong> <%= @idea.category.name %>
-    </p>
-  <% end %>
-
-  <% if @idea.officer.present? %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".officer") %>:</strong> <%= @idea.officer.name %>
-    </p>
-  <% end %>
 
   <p class="kern-body kern-body--small mb-3">
     <strong><%= t(".created_at") %>:</strong> <%= l(@idea.created_at, format: :long) %>
@@ -65,45 +48,128 @@
 
   <p class="kern-body kern-body--small">
     <%= link_to t(".view_on_site"), idea_path(@idea), target: "_blank", data: { turbo: false } %>
-    | <%= link_to t(".download_pdf"), adm_ideas_idea_path(@idea, format: :pdf),
-          data: @idea.map_location.present? ? {
-            controller: "map-screenshot",
-            map_screenshot_container_value: dom_id(@idea, "map"),
-            action: "click->map-screenshot#capture"
-          } : {} %>
   </p>
-  <p class="kern-body kern-body--small">
+  <p class="kern-body kern-body--small mb-3">
     <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @idea.cached_votes_up %>
     · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @idea.comments_count %>
   </p>
 
-  <div class="kern-row mb-3">
-    <% if @image_url.present? %>
-      <div class="kern-col-sm-12 kern-col-md-5">
-        <%= image_tag(@image_url, class: "w-100") %>
+  <%= turbo_frame_tag "idea_content" do %>
+
+    <div class="d-flex gap-2 mb-4 justify-content-end">
+      <%= kern_link_button(edit_adm_ideas_idea_path(@idea),
+            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "idea_content" }) %>
+      <%= kern_link_button(adm_ideas_idea_path(@idea, format: :pdf),
+            text: t(".download_pdf"), icon: "download", style: :secondary,
+            data: @idea.map_location.present? ? {
+              turbo: false,
+              controller: "map-screenshot",
+              map_screenshot_container_value: dom_id(@idea, "map"),
+              action: "click->map-screenshot#capture"
+            } : { turbo: false }) %>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".title_label") %></strong>
       </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @idea.title %></p>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".description_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@idea.description) %></div>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".image_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @image_url.present? %>
+          <%= image_tag(@image_url, style: "width: 100%;") %>
+        <% end %>
+      </div>
+    </div>
+    <hr class="kern-divider mb-3">
+
+    <% if @idea.documents.any? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".documents_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <ul class="kern-body">
+            <% @idea.documents.each do |document| %>
+              <li><%= link_to document.title, document.attachment, target: :blank %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
     <% end %>
 
-    <div class="kern-col-sm-12 kern-col-md-<%= @image_url.present? ? 5 : 10 %>">
-      <div class="kern-body mb-4">
-        <%= auto_link_already_sanitized_html wysiwyg(@idea.description) %>
+    <% if @idea.video_url.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".video_url") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <p class="kern-body"><%= link_to @idea.video_url, @idea.video_url, target: "_blank" %></p>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".on_behalf_of_label") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @idea.on_behalf_of %></p>
       </div>
     </div>
-  </div>
+    <hr class="kern-divider mb-3">
 
-  <% if @idea.map_location.present? %>
-    <div class="kern-row mb-4">
-      <div class="kern-col-sm-12 kern-col-md-10">
-        <%= render Kern::MapComponent.new(map_location: @idea.map_location) %>
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t(".category") %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <% if @idea.category.present? %>
+          <span class="map-feature-pill map-feature-pill--sentiment"
+                data-color="<%= @idea.category.color %>"
+                style="--pill-color:<%= @idea.category.color %>;--pill-text-color:<%= pick_text_color(@idea.category.color) %>">
+            <% if @idea.category.icon.present? %>
+              <i class="fas fa-<%= @idea.category.icon %>"></i>
+            <% end %>
+            <%= @idea.category.name %>
+          </span>
+        <% end %>
       </div>
     </div>
-  <% end %>
+    <hr class="kern-divider mb-3">
 
-  <% if @idea.video_url.present? %>
-    <p class="kern-body mb-4">
-      <strong><%= t(".video_url") %>:</strong>
-      <%= link_to @idea.video_url, @idea.video_url, target: "_blank" %>
-    </p>
+    <% if @idea.map_location.present? %>
+      <div class="kern-row mb-3">
+        <div class="kern-col-12 kern-col-md-4">
+          <strong class="kern-body"><%= t(".map_label") %></strong>
+        </div>
+        <div class="kern-col-12 kern-col-md-6">
+          <%= render Kern::MapComponent.new(map_location: @idea.map_location) %>
+        </div>
+      </div>
+      <hr class="kern-divider mb-3">
+    <% end %>
+
   <% end %>
 
   <hr class="kern-divider my-5">

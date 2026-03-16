@@ -258,7 +258,7 @@
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML('#ff0000')
+            icon: App.Utils.getLeafletMarkerHTML('#ff0000', null, 'Verwaltungseintrag')
           });
         },
         style: {
@@ -314,12 +314,18 @@
     }
 
     setupPlugins() {
-      L.control.locate({
+      var locateControl = L.control.locate({
         icon: 'fa fa-map-marker',
         strings: {
           title: 'Meine Position anzeigen'
         }
       }).addTo(this.map);
+
+      var locateButton = locateControl.getContainer().querySelector('a');
+      if (locateButton) {
+        locateButton.setAttribute('aria-label', 'Meine Position anzeigen');
+        locateButton.querySelector('.fa').setAttribute('aria-hidden', 'true');
+      }
 
       const searchControl = new GeoSearch.GeoSearchControl({
         provider: new GeoSearch.OpenStreetMapProvider(),
@@ -344,8 +350,10 @@
         minSize: 30,
         markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
+          var title = shape.feature.properties.feature_category_name || shape.feature.properties.title || "Kartenmarkierung";
+
           return {
-            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name ),
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name, title),
           }
         }
 
@@ -360,8 +368,10 @@
 
         L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
+            var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
+              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle),
             });
           },
           style: function (feature) {

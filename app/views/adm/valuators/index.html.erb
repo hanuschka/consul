@@ -8,8 +8,11 @@
   <% if @valuators.any? %>
     <%= render 'adm/role_assignments/roles', roles: @valuators, pagy: @pagy %>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_valuators") %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".no_valuators") %></span>
+      </div>
     </div>
   <% end %>
 </div>

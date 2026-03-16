@@ -29,6 +29,20 @@ de:
           aria_label: "Benachrichtigungsfilter"
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
+        glightbox-image-alt: "%{resource_type}: %{title}. Vergrößerte Ansicht."
+      share-links:
+        whatsapp: "Auf WhatsApp teilen"
+        facebook: "Auf Facebook teilen"
+        twitter: "Auf X (Twitter) teilen"
+        telegram: "Auf Telegram teilen"
+        linkedin: "Auf LinkedIn teilen"
+        email: "Per E-Mail teilen"
+        copy-link: "Link kopieren"
+      map:
+        marker-label: "Kartenmarkierung"
+      phases:
+        scroll_left: "Phasen nach links scrollen"
+        scroll_right: "Phasen nach rechts scrollen"
       events:
         projekt-aria-label: "Projekt: %{projekt_name}"
     map:

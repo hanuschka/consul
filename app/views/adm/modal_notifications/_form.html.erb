@@ -1,0 +1,20 @@
+<%= form_with model: [:adm, @modal_notification] do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:active_from)) do %>
+    <%= f.date_field :active_from, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:active_to)) do %>
+    <%= f.date_field :active_to, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:title)) do %>
+    <%= f.text_field :title, label: false, placeholder: ModalNotification.human_attribute_name(:title) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:html_content)) do %>
+    <%= f.rich_text_area :html_content, label: false %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -185,6 +185,17 @@
   }
 }
 
+.content-block-templates-selector--spinner {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+
+  .shared-loading-spinner-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .content-block-templates-selector--fallback-note {
   display: flex;
   align-items: center;

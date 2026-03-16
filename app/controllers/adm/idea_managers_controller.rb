@@ -5,7 +5,7 @@ module Adm
       @pagy, @idea_managers = pagy(policy_scope([:adm, IdeaManager]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.idea_managers") }
       ]
     end
@@ -14,7 +14,7 @@ module Adm
       authorize [:adm, IdeaManager], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.idea_managers"), url: adm_idea_managers_path },
         { name: t(".title") }
       ]

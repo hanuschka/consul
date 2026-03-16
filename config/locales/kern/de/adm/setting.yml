@@ -13,6 +13,8 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet. Ein klar formulierter, suchmaschinenfreundlicher Titel verbessert die Sichtbarkeit Ihrer Anwendung bei Google & Co."
     meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
     meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unter dem Titel Ihrer Seite. Sie sollte kurz, präzise und ansprechend sein, um Nutzer zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Sichtbarkeit und Klickrate in den Suchergebnissen."
+    newsletter_brand_color: "Newsletter Markenfarbe"
+    newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-Emails verwendet."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
     meta_keywords_description: "Hier können Sie optionale Stichwörter eintragen, die den Inhalt der Seite thematisch beschreiben. Diese werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag heute kaum noch auswerten, kann er für interne Zwecke oder spezifische SEO-Strategien weiterhin nützlich sein. Begriffe durch Kommas trennen."
     facebook_handle: "Facebook-Benutzername"
@@ -29,13 +31,13 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     youtube_handle_description: "Wenn ausgefüllt, wird ein YouTube-Logo mit Link in der Fußzeile angezeigt."
     welcomepage:
       usage_stats: Nutzerübersicht anzeigen
-      usage_stats_description: Zeigt auf der Startseite die Gesamtanzahl registrierter Nutzer an und verlinkt auf eine detaillierte Nutzerübersicht.
+      usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzerinnen und Nutzer eingeblendet. Zusätzlich wird ein öffentlicher Link zur Nutzerübersichtsseite angezeigt. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Sie kann deaktiviert werden, wenn diese Informationen nicht öffentlich sichtbar sein sollen."
       newsletter_subscription: Plattformstatistik anzeigen
-      newsletter_subscription_description: Zeigt zentrale Kennzahlen zur Plattform an – darunter Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare.
+      newsletter_subscription_description: "Wenn aktiviert, werden auf der Startseite zentrale Kennzahlen zur Plattform eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Zahlen aktualisieren sich automatisch. Diese Funktion gibt Besucherinnen und Besuchern einen schnellen Überblick über die Aktivität der Plattform. Sie kann deaktiviert werden, wenn keine Statistiken öffentlich sichtbar sein sollen."
       platform_activity: Newsletter-Funktion aktivieren
-      platform_activity_description: Bietet eingeloggten Nutzern eine gut sichtbare Möglichkeit zur Newsletter-Anmeldung. Auch nicht angemeldete Nutzer können sich über ein separates Formular anmelden.
+      platform_activity_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzerinnen und Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Formular. So können Interessierte über neue Projekte und Beteiligungsmöglichkeiten auf dem Laufenden gehalten werden. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
       projekt_search: Projektsuche aktivieren
-      projekt_search_description: Ermöglicht eine Suchleiste auf der Startseite, mit der Nutzer gezielt nach Projekten suchen können. Wenn diese Option aktiviert ist, wird der hervorgehobene Startseiten-Button durch die Suchleiste ersetzt. Beides gleichzeitig ist nicht möglich.
+      projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzerinnen und Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus – ist die Suche aktiv, wird der Button automatisch ausgeblendet. Die Projektsuche ist besonders sinnvoll, wenn die Plattform viele Projekte enthält. Sie kann jederzeit wieder deaktiviert werden."
     extended_feature:
       projekts_overview_page_navigation:
         show_index_order_all: Alle Projekte
@@ -75,9 +77,9 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     extended_option:
       general:
         title: Titel der Anwendung
-        title_description: Dieser Titel wird innerhalb des Hintergrundbildes auf der Startseite angezeigt. Wenn das Feld leer bleibt, wird kein Titel dargestellt.
+        title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucherinnen und Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
-        subtitle_description: Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt.
+        subtitle_description: "Der Untertitel erscheint direkt unterhalb des Haupttitels im Hintergrundbild auf der Startseite. Er ermöglicht eine kurze ergänzende Information oder Beschreibung des Beteiligungsangebots. Formulieren Sie ihn als prägnanten Satz, der den Kontext der Plattform auf den Punkt bringt. Wenn das Feld leer bleibt, wird kein Untertitel angezeigt."
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
@@ -106,6 +108,59 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer individuellen Liste an. Es erscheint nicht in anderen automatischen Listen wie “Laufende Projekte”.
         allow_indexing: Projektseite für Suchmaschinen freigeben
         allow_indexing_description: Erlaubt die Indexierung der Projektseite durch Google und andere Suchmaschinen.
+    ideas:
+      show_in_main_menu: Ideen in Navigation anzeigen
+      show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
+      admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+      admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
+      officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
+      officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Ideen
+      officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
+      officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Ideen
+      enable_comments: Kommentarfunktion
+      enable_comments_description: Nutzer*innen können unterhalb einer Idee kommentieren
+      intro_text: Einleitungstext für die Idee
+      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+      enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen
+      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+      admin_acceptance_required: Bestätigung durch Administratoren
+      admin_acceptance_required_description: Administratoren müssen neue Ideen vor der Veröffentlichung zunächst bestätigen.
+      document_upload: Zusätzliche Dokumente
+      document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
+      external_video: Externes Video einbinden
+      external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+    deficiency_reports:
+      show_in_main_menu: Mängelmelder in Navigation anzeigen
+      show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
+      admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+      admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
+      officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
+      officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
+      officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
+      officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
+      allow_voting: Nutzer*innen Bewertung pro Mangel
+      allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
+      enable_comments: Kommentarfunktion
+      enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
+      intro_text: Einleitungstext für den Mängelmelder
+      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+      enable_my_posts_filter: Meine Beiträge
+      enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+      enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+      admin_acceptance_required: Bestätigung durch Administratoren
+      admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+      document_upload: Zusätzliche Dokumente
+      document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+      external_video: Externes Video einbinden
+      external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+      voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
+      voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+      send_feedback_form_link: Feedback-Formular
+      send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
+      show_create_report_button: Button zum Einreichen von Mangelmeldungen anzeigen
+      show_create_report_button_description: Zeigt einen Button zum Einreichen von Mängelmeldungen in der Seitenleiste der Mängelübersichtsseite an
+
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
     header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."
@@ -371,60 +426,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #   general:
     #     external_participation_link: Alternativen Link in den Projektressourcen verwenden
     #     external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
-    # deficiency_reports:
-    #   show_in_main_menu: Mängelmelder in Navigation anzeigen
-    #   show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
-    #   admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
-    #   admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
-    #   officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
-    #   officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
-    #   officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
-    #   officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
-    #   allow_voting: Nutzer*innen Bewertung pro Mangel
-    #   allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
-    #   enable_comments: Kommentarfunktion
-    #   enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
-    #   intro_text: Einleitungstext für den Mängelmelder
-    #   intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
-    #   enable_my_posts_filter: Meine Beiträge
-    #   enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-    #   enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-    #   enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
-    #   admin_acceptance_required: Bestätigung durch Administratoren
-    #   admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
-    #   document_upload: Zusätzliche Dokumente
-    #   document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
-    #   external_video: Externes Video einbinden
-    #   external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
-    #   voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
-    #   voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
-    #   send_feedback_form_link: Feedback-Formular
-    #   send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
-    # ideas:
-    #   show_in_main_menu: Ideen in Navigation anzeigen
-    #   show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
-    #   admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
-    #   admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
-    #   officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
-    #   officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
-    #   officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
-    #   officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
-    #   allow_voting: Nutzer*innen Bewertung pro Idee
-    #   allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
-    #   enable_comments: Kommentarfunktion
-    #   enable_comments_description: Nutzer*innen können unterhalb einer Idee kommentieren
-    #   intro_text: Einleitungstext für die Idee
-    #   intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
-    #   enable_my_posts_filter: Meine Beiträge
-    #   enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-    #   enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-    #   enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
-    #   admin_acceptance_required: Bestätigung durch Administratoren
-    #   admin_acceptance_required_description: Administratoren müssen neue Idee vor der Veröffentlichung zunächst bestätigen.
-    #   document_upload: Zusätzliche Dokumente
-    #   document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
-    #   external_video: Externes Video einbinden
-    #   external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
 
     # projekt_newsfeed:
     #   id: Newsfeed ID

@@ -3,6 +3,17 @@ de:
     age_ranges:
       index:
         title: Altersgruppen
+        intro_title: Hinweis zu Altersgruppen
+        intro_text_p1: >
+          Altersgruppen werden in zwei Varianten gepflegt: für Altersbeschränkungen in Beteiligungsphasen
+          und für die statistische Auswertung. Gruppen für Beschränkungen schränken die Teilnahme an einer
+          Beteiligungsphase auf Nutzerinnen und Nutzer eines bestimmten Altersbereichs ein. Gruppen für
+          Statistiken dienen ausschließlich der Auswertung und haben keinen Einfluss auf die
+          Teilnahmeberechtigung.
+        intro_text_p2: >
+          Die Reihenfolge der Altersgruppen innerhalb jedes Tabs kann per Drag & Drop angepasst werden.
+          Diese Reihenfolge beeinflusst die Darstellung in Auswahllisten und statistischen Auswertungen.
+          Jede Gruppe benötigt einen Namen sowie eine Altersuntergrenze und -obergrenze.
         new_age_range: Neue Altersgruppe erstellen
         filters:
           for_restrictions: Altersbeschränkung

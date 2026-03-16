@@ -1,10 +1,11 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil)
+  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
+    @narrow = narrow
   end
 
   def breadcrumb_item(breadcrumb, is_last)
@@ -23,12 +24,23 @@ class Adm::HeaderComponent < ApplicationComponent
   end
 
   def breadcrumb_item_content(breadcrumb, is_last)
+    icon_html = breadcrumb[:icon].present? ? icon_tag(breadcrumb[:icon]) : "".html_safe
+    label = breadcrumb[:name]
+
     if is_last
-      tag.strong(breadcrumb[:name])
+      tag.span { icon_html + label }
     elsif breadcrumb[:url].blank?
-      tag.span(breadcrumb[:name])
+      tag.span { icon_html + label }
     else
-      link_to breadcrumb[:name], breadcrumb[:url]
+      link_to breadcrumb[:url] do
+        icon_html + label
+      end
     end
   end
+
+  private
+
+    def icon_tag(icon_name)
+      content_tag(:span, icon_name, class: "material-symbols-outlined breadcrumb-icon", aria: { hidden: true })
+    end
 end

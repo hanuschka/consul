@@ -42,12 +42,22 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::ProjektManagerPolicy
       when "Idea"
         Adm::Ideas::IdeaPolicy
+      when "DeficiencyReport"
+        Adm::DeficiencyReports::DeficiencyReportPolicy
       when "Poll::Question"
         Adm::Projekts::PollQuestionPolicy
       when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
         Adm::Projekts::BudgetPolicy
       when "SiteCustomization::Page"
         Adm::SiteCustomization::PagePolicy
+      when "SiteCustomization::Image"
+        Adm::SiteCustomization::ImagePolicy
+      when "SiteCustomization::ContentBlock"
+        Adm::SiteCustomization::ContentBlockPolicy
+      when "Newsletter"
+        Adm::NewsletterPolicy
+      when "Image"
+        Adm::ImagePolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

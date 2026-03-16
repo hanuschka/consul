@@ -25,7 +25,7 @@
   <div class="d-flex gap-2 mb-4">
     <%= kern_link_button edit_adm_projekts_phase_poll_question_path(@projekt_phase, @question),
           text: @question.bundle_question? ? t(".edit_bundle") : t(".edit_question"),
-          icon: "edit", style: :secondary %>
+          icon: "edit", style: :primary %>
   </div>
 
   <% unless @question.bundle_question? %>
@@ -33,7 +33,7 @@
 
     <div class="d-flex gap-2 mb-4">
       <%= kern_link_button new_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question),
-            text: t(".add_answer"), icon: "add", style: :secondary %>
+            text: t(".add_answer"), icon: "add", style: :primary %>
     </div>
 
     <% if @question.question_answers.any? %>

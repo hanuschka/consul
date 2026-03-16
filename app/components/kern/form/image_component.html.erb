@@ -17,9 +17,9 @@
 
   <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
     <% if show_preview? %>
-      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" }) %>
+      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" }) %>
     <% else %>
-      <%= tag.img alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" } %>
+      <%= tag.img alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" } %>
     <% end %>
   </div>
 

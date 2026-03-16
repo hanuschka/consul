@@ -11,15 +11,15 @@ de:
         application: Applikation
         application_subitems:
           homepage: Startseite
-          documents: Eigene Dokumente
-          navbar: Navigationsleiste
-          metadata_settings: Metadaten & Kommunikation
+          documents: Dokumente
+          navbar: Navigation
+          metadata_settings: Metadaten
           gdpr_settings: DSGVO
-          registration_settings: Registrierung & Verifizierung
-          registered_addresses: Registrierte Adressen
-          default_map_location: Karten
+          registration_settings: Konto & Zugang
+          registered_addresses: Adressen
+          default_map_location: Standardkarte
           tags: Tags
-          individual_groups: Individuelle Gruppen
+          individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
         profiles: Profile
         profiles_subitems:
@@ -32,8 +32,27 @@ de:
           valuators: Budgetgutachter
           users: Benutzer
         notifications: Notification
-        stats: Statistics
+        notifications_subitems:
+          modal_notifications: Popup Benachrichtigungen
+          newsletters: Newsletter
+          recipient_groups: Empfängergruppen
+          unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
+        stats: Statistiken
         apps: Apps
+    deficiency_reports:
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          deficiency_reports: Mängelmelder
+          officers: Sachbearbeiter*inen
+          categories: Kategorien
+          statuses: Status
+          settings: Funktionen
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI prompt
     ideas:
       menu:
         aria_label: Ideenplattform Menü
@@ -41,5 +60,5 @@ de:
           ideas: Ideen
           officers: Sachbearbeiter
           categories: Kategorien
-          settings: Einstellungen
-          districts: Bezirke
+          settings: Funktionen
+          districts: Gebiete

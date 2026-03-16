@@ -8,7 +8,7 @@
       <table class="kern-table">
         <thead class="kern-table__head">
           <tr class="kern-table__row">
-            <th scope="col" class="kern-table__header"><%= RegisteredAddress::District.human_attribute_name(:name) %></th>
+            <th scope="col" class="kern-table__header"><%= ::RegisteredAddress::District.human_attribute_name(:name) %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.default_officer") %></th>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
           </tr>
@@ -29,8 +29,11 @@
       </table>
     </div>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_districts") %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".no_districts") %></span>
+      </div>
     </div>
   <% end %>
 </div>

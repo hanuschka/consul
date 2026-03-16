@@ -2,11 +2,6 @@ namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "projekts#index"
 
-    resources :landing_pages do
-      patch :toggle_active, on: :member
-      patch :reorder, on: :collection
-    end
-
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
       patch :toggle_manage_all_projekts, on: :member
@@ -34,6 +29,7 @@ namespace :adm do
 
         # Content management
         get :proposals
+        get :comments
         get :proposal_criteria
         get :budget_phases
         get :budget_edit
@@ -110,6 +106,16 @@ namespace :adm do
         member do
           patch :toggle_admin_accepted
           patch :update_official_answer
+          put :hide
+          put :unhide
+          put :ignore_flag
+        end
+      end
+      resources :comments, only: [] do
+        member do
+          put :hide
+          put :unhide
+          put :ignore_flag
         end
       end
       resources :budget_phases, only: [:edit] do
@@ -138,6 +144,9 @@ namespace :adm do
           get :milestones
           get :progress_bars
           get :audits
+          put :hide
+          put :unhide
+          put :ignore_flag
         end
       end
     end

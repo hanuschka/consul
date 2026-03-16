@@ -91,7 +91,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
-      proposals user_resource_criteria
+      proposals comments user_resource_criteria
       projekt_labels sentiments map
       officing_managers ai_settings
     ]

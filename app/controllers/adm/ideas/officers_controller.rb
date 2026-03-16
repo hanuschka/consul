@@ -7,9 +7,12 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
         .joins(:user)
         .order("users.username ASC")
     )
+
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.officers") }]
   end
 
   def search
+    authorize Idea::Officer, :create?, policy_class: Adm::Ideas::OfficerPolicy
     @user = User.find_by(email: params[:search])
 
     respond_to do |format|

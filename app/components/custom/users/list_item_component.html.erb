@@ -9,7 +9,7 @@
       <% if user.image&.variant(:thumb2).present? %>
         <%= image_tag(user.image&.variant(:thumb2)) %>
       <% else %>
-        <div class="user-list-item--avatar-placeholder">
+        <div class="user-list-item--avatar-placeholder" aria-hidden="true">
           <%= user.first_letter_of_name %>
         </div>
       <% end %>

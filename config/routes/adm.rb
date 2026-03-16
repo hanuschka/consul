@@ -60,6 +60,31 @@ namespace :adm do
   end
   # profiles
 
+  # notifications
+  resources :modal_notifications, except: :show
+
+  scope :newsletters do
+    resources :recipient_groups, except: :show do
+      collection do
+        post :select_options
+      end
+    end
+    resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
+  end
+  resources :newsletters do
+    member do
+      post :deliver
+      post :send_test
+    end
+    collection do
+      get :settings
+    end
+  end
+  # notifications
+
+  resource :statistics, controller: "statistics", only: [:show]
+  resource :apps, controller: "apps", only: [:show]
+
   namespace :site_customization do
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member

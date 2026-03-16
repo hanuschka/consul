@@ -1,9 +1,4 @@
 GEM
-  remote: https://rails-assets.org/
-  specs:
-    rails-assets-markdown-it (9.0.1)
-
-GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (2.0.1)
@@ -236,11 +231,11 @@ GEM
       i18n (>= 1.8.11, < 2)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
-    faraday-multipart (1.1.1)
+    faraday-multipart (1.2.0)
       multipart-post (~> 2.0)
     faraday-net_http (3.1.0)
       net-http
-    faraday-retry (2.3.2)
+    faraday-retry (2.4.0)
       faraday (~> 2.0)
     ffi (1.16.3)
     file_validators (3.0.0)
@@ -639,17 +634,17 @@ GEM
       rexml
     ruby-vips (2.2.0)
       ffi (~> 1.12)
-    ruby_llm (1.9.1)
+    ruby_llm (1.13.2)
       base64
       event_stream_parser (~> 1)
-      faraday (>= 1.10.0)
+      faraday (>= 2.0)
       faraday-multipart (>= 1)
       faraday-net_http (>= 1)
-      faraday-retry (>= 1)
-      marcel (~> 1.0)
-      ruby_llm-schema (~> 0.2.1)
+      faraday-retry (>= 2.0)
+      marcel (~> 1)
+      ruby_llm-schema (~> 0)
       zeitwerk (~> 2)
-    ruby_llm-schema (0.2.5)
+    ruby_llm-schema (0.3.0)
     rubyzip (2.3.2)
     rugged (1.7.1)
     rvm1-capistrano3 (1.4.0)
@@ -890,7 +885,6 @@ DEPENDENCIES
   rack-cors
   rack-mini-profiler
   rails (= 6.1.7.6)
-  rails-assets-markdown-it (~> 9.0.1)!
   rb-readline (= 0.5.5)
   recipient_interceptor (~> 0.3.1)
   redcarpet (~> 3.6.0)
@@ -908,7 +902,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.21.2)
   rubocop-rspec (~> 2.24.1)
   ruby-saml (~> 1.16)
-  ruby_llm (= 1.9.1)
+  ruby_llm (= 1.13.2)
   rvm1-capistrano3 (~> 1.4.0)
   sassc-rails (~> 2.1.2)
   savon (~> 2.14.0)

@@ -64,7 +64,7 @@ de:
           geozone:
             no_restriction: Keine Einschränkung
             only_citizens: Nur Bürger
-            only_geozones: Nur bestimmte Bezirke
+            only_geozones: Nur bestimmte Gebiete
             only_streets: Nur bestimmte Straßen
             search_street: Straße suchen...
           extended_geozone:
@@ -84,9 +84,25 @@ de:
             id: ID
             admin_accepted: Freigegeben
             title: Titel
+            moderation: Moderation
             author: Autor
             actions: Aktionen
             view: Anzeigen
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Meldung ignorieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
+        comments:
+          title: Kommentare
+          no_comments: Keine Kommentare vorhanden.
+          table:
+            body: Kommentar
+            author: Autor
+            moderation: Moderation
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Meldung ignorieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Kommentar herausmoderiert."
         projekt_labels:
           title: Labels
           create_button: Neues Label erstellen
@@ -334,7 +350,13 @@ de:
             admin: Administrator
             author: Autor
             valuator: Gutachter
+            moderation: Moderation
             pdf_link: PDF
+            view: Anzeigen
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Als gelesen markieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
             actions: Aktionen
         age_ranges_for_stats:
           title: Altersgruppen für Statistiken
@@ -373,3 +395,4 @@ de:
           progress_bars: Fortschrittsbalken
           settings: Einstellungen
           user_resource_criteria: Bewertungskriterien
+          comments: Kommentare

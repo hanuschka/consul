@@ -5,7 +5,7 @@ module Adm
 
       @default_map_location = MapLocation.default
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t(".title") }
       ]
     end

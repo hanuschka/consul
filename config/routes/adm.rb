@@ -60,6 +60,10 @@ namespace :adm do
   end
   # profiles
 
+  # notifications
+  resources :modal_notifications, except: :show
+  # notifications
+
   resource :statistics, controller: "statistics", only: [:show]
   resource :apps, controller: "apps", only: [:show]
 

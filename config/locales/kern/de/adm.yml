@@ -32,6 +32,8 @@ de:
           valuators: Budgetgutachter
           users: Benutzer
         notifications: Notification
+        notifications_subitems:
+          modal_notifications: Popup Benachrichtigungen
         stats: Statistiken
         apps: Apps
     deficiency_reports:

@@ -2,7 +2,7 @@
 # Fixes sanitization issues in AdminWYSIWYGSanitizer and allows to use extra css attributes and functions
 
 # Allow positioning-related inline CSS in sanitized content.
-extra_properties = %w[position top bottom left right box-shadow border-radius z-index]
+extra_properties = %w[position top bottom left right box-shadow border-radius z-index gap row-gap column-gap]
 
 if defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES)
   Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES.merge(extra_properties)

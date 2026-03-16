@@ -43,6 +43,7 @@ User.class_eval do
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :landing_page_manager
   has_one :deficiency_report_manager
   has_many :ideas, inverse_of: :author, foreign_key: :author_id
   has_one :idea_officer, class_name: "Idea::Officer"
@@ -228,6 +229,14 @@ User.class_eval do
     return false unless projekt_manager?
 
     projekt_manager.allowed_to?(permission, projekt)
+  end
+
+  def landing_page_manager?(page = nil)
+    if page.present?
+      landing_page_manager.present? && landing_page_manager.allowed_to?(page)
+    else
+      landing_page_manager.present?
+    end
   end
 
   def officing_manager?

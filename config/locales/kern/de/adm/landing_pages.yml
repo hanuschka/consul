@@ -1,0 +1,37 @@
+de:
+  adm:
+    landing_pages:
+      title: Themenseiten
+      menu:
+        aria_label: Themenseiten Navigation
+        items:
+          landing_pages: Themenseiten
+          managers: Manager*innen
+      landing_pages:
+        index:
+          title: Themenseiten
+          hint_title: Hinweis zu den Themenseiten
+          hint_text: >
+            Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile einer Gemeinde erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Die Gestaltungsmöglichkeiten ähneln denen der allgemeinen Startseite und schaffen Raum für visuelle und sprachliche Differenzierung.
+          table:
+            header:
+              name: Themenseiten
+              url: URL
+              status: Status
+            no_landing_pages: Es wurden noch keine Themenseiten erstellt.
+        edit:
+          title: Themenseite bearbeiten
+          managers_title: Themenseiten Manager*innen
+          managers_description: Wählen Sie aus, welche Manager*innen diese Themenseite verwalten dürfen.
+        update:
+          success: Der Wert wurde erfolgreich aktualisiert.
+      managers:
+        index:
+          title: Themenseiten Manager*innen
+          new_link: Erstellen
+          manage_all_landing_pages: Alle verwalten
+          no_landing_page_managers: Es sind keine Themenseiten Manager*innen vorhanden.
+        new:
+          title: Themenseiten Manager*in hinzufügen
+          search_label: Nutzer*in suchen
+          search_description: Suchen Sie nach Nutzer*innen, um sie als Themenseiten Manager*in hinzuzufügen.

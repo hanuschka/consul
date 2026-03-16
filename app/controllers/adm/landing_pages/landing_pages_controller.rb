@@ -1,48 +1,54 @@
 module Adm
-  module Projekts
-    class LandingPagesController < Adm::Projekts::BaseController
-      include Translatable
+  module LandingPages
+    class LandingPagesController < Adm::LandingPages::BaseController
 
       def index
-        authorize [:adm, :projekts, :landing_page]
+        authorize [:adm, :landing_pages, :landing_page]
         @breadcrumbs = [
-          { name: t("adm.projekts.menu.items.landing_pages") }
+          { name: t("adm.landing_pages.menu.items.landing_pages") }
         ]
 
         @landing_pages = policy_scope(
           ::SiteCustomization::Page,
-          policy_scope_class: Adm::Projekts::LandingPagePolicy::Scope
+          policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope
         ).order(:landing_nav_position)
       end
 
       def edit
         @landing_page = ::SiteCustomization::Page.find(params[:id])
-        authorize [:adm, :projekts, @landing_page], policy_class: Adm::Projekts::LandingPagePolicy
+        authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
 
         @breadcrumbs = [
-          { name: t("adm.projekts.menu.items.landing_pages"), url: adm_projekts_landing_pages_path },
-          { name: t(".title") }
+          { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path },
+          { name: @landing_page.title }
         ]
       end
 
       def update
         @landing_page = ::SiteCustomization::Page.find(params[:id])
-        authorize [:adm, :projekts, @landing_page], policy_class: Adm::Projekts::LandingPagePolicy
+        authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
 
-        if @landing_page.update(landing_page_params)
-          flash.now[:success] = t(".success")
+        @landing_page.update(landing_page_params)
+        flash.now[:success] = t(".success")
+
+        if params[:respond_with].present?
+          render turbo_stream: turbo_stream.replace(
+            params[:respond_with],
+            partial: params[:respond_with],
+            locals: { landing_page: @landing_page }
+          )
         end
       end
 
       def toggle_active
         @landing_page = ::SiteCustomization::Page.find(params[:id])
-        authorize [:adm, :projekts, @landing_page], :update?, policy_class: Adm::Projekts::LandingPagePolicy
+        authorize [:adm, :landing_pages, @landing_page], :update?, policy_class: Adm::LandingPages::LandingPagePolicy
 
         @landing_page.update!(status: landing_page_params[:status])
       end
 
       def reorder
-        authorize [:adm, :projekts, :landing_page], :index?
+        authorize [:adm, :landing_pages, :landing_page], :index?
 
         ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])
         head :ok
@@ -57,7 +63,7 @@ module Adm
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
             :landing_desktop_header_image, :landing_mobile_header_image,
-            translation_params(::SiteCustomization::Page)
+            landing_page_manager_ids: []
           )
         end
     end

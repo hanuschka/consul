@@ -11,7 +11,7 @@ extra_properties = %w[
   object-fit object-position
   pointer-events
   scroll-snap-type scroll-snap-align
-  transition
+  transition transform
   backdrop-filter -webkit-backdrop-filter
   scrollbar-width -webkit-overflow-scrolling -ms-overflow-style
 ]

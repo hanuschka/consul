@@ -44,8 +44,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     end
     def notifications_subitems
       [
-        { label: t("adm.menu.items.notifications_subitems.modal_notifications"), path: adm_modal_notifications_path },
-        { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" }
+        { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" },
+        { label: t("adm.menu.items.notifications_subitems.modal_notifications"), path: adm_modal_notifications_path }
       ]
     end
   # rubocop:enable Layout/LineLength

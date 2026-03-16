@@ -1,3 +1,13 @@
+html.is-shared-modal-open.shared-modal-has-scroll {
+  overflow-y: scroll;
+}
+
+html.is-shared-modal-open {
+  position: fixed;
+  width: 100%;
+  overflow-y: hidden;
+}
+
 .shared-modal {
   border: none;
   border-radius: 8px;

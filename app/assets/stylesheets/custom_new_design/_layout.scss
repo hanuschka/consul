@@ -75,7 +75,7 @@
     }
 
     .notification:hover::before {
-      color: $brand;
+      color: var(--brand-color);
     }
   }
 }

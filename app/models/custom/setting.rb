@@ -165,6 +165,7 @@ class Setting < ApplicationRecord
         # Emails under the domain's subdomains will also be included
         "email_domain_for_officials": "",
         # CONSUL installation's organization name
+        "brand_color": "",
         "newsletter_brand_color": "#004a83",
         "proposal_notification_minimum_interval_in_days": 3,
         "direct_message_max_per_day": 3,

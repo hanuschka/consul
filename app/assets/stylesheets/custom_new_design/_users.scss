@@ -17,7 +17,7 @@
 
 .user-list-item--background-image {
   height: 85px;
-  background-color: $brand;
+  background-color: var(--brand-color);
   width: 100%;
   overflow: hidden;
 }

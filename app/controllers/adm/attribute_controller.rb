@@ -7,7 +7,7 @@ module Adm
       authorize @record, :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
-      if @kind == :image && params[:remove_image] == "1"
+      if @kind == :image && params[:remove_image] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
       elsif @record.update(permitted_params)

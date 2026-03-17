@@ -13,6 +13,9 @@
     <%= raw setting["html.per_page_code_head"] %>
   </head>
   <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
+    <% if Setting["brand_color"].present? && Setting["brand_color"].match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
+      <style>:root { --brand-color: <%= Setting["brand_color"] %>; }</style>
+    <% end %>
     <%= yield :styles %>
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>

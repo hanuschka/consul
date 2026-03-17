@@ -1,0 +1,23 @@
+de:
+  adm:
+    modal_notifications:
+      index:
+        title: Popup Benachrichtigungen
+        new_modal_notification: Erstellen
+        table:
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Popup Benachrichtigung löschen möchten?
+      new:
+        title: Popup erstellen
+      edit:
+        title: Popup Benachrichtigung bearbeiten
+      create:
+        success: Popup Benachrichtigung wurde erfolgreich erstellt
+      update:
+        success: Popup Benachrichtigung wurde erfolgreich aktualisiert
+      destroy:
+        success: Popup Benachrichtigung wurde erfolgreich gelöscht
+      form:
+        submit: Speichern

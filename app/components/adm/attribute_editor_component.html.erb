@@ -12,14 +12,22 @@
     </div>
 
     <div class="kern-row">
-      <div class="kern-col-12 kern-col-md-5">
-        <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
-      </div>
-      <div class="kern-col-12 kern-col-md-5">
-        <div class="attribute-form <%= @kind %>">
-          <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+      <% if wide? %>
+        <div class="kern-col-12 kern-col-md-10">
+          <div class="attribute-form <%= @kind %>">
+            <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+          </div>
         </div>
-      </div>
+      <% else %>
+        <div class="kern-col-12 kern-col-md-5">
+          <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
+        </div>
+        <div class="kern-col-12 kern-col-md-5">
+          <div class="attribute-form <%= @kind %>">
+            <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 

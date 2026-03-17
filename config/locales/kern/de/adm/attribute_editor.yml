@@ -39,11 +39,38 @@ de:
         total_duration_start_description: Startdatum
         total_duration_end_label: Enddatum
         total_duration_end_description: Enddatum
+      image:
+        attachment_label: Bild
+        attachment_description: Bild für den Newsletter.
+      newsletter:
+        recipient_group_id_label: Empfängergruppe
+        recipient_group_id_description: An welche Empfängergruppe soll dieser Newsletter gesendet werden?
+        from_label: Absender
+        from_description: E-Mail-Adresse des Absenders.
+        subject_label: Betreff
+        subject_description: Betreffzeile der Newsletter-E-Mail.
+        title_label: Titel
+        title_description: Wird als Überschrift im Newsletter angezeigt.
+        title_color_label: Titelfarbe
+        title_color_description: Farbe der Titelüberschrift.
+        subtitle_label: Untertitel
+        subtitle_description: Wird unterhalb des Titels im Newsletter angezeigt.
+        subtitle_color_label: Untertitelfarbe
+        subtitle_color_description: Farbe des Untertitels.
+        greeting_label: Begrüßung
+        greeting_description: Begrüßungstext am Anfang des Newsletters.
+        body_label: Inhalt
+        body_description: Hauptinhalt des Newsletters.
+      site_customization/content_block:
+        body_label: Footer
+        body_description: "Inhalt des Newsletter-Footers. Wird am Ende jeder Newsletter-E-Mail angezeigt."
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
         header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zur Beteiligungsplattform passen. Empfohlenes Format: 1920 × 760 Pixel."
         mobile_header_image_label: Hintergrundbild für Mobile
         mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Bitte verwenden Sie ein Bild mit zentriertem Hauptmotiv, da es auf kleinen Bildschirmen beschnitten werden kann. Es sollte thematisch zur Plattform passen und klar auch in kleinen Formaten wirken. Empfohlenes Format: 768 × 400 Pixel."
+        logo_newsletter_email_label: Newsletter Email Logo
+        logo_newsletter_email_description: "Das Logo wird im Kopfbereich der Newsletter-Emails angezeigt. Empfohlenes Format: 130 × 45 Pixel."
       site_customization/page:
         projekt:
           title_label: Titel der Startseite

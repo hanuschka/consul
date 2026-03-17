@@ -53,7 +53,7 @@ class Adm::BaseMenuComponent < ApplicationComponent
     end
 
     def subitem_active?(subitems)
-      subitems.any? { |subitem| current_page?(subitem[:path]) }
+      subitems.any? { |subitem| item_active?(subitem) }
     end
 
     def material_icon(name)

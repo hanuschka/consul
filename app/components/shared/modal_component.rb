@@ -1,10 +1,11 @@
 class Shared::ModalComponent < ApplicationComponent
-  attr_reader :id, :closeable, :blur_backdrop
+  attr_reader :id, :closeable, :blur_backdrop, :close_on_backdrop
 
-  def initialize(id:, closeable: true, blur_backdrop: true)
+  def initialize(id:, closeable: true, blur_backdrop: true, close_on_backdrop: true)
     @id = id
     @closeable = closeable
     @blur_backdrop = blur_backdrop
+    @close_on_backdrop = close_on_backdrop
   end
 
   def css_classes

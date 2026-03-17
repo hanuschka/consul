@@ -6,7 +6,8 @@ module Adm
       "deficiency_report_manager" => DeficiencyReportManager,
       "idea_manager" => IdeaManager,
       "moderator" => Moderator,
-      "valuator" => Valuator
+      "valuator" => Valuator,
+      "landing_page_manager" => LandingPageManager
     }.freeze
 
     def create
@@ -37,6 +38,8 @@ module Adm
         case role_class.name
         when "ProjektManager"
           Adm::Projekts::ProjektManagerPolicy
+        when "LandingPageManager"
+          Adm::LandingPages::LandingPageManagerPolicy
         else
           "Adm::#{role_class.name}Policy".constantize
         end

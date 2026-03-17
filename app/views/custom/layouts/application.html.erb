@@ -41,6 +41,10 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
+    <% if (current_user&.administrator? || current_user&.projekt_manager?) && !embedded? %>
+      <%= render "layouts/admin_topbar" %>
+    <% end %>
+
     <% if Setting.new_design_enabled? && !embedded? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
@@ -62,6 +66,11 @@
           App.routeNamespace = "<%= @namespace %>"
         })
       </script>
+    <% end %>
+
+    <% if current_user&.administrator? || current_user&.projekt_manager? %>
+      <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+      <%= render Projekts::ContentBlockEditPopupsComponent.new %>
     <% end %>
   </body>
 </html>

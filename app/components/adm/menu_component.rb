@@ -5,7 +5,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
-      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", divider: true },
+      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems, divider: true },
       { label: t("adm.menu.items.stats"),         icon: "bar_chart_4_bars", path: adm_statistics_path },
       { label: t("adm.menu.items.apps"),          icon: "dashboard",        path: adm_apps_path }
     ]
@@ -40,6 +40,12 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
         { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
+      ]
+    end
+    def notifications_subitems
+      [
+        { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" },
+        { label: t("adm.menu.items.notifications_subitems.modal_notifications"), path: adm_modal_notifications_path }
       ]
     end
   # rubocop:enable Layout/LineLength

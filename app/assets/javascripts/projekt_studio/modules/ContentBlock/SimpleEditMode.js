@@ -195,13 +195,14 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   handleMarginBottomInput(e) {
     const input = e.currentTarget;
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(input);
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
     const marginValue = parseInt(input.value) || 0;
 
     contentBlockWrapper.style.marginBottom = `${marginValue}px`;
 
+    const updateUrl = ProjektStudio.ContentBlock.Crud.getUpdateUrl(contentBlockWrapper);
+
     $.ajax({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      url: updateUrl,
       method: "PATCH",
       data: {
         margin_bottom: marginValue

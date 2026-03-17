@@ -1,0 +1,58 @@
+de:
+  adm:
+    newsletters:
+      index:
+        title: Newsletter
+        new_newsletter: Erstellen
+        tabs:
+          list: Newsletter
+          recipient_groups: Empfängergruppen
+          unregistered_subscribers: Nicht registrierte Abonnenten
+          settings: Einstellungen
+        table:
+          subject: Betreff
+          recipient_group: Empfängergruppe
+          sent: Gesendet
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Newsletter löschen möchten?
+          draft: Entwurf
+        empty: Es sind keine Newsletter vorhanden.
+      show:
+        title: Newsletter Vorschau
+        sent_at: Gesendet am
+        from: Von
+        subject: Betreff
+        recipient_group: Empfängergruppe
+        affected_users: "(%{n} Empfänger*innen)"
+        sent_emails: "Gesendete Emails: %{count}"
+        body: Inhalt
+        body_help_text: So wird der Newsletter als Email dargestellt.
+        send: Senden
+        send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger*innen senden möchten?"
+        send_test: Test-Email an mich senden
+        deliver_success: Newsletter wird versendet.
+        send_test_success: Test-Email wurde erfolgreich gesendet.
+        recipient_emails: "Empfänger*innen Emails"
+      new:
+        title: Newsletter erstellen
+      edit:
+        title: Newsletter bearbeiten
+      create:
+        success: Newsletter wurde erfolgreich erstellt.
+      update:
+        success: Newsletter wurde erfolgreich aktualisiert.
+      destroy:
+        success: Newsletter wurde erfolgreich gelöscht.
+      settings:
+        title: Newsletter Einstellungen
+        email_logo: Email Logo
+        logo_hint: Die Bildgröße sollte 130 x 45 betragen
+        brand_color: Markenfarbe
+        footer: Footer
+        update_success: Einstellung wurde erfolgreich aktualisiert.
+        update_error: Einstellung konnte nicht aktualisiert werden.
+      form:
+        submit: Speichern
+        template_block_copy: Weiteren Inhaltsblock als Quellcode in die Zwischenablage speichern

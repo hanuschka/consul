@@ -1,0 +1,19 @@
+de:
+  adm:
+    unregistered_newsletter_subscribers:
+      index:
+        title: Nicht registrierte Newsletter Abonnenten
+        table:
+          id: Id
+          email: Email
+          confirmed: Bestätigt
+          created_at: Angelegt am
+          actions: Aktionen
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Abonnenten löschen möchten?
+          confirmed_yes: Ja
+          confirmed_no: Nein
+        empty: Es sind keine nicht registrierten Newsletter Abonnenten vorhanden.
+        download_csv: CSV herunterladen
+      destroy:
+        success: Abonnent wurde erfolgreich gelöscht.

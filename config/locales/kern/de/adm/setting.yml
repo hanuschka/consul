@@ -13,6 +13,8 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet. Ein klar formulierter, suchmaschinenfreundlicher Titel verbessert die Sichtbarkeit Ihrer Anwendung bei Google & Co."
     meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
     meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unter dem Titel Ihrer Seite. Sie sollte kurz, präzise und ansprechend sein, um Nutzer zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Sichtbarkeit und Klickrate in den Suchergebnissen."
+    newsletter_brand_color: "Newsletter Markenfarbe"
+    newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-Emails verwendet."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
     meta_keywords_description: "Hier können Sie optionale Stichwörter eintragen, die den Inhalt der Seite thematisch beschreiben. Diese werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag heute kaum noch auswerten, kann er für interne Zwecke oder spezifische SEO-Strategien weiterhin nützlich sein. Begriffe durch Kommas trennen."
     facebook_handle: "Facebook-Benutzername"

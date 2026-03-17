@@ -13,6 +13,8 @@ class SiteCustomization::Page < ApplicationRecord
   has_many :comments, through: :projekt
 
   has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
+  has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
+  has_many :landing_page_managers, through: :landing_page_manager_assignments
 
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image

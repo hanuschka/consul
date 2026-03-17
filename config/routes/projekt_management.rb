@@ -207,7 +207,12 @@ namespace :projekt_management do
 
   namespace :site_customization do
     resources :pages, only: [:update]
-    resources :content_blocks, only: [:edit, :update]
+    resources :content_blocks, only: [:edit, :update] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
   end
 
   scope module: :poll do

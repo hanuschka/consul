@@ -22,7 +22,9 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   `
 }
 
-ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex} = {}) {
+ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, aiUrl} = {}) {
+  const isSiteContext = context === 'site';
+
   return `
     <div
       class="js-content-block js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper ${draftContentBlockIndex ? ' -draft' : ''}"
@@ -30,113 +32,28 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
       data-edit-mode=""
+      ${updateUrl ? `data-update-url="${updateUrl}"` : ''}
+      ${aiUrl ? `data-ai-url="${aiUrl}"` : ''}
+      data-context="${context || 'projekt'}"
       >
       <div class="relative">
         <div class="projekt-content-block--toolbar js-projekt-studio-hide-on-preview">
 
-            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
-              <div class="ai-button-wrapper">
-                <div class="ai-button-wrapper--inner">
-                  <button
-                    type="button"
-                    data-tooltip
-                    data-position="left"
-                    data-hover-delay="800"
-                    tabindex="0"
-                    title="AI-Generierung&#10;Ermöglicht KI-gestützte Erstellung, Bearbeitung und Verbesserung dieses Inhaltsblocks mit erweiterten Funktionen"
-                    class="projekt-frame-icon-button js-projekt-content-block--ai-edit"
-                  >
-                    <i class="dt-logo-small-icon">
-                    </i>
-                  </button>
-                </div>
-                <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
-              </div>
+            <div class="d-flex projekt-content-block-edit--buttons-wrapper">
               <button
                 type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Text-Editor&#10;Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung"
-                class="js-edit-text-projekt-content-block projekt-frame-icon-button"
+                class="projekt-content-block-edit--button -green js-save-content-block"
               >
-                <i class="fas fa-pencil-alt">
-                </i>
+                <i class="fas fa-save"></i>
+                Speichern
               </button>
-              <div class="projekt-frame-icon-button-wrapper">
-                <button
-                  type="button"
-                  data-tooltip
-                  data-hover-delay="800"
-                  tabindex="0"
-                  title="KI-Editor&#10;Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen um diesen Block zu modifizieren, umzugestalten oder zu verbessern"
-                  class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button"
-                >
-                  <i class="fas fa-magic">
-                  </i>
-                </button>
-              </div>
               <button
                 type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Code-Editor&#10;Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting"
-                class="js-content-block-enter-code-edit-mode projekt-frame-icon-button"
+                class="projekt-content-block-edit--button js-cancel-content-block"
               >
-                <i class="fas fa-code">
-                </i>
+                <i class="fas fa-xmark"></i>
+                Abbrechen
               </button>
-              <button
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen"
-                class="projekt-frame-icon-button js-html-edit-content-block"
-              >
-                <i class="fas fa-edit">
-                </i>
-              </button>
-              <div class="projekt-content-block-edit--separator"></div>
-              <button
-                type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Duplizieren&#10;Erstellt eine exakte Kopie dieses Inhaltsblocks mit allen Einstellungen direkt unterhalb des aktuellen Blocks"
-                class="js-copy-current-content-block projekt-frame-icon-button"
-              >
-                <i class="fas fa-copy">
-                </i>
-              </button>
-              <button
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Versionsverlauf&#10;Verwalten Sie Versionen dieses Blocks: Anzeigen vorheriger Versionen und Rückgängigmachen von Änderungen"
-                disabled
-                class="projekt-frame-icon-button js-content-block-version-managment"
-              >
-                <i class="fa fa-arrow-rotate-left fa-undo">
-                </i>
-              </button>
-              <div class="projekt-content-block-edit--separator"></div>
-              <button
-                class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
-                title="Inhaltsbock verschieben"
-              >
-                <i class="fas fa-up-down-left-right"></i>
-              </button>
-              <div class="projekt-content-block-edit--separator"></div>
-              <button
-                type="button"
-                tabindex="0"
-                class="js-delete-projekt-content-block -delete projekt-frame-icon-button"
-              >
-                <i class="fas fa-trash-alt">
-                </i>
-              </button>
-
             </div>
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
@@ -231,27 +148,142 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </button>
               </div>
             </div>
+            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">
+              <div class="ai-button-wrapper">
+                <div class="ai-button-wrapper--inner">
+                  <button
+                    type="button"
+                    data-tooltip
+                    data-position="left"
+                    data-hover-delay="800"
+                    tabindex="0"
+                    title="AI-Generierung&#10;Ermöglicht KI-gestützte Erstellung, Bearbeitung und Verbesserung dieses Inhaltsblocks mit erweiterten Funktionen"
+                    class="projekt-frame-icon-button js-projekt-content-block--ai-edit"
+                  >
+                    <i class="dt-logo-small-icon">
+                    </i>
+                  </button>
+                </div>
+                <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
+              </div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Text-Editor&#10;Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung"
+                class="js-edit-text-projekt-content-block projekt-frame-icon-button"
+              >
+                <i class="fas fa-pencil-alt">
+                </i>
+              </button>
+              <div class="projekt-frame-icon-button-wrapper">
+                <button
+                  type="button"
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="KI-Editor&#10;Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen um diesen Block zu modifizieren, umzugestalten oder zu verbessern"
+                  class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button"
+                >
+                  <i class="fas fa-magic">
+                  </i>
+                </button>
+              </div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Code-Editor&#10;Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting"
+                class="js-content-block-enter-code-edit-mode projekt-frame-icon-button"
+              >
+                <i class="fas fa-code">
+                </i>
+              </button>
+              <!-- <button -->
+              <!--   data-tooltip -->
+              <!--   data-hover-delay="800" -->
+              <!--   tabindex="0" -->
+              <!--   title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen" -->
+              <!--   class="projekt-frame-icon-button js-html-edit-content-block" -->
+              <!-- > -->
+              <!--   <i class="fas fa-edit"> -->
+              <!--   </i> -->
+              <!-- </button> -->
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Duplizieren&#10;Erstellt eine exakte Kopie dieses Inhaltsblocks mit allen Einstellungen direkt unterhalb des aktuellen Blocks"
+                class="js-copy-current-content-block projekt-frame-icon-button"
+              >
+                <i class="fas fa-copy">
+                </i>
+              </button>
+              <button
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Versionsverlauf&#10;Verwalten Sie Versionen dieses Blocks: Anzeigen vorheriger Versionen und Rückgängigmachen von Änderungen"
+                disabled
+                class="projekt-frame-icon-button js-content-block-version-managment"
+              >
+                <i class="fa fa-arrow-rotate-left fa-undo">
+                </i>
+              </button>
+              ${isSiteContext ? `
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
+                class="projekt-frame-icon-button js-open-template-selector-for-replace"
+              >
+                <i class="fas fa-exchange-alt">
+                </i>
+              </button>
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Entfernt den gesamten Inhalt dieses Blocks"
+                class="projekt-frame-icon-button -delete js-clear-site-content-block"
+              >
+                <i class="fas fa-eraser">
+                </i>
+              </button>
+              ` : `
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                class="projekt-frame-icon-button projekt-content-block--move-button js-dnd-handle"
+                title="Inhaltsbock verschieben"
+              >
+                <i class="fas fa-up-down-left-right"></i>
+              </button>
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                tabindex="0"
+                class="js-delete-projekt-content-block -delete projekt-frame-icon-button"
+              >
+                <i class="fas fa-trash-alt">
+                </i>
+              </button>
+              `}
+
+            </div>
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
             </div>
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
-            </div>
-            <div class="d-flex projekt-content-block-edit--buttons-wrapper">
-              <button
-                type="button"
-                class="projekt-content-block-edit--button -green js-save-content-block"
-              >
-                <i class="fas fa-save"></i>
-                Speichern
-              </button>
-              <button
-                type="button"
-                class="projekt-content-block-edit--button js-cancel-content-block"
-              >
-                <i class="fas fa-xmark"></i>
-                Abbrechen
-              </button>
             </div>
         </div>
 
@@ -265,7 +297,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         </div>
       </div>
 
-      ${showContentBlockTemplatesButton(!!draftContentBlockIndex)}
+      ${isSiteContext ? '' : showContentBlockTemplatesButton(!!draftContentBlockIndex)}
     </div>
   `.trim()
 }

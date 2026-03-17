@@ -1,8 +1,29 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
-<% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
-  <%= render Projekts::ContentBlockEditPopupsComponent.new %>
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <% content_for :admin_topbar_actions do %>
+    <% if @custom_page.landing? %>
+      <% if current_user&.administrator? %>
+        <%= link_to edit_adm_projekts_landing_page_path(@custom_page),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_landing") %></span>
+        <% end %>
+      <% end %>
+    <% elsif @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
+      <%= render "pages/topbar/admin_topbar_projekt_actions" %>
+    <% else %>
+      <% if current_user&.administrator? %>
+        <%= link_to edit_admin_site_customization_page_path(@custom_page),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_page") %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <% if @custom_page.landing? %>
@@ -64,10 +85,6 @@
           <% end %>
         </div>
       </div>
-    <% end %>
-
-    <% if show_admin_controls_for_projekt?(@projekt) %>
-      <%= render "pages/topbar/admin_topbar" %>
     <% end %>
 
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>

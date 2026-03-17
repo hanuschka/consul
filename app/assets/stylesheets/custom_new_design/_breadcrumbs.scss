@@ -4,6 +4,6 @@
   }
 
   .custom-breadcrumbs div.breadcrumbs-item {
-    color: $brand;
+    color: var(--brand-color);
   }
 }

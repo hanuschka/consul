@@ -12,6 +12,15 @@
       $document.on("click", ".js-shared-modal-close", (event) => {
         this.close(event.currentTarget);
       });
+
+      $document.on("click", "dialog.shared-modal", (event) => {
+        const dialog = event.currentTarget;
+        if (event.target !== dialog) return
+        if (dialog.hasAttribute("data-no-backdrop-close")) return
+
+        dialog.close();
+        document.body.style.overflow = "";
+      });
     },
 
     open: function(modalId) {

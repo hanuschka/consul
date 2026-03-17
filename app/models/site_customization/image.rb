@@ -5,6 +5,7 @@ class SiteCustomization::Image < ApplicationRecord
     "mobile_header_image" => [470, 246],
     ##################################
     "logo_header" => [80, 80],
+    "logo_header_for_transparent" => [80, 80],
     "social_media_icon" => [470, 246],
     "social_media_icon_twitter" => [246, 246],
     "apple-touch-icon-200" => [200, 200],
@@ -65,12 +66,11 @@ class SiteCustomization::Image < ApplicationRecord
       width = image.metadata[:width]
       height = image.metadata[:height]
 
-      if name == "logo_header"
+      if name.in?(%w[logo_header logo_header_for_transparent])
         errors.add(:image, :image_width, required_width: required_width) unless width <= required_width
       else
         errors.add(:image, :image_width, required_width: required_width) unless width == required_width
+        errors.add(:image, :image_height, required_height: required_height) unless height == required_height
       end
-
-      errors.add(:image, :image_height, required_height: required_height) unless height == required_height
     end
 end

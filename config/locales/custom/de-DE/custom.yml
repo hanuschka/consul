@@ -12,6 +12,13 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code-Editor"
+        title_sidebar: "Code-Editor für Sidebar-Bereich"
+        title_footer: "Code-Editor für Footer-Bereich"
+        save: "Speichern"
+        cancel: "Abbrechen"
     projekt_content_blocks:
       create:
         success: Inhaltsblock erstellt

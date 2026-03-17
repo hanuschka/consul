@@ -49,7 +49,7 @@
     padding-top: 0;
 
     i {
-      color: $brand;
+      color: var(--brand-color);
       margin-right: 8px;
     }
   }
@@ -60,7 +60,7 @@
 
   .sdg-tag-icon:before {
     top: 0;
-    color: $brand;
+    color: var(--brand-color);
     margin-right: 8px;
   }
 
@@ -84,7 +84,7 @@
 
   .projekt-tag-chip-icon:before {
     margin-right: 8px;
-    color: $brand;
+    color: var(--brand-color);
   }
 
   .geozone-affiliation-filter {

@@ -13,6 +13,8 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet. Ein klar formulierter, suchmaschinenfreundlicher Titel verbessert die Sichtbarkeit Ihrer Anwendung bei Google & Co."
     meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
     meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unter dem Titel Ihrer Seite. Sie sollte kurz, präzise und ansprechend sein, um Nutzer zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Sichtbarkeit und Klickrate in den Suchergebnissen."
+    brand_color: "Markenfarbe"
+    brand_color_description: "Die Markenfarbe wird als Akzentfarbe auf der gesamten Plattform verwendet (z. B. Buttons, Links, Hervorhebungen). Auf Landingpages kann diese Farbe individuell überschrieben werden. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe aus dem Stylesheet verwendet."
     newsletter_brand_color: "Newsletter Markenfarbe"
     newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-Emails verwendet."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
@@ -80,6 +82,10 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucherinnen und Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
         subtitle_description: "Der Untertitel erscheint direkt unterhalb des Haupttitels im Hintergrundbild auf der Startseite. Er ermöglicht eine kurze ergänzende Information oder Beschreibung des Beteiligungsangebots. Formulieren Sie ihn als prägnanten Satz, der den Kontext der Plattform auf den Punkt bringt. Wenn das Feld leer bleibt, wird kein Untertitel angezeigt."
+        homepage_button_text: Homepage-Button-Text
+        homepage_button_text_description: "Text, der auf dem Button im Headerbereich der Startseite angezeigt wird. Wenn das Feld leer bleibt, wird kein Button angezeigt."
+        homepage_button_link: Homepage-Button-Link
+        homepage_button_link_description: "Ziel-URL, die beim Klick auf den Homepage-Button aufgerufen wird (z. B. /projekts oder eine externe URL)."
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."

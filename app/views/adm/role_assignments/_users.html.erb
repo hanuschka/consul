@@ -13,7 +13,27 @@
       </tbody>
     </table>
   </div>
-
 <% else %>
   <p><%= t('.no_results') %></p>
+<% end %>
+
+<% if local_assigns[:pending_role_email].present? %>
+  <div class="kern-alert kern-alert--warning mt-3" role="alert">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+      <% if pending_already_exists %>
+        <span class="kern-title"><%= t("adm.pending_role_assignments.already_pending", email: pending_role_email) %></span>
+      <% else %>
+        <span class="kern-title"><%= t("adm.pending_role_assignments.offer_preassign", email: pending_role_email) %></span>
+      <% end %>
+    </div>
+    <% unless pending_already_exists %>
+      <div class="kern-alert__body mt-3">
+        <%= button_to create_pending_adm_role_assignment_path(email: pending_role_email, role: role),
+              class: "kern-btn kern-btn--primary", method: :post do %>
+          <span class="kern-label"><%= t("adm.pending_role_assignments.preassign_button") %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 <% end %>

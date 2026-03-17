@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_16_145126) do
+ActiveRecord::Schema.define(version: 2026_03_17_134931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1700,6 +1700,18 @@ ActiveRecord::Schema.define(version: 2026_03_16_145126) do
     t.index ["user_id"], name: "index_organizations_on_user_id"
   end
 
+  create_table "pending_role_assignments", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "role_type", null: false
+    t.jsonb "metadata", default: {}
+    t.bigint "created_by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email", "role_type"], name: "index_pending_role_assignments_on_email_and_role_type", unique: true
+    t.index ["email"], name: "index_pending_role_assignments_on_email"
+    t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
+  end
+
   create_table "poll_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "author_id"
@@ -3222,6 +3234,7 @@ ActiveRecord::Schema.define(version: 2026_03_16_145126) do
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"
   add_foreign_key "organizations", "users"
+  add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
   add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"

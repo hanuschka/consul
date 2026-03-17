@@ -32,6 +32,7 @@ User.class_eval do
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :fulfill_pending_role_assignments
 
   has_secure_token :frame_sign_in_token
 
@@ -440,6 +441,14 @@ User.class_eval do
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def fulfill_pending_role_assignments
+      return unless email.present?
+
+      PendingRoleAssignment.for_email(email).find_each do |pending|
+        pending.fulfill!(self)
       end
     end
 end

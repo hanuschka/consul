@@ -33,6 +33,8 @@ namespace :adm do
   resource :role_assignment, only: [] do
     post :create
     delete :destroy
+    post :create_pending
+    delete :destroy_pending
   end
 
   resources :administrators, only: [:index, :new, :destroy] do

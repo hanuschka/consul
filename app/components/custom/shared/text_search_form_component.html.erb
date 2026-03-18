@@ -4,13 +4,14 @@
   <% end %>
 
   <label for="search_text">
+    <span class="show-for-sr"><%= t("custom.accessibility.search.search_input.aria-label") %></span>
     <input
+      id="search_text"
       type="text"
       name="search"
       autocomplete="off"
       placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
       class="input-group-field js-text-search-form-search-input"
-      aria-label="<%= t("custom.accessibility.search.search_input.aria-label") %>"
       value="<%= params[:search] %>"
     >
   </label>

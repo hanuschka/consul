@@ -54,31 +54,47 @@
       });
     },
 
+    getToggleButton: function() {
+      return document.querySelector('.js-toggle-mobile-menu');
+    },
+
     handleTabKey: function(event) {
       if (!App.ResponsiveMenu.isMobileMenuOpen()) return;
 
       var focusable = App.ResponsiveMenu.getFocusableElements();
       if (focusable.length === 0) return;
 
+      var toggleButton = App.ResponsiveMenu.getToggleButton();
       var firstFocusable = focusable[0];
       var lastFocusable = focusable[focusable.length - 1];
 
-      if (event.shiftKey && document.activeElement === firstFocusable) {
+      if (document.activeElement === toggleButton) {
         event.preventDefault();
-        lastFocusable.focus();
+        if (event.shiftKey) {
+          lastFocusable.focus();
+        } else {
+          firstFocusable.focus();
+        }
+      } else if (event.shiftKey && document.activeElement === firstFocusable) {
+        event.preventDefault();
+        toggleButton.focus();
       } else if (!event.shiftKey && document.activeElement === lastFocusable) {
         event.preventDefault();
-        firstFocusable.focus();
+        toggleButton.focus();
       }
     },
 
-    trapFocus: function(event) {
+    trapFocus: function() {
       if (!App.ResponsiveMenu.isMobileMenuOpen()) return;
 
       var menu = document.getElementById('responsive-menu');
       if (!menu) return;
 
-      if (!menu.contains(document.activeElement) && !document.querySelector('.js-toggle-mobile-menu').contains(document.activeElement)) {
+      var toggleButton = App.ResponsiveMenu.getToggleButton();
+      var isInMenu = menu.contains(document.activeElement);
+      var isOnToggle = toggleButton && toggleButton.contains(document.activeElement);
+
+      if (!isInMenu && !isOnToggle) {
         var focusable = App.ResponsiveMenu.getFocusableElements();
         if (focusable.length > 0) {
           focusable[0].focus();
@@ -178,12 +194,19 @@
         }
       });
 
-      $("body").on("keyup", ".js-toggle-mobile-menu", function() {
+      $("body").on("keyup", ".js-toggle-mobile-menu", function(event) {
         if ( event.which == 32 || event.which == 13 ) {
           event.preventDefault();
           $('#responsive-menu').toggle();
           var menuVisible = $('#responsive-menu').is(':visible');
           $(this).attr('aria-expanded', menuVisible);
+
+          if (menuVisible) {
+            var focusable = App.ResponsiveMenu.getFocusableElements();
+            if (focusable.length > 0) {
+              focusable[0].focus();
+            }
+          }
         }
       });
 

@@ -17,7 +17,7 @@
       <% end %>
       <p><%= AdminWYSIWYGSanitizer.new.sanitize(@question.description) %></p>
       <table>
-        <thead class="sr-only">
+        <thead class="show-for-sr">
           <tr>
             <th scope="col"><%= t("custom.polls.results.table.votes") %></th>
             <th scope="col"><%= t("custom.polls.results.table.answer") %></th>

@@ -7,6 +7,8 @@ html{
 body.custom-new-design {
   font-family: $new-body-font-family;
   color: $main-text-color;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   h1, h2, h3, h4, h5 {
     font-family: $new-header-font-family;
@@ -241,4 +243,13 @@ a.resources--info-count {
 
 .custom-page-content a:not(.accordion-title) {
   text-decoration: underline;
+}
+
+body.custom-new-design {
+  p a,
+  .callout a,
+  .notification-body a,
+  .comment-body a {
+    text-decoration: underline;
+  }
 }

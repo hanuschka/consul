@@ -7,6 +7,9 @@ de:
       deficiency_report_manager:
         one: Mängelmelder Admin
         other: Mängelmelder Admins
+      deficiency_report/feedback_form:
+        one: Feedbackformular
+        other: Feedbackformulare
       deficiency_report/officer_group:
         one: Sachbearbeitergruppe
         other: Sachbearbeitergruppen
@@ -125,6 +128,10 @@ de:
               blank: Bitte wählen Sie mindestens ein Label
             sentiment_id:
               blank: Bitte wählen Sie ein Sentiment
+        deficiency_report/feedback_form:
+          attributes:
+            overall_satisfaction:
+              blank: Bitte wählen Sie eine Option aus.
     attributes:
       map_location:
         latitude: Breitengrad
@@ -168,6 +175,13 @@ de:
         official_answer_approved: Antwort freigeben
         approximated_address: Addresse
         responsible: Sachbearbeiter*in
+      deficiency_report/feedback_form:
+        overall_satisfaction: Gesamtzufriedenheit
+        response_time_satisfaction: Reaktionszeit
+        communication_satisfaction: Kommunikation
+        resolved: Anliegen gelöst
+        what_liked_note: Was hat Ihnen gefallen
+        what_improve_note: Was können wir verbessern
       deficiency_report/category:
         default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
       deficiency_report/officer_group:

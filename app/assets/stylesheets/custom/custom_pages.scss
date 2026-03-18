@@ -116,7 +116,7 @@ span.sidebar-projekt-phases-title {
     display: none;
   }
 
-  span.toggle-arrow:after {
+  .toggle-arrow:after {
     transform: rotate(180deg);
     transition: 0.25s;
   }
@@ -361,7 +361,17 @@ li.projekt-navigator[aria-expanded="false"] {
 }
 
 .page-subnav-tab.is-active {
-  background: #e7f2fc;
+  background: var(--brand-color, #004a83);
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+
+  a {
+    color: #fff;
+  }
+
+  h2 {
+    color: #fff;
+  }
 }
 
 .arrow-controls {

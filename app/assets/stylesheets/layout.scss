@@ -1400,10 +1400,11 @@ form {
 
     a {
       text-decoration: none;
+      color: var(--brand-color-dark);
     }
 
     p:not(.time) {
-      // color: $link;
+      color: $body-font-color;
     }
 
     &::before {
@@ -1632,7 +1633,7 @@ table {
 
 .ssb-whatsapp_app {
   @include has-fa-icon(whatsapp, brands);
-  background: #32ad40;
+  background: #2cab3a;
 
   &:before {
     font-size: 34px !important;
@@ -1641,7 +1642,8 @@ table {
   &:hover,
   &:focus {
     color: white !important;
-    background-color: #59bc65 !important;
+    // background-color: #59bc65 !important;
+    background: #32b741 !important;
   }
 }
 

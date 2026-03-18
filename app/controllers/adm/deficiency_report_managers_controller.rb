@@ -1,5 +1,7 @@
 module Adm
   class DeficiencyReportManagersController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, DeficiencyReportManager]
       @pagy, @deficiency_report_managers = pagy(
@@ -33,6 +35,7 @@ module Adm
       authorize [:adm, DeficiencyReportManager], :index?
       params[:role] = "deficiency_report_manager"
       @users = User.search(params[:search]).where.missing(:deficiency_report_manager).limit(4)
+      check_pending_for_search
     end
   end
 end

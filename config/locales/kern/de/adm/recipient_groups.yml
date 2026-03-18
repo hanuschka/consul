@@ -1,0 +1,42 @@
+de:
+  adm:
+    recipient_groups:
+      index:
+        title: Empfängergruppen
+        new_recipient_group: Erstellen
+        table:
+          name: Name
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Empfängergruppe löschen möchten?
+        empty: Es sind keine Empfängergruppen vorhanden.
+      new:
+        title: Empfängergruppe erstellen
+        label_for_general: Typ der Adressatengruppe
+        label_for_projekt: Projekt auswählen
+        label_for_projekt_phase: Phase auswählen
+        base_options_for_kind:
+          projekts: Projekte
+          user_roles: Nutzerrollen
+        select_options:
+          projekt_related: Projektbezogen
+        access_methods:
+          newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
+          all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
+          administrators_ids: Administrator*innen
+          any_phase_subscribers_ids: Abonnent*innen aller Phasen
+          authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
+          authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen
+          authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
+          authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
+          authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
+      edit:
+        title: Empfängergruppe bearbeiten
+        submit: Empfängergruppe speichern
+      create:
+        success: Empfängergruppe wurde erfolgreich erstellt.
+      update:
+        success: Empfängergruppe wurde erfolgreich aktualisiert.
+      destroy:
+        success: Empfängergruppe wurde erfolgreich gelöscht.

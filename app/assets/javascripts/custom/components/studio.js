@@ -86,6 +86,7 @@
 
           block.parentNode.replaceChild(wrappedElement, block);
 
+<<<<<<< HEAD
           if (wrappedElement.closest("aside, .sidebar, footer")) {
             wrappedElement.classList.add("-compact-mode");
           }
@@ -95,6 +96,10 @@
         });
 
         App.ImageGallery.initialize();
+=======
+          $(wrappedElement).find("[data-tooltip]").foundation();
+        });
+>>>>>>> new-connection
       }
     }
   };

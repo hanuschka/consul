@@ -35,7 +35,6 @@ ProjektStudio.ContentBlockTemplateSelector = {
 
   detectSection(wrapper) {
     if (!wrapper) return "projekt_page"
-
     if (wrapper.closest("aside, .sidebar, footer")) return "sidebar_and_footer"
 
     return "projekt_page"

@@ -15,7 +15,7 @@
 }
 
 .map .map-marker .map-icon {
-  background: $brand;
+  background: var(--brand-color);
 }
 
 // Map layers
@@ -62,11 +62,11 @@
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background-color: rgba($brand, 0.5);
+  background-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
   color: $white;
 
   div {
-    background-color: rgba($brand, 0.5);
+    background-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
   }
 }
 

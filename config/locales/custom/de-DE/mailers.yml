@@ -50,6 +50,22 @@ de:
       title: "Willkommen zu %{org}"
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
+    pending_role_invite:
+      subject: "Einladung an %{org_name}"
+      title: "Einladung zu %{org}"
+      text: "Sie wurden als %{role} bei %{org} vorgemerkt. Bitte registrieren Sie sich, um Ihre Rolle zu aktivieren."
+      button: "Jetzt registrieren"
+      ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
+      thanks: "Vielen Dank."
+      roles:
+        administrator: "Administrator"
+        moderator: "Moderator"
+        valuator: "Budgetgutachter"
+        deficiency_report_manager: "Mängelmelder-Admin"
+        idea_manager: "Ideenplattform-Admin"
+        projekt_manager: "Projektmanager"
+        officing_manager: "Officing-Manager"
+        landing_page_manager: "Landing-Page-Manager"
     budget_investment_created:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
       title: "Danke, dass Sie einen Vorschlag eingereicht haben!"

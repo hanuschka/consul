@@ -81,6 +81,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def pending_role_invite(pending_role_assignment)
+    @email_to = pending_role_assignment.email
+    @role_name = I18n.t("mailers.pending_role_invite.roles.#{pending_role_assignment.role_type.underscore}",
+                        default: pending_role_assignment.role_type.titleize)
+
+    I18n.with_locale(I18n.default_locale) do
+      mail(to: @email_to, subject: t("mailers.pending_role_invite.subject", org_name: Setting["org_name"]))
+    end
+  end
+
   def proposal_created(proposal)
     @proposal = proposal
     @author = @proposal.author

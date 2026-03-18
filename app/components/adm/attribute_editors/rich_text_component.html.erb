@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "rich_text" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :wide, @options[:wide] if @options[:wide] %>
 
   <div class="mb-3 <%= 'disabled' if disabled? %>">
     <%= form.text_area @attribute,

@@ -150,10 +150,10 @@ button,
 .button {
   @extend %button;
   @include inverted-selection;
-  background: $brand;
+  background: var(--brand-color);
 
   &:hover {
-   background: rgba($brand, 0.05);
+   background: var(--brand-color-hover);
   }
 
   &.warning,
@@ -998,7 +998,7 @@ footer {
 }
 
 .sidebar-title {
-  border-top: 2px solid $brand;
+  border-top: 2px solid var(--brand-color);
   display: inline-block;
   font-size: rem-calc(16);
   font-weight: bold;
@@ -1018,7 +1018,7 @@ footer {
 }
 
 .auth-image {
-  background: $brand image-url("auth_bg.jpg");
+  background: var(--brand-color) image-url("auth_bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   color: $white;
@@ -1407,13 +1407,13 @@ form {
     }
 
     &::before {
-      background-color: darken($brand, 10%);
+      background-color: var(--brand-color-dark);
     }
   }
 
   &::before {
     content: "";
-    background-color: $brand;
+    background-color: var(--brand-color);
     border: 2px solid $body-background;
     border-radius: 50%;
     height: rem-calc(20);
@@ -2635,7 +2635,7 @@ table {
 
     &.title {
       display: inline-block;
-      border-top: 4px solid $brand;
+      border-top: 4px solid var(--brand-color);
       margin-bottom: 0;
       padding: $line-height / 2 0;
     }

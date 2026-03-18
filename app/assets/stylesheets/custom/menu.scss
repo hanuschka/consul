@@ -253,7 +253,7 @@ span.icon-account {
   }
 
   #navigation_bar {
-    background-color: $top-level-menu-background-color;
+    background-color: var(--brand-color);
   }
 
   .subnavigation a.home-items-icon {

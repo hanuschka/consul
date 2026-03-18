@@ -50,6 +50,14 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::BudgetPolicy
       when "SiteCustomization::Page"
         Adm::SiteCustomization::PagePolicy
+      when "SiteCustomization::Image"
+        Adm::SiteCustomization::ImagePolicy
+      when "SiteCustomization::ContentBlock"
+        Adm::SiteCustomization::ContentBlockPolicy
+      when "Newsletter"
+        Adm::NewsletterPolicy
+      when "Image"
+        Adm::ImagePolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

@@ -15,8 +15,8 @@
   <h3 class="notification--title" id="<%= dom_id(notification) if notification %>_title">
     <%= title %>
   </h3>
-  <% if body %>
-    <p><%= body %></p>
+  <% if body.present? %>
+    <div class="notification--body"><%= sanitize(body.to_s.gsub(/<p>\s*<\/p>/, "")) %></div>
   <% end %>
 </div>
 <p class="time">

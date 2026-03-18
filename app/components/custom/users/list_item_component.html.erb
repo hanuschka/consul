@@ -21,9 +21,9 @@
       </div>
     <% end %>
 
-    <div class="user-list-item--registration-date margin-bottom-10">
+    <p class="user-list-item--registration-date margin-bottom-10">
       <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
-    </div>
+    </p>
     <div class="margin-bottom-10">
       <%= render Shared::OfficialPositionBadgeComponent.new(user: user) %>
     </div>

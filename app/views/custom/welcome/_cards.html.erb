@@ -1,7 +1,7 @@
 <h2 class="title card-title"><%= section_title %></h2>
 
-<div class="row">
+<ul class="row card-homepage-list">
   <% cards.each do |card| %>
     <%= render "card", card: card %>
   <% end %>
-</div>
+</ul>

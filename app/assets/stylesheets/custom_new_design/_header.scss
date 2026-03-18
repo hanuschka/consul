@@ -349,6 +349,11 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       margin: 0;
     }
 
+    .content-items-list,
+    .account-admin-items-list {
+      display: contents;
+    }
+
     .content-items {
       align-items: center;
       flex-grow: 1;

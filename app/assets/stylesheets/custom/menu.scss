@@ -292,6 +292,11 @@ span.icon-account {
     flex-wrap: wrap;
   }
 
+  .content-items-list,
+  .account-admin-items-list {
+    display: contents;
+  }
+
   .account-admin-items {
     display: flex;
     justify-content: space-between;

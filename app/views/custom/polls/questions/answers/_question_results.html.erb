@@ -20,6 +20,12 @@
   <p><%= AdminWYSIWYGSanitizer.new.sanitize(question.description) %></p>
 
   <table id="question_<%= question.id %>_results_table" class='results-table'>
+    <thead class="sr-only">
+      <tr>
+        <th scope="col"><%= t("custom.polls.results.table.votes") %></th>
+        <th scope="col"><%= t("custom.polls.results.table.answer") %></th>
+      </tr>
+    </thead>
     <tbody>
       <%- question.question_answers.each do |answer| %>
         <tr>

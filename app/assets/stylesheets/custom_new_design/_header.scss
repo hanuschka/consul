@@ -217,6 +217,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   &.home-page {
+    .top-bar[data-white-text="true"] {
+      background: rgba(0, 0, 0, 0.45) !important;
+    }
+
     .top-bar[data-white-text="true"], .sticky-header .top-bar  {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
@@ -397,8 +401,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     width: 25px;
     color: white;
     height: 25px;
-    background: #58a958;
-    background-color: #4a894a;
+    background-color: #2a6b2a;
     border-radius: 50%;
     display: flex;
     justify-content: center;

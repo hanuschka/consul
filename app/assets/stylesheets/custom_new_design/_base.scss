@@ -235,3 +235,12 @@ a.resources--info-count {
 .custom-page-content a:not(.accordion-title) {
   text-decoration: underline;
 }
+
+body.custom-new-design {
+  p a,
+  .callout a,
+  .notification-body a,
+  .comment-body a {
+    text-decoration: underline;
+  }
+}

@@ -1400,10 +1400,11 @@ form {
 
     a {
       text-decoration: none;
+      color: var(--brand-color-dark);
     }
 
     p:not(.time) {
-      // color: $link;
+      color: $body-font-color;
     }
 
     &::before {

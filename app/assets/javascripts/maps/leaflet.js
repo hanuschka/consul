@@ -79,6 +79,8 @@
 
       this.map.addControl(zoomControl);
 
+      this.setupEscKeyHandler();
+
       this.map.pm.setGlobalOptions({
         markerStyle: {
           icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor),
@@ -97,6 +99,16 @@
       if (this.editableLayersLimit && this.editableLayersLimit > 1) {
         this.addHintAboutEditableLayersLimit();
       }
+    }
+
+    setupEscKeyHandler() {
+      const map = this.map;
+
+      $(this.element).on('keydown', function(event) {
+        if (event.which === 27) {
+          map.closePopup();
+        }
+      });
     }
 
     setupEventListenersForNewFeatures() {

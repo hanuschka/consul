@@ -8,12 +8,10 @@
       <%= prepare_projekt_name(projekt, 'mobile') %>
 
       <% if activated_child_projekts.any? %>
-        <span class='js-icon-toggle-child-projekts toggle-arrow focusable js-prevent-key-scroll'
-              role="button"
-              tabindex="0"
+        <button class='js-icon-toggle-child-projekts toggle-arrow js-prevent-key-scroll'
               aria-expanded="<%= toggle_projekt %>"
               aria-label="<%= t('custom.links.projekts_filter.arrow_label') %>" >
-        </span>
+        </button>
       <% end %>
 
       <% if projekt.children.with_order_number.activated.any? %>

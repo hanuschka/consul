@@ -24,11 +24,23 @@
         </div>
 
         <%= form_with model: @deficiency_report_feedback_form, url: deficiency_report_feedback_form_path(@deficiency_report) do |f| %>
-          <div class="" style="margin-bottom: 2rem;">
-            <h3><%= t('custom.deficiency_reports.feedback_form.new.overall_satisfaction') %></h3>
+          <% has_satisfaction_error = @deficiency_report_feedback_form.errors.attribute_names.include?(:overall_satisfaction) %>
+          <div
+            class=""
+            style="margin-bottom: 2rem;"
+            role="group"
+            aria-labelledby="overall_satisfaction_label"
+            <%= "aria-describedby=\"overall_satisfaction_error\" aria-invalid=\"true\"".html_safe if has_satisfaction_error %>
+          >
+            <h3 id="overall_satisfaction_label"><%= t('custom.deficiency_reports.feedback_form.new.overall_satisfaction') %></h3>
             <%= render Forms::StarRatingComponent.new(f: f, attribute: :overall_satisfaction) %>
-            <% if @deficiency_report_feedback_form.errors.attribute_names.include? :overall_satisfaction %>
-							<small class="form-error is-visible" style="margin-top:0.5rem;"><%= t('custom.deficiency_reports.feedback_form.new.errors.overall_satisfaction') %></small>
+            <% if has_satisfaction_error %>
+              <small
+                id="overall_satisfaction_error"
+                class="form-error is-visible"
+                style="margin-top:0.5rem;"
+                role="alert"
+              ><%= t('custom.deficiency_reports.feedback_form.new.errors.overall_satisfaction') %></small>
             <% end %>
           </div>
 

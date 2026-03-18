@@ -45,7 +45,7 @@ module ProjektsHelper
     url = projekt.page.url
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, url, class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
       link_to projekt.page.title, url, class: classes.join(" ")
     else

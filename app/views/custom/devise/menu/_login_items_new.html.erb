@@ -8,7 +8,7 @@
         false,
         rel: "nofollow",
         title: t("shared.go_to_page") +
-        t("layouts.header.my_account_link"), tabindex: "-1", aria: { hidden: true } %>
+        t("layouts.header.my_account_link") %>
   </li>
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
@@ -69,7 +69,7 @@
       aria-label='<%= t("devise_views.menu.login_items.logout") %>'
       >
     <%= link_to t("devise_views.menu.login_items.logout"),
-                destroy_user_session_path, rel: "nofollow", method: :delete, tabindex: "-1", aria: { hidden: true } %>
+                destroy_user_session_path, rel: "nofollow", method: :delete %>
   </li>
 <% else %>
   <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
@@ -77,13 +77,13 @@
       aria-label='<%= t("devise_views.menu.login_items.login") %>'
       >
     <%= link_to t("devise_views.menu.login_items.login"),
-                new_user_session_path, rel: "nofollow", tabindex: "-1", aria: { hidden: true } %>
+                new_user_session_path, rel: "nofollow" %>
   </li>
   <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
       tabindex="0"
       aria-label='<%= t("devise_views.menu.login_items.signup") %>'
       >
     <%= link_to t("devise_views.menu.login_items.signup"),
-                new_user_registration_path, rel: "nofollow", tabindex: "-1", aria: { hidden: true } %>
+                new_user_registration_path, rel: "nofollow" %>
   </li>
 <% end %>

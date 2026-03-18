@@ -3,10 +3,9 @@
   App.ResponsiveMenu = {
 
     toggleMenu: function($arrow) {
-      console.log($arrow.prop('tagName') + '.' + $arrow.prop('className'))
-      var $navElement = $arrow.closest('li.nav-element')
-      var $navElementValue = ( $navElement.attr('aria-expanded') == 'true' )
-      $navElement.attr('aria-expanded', !$navElementValue )
+      var $navElement = $arrow.closest('li.nav-element');
+      var $navElementValue = ( $navElement.attr('aria-expanded') == 'true' );
+      $navElement.attr('aria-expanded', !$navElementValue);
     },
 
     isMobileMenuOpen: function() {
@@ -16,7 +15,23 @@
     closeMobileMenu: function() {
       $('#responsive-menu').hide();
       $('.js-toggle-mobile-menu').attr('aria-expanded', 'false');
+      this.updateBackgroundInert(false);
       $('.js-toggle-mobile-menu').focus();
+    },
+
+    updateBackgroundInert: function(menuVisible) {
+      if (menuVisible) {
+        var header = document.querySelector('header');
+        var menuWrapper = document.querySelector('.header--responsive-menu-wrapper');
+        var excludeElements = [];
+
+        if (header) excludeElements.push(header);
+        if (menuWrapper) excludeElements.push(menuWrapper);
+
+        App.FocusTrap.setBackgroundInert(excludeElements);
+      } else {
+        App.FocusTrap.removeBackgroundInert();
+      }
     },
 
     getFocusableElements: function() {
@@ -194,12 +209,12 @@
         }
       });
 
-      $("body").on("keyup", ".js-toggle-mobile-menu", function(event) {
-        if ( event.which == 32 || event.which == 13 ) {
-          event.preventDefault();
-          $('#responsive-menu').toggle();
+      $("body").on("click", ".js-toggle-mobile-menu", function() {
+        var $button = $(this);
+        setTimeout(function() {
           var menuVisible = $('#responsive-menu').is(':visible');
-          $(this).attr('aria-expanded', menuVisible);
+          $button.attr('aria-expanded', String(menuVisible));
+          App.ResponsiveMenu.updateBackgroundInert(menuVisible);
 
           if (menuVisible) {
             var focusable = App.ResponsiveMenu.getFocusableElements();
@@ -207,7 +222,7 @@
               focusable[0].focus();
             }
           }
-        }
+        }, 0);
       });
 
       $(document).on("keydown", function(event) {
@@ -223,6 +238,14 @@
 
       $(document).on("focusin", function() {
         App.ResponsiveMenu.trapFocus();
+      });
+
+      $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
+        $(this).attr("aria-expanded", "true");
+      });
+
+      $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
+        $(this).attr("aria-expanded", "false");
       });
 
       App.ResponsiveMenu.initPriorityPlus();

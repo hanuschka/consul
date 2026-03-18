@@ -32,6 +32,36 @@ body.admin .tabs-title > a[aria-selected='true'],
   margin: 0;
 }
 
+.footer-main-navigation {
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.footer-main-navigation--heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.footer-main-navigation--list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-bottom: 0.5rem;
+
+  a {
+    font-size: 0.875rem;
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+}
+
 .row.full-width {
   max-width: 100%;
 

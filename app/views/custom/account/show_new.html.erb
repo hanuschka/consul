@@ -184,14 +184,24 @@
         mark_all_as_read_notifications_path, method: :put,
         class: "button hollow float-right-medium" %>
 
-      <ul class="menu simple clear" role="navigation" aria-label="<%= t('custom.accessibility.account.notifications.aria_label') %>">
-        <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
-          <h2><%= link_to t("notifications.index.unread"), account_path,
-            "aria-current": (params[:notifications] != "read" ? "page" : nil) %></h2>
+      <ul
+        class="menu simple clear"
+        role="tablist"
+        aria-label="<%= t('custom.accessibility.account.notifications.tab_label') %>"
+      >
+        <li
+          role="tab"
+          aria-selected="<%= params[:notifications] != "read" %>"
+          class="<%= params[:notifications] == "read" ? "" : "is-active" %>"
+        >
+          <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
         </li>
-        <li class="<%= params[:notifications] == "read" ? "is-active" : "" %>">
-          <h2><%= link_to t("notifications.index.read"), account_path(notifications: "read"),
-            "aria-current": (params[:notifications] == "read" ? "page" : nil) %></h2>
+        <li
+          role="tab"
+          aria-selected="<%= params[:notifications] == "read" %>"
+          class="<%= params[:notifications] == "read" ? "is-active" : "" %>"
+        >
+          <h2><%= link_to t("notifications.index.read"), account_path(notifications: "read") %></h2>
         </li>
       </ul>
 

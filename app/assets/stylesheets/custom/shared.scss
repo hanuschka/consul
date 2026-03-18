@@ -336,13 +336,16 @@ form .checkbox-label--aligned {
 
 // Toggle arrow
 
-span.toggle-arrow {
+.toggle-arrow {
   position: absolute;
   right: 0;
   top: 0;
   width: 14px;
   cursor: pointer;
   color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
 
   &:after {
     content: "\f107";

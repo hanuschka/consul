@@ -1,5 +1,12 @@
-<div id="sentiment_selector" class="sentiments">
-  <h2 class="rich-form-label">
+<% has_sentiment_error = model.errors.where(:sentiment_id).any? %>
+<div
+  id="sentiment_selector"
+  class="sentiments"
+  role="group"
+  aria-labelledby="sentiment_heading"
+  <%= "aria-describedby=\"sentiment_error\" aria-invalid=\"true\"".html_safe if has_sentiment_error %>
+>
+  <h2 class="rich-form-label" id="sentiment_heading">
     <i class="fas fa-heart"></i>
     <%= projekt_phase.sentiments_name.presence || I18n.t("custom.shared.form.sentiment_label") %>
     <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
@@ -20,8 +27,8 @@
   </div>
 </div>
 
-<% model.errors.where(:sentiment_id).each do |error| %>
-  <small class='form-error is-visible'>
-    <%= error.message %>
+<% if has_sentiment_error %>
+  <small id="sentiment_error" class="form-error is-visible" role="alert">
+    <%= model.errors.where(:sentiment_id).map(&:message).join(", ") %>
   </small>
 <% end %>

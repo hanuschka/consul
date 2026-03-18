@@ -25,6 +25,12 @@
       padding: 10px 0;
     }
 
+    @media(max-width: 480px) {
+      position: static;
+      border-top: 1px solid #e0e0e0;
+      padding: 10px 0;
+    }
+
     .user-resources-form--submit-section--privacy-policy {
       font-size: 16px !important;
       padding-bottom: 5px !important;

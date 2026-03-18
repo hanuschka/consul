@@ -21,6 +21,11 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+        pages: Seiten
+        pages_subitems:
+          privacy: Datenschutzbestimmungen
+          conditions: Nutzungsbedingungen
+          impressum: Impressum
         profiles: Profile
         profiles_subitems:
           administrators: Globaler Admin

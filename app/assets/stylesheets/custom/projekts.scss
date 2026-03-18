@@ -351,7 +351,7 @@ table.edit-projekt {
   }
 
   .projekt-filter-icon {
-    color: $brand;
+    color: var(--brand-color);
   }
 
   .checkmark,
@@ -860,7 +860,7 @@ span.projekt-backlink:before {
     }
 
     .control input:checked ~ .control-indicator {
-      background-color: $brand;
+      background-color: var(--brand-color);
       border: 0;
     }
 
@@ -1672,7 +1672,7 @@ span.projekt-backlink:before {
     background-color: #767676 !important;
 
     &.selected {
-      background-color: $brand !important;
+      background-color: var(--brand-color) !important;
     }
   }
 }

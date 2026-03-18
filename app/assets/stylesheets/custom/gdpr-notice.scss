@@ -4,8 +4,8 @@
   left: 0;
   z-index: 100;
   width: 100%;
-  background: lighten($brand, 70%);
-  border-top: 1px solid $brand;
+  background: var(--brand-color-secondary);
+  border-top: 1px solid var(--brand-color);
   padding: 2em 0;
 
   @media screen and (min-width: 40em) {

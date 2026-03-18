@@ -22,6 +22,7 @@
 
         dialog.close();
         this.unlockScroll();
+        document.body.style.overflow = "";
       });
     },
 

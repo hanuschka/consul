@@ -85,7 +85,7 @@
   }
 
   &.filtered {
-    background: $brand;
+    background: var(--brand-color);
 
     a {
       color: $white;
@@ -249,7 +249,7 @@
 .communities-show blockquote,
 .topic-show blockquote,
 .milestone-content blockquote {
-  background-color: lighten($brand, 70%);
+  background-color: var(--brand-color-secondary);
   font-size: 1.25em;
   padding-top: 10px;
   padding-bottom: 8px;
@@ -271,8 +271,8 @@
 // Overriding foundation
 
 .button:hover, .button:focus {
-  background-color: $secondary;
-  color: $brand
+  background-color: var(--brand-color-secondary);
+  color: var(--brand-color)
 }
 
 .callout.primary {
@@ -281,11 +281,11 @@
 }
 
 .additional-content .filter-subnav {
-  background: $secondary;
+  background: var(--brand-color-secondary);
 }
 
 .comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
-  background: $accent;
+  background: var(--brand-color-accent);
   border-radius: 5px;
 }
 

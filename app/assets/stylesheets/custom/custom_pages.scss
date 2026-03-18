@@ -156,7 +156,7 @@ ul.projekt-navigator {
   margin-left: 1rem;
   margin-bottom: 0;
   font-size: 0.875rem;
-  color: $brand;
+  color: var(--brand-color);
   list-style-type: none;
 }
 
@@ -370,17 +370,17 @@ li.projekt-navigator[aria-expanded="false"] {
 
   button, a {
     /* i { */
-      color: $brand;
+      color: var(--brand-color);
     /* } */
 
     &:hover {
       /* i { */
-        color: darken($brand, 3);
+        color: color-mix(in srgb, var(--brand-color), black 3%);
       /* } */
     }
     &:active {
       /* i { */
-        color: darken($brand, 5);
+        color: color-mix(in srgb, var(--brand-color), black 5%);
       /* } */
     }
   }
@@ -461,10 +461,10 @@ li.projekt-navigator[aria-expanded="false"] {
         border-radius: 50%;
         justify-content: center;
         align-items: center;
-        color: $brand;
+        color: var(--brand-color);
 
         &:hover {
-          background-color: rgba($brand, 0.1);
+          background-color: var(--brand-color-lighter);
         }
       }
 

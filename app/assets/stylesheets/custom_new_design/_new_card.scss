@@ -55,7 +55,7 @@
   }
 
   .new-card--heading-icon {
-    color: $brand;
+    color: var(--brand-color);
     margin-right: 5px;
   }
 }

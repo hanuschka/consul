@@ -1,0 +1,49 @@
+<%= form_with model: [:adm, @newsletter] do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:recipient_group), divider: false, inline: true) do %>
+    <%= f.select :recipient_group_id,
+      options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id),
+      { prompt: t("custom.shared.select") },
+      label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:from), divider: false, inline: true) do %>
+    <%= f.text_field :from, value: (f.object.from || Setting['mailer_from_address']), label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:subject), divider: false, inline: true) do %>
+    <%= f.text_field :subject, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:title), divider: false, inline: true) do %>
+    <%= f.text_field :title, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:title_color), divider: false, inline: true) do %>
+    <%= f.color_field :title_color, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:subtitle), divider: false, inline: true) do %>
+    <%= f.text_field :subtitle, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:subtitle_color), divider: false, inline: true) do %>
+    <%= f.color_field :subtitle_color, label: false %>
+  <% end %>
+
+  <%= render Images::NestedComponent.new(f) %>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:greeting), divider: false, inline: true) do %>
+    <%= f.text_field :greeting, value: (f.object.greeting || "Sehr geehrte Damen und Herren, liebe Nutzer*innen "), label: false %>
+  <% end %>
+
+  <div class="mb-4">
+    <%= render "template_block_2" %>
+  </div>
+
+  <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:body), divider: false, inline: true) do %>
+    <%= f.rich_text_area :body, label: false %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t("adm.newsletters.form.submit")) %>
+<% end %>

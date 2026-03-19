@@ -37,7 +37,7 @@ class Adm::EmailTemplatesController < Adm::BaseController
     end
 
     def find_email_template
-      @email_template = SiteCustomization::EmailTemplate.find(params[:id])
+      @email_template = ::SiteCustomization::EmailTemplate.find(params[:id])
     end
 
     def email_template_params

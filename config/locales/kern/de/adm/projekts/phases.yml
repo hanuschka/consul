@@ -252,6 +252,8 @@ de:
             actions: Aktionen
         user_resource_criteria:
           title: Bewertungskriterien
+        email_templates:
+          title: E-Mail-Vorlagen
         ai_settings:
           title: KI Anweisung
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -396,3 +398,4 @@ de:
           settings: Einstellungen
           user_resource_criteria: Bewertungskriterien
           comments: Kommentare
+          email_templates: E-Mail-Vorlagen

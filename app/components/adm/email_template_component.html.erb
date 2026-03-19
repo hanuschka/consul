@@ -1,0 +1,63 @@
+<%= turbo_frame_tag dom_id(@email_template) do %>
+  <div class="email-template-component mb-5" data-mailer-class="<%= @email_template.mailer_class %>" data-mailer-action="<%= @email_template.mailer_action %>">
+    <h3 class="kern-title kern-title--medium mb-4"><%= label %></h3>
+
+    <div class="kern-row mb-4">
+      <div class="kern-col-12 kern-col-md-3">
+        <div class="kern-title kern-title--small"><%= t(".trigger") %></div>
+      </div>
+      <div class="kern-col-12 kern-col-md-7">
+        <p class="kern-body mb-0"><%= description %></p>
+      </div>
+    </div>
+
+    <%= form_with model: @email_template, url: path, method: :patch do |form| %>
+      <div class="kern-row mb-4">
+        <div class="kern-col-12 kern-col-md-3">
+          <div class="kern-title kern-title--small"><%= t(".subject") %></div>
+        </div>
+        <div class="kern-col-12 kern-col-md-7">
+          <%= form.text_field :subject, label: false, class: "kern-form-input__input" %>
+        </div>
+      </div>
+
+      <div class="kern-row mb-4">
+        <div class="kern-col-12 kern-col-md-3">
+          <div class="kern-title kern-title--small"><%= t(".body") %></div>
+          <% if variables.any? %>
+            <p class="kern-body kern-body--small mt-2 mb-0">
+              <%= t(".available_variables") %>:<br>
+              <%= variables_hint.html_safe %>
+            </p>
+          <% end %>
+        </div>
+        <div class="kern-col-12 kern-col-md-7">
+          <%= form.text_area :body,
+            value: sanitized_body,
+            label: false,
+            data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+        </div>
+      </div>
+
+      <%= form_submit_button %>
+    <% end %>
+
+    <% if @email_template.customized? %>
+      <%= form_with url: send_test_path, method: :post, class: "mt-3" do %>
+        <%= kern_button(text: t(".send_test"), icon: "send", style: :secondary, type: :submit) %>
+      <% end %>
+    <% end %>
+
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2" data-controller="auto-remove">
+        <%= flash[:success] %>
+      </div>
+    <% end %>
+
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <hr class="kern-divider my-5" aria-hidden="true" />
+      </div>
+    </div>
+  </div>
+<% end %>

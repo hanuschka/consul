@@ -1,0 +1,23 @@
+de:
+  mailer:
+    budget_investment_created:
+      title: Bestätigung nach Einreichung
+      description: Wird an den Autor gesendet, wenn ein Bürgervorschlag erfolgreich eingereicht wurde.
+    budget_investment_feasible:
+      title: Vorschlag als umsetzbar bewertet
+      description: Wird an den Autor gesendet, wenn sein Vorschlag als umsetzbar bewertet wurde.
+    budget_investment_unfeasible:
+      title: Vorschlag als nicht umsetzbar bewertet
+      description: Wird an den Autor gesendet, wenn sein Vorschlag als nicht umsetzbar bewertet wurde.
+    budget_investment_selected:
+      title: Vorschlag ausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag in die engere Auswahl aufgenommen wurde.
+    budget_investment_unselected:
+      title: Vorschlag nicht ausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht in die engere Auswahl aufgenommen wurde.
+    budget_investment_preselected:
+      title: Vorschlag vorausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag vorausgewählt wurde.
+    budget_investment_not_preselected:
+      title: Vorschlag nicht vorausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht vorausgewählt wurde.

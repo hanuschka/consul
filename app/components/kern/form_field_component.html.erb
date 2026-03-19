@@ -5,6 +5,9 @@
         <% if label %>
           <div class="kern-title kern-title--small mb-3 mb-md-0"><%= label %></div>
         <% end %>
+        <% if hint %>
+          <p class="kern-body kern-body--small mt-2 mb-0"><%= hint %></p>
+        <% end %>
       </div>
       <div class="kern-col-12 kern-col-md-5">
         <%= content %>

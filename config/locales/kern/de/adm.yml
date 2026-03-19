@@ -44,6 +44,9 @@ de:
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
         apps: Apps
+    email_templates:
+      send_test:
+        success: "Test-E-Mail wurde an %{email} gesendet."
     deficiency_reports:
       menu:
         aria_label: Mängelmelder Navigation

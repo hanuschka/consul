@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_17_134931) do
+ActiveRecord::Schema.define(version: 2026_03_18_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2765,6 +2765,19 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.index ["landing_page_id"], name: "index_site_customization_content_cards_on_landing_page_id"
   end
 
+  create_table "site_customization_email_templates", force: :cascade do |t|
+    t.bigint "projekt_phase_id"
+    t.string "mailer_class", null: false
+    t.string "mailer_action", null: false
+    t.string "locale", default: "de", null: false
+    t.string "subject"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "mailer_class", "mailer_action", "locale"], name: "idx_email_templates_on_phase_mailer_action_locale", unique: true
+    t.index ["projekt_phase_id"], name: "index_site_customization_email_templates_on_projekt_phase_id"
+  end
+
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "image_file_name"
@@ -3302,6 +3315,7 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
   add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "sentiments", "projekt_phases"
+  add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"

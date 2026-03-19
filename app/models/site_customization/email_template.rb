@@ -25,6 +25,36 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "Mailer#proposal_created" => {
       variables: %w[username proposal_title proposal_url]
+    },
+    "NotificationServiceMailer#new_proposal" => {
+      variables: %w[username proposal_title proposal_url]
+    },
+    "NotificationServiceMailer#new_poll" => {
+      variables: %w[username poll_title poll_url]
+    },
+    "NotificationServiceMailer#new_comment" => {
+      variables: %w[username comment_body comment_url]
+    },
+    "NotificationServiceMailer#projekt_questions" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#projekt_arguments" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#new_projekt_notification" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#new_projekt_event" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#new_projekt_milestone" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#new_projekt_livestream" => {
+      variables: %w[username phase_url]
+    },
+    "NotificationServiceMailer#new_budget_investment" => {
+      variables: %w[username investment_title investment_url projekt_title projekt_url]
     }
   }.freeze
 

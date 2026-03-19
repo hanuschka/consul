@@ -24,3 +24,34 @@ de:
     proposal_created:
       title: Bestätigung nach Einreichung
       description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.
+  notification_service_mailer:
+    new_proposal:
+      title: Benachrichtigung über neuen Vorschlag
+      description: Wird an Abonnenten gesendet, wenn ein neuer Vorschlag eingereicht wurde.
+    new_poll:
+      title: Benachrichtigung über neue Abstimmung
+      description: Wird an Abonnenten gesendet, wenn eine neue Abstimmung erstellt wurde.
+    new_comment:
+      title: Benachrichtigung über neuen Kommentar
+      description: Wird an Abonnenten gesendet, wenn ein neuer Kommentar geschrieben wurde.
+    projekt_questions:
+      title: Benachrichtigung über neue Kurzumfrage
+      description: Wird an Abonnenten gesendet, wenn eine neue Kurzumfrage erstellt wurde.
+    projekt_arguments:
+      title: Benachrichtigung über neue Stimme
+      description: Wird an Abonnenten gesendet, wenn eine neue Stimme erstellt wurde.
+    new_projekt_notification:
+      title: Benachrichtigung über neue Projektmitteilung
+      description: Wird an Abonnenten gesendet, wenn eine neue Projektmitteilung veröffentlicht wurde.
+    new_projekt_event:
+      title: Benachrichtigung über neue Veranstaltung
+      description: Wird an Abonnenten gesendet, wenn eine neue Veranstaltung erstellt wurde.
+    new_projekt_milestone:
+      title: Benachrichtigung über neuen Meilenstein
+      description: Wird an Abonnenten gesendet, wenn ein neuer Meilenstein veröffentlicht wurde.
+    new_projekt_livestream:
+      title: Benachrichtigung über neuen Livestream
+      description: Wird an Abonnenten gesendet, wenn ein neuer Livestream erstellt wurde.
+    new_budget_investment:
+      title: Benachrichtigung über neuen Bürgervorschlag
+      description: Wird an Abonnenten gesendet, wenn ein neuer Bürgervorschlag eingereicht wurde.

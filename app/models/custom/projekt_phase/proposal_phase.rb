@@ -90,7 +90,8 @@ class ProjektPhase::ProposalPhase < ProjektPhase
 
   def customizable_email_templates
     [
-      ["Mailer", "proposal_created"]
+      ["Mailer", "proposal_created"],
+      ["NotificationServiceMailer", "new_proposal"]
     ]
   end
 

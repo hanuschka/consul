@@ -120,7 +120,8 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       ["Mailer", "budget_investment_selected"],
       ["Mailer", "budget_investment_unselected"],
       ["Mailer", "budget_investment_preselected"],
-      ["Mailer", "budget_investment_not_preselected"]
+      ["Mailer", "budget_investment_not_preselected"],
+      ["NotificationServiceMailer", "new_budget_investment"]
     ]
   end
 

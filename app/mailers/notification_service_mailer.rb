@@ -1,5 +1,7 @@
 class NotificationServiceMailer < ApplicationMailer
+  include CustomizableEmail
   helper TextWithLinksHelper
+  helper :mailer
 
   def overdue_deficiency_reports(officer_id, overdue_reports_ids)
     @officer = DeficiencyReport::Officer.find(officer_id)
@@ -44,10 +46,12 @@ class NotificationServiceMailer < ApplicationMailer
     @proposal = Proposal.find(proposal_id)
     @projekt_phase = @proposal&.projekt_phase
 
-    subject = t("custom.notification_service_mailers.new_proposal.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "proposal_title" => @proposal.title,
+        "proposal_url" => proposal_url(@proposal)
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_proposal.subject"))
     end
   end
 
@@ -68,10 +72,12 @@ class NotificationServiceMailer < ApplicationMailer
     @poll = Poll.find(poll_id)
     @projekt_phase = @poll&.projekt_phase
 
-    subject = t("custom.notification_service_mailers.new_poll.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "poll_title" => @poll.title,
+        "poll_url" => poll_url(@poll)
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_poll.subject"))
     end
   end
 
@@ -80,10 +86,12 @@ class NotificationServiceMailer < ApplicationMailer
     @comment = Comment.find(comment_id)
     @projekt_phase = @comment&.commentable if @comment&.commentable.is_a?(ProjektPhase)
 
-    subject = t("custom.notification_service_mailers.new_comment.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "comment_body" => @comment.body.truncate(100),
+        "comment_url" => comment_url(@comment)
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_comment.subject"))
     end
   end
 
@@ -115,10 +123,11 @@ class NotificationServiceMailer < ApplicationMailer
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
     @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
-    subject = t("custom.notification_service_mailers.projekt_questions.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.projekt_questions.subject"))
     end
   end
 
@@ -127,10 +136,11 @@ class NotificationServiceMailer < ApplicationMailer
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
     @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
-    subject = t("custom.notification_service_mailers.projekt_arguments.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.projekt_arguments.subject"))
     end
   end
 
@@ -138,11 +148,16 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @investment = Budget::Investment.find(investment_id)
     @projekt = @investment&.projekt
-
-    subject = t("custom.notification_service_mailers.new_budget_investment.subject")
+    @projekt_phase = @investment.budget&.projekt_phase
 
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "investment_title" => @investment.title,
+        "investment_url" => budget_investment_url(@investment.budget, @investment),
+        "projekt_title" => @projekt&.name,
+        "projekt_url" => @projekt&.page ? page_url(@projekt.page.slug) : ""
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_budget_investment.subject"))
     end
   end
 
@@ -152,10 +167,11 @@ class NotificationServiceMailer < ApplicationMailer
     @projekt_phase = @projekt_notification.projekt_phase
     @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
-    subject = t("custom.notification_service_mailers.new_projekt_notification.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_notification.subject"))
     end
   end
 
@@ -165,10 +181,11 @@ class NotificationServiceMailer < ApplicationMailer
     @projekt_phase = @projekt_event.projekt_phase
     @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
-    subject = t("custom.notification_service_mailers.new_projekt_event.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_event.subject"))
     end
   end
 
@@ -183,10 +200,11 @@ class NotificationServiceMailer < ApplicationMailer
       return
     end
 
-    subject = t("custom.notification_service_mailers.new_projekt_milestone.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_milestone.subject"))
     end
   end
 
@@ -196,10 +214,11 @@ class NotificationServiceMailer < ApplicationMailer
     @projekt_phase = @projekt_livestream.projekt_phase
     @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
-    subject = t("custom.notification_service_mailers.new_projekt_livestream.subject")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @user.username,
+        "phase_url" => @url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_livestream.subject"))
     end
   end
 

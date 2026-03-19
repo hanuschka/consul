@@ -98,20 +98,11 @@ class Mailer < ApplicationMailer
     @email_to = @proposal.author.email
 
     with_user(@proposal.author) do
-      template = find_custom_template(proposal.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "proposal_title" => @proposal.title,
-          "proposal_url" => proposal_url(@proposal)
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.proposal_created.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.proposal_created.subject"))
-      end
+      mail_with_custom_template(proposal.projekt_phase, {
+        "username" => @author.username,
+        "proposal_title" => @proposal.title,
+        "proposal_url" => proposal_url(@proposal)
+      }, to: @email_to, default_subject: t("mailers.proposal_created.subject"))
     end
   end
 
@@ -121,21 +112,12 @@ class Mailer < ApplicationMailer
     @email_to = @investment.author.email
 
     with_user(@investment.author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @investment.author.username,
-          "investment_title" => @investment.title,
-          "projekt_title" => @projekt&.name,
-          "investment_url" => budget_investment_url(@investment.budget, @investment)
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_created.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_created.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @investment.author.username,
+        "investment_title" => @investment.title,
+        "projekt_title" => @projekt&.name,
+        "investment_url" => budget_investment_url(@investment.budget, @investment)
+      }, to: @email_to, default_subject: t("mailers.budget_investment_created.subject"))
     end
   end
 
@@ -146,21 +128,12 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "projekt_title" => @projekt&.name,
-          "unfeasibility_explanation" => @investment.unfeasibility_explanation
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_unfeasible.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_unfeasible.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "projekt_title" => @projekt&.name,
+        "unfeasibility_explanation" => @investment.unfeasibility_explanation
+      }, to: @email_to, default_subject: t("mailers.budget_investment_unfeasible.subject"))
     end
   end
 
@@ -171,20 +144,11 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "projekt_title" => @projekt&.name
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_feasible.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_feasible.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "projekt_title" => @projekt&.name
+      }, to: @email_to, default_subject: t("mailers.budget_investment_feasible.subject"))
     end
   end
 
@@ -194,20 +158,11 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "investment_url" => budget_investment_url(@investment.budget, @investment)
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_selected.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_selected.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "investment_url" => budget_investment_url(@investment.budget, @investment)
+      }, to: @email_to, default_subject: t("mailers.budget_investment_selected.subject"))
     end
   end
 
@@ -218,21 +173,12 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "investment_url" => budget_investment_url(@investment.budget, @investment),
-          "projekt_title" => @projekt&.name
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_unselected.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_unselected.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "investment_url" => budget_investment_url(@investment.budget, @investment),
+        "projekt_title" => @projekt&.name
+      }, to: @email_to, default_subject: t("mailers.budget_investment_unselected.subject"))
     end
   end
 
@@ -366,21 +312,12 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "investment_url" => budget_investment_url(@investment.budget, @investment),
-          "projekt_title" => @projekt&.name
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_preselected.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_preselected.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "investment_url" => budget_investment_url(@investment.budget, @investment),
+        "projekt_title" => @projekt&.name
+      }, to: @email_to, default_subject: t("mailers.budget_investment_preselected.subject"))
     end
   end
 
@@ -391,21 +328,12 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      template = find_custom_template(investment.budget&.projekt_phase)
-
-      if template&.customized?
-        variables = {
-          "username" => @author.username,
-          "investment_title" => @investment.title,
-          "investment_url" => budget_investment_url(@investment.budget, @investment),
-          "projekt_title" => @projekt&.name
-        }
-        @custom_email_subject = template.render_subject(variables) || t("mailers.budget_investment_not_preselected.subject")
-        @custom_email_body = template.render_body(variables)
-        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
-      else
-        mail(to: @email_to, subject: t("mailers.budget_investment_not_preselected.subject"))
-      end
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "investment_title" => @investment.title,
+        "investment_url" => budget_investment_url(@investment.budget, @investment),
+        "projekt_title" => @projekt&.name
+      }, to: @email_to, default_subject: t("mailers.budget_investment_not_preselected.subject"))
     end
   end
 

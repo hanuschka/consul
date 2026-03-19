@@ -30,6 +30,6 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
   private
 
   def projekt_from_record
-    @record.projekt
+    @record.is_a?(ProjektPhase) ? @record.projekt : @record.projekt_phase&.projekt
   end
 end

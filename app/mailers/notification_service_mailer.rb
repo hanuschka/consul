@@ -225,17 +225,22 @@ class NotificationServiceMailer < ApplicationMailer
   def user_reverification_failed(user_id)
     @user = User.find(user_id)
     @base_url = Setting["url"]
-    subject = t("custom.notification_service_mailers.user_reverification_failed.subject")
+
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "last_name" => @user.last_name,
+        "base_url" => @base_url
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.user_reverification_failed.subject"))
     end
   end
 
   def user_reverification_succeeded(user_id)
     @user = User.find(user_id)
-    subject = t("custom.notification_service_mailers.user_reverification_succeeded.subject")
+
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "last_name" => @user.last_name
+      }, to: @user.email, default_subject: t("custom.notification_service_mailers.user_reverification_succeeded.subject"))
     end
   end
 

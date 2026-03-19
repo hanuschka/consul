@@ -87,6 +87,7 @@ namespace :adm do
   resources :email_templates, only: [:update] do
     post :send_test, on: :member
   end
+  resources :global_email_templates, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
   resource :apps, controller: "apps", only: [:show]

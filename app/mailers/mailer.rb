@@ -14,9 +14,16 @@ class Mailer < ApplicationMailer
     @email_to = @commentable.author.email
     manage_subscriptions_token(@commentable.author)
 
+    return unless @commentable.present? && @commentable.author.present?
+
     with_user(@commentable.author) do
-      subject = t("mailers.comment.subject", commentable: t("activerecord.models.#{@commentable.class.name.underscore}", count: 1).downcase)
-      mail(to: @email_to, subject: subject) if @commentable.present? && @commentable.author.present?
+      mail_with_custom_template(nil, {
+        "username" => @commentable.author.username,
+        "commenter_name" => @comment.author.name,
+        "commentable_title" => @commentable.title,
+        "commentable_url" => commentable_url(@commentable),
+        "comment_body" => @comment.body.truncate(200)
+      }, to: @email_to, default_subject: t("mailers.comment.subject", commentable: t("activerecord.models.#{@commentable.class.name.underscore}", count: 1).downcase))
     end
   end
 
@@ -26,8 +33,14 @@ class Mailer < ApplicationMailer
     @email_to = @email.to
     manage_subscriptions_token(@email.recipient)
 
+    return unless @email.can_be_sent?
+
     with_user(@email.recipient) do
-      mail(to: @email_to, subject: @email.subject) if @email.can_be_sent?
+      mail_with_custom_template(nil, {
+        "username" => @email.recipient.username,
+        "reply_body" => @reply.body.truncate(200),
+        "comment_url" => comment_url(@reply)
+      }, to: @email_to, default_subject: @email.subject)
     end
   end
 
@@ -50,7 +63,13 @@ class Mailer < ApplicationMailer
     manage_subscriptions_token(@receiver)
 
     with_user(@receiver) do
-      mail(to: @email_to, subject: t("mailers.direct_message_for_receiver.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @receiver.username,
+        "sender_name" => @direct_message.sender.name,
+        "message_title" => @direct_message.title,
+        "message_body" => @direct_message.body.truncate(200),
+        "sender_url" => user_url(@direct_message.sender)
+      }, to: @email_to, default_subject: t("mailers.direct_message_for_receiver.subject"))
     end
   end
 
@@ -78,7 +97,10 @@ class Mailer < ApplicationMailer
     @email_to = email
 
     I18n.with_locale(I18n.default_locale) do
-      mail(to: @email_to, subject: t("mailers.user_invite.subject", org_name: Setting["org_name"]))
+      mail_with_custom_template(nil, {
+        "org_name" => Setting["org_name"],
+        "registration_url" => new_user_registration_url
+      }, to: @email_to, default_subject: t("mailers.user_invite.subject", org_name: Setting["org_name"]))
     end
   end
 
@@ -88,7 +110,11 @@ class Mailer < ApplicationMailer
                         default: pending_role_assignment.role_type.titleize)
 
     I18n.with_locale(I18n.default_locale) do
-      mail(to: @email_to, subject: t("mailers.pending_role_invite.subject", org_name: Setting["org_name"]))
+      mail_with_custom_template(nil, {
+        "org_name" => Setting["org_name"],
+        "role_name" => @role_name,
+        "registration_url" => new_user_registration_url
+      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", org_name: Setting["org_name"]))
     end
   end
 
@@ -221,7 +247,10 @@ class Mailer < ApplicationMailer
     @user = user
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.already_confirmed.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "new_password_url" => new_password_url(@user)
+      }, to: @email_to, default_subject: t("mailers.already_confirmed.subject"))
     end
   end
 
@@ -230,7 +259,9 @@ class Mailer < ApplicationMailer
     @user = user
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.manual_verification_confirmation.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username
+      }, to: @email_to, default_subject: t("mailers.manual_verification_confirmation.subject"))
     end
   end
 
@@ -257,7 +288,10 @@ class Mailer < ApplicationMailer
     @user = user
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.newsletter_subscription_for_existing_user.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "account_url" => account_url
+      }, to: @email_to, default_subject: t("mailers.newsletter_subscription_for_existing_user.subject"))
     end
   end
 
@@ -267,7 +301,10 @@ class Mailer < ApplicationMailer
     @download_url = download_url
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.csv_download_ready.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "download_url" => @download_url
+      }, to: @email_to, default_subject: t("mailers.csv_download_ready.subject"))
     end
   end
 
@@ -279,7 +316,10 @@ class Mailer < ApplicationMailer
 
     with_user(@user) do
       attachments[@file_name] = File.read(@file_path)
-      mail(to: @email_to, subject: t("mailers.file_ready.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "file_name" => @file_name
+      }, to: @email_to, default_subject: t("mailers.file_ready.subject"))
     end
   end
 
@@ -290,7 +330,11 @@ class Mailer < ApplicationMailer
     @individual_group = @individual_group_value.individual_group
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.individual_group_value_users_added.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "group_name" => @individual_group.name,
+        "group_value_name" => @individual_group_value.name
+      }, to: @email_to, default_subject: t("mailers.individual_group_value_users_added.subject"))
     end
   end
 
@@ -301,7 +345,10 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      mail(to: @email_to, subject: t("mailers.resource_hidden.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @author.username,
+        "resource_text" => @resource_text.truncate(200)
+      }, to: @email_to, default_subject: t("mailers.resource_hidden.subject"))
     end
   end
 
@@ -372,14 +419,17 @@ class Mailer < ApplicationMailer
     @email_to = @user.email
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.existing_stamp_notify_existing_user.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username
+      }, to: @email_to, default_subject: t("mailers.existing_stamp_notify_existing_user.subject"))
     end
   end
 
   def existing_stamp_notify_new_user(email)
     @email_to = email
 
-    mail(to: @email_to, subject: t("mailers.existing_stamp_notify_new_user.subject"))
+    mail_with_custom_template(nil, {},
+      to: @email_to, default_subject: t("mailers.existing_stamp_notify_new_user.subject"))
   end
 
   def user_verification_failed(user)
@@ -387,7 +437,10 @@ class Mailer < ApplicationMailer
     @email_to = @user.email
 
     with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.user_verification_failed.subject"))
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "verification_url" => new_residence_url
+      }, to: @email_to, default_subject: t("mailers.user_verification_failed.subject"))
     end
   end
 

@@ -55,8 +55,79 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "NotificationServiceMailer#new_budget_investment" => {
       variables: %w[username investment_title investment_url projekt_title projekt_url]
+    },
+    "NotificationServiceMailer#user_reverification_failed" => {
+      variables: %w[last_name base_url]
+    },
+    "NotificationServiceMailer#user_reverification_succeeded" => {
+      variables: %w[last_name]
+    },
+    "Mailer#comment" => {
+      variables: %w[username commenter_name commentable_title commentable_url comment_body]
+    },
+    "Mailer#reply" => {
+      variables: %w[username reply_body comment_url]
+    },
+    "Mailer#direct_message_for_receiver" => {
+      variables: %w[username sender_name message_title message_body sender_url]
+    },
+    "Mailer#resource_hidden" => {
+      variables: %w[username resource_text]
+    },
+    "Mailer#already_confirmed" => {
+      variables: %w[username new_password_url]
+    },
+    "Mailer#manual_verification_confirmation" => {
+      variables: %w[username]
+    },
+    "Mailer#newsletter_subscription_for_existing_user" => {
+      variables: %w[username account_url]
+    },
+    "Mailer#user_invite" => {
+      variables: %w[org_name registration_url]
+    },
+    "Mailer#pending_role_invite" => {
+      variables: %w[org_name role_name registration_url]
+    },
+    "Mailer#csv_download_ready" => {
+      variables: %w[username download_url]
+    },
+    "Mailer#file_ready" => {
+      variables: %w[username file_name]
+    },
+    "Mailer#individual_group_value_users_added" => {
+      variables: %w[username group_name group_value_name]
+    },
+    "Mailer#existing_stamp_notify_existing_user" => {
+      variables: %w[username]
+    },
+    "Mailer#existing_stamp_notify_new_user" => {
+      variables: %w[]
+    },
+    "Mailer#user_verification_failed" => {
+      variables: %w[username verification_url]
     }
   }.freeze
+
+  GLOBAL_EMAIL_TEMPLATES = [
+    ["NotificationServiceMailer", "user_reverification_failed"],
+    ["NotificationServiceMailer", "user_reverification_succeeded"],
+    ["Mailer", "comment"],
+    ["Mailer", "reply"],
+    ["Mailer", "direct_message_for_receiver"],
+    ["Mailer", "resource_hidden"],
+    ["Mailer", "already_confirmed"],
+    ["Mailer", "manual_verification_confirmation"],
+    ["Mailer", "newsletter_subscription_for_existing_user"],
+    ["Mailer", "user_invite"],
+    ["Mailer", "pending_role_invite"],
+    ["Mailer", "csv_download_ready"],
+    ["Mailer", "file_ready"],
+    ["Mailer", "individual_group_value_users_added"],
+    ["Mailer", "existing_stamp_notify_existing_user"],
+    ["Mailer", "existing_stamp_notify_new_user"],
+    ["Mailer", "user_verification_failed"]
+  ].freeze
 
   audited only: %i[subject body]
 

@@ -21,6 +21,7 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+          email_templates: E-Mail-Vorlagen
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
@@ -47,6 +48,9 @@ de:
     email_templates:
       send_test:
         success: "Test-E-Mail wurde an %{email} gesendet."
+    global_email_templates:
+      index:
+        title: E-Mail-Vorlagen
     deficiency_reports:
       menu:
         aria_label: Mängelmelder Navigation

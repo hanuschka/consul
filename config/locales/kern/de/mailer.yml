@@ -21,3 +21,6 @@ de:
     budget_investment_not_preselected:
       title: Vorschlag nicht vorausgewählt
       description: Wird an den Autor gesendet, wenn sein Vorschlag nicht vorausgewählt wurde.
+    proposal_created:
+      title: Bestätigung nach Einreichung
+      description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.

@@ -22,6 +22,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "Mailer#budget_investment_not_preselected" => {
       variables: %w[username investment_title investment_url projekt_title]
+    },
+    "Mailer#proposal_created" => {
+      variables: %w[username proposal_title proposal_url]
     }
   }.freeze
 

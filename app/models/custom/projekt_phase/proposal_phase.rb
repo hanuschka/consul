@@ -88,12 +88,19 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     !selectable_by_users?
   end
 
+  def customizable_email_templates
+    [
+      ["Mailer", "proposal_created"]
+    ]
+  end
+
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
       proposals comments user_resource_criteria
       projekt_labels sentiments map
-      officing_managers ai_settings
+      officing_managers email_templates
+      ai_settings
     ]
   end
 

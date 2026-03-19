@@ -98,7 +98,20 @@ class Mailer < ApplicationMailer
     @email_to = @proposal.author.email
 
     with_user(@proposal.author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_created.subject"))
+      template = find_custom_template(proposal.projekt_phase)
+
+      if template&.customized?
+        variables = {
+          "username" => @author.username,
+          "proposal_title" => @proposal.title,
+          "proposal_url" => proposal_url(@proposal)
+        }
+        @custom_email_subject = template.render_subject(variables) || t("mailers.proposal_created.subject")
+        @custom_email_body = template.render_body(variables)
+        mail(to: @email_to, subject: @custom_email_subject, template_name: "customizable_email")
+      else
+        mail(to: @email_to, subject: t("mailers.proposal_created.subject"))
+      end
     end
   end
 

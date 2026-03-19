@@ -21,7 +21,7 @@ class Mailer < ApplicationMailer
         "username" => @commentable.author.username,
         "commenter_name" => @comment.author.name,
         "commentable_title" => @commentable.title,
-        "commentable_url" => commentable_url(@commentable),
+        "commentable_url" => polymorphic_url(@commentable),
         "comment_body" => @comment.body.truncate(200)
       }, to: @email_to, default_subject: t("mailers.comment.subject", commentable: t("activerecord.models.#{@commentable.class.name.underscore}", count: 1).downcase))
     end
@@ -249,7 +249,7 @@ class Mailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(nil, {
         "username" => @user.username,
-        "new_password_url" => new_password_url(@user)
+        "new_password_url" => new_user_password_url
       }, to: @email_to, default_subject: t("mailers.already_confirmed.subject"))
     end
   end

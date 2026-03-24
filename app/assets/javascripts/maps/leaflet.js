@@ -258,16 +258,16 @@
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML('#ff0000')
+            icon: App.Utils.getLeafletMarkerHTML('#008000')
           });
         },
         style: {
-          color: '#ff0000',
+          color: '#008000',
           weight: 2,
           fillOpacity: 0.2
         },
         onEachFeature: (feature, layer) => {
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
           layer.pm.disable();
           layer.pm.setOptions({
             draggable: false,
@@ -297,7 +297,7 @@
     }
 
     renderAdminFeaturesNote() {
-      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in grün sind vom System vorgegeben';
       const adminShapeExplainer = L.control({
         position: 'bottomleft'
       });
@@ -306,7 +306,7 @@
         const container = L.DomUtil.create('div', 'my-attribution');
         container.innerHTML = adminShapeExplainerText;
         container.className += ' leaflet-control-attribution';
-        container.style.color = '#ff0000';
+        container.style.color = '#008000';
         return container;
       };
 

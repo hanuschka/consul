@@ -276,7 +276,7 @@
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.5 }
+          paint: { 'circle-radius': 12, 'circle-color': '#008000', 'circle-opacity': 0.5 }
         });
 
         instance.map.addLayer({
@@ -285,7 +285,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'LineString'],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': '#ff0000', 'line-width': 4 }
+          paint: { 'line-color': '#008000', 'line-width': 4 }
         });
 
         instance.map.addLayer({
@@ -294,7 +294,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: { 'fill-color': '#ff0000', 'fill-opacity': 0.2 }
+          paint: { 'fill-color': '#008000', 'fill-opacity': 0.2 }
         });
       }
 
@@ -364,7 +364,7 @@
     }
 
     renderAdminFeaturesNote() {
-      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#ff0000;">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#008000;">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
     }
 
     setupPlugins() {

@@ -24,7 +24,7 @@
 
       <div class="projekt-arguments --pro">
         <% if @projekt_arguments_pro.any? %>
-          <h3 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.pro") %></h3>
+          <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.pro") %></h2>
           <% @projekt_arguments_pro.each do |argument| %>
             <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
           <% end %>
@@ -38,7 +38,7 @@
 
       <div class="projekt-arguments --contra">
         <% if @projekt_arguments_cons.any? %>
-          <h3 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.cons") %></h3>
+          <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.cons") %></h2>
           <% @projekt_arguments_cons.each do |argument| %>
             <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
           <% end %>

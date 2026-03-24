@@ -40,8 +40,15 @@
     }
 
     &.is-active {
-      /* background: $brand-lighter; */
-      background: color-mix(in srgb, var(--brand-color), var(--main-background-color) 90%);
+      background: var(--brand-color);
+      border-color: var(--brand-color);
+
+      h2,
+      a,
+      .tab-info-summary,
+      .tab-info-summary span {
+        color: #fff;
+      }
     }
 
     &.ui-sortable-helper {

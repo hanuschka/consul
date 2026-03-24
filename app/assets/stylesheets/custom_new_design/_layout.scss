@@ -77,6 +77,12 @@
     .notification:hover::before {
       color: var(--brand-color);
     }
+
+    .notification--title {
+      font-size: inherit;
+      font-weight: bold;
+      margin: 0;
+    }
   }
 }
 

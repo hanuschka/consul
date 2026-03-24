@@ -62,11 +62,11 @@
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
+  background-color: color-mix(in srgb, var(--brand-color) 80%, transparent);
   color: $white;
 
   div {
-    background-color: color-mix(in srgb, var(--brand-color) 50%, transparent);
+    background-color: color-mix(in srgb, var(--brand-color) 80%, transparent);
   }
 }
 
@@ -80,6 +80,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 .custom-leaflet-map-styles {

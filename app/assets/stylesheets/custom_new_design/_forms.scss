@@ -82,6 +82,7 @@
 
   form select {
     background: transparent;
+    border: 1px solid $input-border-color;
     border-radius: 10px;
   }
 
@@ -135,7 +136,7 @@
     padding-left: 15px;
 
     &:focus {
-      border: 1px solid #cccccc;
+      border: 1px solid $input-border-color;
     }
   }
 

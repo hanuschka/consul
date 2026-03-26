@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   draw "adm/landing_pages"
   draw "adm/deficiency_reports"
   draw "adm/moderation"
+  draw "adm/valuation"
   draw :account
   draw :admin
   draw :budget

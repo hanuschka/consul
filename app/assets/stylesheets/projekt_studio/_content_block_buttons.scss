@@ -144,7 +144,7 @@
   min-width: 170px;
 }
 
-aside, .sidebar, footer {
+.projekt-content-block-wrapper.-compact-mode {
   .projekt-content-block--toolbar {
     padding: 3px 5px;
   }
@@ -178,7 +178,7 @@ aside, .sidebar, footer {
     gap: 5px;
   }
 
-  .projekt-content-block-wrapper.-in-edit-mode {
+  &.-in-edit-mode {
     .projekt-content-block-edit-main-controlls {
       display: none !important;
     }

@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "application_controller
 
 class ApplicationController < ActionController::Base
   include EmbeddedAuth
+  before_action :sanitize_pagination_params
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   after_action :set_back_path
@@ -19,6 +20,14 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+    def sanitize_pagination_params
+      %i[page per_page].each do |key|
+        if params[key].present? && !params[key].is_a?(String) && !params[key].is_a?(Numeric)
+          params[key] = nil
+        end
+      end
+    end
+
     def show_launch_page?
       launch_date_setting = Setting["extended_option.general.launch_date"]
       return false if launch_date_setting.blank?

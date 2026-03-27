@@ -42,6 +42,8 @@
     </div>
   <% end %>
 
+  <%== pagy_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+
   <div class="mt-5">
     <%= kern_link_button(
       verify_user_adm_officing_budget_path(@budget),

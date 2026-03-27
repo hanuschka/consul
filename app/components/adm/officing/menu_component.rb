@@ -19,6 +19,14 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
       }
     end
 
+    officing_manager.officing_proposal_phases.each do |proposal_phase|
+      items << {
+        label: proposal_phase.projekt.name,
+        icon: "how_to_vote",
+        path: verify_user_adm_officing_proposal_phase_path(proposal_phase)
+      }
+    end
+
     items
   end
 end

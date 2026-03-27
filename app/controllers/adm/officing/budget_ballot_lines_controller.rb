@@ -1,4 +1,6 @@
 class Adm::Officing::BudgetBallotLinesController < Adm::Officing::BaseController
+  include Adm::Officing::BudgetScoped
+
   before_action :load_budget
   before_action :verify_assignment
   before_action :load_offline_user
@@ -32,9 +34,5 @@ class Adm::Officing::BudgetBallotLinesController < Adm::Officing::BaseController
 
     def load_ballot
       @ballot = Budget::Ballot.find_by!(user: @offline_user, budget: @budget)
-    end
-
-    def officing_desk_path(offline_user)
-      officing_desk_adm_officing_budget_path(@budget, offline_user_id: offline_user.id)
     end
 end

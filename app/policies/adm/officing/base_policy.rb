@@ -27,6 +27,14 @@ class Adm::Officing::BasePolicy < ApplicationPolicy
     officing_manager_or_admin?
   end
 
+  def bulk_votes?
+    officing_manager_or_admin?
+  end
+
+  def update_bulk_votes?
+    officing_manager_or_admin?
+  end
+
   private
 
     def officing_manager_or_admin?

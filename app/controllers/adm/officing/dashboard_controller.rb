@@ -8,5 +8,7 @@ class Adm::Officing::DashboardController < Adm::Officing::BaseController
       (@officing_manager&.balloting_budgets || []) +
       (@officing_manager&.selecting_budgets || [])
     ).uniq
+
+    @proposal_phases = @officing_manager&.officing_proposal_phases || []
   end
 end

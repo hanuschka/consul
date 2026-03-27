@@ -1,4 +1,6 @@
 class Adm::Officing::BudgetInvestmentVotesController < Adm::Officing::BaseController
+  include Adm::Officing::BudgetScoped
+
   before_action :load_budget
   before_action :verify_assignment
   before_action :load_offline_user
@@ -30,9 +32,5 @@ class Adm::Officing::BudgetInvestmentVotesController < Adm::Officing::BaseContro
 
     def load_investment
       @investment = @budget.investments.find(params[:investment_id] || params[:id])
-    end
-
-    def officing_desk_path(offline_user)
-      officing_desk_adm_officing_budget_path(@budget, offline_user_id: offline_user.id)
     end
 end

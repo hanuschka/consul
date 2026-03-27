@@ -253,6 +253,13 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/proposals"
   end
 
+  def comments
+    authorize!(:comments, @projekt_phase)
+    @comments = @projekt_phase.comments.order(id: :desc).page(params[:page])
+
+    render "custom/admin/projekt_phases/comments"
+  end
+
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
     @projekt_labels = @projekt_phase.projekt_labels

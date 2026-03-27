@@ -7,7 +7,7 @@
           var showWarning = true;
         }
 
-        if (event.currentTarget.classList.contains("glightbox-link")) {
+        if (event.currentTarget.matches(".glightbox-link, .glightbox")) {
           return
         }
 

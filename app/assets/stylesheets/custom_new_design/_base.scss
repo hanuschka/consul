@@ -58,6 +58,13 @@ ul.no-ul-style {
     }
   }
 
+  &:has(.projekt-page--admin-topbar)  {
+    .notice-container {
+      top: 110px + $admin-topbar-height;
+    }
+  }
+
+
   .wrapper.has-custom-fixed-tabs .notice-container {
     @media screen and (max-width: $small-tablet-viewport-start) {
       top: 170px;

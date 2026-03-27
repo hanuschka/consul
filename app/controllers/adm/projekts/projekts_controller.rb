@@ -1,5 +1,8 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase]
+  before_action :find_projekt, only: [
+    :details, :visibility, :projekt_managers, :map, :phases, :update,
+    :destroy, :toggle_activated, :update_default_phase
+  ]
 
   def index
     authorize [:adm, :projekts, Projekt]
@@ -120,6 +123,17 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
   end
 
+  def import_projekt
+    authorize [:adm, :projekts, Projekt], :create?
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: t(".title") }
+    ]
+
+    @dt_import_url = build_dt_import_url
+  end
+
   def toggle_activated
     authorize [:adm, :projekts, @projekt], :update?
 
@@ -159,5 +173,9 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def create_params
       params.require(:projekt).permit(:name)
+    end
+
+    def build_dt_import_url
+      Dt.file_import_url(user_id: current_user.id)
     end
 end

@@ -1,8 +1,32 @@
 class InternalApi::ProjektPhasesController < InternalApi::BaseController
-  before_action :find_projekt, only: [:update]
+  before_action :find_projekt, only: [:update, :create]
   before_action :find_phase, only: [:update]
 
   skip_authorization_check
+
+  def create
+    phase_type = params[:type]
+
+    if phase_type.blank? || ProjektPhase::PROJEKT_PHASES_TYPES.exclude?(phase_type)
+      render json: { error: "Invalid phase type" }, status: :unprocessable_entity
+
+      return
+    end
+
+    phase = @projekt.projekt_phases.build(
+      type: phase_type,
+      phase_tab_name: params[:name],
+      start_date: params[:start_date],
+      end_date: params[:end_date],
+      active: params[:active] != "false"
+    )
+
+    if phase.save
+      render json: { id: phase.id, message: "Phase created" }, status: :created
+    else
+      render json: { errors: phase.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
   # Do not comment
   # In use
@@ -53,6 +77,23 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
 
     respond_to do |format|
       format.js
+    end
+  end
+
+  def update_setting
+    phase = ProjektPhase.find(params[:id])
+    setting = phase.settings.find_by(key: params[:key])
+
+    if setting.blank?
+      render json: { error: "Setting not found" }, status: :not_found
+
+      return
+    end
+
+    if setting.update(value: params[:value])
+      render json: { message: "Phase setting updated" }
+    else
+      render json: { error: "Error updating phase setting" }, status: :unprocessable_entity
     end
   end
 

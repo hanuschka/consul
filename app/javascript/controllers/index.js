@@ -90,3 +90,6 @@ application.register("adm-newsletters--recipient-group-builder", AdmNewslettersR
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 
+import AdmProjektImportController from "./adm/projekt_import_controller"
+application.register("adm-projekt-import", AdmProjektImportController)
+

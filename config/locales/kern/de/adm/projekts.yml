@@ -31,9 +31,13 @@ de:
         index:
           title: Projekte
           new_projekt: Neues Projekt erstellen
+          import_projekt: Projekt aus Datei importieren
           table:
             status: Status
             actions: Aktionen
+        import_projekt:
+          title: Projekt aus Datei importieren
+          dt_not_connected: "Der DemokratieToday-Dienst ist nicht verbunden. Bitte richten Sie zuerst die Verbindung ein."
         new:
           title: Neues Projekt erstellen
           intro_title: Projektname eingeben

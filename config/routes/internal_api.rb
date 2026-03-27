@@ -4,6 +4,8 @@ namespace :internal_api do
   patch "/internal_api_clients_registration/mark_as_registered"
 
   post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
+  get "/auth/validate_iframe_token", to: "auth#validate_iframe_token"
+  post "/auth/generate_iframe_token", to: "auth#generate_iframe_token"
 
   resources :projekts, only: [:index, :create, :update] do
     collection do
@@ -39,12 +41,15 @@ namespace :internal_api do
     member do
       post :send_notifications
       patch :set_as_default
+      patch :update_setting
     end
 
     collection do
       patch :update
     end
   end
+
+  get "projekt_import_references", to: "projekt_import_references#show"
 
   resources :images, only: [:create, :destroy]
 

@@ -175,8 +175,8 @@ class PagesController < ApplicationController
 
       @current_order = if @valid_orders.include?(params[:order])
                          params[:order]
-                       elsif sort_option.present?
-                         @current_order = sort_option.value
+                       elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+                         sort_option.value
                        else
                          Setting["selectable_setting.proposals.default_order"]
                        end
@@ -291,8 +291,8 @@ class PagesController < ApplicationController
       @current_order =
         if @valid_orders.include?(params[:order])
           params[:order]
-        elsif sort_option.present? || @valid_orders.include?(sort_option.value)
-          @current_order = sort_option.value
+        elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+          sort_option.value
         else
           @valid_orders.first
         end

@@ -152,17 +152,22 @@ namespace :adm do
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
-      get :details, on: :member
-      get :visibility, on: :member
-      get :projekt_managers, on: :member
-      get :map, on: :member
-      get :phases, on: :member
-      patch :toggle_activated, on: :member
+      collection do
+        get :import_projekt
+      end
+      member do
+        get :details
+        get :visibility
+        get :projekt_managers
+        get :map
+        get :phases
+        patch :toggle_activated
+        patch :update_default_phase
+      end
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create]
       resources :manager_assignments, only: [:update]
-      patch :update_default_phase, on: :member
     end
   end
 end

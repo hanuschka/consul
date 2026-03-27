@@ -3,7 +3,15 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.projekts.index.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
-  <%= new_resource_link(new_adm_projekts_projekt_path, t(".new_projekt")) %>
+  <div class="d-flex justify-content-start mb-4 gap-3">
+    <%= kern_link_button(new_adm_projekts_projekt_path, text: t(".new_projekt")) %>
+    <%= kern_link_button(
+      import_projekt_adm_projekts_projekts_path,
+      text: t(".import_projekt"),
+      icon: "upload_file",
+      style: :secondary
+    ) %>
+  </div>
 
   <div class="kern-table-responsive" tabindex="0">
     <table class="kern-table">

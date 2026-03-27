@@ -1,74 +1,71 @@
-.content-block-image-loading-overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  z-index: 3;
+// --- Image edit overlay (floating, no DOM wrapping) ---
 
-  .loading-spinner-inline {
-    width: 70px;
-    height: 70px;
-    position: relative;
-    z-index: 3;
-  }
-}
-
-.content-block-image-loading-overlay-blur-backdrop {
+.image-edit-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  backdrop-filter: blur(15px);
-  z-index: 2;
-}
-
-.content-block-image-loading-overlay-blur {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
+  z-index: 100;
   pointer-events: none;
+  outline: 2px solid #0078d4;
+  outline-offset: 0;
+  border-radius: 2px;
+
+  .js-img-resize-handle,
+  .image-edit-overlay--actions button,
+  .image-edit-overlay--height-control,
+  .image-edit-overlay--height-control button,
+  .image-edit-overlay--height-control input {
+    pointer-events: all;
+  }
 }
 
-.content-block-image-wrapper {
-  // Both of those cause image jumping when entering simple edit mode
-  // display: inline-block;
-  // display: inline-flex;
-  display: block;
-  position: relative;
-  width: 100%;
-  // height: 100%;
-  // overflow: hidden;
+.image-edit-overlay--handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #0078d4;
+  border: 1px solid #fff;
+  border-radius: 2px;
 
-    &.-loading {
-      .content-block-image-loading-overlay {
-        display: flex;
-      }
-
-      .content-block-image-change-button,
-      .content-block-image-crop-button,
-      .content-block-image-height-control {
-        display: none;
-      }
-    }
+  &.-top-left {
+    top: -6px;
+    left: -6px;
+    cursor: nwse-resize;
   }
 
-.image-change-button {
+  &.-top-right {
+    top: -6px;
+    right: -6px;
+    cursor: nesw-resize;
+  }
+
+  &.-bottom-left {
+    bottom: -6px;
+    left: -6px;
+    cursor: nesw-resize;
+  }
+
+  &.-bottom-right {
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+  }
+}
+
+.image-edit-overlay--actions {
+  position: absolute;
+  bottom: 7px;
+  left: 8px;
+  display: flex;
+  gap: 7px;
+}
+
+.image-edit-overlay--action-button {
+  width: 32px;
+  height: 32px;
+  font-size: 17px;
   background-color: #c7c7c7;
   color: #434343;
   border-radius: 50%;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,63 +77,17 @@
   }
 }
 
-.content-block-image-control-buttons {
+.js-img-overlay-crop.-active {
+  background-color: #45ac50;
+  color: white;
+
+  &:hover {
+    background-color: #4aba56;
+  }
+}
+
+.image-edit-overlay--height-control {
   display: flex;
-  position: absolute;
-  bottom: 7px;
-  left: 8px;
-  gap: 7px;
-  z-index: 3;
-}
-
-.content-block-image-control-button {
-  width: 32px;
-  height: 32px;
-  font-size: 17px;
-
-  &.-small {
-    width: 28px;
-    height: 28px;
-    bottom: 5px;
-    left: 5px;
-    font-size: 17px;
-  }
-}
-
-.content-block-image-crop-button {
-  &.-active {
-    background-color: #45ac50;
-    color: white;
-
-    &:hover {
-      background-color: #4aba56;
-    }
-  }
-}
-
-.orbit-figure {
-  .content-block-image-control-buttons {
-    bottom: 47px;
-  }
-}
-
-.content-block-image-change-input {
-  display: none;
-}
-
-// .content-block-image-wrapper:hover {
-//   .content-block-image-height-control {
-//     display: flex !important;
-//   }
-
-//   .content-block-image-control-buttons {
-//     display: flex;
-//   }
-// }
-
-.content-block-image-height-control {
-  // display: none;
-  display: flex !important;
   position: absolute;
   top: 5px;
   left: 5px;
@@ -164,7 +115,7 @@
     }
 
     &:last-child {
-      border-radius: 0 8px 8px 0px;
+      border-radius: 0 8px 8px 0;
     }
 
     &:hover {
@@ -206,6 +157,50 @@
     }
   }
 }
+
+// --- Loading overlay (floating, reusable) ---
+
+.image-edit-loading-overlay {
+  position: absolute;
+  z-index: 101;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 2px;
+
+  .loading-spinner-inline {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    z-index: 3;
+  }
+}
+
+.image-edit-loading-overlay--blur-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(15px);
+  z-index: 2;
+}
+
+.image-edit-loading-overlay--blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// --- Legacy styles kept for non-overlay contexts ---
 
 .projekt-content-block {
   .orbit-image {
@@ -251,7 +246,6 @@
   background-color: #b9daf5;
 
   &.-small {
-    // top: 3px;
     right: 20px;
   }
 
@@ -266,7 +260,6 @@
   background-color: #ffdede;
 
   &.-small {
-    // top: 3px;
     right: -12px;
   }
 

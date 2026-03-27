@@ -51,7 +51,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     const imageWrapper = document.createElement("div")
     imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper", "js-content-block-element-not-editable")
 
-    const smallButton = img.height < 120;
+    const imageHeight = img.clientHeight || parseInt(img.style.height) || img.naturalHeight || parseInt(img.dataset.originalThumbHeight) || 0;
+    const imageNaturalHeight = img.naturalHeight || imageHeight;
+    const smallButton = imageHeight < 120;
     const computedStyle = getComputedStyle(img);
     const borderRadius = computedStyle.borderRadius;
 
@@ -77,8 +79,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
           title="Bildhöhe (px)"
           class="js-content-block-image-height-input"
           min="30"
-          max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
-          value="${img.clientHeight}"
+          max="${imageNaturalHeight}"
+          value="${imageHeight}"
         >
         <button
           type="button"
@@ -208,11 +210,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
     blurOverlay.style.backgroundImage = `url(${previewUrl})`;
 
-    const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
-      selectedPicture.id,
-      img.clientWidth
-    )
-    const customThumbUrl = thumbResponse['custom_thumb_url']
+    const customThumbUrl = selectedPicture.custom_thumb_url;
 
     const onImageLoadComplete = () => {
       if (blurOverlay) {
@@ -238,19 +236,19 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     this.currentImg = null;
   },
 
-  async fetchCustomThumbVersionOfPicture(pictureId, width) {
-    const pad = Math.round(width * 0.2);
-
-    return await $.ajax({
-      url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
-      method: "GET",
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      data: { width: width, pad: pad },
-      responseType: "json"
-    })
-  },
+  // async fetchCustomThumbVersionOfPicture(pictureId, width) {
+  //   const pad = Math.round(width * 0.2);
+  //
+  //   return await $.ajax({
+  //     url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
+  //     method: "GET",
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     data: { width: width, pad: pad },
+  //     responseType: "json"
+  //   })
+  // },
 
   finishImageLoading(img, imageWrapper, contentBlockWrapper, contentBlockId) {
     imageWrapper.classList.remove("-loading")
@@ -261,16 +259,21 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
       img.style.objectFit = "cover"
       this.toggleCropImageButton(img, imageWrapper.querySelector(".js-content-block-image-crop-button"))
     // }
-    // img.style.height = ""
-    img.height = img.clientHeight
-    img.dataset.originalThumbHeight = img.clientHeight;
-    img.style.height = `${img.clientHeight}px`
+
+    img.style.height = ""
+    img.removeAttribute("height")
+
+    const newHeight = img.clientHeight || img.naturalHeight;
+
+    img.height = newHeight
+    img.dataset.originalThumbHeight = newHeight;
+    img.style.height = `${newHeight}px`
 
     const heightInput = imageWrapper.querySelector(".js-content-block-image-height-input")
 
     if (heightInput) {
       heightInput.max = img.naturalHeight
-      heightInput.value = img.clientHeight
+      heightInput.value = newHeight
     }
 
     // If all images in this content block are done loading, unlock the save/cancel buttons

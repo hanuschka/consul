@@ -10,9 +10,11 @@
   <div
     class="kern-container mb-5"
     data-controller="adm-projekt-import"
-    data-adm-projekt-import-details-path-value="<%= details_adm_projekts_projekt_path(':id') %>"
   >
-    <div class="admin-projekt-import--iframe-wrapper">
+    <div
+      class="admin-projekt-import--iframe-wrapper"
+      data-adm-projekt-import-target="iframeWrapper"
+    >
       <div class="admin-projekt-import--iframe-loader">
         <div class="shared-loading-spinner shared-loading-spinner--large"></div>
       </div>
@@ -22,6 +24,29 @@
         class="admin-projekt-import--iframe"
         allow="clipboard-write"
       ></iframe>
+    </div>
+
+    <div
+      class="admin-projekt-import--error -hidden"
+      data-adm-projekt-import-target="error"
+    >
+      <div class="admin-projekt-import--error-icon">
+        <i class="fa fa-exclamation-circle"></i>
+      </div>
+      <h3 class="admin-projekt-import--error-title">
+        <%= t(".error_title") %>
+      </h3>
+      <p
+        class="admin-projekt-import--error-message"
+        data-adm-projekt-import-target="errorMessage"
+      ></p>
+      <button
+        type="button"
+        class="admin-projekt-import--retry-button"
+        data-action="click->adm-projekt-import#retry"
+      >
+        <%= t(".try_again") %>
+      </button>
     </div>
   </div>
 <% else %>

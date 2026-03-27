@@ -38,6 +38,8 @@ de:
         import_projekt:
           title: Projekt aus Datei importieren
           dt_not_connected: "Der DemokratieToday-Dienst ist nicht verbunden. Bitte richten Sie zuerst die Verbindung ein."
+          error_title: "Import fehlgeschlagen"
+          try_again: "Erneut versuchen"
         new:
           title: Neues Projekt erstellen
           intro_title: Projektname eingeben

@@ -715,7 +715,16 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
+          comments: Kommentare
           ai_settings: KI Anweisung
+          user_resource_criteria: Nutzer Ressourcen Kriterien
+        comments:
+          page_title: Kommentare
+          id: ID
+          body: Kommentar
+          author: Autor
+          created_at: Erstellt am
+          no_comments: Es gibt keine Kommentare.
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert

@@ -445,6 +445,15 @@ en:
           projekt_arguments: Arguments
           formular: Formular
           formular_answers: Formular answers
+          comments: Comments
+          user_resource_criteria: User resource criteria
+        comments:
+          page_title: Comments
+          id: ID
+          body: Comment
+          author: Author
+          created_at: Created at
+          no_comments: There are no comments.
         notice:
           created: Phase created
           updated: Phase updated

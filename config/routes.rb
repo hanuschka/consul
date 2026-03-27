@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   draw "adm/deficiency_reports"
   draw "adm/moderation"
   draw "adm/valuation"
+  draw "adm/officing"
   draw :account
   draw :admin
   draw :budget

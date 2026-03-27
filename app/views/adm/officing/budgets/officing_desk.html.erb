@@ -1,0 +1,52 @@
+<%= render Adm::HeaderComponent.new(
+  title: @budget.projekt.name,
+  back_button_url: adm_officing_root_path,
+  breadcrumbs: [
+    { name: t("adm.officing.dashboard.title"), url: adm_officing_root_path },
+    { name: @budget.projekt.name }
+  ]
+) %>
+
+<div class="kern-container my-5">
+  <div class="kern-alert kern-alert--info mb-5" role="status">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+      <span class="kern-title"><%= t("adm.officing.budgets.officing_desk.voting_for", user: @offline_user.id) %></span>
+    </div>
+    <% if @ballot %>
+      <div class="kern-alert__body">
+        <strong><%= t("adm.officing.budgets.officing_desk.votes_cast") %>:</strong>
+        <% if @budget.distributed_voting? %>
+          <%= @ballot.lines.sum(:line_weight) %> / <%= @ballot.amount_limit(@budget.heading) %>
+        <% else %>
+          <%= @ballot.lines.count %> / <%= @ballot.amount_limit(@budget.heading) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @investments.any? %>
+    <% @investments.each do |investment| %>
+      <% if @ballot %>
+        <%= render "adm/officing/budgets/investment_ballot", investment: investment, ballot: @ballot, budget: @budget, offline_user: @offline_user, lines_by_investment_id: @lines_by_investment_id %>
+      <% else %>
+        <%= render "adm/officing/budgets/investment_vote", investment: investment, budget: @budget, offline_user: @offline_user %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t("adm.officing.budgets.officing_desk.no_investments") %></span>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-5">
+    <%= kern_link_button(
+      verify_user_adm_officing_budget_path(@budget),
+      text: t("adm.officing.budgets.officing_desk.next_ballot"),
+      style: :secondary
+    ) %>
+  </div>
+</div>

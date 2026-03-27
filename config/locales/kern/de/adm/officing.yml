@@ -1,0 +1,47 @@
+de:
+  adm:
+    officing:
+      menu:
+        aria_label: Officing Navigation
+        items:
+          dashboard: Übersicht
+      dashboard:
+        title: Officing
+        budgets: Budgets zur Abstimmung
+        table:
+          name: Name
+          phase: Phase
+          open: Öffnen
+        no_assignments: Ihnen sind derzeit keine Abstimmungen zugewiesen.
+      verification:
+        title: Offline-Stimme hinzufügen
+        skip_verification: Ohne Verifizierung fortfahren
+        first_name: Vorname
+        last_name: Nachname
+        gender: Geschlecht
+        date_of_birth: Geburtsdatum
+        address: Adresse
+        mark_as_verified: Als verifiziert markieren
+        submit: Offline-Stimme hinzufügen
+        errors:
+          missing_fields: Bitte stellen Sie sicher, dass alle Felder ausgefüllt sind.
+      budgets:
+        officing_desk:
+          title: Abstimmung
+          voting_for: "Abstimmung für Offline-Nutzer #%{user}"
+          votes_cast: Abgegebene Stimmen
+          no_investments: Keine Investitionsvorschläge zur Abstimmung verfügbar.
+          next_ballot: Nächster Stimmzettel
+        investment_ballot:
+          vote: Abstimmen
+          revoke: Zurücknehmen
+          weight: "Gewicht: %{count}"
+        investment_vote:
+          support: Unterstützen
+          revoke: Zurücknehmen
+          weight: "Gewicht: %{count}"
+      shared:
+        permission_problem:
+          title: Berechtigung fehlt
+          message: "Diese Person kann nicht abstimmen: %{problem}"
+          back: Zurück zur Übersicht

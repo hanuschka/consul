@@ -10,5 +10,6 @@ class Adm::Officing::DashboardController < Adm::Officing::BaseController
     ).uniq
 
     @proposal_phases = @officing_manager&.officing_proposal_phases || []
+    @voting_phases = @officing_manager&.officing_voting_phases || []
   end
 end

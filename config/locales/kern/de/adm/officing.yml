@@ -9,6 +9,7 @@ de:
         title: Officing
         budgets: Budgets zur Abstimmung
         proposals: Vorschläge zur Abstimmung
+        polls: Umfragen zur Abstimmung
         table:
           name: Name
           phase: Phase
@@ -62,6 +63,23 @@ de:
           vote_count: Stimmen
           update: Aktualisieren
           saved: Gespeichert
+      voting_phases:
+        officing_desk:
+          title: Abstimmung
+          voting_for: "Abstimmung für Offline-Nutzer #%{user}"
+          progress: "Frage %{current} von %{total}"
+          no_questions: Keine Fragen zur Abstimmung verfügbar.
+          prev_question: Vorherige Frage
+          next_question: Nächste Frage
+          next_voter: Nächste Person
+        poll_question:
+          vote: Abstimmen
+          revoke: Zurücknehmen
+          weight: "%{count} Stimme(n)"
+          weight_label: "Stimmgewicht für %{answer}"
+          no_votes_left: Keine Stimmen mehr verfügbar
+          context: "Gilt bei Antwort: %{answer}"
+          save_open_answer: Texteingabe speichern
       shared:
         permission_problem:
           title: Berechtigung fehlt

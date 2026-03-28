@@ -14,6 +14,20 @@ namespace :adm do
       resources :proposal_votes, only: [:create, :destroy]
     end
 
+    resources :voting_phases, only: [] do
+      member do
+        get :verify_user
+        post :do_verify_user
+        get :officing_desk
+      end
+
+      resources :poll_answers, only: [:create, :destroy] do
+        collection do
+          post :update_open_answer
+        end
+      end
+    end
+
     resources :budgets, only: [] do
       member do
         get :verify_user

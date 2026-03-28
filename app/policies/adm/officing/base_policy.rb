@@ -35,6 +35,10 @@ class Adm::Officing::BasePolicy < ApplicationPolicy
     officing_manager_or_admin?
   end
 
+  def update_open_answer?
+    officing_manager_or_admin?
+  end
+
   private
 
     def officing_manager_or_admin?

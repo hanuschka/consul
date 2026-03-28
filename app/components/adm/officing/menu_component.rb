@@ -27,6 +27,14 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
       }
     end
 
+    officing_manager.officing_voting_phases.each do |voting_phase|
+      items << {
+        label: voting_phase.projekt.name,
+        icon: "ballot",
+        path: verify_user_adm_officing_voting_phase_path(voting_phase)
+      }
+    end
+
     items
   end
 end

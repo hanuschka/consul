@@ -1,4 +1,6 @@
 class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
+  include Admin::PendingRoleAssignable
+
   def index
     authorize ProjektManager, policy_class: Adm::Projekts::ProjektManagerPolicy
 
@@ -42,5 +44,12 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
 
     params[:role] = "projekt_manager"
     @users = User.search(params[:search]).where.missing(:projekt_manager).limit(4)
+    check_pending_for_search
   end
+
+  private
+
+    def pending_role_type
+      "ProjektManager"
+    end
 end

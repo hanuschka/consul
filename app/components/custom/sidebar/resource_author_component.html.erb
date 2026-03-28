@@ -22,9 +22,9 @@
     <% end %>
 
     <% unless on_behalf_of? %>
-      <div class="sidebar-resource-author--registration-date">
+      <p class="sidebar-resource-author--registration-date">
         <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
-      </div>
+      </p>
 
       <!-- #cli
       <p class="users-profile-banner--info-line">

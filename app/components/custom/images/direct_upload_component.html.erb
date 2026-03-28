@@ -28,9 +28,9 @@
         <div class="direct-image-upload--progress-bar-wrapper"><div class="direct-image-upload--loading-bar"></div></div>
 
         <% if custom_edit_button.present? %>
-          <div class="direct-image-upload-custom-edit-button js-direct-image-upload-custom-edit-button <%= destroy_link_class %>" role="button">
+          <button type="button" class="direct-image-upload-custom-edit-button js-direct-image-upload-custom-edit-button <%= destroy_link_class %>">
             <%= custom_edit_button %>
-          </div>
+          </button>
         <% end %>
         <div class="<%= preview_area_class %> direct-image-upload--preview-area js-direct-image-upload--preview-area">
           <div class="image-preview">

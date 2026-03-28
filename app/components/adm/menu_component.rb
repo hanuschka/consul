@@ -4,6 +4,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     [
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
+      { label: t("adm.menu.items.pages"),         icon: "description",      path: "#", subitems: pages_subitems },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
       { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems, divider: true },
       { label: t("adm.menu.items.stats"),         icon: "bar_chart_4_bars", path: adm_statistics_path },
@@ -26,6 +27,14 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.documents"),             path: adm_documents_path }
+      ]
+    end
+
+    def pages_subitems
+      [
+        { label: t("adm.menu.items.pages_subitems.privacy"), path: adm_site_customization_edit_page_by_slug_path(slug: "privacy") },
+        { label: t("adm.menu.items.pages_subitems.conditions"), path: adm_site_customization_edit_page_by_slug_path(slug: "conditions") },
+        { label: t("adm.menu.items.pages_subitems.impressum"), path: adm_site_customization_edit_page_by_slug_path(slug: "impressum") }
       ]
     end
 

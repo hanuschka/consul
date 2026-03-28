@@ -205,10 +205,6 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
-        "welcomepage.usage_stats": true,
-        "welcomepage.platform_activity": true,
-        "welcomepage.newsletter_subscription": false,
-        "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.show_in_main_menu": false,

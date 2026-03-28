@@ -221,15 +221,15 @@
       if (Array.isArray(instance.adminFeatures)) {
         instance.adminFeatures.forEach(function(featuresCollection) {
           featuresCollection.features.forEach(function(feature) {
-            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
           });
         });
       } else if (instance.adminFeatures.type === 'FeatureCollection') {
         instance.adminFeatures.features.forEach(function(feature) {
-          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
         });
       } else if (instance.adminFeatures.type === 'Feature') {
-        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#ff0000');
+        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#008000');
       }
     }
 

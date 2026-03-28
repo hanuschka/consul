@@ -34,7 +34,20 @@
         height: auto;
       }
 
+      // Table horizontal scroll: wrap tables in their own scroll context
+      // so non-table content below does not scroll horizontally with the table
+      figure.table,
+      .table-wrapper {
+        overflow-x: auto;
+        max-width: 100%;
+      }
 
+      > table,
+      > div > table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+      }
     }
   }
 }

@@ -33,6 +33,8 @@ namespace :adm do
   resource :role_assignment, only: [] do
     post :create
     delete :destroy
+    post :create_pending
+    delete :destroy_pending
   end
 
   resources :administrators, only: [:index, :new, :destroy] do
@@ -86,6 +88,8 @@ namespace :adm do
   resource :apps, controller: "apps", only: [:show]
 
   namespace :site_customization do
+    get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug
+
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection

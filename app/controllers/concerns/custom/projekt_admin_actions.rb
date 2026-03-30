@@ -137,7 +137,7 @@ module ProjektAdminActions
       render json: {
         status: { message: "Projekt page title image updated" },
         image_url: polymorphic_path(
-          attachment.variant(resize_to_fill: [930, 585], coalesce: true, gravity: "center")
+          attachment.variant(resize_to_fill: [930, 585])
         ),
         lightbox_image_url: polymorphic_path(lightbox_variant)
       }

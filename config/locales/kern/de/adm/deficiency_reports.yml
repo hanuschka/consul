@@ -15,7 +15,7 @@ de:
             location: Standort
             district: Bezirk
             category: Kategorie
-            responsible: Sachbearbeiter*in
+            responsible: Sachbearbeiter
         tabs:
           show: Anzeigen
           administer: Administrieren
@@ -43,7 +43,7 @@ de:
           on_behalf_of_label: Im Auftrag von
           video_url: Video-URL
           address: Adresse
-          responsible_label: Sachbearbeiter*in
+          responsible_label: Sachbearbeiter
           author: Autor
           official_answer: Offizielle Antwort
           official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
@@ -64,11 +64,11 @@ de:
         administer:
           title: Administrieren
           status: Status
-          responsible: Sachbearbeiter*in
+          responsible: Sachbearbeiter
           no_status: Kein Status
-          officers: Sachbearbeiter*inen
+          officers: Sachbearbeiter
           officer_groups: Sachbearbeitergruppen
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          no_responsible: "-- Kein Sachbearbeiter --"
         audits:
           title: Änderungslog
         feedback_form:
@@ -86,7 +86,7 @@ de:
             name: Name
             color: Farbe
             icon: Symbol
-            default_responsible: Standard-Sachbearbeiter*in
+            default_responsible: Standard-Sachbearbeiter
             warning_text: Popup
             actions: Aktionen
         new:
@@ -107,11 +107,11 @@ de:
           color_hint: Wählen Sie eine Farbe für die Kategorie.
           icon_label: Symbol
           icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
-          default_responsible_label: Standard-Sachbearbeiter*in
+          default_responsible_label: Standard-Sachbearbeiter
           default_responsible_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter*in
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          officers: Sachbearbeiter
+          no_responsible: "-- Kein Sachbearbeiter --"
           warning_text_label: Popup
           submit: Speichern
       statuses:
@@ -146,10 +146,10 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter*inen
+          title: Sachbearbeiter
           search_label: Benutzer suchen
           search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
-          no_officers: Keine Sachbearbeiter*inen vorhanden
+          no_officers: Keine Sachbearbeiter vorhanden
           table:
             name: Name
             email: E-Mail
@@ -166,13 +166,13 @@ de:
           title: Gebiete
           no_districts: Keine Gebiete vorhanden
           table:
-            default_responsible: Standard-Sachbearbeiter*in
+            default_responsible: Standard-Sachbearbeiter
         edit:
           title: Bezirk bearbeiten
-          default_responsible_label: Standard-Sachbearbeiter*in
+          default_responsible_label: Standard-Sachbearbeiter
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter*in
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          officers: Sachbearbeiter
+          no_responsible: "-- Kein Sachbearbeiter --"
           submit: Speichern
         update:
           success: Bezirk wurde erfolgreich aktualisiert.
@@ -203,7 +203,7 @@ de:
           no_officer_groups: Keine Sachbearbeitergruppen vorhanden
           table:
             name: Name
-            officers: Sachbearbeiter*inen
+            officers: Sachbearbeiter
             default_email: Standard-E-Mail
         new:
           title: Neue Sachbearbeitergruppe
@@ -218,7 +218,7 @@ de:
         form:
           name_label: Name
           default_email_label: Standard-E-Mail
-          officers_label: Sachbearbeiter*inen
+          officers_label: Sachbearbeiter
           submit: Speichern
       stats:
         show:
@@ -226,7 +226,7 @@ de:
           type:
             status: Status
             category: Kategorie
-            responsible: Sachbearbeiter*in
+            responsible: Sachbearbeiter
           total: Gesamtzeit
           this_week: Diese Woche
           last_week: Letzte Woche

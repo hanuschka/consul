@@ -46,9 +46,6 @@
   <% end %>
 </div>
 
-<% if show_admin_controls_for_projekt?(@custom_page&.projekt)  %>
-  <%= render(ProjektStudio::FileUploadDialogComponent.new) %>
-<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

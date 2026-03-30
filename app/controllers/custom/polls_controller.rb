@@ -33,7 +33,7 @@ class PollsController < ApplicationController
 
     @resources = @resources.search(@search_terms) if @search_terms.present?
 
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekt_ids = @resources.pluck("projekt_phases.projekt_id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
 
     @scoped_projekt_ids = Projekt.visible_for(current_user).joins(voting_phases: :polls).select(:id)

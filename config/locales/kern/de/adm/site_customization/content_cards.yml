@@ -2,6 +2,7 @@ de:
   adm:
     site_customization:
       content_cards:
+        title: Titel
         setting:
           label:
             limit: Anzahl an angezeigten Einträgen

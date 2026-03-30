@@ -4,11 +4,19 @@
 
 <div class="kern-container my-5">
   <%= form_with model: [:adm, @newsletter] do |f| %>
-    <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:subject), divider: false, inline: true) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Newsletter.human_attribute_name(:subject),
+      hint: t(".hints.subject"),
+      divider: false
+    ) do %>
       <%= f.text_field :subject, label: false %>
     <% end %>
 
-    <%= render Kern::FormFieldComponent.new(label: Newsletter.human_attribute_name(:recipient_group), divider: false, inline: true) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Newsletter.human_attribute_name(:recipient_group),
+      hint: t(".hints.recipient_group"),
+      divider: false
+    ) do %>
       <%= f.select :recipient_group_id,
         options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id),
         { prompt: t("custom.shared.select") },

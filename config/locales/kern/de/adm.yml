@@ -35,10 +35,10 @@ de:
           idea_managers: Ideen-Administratoren
           moderators: Moderatoren
           valuators: Budget-Administratoren
-          users: Benutzer
+          users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
-          modal_notifications: Popup Benachrichtigungen
+          modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten

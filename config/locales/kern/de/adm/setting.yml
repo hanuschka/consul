@@ -14,22 +14,22 @@ de:
     meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unterhalb des Seitentitels und gibt Nutzern einen ersten Eindruck Ihrer Plattform. Sie sollte kurz, präzise und ansprechend formuliert sein, um Bürger zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Klickrate in den Suchergebnissen. Empfohlene Länge: 120-160 Zeichen."
     brand_color: "Markenfarbe"
     brand_color_description: "Die Markenfarbe wird als Akzentfarbe auf der gesamten Plattform verwendet – unter anderem für Buttons, Links und Hervorhebungen. Auf einzelnen Landingpages kann diese Farbe individuell überschrieben werden. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe aus dem Stylesheet der Plattform verwendet."
-    newsletter_brand_color: "Newsletter Markenfarbe"
-    newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-E-Mails verwendet. Sie kann unabhängig von der Plattform-Markenfarbe gewählt werden – unter anderem für Buttons, Links und Hervorhebungen. Auf einzelnen Landingpages kann diese Farbe individuell überschrieben werden. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe aus dem Stylesheet der Plattform verwendet."
+    newsletter_brand_color: "Newsletter-Markenfarbe"
+    newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-E-Mails verwendet, z. B. für Buttons, Links und dekorative Elemente. Sie kann unabhängig von der Plattform-Markenfarbe gewählt werden, um ein eigenständiges Newsletter-Design zu ermöglichen. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe der Plattform verwendet."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
     meta_keywords_description: "Optionale Stichwörter, die den Inhalt der Seite thematisch beschreiben. Sie werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag kaum noch auswerten, kann er für interne Zwecke nützlich sein. Trennen Sie Begriffe durch Kommas, z. B. Bürgerbeteiligung, Stadtentwicklung, Projekte."
-    facebook_handle: "Facebook-Benutzername"
-    facebook_handle_description: "Facebook-Benutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Facebook-Logo mit Verlinkung zum Profil. Bitte nur den Benutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Facebook-Profil verlinkt werden soll."
-    instagram_handle: "Instagram-Benutzername"
-    instagram_handle_description: "Instagram-Benutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Instagram-Logo mit Verlinkung zum Profil. Bitte nur den Benutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Instagram-Profil verlinkt werden soll."
-    twitter_handle: "X-Benutzername (ehemals Twitter)"
-    twitter_handle_description: "Benutzername Ihres X-Profils (ehemals Twitter). Wenn dieses Feld ausgefüllt ist, erscheint in der Fußzeile automatisch ein X-Logo mit Verlinkung zum Profil. Bitte nur den Benutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein X-Profil verlinkt werden soll."
+    facebook_handle: "Facebook-Nutzername"
+    facebook_handle_description: "Facebook-Nutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Facebook-Logo mit Verlinkung zum Profil. Bitte nur den Nutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Facebook-Profil verlinkt werden soll."
+    instagram_handle: "Instagram-Nutzername"
+    instagram_handle_description: "Instagram-Nutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Instagram-Logo mit Verlinkung zum Profil. Bitte nur den Nutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Instagram-Profil verlinkt werden soll."
+    twitter_handle: "X-Nutzername (ehemals Twitter)"
+    twitter_handle_description: "Nutzername Ihres X-Profils (ehemals Twitter). Wenn dieses Feld ausgefüllt ist, erscheint in der Fußzeile automatisch ein X-Logo mit Verlinkung zum Profil. Bitte nur den Nutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein X-Profil verlinkt werden soll."
     twitter_hashtag: "X-Hashtag"
     twitter_hashtag_description: "Hashtag, der mit der Plattform X verknüpft wird. Er erscheint in der Fußzeile und verlinkt auf die entsprechende Hashtag-Seite bei X. Dies eignet sich besonders für Kampagnen oder zentrale Beteiligungsthemen. Bitte ohne vorangestelltes #-Zeichen eintragen. Lassen Sie das Feld leer, wenn nicht gewünscht."
-    telegram_handle: "Telegram-Benutzername"
-    telegram_handle_description: "Telegram-Benutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Telegram-Logo mit Verlinkung zum Kanal oder Profil. Bitte nur den Benutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Telegram-Kanal verlinkt werden soll."
-    youtube_handle: "YouTube-Benutzername oder Kanal-ID"
-    youtube_handle_description: "YouTube-Benutzername oder Kanal-ID Ihrer Kommune. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein YouTube-Logo mit Verlinkung zum Kanal. Sie können den benutzerdefinierten Kanalnamen oder die technische Kanal-ID verwenden. Lassen Sie das Feld leer, wenn kein YouTube-Kanal verlinkt werden soll."
+    telegram_handle: "Telegram-Nutzername"
+    telegram_handle_description: "Telegram-Nutzername Ihrer Kommune oder Plattform. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein Telegram-Logo mit Verlinkung zum Kanal oder Profil. Bitte nur den Nutzernamen ohne @-Zeichen und ohne vollständige URL eintragen. Lassen Sie das Feld leer, wenn kein Telegram-Kanal verlinkt werden soll."
+    youtube_handle: "YouTube-Nutzername oder Kanal-ID"
+    youtube_handle_description: "YouTube-Nutzername oder Kanal-ID Ihrer Kommune. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein YouTube-Logo mit Verlinkung zum Kanal. Sie können den benutzerdefinierten Kanalnamen oder die technische Kanal-ID verwenden. Lassen Sie das Feld leer, wenn kein YouTube-Kanal verlinkt werden soll."
     welcomepage:
       usage_stats: Nutzerübersicht
       usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."
@@ -119,7 +119,7 @@ de:
         check_documents: Dokumentenprüfung in der Verifizierung
         check_documents_description: "Aktiviert eine Verifizierungsmethode, bei der die bei der Registrierung hinterlegte Dokumentennummer (letzte vier Ziffern von Personalausweis oder Reisepass) mit einer Referenzliste abgeglichen wird. Diese Prüfung ist unabhängig von der reinen Erfassung in der Registrierungsmaske und setzt eine API-Verbindung zum Melderegister voraus."
         show_data_completeness_status: Datenvollständigkeit im Nutzerkonto
-        show_data_completeness_status_description: "Zeigt im Benutzerkonto an, ob alle für bestimmte Beteiligungsphasen erforderlichen Profildaten hinterlegt wurden. Nutzer erkennen so auf einen Blick, ob sie noch Angaben ergänzen müssen, um an einer Phase teilnehmen zu können. Die Anzeige erscheint im Profilbereich und aktualisiert sich automatisch bei Datenänderungen."
+        show_data_completeness_status_description: "Zeigt im Nutzerkonto an, ob alle für bestimmte Beteiligungsphasen erforderlichen Profildaten hinterlegt wurden. Nutzer erkennen so auf einen Blick, ob sie noch Angaben ergänzen müssen, um an einer Phase teilnehmen zu können. Die Anzeige erscheint im Profilbereich und aktualisiert sich automatisch bei Datenänderungen."
         show_verification_status: Verifizierungsstatus im Nutzerkonto
         show_verification_status_description: "Zeigt den aktuellen Verifizierungsstatus des Nutzers direkt im Profilbereich unterhalb des Nutzerbildes an. Dies schafft Transparenz und erleichtert die Einschätzung, ob eine Teilnahme an verifizierungsbeschränkten Beteiligungsphasen möglich ist. Der Status wird automatisch aktualisiert, sobald sich der Verifizierungsstand ändert."
     projekt_feature:
@@ -286,7 +286,7 @@ de:
     #     homepage_button_link_description: Link, der über den Button angesteuert werden soll
 
     #   proposals:
-    #     max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
+    #     max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Nutzer
     #     max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest
     #     description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
     #     description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen

@@ -4,44 +4,8 @@
   <%= render "custom/admin/projekt_phases/nav_bar" %>
 <% end %>
 
-<div class="row">
-  <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.comments.page_title") %></h2>
-  </div>
-</div>
-
-<div class="row">
-  <div class="column">
-    <% if @comments.any? %>
-      <h3><%= page_entries_info @comments %></h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th class="text-center"><%= t("custom.admin.projekt_phases.comments.id") %></th>
-            <th><%= t("custom.admin.projekt_phases.comments.body") %></th>
-            <th><%= t("custom.admin.projekt_phases.comments.author") %></th>
-            <th><%= t("custom.admin.projekt_phases.comments.created_at") %></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @comments.each do |comment| %>
-            <tr id="<%= dom_id(comment) %>">
-              <td class="text-center"><%= comment.id %></td>
-              <td><%= truncate(comment.body, length: 100) %></td>
-              <td><%= comment.author.username %></td>
-              <td><%= l(comment.created_at, format: :short) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-
-      <%= paginate @comments %>
-    <% else %>
-      <div class="callout primary">
-        <%= t("custom.admin.projekt_phases.comments.no_comments") %>
-      </div>
-    <% end %>
+<div class="row margin-bottom">
+  <div class="small-12 column">
+    <p>Comments management is not yet available in this view.</p>
   </div>
 </div>

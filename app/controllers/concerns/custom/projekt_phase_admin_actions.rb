@@ -246,6 +246,12 @@ module ProjektPhaseAdminActions
     @apps = App.all
   end
 
+  def comments
+    authorize!(:comments, @projekt_phase)
+
+    render "custom/admin/projekt_phases/comments"
+  end
+
   def proposals
     authorize!(:proposals, @projekt_phase)
     @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])

@@ -6,7 +6,7 @@ de:
         aria_label: Projekts Navigation
         items:
           projekts: Projekte
-          managers: Projektmanager*innen
+          managers: Projektmanagernen
           landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
       landing_pages:
@@ -48,7 +48,7 @@ de:
           top_level_projekt: Top-Level-Projekt
           details: Projektdetails
           visibility: Sichtbarkeit & Darstellung
-          projekt_managers: Projektmanager*innen
+          projekt_managers: Projektmanagernen
           map: Karte
           projekt_phases: Beteiligungsphasen
           delete: Löschen
@@ -56,7 +56,7 @@ de:
         tabs:
           details: Projektdetails
           visibility: Sichtbarkeit
-          projekt_managers: Projektmanager*innen
+          projekt_managers: Projektmanagernen
           map: Karte
           phases: Beteiligungsphasen
         details:
@@ -78,8 +78,8 @@ de:
           individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken
           individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter "Starke Gruppen" angelegt wurden.
         projekt_managers:
-          title: Projektmanager*innen
-          no_managers: Es sind noch keine Projektmanager*innen im System registriert.
+          title: Projektmanagernen
+          no_managers: Es sind noch keine Projektmanagernen im System registriert.
           assignment:
             hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
             permissions:

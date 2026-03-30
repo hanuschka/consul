@@ -28,15 +28,15 @@ de:
           impressum: Impressum
         profiles: Profile
         profiles_subitems:
-          administrators: Globaler Admin
+          administrators: Administratoren
           projekt_managers: Projektmanager
-          deficiency_report_managers: Mängelmelder (Admin)
+          deficiency_report_managers: Mängel-Administratoren
           deficiency_report_officers: Mängelmelder (Sachbearbeiter)
-          idea_managers: Ideenplattform (Admin)
-          moderators: Globale Moderatoren
-          valuators: Budgetgutachter
+          idea_managers: Ideen-Administratoren
+          moderators: Moderatoren
+          valuators: Budget-Administratoren
           users: Benutzer
-        notifications: Notification
+        notifications: Benachrichtigungen
         notifications_subitems:
           modal_notifications: Popup Benachrichtigungen
           newsletters: Newsletter
@@ -49,7 +49,7 @@ de:
         aria_label: Mängelmelder Navigation
         items:
           deficiency_reports: Mängelmelder
-          officers: Sachbearbeiter*inen
+          officers: Sachbearbeiter
           categories: Kategorien
           statuses: Status
           settings: Funktionen

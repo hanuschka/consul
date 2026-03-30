@@ -32,7 +32,7 @@ de:
         title: Konto & Zugang
         intro_title: Hinweis zu Konto & Zugang
         intro_text_p1: >
-          Hier steuern Sie, welche Informationen Nutzerinnen und Nutzer bei der Registrierung angeben müssen.
+          Hier steuern Sie, welche Informationen Nutzer bei der Registrierung angeben müssen.
           Bei aktivierter erweiterter Registrierung werden zusätzliche Felder abgefragt – darunter Vorname,
           Nachname, Adresse und Geburtsdatum. Diese Daten stehen anschließend für projektbezogene
           Teilnahmebeschränkungen zur Verfügung. Optional kann zusätzlich die Eingabe der letzten vier

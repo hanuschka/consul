@@ -12,7 +12,7 @@ de:
             id: ID
             title: Titel
             budget: Budget
-            valuator: Gutachter*in
+            valuator: Gutachter
             edit: Bearbeiten
           no_investments: Noch keine Vorschläge vorhanden.
         details:
@@ -28,7 +28,7 @@ de:
             user: Autor unterstützt bei der Umsetzung
           user_cost_estimate: "Preisliche Einschätzung des Nutzers (€)"
           valuation_finished: Begutachtung abgeschlossen
-          assigned_valuators: Zugewiesene Gutachter*innen
+          assigned_valuators: Zugewiesene Gutachter
           undefined: Noch nicht bewertet
         form:
           feasibility_title: Prüfung auf Kriterienerfüllung

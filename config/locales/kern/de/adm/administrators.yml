@@ -4,7 +4,7 @@ de:
       index:
         title: Administratoren
         new_link: Neuer Administrator
-        no_administrators: Keine Administrator*innen vorhanden.
+        no_administrators: Keine Administratoren vorhanden.
         hint: Hier verwalten Sie die Plattformadministratoren. Administratoren haben vollen Zugriff auf alle Einstellungen und Verwaltungsbereiche der Plattform. Über „Neuer Administrator" können Sie registrierte Nutzer als Administratoren hinzufügen.
       new:
         title: Neuer Administrator

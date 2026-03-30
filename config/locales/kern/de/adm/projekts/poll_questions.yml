@@ -31,7 +31,7 @@ de:
           no_contextualization: Keine Kontextualisierung
           votation_type_hint_title: Information
           votation_type_hints:
-            unique: Nutzer*innen können je Frage eine Stimme vergeben.
-            multiple: Nutzer*innen können je Frage ihre Stimmen auf mehrere Antworten gleichmäßig verteilen.
-            multiple_with_weight: Nutzer*innen können je Frage ihre Stimmen auf mehrere Antworten gewichtet verteilen.
-            rating_scale: Nutzer*innen können eine Stimme pro Bewertungsskala abgeben.
+            unique: Nutzer können je Frage eine Stimme vergeben.
+            multiple: Nutzer können je Frage ihre Stimmen auf mehrere Antworten gleichmäßig verteilen.
+            multiple_with_weight: Nutzer können je Frage ihre Stimmen auf mehrere Antworten gewichtet verteilen.
+            rating_scale: Nutzer können eine Stimme pro Bewertungsskala abgeben.

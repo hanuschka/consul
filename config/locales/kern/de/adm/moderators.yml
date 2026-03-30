@@ -2,7 +2,7 @@ de:
   adm:
     moderators:
       index:
-        title: Globale Moderatoren
+        title: Moderatoren
         new_link: Neuer Moderator
         no_moderators: Keine Moderatoren vorhanden.
       new:

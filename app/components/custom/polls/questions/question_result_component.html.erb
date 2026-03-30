@@ -71,7 +71,7 @@
             <td style='' class='poll-results-additional-stats <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>'>
               <% if answer.total_votes > 0 %>
                 <% if helpers.can? :stats, answer.question.poll %>
-                  <%= link_to stats_poll_question_answer_path(answer.question.poll, answer), remote: true, style: "margin-right:7px;text-decoration:none;", title: t("custom.polls.results.question_street_details_tooltip") do %>
+                  <%= link_to stats_poll_question_answer_path(answer.question.poll, answer), remote: true, rel: "nofollow", style: "margin-right:7px;text-decoration:none;", title: t("custom.polls.results.question_street_details_tooltip") do %>
                     <i class="fas fa-chart-pie"></i>
                   <% end %>
                 <% end %>
@@ -79,7 +79,7 @@
                 <div class="reveal" id="<%= dom_id(answer, :answer_stats) %>" data-reveal></div>
 
                 <% if helpers.can? :results, answer.question.poll %>
-                  <%= link_to results_poll_question_answer_path(answer.question.poll, answer), remote: true, title: t("custom.polls.results.question_answer_details_tooltip") do %>
+                  <%= link_to results_poll_question_answer_path(answer.question.poll, answer), remote: true, rel: "nofollow", title: t("custom.polls.results.question_answer_details_tooltip") do %>
                     <i class="fas fa-clipboard-list"></i>
                   <% end %>
                 <% end %>

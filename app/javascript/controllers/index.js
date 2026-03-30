@@ -33,6 +33,9 @@ application.register("kern--form--nested-entries", KernFormNestedEntriesControll
 import KernFormCheckFilter from "./kern_form_check_filter_controller"
 application.register("kern-form-check-filter", KernFormCheckFilter)
 
+import KernRegisteredAddressSelectorController from "./kern/registered_address_selector_controller"
+application.register("kern--registered-address-selector", KernRegisteredAddressSelectorController)
+
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
 

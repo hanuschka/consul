@@ -3,7 +3,7 @@
   data-id="<%= asset.id %>"
   data-description="<%= asset.description.presence || '' %>"
   data-url="<%= asset.url_content(editor_id: params[:editor_id]) %>"
-  data-custom-thumb-url="<%= asset.custom_thumb_url(width: 870) %>"
+  data-custom-thumb-url="<%= asset.custom_thumb_url(width: 925) %>"
 >
   <div class="file-upload-manager-dialog--item-thumb">
     <% if asset.data_content_type&.start_with?('image/') %>

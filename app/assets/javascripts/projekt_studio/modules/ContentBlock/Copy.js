@@ -29,12 +29,6 @@ ProjektStudio.ContentBlock.Copy = {
   stripSimpleEditModeControls(clone) {
     clone.querySelectorAll(".js-content-block--list-control").forEach((el) => el.remove());
 
-    clone.querySelectorAll(".js-content-block-image-wrapper").forEach((wrapper) => {
-      const img = wrapper.querySelector("img");
-      if (img) wrapper.parentNode.insertBefore(img, wrapper);
-      wrapper.remove();
-    });
-
     clone.querySelectorAll(".js-content-block-link-wrapper").forEach((wrapper) => {
       const link = wrapper.querySelector("a");
       if (link) wrapper.parentNode.insertBefore(link, wrapper);

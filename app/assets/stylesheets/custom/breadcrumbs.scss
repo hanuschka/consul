@@ -4,6 +4,20 @@
   display: inline-block;
 }
 
+.breadcrumbs-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumbs-list-item {
+  display: flex;
+  align-items: center;
+}
+
 .custom-breadcrumbs {
   .breadcrumbs-item, .breadcrumbs-divider {
     margin-right: 0.25rem;

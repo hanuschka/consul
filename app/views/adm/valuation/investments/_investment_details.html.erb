@@ -1,0 +1,53 @@
+<h3 class="fs-5 mb-3"><%= t("adm.valuation.investments.details.details") %></h3>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.author") %>:</strong>
+  <%= investment.author.username %> (<%= investment.author.email %>)
+</div>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.budget") %>:</strong>
+  <%= investment.budget.name %>
+</div>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.current_phase") %>:</strong>
+  <%= "#{investment.budget.current_phase_index}. #{investment.budget.current_phase.name}" %>
+</div>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.created_at") %>:</strong>
+  <%= l investment.created_at.to_date %>
+</div>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.frontend") %>:</strong>
+  <%= link_to(investment.title, budget_investment_path(investment.budget, investment), target: "_blank", rel: "noopener", class: "kern-link") %>
+</div>
+
+<% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
+  <div class="mb-3">
+    <strong><%= t("adm.valuation.investments.details.implementation_performer_label") %>:</strong>
+    <% if investment.implementation_contribution.present? %>
+      <%= "#{t("adm.valuation.investments.details.implementation_performer.#{investment.implementation_performer}")}: #{investment.implementation_contribution}" %>
+    <% else %>
+      <%= t("adm.valuation.investments.details.implementation_performer.#{investment.implementation_performer}") %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if projekt_phase_feature?(investment.projekt_phase, "form.show_user_cost_estimate") && investment.user_cost_estimate.present? %>
+  <div class="mb-3">
+    <strong><%= t("adm.valuation.investments.details.user_cost_estimate") %>:</strong>
+    <%= investment.user_cost_estimate %>
+  </div>
+<% end %>
+
+<div class="mb-3">
+  <strong><%= t("adm.valuation.investments.details.assigned_valuators") %>:</strong>
+  <% if investment.valuators.any? %>
+    <%= investment.valuators.map { |v| "#{v.name} (#{v.email})" }.join(", ") %>
+  <% else %>
+    <%= t("adm.valuation.investments.details.undefined") %>
+  <% end %>
+</div>

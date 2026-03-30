@@ -1,0 +1,99 @@
+<%= render Adm::HeaderComponent.new(title: t("adm.officing.dashboard.title")) %>
+
+<div class="kern-container my-5">
+  <% if @budgets.any? %>
+    <h3 class="fs-5 mb-3"><%= t("adm.officing.dashboard.budgets") %></h3>
+
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t("adm.officing.dashboard.table.name") %></th>
+            <th scope="col" class="kern-table__header" style="width: 12rem;"><%= t("adm.officing.dashboard.table.phase") %></th>
+            <th scope="col" class="kern-table__header" style="width: 5rem;"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @budgets.each do |budget| %>
+            <tr class="kern-table__row">
+              <td class="kern-table__cell"><%= budget.projekt.name %></td>
+              <td class="kern-table__cell"><%= budget.current_phase.name %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(label: t("adm.officing.dashboard.table.open"), url: verify_user_adm_officing_budget_path(budget)) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <% if @proposal_phases.any? %>
+    <h3 class="fs-5 mb-3 mt-5"><%= t("adm.officing.dashboard.proposals") %></h3>
+
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t("adm.officing.dashboard.table.name") %></th>
+            <th scope="col" class="kern-table__header" style="width: 10rem;"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @proposal_phases.each do |proposal_phase| %>
+            <tr class="kern-table__row">
+              <td class="kern-table__cell"><%= proposal_phase.projekt.name %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(label: t("adm.officing.dashboard.table.vote"), url: verify_user_adm_officing_proposal_phase_path(proposal_phase)) %>
+                  <% actions.with_action(label: t("adm.officing.dashboard.table.bulk_votes"), url: bulk_votes_adm_officing_proposal_phase_path(proposal_phase)) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <% if @voting_phases.any? %>
+    <h3 class="fs-5 mb-3 mt-5"><%= t("adm.officing.dashboard.polls") %></h3>
+
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t("adm.officing.dashboard.table.name") %></th>
+            <th scope="col" class="kern-table__header" style="width: 10rem;"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @voting_phases.each do |voting_phase| %>
+            <tr class="kern-table__row">
+              <td class="kern-table__cell"><%= voting_phase.projekt.name %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(label: t("adm.officing.dashboard.table.vote"), url: verify_user_adm_officing_voting_phase_path(voting_phase)) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <% if @budgets.empty? && @proposal_phases.empty? && @voting_phases.empty? %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t("adm.officing.dashboard.no_assignments") %></span>
+      </div>
+    </div>
+  <% end %>
+</div>

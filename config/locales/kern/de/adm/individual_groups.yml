@@ -26,6 +26,14 @@ de:
           kinds:
             hard: Stark
             soft: Schwach
+      show:
+        new_value: Neuen Wert erstellen
+        table:
+          name: Name
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Wert löschen möchten?
       new:
         title: Neue Gruppe erstellen
       edit:
@@ -45,3 +53,48 @@ de:
           name: Name der Gruppe, wie er den Benutzern angezeigt wird.
           kind: Art der Gruppe (stark oder schwach).
           visible: Legt fest, ob die Gruppe für Benutzer sichtbar ist.
+    individual_group_values:
+      show:
+        csv_hint_html: >
+          Sie können mit Hilfe des CSV-Uploaders mehrere Einträge auf einmal hinzufügen.
+          Die CSV benötigt lediglich eine Spalte mit den gewünschten E-Mail-Adressen.
+          Der Spaltenname muss "Email" lauten.
+          Sie können sich zunächst die <a href="%{sample_url}">Beispieldatei</a> ansehen.
+        import_button: CSV importieren
+        search_user_label: Nutzer suchen (E-Mail)
+        related_users_heading:
+          one: "%{count} zugeordneter Nutzer"
+          other: "%{count} zugeordnete Nutzer"
+        auto_join_emails_heading:
+          one: "Konto noch nicht erstellt (%{count})"
+          other: "Konto noch nicht erstellt (%{count})"
+        table:
+          name: Name
+          email: E-Mail
+          actions: Aktionen
+          remove_user: Entfernen
+          remove_user_confirm: Sind Sie sicher, dass Sie diesen Nutzer entfernen möchten?
+          remove_email: Entfernen
+          remove_email_confirm: Sind Sie sicher, dass Sie diese E-Mail entfernen möchten?
+      search_user:
+        add_user: Hinzufügen
+        already_assigned: Bereits zugeordnet
+        not_found: Kein Nutzer mit dieser E-Mail-Adresse gefunden.
+      new:
+        title: Neuen Wert erstellen
+      edit:
+        title: Wert bearbeiten
+      create:
+        success: Wert erfolgreich erstellt.
+      update:
+        success: Wert erfolgreich aktualisiert.
+      destroy:
+        success: Wert erfolgreich gelöscht.
+      add_from_csv:
+        no_file: Bitte wählen Sie eine Datei aus.
+        invalid_format: Bitte wählen Sie eine CSV-Datei aus.
+        success: Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt.
+      form:
+        submit: Speichern
+        hints:
+          email_pattern: "E-Mail-Muster für automatische Zuordnung (z.B. @beispiel.de)"

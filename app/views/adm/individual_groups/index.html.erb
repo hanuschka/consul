@@ -26,7 +26,7 @@
       <tbody class="kern-table__body">
         <% @individual_groups.each do |individual_group| %>
           <tr id="<%= dom_id(individual_group) %>" class="kern-table__row">
-            <td scope="row" class="kern-table__header"><%= individual_group.name %></td>
+            <td scope="row" class="kern-table__header"><%= link_to individual_group.name, adm_individual_group_path(individual_group) %></td>
             <td class="kern-table__cell"><%= t(".table.kinds.#{individual_group.kind}") %></td>
             <td class="kern-table__cell"><%= individual_group.visible ? t('.table.yes') : t('.table.no') %></td>
             <td class="kern-table__cell">

@@ -8,7 +8,7 @@
   <%= new_resource_link(new_adm_projekts_phase_label_path(@projekt_phase), t(".create_button")) %>
 
   <% if @projekt_labels.empty? %>
-    <p><%= t(".no_labels") %></p>
+    <%= empty_state(title: t(".no_labels_title"), description: t(".no_labels_description"), icon: "label") %>
   <% else %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">

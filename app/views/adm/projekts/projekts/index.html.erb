@@ -1,6 +1,6 @@
-<%= content_for :title, t("adm.projekts.index.title") %>
+<%= content_for :title, t("adm.projekts.projekts.index.title") %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.projekts.index.title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.projekts.index.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
   <%= new_resource_link(new_adm_projekts_projekt_path, t(".new_projekt")) %>

@@ -3,9 +3,9 @@ de:
     projekts:
       managers:
         index:
-          title: Projektmanagernen
+          title: Projektmanager
           new_link: Neue*n Projektmanager hinzufügen
-          no_projekt_managers: Keine Projektmanagernen vorhanden.
+          no_projekt_managers: Keine Projektmanager vorhanden.
           manage_all_projekts: Admin
         new:
           title: Neue*n Projektmanager hinzufügen

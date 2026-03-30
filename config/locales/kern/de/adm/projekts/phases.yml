@@ -28,7 +28,7 @@ de:
           intro_title: Beteiligungsmodul auswählen
           intro_text: Wählen Sie ein Beteiligungsmodul aus, um eine neue Phase für dieses Projekt zu erstellen. Jedes Modul bietet unterschiedliche Funktionen für die Bürgerbeteiligung.
           phase_type_label: Beteiligungsmodul
-          phase_type_hint: Wählen Sie das gewünschte Modul für die neue Beteiligungsphase aus.
+          phase_type_hint: Jedes Beteiligungsmodul bietet unterschiedliche Funktionen – z. B. Abstimmungen, Vorschläge, Umfragen oder Veranstaltungen. Wählen Sie das Modul, das am besten zum Ziel dieser Beteiligungsphase passt. Nach der Erstellung können Sie die Phase weiter konfigurieren, z. B. mit Laufzeiten, Beschränkungen und Darstellungsoptionen.
           select_phase_type: Bitte wählen...
           create_phase: Phase erstellen
         create:
@@ -38,7 +38,7 @@ de:
         duration:
           title: Laufzeit
           dates_label: Laufzeit der Phase
-          dates_description: Wann soll die Phase beginnen und enden?
+          dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
         naming:
           title: Benennung
         restrictions:
@@ -48,15 +48,15 @@ de:
             <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
             <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
           user_status_label: Teilnahme nach Nutzerstatus
-          user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+          user_status_hint: "Legt fest, welchen Verifikationsstatus Nutzer mindestens haben müssen, um an dieser Phase teilzunehmen. Es gibt drei Stufen: Gastnutzer (ohne Registrierung), registrierte Nutzer (mit Plattform-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Höhere Stufen erfordern entsprechende Nachweise bei der Registrierung."
           geozone_label: Gebietsbeschränkung der Teilnahme
-          geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+          geozone_hint: "Schränkt die Teilnahme auf Nutzer ein, deren registrierte Adresse in einem bestimmten geografischen Gebiet liegt. Für die Nutzung muss ein Administrator vorab eine CSV-Datei mit den relevanten Adressen an demokratie.today übermitteln. Nach dem Import können die gewünschten Gebiete hier aktiviert und die Beschränkung für diese Phase zugewiesen werden."
           age_label: Altersbeschränkung der Teilnahme
-          age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden."
+          age_hint: "Schränkt die Teilnahme auf Nutzer ein, deren Alter innerhalb einer festgelegten Altersgruppe liegt. Die Altersgruppen werden von einem Administrator zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden. Nutzer ohne hinterlegtes Geburtsdatum werden aufgefordert, dieses vor der Teilnahme anzugeben."
           individual_groups_label: Beschränkung auf starke Gruppen
-          individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+          individual_groups_hint: "Schränkt die Teilnahme auf Mitglieder bestimmter Nutzergruppen ein, die vorab unter Einstellungen > Starke Gruppen angelegt wurden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen. Nur Nutzer, die einer der hier ausgewählten Gruppen zugeordnet sind, können an dieser Beteiligungsphase teilnehmen."
           extended_geozone_label: Erweiterte Gebietsbeschränkung
-          extended_geozone_hint: Erweiterte Gebietsbeschränkung nach registrierten Adressgruppen.
+          extended_geozone_hint: "Ermöglicht eine feinere Gebietsbeschränkung auf Basis registrierter Adressgruppen wie Wahlkreise, Quartiere oder Schulbezirke. Im Gegensatz zur einfachen Gebietsbeschränkung können hier mehrere Adressgruppen kombiniert werden. Die verfügbaren Gruppen basieren auf den von einem Administrator importierten Adressdaten und ermöglichen eine präzise Steuerung, welche Nutzer an der Phase teilnehmen dürfen."
           user_status:
             guest: Gäste (keine Registrierung erforderlich)
             registered: Registrierte Nutzer
@@ -79,7 +79,8 @@ de:
           title: Nutzerfunktionen
         proposals:
           title: Vorschläge
-          no_proposals: Keine Vorschläge vorhanden.
+          no_proposals_title: Keine Vorschläge vorhanden
+          no_proposals_description: Sobald Nutzer Vorschläge in dieser Beteiligungsphase einreichen, werden diese hier angezeigt und können moderiert werden.
           table:
             id: ID
             admin_accepted: Freigegeben
@@ -94,7 +95,8 @@ de:
             confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
         comments:
           title: Kommentare
-          no_comments: Keine Kommentare vorhanden.
+          no_comments_title: Keine Kommentare vorhanden
+          no_comments_description: Sobald Nutzer Kommentare in dieser Beteiligungsphase verfassen, werden diese hier angezeigt und können moderiert werden.
           table:
             body: Kommentar
             author: Autor
@@ -106,7 +108,8 @@ de:
         projekt_labels:
           title: Labels
           create_button: Neues Label erstellen
-          no_labels: Keine Labels vorhanden.
+          no_labels_title: Keine Labels vorhanden
+          no_labels_description: Erstellen Sie Labels, um Vorschläge thematisch zu kategorisieren. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die Filterung.
           table:
             icon: Icon
             name: Name
@@ -114,7 +117,8 @@ de:
         sentiments:
           title: Sentimente
           create_button: Neues Sentiment erstellen
-          no_sentiments: Keine Sentimente vorhanden.
+          no_sentiments_title: Keine Sentiments vorhanden
+          no_sentiments_description: Erstellen Sie Sentiments, um Nutzern eine emotionale Einordnung von Vorschlägen zu ermöglichen. Sentiments werden im Frontend als farbige Markierungen angezeigt.
           table:
             color: Farbe
             name: Name
@@ -126,7 +130,9 @@ de:
           lock_on: Sperrdatum
           lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
           select_managers: Abstimmungshelfer zuordnen
-          select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+          select_managers_hint: "Wählen Sie aus der Liste die Abstimmungshelfer aus, die in dieser Phase Offline-Stimmen erfassen dürfen. Nur ausgewählte Helfer können über das Officing-Modul Stimmen im Namen von Bürgern abgeben. Die Zuordnung kann jederzeit geändert werden. Abstimmungshelfer müssen zuvor von einem Administrator im System angelegt worden sein."
+          no_managers_title: Keine Abstimmungshelfer vorhanden
+          no_managers_description: Es sind noch keine Abstimmungshelfer im System registriert. Abstimmungshelfer können von einem Administrator unter „Einstellungen" angelegt werden.
         poll_questions:
           title: Fragen
           create_question: Normale Frage erstellen
@@ -151,6 +157,8 @@ de:
           title: Kategorien
           create_button: Neue Kategorie erstellen
           no_categories: Keine Kategorien vorhanden.
+          no_categories_title: Keine Kategorien vorhanden
+          no_categories_description: Erstellen Sie Kategorien, um die Orte von Interesse thematisch zu gruppieren. Kategorien werden im Frontend als Filteroption angezeigt.
           table:
             name: Name
             icon: Icon
@@ -159,6 +167,8 @@ de:
         projekt_point_of_interest_pins:
           title: Pins
           no_pins: Keine Pins vorhanden.
+          no_pins_title: Keine Pins vorhanden
+          no_pins_description: Sobald Nutzer im Frontend Orte von Interesse auf der Karte markieren, werden die Pins hier aufgelistet und können verwaltet werden.
           table:
             id: ID
             address: Adresse
@@ -174,6 +184,8 @@ de:
           send_notifications_button: Benachrichtigungen senden
           send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
           no_questions: Keine Kurzumfragen vorhanden.
+          no_questions_title: Keine Kurzumfragen vorhanden
+          no_questions_description: Erstellen Sie Kurzumfragen, um schnelles Feedback von Nutzern zu sammeln. Jede Frage kann mehrere Antwortoptionen enthalten und wird im Frontend in der Beteiligungsphase angezeigt.
           table:
             title: Titel
             question_options: Antworten
@@ -252,9 +264,12 @@ de:
             actions: Aktionen
         user_resource_criteria:
           title: Bewertungskriterien
+          empty_title: Bewertungskriterien nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-gestützten Bewertungskriterien zu aktivieren.
         ai_settings:
           title: KI Anweisung
-          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+          empty_title: KI Anweisung nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-Anweisungen zu aktivieren.
         legislation_process_draft_versions:
           title: Textentwürfe
           create_button: Neuen Textentwurf erstellen

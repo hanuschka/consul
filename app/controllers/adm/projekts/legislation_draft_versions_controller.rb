@@ -71,7 +71,7 @@ class Adm::Projekts::LegislationDraftVersionsController < Adm::Projekts::BaseCon
     def breadcrumbs_for_action(action_title)
       [
         { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.projekt.page.title, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.legislation_process_draft_versions.title"), url: legislation_process_draft_versions_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }

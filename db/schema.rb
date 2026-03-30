@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_17_134931) do
+ActiveRecord::Schema.define(version: 2026_03_30_185209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2157,6 +2157,9 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.string "comment_form_button"
     t.text "welcome_text_in_show"
     t.string "support_button_text"
+    t.text "resource_form_intro"
+    t.text "resource_form_title_placeholder"
+    t.text "resource_form_description_placeholder"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end

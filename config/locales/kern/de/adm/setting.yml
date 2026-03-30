@@ -125,13 +125,13 @@ de:
     projekt_feature:
       general:
         show_in_overview_page: Projekt auf Projektübersichtsseite
-        show_in_overview_page_description: Zeigt das Projekt auf der allgemeinen Projektübersichtsseite an.
+        show_in_overview_page_description: Steuert, ob dieses Projekt auf der allgemeinen Projektübersichtsseite angezeigt wird. Die Projektübersichtsseite listet alle öffentlichen Projekte der Plattform auf und ist für Nutzer der zentrale Einstiegspunkt, um laufende und abgeschlossene Beteiligungsprojekte zu entdecken und zu filtern.
         show_in_homepage: Projekt auf der Startseite
-        show_in_homepage_description: Blendet das Projekt unter den weiterführenden Ressourcen auf der Startseite ein - wie z.B. aktuelle Projekte
+        show_in_homepage_description: Blendet das Projekt auf der Startseite der Plattform ein, z. B. im Bereich „Aktuelle Projekte” oder unter weiterführenden Ressourcen. So erhalten besonders relevante oder aktuelle Projekte zusätzliche Aufmerksamkeit direkt beim ersten Besuch der Plattform – unabhängig von der Projektübersichtsseite.
         show_in_individual_list: Projekt in individueller Liste
-        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer individuellen Liste an. Es erscheint nicht in anderen automatischen Listen wie “Laufende Projekte”.
+        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer eigenständigen, individuellen Liste an – getrennt von den automatisch generierten Listen wie „Laufende Projekte” oder „Abgeschlossene Projekte”. Diese Option eignet sich z. B. für hervorgehobene oder dauerhaft sichtbare Projekte.
         allow_indexing: Suchmaschinen-Indexierung
-        allow_indexing_description: Erlaubt die Indexierung der Projektseite durch Google und andere Suchmaschinen.
+        allow_indexing_description: Erlaubt Suchmaschinen wie Google, die Projektseite zu indexieren und in Suchergebnissen anzuzeigen. Ist diese Option deaktiviert, wird ein „noindex”-Tag gesetzt, sodass die Seite zwar über die Plattform erreichbar bleibt, aber nicht über externe Suchmaschinen gefunden werden kann.
     ideas:
       show_in_main_menu: Ideen in der Navigation
       show_in_main_menu_description: Zeigt den Menüpunkt Ideen in der Hauptnavigation an

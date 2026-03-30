@@ -6,7 +6,7 @@ de:
         aria_label: Projekts Navigation
         items:
           projekts: Projekte
-          managers: Projektmanagernen
+          managers: Projektmanager
           landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
       landing_pages:
@@ -29,7 +29,7 @@ de:
           success: Der Wert wurde erfolgreich aktualisiert.
       projekts:
         index:
-          title: Projekte
+          title: Projektübersicht
           new_projekt: Neues Projekt erstellen
           table:
             status: Status
@@ -48,7 +48,7 @@ de:
           top_level_projekt: Top-Level-Projekt
           details: Projektdetails
           visibility: Sichtbarkeit & Darstellung
-          projekt_managers: Projektmanagernen
+          projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
           delete: Löschen
@@ -56,17 +56,23 @@ de:
         tabs:
           details: Projektdetails
           visibility: Sichtbarkeit
-          projekt_managers: Projektmanagernen
+          projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
         details:
           title: Projektdetails
+          hint_title: Hinweis zu den Projektdetails
+          hint_text: >
+            Auf dieser Seite konfigurieren Sie die grundlegenden Einstellungen des Projekts:
+            den Titel der Startseite, die Projektlaufzeit, die Zuordnung zu Themenseiten sowie
+            die geografische Einordnung. Diese Angaben bestimmen, wie das Projekt auf der Plattform
+            dargestellt und gefunden wird.
           duration_label: Projektlaufzeit
-          duration_description: Definiert den Zeitraum, in dem das Projekt online ist – auch außerhalb aktiver Beteiligungsphasen.
+          duration_description: Legt den Zeitraum fest, in dem das Projekt auf der Plattform sichtbar und zugänglich ist – unabhängig davon, ob gerade eine aktive Beteiligungsphase läuft. Das Start- und Enddatum bestimmt, wann das Projekt in der öffentlichen Projektübersicht erscheint und von Nutzern aufgerufen werden kann.
           landing_pages_label: Zuordnung zu Themenseiten
-          landing_pages_description: Ordnet das Projekt optional einer oder mehreren Gebiets- oder Themenseiten zu.
+          landing_pages_description: Ordnet das Projekt optional einer oder mehreren Themenseiten zu. Themenseiten bündeln thematisch verwandte Projekte auf einer eigenen Einstiegsseite – z. B. für Jugendbeteiligung oder Stadtentwicklung. Ein Projekt kann mehreren Themenseiten gleichzeitig zugeordnet werden.
           geo_restriction_label: Gebietszuordnung
-          geo_restriction_description: Legt fest, ob das Projekt einem bestimmten Gebiet zugeordnet ist.
+          geo_restriction_description: Ordnet das Projekt einem geografischen Gebiet zu. Diese Zuordnung wird auf der Projektübersichtsseite als Filteroption angezeigt, sodass Nutzer gezielt nach Projekten in bestimmten Stadtteilen oder dem gesamten Stadtgebiet suchen können. Die Zuordnung hat keinen Einfluss auf die Sichtbarkeit des Projekts.
           geo_restriction:
             geozone_affiliated_no_affiliation: Keine Gebietszuordnung
             geozone_affiliated_entire_city: Stadtweit
@@ -75,11 +81,25 @@ de:
             districts_label: Stadtteile
         visibility:
           title: Sichtbarkeit & Darstellung
+          hint_title: Hinweis zur Sichtbarkeit
+          hint_text: >
+            Hier legen Sie fest, wo und für wen das Projekt sichtbar ist. Sie können steuern,
+            ob es auf der Projektübersichtsseite, der Startseite oder in individuellen Listen
+            erscheint. Zusätzlich lässt sich die Sichtbarkeit auf bestimmte Nutzergruppen
+            einschränken und die Indexierung durch Suchmaschinen aktivieren oder deaktivieren.
           individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken
-          individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter "Starke Gruppen" angelegt wurden.
+          individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf ausgewählte Nutzergruppen, die zuvor unter „Starke Gruppen" angelegt wurden. Nur Mitglieder der hier zugewiesenen Gruppen können das Projekt sehen und daran teilnehmen. Ohne Auswahl bleibt das Projekt für alle registrierten Nutzer sichtbar.
         projekt_managers:
-          title: Projektmanagernen
-          no_managers: Es sind noch keine Projektmanagernen im System registriert.
+          title: Projektmanager
+          hint_title: Hinweis zu Projektmanagern
+          hint_text: >
+            Projektmanager erhalten spezifische Berechtigungen für dieses Projekt, z. B.
+            Administration, Moderation oder das Erstellen von Beiträgen im Namen anderer.
+            Weisen Sie hier registrierten Projektmanagern individuelle Rechte zu. Neue
+            Projektmanager können über den Menüpunkt „Projektmanager" in der Seitenleiste angelegt werden.
+          no_managers_title: Keine Projektmanager vorhanden
+          no_managers_description: Erstellen Sie einen neuen Projektmanager unter „Projektmanager" in der Seitenleiste, um diesen anschließend dem Projekt zuzuweisen.
+          no_managers_link: Projektmanager anlegen
           assignment:
             hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
             permissions:
@@ -91,6 +111,13 @@ de:
               review: Offline Stimmen hinzufügen
         map:
           title: Karte
+          hint_title: Hinweis zur Kartenansicht
+          hint_text: >
+            Konfigurieren Sie hier die Kartenansicht für dieses Projekt. Beim Erstellen eines neuen Projekts
+            werden die Grundeinstellungen der Standardkarte auf Applikationsebene automatisch übernommen.
+            Sobald Sie die Karte hier im Projekt anpassen, werden nachträgliche Änderungen an der Standardkarte
+            nicht mehr in dieses Projekt übernommen. Zusätzlich lassen sich Kartenebenen hinzufügen, um z. B.
+            Geodaten oder Projektstandorte visuell hervorzuheben.
         phases:
           title: Beteiligungsphasen
           intro_title: Hinweis zu den Beteiligungsphasen
@@ -103,7 +130,8 @@ de:
           intro_text_visible_description: Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.
           intro_text_p2: Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.
           new_phase: Neue Phase erstellen
-          no_phases: Diesem Projekt sind noch keine Beteiligungsphasen zugeordnet.
+          no_phases_title: Keine Beteiligungsphasen vorhanden
+          no_phases_description: Erstellen Sie eine neue Beteiligungsphase, um Bürgern die Teilnahme an diesem Projekt zu ermöglichen.
           table:
             phase_tab_name: Beteiligungsphasen
             start_date: Start

@@ -9,7 +9,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title },
       { name: t("adm.projekts.phases.index.title"), url: phases_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -43,7 +43,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -53,7 +53,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -63,7 +63,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -83,7 +83,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -93,7 +93,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -103,7 +103,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -118,7 +118,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -133,7 +133,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -145,7 +145,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -157,7 +157,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -170,7 +170,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -183,7 +183,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -218,7 +218,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
         @breadcrumbs = [
           { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-          { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
         ]
@@ -237,7 +237,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -251,7 +251,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -268,7 +268,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       format.html do
         @breadcrumbs = [
           { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-          { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
         ]
@@ -285,7 +285,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -297,7 +297,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -308,7 +308,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -319,7 +319,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -330,7 +330,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -342,7 +342,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -353,7 +353,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -365,7 +365,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -377,7 +377,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -389,7 +389,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -405,7 +405,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -417,7 +417,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -438,7 +438,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -449,7 +449,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -460,7 +460,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -471,7 +471,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -482,7 +482,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
@@ -494,7 +494,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]

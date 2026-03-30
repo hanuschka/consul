@@ -1,6 +1,10 @@
-<%= content_for :title, [@projekt.name, t("adm.projekts.projekts.index.title")].join(" | ") %>
+<%= content_for :title, [@projekt.page.title, t("adm.projekts.projekts.index.title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @projekt.page.title, breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.projekts.projekts.visibility.hint_text") %></p>
+  <% end %>
+<% end %>
 
 <%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
 

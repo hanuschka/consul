@@ -4,33 +4,33 @@ de:
       default_description: Ohne Beschreibung
       projekt_phase:
         lock_on_label: Sperrdatum
-        lock_on_description: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
+        lock_on_description: "Ab diesem Datum können keine Offline-Stimmen mehr über Abstimmungshelfer erfasst werden. Bereits abgegebene Stimmen bleiben erhalten. Das Sperrdatum begrenzt die Offline-Stimmabgabe zeitlich, z. B. nach einer Veranstaltung oder am Ende einer Beteiligungsphase. Lassen Sie das Feld leer, wenn keine zeitliche Begrenzung gewünscht ist."
         phase_tab_name_label: Tab-Bezeichnung
-        phase_tab_name_description: Wie soll der Tab für diese Phase im Frontend angezeigt werden?
+        phase_tab_name_description: Bestimmt den Namen des Tabs, der im Frontend in der Tab-Leiste des Projekts für diese Beteiligungsphase angezeigt wird. Wählen Sie eine kurze, aussagekräftige Bezeichnung, die den Inhalt der Phase klar vermittelt – z. B. „Abstimmung", „Vorschläge einreichen" oder „Diskussion". Der Tab-Name ist für alle Nutzer sichtbar.
         cta_button_name_label: Button-Beschriftung auf der Projektseite
-        cta_button_name_description: Legt fest, welcher Text im Beteiligungs-Button auf der Projektseite angezeigt wird.
+        cta_button_name_description: Bestimmt den Text des Beteiligungs-Buttons, der auf der Projektseite angezeigt wird und Nutzer zur aktiven Teilnahme auffordert. Wählen Sie eine handlungsorientierte Formulierung, z. B. „Jetzt abstimmen", „Vorschlag einreichen" oder „Meinung abgeben". Der Button verlinkt direkt auf die jeweilige Beteiligungsphase.
         resource_form_intro_label: Hinweistext beim Start der Beitragserstellung
-        resource_form_intro_description: Wird oberhalb des Eingabebereichs angezeigt, um Nutzern Hinweise oder Erläuterungen zum Ausfüllen zu geben.
+        resource_form_intro_description: Wird im Frontend oberhalb des Eingabebereichs angezeigt und gibt Nutzern Orientierung beim Erstellen eines Beitrags. Nutzen Sie dieses Feld für Hinweise zum gewünschten Format, zur inhaltlichen Ausrichtung oder für Tipps zur Formulierung. Der Text unterstützt Rich-Text-Formatierung und kann Links oder Hervorhebungen enthalten.
         resource_form_title_label: Überschrift oberhalb des Eingabebereichs
-        resource_form_title_description: Wird als einleitende Überschrift ganz oben im Bereich zur Beitragserstellung angezeigt (z. B. ‚Neuen Vorschlag erstellen').
+        resource_form_title_description: Wird im Frontend als einleitende Überschrift ganz oben im Bereich zur Beitragserstellung angezeigt. Wählen Sie eine klare, handlungsorientierte Formulierung wie „Neuen Vorschlag erstellen" oder „Ihre Idee einreichen". Die Überschrift hilft Nutzern zu verstehen, was auf dieser Seite von ihnen erwartet wird.
         resource_form_title_placeholder_label: Platzhaltertext für den Titel
-        resource_form_title_placeholder_description: Wird im Eingabefeld für den Titel als Platzhalter angezeigt – z. B. "Geben Sie Ihrem Vorschlag einen aussagekräftigen Titel!"
+        resource_form_title_placeholder_description: Wird im Eingabefeld für den Titel als grauer Platzhaltertext angezeigt, bevor der Nutzer etwas eingibt. Nutzen Sie diesen Text als Orientierungshilfe oder Inspiration – z. B. „Geben Sie Ihrem Vorschlag einen aussagekräftigen Titel". Der Platzhalter verschwindet automatisch, sobald der Nutzer mit der Eingabe beginnt.
         resource_form_description_placeholder_label: Platzhaltertext für die Beschreibung
-        resource_form_description_placeholder_description: Wird im Eingabefeld für die Beschreibung als Platzhalter angezeigt – z. B. "Beschreiben Sie Ihr Anliegen möglichst konkret."
+        resource_form_description_placeholder_description: Wird im Eingabefeld für die Beschreibung als grauer Platzhaltertext angezeigt, bevor der Nutzer etwas eingibt. Nutzen Sie diesen Text, um Nutzern eine Richtung vorzugeben – z. B. „Beschreiben Sie Ihr Anliegen möglichst konkret". Der Platzhalter verschwindet automatisch, sobald der Nutzer mit der Eingabe beginnt.
         labels_name_label: Bezeichnung für Labels
-        labels_name_description: Legt fest, wie der Begriff "Labels" im Frontend angezeigt wird – z. B. "Kategorien" oder "Themenbereiche"
-        sentiments_name_label: Bezeichnung für Sentimente
-        sentiments_name_description: Legt fest, wie der Begriff "Sentimente" im Frontend angezeigt wird – z. B. "Stimmung" oder "Gefühlslage". Sentimente drücken aus, ob ein Vorschlag positiv, neutral oder negativ bewertet wird."
-        welcome_text_in_show_label: Einleitungstext oberhalb der eingereichten Vorschlägen
-        welcome_text_in_show_description: Wird oberhalb der veröffentlichten Vorschläge angezeigt und dient zur inhaltlichen Einführung oder Erläuterung.
+        labels_name_description: Legt fest, unter welcher Bezeichnung Labels im Frontend für die Nutzer sichtbar sind. Standardmäßig wird der Begriff „Labels" verwendet, Sie können ihn jedoch durch eine passendere Bezeichnung ersetzen – z. B. „Kategorien", „Themenbereiche" oder „Schlagwörter". Die Änderung wirkt sich auf alle Stellen im Frontend aus.
+        sentiments_name_label: Bezeichnung für Sentiments
+        sentiments_name_description: Legt fest, unter welcher Bezeichnung Sentiments im Frontend für die Nutzer sichtbar sind. Standardmäßig wird der Begriff „Sentiments" verwendet, Sie können ihn jedoch durch eine passendere Bezeichnung ersetzen – z. B. „Stimmung", „Bewertung" oder „Gefühlslage". Die Änderung wirkt sich auf alle Stellen im Frontend aus.
+        welcome_text_in_show_label: Einleitungstext oberhalb der eingereichten Vorschläge
+        welcome_text_in_show_description: Wird im Frontend oberhalb der Liste der veröffentlichten Vorschläge angezeigt. Nutzen Sie dieses Feld, um den Nutzern eine inhaltliche Einführung zu geben, den Kontext der Beteiligung zu erläutern oder auf Besonderheiten hinzuweisen. Der Text unterstützt Rich-Text-Formatierung und kann Links oder Hervorhebungen enthalten.
         support_button_text_label: Text des Unterstützungsbuttons
-        support_button_text_description: Legt fest, welcher Text im Button zur Unterstützung eines Vorschlags angezeigt wird – z. B. "Unterstützen" oder "Ich bin dafür"
-        description_label: Description Label 11
-        description_description: Description Description
+        support_button_text_description: Bestimmt den Text des Buttons, mit dem Nutzer einen Vorschlag unterstützen können. Wählen Sie eine klare, motivierende Formulierung wie „Unterstützen", „Ich bin dafür" oder „Gefällt mir". Der Button-Text wird im Frontend an jedem Vorschlag angezeigt und sollte zur Tonalität der Beteiligung passen.
+        description_label: Beschreibung der Abstimmungsphase
+        description_description: Wird im Frontend als einleitender Text oberhalb der Abstimmung angezeigt. Nutzen Sie dieses Feld, um den Teilnehmern den Kontext der Abstimmung zu erläutern – z. B. worum es geht, wie abgestimmt wird und was mit den Ergebnissen geschieht. Der Text kann formatiert werden und unterstützt Rich-Text-Elemente.
         comment_form_title_label: Titel des Kommentarformulars
-        comment_form_title_description: Wird oberhalb des Kommentarformulars angezeigt.
-        comment_form_button_label: Kommentarformular Button
-        comment_form_button_description: Text des Buttons zum Absenden eines Kommentars.
+        comment_form_title_description: Wird als Überschrift oberhalb des Kommentarformulars angezeigt und gibt Nutzern eine Orientierung, was von ihnen erwartet wird. Wählen Sie eine einladende Formulierung, z. B. „Ihre Meinung ist gefragt", „Kommentar verfassen" oder „Feedback hinterlassen". Wenn das Feld leer bleibt, wird kein Titel angezeigt.
+        comment_form_button_label: Button-Text des Kommentarformulars
+        comment_form_button_description: Bestimmt den Text des Buttons, mit dem Nutzer ihren Kommentar absenden. Wählen Sie eine klare, handlungsorientierte Formulierung wie „Kommentar absenden", „Beitrag veröffentlichen" oder „Absenden". Der Button-Text sollte eindeutig vermitteln, dass der Kommentar damit veröffentlicht wird.
       poll:
         closing_note_label: Text der Abschlussseite
         closing_note_description: Wird auf der Abschlussseite der Umfrage angezeigt, nachdem die Nutzer ihre Antworten eingereicht haben.

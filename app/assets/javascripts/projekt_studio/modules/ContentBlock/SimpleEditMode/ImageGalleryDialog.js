@@ -54,9 +54,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   async openDialog(onSelectCallback, contentBlockId = null, contentBlockWrapper = null) {
-    const dialog = this.getDialogElement();
-    if (!dialog) return;
-
     this.onSelectCallback = onSelectCallback;
     this.contentBlockId = contentBlockId;
     this.contentBlockWrapper = contentBlockWrapper;
@@ -71,7 +68,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
       removedItemsStack: []
     };
 
-    if (!dialog.open) {
+    const dialog = this.getDialogElement();
+    if (dialog && !dialog.open) {
       dialog.showModal();
     }
     $(".js-file-upload-manager-search").val("")
@@ -366,8 +364,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         const response = await this.fetchImageData();
         const html = await response.text();
         const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
-        if (!dialogBody) return;
-
         dialogBody.innerHTML = html;
       } catch (error) {
         console.error('Error fetching images:', error);

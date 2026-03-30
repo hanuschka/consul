@@ -265,8 +265,8 @@ de:
         rating_scale: Bewertungsskala
       individual_group:
         name: Name
-        visible: sichtbar
-        kind: Art
+        visible: Sichtbarkeit
+        kind: Gruppentyp
         kinds:
           hard: starke Gruppe
           soft: schwache Gruppe

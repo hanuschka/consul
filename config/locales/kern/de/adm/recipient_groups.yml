@@ -22,15 +22,15 @@ de:
         select_options:
           projekt_related: Projektbezogen
         access_methods:
-          newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
-          all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
-          administrators_ids: Administrator*innen
-          any_phase_subscribers_ids: Abonnent*innen aller Phasen
-          authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
-          authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen
-          authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
-          authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
-          authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
+          newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung
+          all_newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
+          administrators_ids: Administratoren
+          any_phase_subscribers_ids: Abonnenten aller Phasen
+          authors_of_feasible_ids: Autoren, deren Vorschläge den Kriterien entsprechen
+          authors_of_unfeasible_ids: Autoren, deren Vorschläge den Kriterien nicht entsprechen
+          authors_of_selected_ids: Autoren, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
+          authors_of_not_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
+          authors_of_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung gewonnen haben
       edit:
         title: Empfängergruppe bearbeiten
         submit: Empfängergruppe speichern

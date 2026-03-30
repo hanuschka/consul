@@ -10,6 +10,7 @@ class Adm::BaseController < ActionController::Base
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  helper KernHelper
   helper_method :adm_menu_component, :adm_header_title
 
   private

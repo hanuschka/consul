@@ -25,16 +25,16 @@ de:
         from: Von
         subject: Betreff
         recipient_group: Empfängergruppe
-        affected_users: "(%{n} Empfänger*innen)"
+        affected_users: "(%{n} Empfänger)"
         sent_emails: "Gesendete Emails: %{count}"
         body: Inhalt
         body_help_text: So wird der Newsletter als Email dargestellt.
         send: Senden
-        send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger*innen senden möchten?"
+        send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger senden möchten?"
         send_test: Test-Email an mich senden
         deliver_success: Newsletter wird versendet.
         send_test_success: Test-Email wurde erfolgreich gesendet.
-        recipient_emails: "Empfänger*innen Emails"
+        recipient_emails: "Empfänger Emails"
       new:
         title: Newsletter erstellen
       edit:

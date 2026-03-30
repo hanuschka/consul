@@ -20,15 +20,15 @@ de:
           actions:
             hide: Verstecken
             block: Blockieren
-          confirm_hide: "Sind Sie sicher? Damit wird der/die Benutzer*in \"%{name}\" ausgeblendet, ohne dass sein/ihr Inhalt verborgen wird."
-          confirm_block: "Sind Sie sicher? Dadurch wird der/die Benutzer*in \"%{name}\" und alle seine/ihre Inhalte ausgeblendet."
-        notice_hide: Der/die Benutzer*in wurde ausgeblendet. Inhalte, die von diesem/dieser Benutzer*in verfasst wurden, sind weiterhin verfügbar.
-        notice_block: Der/die Benutzer*in wurde blockiert. Alle Inhalte dieses/dieser Benutzers*in wurden ausgeblendet.
+          confirm_hide: "Sind Sie sicher? Damit wird der Benutzer \"%{name}\" ausgeblendet, ohne dass sein/ihr Inhalt verborgen wird."
+          confirm_block: "Sind Sie sicher? Dadurch wird der Benutzer \"%{name}\" und alle seine/ihre Inhalte ausgeblendet."
+        notice_hide: Der Benutzer wurde ausgeblendet. Inhalte, die von diesem Benutzer verfasst wurden, sind weiterhin verfügbar.
+        notice_block: Der Benutzer wurde blockiert. Alle Inhalte dieses Benutzers wurden ausgeblendet.
       proposals:
         index:
           title: Vorschläge moderieren
           projekt: Projekt
-          author: Autor*in
+          author: Autor
           flags_count: Meldungen
           tabs:
             pending_flag_review: Gemeldet
@@ -47,7 +47,7 @@ de:
         index:
           title: Bürgerhaushaltsvorschläge moderieren
           projekt: Projekt
-          author: Autor*in
+          author: Autor
           flags_count: Meldungen
           tabs:
             pending_flag_review: Gemeldet
@@ -67,7 +67,7 @@ de:
         index:
           title: Kommentare moderieren
           projekt: Projekt
-          author: Autor*in
+          author: Autor
           flags_count: Meldungen
           tabs:
             pending_flag_review: Gemeldet

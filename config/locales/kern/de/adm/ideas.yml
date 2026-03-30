@@ -15,7 +15,7 @@ de:
             status: Status
             location: Standort
             category: Kategorie
-            officer: Sachbearbeiter*in
+            officer: Sachbearbeiter
         idea_row:
           frontend_link: Frontend
         edit:

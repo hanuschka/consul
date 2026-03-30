@@ -9,7 +9,7 @@ de:
           browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         form:
           allow_attached_image: Titelbild
-          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          allow_attached_image_description: Ermöglicht es den Bürger ein Titelbild hinzuzufügen.
           labels: Labels
           labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
           sentiments: Sentimente
@@ -17,11 +17,11 @@ de:
           show_map: Karte
           show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
           enable_geoman_controls_in_maps: Polygone in Karte
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
           allow_attached_documents: Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
           enable_external_video: Video
-          enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+          enable_external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
           show_implementation_option_fields: Umsetzung
           show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
           show_user_cost_estimate: Preisschätzung
@@ -126,7 +126,7 @@ de:
           require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
         form:
           allow_attached_image: Titelbild
-          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          allow_attached_image_description: Ermöglicht es den Bürger ein Titelbild hinzuzufügen.
           labels: Labels
           labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
           sentiments: Sentiments
@@ -134,11 +134,11 @@ de:
           show_map: Karte
           show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
           enable_geoman_controls_in_maps: Polygone in Karte
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
           allow_attached_documents: Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
           enable_external_video: Video
-          enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+          enable_external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
           anonimize_authors: Beiträge anonym erstellen
           anonimize_authors_description: Autorenkacheln werden im Frontend nicht angezeigt.
           voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren

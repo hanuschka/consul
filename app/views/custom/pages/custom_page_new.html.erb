@@ -4,7 +4,7 @@
   <% content_for :admin_topbar_actions do %>
     <% if @custom_page.landing? %>
       <% if current_user&.administrator? %>
-        <%= link_to edit_adm_projekts_landing_page_path(@custom_page),
+        <%= link_to edit_adm_landing_pages_landing_page_path(@custom_page),
               class: "button hollow projekt-page--admin-topbar-button",
               target: "_blank" do %>
           <i class="fas fa-edit"></i>

@@ -1,0 +1,32 @@
+en:
+  adm:
+    projekts:
+      phases:
+        ai_user_flow:
+          title: AI flow assistant
+          criteria_title: Evaluation criteria
+          add_criterion: Add criterion
+          text_placeholder: "Describe the criterion …"
+        ai_settings:
+          title: Voice assistant
+          empty_title: Voice assistant not available
+          empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative at demokratie.today to activate the voice assistant.
+          questions: What questions should be asked to citizens?
+          criteria: What criteria must the proposals meet?
+          parting_words: What parting words should the AI assistant give?
+          update_button: Update
+          not_connected: The AI app is not connected
+        projekt_phase:
+          ai_user_flow: AI flow assistant
+          ai_settings: Voice assistant
+  projekt_phase_setting:
+    proposal_phase:
+      feature:
+        resource:
+          create_proposal_with_ai: Create proposal with AI
+          create_proposal_with_ai_description: Shows the "Create proposal with AI" button
+    budget_phase:
+      feature:
+        resource:
+          create_proposal_with_ai: Create proposal with AI
+          create_proposal_with_ai_description: Shows the "Create proposal with AI" button

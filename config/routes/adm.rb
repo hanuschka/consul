@@ -63,6 +63,9 @@ namespace :adm do
   resources :valuators, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
+  resources :officing_managers, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member

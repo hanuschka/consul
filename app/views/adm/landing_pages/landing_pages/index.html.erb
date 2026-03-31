@@ -8,6 +8,10 @@
 
   <hr class="kern-divider mb-5" aria-hidden="true">
 
+  <% if policy([:adm, :landing_pages, :landing_page]).create? %>
+    <%= new_resource_link(new_adm_landing_pages_landing_page_path, t(".new_landing_page")) %>
+  <% end %>
+
   <% if @landing_pages.any? %>
     <table class="kern-table content-cards-table" id="content-cards-table">
       <thead class="kern-table__head">

@@ -29,17 +29,11 @@
                   url: adm_projekts_phase_legislation_draft_version_path(@projekt_phase, @draft_version),
                   method: :patch do |f| %>
 
-      <div class="adm-markdown-editor__toolbar d-flex align-items-center gap-2 mb-3">
-        <h3 class="m-0 fs-4 fw-medium flex-grow-1"><%= t(".title") %></h3>
-        <button type="button" class="kern-btn kern-btn--ghost kern-btn--small"
-                data-action="adm-markdown-editor#toggleFullscreen">
-          <span class="material-symbols-outlined" aria-hidden="true">fullscreen</span>
-          <%= t(".fullscreen") %>
-        </button>
-        <%= kern_button(icon: "save", text: t(".save"), type: "submit") %>
+      <div class="mb-3">
+        <%= kern_button(icon: "fullscreen", text: t(".fullscreen"), style: :secondary, data: { action: "adm-markdown-editor#toggleFullscreen" }) %>
       </div>
 
-      <div class="adm-markdown-editor__panes d-flex flex-column flex-md-row gap-3">
+      <div class="adm-markdown-editor__panes d-flex gap-3">
         <div class="adm-markdown-editor__editor">
           <%= f.text_area :body,
                           label: false,
@@ -54,6 +48,10 @@
              data-adm-markdown-editor-target="preview"
              data-empty-text="<%= t('.preview_placeholder') %>">
         </div>
+      </div>
+
+      <div class="mt-4">
+        <%= kern_button(icon: "save", text: t(".save"), type: "submit") %>
       </div>
     <% end %>
   </div>

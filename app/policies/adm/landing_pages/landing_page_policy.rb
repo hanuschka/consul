@@ -3,6 +3,14 @@ class Adm::LandingPages::LandingPagePolicy < ApplicationPolicy
     @user&.administrator? || @user&.landing_page_manager?
   end
 
+  def new?
+    @user&.administrator? || @user&.landing_page_manager&.manage_all_landing_pages?
+  end
+
+  def create?
+    @user&.administrator? || @user&.landing_page_manager&.manage_all_landing_pages?
+  end
+
   def edit?
     @user&.administrator? || @user&.landing_page_manager?(@record)
   end

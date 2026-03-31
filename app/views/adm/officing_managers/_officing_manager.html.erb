@@ -1,0 +1,11 @@
+<tr class="kern-table__row" id="<%= dom_id(officing_manager) %>">
+  <th scope="row" class="kern-table__header"><%= officing_manager.id %></th>
+  <td class="kern-table__cell"><%= officing_manager.name %></td>
+  <td class="kern-table__cell"><%= officing_manager.email %></td>
+  <td class="kern-table__cell">
+    <%= link_to t('shared.delete'),
+                adm_officing_manager_path(officing_manager),
+                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                class: "kern-link" %>
+  </td>
+</tr>

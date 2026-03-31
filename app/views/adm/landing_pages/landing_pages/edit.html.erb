@@ -3,6 +3,8 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container my-5">
+  <%= render "navbar_items", landing_page: @landing_page %>
+
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :slug, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
 
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>

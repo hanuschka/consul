@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_30_185209) do
+ActiveRecord::Schema.define(version: 2026_03_31_105651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1608,6 +1608,8 @@ ActiveRecord::Schema.define(version: 2026_03_30_185209) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
+    t.integer "landing_page_id"
+    t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
   end

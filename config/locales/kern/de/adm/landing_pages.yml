@@ -23,6 +23,12 @@ de:
           title: Themenseite bearbeiten
           managers_title: Themenseiten Manager
           managers_description: Wählen Sie aus, welche Manager diese Themenseite verwalten dürfen.
+        navbar_items:
+          title: Navigation
+          description: >
+            Konfigurieren Sie die Navigationselemente für diese Themenseite.
+            Per Drag & Drop können Sie die Reihenfolge anpassen.
+          new_item: Neuen Eintrag erstellen
         update:
           success: Der Wert wurde erfolgreich aktualisiert.
       managers:

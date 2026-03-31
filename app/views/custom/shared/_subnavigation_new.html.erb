@@ -1,8 +1,10 @@
 <ul class="main-menu">
   <li class="content-items">
     <ul class="content-items-list">
-      <% if NavbarItem.any? %>
-        <%= render partial: "shared/navbar_items", locals: { placement: placement } %>
+      <% landing_page_for_nav = @ui_landing_page %>
+      <% has_navbar_items = landing_page_for_nav.present? ? NavbarItem.for_landing_page(landing_page_for_nav.id).any? : NavbarItem.global.any? %>
+      <% if has_navbar_items %>
+        <%= render partial: "shared/navbar_items", locals: { placement: placement, landing_page: landing_page_for_nav } %>
       <% else %>
 
         <% if @ui_hide_topbar_links && @ui_show_projekts_overview %>

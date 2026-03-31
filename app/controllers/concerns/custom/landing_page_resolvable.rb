@@ -3,6 +3,28 @@ module LandingPageResolvable
 
   private
 
+  def resolve_landing_page_from_slug
+    slug = params[:landing_page_slug]
+    return if slug.blank?
+
+    landing_page = SiteCustomization::Page.published.landing.find_by(slug: slug)
+
+    if landing_page.nil?
+      raise ActionController::RoutingError.new("Not Found")
+    end
+
+    @landing_page = landing_page
+    set_landing_page_topbar_ui_variables(landing_page)
+
+    landing_page
+  end
+
+  def landing_page_scoped_projekt_ids
+    return if @landing_page.blank?
+
+    @landing_page.landing_projekts.activated.ids
+  end
+
   def resolve_landing_page_for_projekt(projekt)
     return if projekt.blank?
 

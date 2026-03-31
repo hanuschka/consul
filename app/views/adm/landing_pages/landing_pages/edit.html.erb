@@ -26,6 +26,8 @@
     <% end %>
   <% end %>
 
+  <%= render "navbar_items", landing_page: @landing_page %>
+
   <h2 class="kern-title kern-title--small mb-3"><%= t("adm.homepage.show.content_cards_title") %></h2>
   <p class="kern-body mb-4 mb-md-0">
     <%= t("adm.homepage.show.content_cards_description") %>

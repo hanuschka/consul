@@ -59,17 +59,31 @@ module Adm
         landing_page_id = params[:landing_page_id] || params.dig(:navbar_item, :landing_page_id)
         return if landing_page_id.blank?
 
-        SiteCustomization::Page.find(landing_page_id)
+        ::SiteCustomization::Page.find(landing_page_id)
       end
 
       def set_form_variables
-        @available_kinds = @landing_page.present? ? ["presets"] : NavbarItem.kinds.keys
+        @available_kinds = NavbarItem.kinds.keys
 
         @available_presets =
           if @landing_page.present?
             NavbarItem::PRESETS.select { |k, _| k.in?(NavbarItem::LANDING_PAGE_ALLOWED_PRESETS) }
           else
             NavbarItem::PRESETS
+          end
+
+        @available_projekts =
+          if @landing_page.present?
+            @landing_page.landing_projekts
+          else
+            Projekt.all
+          end
+
+        @form_url =
+          if @landing_page.present?
+            adm_landing_pages_landing_page_navbar_items_path(@landing_page)
+          else
+            adm_navbar_items_path
           end
       end
 

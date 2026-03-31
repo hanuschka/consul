@@ -11,7 +11,7 @@
   <div class="column">
     <ul
       class="user-resource-criteria--list js-criteria-sortable"
-      data-reorder-url="<%= reorder_user_resource_criteria_admin_projekt_phase_path(@projekt_phase) %>"
+      data-reorder-url="<%= reorder_ai_user_flow_admin_projekt_phase_path(@projekt_phase) %>"
     >
       <% @criteria.each do |criterion| %>
         <li
@@ -52,7 +52,7 @@
 
     <form
       class="js-criteria-add-form"
-      action="<%= user_resource_criteria_admin_projekt_phase_path(@projekt_phase) %>"
+      action="<%= ai_user_flow_admin_projekt_phase_path(@projekt_phase) %>"
       data-update-url-template="<%= update_user_resource_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
       data-delete-url-template="<%= destroy_user_resource_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
     >

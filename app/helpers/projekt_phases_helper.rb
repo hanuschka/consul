@@ -1,11 +1,11 @@
 module ProjektPhasesHelper
-  SUBCONTROLLER_NAV_ACTIONS = %w[user_resource_criteria].freeze
+  SUBCONTROLLER_NAV_ACTIONS = %w[ai_user_flow].freeze
 
   def projekt_phase_navbar_link(action)
     class_name = ["static-subnav-link", static_subnav_link_current?(action)].reject(&:blank?).join(" ")
     path =
       if SUBCONTROLLER_NAV_ACTIONS.include?(action)
-        user_resource_criteria_adm_projekts_phase_path(params[:id])
+        ai_user_flow_adm_projekts_phase_path(params[:id])
       else
         url_for(controller: "/adm/projekts/phases", action:, id: params[:id], only_path: true)
       end

@@ -52,13 +52,18 @@ namespace :adm do
         get :sentiments
 
         # Users & permissions
-        get :user_resource_criteria
+        get :ai_user_flow
+        post :create_user_resource_criterion
+        patch :update_user_resource_criterion
+        delete :destroy_user_resource_criterion
+        patch :reorder_user_resource_criteria
         get :officing_managers
         get :officing_manager_audits
         get :age_ranges_for_stats
 
         # AI
         get :ai_settings
+        patch :update_ai_settings
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications

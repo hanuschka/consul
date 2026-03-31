@@ -99,7 +99,6 @@ de:
       footer:
         impressum: Impressum
         navigation_heading: Fußzeilennavigation
-        main_navigation_heading: Navigation
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         demokratie: demokratie.today
         demokratie_url: "https://demokratie.today/"

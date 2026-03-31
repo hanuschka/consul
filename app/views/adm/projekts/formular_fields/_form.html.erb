@@ -5,8 +5,8 @@
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint")) do %>
-    <%= f.text_area :description, label: false, rows: 4 %>
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
+    <%= f.text_area :description, label: false, rows: 4, placeholder: t(".description_placeholder") %>
   <% end %>
 
   <div data-controller="formular-fields--kind">

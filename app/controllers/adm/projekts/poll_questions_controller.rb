@@ -10,7 +10,14 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
     authorize [:adm, :projekts, @question], :create?, policy_class: Adm::Projekts::PollQuestionPolicy
     set_context_sources
-    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+    @title = if params[:parent_question_id].present?
+                t(".nested_title")
+              elsif params[:bundle_question] == "true"
+                t(".bundle_title")
+              else
+                t(".title")
+              end
+    @breadcrumbs = breadcrumbs_for_action(@title)
   end
 
   def create
@@ -24,7 +31,12 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     @question.given_order = @poll.questions.maximum(:given_order).to_i + 1
 
     if @question.save
-      redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question)
+      redirect_path = if @question.parent_question.present?
+                        adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
+                      else
+                        adm_projekts_phase_poll_question_path(@projekt_phase, @question)
+                      end
+      redirect_to redirect_path
     else
       set_context_sources
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.poll_questions.new.title"))
@@ -121,7 +133,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     def breadcrumbs_for_action(action_title)
       [
         { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.poll_questions.title"), url: poll_questions_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }

@@ -8,7 +8,7 @@
   <%= new_resource_link(new_adm_projekts_phase_sentiment_path(@projekt_phase), t(".create_button")) %>
 
   <% if @sentiments.empty? %>
-    <p><%= t(".no_sentiments") %></p>
+    <%= empty_state(title: t(".no_sentiments_title"), description: t(".no_sentiments_description"), icon: "palette") %>
   <% else %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">

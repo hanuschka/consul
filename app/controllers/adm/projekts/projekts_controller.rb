@@ -42,7 +42,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
     ]
   end
@@ -52,7 +52,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -68,7 +68,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -77,7 +77,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -92,7 +92,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end

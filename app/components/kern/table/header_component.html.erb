@@ -25,18 +25,22 @@
         <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
       <% end %>
 
-      <fieldset class="kern-fieldset kern-table__header-filter-menu p-4 d-none" data-table-header-target="filterMenu">
-        <button type="button" class="kern-btn kern-btn--tertiary position-absolute top-0 right-0 p-1" style="min-height: auto; line-height: 1" data-action="table-header#toggleFilterMenu">
-          <span class="material-symbols-outlined">close</span>
-          <span class="sr-only">Schließen</span>
-        </button>
-
-        <legend class="kern-fieldset__legend mb-2"><%= @label %></legend>
+      <fieldset class="kern-fieldset kern-table__header-filter-menu d-none" data-table-header-target="filterMenu">
+        <legend class="kern-fieldset__legend kern-table__header-filter-legend">
+          <%= @label %>
+          <button type="button" class="kern-btn kern-btn--tertiary kern-table__header-filter-close" data-action="table-header#toggleFilterMenu">
+            <span class="material-symbols-outlined">close</span>
+            <span class="sr-only"><%= t("shared.table.filter.close") %></span>
+          </button>
+        </legend>
 
         <div class="kern-fieldset__body">
           <% if @search.present? %>
-            <div class="kern-form-input my-3">
-              <%= text_field_tag "#{@column}__search", params["#{@column}__search"], class: "kern-form-input__input", data: { "table-header-target": "searchInput" } %>
+            <div class="kern-form-input">
+              <%= text_field_tag "#{@column}__search", params["#{@column}__search"],
+                    class: "kern-form-input__input",
+                    placeholder: t("shared.table.filter.search_placeholder", column_label: @label),
+                    data: { "table-header-target": "searchInput" } %>
             </div>
           <% end %>
 
@@ -48,8 +52,8 @@
           <% end %>
         </div>
 
-        <button type="button" class="kern-btn kern-btn--primary my-3" data-action="table-header#applyFilter">
-          <span class="kern-label">Filter anwenden</span>
+        <button type="button" class="kern-btn kern-btn--primary kern-btn--small mt-3" data-action="table-header#applyFilter">
+          <span class="kern-label"><%= t("shared.table.filter.apply") %></span>
         </button>
       </fieldset>
     <% end %>

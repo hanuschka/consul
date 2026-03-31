@@ -23,7 +23,15 @@ namespace :adm do
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
-  resources :individual_groups, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :individual_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    resources :individual_group_values, as: :values, only: [:show, :new, :create, :edit, :update, :destroy] do
+      post :search_user, on: :member
+      post :add_user, on: :member
+      post :add_from_csv, on: :member
+      delete :remove_user, on: :member
+      delete :remove_email_from_auto_join_emails, on: :member
+    end
+  end
   resources :age_ranges, only: [:index, :new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
   end

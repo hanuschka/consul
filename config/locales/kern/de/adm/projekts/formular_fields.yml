@@ -13,22 +13,58 @@ de:
         destroy:
           success: Formularfeld wurde erfolgreich gelöscht.
         form:
-          name_label: Name
-          name_hint: Der Name des Formularfelds, wie er im Formular angezeigt wird.
-          description_label: Beschreibung
-          description_hint: Optionale Beschreibung oder Hilfetext für das Feld.
+          name_label: Feldbezeichnung
+          name_hint: >
+            Geben Sie den Namen des Formularfelds ein, der im Frontend als Beschriftung neben oder über
+            dem Eingabefeld angezeigt wird. Wählen Sie eine kurze, verständliche Bezeichnung, die Nutzern
+            sofort vermittelt, welche Eingabe erwartet wird – z. B. „Vorname", „Anliegen" oder
+            „Straße und Hausnummer".
+          description_placeholder: "z. B. Bitte geben Sie Ihre vollständige Adresse an"
+          description_label: Hilfetext
+          description_hint: >
+            Optionaler Hilfetext, der im Frontend unterhalb der Feldbezeichnung angezeigt wird und Nutzern
+            zusätzliche Orientierung beim Ausfüllen gibt. Nutzen Sie dieses Feld für Hinweise zum gewünschten
+            Format, Beispiele oder Erläuterungen – z. B. „Bitte geben Sie Ihre vollständige Adresse an" oder
+            „Maximal 500 Zeichen".
           kind_label: Feldtyp
-          kind_hint: Der Typ des Formularfelds. Kann nach dem Erstellen nicht mehr geändert werden.
-          drop_down_options_label: Dropdown-Optionen
-          drop_down_options_hint: Kommagetrennte Liste der Auswahlmöglichkeiten.
-          email_for_confirmation_label: Bestätigungsmail
-          email_for_confirmation_hint: Soll an diese E-Mail-Adresse eine Bestätigungsmail gesendet werden?
+          kind_hint: >
+            Bestimmt die Art des Eingabefelds im Frontend – z. B. Textfeld, Auswahlmenü, Checkbox oder
+            Datei-Upload. Der Feldtyp legt fest, wie Nutzer ihre Eingabe machen können und welche Daten
+            erfasst werden. Achtung: Der Feldtyp kann nach dem Erstellen nicht mehr geändert werden, da die
+            gespeicherten Daten vom Typ abhängen.
+          drop_down_options_label: Auswahloptionen
+          drop_down_options_hint: >
+            Geben Sie die Auswahlmöglichkeiten als kommagetrennte Liste ein – z. B. „Option A, Option B,
+            Option C". Jeder Eintrag wird im Frontend als auswählbare Option im Dropdown-Menü angezeigt.
+            Achten Sie auf eindeutige, kurze Bezeichnungen. Die Reihenfolge der Eingabe entspricht der
+            Anzeigereihenfolge im Frontend.
+          email_for_confirmation_label: Bestätigungsmail senden
+          email_for_confirmation_hint: >
+            Aktiviert den Versand einer automatischen Bestätigungsmail an die im Formular eingegebene
+            E-Mail-Adresse. Nutzer erhalten nach dem Absenden eine Bestätigung mit dem von Ihnen definierten
+            Betreff und Text. Geeignet für Formulare, bei denen eine Eingangsbestätigung oder Empfangsquittung
+            gewünscht ist.
           email_for_confirmation_subject_label: Betreff der Bestätigungsmail
-          email_for_confirmation_subject_hint: Der Betreff der Bestätigungsmail.
+          email_for_confirmation_subject_hint: >
+            Geben Sie den Betreff der automatischen Bestätigungsmail ein, die nach dem Absenden des Formulars
+            an den Nutzer gesendet wird. Wählen Sie einen klaren, informativen Betreff – z. B. „Ihre Eingabe
+            wurde erfolgreich übermittelt" oder „Bestätigung Ihres Beitrags". Der Betreff erscheint in der
+            Betreffzeile der E-Mail.
           email_for_confirmation_text_label: Text der Bestätigungsmail
-          email_for_confirmation_text_hint: Der Inhalt der Bestätigungsmail.
+          email_for_confirmation_text_hint: >
+            Verfassen Sie den Inhalt der Bestätigungsmail, die Nutzer nach dem Absenden des Formulars erhalten.
+            Bedanken Sie sich für die Teilnahme und geben Sie ggf. Hinweise zum weiteren Verlauf – z. B. wann
+            mit einer Rückmeldung zu rechnen ist. Der Text wird als Fließtext in der E-Mail dargestellt.
           required_label: Pflichtfeld
-          required_hint: Muss dieses Feld ausgefüllt werden?
+          required_hint: >
+            Legt fest, ob dieses Formularfeld vor dem Absenden ausgefüllt werden muss. Pflichtfelder werden im
+            Frontend mit einem Sternchen (*) markiert. Wenn ein Nutzer ein Pflichtfeld leer lässt, wird eine
+            Fehlermeldung angezeigt und das Formular kann nicht abgesendet werden. Aktivieren Sie diese Option
+            nur für Felder, die zwingend erforderlich sind.
           follow_up_label: Follow-up Feld
-          follow_up_hint: Wird dieses Feld nur in der Follow-up Phase angezeigt?
+          follow_up_hint: >
+            Markiert dieses Feld als Follow-up Feld, das erst nach dem Absenden des Hauptformulars in einem
+            zweiten Schritt angezeigt wird. Follow-up Felder eignen sich für ergänzende Angaben, die nicht
+            alle Nutzer betreffen – z. B. Kontaktdaten für Rückfragen oder detaillierte Beschreibungen zu
+            einem zuvor eingereichten Anliegen.
           submit: Speichern

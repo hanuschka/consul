@@ -14,7 +14,7 @@ de:
           success: Stimmung erfolgreich gelöscht.
         form:
           name_label: Name
-          name_hint: Geben Sie den Namen des Sentiments ein.
+          name_hint: "Der Name des Sentiments wird im Frontend als Auswahlmöglichkeit angezeigt, mit der Nutzer ihre Haltung zu einem Vorschlag ausdrücken können. Wählen Sie eine kurze, verständliche Bezeichnung wie 'Positiv', 'Neutral' oder 'Kritisch'. Der Name sollte für alle Nutzer auf Anhieb verständlich sein und die Stimmungslage eindeutig beschreiben."
           color_label: Farbe
-          color_hint: Wählen Sie eine Farbe für das Sentiment aus.
+          color_hint: "Die Farbe wird im Frontend als visuelle Kennzeichnung neben dem Sentiment angezeigt und ermöglicht eine schnelle optische Zuordnung. Wählen Sie eine Farbe, die intuitiv zur Bedeutung des Sentiments passt – z. B. Grün für positive, Gelb für neutrale und Rot für kritische Stimmungen. Die Farbe sollte ausreichend Kontrast zum Hintergrund bieten."
           submit: Speichern

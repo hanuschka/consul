@@ -1,6 +1,6 @@
 <%= form_with model: @milestone, url: url do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".status_label"), hint: link_to(t(".manage_statuses"), adm_projekts_milestone_statuses_path, target: "_blank")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".status_label"), hint: t(".status_hint_html", manage_link: link_to(t(".manage_statuses"), adm_projekts_milestone_statuses_path, target: "_blank"))) do %>
     <%= f.select :status_id,
           @statuses.map { |s| [s.name, s.id] },
           { include_blank: @statuses.any? ? "" : t(".no_statuses") },
@@ -8,19 +8,19 @@
           disabled: @statuses.blank? %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".description_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
     <%= f.rich_text_area :description, label: false, rows: 8 %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".publication_date_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".publication_date_label"), hint: t(".publication_date_hint")) do %>
     <%= f.date_field :publication_date, label: false, value: @milestone.publication_date || Date.current %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".custom_date_label"), hint: t(".custom_date_hint")) do %>
-    <%= f.text_field :custom_date, label: false %>
+    <%= f.text_field :custom_date, label: false, placeholder: t(".custom_date_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".image_label"), hint: t(".image_hint")) do %>
     <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
   <% end %>
 

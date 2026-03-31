@@ -4,6 +4,5 @@
 <%= render Adm::TabsComponent.new(tabs: pages_tabs) %>
 
 <div class="kern-container my-5">
-  <%= render Adm::AttributeEditorComponent.new(@page, :title, :string, inline: true, divider: false) %>
-  <%= render Adm::AttributeEditorComponent.new(@page, :content, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(@page, :content, :rich_text, wide: true, hide_label: true) %>
 </div>

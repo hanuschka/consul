@@ -36,7 +36,7 @@ module AdmHelper
     "officing_managers" => "badge",
     "officing_manager_audits" => "history",
     "ai_settings" => "smart_toy",
-    "user_resource_criteria" => "checklist",
+    "ai_user_flow" => "checklist",
     "projekt_notifications" => "notifications",
     "projekt_events" => "event",
     "projekt_livestreams" => "videocam",

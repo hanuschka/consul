@@ -41,6 +41,16 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
       ''
     end
 
+    def phase_edit_url
+      action = phase.admin_nav_bar_items.first
+
+      if @namespace == :admin
+        helpers.send("#{action}_adm_projekts_phase_path", phase)
+      else
+        helpers.polymorphic_path([@namespace, phase], action: action)
+      end
+    end
+
     def tab_title
       @phase.title
     end

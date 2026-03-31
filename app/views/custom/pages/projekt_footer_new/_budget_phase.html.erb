@@ -12,7 +12,7 @@
   <div class="flex justify-between items-center">
     <div class="hide-on-small-tablet">
       <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && params[:section] != "results" && params[:section] != "stats" && params[:section] != "key_metrics" && params[:section] != "analysis" %>
-        <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
+        <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %> <%= 'js-studio-hide-on-preview' if @budget.current_phase.kind == 'reviewing' %>">
           <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
         </div>
       <% end %>

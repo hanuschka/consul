@@ -51,6 +51,10 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <%= kern_alert(title: t(".empty_title"), style: :info) %>
+    <%= empty_state(
+      title: t(".empty_title"),
+      description: t(".empty_description"),
+      icon: "location_on"
+    ) %>
   <% end %>
 </div>

@@ -62,8 +62,8 @@ de:
         body_label: Inhalt
         body_description: Hauptinhalt des Newsletters.
       site_customization/content_block:
-        body_label: Footer
-        body_description: "Inhalt des Newsletter-Footers. Wird am Ende jeder Newsletter-E-Mail angezeigt."
+        body_label: Newsletter-Fußbereich
+        body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
         header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild mit klarem Motiv. Es sollte thematisch zur Beteiligungsplattform passen und auch bei unterschiedlichen Bildschirmgrößen gut wirken. Empfohlenes Format: 1920 × 760 Pixel."
@@ -73,8 +73,8 @@ de:
         logo_header_description: "Dieses Logo wird in der oberen Navigationsleiste angezeigt, sobald der Hintergrund weiß ist – also z. B. nach dem Scrollen auf der Startseite. Es sollte gut lesbar auf hellem Hintergrund sein. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund. Empfohlenes Format: maximal 80 × 80 Pixel."
         logo_header_for_transparent_label: Logo (transparenter Hintergrund)
         logo_header_for_transparent_description: "Dieses Logo wird in der oberen Navigationsleiste angezeigt, solange der Hintergrund transparent ist – also z. B. über dem Headerbild. Es sollte gut auf wechselnden Hintergründen erkennbar sein. Verwenden Sie idealerweise ein helles PNG mit transparentem Hintergrund. Empfohlenes Format: max. 80 × 80 Pixel."
-        logo_newsletter_email_label: Newsletter Email Logo
-        logo_newsletter_email_description: "Das Logo wird im Kopfbereich der Newsletter-Emails angezeigt. Empfohlenes Format: 130 × 45 Pixel."
+        logo_newsletter_email_label: Newsletter-Logo
+        logo_newsletter_email_description: "Dieses Logo wird im Kopfbereich jeder Newsletter-E-Mail angezeigt und dient als visuelles Erkennungsmerkmal Ihrer Plattform. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund, das auf hellem Hintergrund gut lesbar ist. Das Logo sollte die Wiedererkennung Ihrer Kommune oder Plattform sicherstellen. Empfohlenes Format: 130 × 45 Pixel."
       site_customization/page:
         projekt:
           title_label: Titel der Startseite

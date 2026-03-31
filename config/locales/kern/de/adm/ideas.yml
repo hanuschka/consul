@@ -135,8 +135,8 @@ de:
       officers:
         index:
           title: Sachbearbeiter
-          search_label: Benutzer suchen
-          search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
+          search_label: Nutzer suchen
+          search_description: Geben Sie die E-Mail-Adresse des Nutzers ein
           no_officers: Keine Sachbearbeiter vorhanden
           table:
             name: Name
@@ -148,7 +148,7 @@ de:
             name: Name
             email: E-Mail
         user_not_found:
-          user_not_found: Benutzer nicht gefunden
+          user_not_found: Nutzer nicht gefunden
       districts:
         index:
           title: Gebeite

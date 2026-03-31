@@ -10,4 +10,4 @@ de:
         search_label: Nutzer durchsuchen
         search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Profile</a> gelistet sind. Diese können Sie anschließend als Projektmanager hinzufügen.
       search:
-        no_results: Keine Benutzer gefunden mit diesen Kriterien.
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.

@@ -161,8 +161,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
         title_description: Der Titel des Vorschlags.
         description_label: Beschreibung
         description_description: Ausführliche Beschreibung des Vorschlags.
-        price_label: Kosten
-        price_description: Geschätzter Preis des Vorschlags.
+        price_label: Gesamtkosten
+        price_description: Geschätzte Gesamtkosten des Vorschlags.
         feasibility_label: Kriterien
         feasibility_description: "Kriterienstatus des Vorschlags."
         feasibility_label_options:
@@ -181,10 +181,10 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
         valuator_explanation_description: Erläuterung für Gutachter.
         valuation_finished_label: Bewertung beendet
         valuation_finished_description: Vorschlag kann vom Autor nicht mehr geändert werden.
-        price_first_year_label: Fortlaufende Kosten pro Jahr (intern)
-        price_first_year_description: Fortlaufende Kosten pro Jahr – nur für interne Informationen.
-        duration_label: Zeitrahmen
-        duration_description: Geschätzter Zeitrahmen für die Umsetzung.
+        price_first_year_label: Jährliche Folgekosten (intern)
+        price_first_year_description: Jährliche Folgekosten – nur für interne Informationen.
+        duration_label: Umsetzungszeitraum (intern)
+        duration_description: Geschätzter Zeitraum für die Umsetzung – nur für interne Informationen.
         video_url_label: Video-URL
         on_behalf_of_label: Im Auftrag von
         implementation_performer_label: Umsetzung

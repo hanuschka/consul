@@ -171,7 +171,7 @@ class DebatesController < ApplicationController
     @projekt = @debate.projekt_phase&.projekt
 
     if @projekt.nil?
-      redirect_to debates_path
+      redirect_to root_path
 
       return
     end

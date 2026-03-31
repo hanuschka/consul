@@ -10,6 +10,11 @@ namespace :adm do
     resources :landing_pages, only: [:edit, :update], path: "" do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
+
+      resources :navbar_items, only: [:new, :create, :destroy],
+        controller: "/adm/navbar_items" do
+        patch :reorder, on: :collection
+      end
     end
   end
 end

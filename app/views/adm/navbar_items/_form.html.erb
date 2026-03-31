@@ -1,5 +1,5 @@
 <div data-controller="components-adm-new-navbar-item">
-  <%= form_with model: [:adm, @navbar_item] do |f| %>
+  <%= form_with model: @navbar_item, url: @form_url do |f| %>
     <%= f.hidden_field :landing_page_id if @landing_page.present? %>
 
     <% if @available_kinds.one? %>
@@ -49,7 +49,7 @@
             <%= t(".projekt_label") %>
           </legend>
           <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
-            <%= f.collection_radio_buttons :projekt_id, NavbarItem.projekts, :id, :title do |cb| %>
+            <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
               <div class="kern-form-check">
                 <%= cb.radio_button(class: "kern-form-check__radio") %>
                 <%= cb.label(class: "kern-label") %>

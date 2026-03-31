@@ -471,11 +471,12 @@ de:
         title: Antwort
         description: Beschreibung
       poll/question/answer/video:
-        title: Externes Video Titel
-        url: Externes Video URL
+        title: Videotitel
+        url: Video-URL
       newsletter:
-        recipient_group_id: Adressatengruppe
-        segment_recipient: Empfänger*innen
+        recipient_group: Empfängergruppe
+        recipient_group_id: Empfängergruppe
+        segment_recipient: Empfänger
         subject: Betreff
         from: "Absender-Email-Adresse (muss auf @domain.de enden)"
         greeting: Ansprache

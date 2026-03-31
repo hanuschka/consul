@@ -51,7 +51,6 @@
     SiteContentBlockEditor: {
       initialize() {
         if (typeof ProjektStudio === "undefined") return
-        if (ProjektStudio.isProjektPage()) return
         if (!this.hasSiteContentBlocks()) return
 
         this.wrapContentBlocks();
@@ -90,8 +89,7 @@
             wrappedElement.classList.add("-compact-mode");
           }
 
-          $(wrappedElement).find("[data-tooltip]").foundation();
-          $(wrappedElement).find("[data-orbit]").each(function() { new Foundation.Orbit($(this)); });
+          $(wrappedElement).foundation();
 
           App.ImageGallery.initialize();
         });

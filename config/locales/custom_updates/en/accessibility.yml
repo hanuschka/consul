@@ -55,7 +55,6 @@ en:
       navigation:
         main: "Main navigation"
         mobile: "Mobile navigation"
-        footer: "Footer navigation"
       events:
         projekt-aria-label: "Project: %{projekt_name}"
       session_timeout:

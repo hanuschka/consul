@@ -11,7 +11,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       class="js-content-blocks-list content-blocks-container"
     >
       <div
-        class="js-add-first-content-block-wrapper add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper js-projekt-studio-hide-on-preview"
+        class="js-add-first-content-block-wrapper add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper js-studio-hide-on-preview"
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
         ${showContentBlockTemplatesButton()}
@@ -37,7 +37,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-context="${context || 'projekt'}"
       >
       <div class="relative">
-        <div class="projekt-content-block--toolbar js-projekt-studio-hide-on-preview">
+        <div class="projekt-content-block--toolbar js-studio-hide-on-preview">
 
             <div class="d-flex projekt-content-block-edit--buttons-wrapper">
               <button
@@ -287,7 +287,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             </div>
         </div>
 
-        <div class="projekt-content-block--toolbar-border js-projekt-content-block--toolbar-anchor js-projekt-studio-hide-on-preview"></div>
+        <div class="projekt-content-block--toolbar-border js-projekt-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
         <div class="projekt-content-block js-projekt-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
@@ -304,7 +304,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
-    <div class="add-new-content-block-section js-show-content-block-templates-section js-projekt-studio-hide-on-preview">
+    <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
       <button
         type="button"
         class="js-show-content-block-templates add-new-content-block-button"

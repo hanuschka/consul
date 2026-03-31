@@ -1,6 +1,10 @@
 @use "../abstracts/mappings" as mappings;
 @use "../abstracts/breakpoints" as breakpoints;
 
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
 @each $size, $value in mappings.$spacing-sizes {
   .m-#{$size} { margin: $value !important; }
   .mt-#{$size} { margin-top: $value !important; }

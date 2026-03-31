@@ -1,37 +1,64 @@
 module CommunitiesHelper
   def community_title(community)
-    community.from_proposal? ? community.proposal.title : community.investment.title
+    communitable_for(community)&.title.to_s
   end
 
   def community_text(community)
-    community.from_proposal? ? t("community.show.title.proposal") : t("community.show.title.investment")
-  end
-
-  def community_description(community)
-    community.from_proposal? ? t("community.show.description.proposal") : t("community.show.description.investment")
-  end
-
-  def author?(community, participant)
-    if community.from_proposal?
-      community.proposal.author_id == participant.id
+    if communitable_is_proposal?(community)
+      t("community.show.title.proposal")
     else
-      community.investment.author_id == participant.id
+      t("community.show.title.investment")
     end
   end
 
-  def community_back_link_path(community)
-    if community.from_proposal?
-      proposal_path(community.proposal)
+  def community_description(community)
+    if communitable_is_proposal?(community)
+      t("community.show.description.proposal")
     else
-      budget_investment_path(community.investment.budget_id, community.investment)
+      t("community.show.description.investment")
+    end
+  end
+
+  def author?(community, participant)
+    communitable = communitable_for(community)
+    return false if communitable.blank?
+
+    communitable.author_id == participant.id
+  end
+
+  def community_back_link_path(community)
+    communitable = communitable_for(community)
+
+    if communitable.is_a?(Proposal)
+      proposal_path(communitable)
+    else
+      budget_investment_path(communitable.budget_id, communitable)
     end
   end
 
   def community_access_text(community)
-    community.from_proposal? ? t("community.sidebar.description.proposal") : t("community.sidebar.description.investment")
+    if communitable_is_proposal?(community)
+      t("community.sidebar.description.proposal")
+    else
+      t("community.sidebar.description.investment")
+    end
   end
 
   def create_topic_link(community)
-    current_user.present? ? new_community_topic_path(community.id) : new_user_session_path
+    if current_user.present?
+      new_community_topic_path(community.id)
+    else
+      new_user_session_path
+    end
+  end
+
+  private
+
+  def communitable_for(community)
+    @communitable_resource || community.communitable
+  end
+
+  def communitable_is_proposal?(community)
+    communitable_for(community).is_a?(Proposal)
   end
 end

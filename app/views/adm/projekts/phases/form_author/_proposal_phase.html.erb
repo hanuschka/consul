@@ -3,9 +3,9 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.sentiments"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.show_map"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.enable_geoman_controls_in_maps"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.anonimize_authors"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.allow_attached_documents"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.enable_external_video"), :value, :boolean) %>
-<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.anonimize_authors"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.voice_assistant"), :value, :boolean, disabled: !Ai::Settings.ai_available?) %>
 
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.map_features_limit"), :value, :string) %>

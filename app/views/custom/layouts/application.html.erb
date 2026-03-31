@@ -77,6 +77,7 @@
     <% if current_user&.administrator? || current_user&.projekt_manager? %>
       <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
       <%= render Projekts::ContentBlockEditPopupsComponent.new %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new %>
     <% end %>
     <% if user_signed_in? %>
       <%

@@ -1,9 +1,9 @@
-<div class='projekt-phase-subnav'>
+<div class='projekt-phase-subnav <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>'>
   <div class='projekt-phase-subnav--items'>
     <% projekt_phase_subnav_items.each do |item| %>
       <% if item[:disabled] %>
         <span
-          class="projekt-phase-subnav-item ai-feature-disabled"
+          class="projekt-phase-subnav-item ai-feature-disabled <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
           data-tooltip
           tabindex="0"
           title="<%= t('ai.disabled_tooltip') %>"
@@ -11,7 +11,7 @@
           <%= item[:text] %>
         </span>
       <% else %>
-        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item projekt-phase-subnav-item #{"is-active" if item[:active]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
+        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item projekt-phase-subnav-item #{"is-active" if item[:active]} #{'js-studio-hide-on-preview' if item[:hide_on_preview]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
       <% end %>
     <% end %>
   </div>

@@ -1,5 +1,6 @@
+<% navbar_scope = defined?(landing_page) && landing_page.present? ? NavbarItem.for_landing_page(landing_page.id) : NavbarItem.global %>
 <div data-navbar data-navbar-more-label="<%= t('shared.navbar_more') %>" style="display: contents;">
-  <% NavbarItem.top_level.includes(:projekt, children: [:projekt, children: [:projekt, :children]]).each do |item| %>
+  <% navbar_scope.top_level.includes(:landing_page, :projekt, children: [:landing_page, :projekt, children: [:landing_page, :projekt, :children]]).each do |item| %>
     <% has_children = item.children.any? %>
     <li class="nav-element top-level-item"
         <%= "aria-haspopup=true aria-expanded=false" if has_children %>>

@@ -112,7 +112,11 @@
     handleLogout: function() {
       this.clearTimers();
       this.hideWarning();
-      window.location.href = "/users/sign_out";
+      this.submitSignOut();
+    },
+
+    submitSignOut: function() {
+      $.rails.handleMethod($("<a>", { href: "/users/sign_out", "data-method": "delete" }));
     },
 
     handleKeydown: function(event) {

@@ -14,9 +14,12 @@ de:
           success: Fortschrittsbalken wurde erfolgreich gelöscht.
         form:
           kind_label: Typ
+          kind_hint: "Legt fest, ob es sich um den Hauptfortschrittsbalken (primär) oder einen ergänzenden Balken (sekundär) handelt. Der primäre Balken wird im Frontend prominent angezeigt und zeigt den Gesamtfortschritt. Sekundäre Balken erscheinen darunter und können Teilaspekte der Umsetzung abbilden."
           title_label: Titel
-          title_hint: Pflichtfeld für sekundäre Fortschrittsbalken.
-          percentage_label: Aktueller Fortschritt
+          title_hint: "Geben Sie eine kurze Bezeichnung für den Fortschrittsbalken ein, die im Frontend als Beschriftung angezeigt wird – z. B. 'Gesamtfortschritt', 'Planungsphase' oder 'Baufortschritt'. Für den primären Balken ist kein Titel erforderlich, für sekundäre Balken ist der Titel ein Pflichtfeld."
+          title_placeholder: "z. B. Baufortschritt"
+          percentage_label: Fortschritt (%)
+          percentage_hint: "Prozentwert zwischen 0 und 100, der den aktuellen Stand der Umsetzung darstellt. Der Wert wird im Frontend als visueller Fortschrittsbalken und als Zahl angezeigt. Aktualisieren Sie den Wert regelmäßig, um den Teilnehmern einen transparenten Überblick über den Umsetzungsstand zu geben."
           submit: Speichern
           kinds:
             primary: Primär

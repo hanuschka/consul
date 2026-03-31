@@ -34,6 +34,15 @@ module KernHelper
     end
   end
 
+  def empty_state(title:, description: nil, icon: "folder_open", link_url: nil, link_text: nil)
+    content_tag(:div, class: "adm-empty-state") do
+      concat(content_tag(:span, icon, class: "adm-empty-state__icon material-symbols-outlined", "aria-hidden": "true"))
+      concat(content_tag(:p, title, class: "adm-empty-state__title"))
+      concat(content_tag(:p, description, class: "adm-empty-state__description")) if description.present?
+      concat(link_to(link_text, link_url, class: "adm-empty-state__link kern-button kern-button--outline mt-3")) if link_url.present? && link_text.present?
+    end
+  end
+
   def kern_alert(title:, style: :info, &block)
     content_tag(:div, class: "kern-alert kern-alert--#{style}", role: "alert") do
       header = content_tag(:div, class: "kern-alert__header") do

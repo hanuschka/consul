@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
-  after_action :set_back_path
   helper_method :set_comment_flags
 
   # unless Rails.env.production?
@@ -105,9 +104,21 @@ class ApplicationController < ActionController::Base
       request.format == "text/javascript"
     end
 
-    def set_back_path
+    def set_return_url
       return if javascript_request?
       return if request.xhr?
+
+      if request.get? && !devise_controller? && is_navigational_format? && document_request?
+        if request.fullpath.include?("/null")
+          current_user_id = current_user.present? ? current_user.id : "not logged in"
+          Sentry.capture_message("NULL exception. URL: #{request.base_url + request.fullpath} for user id: #{current_user_id}")
+          redirect_to root_path
+
+          return
+        end
+
+        store_location_for(:user, SessionUrlTruncator.truncate(request.fullpath))
+      end
 
       if params[:projekt_phase_id].present?
         back_path = helpers.url_to_footer_tab(extras: { anchor: "filter-subnav" })
@@ -115,7 +126,7 @@ class ApplicationController < ActionController::Base
         back_path = request.fullpath
       end
 
-      session[:back_path] = back_path
+      session[:back_path] = SessionUrlTruncator.truncate(back_path)
     end
 
     def auto_sign_in_guest_for(projekt_phase)

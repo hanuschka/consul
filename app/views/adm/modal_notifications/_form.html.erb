@@ -1,20 +1,35 @@
 <%= form_with model: [:adm, @modal_notification] do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:active_from)) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: ModalNotification.human_attribute_name(:active_from),
+    hint: t("adm.modal_notifications.form.hints.active_from")
+  ) do %>
     <%= f.date_field :active_from, label: false %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:active_to)) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: ModalNotification.human_attribute_name(:active_to),
+    hint: t("adm.modal_notifications.form.hints.active_to")
+  ) do %>
     <%= f.date_field :active_to, label: false %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:title)) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: ModalNotification.human_attribute_name(:title),
+    hint: t("adm.modal_notifications.form.hints.title")
+  ) do %>
     <%= f.text_field :title, label: false, placeholder: ModalNotification.human_attribute_name(:title) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: ModalNotification.human_attribute_name(:html_content)) do %>
+  <div class="kern-form-field mb-5">
+    <div class="kern-title kern-title--small mb-3"><%= ModalNotification.human_attribute_name(:html_content) %></div>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-8">
+        <p class="kern-body mb-3"><%= t("adm.modal_notifications.form.hints.html_content") %></p>
+      </div>
+    </div>
     <%= f.rich_text_area :html_content, label: false %>
-  <% end %>
+  </div>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

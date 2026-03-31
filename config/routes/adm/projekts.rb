@@ -81,7 +81,9 @@ namespace :adm do
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :milestones, controller: "milestones/phases", except: %i[index show]
       resources :progress_bars, controller: "progress_bars/phases", except: %i[index show]
-      resources :legislation_draft_versions, except: %i[index show]
+      resources :legislation_draft_versions, except: %i[index show] do
+        get :draft_text, on: :member
+      end
       resources :formular_fields, except: %i[index show] do
         collection do
           post :reorder

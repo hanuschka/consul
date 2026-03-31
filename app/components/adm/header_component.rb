@@ -9,6 +9,10 @@ class Adm::HeaderComponent < ApplicationComponent
     @frontend_url = frontend_url
   end
 
+  def before_render
+    @frontend_url ||= helpers.root_path
+  end
+
   def breadcrumb_item(breadcrumb, is_last)
     li_options = {
       class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),

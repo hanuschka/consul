@@ -16,17 +16,15 @@
               <% is_last = index == @breadcrumbs.size - 1 %>
               <%= breadcrumb_item(breadcrumb, is_last) %>
             <% end %>
-
-            <% if @frontend_url.present? %>
-              <li class="adm-frontend-link-item">
-                <%= link_to @frontend_url, class: "adm-frontend-link", target: "_blank", rel: "noopener" do %>
-                  <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-                  <span><%= t("components.adm.header_component.frontend_link") %></span>
-                <% end %>
-              </li>
-            <% end %>
           </ol>
         </nav>
+
+        <% if @frontend_url.present? %>
+          <%= link_to @frontend_url, class: "adm-frontend-link text-decoration-none d-none d-md-flex align-items-md-center gap-1 py-2 px-3 fs-2 fw-medium ml-auto", target: "_blank", rel: "noopener" do %>
+            <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+            <span><%= t("components.adm.header_component.frontend_link") %></span>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
   </div>

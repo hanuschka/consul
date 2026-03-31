@@ -3,26 +3,11 @@
   align-items: center;
 }
 
-.adm-frontend-link-item {
-  margin-left: auto;
-}
-
 .adm-frontend-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
   color: var(--kern-grey-600);
-  text-decoration: none;
-  padding: 0.3rem 0.75rem;
-  border-radius: 4px;
+  border-radius: var(--kern-metric-border-radius-default);
   white-space: nowrap;
   transition: color 0.15s ease, background-color 0.15s ease;
-
-  .material-symbols-outlined {
-    font-size: 1rem;
-  }
 
   &:hover {
     color: var(--kern-color-action-default);
@@ -89,7 +74,7 @@
     gap: 0.25rem;
     padding: 0.3rem 1rem;
     background: var(--kern-darkblue-750);
-    border-radius: 4px;
+    border-radius: var(--kern-metric-border-radius-default);
     cursor: pointer;
     text-decoration: none;
 

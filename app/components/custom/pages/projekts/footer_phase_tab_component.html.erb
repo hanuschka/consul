@@ -93,7 +93,7 @@
             </i>
           </button>
         <% end %>
-        <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to phase_edit_url, title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>

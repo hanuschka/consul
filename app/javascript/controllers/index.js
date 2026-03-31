@@ -101,6 +101,7 @@ application.register("clipboard", ClipboardController)
 
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
+
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 

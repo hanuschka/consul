@@ -174,7 +174,13 @@ class ProposalsController
 
   def show
     super
-    @projekt = @proposal.projekt_phase.projekt
+    @projekt = @proposal.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to proposals_path
+
+      return
+    end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
       head :not_found, content_type: "text/html" and return

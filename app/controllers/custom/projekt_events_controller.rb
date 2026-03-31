@@ -27,10 +27,14 @@ class ProjektEventsController < ApplicationController
 
     @projekt_events = @projekt_events.page(params[:page]).per(10)
 
-    if Setting.new_design_enabled?
-      render :index_new
-    else
-      render :index
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
     end
   end
 end

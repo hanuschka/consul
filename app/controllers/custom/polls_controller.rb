@@ -69,10 +69,14 @@ class PollsController < ApplicationController
 
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
 
-    if Setting.new_design_enabled?
-      render :index_new
-    else
-      render :index
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
     end
   end
 

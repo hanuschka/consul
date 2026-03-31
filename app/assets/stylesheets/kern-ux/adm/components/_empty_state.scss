@@ -5,6 +5,9 @@
   justify-content: center;
   padding: 3rem 1.5rem;
   text-align: center;
+  border: 1px dashed var(--kern-color-layout-border, #A5AAC3);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+  background: var(--kern-grey-50, #FAFAFC);
 }
 
 .adm-empty-state__icon {

@@ -155,9 +155,12 @@ de:
       poll/question/translation:
         intro: Einleitungssatz
       poll/question/answer:
-        more_info_link: Erklärungslink
-        more_info_iframe: Iframe-Link
-        terminates_poll: Beendet die Umfrage
+        title: Titel der Antwort
+        open_answer: Offene Antwort
+        more_info_link: Weiterführender Link
+        more_info_iframe: Eingebettete Webseite
+        terminates_poll: Abstimmung beenden
+        next_question_id: Nächste Frage
       poll/translation:
         closing_note: Text der Abschlussseite
       widget/card:

@@ -42,32 +42,69 @@ de:
     extended_feature:
       projekts_overview_page_navigation:
         show_index_order_all: Alle Projekte
-        show_index_order_all_description: Zeigt Tab "Alle Projekte" an
+        show_index_order_all_description: >
+          Blendet den Tab „Alle Projekte" in der Navigationsleiste der Projektübersichtsseite ein. Dieser Tab zeigt alle öffentlichen
+          Projekte unabhängig von ihrem Status an und bietet Nutzern einen vollständigen Überblick über das gesamte Beteiligungsangebot
+          der Plattform. Deaktivieren Sie diese Option, wenn nur gefilterte Ansichten gewünscht sind.
         show_index_order_underway: Aktive Beteiligung
-        show_index_order_underway_description: Zeigt Tab "Aktive Beteiligung" an
+        show_index_order_underway_description: >
+          Blendet den Tab „Aktive Beteiligung" ein, der ausschließlich Projekte mit aktuell laufenden Beteiligungsphasen anzeigt. Nutzer
+          sehen so auf einen Blick, wo sie sich gerade aktiv einbringen können. Besonders geeignet als Standard-Tab, um die Aufmerksamkeit
+          auf aktuelle Mitwirkungsmöglichkeiten zu lenken.
         show_index_order_ongoing: Laufende Projekte
-        show_index_order_ongoing_description: Zeigt Tab "Laufende Projekte" an
+        show_index_order_ongoing_description: >
+          Blendet den Tab „Laufende Projekte" ein, der alle Projekte zeigt, deren Laufzeit noch nicht abgelaufen ist – unabhängig davon,
+          ob gerade eine aktive Beteiligungsphase stattfindet. Dies umfasst auch Projekte in Vorbereitung oder Zwischenphasen ohne direkte
+          Beteiligungsmöglichkeit.
         show_index_order_upcoming: Zukünftige Projektvorhaben
-        show_index_order_upcoming_description: Zeigt Tab "Zukünftige Projektvorhaben" an
+        show_index_order_upcoming_description: >
+          Blendet den Tab „Zukünftige Projektvorhaben" ein, der Projekte anzeigt, deren Startdatum in der Zukunft liegt. So können Nutzer
+          frühzeitig sehen, welche Beteiligungsmöglichkeiten geplant sind. Dies fördert die Transparenz über kommende Vorhaben und
+          ermöglicht frühzeitiges Interesse.
         show_index_order_expired: Archivierte Projektvorhaben
-        show_index_order_expired_description: Zeigt Tab "Archivierte Projektvorhaben" an
+        show_index_order_expired_description: >
+          Blendet den Tab „Archivierte Projektvorhaben" ein, der abgeschlossene Projekte zeigt, deren Laufzeit beendet ist. Nutzer können
+          so vergangene Beteiligungen nachvollziehen und Ergebnisse einsehen. Deaktivieren Sie diese Option, wenn abgeschlossene Projekte
+          nicht mehr öffentlich sichtbar sein sollen.
         show_index_order_individual_list: Individuelle Liste
-        show_index_order_individual_list_description: Zeigt Tab "Individuelle Liste" an
+        show_index_order_individual_list_description: >
+          Blendet den Tab „Individuelle Liste" ein, der speziell hervorgehobene Projekte anzeigt, die manuell für diese Liste konfiguriert
+          wurden. Im Gegensatz zu den automatisch befüllten Tabs wird der Inhalt dieser Liste über die Sichtbarkeitseinstellungen einzelner
+          Projekte gesteuert.
         show_index_order_drafts: Entwürfe
-        show_index_order_drafts_description: Zeigt Tab "Entwürfe" an
+        show_index_order_drafts_description: >
+          Blendet den Tab „Entwürfe" ein, der nur für Administratoren sichtbar ist und Projekte im Entwurfsstatus anzeigt. Diese Projekte
+          sind im Frontend für normale Nutzer nicht sichtbar. Nutzen Sie diesen Tab, um Projekte vor der Veröffentlichung vorzubereiten
+          und zu prüfen.
       projekts_overview_page_footer:
-        show_in_index_order_all: Beteiligung für "Alle Projekte"
-        show_in_index_order_all_description: Zeigt die Beteiligungsmodule für den Tab "Alle Projekte an"
-        show_in_index_order_underway: Beteiligung für "Aktive Beteiligung"
-        show_in_index_order_underway_description: Zeigt die Beteiligungsmodule für den Tab "Aktive Beteiligung"
-        show_in_index_order_ongoing: Beteiligung für "Laufende Projekte"
-        show_in_index_order_ongoing_description: Zeigt die Beteiligungsmodule für den Tab "Laufende Projekte"
-        show_in_index_order_upcoming: Beteiligung für "Zukünftige Projektvorhaben"
-        show_in_index_order_upcoming_description: Zeigt die Beteiligungsmodule für den Tab "Zukünftige Projektvorhaben"
-        show_in_index_order_expired: Beteiligung für "Archivierte Projektvorhaben"
-        show_in_index_order_expired_description: Zeigt die Beteiligungsmodule für den Tab "Archivierte Projektvorhaben"
+        show_in_index_order_all: Beteiligung für „Alle Projekte"
+        show_in_index_order_all_description: >
+          Zeigt die Beteiligungsmodule (z. B. aktive Phasen, Abstimmungen) im Footer-Bereich des Tabs „Alle Projekte" an. Wenn aktiviert,
+          werden unterhalb der Projektliste die Beteiligungsmöglichkeiten der einzelnen Projekte eingeblendet. Deaktivieren Sie diese
+          Option, wenn nur die Projektliste ohne Beteiligungsdetails angezeigt werden soll.
+        show_in_index_order_underway: Beteiligung für „Aktive Beteiligung"
+        show_in_index_order_underway_description: >
+          Zeigt die Beteiligungsmodule im Footer-Bereich des Tabs „Aktive Beteiligung" an. Nutzer sehen so direkt unter der Projektliste
+          die aktuellen Beteiligungsmöglichkeiten. Besonders sinnvoll in Kombination mit dem Navigations-Tab, um aktive Phasen
+          hervorzuheben.
+        show_in_index_order_ongoing: Beteiligung für „Laufende Projekte"
+        show_in_index_order_ongoing_description: >
+          Zeigt die Beteiligungsmodule im Footer-Bereich des Tabs „Laufende Projekte" an. So werden unterhalb der Projektliste die
+          Beteiligungsphasen der laufenden Projekte angezeigt und Nutzer können direkt auf die Beteiligung zugreifen, ohne erst die
+          Projektseite öffnen zu müssen.
+        show_in_index_order_upcoming: Beteiligung für „Zukünftige Projektvorhaben"
+        show_in_index_order_upcoming_description: >
+          Zeigt die Beteiligungsmodule im Footer-Bereich des Tabs „Zukünftige Projektvorhaben" an. Da zukünftige Projekte in der Regel
+          noch keine aktiven Phasen haben, ist diese Option in den meisten Fällen weniger relevant und kann deaktiviert bleiben.
+        show_in_index_order_expired: Beteiligung für „Archivierte Projektvorhaben"
+        show_in_index_order_expired_description: >
+          Zeigt die Beteiligungsmodule im Footer-Bereich des Tabs „Archivierte Projektvorhaben" an. So können Nutzer auch bei
+          abgeschlossenen Projekten sehen, welche Beteiligungsphasen stattgefunden haben und welche Ergebnisse erzielt wurden. Nützlich
+          für Transparenz und Nachvollziehbarkeit.
         show_in_index_order_individual_list: Individuelle Liste
-        show_in_index_order_individual_list_description: Zeigt Tab "Individuelle Liste" an
+        show_in_index_order_individual_list_description: >
+          Zeigt die Beteiligungsmodule im Footer-Bereich des Tabs „Individuelle Liste" an. So werden unterhalb der individuell
+          zusammengestellten Projektliste die zugehörigen Beteiligungsphasen eingeblendet.
       gdpr:
         gdpr_conformity: "DSGVO-konforme Voreinstellungen"
         gdpr_conformity_description: >
@@ -412,14 +449,14 @@ de:
     #     show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
     #     show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Abstimmungsübersichtsseite an
     #   budgets:
-    #     remove_investments_supports: Zurückziehen von Unterstützungen für Investitionsvorschläge zulassen
-    #     remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
+    #     remove_investments_supports: Zurückziehen von Unterstützungen für Vorschläge zulassen
+    #     remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Vorschläge zurückzuziehen
     #     show_report_button_in_sidebar: Investition melden
     #     show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
     #     show_follow_button_in_sidebar: Investition folgen
     #     show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
     #     show_community_button_in_sidebar: Community
-    #     show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Investitionsvorschläge
+    #     show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Vorschläge
     #     show_related_content: Verwandte Inhalte
     #     show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
     #     show_implementation_option_fields: Umsetzung
@@ -430,10 +467,10 @@ de:
     #     show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
     #     allow_attached_documents: Zusätzliche Dokumente
     #     allow_attached_documents_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
-    #     only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
+    #     only_admins_create_investment_proposals: Nur Admins können neue Vorschläge erstellen
     #     only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
-    #     show_map: Karte für Investitionsvorschläge anzeigen
-    #     show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
+    #     show_map: Karte für Vorschläge anzeigen
+    #     show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
     #     show_results_after_first_vote: Ergebnisliste nach erster Beteiligungsphase anzeigen
     #     show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
     #     enable_summary: "\"Zusammenfassung\" anzeigen"

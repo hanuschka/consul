@@ -30,6 +30,10 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
     authorize @projekt_manager, policy_class: Adm::Projekts::ProjektManagerPolicy
 
     @projekt_manager.destroy!
+
+    if ProjektManager.none?
+      redirect_to adm_projekts_managers_path
+    end
   end
 
   def toggle_manage_all_projekts

@@ -47,6 +47,16 @@ class Adm::Projekts::FormularFieldsController < Adm::Projekts::BaseController
     redirect_to formular_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
   end
 
+  def reorder
+    authorize [:adm, :projekts, @formular.formular_fields.first], policy_class: Adm::Projekts::FormularFieldPolicy
+
+    params[:order]&.each_with_index do |id, index|
+      @formular.formular_fields.where(id: id).update_all(given_order: index + 1)
+    end
+
+    head :ok
+  end
+
   private
 
     def set_projekt_phase

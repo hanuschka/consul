@@ -9,6 +9,13 @@ de:
           managers: Projektmanager
           landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
+      overview_page:
+        title: Projektübersichtsseite
+        hint_text: >
+          Konfigurieren Sie hier die öffentliche Projektübersichtsseite, auf der alle Beteiligungsprojekte
+          gelistet werden. Über die Navigation steuern Sie, welche Projektlisten in der oberen Filterleiste
+          angezeigt werden. Im Footer-Tab legen Sie fest, welche Projektlisten im unteren Bereich der Seite
+          erscheinen.
       landing_pages:
         index:
           title: Themenseiten
@@ -30,7 +37,14 @@ de:
       projekts:
         index:
           title: Projektübersicht
+          hint_text: >
+            Hier verwalten Sie alle Beteiligungsprojekte der Plattform. Jedes Projekt kann mit
+            Laufzeit, Beteiligungsphasen, Sichtbarkeit und Projektmanagern konfiguriert werden.
+            Über den Status-Toggle können Projekte aktiviert oder deaktiviert werden – deaktivierte
+            Projekte sind im Frontend nicht sichtbar.
           new_projekt: Neues Projekt erstellen
+          no_projekts_title: Keine Projekte vorhanden
+          no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
           table:
             status: Status
             actions: Aktionen

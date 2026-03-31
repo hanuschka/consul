@@ -43,7 +43,7 @@ en:
   admin:
     projekt_phases:
       user_resource_criteria:
-        title: "Evaluation Criteria"
+        title: "AI flow assistant"
         add_criterion: "Add criterion"
         text_placeholder: "Describe the criterion …"
         save: "Save"

@@ -10,6 +10,7 @@ de:
       landing_pages:
         index:
           title: Themenseiten
+          new_landing_page: Neue Themenseite erstellen
           hint_title: Hinweis zu den Themenseiten
           hint_text: >
             Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile einer Gemeinde erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Die Gestaltungsmöglichkeiten ähneln denen der allgemeinen Startseite und schaffen Raum für visuelle und sprachliche Differenzierung.
@@ -19,6 +20,14 @@ de:
               url: URL
               status: Status
             no_landing_pages: Es wurden noch keine Themenseiten erstellt.
+        new:
+          title: Neue Themenseite
+          submit: Themenseite erstellen
+          hints:
+            slug: >
+              Die URL-Kennung der Themenseite (z.B. "jugend" ergibt /jugend). Nur Buchstaben, Zahlen, Bindestriche und Unterstriche erlaubt.
+        create:
+          success: Die Themenseite wurde erfolgreich erstellt.
         edit:
           title: Themenseite bearbeiten
           managers_title: Themenseiten Manager

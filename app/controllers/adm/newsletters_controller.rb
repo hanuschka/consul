@@ -59,7 +59,11 @@ module Adm
     def edit
       @newsletter = Newsletter.find(params[:id])
       authorize [:adm, @newsletter]
-      @newsletter_image = @newsletter.image || @newsletter.create_image(user: current_user)
+      @newsletter_image = @newsletter.image
+      unless @newsletter_image
+        @newsletter_image = @newsletter.build_image(user: current_user)
+        @newsletter_image.save!(validate: false)
+      end
 
       @breadcrumbs = [
         { name: t("adm.menu.items.notifications"), icon: "send" },

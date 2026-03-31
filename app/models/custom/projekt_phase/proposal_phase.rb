@@ -60,7 +60,9 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   has_many :resources, foreign_key: :projekt_phase_id, class_name: "Proposal",
                        inverse_of: :projekt_phase, dependent: :destroy
 
-  alias_method :proposals, :resources
+  def proposals
+    resources
+  end
 
   after_create :copy_map_settings_from_projekt
 

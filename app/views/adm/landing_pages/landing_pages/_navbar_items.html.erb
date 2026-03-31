@@ -3,14 +3,14 @@
   <p class="kern-body mb-4"><%= t(".description") %></p>
 
   <%= new_resource_link(
-    new_adm_navbar_item_path(landing_page_id: landing_page.id),
+    new_adm_landing_pages_landing_page_navbar_item_path(landing_page),
     t(".new_item")
   ) %>
 
   <div
     class="navbar-items"
     data-controller="sortable"
-    data-sortable-url-value="<%= reorder_adm_navbar_items_path %>"
+    data-sortable-url-value="<%= reorder_adm_landing_pages_landing_page_navbar_items_path(landing_page) %>"
   >
     <%= render landing_page.navbar_items.top_level %>
   </div>

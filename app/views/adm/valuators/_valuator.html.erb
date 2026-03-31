@@ -3,9 +3,8 @@
   <td class="kern-table__cell"><%= valuator.name %></td>
   <td class="kern-table__cell"><%= valuator.email %></td>
   <td class="kern-table__cell">
-    <%= link_to t('shared.delete'),
-                adm_valuator_path(valuator),
-                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
-                class: "kern-link" %>
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("shared.delete"), url: adm_valuator_path(valuator), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+    <% end %>
   </td>
 </tr>

@@ -129,9 +129,9 @@ de:
         admin_link: Administration
         home_link: Start Seite
         projekt_events_link: Veranstaltungen
-        projekt_management: Projektmanager
+        projekt_management: Projekte
         deficiency_report_management: Mängelmelder
-        idea_management: Ideenplattform
+        idea_management: Ideen
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: Öffentlichkeitsbeteiligung

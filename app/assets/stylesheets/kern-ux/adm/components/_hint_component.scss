@@ -1,7 +1,5 @@
 .adm-hint {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: contents;
 }
 
 .adm-hint__toggle {
@@ -37,13 +35,9 @@
 }
 
 .adm-hint__panel {
+  flex-basis: 100%;
   display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 10;
-  min-width: 360px;
-  max-width: 480px;
+  margin-bottom: 0.5rem;
 
   &--open {
     display: block;

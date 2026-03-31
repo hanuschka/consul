@@ -12,7 +12,7 @@ class Adm::Moderation::CommentsController < Adm::Moderation::BaseController
     @flags_count_header_options = { sort: true }
 
     @breadcrumbs = [
-      { name: I18n.t("adm.moderation.menu.title") },
+      { name: I18n.t("adm.moderation.menu.title"), icon: "comment" },
       { name: I18n.t("adm.moderation.menu.comments") }
     ]
   end

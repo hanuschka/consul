@@ -17,13 +17,8 @@
   <%= turbo_frame_tag "investment_content" do %>
 
     <%# === Section header === %>
-    <div class="d-flex align-items-center justify-content-between mb-4">
-      <div class="d-flex align-items-center gap-3">
-        <h2 class="adm-detail-section-title m-0"><%= t(".content_title") %></h2>
-        <%= render Adm::HintComponent.new do %>
-          <p class="adm-hint__text"><%= t(".content_info") %></p>
-        <% end %>
-      </div>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="adm-detail-section-title m-0"><%= t(".content_title") %></h2>
       <div class="d-flex align-items-center gap-3">
         <span class="adm-detail-meta__item">
           <%= link_to budget_investment_path(@investment.budget, @investment), target: "_blank", rel: "noopener" do %>
@@ -40,6 +35,11 @@
         <%= kern_link_button(edit_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
               text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "investment_content" }) %>
       </div>
+    </div>
+    <div class="d-flex align-items-center flex-wrap gap-3 mb-4">
+      <%= render Adm::HintComponent.new do %>
+        <p class="adm-hint__text"><%= t(".content_info") %></p>
+      <% end %>
     </div>
 
     <%# === Title + Description in card === %>

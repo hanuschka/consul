@@ -7,13 +7,16 @@ de:
         title: Moderation
         users: Nutzer blockieren
         proposals: Vorschläge
-        budget_investments: Bürgerhaushaltsvorschläge
+        budget_investments: Vorschläge (Budget)
         comments: Kommentare
       users:
         index:
           title: Nutzer blockieren
+          page_hint: "Auf dieser Seite können Sie Nutzer suchen und deren Sichtbarkeit auf der Plattform einschränken. Durch Verstecken wird der Nutzer ausgeblendet, seine Inhalte bleiben jedoch erhalten. Durch Blockieren wird der Nutzer samt aller seiner Inhalte verborgen. Nutzen Sie die Suche, um gezielt nach E-Mail-Adresse oder Nutzername zu filtern."
           search_placeholder: E-Mail oder Nutzername
           search_button: Suchen
+          no_items_title: Keine Nutzer gefunden
+          no_items_description: Nutzen Sie die Suche, um Nutzer anhand von E-Mail oder Nutzername zu finden.
           statuses:
             hide: Versteckt
             block: Blockiert
@@ -27,9 +30,12 @@ de:
       proposals:
         index:
           title: Vorschläge moderieren
+          page_hint: Hier sehen Sie alle Vorschläge, die von Nutzern gemeldet wurden. Unter dem Tab Gemeldet finden Sie neue Meldungen zur Prüfung. Sie können Vorschläge herausmoderieren oder die Meldung als gelesen markieren, wenn kein Handlungsbedarf besteht. Herausmoderierte Vorschläge werden für Bürger unsichtbar, bleiben aber im System erhalten.
           projekt: Projekt
           author: Autor
           flags_count: Meldungen
+          no_items_title: Keine Vorschläge vorhanden
+          no_items_description: Sobald Vorschläge gemeldet werden, werden diese hier angezeigt.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen
@@ -45,10 +51,13 @@ de:
         notice_hide: Der Vorschlag wurde herausmoderiert.
       budget_investments:
         index:
-          title: Bürgerhaushaltsvorschläge moderieren
+          title: Vorschläge moderieren
+          page_hint: Hier sehen Sie alle Bürgerhaushaltsvorschläge, die von Nutzern gemeldet wurden. Unter dem Tab Gemeldet finden Sie neue Meldungen zur Prüfung. Sie können Vorschläge herausmoderieren oder die Meldung als gelesen markieren. Herausmoderierte Vorschläge werden auf der Plattform nicht mehr angezeigt, bleiben aber zur Nachverfolgung im System gespeichert.
           projekt: Projekt
           author: Autor
           flags_count: Meldungen
+          no_items_title: Keine Vorschläge vorhanden
+          no_items_description: Sobald Vorschläge gemeldet werden, werden diese hier angezeigt.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen
@@ -66,9 +75,12 @@ de:
       comments:
         index:
           title: Kommentare moderieren
+          page_hint: Hier verwalten Sie gemeldete Kommentare. Unter dem Tab Gemeldet sehen Sie Kommentare, die von Nutzern als unangemessen markiert wurden. Sie können diese herausmoderieren, um sie von der öffentlichen Seite zu entfernen, oder die Meldung als gelesen markieren, wenn der Kommentar den Regeln entspricht. Alle Aktionen werden protokolliert.
           projekt: Projekt
           author: Autor
           flags_count: Meldungen
+          no_items_title: Keine Kommentare vorhanden
+          no_items_description: Sobald Kommentare gemeldet werden, werden diese hier angezeigt.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen

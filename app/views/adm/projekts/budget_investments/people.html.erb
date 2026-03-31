@@ -6,36 +6,38 @@
 
 <div class="kern-container mb-5">
 
-  <%= render Kern::FormFieldComponent.new(
-    label: t(".administrator"),
-    hint: t(".administrator_hint")) do %>
-    <%= render "adm/projekts/budget_investments/people/administrator",
-          investment: @investment, projekt_phase: @projekt_phase, admins: @admins %>
-  <% end %>
-
-  <% unless @admins.any? %>
+  <% if @admins.any? %>
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".administrator"),
+      hint: t(".administrator_hint")) do %>
+      <%= render "adm/projekts/budget_investments/people/administrator",
+            investment: @investment, projekt_phase: @projekt_phase, admins: @admins %>
+    <% end %>
+  <% else %>
     <%= empty_state(title: t(".no_administrators"), icon: "admin_panel_settings") %>
+    <hr class="kern-divider my-5" aria-hidden="true" />
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(
-    label: t(".valuator_groups"),
-    hint: t(".valuator_groups_hint")) do %>
-    <%= render "adm/projekts/budget_investments/people/valuator_groups",
-          investment: @investment, projekt_phase: @projekt_phase, valuator_groups: @valuator_groups %>
-  <% end %>
-
-  <% unless @valuator_groups.any? %>
+  <% if @valuator_groups.any? %>
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".valuator_groups"),
+      hint: t(".valuator_groups_hint")) do %>
+      <%= render "adm/projekts/budget_investments/people/valuator_groups",
+            investment: @investment, projekt_phase: @projekt_phase, valuator_groups: @valuator_groups %>
+    <% end %>
+  <% else %>
     <%= empty_state(title: t(".no_valuator_groups"), icon: "groups") %>
+    <hr class="kern-divider my-5" aria-hidden="true" />
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(
-    label: t(".valuators"),
-    hint: t(".valuators_hint")) do %>
-    <%= render "adm/projekts/budget_investments/people/valuators",
-          investment: @investment, projekt_phase: @projekt_phase, valuators: @valuators %>
-  <% end %>
-
-  <% unless @valuators.any? %>
+  <% if @valuators.any? %>
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".valuators"),
+      hint: t(".valuators_hint")) do %>
+      <%= render "adm/projekts/budget_investments/people/valuators",
+            investment: @investment, projekt_phase: @projekt_phase, valuators: @valuators %>
+    <% end %>
+  <% else %>
     <%= empty_state(title: t(".no_valuators"), icon: "person_search") %>
   <% end %>
 

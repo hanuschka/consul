@@ -1,0 +1,10 @@
+de:
+  adm:
+    memos:
+      title: Memos
+      form:
+        submit: Memo erstellen
+      memo:
+        reply: Antworten
+        send_notification: Benachrichtigung senden
+        last_notification: "Letzte Benachrichtigung gesendet am %{datetime}"

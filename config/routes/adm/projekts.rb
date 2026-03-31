@@ -162,6 +162,12 @@ namespace :adm do
       end
     end
 
+    resources :memos, only: [:create] do
+      member do
+        post :send_notification
+      end
+    end
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member
       get :visibility, on: :member

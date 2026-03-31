@@ -3,60 +3,60 @@ de:
     budget_phase:
       feature:
         general:
-          browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
-          browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
-          browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
-          browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+          browse_mode_in_phase_footer: Blättern-Modus
+          browse_mode_in_phase_footer_description: Aktiviert den Blättern-Modus im Footer-Bereich der Vorschlagsansicht. Nutzer können damit einzeln durch alle Vorschläge navigieren, ohne zur Übersichtsseite zurückkehren zu müssen. Dies verbessert die Nutzererfahrung bei vielen Einträgen. Deaktivieren Sie diese Option, wenn die Übersichtsseite bevorzugt genutzt werden soll.
+          browse_mode_in_phase_footer_by_default: Blättern-Modus als Standard
+          browse_mode_in_phase_footer_by_default_description: Legt den Blättern-Modus als Standardansicht fest, sodass Nutzer beim Aufruf der Seite direkt in der Einzelansicht starten und durch die Vorschläge blättern können. Ohne diese Einstellung sehen Nutzer zunächst die Listenansicht. Aktivieren Sie diese Option, wenn die sequentielle Darstellung der Vorschläge bevorzugt wird.
         form:
           allow_attached_image: Titelbild
-          allow_attached_image_description: Ermöglicht es den Bürger ein Titelbild hinzuzufügen.
+          allow_attached_image_description: Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Dieses Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht angezeigt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder die Moderation reduziert werden soll.
           labels: Labels
-          labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
-          sentiments: Sentimente
-          sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
+          labels_description: Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren.
+          sentiments: Sentiments
+          sentiments_description: Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Gefühle oder Stimmungen zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen die Stimmungslage der Teilnehmer zusätzlich erfasst werden soll.
           show_map: Karte
-          show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
-          enable_geoman_controls_in_maps: Polygone in Karte
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
+          show_map_description: Zeigt eine interaktive Karte in der Vorschlags-Ansicht an. Nutzer können über die Karte den räumlichen Bezug eines Vorschlags erkennen. Im Frontend wird die Karte in der Detailansicht des Vorschlags eingebunden. Aktivieren Sie diese Option bei Projekten mit starkem Ortsbezug und deaktivieren Sie sie bei rein thematischen Beteiligungen.
+          enable_geoman_controls_in_maps: Kartenzeichnung
+          enable_geoman_controls_in_maps_description: Erweitert die Kartenfunktion um Zeichenwerkzeuge, mit denen Nutzer geometrische Formen wie Rechtecke, Kreise und Polygone auf der Karte einzeichnen können. Im Frontend erscheinen zusätzliche Steuerelemente über der Karte. Aktivieren Sie diese Option, wenn Nutzer Flächen oder Bereiche markieren sollen, nicht nur einzelne Standort-Pins.
           allow_attached_documents: Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: Ermöglicht es dem Nutzer, Dokumente wie PDFs oder Bilder an einen Vorschlag anzuhängen. Die Dateien werden im Frontend als Download-Links in der Detailansicht angezeigt. Aktivieren Sie diese Option, wenn Nutzer ergänzende Unterlagen bereitstellen sollen. Deaktivieren Sie sie, um den Moderationsaufwand bei Dateianhängen zu vermeiden.
           enable_external_video: Video
-          enable_external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
+          enable_external_video_description: Ermöglicht es dem Nutzer, externe Videos von YouTube oder Vimeo in einen Vorschlag einzubinden. Im Frontend wird das Video als eingebetteter Player in der Detailansicht angezeigt. Aktivieren Sie diese Option, wenn multimediale Inhalte die Vorschläge bereichern sollen. Deaktivieren Sie sie, wenn nur textbasierte Beiträge gewünscht sind.
           show_implementation_option_fields: Umsetzung
-          show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
+          show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld zur Umsetzungsart hinzu. Nutzer können damit angeben, wie sie sich die Realisierung ihres Vorschlags vorstellen. Im Frontend erscheint das Feld im Erstellungsformular und in der Detailansicht. Aktivieren Sie diese Option bei Projekten, in denen der Umsetzungsweg relevant ist.
           show_user_cost_estimate: Preisschätzung
-          show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
-          voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
-          voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+          show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld für die preisliche Einschätzung hinzu. Nutzer können damit eine grobe Kostenschätzung angeben. Im Frontend wird das Feld im Formular und in der Detailansicht angezeigt. Aktivieren Sie diese Option bei Bürgerhaushalten, in denen Kostentransparenz eine wichtige Rolle spielt.
+          voice_assistant: Sprachassistent
+          voice_assistant_description: "Aktiviert einen KI-gestützten Sprachassistenten, der Nutzer beim Erstellen von Vorschlägen unterstützt. Im Frontend erscheint ein Mikrofon-Symbol im Erstellungsformular, über das Nutzer ihren Vorschlag diktieren können. Nutzen Sie diese Funktion, um die Barrierefreiheit zu erhöhen und die Eingabehürde für weniger technikaffine Nutzer."
         resource:
           users_can_create_investment_proposals: Vorschläge einreichen
-          users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen
+          users_can_create_investment_proposals_description: "Erlaubt es registrierten Nutzern, eigene Vorschläge im Rahmen der Budgetphase zu erstellen. Im Frontend wird ein Erstellen-Button angezeigt, über den das Formular aufgerufen wird. Deaktivieren Sie diese Option, wenn nur von der Verwaltung erstellte Vorschläge zur Abstimmung stehen sollen und keine Einreichungen durch Nutzer gewünscht."
           show_report_button_in_sidebar: Melden
-          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
+          show_report_button_in_sidebar_description: "Zeigt in der Seitenleiste der Vorschläge einen Melden-Button an, über den Nutzer unangemessene Inhalte zur Überprüfung durch die Moderation markieren können. Aktivieren Sie diese Funktion, um die Community-basierte Inhaltsmoderation zu unterstützen. Deaktivieren Sie sie nur, wenn die Moderation ausschliesslich durch Administratoren."
           show_follow_button_in_sidebar: Folgen
-          show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
+          show_follow_button_in_sidebar_description: Zeigt in der Seitenleiste der Vorschläge einen Folgen-Button an. Nutzer erhalten dadurch Benachrichtigungen bei Änderungen am Vorschlag, etwa bei neuen Kommentaren oder Statusänderungen. Aktivieren Sie diese Funktion, um die Nutzerbindung zu stärken. Deaktivieren Sie sie, wenn das Benachrichtigungssystem nicht genutzt werden soll.
           show_community_button_in_sidebar: Arbeitskreise
-          show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Arbeitskreise” für Investitionsvorschläge
+          show_community_button_in_sidebar_description: Zeigt in der Seitenleiste der Vorschläge einen Arbeitskreis-Button an. Über Arbeitskreise können sich Nutzer in Gruppen zusammenfinden und gemeinsam an Vorschlägen arbeiten. Im Frontend wird ein Link zum jeweiligen Arbeitskreis angezeigt. Aktivieren Sie diese Funktion bei kollaborativen Projekten mit vertiefter Zusammenarbeit.
           show_related_content: Verwandte Inhalte
-          show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
+          show_related_content_description: Zeigt unterhalb eines Vorschlags verwandte Inhalte wie ähnliche Vorschläge oder thematisch verknüpfte Debatten an. Im Frontend erscheint ein eigener Bereich mit Verlinkungen zu relevanten Inhalten. Aktivieren Sie diese Funktion, um die Vernetzung zwischen Beiträgen zu fördern und Nutzern zusätzliche Kontextinformationen zu bieten.
           show_comments: Kommentare
-          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+          show_comments_description: Aktiviert die Kommentarfunktion für Vorschläge in der Budgetphase. Im Frontend wird unterhalb jedes Vorschlags ein Kommentarbereich mit Antwortfunktion angezeigt. Aktivieren Sie diese Funktion, um den Dialog zwischen Nutzern und der Verwaltung zu ermöglichen. Deaktivieren Sie sie, wenn keine öffentliche Diskussion erwünscht ist.
           conditional_balloting: Vereinfachte Stimmabgabe
-          conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
+          conditional_balloting_description: "Erlaubt Nutzern die Stimmabgabe bereits vor Abschluss der Verifizierung. Die Stimmen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Abstimmungsbutton sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die."
           show_video_as_link: Videos als Link
-          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
-          hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Investitionsvorschläge
-          hide_ballots_count_description: Aktuelle Stimmenanzahl wird während der Abstimmungsphase nicht angezeigt um Beeinflussung zu vermeiden
+          show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
+          hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Vorschläge
+          hide_ballots_count_description: Blendet die aktuelle Stimmenanzahl während der laufenden Abstimmungsphase aus, sodass Nutzer die bisherige Stimmverteilung nicht einsehen können. Im Frontend wird der Zähler ausgeblendet. Aktivieren Sie diese Option, um eine Beeinflussung durch sichtbare Ergebnisse zu vermeiden und eine unbeeinflusste Stimmabgabe sicherzustellen.
       option:
         form:
-          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
-          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
-          description_max_length: Maximale Zeichenlänge der Beschreibung
-          description_max_length_description: Legt die maximale Anzahl der Zeichen für die Beschreibung fest.
+          map_features_limit: Maximale Kartenmarkierungen
+          map_features_limit_description: "Legt die maximale Anzahl an Kartenmarkierungen fest, die ein Nutzer innerhalb einer einzelnen Sitzung auf der Karte setzen kann. Im Frontend wird nach Erreichen des Limits das Setzen weiterer Pins blockiert. Nutzen Sie diesen Wert, um Missbrauch zu verhindern und die Kartenübersichtlichkeit zu wahren."
+          description_max_length: Maximale Beschreibungslänge
+          description_max_length_description: Definiert die maximale Zeichenanzahl, die ein Nutzer für die Beschreibung eines Vorschlags verwenden darf. Im Frontend wird ein Zeichenzähler angezeigt, der den verbleibenden Platz angibt. Setzen Sie den Wert so, dass Vorschläge ausreichend detailliert beschrieben werden können, ohne unübersichtlich zu werden.
       selectable_setting:
         general:
           default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+          default_order_description: "Legt die Standardreihenfolge fest, in der Vorschläge auf der Übersichtsseite angezeigt werden. Die gewählte Sortierung wird beim ersten Aufruf der Seite angewendet. Nutzer können die Sortierung im Frontend selbst anpassen. Wählen Sie eine Sortierung, die zum Projekttyp passt, etwa zufällig für mehr Fairness oder nach Stimmenanzahl für."
           default_order_options:
             random: Zufällig
             total_votes: Aktuelles Ranking
@@ -67,120 +67,120 @@ de:
       option:
         general:
           submissions_limit: Maximale Anzahl an Einsendungen pro Nutzer
-          submissions_limit_description: Legt fest, wie oft ein Nutzer das Formular ausfüllen darf.
+          submissions_limit_description: "Begrenzt die Anzahl der Formulareinsendungen, die ein einzelner Nutzer abgeben darf. Im Frontend wird nach Erreichen des Limits der Absende-Button deaktiviert und ein Hinweis angezeigt. Nutzen Sie diesen Wert, um Mehrfacheinsendungen zu verhindern und die Datenqualität zu sichern. Ein Wert von eins stellt sicher, dass jeder Nutzer nur einmal."
           primary_formular_cutoff_date: Ende der 1. Phase
-          primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
+          primary_formular_cutoff_date_description: "Legt das Enddatum der ersten Formularphase fest, ab dem keine neuen Einsendungen mehr möglich sind. Das Formular besteht aus zwei Phasen: In der 1. Phase füllen Nutzer die primären Felder aus. Nach Ablauf dieses Datums beginnt die Follow-up-Phase, in der Nutzer nur noch die ergänzenden Follow-up-Felder zu bestehenden Einsendungen ausfüllen können."
     iframe_phase:
       option:
         general:
           iframe_url: Iframe URL
-          iframe_url_description: Bitte geben Sie hier die URL ein
+          iframe_url_description: "Definiert die URL der externen Webseite, die innerhalb eines Iframes in der Phase angezeigt wird. Im Frontend wird der Inhalt der angegebenen URL eingebettet dargestellt. Achten Sie darauf, dass die Zielseite die Einbettung per Iframe erlaubt und über HTTPS erreichbar ist. Nutzen Sie diese Funktion, um externe Tools oder Inhalte nahtlos."
           iframe_width: Breite des Iframes
-          iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
+          iframe_width_description: "Legt die Breite des eingebetteten Iframes in Pixeln fest. Im Frontend bestimmt dieser Wert, wie breit der Iframe-Container dargestellt wird. Der empfohlene Standardwert beträgt 1260 Pixel, was der vollen Inhaltsbreite entspricht. Passen Sie den Wert an, wenn der eingebettete Inhalt eine andere Breite erfordert oder ein schmaleres Layout gewünscht."
           iframe_height: Höhe des Iframes
-          iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"
+          iframe_height_description: "Legt die Höhe des eingebetteten Iframes in Pixeln fest. Im Frontend bestimmt dieser Wert, wie hoch der Iframe-Container dargestellt wird. Der empfohlene Standardwert beträgt 1000 Pixel, was für die meisten Inhalte ausreichend ist. Passen Sie den Wert an, wenn der eingebettete Inhalt mehr oder weniger vertikalen Platz benötigt."
     question_phase:
       feature:
         general:
           show_questions_list: Aktivieren Sie eine Übersicht aller Fragen
-          show_questions_list_description: Zeigt eine Übersichtsseite mit allen Fragen der Kurzumfrage an
+          show_questions_list_description: Zeigt eine Übersichtsseite mit allen Fragen der Kurzumfrage an, auf der Nutzer alle verfügbaren Fragen auf einen Blick sehen und gezielt navigieren können. Im Frontend erscheint eine listenbasierte Darstellung aller Fragen. Aktivieren Sie diese Option bei umfangreicheren Kurzumfragen, damit Nutzer die Gesamtheit der Fragen überblicken können.
     point_of_interest_phase:
       feature:
         general:
           users_can_create_pins: Pins setzen
-          users_can_create_pins_description: Nutzer können Pins erstellen
+          users_can_create_pins_description: "Erlaubt es registrierten Nutzern, eigene Pins auf der Karte der Phase zu setzen und damit ortsbezogene Hinweise oder Vorschläge einzureichen. Im Frontend wird ein Erstellen-Button auf der Kartenansicht angezeigt. Deaktivieren Sie diese Option, wenn Pins ausschliesslich von der Verwaltung gesetzt werden sollen und keine Nutzereingaben auf der Karte."
       option:
         form:
-          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
-          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+          map_features_limit: Maximale Kartenmarkierungen
+          map_features_limit_description: "Legt die maximale Anzahl an Kartenmarkierungen fest, die ein Nutzer innerhalb einer einzelnen Sitzung auf der Karte setzen kann. Im Frontend wird nach Erreichen des Limits das Setzen weiterer Pins blockiert. Nutzen Sie diesen Wert, um Missbrauch zu verhindern und die Kartenübersichtlichkeit zu wahren."
         general:
           max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
-          max_number_of_pins_per_user_description: Legt die maximale Anzahl an Pins fest, die ein Nutzer erstellen kann.
+          max_number_of_pins_per_user_description: Begrenzt die Gesamtanzahl an Pins, die ein einzelner Nutzer über alle Sitzungen hinweg erstellen darf. Im Frontend wird nach Erreichen des Limits der Erstellen-Button deaktiviert und ein Hinweis angezeigt. Nutzen Sie diesen Wert, um eine gleichmässige Beteiligung sicherzustellen und zu verhindern, dass einzelne Nutzer die Karte dominieren.
     milestone_phase:
       feature:
         general:
           newest_first: Neueste Meilensteine zuerst anzeigen
-          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
+          newest_first_description: Sortiert die Meilensteine in absteigender Reihenfolge, sodass der neueste Meilenstein zuerst angezeigt wird. Im Frontend erscheinen aktuelle Fortschritte damit an oberster Stelle. Aktivieren Sie diese Option, wenn der aktuelle Projektstatus im Vordergrund stehen soll. Deaktivieren Sie sie, wenn die chronologische Darstellung bevorzugt wird.
     event_phase:
       feature:
         general:
           reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
-          reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
+          reverse_order_for_incoming_events_description: Kehrt die Sortierreihenfolge der Veranstaltungen um, sodass das späteste Ereignis zuerst angezeigt wird. Im Frontend erscheinen kommende Veranstaltungen damit in umgekehrter chronologischer Reihenfolge. Aktivieren Sie diese Option, wenn das zeitlich letzte Ereignis den höchsten Stellenwert hat. Deaktivieren Sie sie für eine aufsteigende Sortierung.
           show_on_home_page: Veranstaltung auf Homepage anzeigen
-          show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
+          show_on_home_page_description: "Steuert, ob die Veranstaltungen dieser Phase auf der Homepage der Plattform angezeigt werden. Im Frontend erscheint bei Aktivierung ein Veranstaltungswidget im Homepage-Bereich. Aktivieren Sie diese Option, um auf bevorstehende Ereignisse aufmerksam zu machen und die Sichtbarkeit der Veranstaltung zu erhöhen."
     newsfeed_phase:
       option:
         general:
           newsfeed_id: Newsfeed ID
-          newsfeed_id_description: Bitte geben Sie hier die ID des News-Feeds ein
+          newsfeed_id_description: Definiert die eindeutige Kennung des News-Feeds, der in dieser Phase angezeigt werden soll. Im Frontend wird der Inhalt des zugeordneten Feeds automatisch geladen und dargestellt. Geben Sie hier die ID ein, die vom Feed-Anbieter bereitgestellt wird. Ohne korrekte ID werden im Frontend keine Newsfeed-Inhalte angezeigt und der Bereich bleibt leer.
           newsfeed_type: Newsfeed Type
-          newsfeed_type_description: Bitte geben Sie hier den Typ des News-Feeds an
+          newsfeed_type_description: "Legt den Typ des News-Feeds fest, der bestimmt, aus welcher Quelle die Nachrichten geladen werden. Im Frontend beeinflusst der Typ die Darstellung und das Ladeverhalten des Feeds. Geben Sie hier den vom Feed-Anbieter definierten Typ ein. Ohne korrekten Typ kann der Feed nicht korrekt geladen werden und es werden keine Inhalte im Frontend."
     proposal_phase:
       feature:
         general:
-          browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
-          browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
-          browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
-          browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+          browse_mode_in_phase_footer: Blättern-Modus
+          browse_mode_in_phase_footer_description: Aktiviert den Blättern-Modus im Footer-Bereich der Vorschlagsansicht. Nutzer können damit einzeln durch alle Vorschläge navigieren, ohne zur Übersichtsseite zurückkehren zu müssen. Dies verbessert die Nutzererfahrung bei vielen Einträgen. Deaktivieren Sie diese Option, wenn die Übersichtsseite bevorzugt genutzt werden soll.
+          browse_mode_in_phase_footer_by_default: Blättern-Modus als Standard
+          browse_mode_in_phase_footer_by_default_description: Legt den Blättern-Modus als Standardansicht fest, sodass Nutzer beim Aufruf der Seite direkt in der Einzelansicht starten und durch die Vorschläge blättern können. Ohne diese Einstellung sehen Nutzer zunächst die Listenansicht. Aktivieren Sie diese Option, wenn die sequentielle Darstellung der Vorschläge bevorzugt wird.
           require_admin_acceptance: Adminfreigabe
-          require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+          require_admin_acceptance_description: "Erfordert eine manuelle Freigabe durch einen Administrator, bevor ein von Nutzern erstellter Vorschlag im Frontend sichtbar wird. Ohne Freigabe bleibt der Vorschlag im Status Entwurf. Aktivieren Sie diese Option bei sensiblen Beteiligungen, um die inhaltliche Qualität sicherzustellen."
         form:
           allow_attached_image: Titelbild
-          allow_attached_image_description: Ermöglicht es den Bürger ein Titelbild hinzuzufügen.
+          allow_attached_image_description: "Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Das Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht dargestellt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder wenn der Moderationsaufwand für Bildprüfungen reduziert werden soll."
           labels: Labels
-          labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
+          labels_description: "Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die thematische Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren."
           sentiments: Sentiments
-          sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
+          sentiments_description: "Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Stimmung oder Haltung zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen neben inhaltlichem Feedback auch die Stimmungslage der Teilnehmer erfasst werden."
           show_map: Karte
-          show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
-          enable_geoman_controls_in_maps: Polygone in Karte
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
+          show_map_description: "Zeigt eine interaktive Karte in der Vorschlags-Ansicht an, über die der räumliche Bezug eines Vorschlags dargestellt wird. Im Frontend erscheint die Karte in der Detailansicht des Vorschlags. Aktivieren Sie diese Option bei Projekten mit starkem Ortsbezug, etwa bei Stadtentwicklung oder Infrastruktur."
+          enable_geoman_controls_in_maps: Kartenzeichnung
+          enable_geoman_controls_in_maps_description: Erweitert die Kartenfunktion um Zeichenwerkzeuge, mit denen Nutzer geometrische Formen wie Rechtecke, Kreise und Polygone auf der Karte einzeichnen können. Im Frontend erscheinen zusätzliche Steuerelemente über der Karte. Aktivieren Sie diese Option, wenn Nutzer Flächen oder Bereiche markieren sollen, nicht nur einzelne Standort-Pins.
           allow_attached_documents: Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: "Ermöglicht es dem Nutzer, Dokumente wie PDFs oder Bilder an einen Vorschlag anzuhängen. Die angehängten Dateien werden im Frontend als Download-Links in der Detailansicht dargestellt. Aktivieren Sie diese Option, wenn Nutzer ergänzende Unterlagen zu ihren Vorschlägen bereitstellen sollen."
           enable_external_video: Video
-          enable_external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
-          anonimize_authors: Beiträge anonym erstellen
-          anonimize_authors_description: Autorenkacheln werden im Frontend nicht angezeigt.
-          voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
-          voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+          enable_external_video_description: "Ermöglicht es dem Nutzer, externe Videos von YouTube oder Vimeo in einen Vorschlag einzubinden. Im Frontend wird das Video als eingebetteter Player in der Detailansicht dargestellt. Aktivieren Sie diese Option, wenn multimediale Inhalte die Vorschläge bereichern sollen. Deaktivieren Sie sie, wenn ausschließlich textbasierte Beiträge gewünscht sind."
+          anonimize_authors: Anonyme Beiträge
+          anonimize_authors_description: "Blendet die Autorenkacheln und Nutzernamen bei Vorschlägen im Frontend vollständig aus, sodass alle Beiträge anonym erscheinen. Aktivieren Sie diese Option bei sensiblen Themen, um eine unbeeinflusste inhaltliche Bewertung der Vorschläge zu ermöglichen. Deaktivieren Sie sie, wenn Transparenz über die Verfasser gewünscht ist."
+          voice_assistant: Sprachassistent
+          voice_assistant_description: "Aktiviert einen KI-gestützten Dialogassistenten, der Nutzer im Gespräch durch die Erstellung eines Beitrags führt. Im Frontend erscheint ein Chat-Interface, in dem ein Bot gezielt Rückfragen stellt und den Beitrag gemeinsam mit dem Nutzer formuliert. Diese Funktion muss vorab durch demokratie.today aktiviert werden."
         resource:
           show_video_as_link: Videos als Link
-          show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
           enable_proposal_notifications_tab: Benachrichtigungen
-          enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+          enable_proposal_notifications_tab_description: Aktiviert einen Benachrichtigungs-Tab in der Detailansicht eines Vorschlags, über den der Autor Nachrichten an alle Unterstützer seines Vorschlags senden kann. Im Frontend erscheint ein zusätzlicher Reiter in der Vorschlags-Detailansicht. Aktivieren Sie diese Funktion, um die Kommunikation zwischen Autoren und Unterstützern zu fördern.
           enable_proposal_milestones_tab: Meilensteine
-          enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+          enable_proposal_milestones_tab_description: Aktiviert einen Meilenstein-Tab in der Detailansicht eines Vorschlags, in dem die Verwaltung Fortschritte und Umsetzungsschritte dokumentieren kann. Im Frontend erscheint ein zusätzlicher Reiter mit den angelegten Meilensteinen. Nutzen Sie diese Funktion, um den Bearbeitungsstand von Vorschlägen transparent gegenüber den Nutzern darzustellen.
           users_can_create_proposals: Vorschläge einreichen
-          users_can_create_proposals_description: Nutzer können Vorschläge erstellen
+          users_can_create_proposals_description: "Erlaubt es registrierten Nutzern, eigene Vorschläge in der Vorschlagsphase zu erstellen und einzureichen. Im Frontend wird ein Erstellen-Button angezeigt, über den das Formular aufgerufen wird. Deaktivieren Sie diese Option, wenn nur von der Verwaltung erstellte Vorschläge angezeigt werden sollen und keine Einreichungen durch Nutzer vorgesehen sind."
           allow_voting: Unterstützung
-          allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
+          allow_voting_description: "Aktiviert die Unterstützungsfunktion, mit der Nutzer Vorschläge durch eine positive Stimme unterstützen können. Im Frontend wird ein Unterstützungs-Button an jedem Vorschlag angezeigt. Aktivieren Sie diese Funktion, um die Relevanz von Vorschlägen durch die Gemeinschaft bewerten zu lassen."
           quorum_for_proposals: Quorum
-          quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
-          enable_up_and_down_voting: Daumen hoch | runter
-          enable_up_and_down_voting_description: Aktivieren Sie Daumen hoch | runter
+          quorum_for_proposals_description: "Aktiviert ein Mindestquorum für Vorschläge, das erreicht werden muss, damit ein Vorschlag als erfolgreich gilt. Im Frontend wird ein Fortschrittsbalken angezeigt, der den aktuellen Stand zum Quorum visualisiert. Aktivieren Sie diese Funktion bei Projekten, in denen eine Mindestbeteiligung erforderlich ist."
+          enable_up_and_down_voting: Daumen hoch und runter
+          enable_up_and_down_voting_description: "Aktiviert die Möglichkeit, Vorschläge sowohl positiv als auch negativ zu bewerten. Im Frontend werden zwei Buttons mit Daumen hoch und Daumen runter angezeigt. Aktivieren Sie diese Option, wenn eine differenzierte Bewertung durch Zustimmung und Ablehnung gewünscht ist. Deaktivieren Sie sie, wenn nur positive Unterstützung ohne Ablehnungsoption gewünscht ist."
           show_report_button_in_sidebar: Melden
-          show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
+          show_report_button_in_sidebar_description: "Zeigt in der Seitenleiste der Vorschlagsansicht einen Melden-Button an, über den Nutzer unangemessene oder regelwidrige Inhalte zur Überprüfung durch die Moderation markieren können. Aktivieren Sie diese Funktion, um die Community-basierte Inhaltsmoderation zu unterstützen. Deaktivieren Sie sie nur, wenn die Moderation ausschließlich durch Administratoren erfolgt."
           show_follow_button_in_proposal_sidebar: Folgen
-          show_follow_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Vorschlag folgen"
+          show_follow_button_in_proposal_sidebar_description: Zeigt in der Seitenleiste eines Vorschlags einen Folgen-Button an. Nutzer erhalten dadurch Benachrichtigungen bei Änderungen am Vorschlag, etwa bei neuen Kommentaren oder Statusänderungen. Aktivieren Sie diese Funktion, um die Nutzerbindung zu stärken und Teilnehmer über den Fortschritt auf dem Laufenden zu halten. Deaktivieren Sie sie bei Bedarf.
           show_community_button_in_proposal_sidebar: Arbeitskreise
-          show_community_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion "Arbeitskreise" für Vorschläge
+          show_community_button_in_proposal_sidebar_description: Zeigt in der Seitenleiste eines Vorschlags einen Arbeitskreis-Button an, über den sich Nutzer zusammenfinden und gemeinsam an einem Vorschlag arbeiten können. Im Frontend wird ein Link zum jeweiligen Arbeitskreis angezeigt. Aktivieren Sie diese Funktion bei kollaborativen Projekten, in denen vertiefte Zusammenarbeit erwünscht ist.
           show_related_content: Verwandte Inhalte
-          show_related_content_description: Aktivieren Sie die Funktion "Verwandte Inhalte" für Vorschläge
+          show_related_content_description: Zeigt unterhalb eines Vorschlags verwandte Inhalte wie thematisch ähnliche Vorschläge oder verknüpfte Debatten an. Im Frontend erscheint ein eigener Bereich mit Verlinkungen zu relevanten Beiträgen. Aktivieren Sie diese Funktion, um die inhaltliche Vernetzung zwischen Beiträgen zu fördern und Nutzern zusätzliche Kontextinformationen zu bieten.
           show_comments: Kommentare
-          show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+          show_comments_description: "Aktiviert die Kommentarfunktion für Vorschläge in der Vorschlagsphase. Im Frontend wird unterhalb jedes Vorschlags ein Kommentarbereich mit Antwortfunktion angezeigt. Aktivieren Sie diese Funktion, um den Dialog zwischen Nutzern und der Verwaltung zu ermöglichen. Deaktivieren Sie sie bei Beteiligungen, in denen keine öffentliche Diskussion vorgesehen ist."
       option:
         form:
-          map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
-          map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
-          description_max_length: Maximale Zeichenlänge der Beschreibung
-          description_max_length_description: Legt die maximale Anzahl der Zeichen für die Beschreibung fest.
+          map_features_limit: Maximale Kartenmarkierungen
+          map_features_limit_description: "Legt die maximale Anzahl an Kartenmarkierungen fest, die ein Nutzer innerhalb einer einzelnen Sitzung auf der Karte setzen kann. Im Frontend wird nach Erreichen des Limits das Setzen weiterer Pins blockiert. Nutzen Sie diesen Wert, um Missbrauch zu verhindern und die Kartenübersichtlichkeit zu wahren."
+          description_max_length: Maximale Beschreibungslänge
+          description_max_length_description: Definiert die maximale Zeichenanzahl, die ein Nutzer für die Beschreibung eines Vorschlags verwenden darf. Im Frontend wird ein Zeichenzähler angezeigt, der den verbleibenden Platz angibt. Setzen Sie den Wert so, dass Vorschläge ausreichend detailliert formuliert werden können, ohne die Lesbarkeit durch zu lange Texte zu beeinträchtigen.
         resource:
-          votes_for_proposal_success: Anzahl der notwendigen Stimmen
-          votes_for_proposal_success_description: Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr unterstützt werden und gilt als erfolgreich
+          votes_for_proposal_success: Stimmen für Quorum
+          votes_for_proposal_success_description: "Legt die Anzahl der Unterstützungen fest, die ein Vorschlag erreichen muss, um als erfolgreich zu gelten. Nach Erreichen dieses Werts wird der Vorschlag im Frontend als erfolgreich markiert und kann nicht weiter unterstützt werden. Setzen Sie den Wert passend zum Projektumfang und zur erwarteten Teilnehmerzahl, um realistische Quoren zu gewährleisten."
       selectable_setting:
         general:
           default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+          default_order_description: Legt die Standardreihenfolge fest, in der Vorschläge auf der Übersichtsseite angezeigt werden. Die gewählte Sortierung wird beim ersten Seitenaufruf angewendet, kann aber vom Nutzer im Frontend geändert werden. Wählen Sie eine Sortierung, die zum Projekttyp passt, etwa zufällig für mehr Chancengleichheit oder nach Stimmen für maximale Transparenz.
           default_order_options:
             hot_score: Aktivste
             created_at: Neueste zuerst
@@ -191,22 +191,22 @@ de:
       feature:
         resource:
           wizard_mode: Sequentielle Abstimmung
-          wizard_mode_description: Die Abstimmung wird im Modus von sequentiellen Fragen angezeigt
+          wizard_mode_description: "Stellt die Abstimmung im Wizard-Modus dar, bei dem die Fragen nacheinander einzeln angezeigt werden. Im Frontend navigiert der Nutzer schrittweise durch die Fragen, anstatt alle auf einer Seite zu sehen. Aktivieren Sie diesen Modus bei umfangreichen Abstimmungen mit vielen Fragen, um die Übersichtlichkeit zu verbessern und die Abbruchrate zu senken."
           show_on_home_page: Sichtbarkeit Homepage
-          show_on_home_page_description: Zeigt die Abstimmung auf der Homepage an
+          show_on_home_page_description: "Steuert, ob die Abstimmung auf der Homepage der Plattform angezeigt wird. Bei Aktivierung erscheint im Frontend ein Abstimmungswidget im Homepage-Bereich, das Nutzer direkt zur Teilnahme einlädt. Aktivieren Sie diese Option, um die Sichtbarkeit und Teilnahme an der Abstimmung zu maximieren."
           show_on_index_page: Sichtbarkeit Übersichtsseite
-          show_on_index_page_description: Zeigt die Abstimmung auf der Übersichtsseite aller Abstimmungen an
+          show_on_index_page_description: "Steuert, ob die Abstimmung auf der allgemeinen Übersichtsseite aller Abstimmungen angezeigt wird. Hinweis: Die Übersichtsseite selbst muss zunächst von einem Administrator unter Applikation aktiviert werden. Deaktivieren Sie diese Option, wenn die Abstimmung nur über den direkten Projektlink erreichbar sein soll."
           results_enabled: Ergebnisse
-          results_enabled_description: Zeigt die Ergebnisse der Abstimmung am Ende der Abstimmung an
+          results_enabled_description: "Aktiviert die Anzeige der Abstimmungsergebnisse nach Abschluss der Abstimmungsphase. Im Frontend wird ein Ergebnisbereich mit grafischer Auswertung der Stimmenverteilung angezeigt. Aktivieren Sie diese Option, um den Nutzern Transparenz über das Abstimmungsergebnis zu bieten. Deaktivieren Sie sie, wenn die Ergebnisse nur intern ausgewertet werden."
           intermediate_poll_results_for_admins: Zwischenergebnisse (Admins / Projektmanager)
-          intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
+          intermediate_poll_results_for_admins_description: "Ermöglicht Administratoren und Projektmanagern die Einsicht in Zwischenergebnisse einer laufenden Abstimmung, bevor diese offiziell beendet ist. Im Frontend erscheint für berechtigte Nutzer ein zusätzlicher Ergebnisbereich. Aktivieren Sie diese Option, wenn die Verwaltung den Abstimmungsverlauf in Echtzeit verfolgen muss."
           stats_enabled: Statistiken
-          stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
+          stats_enabled_description: "Aktiviert die Anzeige von Statistiken zur Abstimmung nach deren Abschluss. Im Frontend wird ein Statistikbereich mit Kennzahlen wie Teilnahmequote und demografischer Verteilung angezeigt. Aktivieren Sie diese Option, um den Nutzern einen transparenten Überblick über die Beteiligung zu geben."
           advanced_stats_enabled: Erweiterte Statistiken
-          advanced_stats_enabled_description: Zeigt erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
+          advanced_stats_enabled_description: "Aktiviert zusätzliche erweiterte Statistiken zur Abstimmung, die über die Basisstatistiken hinausgehen. Im Frontend werden detailliertere Auswertungen wie Altersverteilung und geografische Herkunft angezeigt. Aktivieren Sie diese Option bei Projekten, in denen eine tiefergehende Analyse der Beteiligung gewünscht ist."
           evaluation_enabled: Report für Bürger anzeigen
-          evaluation_enabled_description: Zeigt eine automatisch erstellte, zusammenfassende Auswertung der Abstimmungsergebnisse für Bürger an.
+          evaluation_enabled_description: "Zeigt eine automatisch generierte, zusammenfassende Auswertung der Abstimmungsergebnisse für alle Nutzer an. Im Frontend erscheint ein aufbereiteter Bericht, der die wesentlichen Ergebnisse verständlich darstellt. Aktivieren Sie diese Option, um die Transparenz der Beteiligung zu erhöhen."
           show_comments: Kommentare
-          show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
+          show_comments_description: "Aktiviert die Kommentarfunktion für das Abstimmungsmodul. Im Frontend wird unterhalb der Abstimmung ein Kommentarbereich mit Antwortfunktion angezeigt, in dem Nutzer ihre Meinungen austauschen können. Aktivieren Sie diese Funktion, um den Dialog rund um die Abstimmung zu fördern. Deaktivieren Sie sie bei Abstimmungen, die ohne begleitende."
           show_open_answer_author_name: Name veröffentlichen
-          show_open_answer_author_name_description: Zeigt den Nutzername der offenen Antworten an
+          show_open_answer_author_name_description: "Zeigt den Nutzernamen des Verfassers bei offenen Antworten in der Abstimmung an. Im Frontend erscheint der Name neben dem Antworttext. Aktivieren Sie diese Option, wenn Transparenz über die Autorenschaft gewünscht ist. Deaktivieren Sie sie bei sensiblen Themen, um anonyme Antworten zu ermöglichen und eine unbeeinflusste Meinungsäusserung."

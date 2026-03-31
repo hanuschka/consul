@@ -116,12 +116,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     %w[
       budget_phases
       naming restrictions
-      budget_edit budget_investments comments user_resource_criteria
+      budget_edit budget_investments comments
       general_settings form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
       officing_managers
-      ai_settings
+      ai_settings user_resource_criteria
     ]
   end
 

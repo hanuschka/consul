@@ -1,16 +1,15 @@
 <%= form_with model: @draft_version, url: url do |f| %>
 
-
-  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
-    <%= f.text_field :title, label: false, placeholder: t(".title_label") %>
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint"), stacked: true) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".title_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".changelog_label"), hint: t(".changelog_hint")) do %>
-    <%= f.text_area :changelog, label: false, rows: 5 %>
+  <%= render Kern::FormFieldComponent.new(label: t(".changelog_label"), hint: t(".changelog_hint"), stacked: true) do %>
+    <%= f.text_area :changelog, label: false, rows: 5, placeholder: t(".changelog_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint")) do %>
-    <%= f.text_area :body, label: false, rows: 20, class: "legislation-draft-version-body" %>
+  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint"), stacked: true) do %>
+    <%= f.text_area :body, label: false, rows: 20, class: "legislation-draft-version-body", placeholder: t(".body_placeholder") %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".status_label"), hint: t(".status_hint")) do %>

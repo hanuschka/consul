@@ -26,7 +26,7 @@ de:
         progress_bars:
           title: Fortschrittsbalken
         show:
-          title: Investitionsvorschlag
+          title: Vorschlag
           author: Autor
           heading: Überschrift
           created_at: Eingereicht
@@ -60,13 +60,13 @@ de:
           selected_true: Vorschlag soll für die Abstimmung berücksichtigt werden
           selected_false: Vorschlag soll nicht für die Abstimmung berücksichtigt werden
         edit:
-          title: Investitionsvorschlag bearbeiten
+          title: Vorschlag bearbeiten
           user_submission_fields: Nutzereingaben
           documents: Dokumente
         update:
-          success: Investitionsvorschlag wurde erfolgreich aktualisiert.
+          success: Vorschlag wurde erfolgreich aktualisiert.
         destroy:
-          success: Investitionsvorschlag wurde erfolgreich gelöscht.
+          success: Vorschlag wurde erfolgreich gelöscht.
         form:
           title_label: Titel
           description_label: Beschreibung

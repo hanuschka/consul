@@ -43,12 +43,9 @@ de:
             Über den Status-Toggle können Projekte aktiviert oder deaktiviert werden – deaktivierte
             Projekte sind im Frontend nicht sichtbar.
           new_projekt: Neues Projekt erstellen
-<<<<<<< HEAD
           import_projekt: Projekt aus Datei importieren
-=======
           no_projekts_title: Keine Projekte vorhanden
           no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
->>>>>>> new-connection
           table:
             status: Status
             actions: Aktionen

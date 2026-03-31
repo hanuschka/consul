@@ -14,6 +14,8 @@ class ProposalsController
   before_action :set_random_seed, only: :index
 
   def index_customization
+    resolve_landing_page_from_slug
+
     if params[:order].nil?
       @current_order = Setting["selectable_setting.proposals.default_order"]
     end
@@ -34,6 +36,10 @@ class ProposalsController
     remove_archived_from_order_links
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
+
+    if @landing_page.present?
+      @scoped_projekt_ids = @scoped_projekt_ids & landing_page_scoped_projekt_ids
+    end
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 

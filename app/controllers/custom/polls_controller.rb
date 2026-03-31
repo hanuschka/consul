@@ -14,6 +14,7 @@ class PollsController < ApplicationController
   has_filters %w[all current expired]
 
   def index
+    resolve_landing_page_from_slug
     @resource_name = 'poll'
     @tag_cloud = tag_cloud
 
@@ -37,6 +38,11 @@ class PollsController < ApplicationController
     related_projekts = Projekt.where(id: related_projekt_ids)
 
     @scoped_projekt_ids = Projekt.visible_for(current_user).joins(voting_phases: :polls).select(:id)
+
+    if @landing_page.present?
+      lp_projekt_ids = landing_page_scoped_projekt_ids
+      @scoped_projekt_ids = @scoped_projekt_ids.where(id: lp_projekt_ids)
+    end
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)

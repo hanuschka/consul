@@ -63,8 +63,10 @@
             <div class="adm-detail-media-card__label">
               <span class="material-symbols-outlined" aria-hidden="true">image</span>
               <%= t(".image") %>
-              <% if @investment.image.concealed? %>
-                <span class="adm-detail-media-card__badge"><%= t(".image_concealed") %></span>
+              <%= link_to toggle_image_concealed_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+                    class: "ml-auto",
+                    data: { turbo_method: :patch } do %>
+                <%= @investment.image.concealed? ? t(".show_image") : t(".hide_image") %>
               <% end %>
             </div>
             <div class="<%= 'adm-detail-media-card__image--concealed' if @investment.image.concealed? %>">

@@ -59,6 +59,8 @@ de:
           description_section: Beschreibung
           image: Bild
           image_concealed: Ausgeblendet
+          hide_image: Bild ausblenden
+          show_image: Bild einblenden
           additional_fields: Weitere Angaben
           on_behalf_of: Im Namen von
           video_url: Video-URL

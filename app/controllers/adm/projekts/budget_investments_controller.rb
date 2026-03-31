@@ -139,11 +139,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
 
     @investment.image.toggle!(:concealed)
-    @investment.build_image(user: current_user) unless @investment.image
-    @investment.create_map_location unless @investment.map_location
-    @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.budget_investments.edit.title"))
 
-    render :edit, status: :see_other
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
   end
 
   def destroy

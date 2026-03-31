@@ -7,7 +7,10 @@ module Adm
       authorize @record, :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
-      if @record.update(permitted_params)
+      if @kind == :image && params[:remove_image] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+        @record.send(params[:attribute]).purge
+        flash.now[:success] = t(".success")
+      elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
       end
 
@@ -35,6 +38,8 @@ module Adm
         options = {}
         options[:select_options] = JSON.parse(params[:select_options]) if params[:select_options].present?
         options[:wide] = true if params[:wide].present?
+        options[:inline] = true if params[:inline].present?
+        options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
         options
       end
   end

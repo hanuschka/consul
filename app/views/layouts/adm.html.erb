@@ -49,7 +49,7 @@
           <% if defined?(RELEASE_DATE) && RELEASE_DATE %>
             <div class="adm-sidebar-footer__release">
               <span class="material-symbols-outlined" aria-hidden="true">deployed_code_update</span>
-              <%= "#{RELEASE_TAG} · #{I18n.l(RELEASE_DATE, format: :short)}" %>
+              <%= I18n.l(RELEASE_DATE, format: :short) %>
             </div>
           <% end %>
         </div>

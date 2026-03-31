@@ -1,5 +1,7 @@
 module Adm
   class ValuatorsController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, Valuator]
       @pagy, @valuators = pagy(policy_scope([:adm, Valuator]).order(id: :desc))
@@ -30,6 +32,7 @@ module Adm
       authorize [:adm, Valuator], :index?
       params[:role] = "valuator"
       @users = User.search(params[:search]).where.missing(:valuator).limit(4)
+      check_pending_for_search
     end
   end
 end

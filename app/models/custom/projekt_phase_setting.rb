@@ -106,7 +106,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
-          "feature.resource.show_comments": "active",
+          "feature.resource.show_comments": "",
           "feature.resource.show_open_answer_author_name": ""
         },
 

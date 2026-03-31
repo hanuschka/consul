@@ -1,0 +1,9 @@
+<%= content_for :title, @page.title %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.menu.items.application_subitems.pages"), breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::TabsComponent.new(tabs: pages_tabs) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(@page, :title, :string, inline: true, divider: false) %>
+  <%= render Adm::AttributeEditorComponent.new(@page, :content, :rich_text, wide: true) %>
+</div>

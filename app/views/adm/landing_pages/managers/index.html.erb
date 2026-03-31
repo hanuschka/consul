@@ -36,4 +36,6 @@
       </div>
     </div>
   <% end %>
+
+  <%= render partial: "adm/role_assignments/pending_role_assignments", locals: { pending_role_assignments: @pending_role_assignments } %>
 </div>

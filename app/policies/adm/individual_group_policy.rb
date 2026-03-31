@@ -3,6 +3,10 @@ class Adm::IndividualGroupPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def show?
+    @user&.administrator?
+  end
+
   def create?
     @user&.administrator?
   end

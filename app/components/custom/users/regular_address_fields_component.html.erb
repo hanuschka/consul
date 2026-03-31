@@ -2,16 +2,19 @@
   <div class="row">
     <div class="small-12 medium-8 column">
       <%= @f.text_field :city_name,
+        autocomplete: "address-level2",
         placeholder: t("custom.devise_views.users.registrations.new.city_name_label") %>
     </div>
     <div class="small-12 medium-4 column">
       <%= @f.text_field :plz,
+        autocomplete: "postal-code",
         placeholder: t("custom.devise_views.users.registrations.new.plz_label") %>
     </div>
   </div>
   <div class="row">
     <div class="small-12 column">
       <%= @f.text_field :street_name,
+        autocomplete: "street-address",
         placeholder: t("custom.devise_views.users.registrations.new.street_name_label") %>
     </div>
   </div>

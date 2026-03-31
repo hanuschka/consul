@@ -283,7 +283,7 @@ table.edit-projekt {
       display: none;
     }
 
-    span.toggle-arrow {
+    .toggle-arrow {
       position: absolute;
       right: 0;
       top: 0;
@@ -292,7 +292,7 @@ table.edit-projekt {
       color: #878787;
     }
 
-    span.toggle-arrow::after {
+    .toggle-arrow::after {
       content: "\f107";
       font-family: "Font Awesome 5 Free";
       font-weight: bold;
@@ -306,7 +306,7 @@ table.edit-projekt {
       display: block;
     }
 
-    span.toggle-arrow::after {
+    .toggle-arrow::after {
       transform: rotate(180deg);
     }
   }
@@ -316,7 +316,7 @@ table.edit-projekt {
       display: none;
     }
 
-    span.toggle-arrow::after {
+    .toggle-arrow::after {
       transform: rotate(0deg);
     }
   }
@@ -351,7 +351,7 @@ table.edit-projekt {
   }
 
   .projekt-filter-icon {
-    color: $brand;
+    color: var(--brand-color);
   }
 
   .checkmark,
@@ -860,7 +860,7 @@ span.projekt-backlink:before {
     }
 
     .control input:checked ~ .control-indicator {
-      background-color: $brand;
+      background-color: var(--brand-color);
       border: 0;
     }
 
@@ -1672,7 +1672,7 @@ span.projekt-backlink:before {
     background-color: #767676 !important;
 
     &.selected {
-      background-color: $brand !important;
+      background-color: var(--brand-color) !important;
     }
   }
 }

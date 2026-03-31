@@ -1,6 +1,8 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "string" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :inline, true if @options[:inline] %>
+  <%= hidden_field_tag :divider, @options[:divider] if @options.key?(:divider) %>
 
   <% input_options = {
         label: false,

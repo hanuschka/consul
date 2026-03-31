@@ -5,35 +5,63 @@
        aria-labelledby="<%= aria_options[:labelledby] %>"
        aria-describedby="<%= aria_options[:describedby] %>"
        aria-disabled="<%= disabled? %>">
-    <div
-      id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
-      class="kern-title kern-title--small mb-3">
-      <%= label %>
-    </div>
-
-    <div class="kern-row">
-      <% if wide? %>
-        <div class="kern-col-12 kern-col-md-10">
+    <% if inline? %>
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-5">
+          <div
+            id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
+            class="kern-title kern-title--small mb-3 mb-md-0">
+            <%= label %>
+          </div>
+        </div>
+        <div class="kern-col-12 kern-col-md-5">
           <div class="attribute-form <%= @kind %>">
             <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div
+        id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
+        class="kern-title kern-title--small mb-3">
+        <%= label %>
+      </div>
+
+      <% if wide? || stacked? %>
+        <% if description.present? %>
+          <div class="kern-row">
+            <div class="kern-col-12 kern-col-md-9">
+              <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-4"><%= sanitize(description) %></p>
+            </div>
+          </div>
+        <% end %>
+        <div class="kern-row">
+          <div class="kern-col-12 kern-col-md-10">
+            <div class="attribute-form <%= @kind %>">
+              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+            </div>
           </div>
         </div>
       <% else %>
-        <div class="kern-col-12 kern-col-md-5">
-          <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
-        </div>
-        <div class="kern-col-12 kern-col-md-5">
-          <div class="attribute-form <%= @kind %>">
-            <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+        <div class="kern-row">
+          <div class="kern-col-12 kern-col-md-5">
+            <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
+          </div>
+          <div class="kern-col-12 kern-col-md-5">
+            <div class="attribute-form <%= @kind %>">
+              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+            </div>
           </div>
         </div>
       <% end %>
-    </div>
+    <% end %>
   </div>
 
-  <div class="kern-row">
-    <div class="kern-col-12 kern-col-md-10">
-      <hr class="kern-divider mb-5" aria-hidden="true" />
+  <% if divider? %>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <hr class="kern-divider mb-5" aria-hidden="true" />
+      </div>
     </div>
-  </div>
+  <% end %>
 <% end %>

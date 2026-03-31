@@ -1,0 +1,37 @@
+de:
+  adm:
+    valuation:
+      menu:
+        aria_label: Bewertungsnavigation
+        items:
+          investments: Vorschläge
+      investments:
+        index:
+          title: Bewertung
+          table:
+            id: ID
+            title: Titel
+            budget: Budget
+            valuator: Gutachter
+            edit: Bearbeiten
+          no_investments: Noch keine Vorschläge vorhanden.
+        details:
+          details: Weitere Infos
+          author: Autor
+          budget: Budget
+          current_phase: Aktuelle Phase
+          created_at: Erstellungsdatum
+          frontend: Frontend
+          implementation_performer_label: Umsetzung
+          implementation_performer:
+            city: Autor unterstützt bei der Umsetzung nicht
+            user: Autor unterstützt bei der Umsetzung
+          user_cost_estimate: "Preisliche Einschätzung des Nutzers (€)"
+          valuation_finished: Begutachtung abgeschlossen
+          assigned_valuators: Zugewiesene Gutachter
+          undefined: Noch nicht bewertet
+        form:
+          feasibility_title: Prüfung auf Kriterienerfüllung
+          feasibility_hint: Prüfen Sie, ob der Vorschlag den Kriterien entspricht. Nach Abschluss des Gutachtens kann der Vorschlag vom Autor nicht mehr bearbeitet werden.
+        notice:
+          updated: Dossier aktualisiert

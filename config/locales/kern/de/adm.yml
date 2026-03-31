@@ -12,6 +12,7 @@ de:
         application_subitems:
           homepage: Startseite
           documents: Dokumente
+          pages: Seiten
           navbar: Navigation
           metadata_settings: Metadaten
           gdpr_settings: DSGVO
@@ -21,19 +22,24 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+        pages: Seiten
+        pages_subitems:
+          privacy: Datenschutzbestimmungen
+          conditions: Nutzungsbedingungen
+          impressum: Impressum
         profiles: Profile
         profiles_subitems:
-          administrators: Globaler Admin
+          administrators: Administratoren
           projekt_managers: Projektmanager
-          deficiency_report_managers: Mängelmelder (Admin)
+          deficiency_report_managers: Mängel-Administratoren
           deficiency_report_officers: Mängelmelder (Sachbearbeiter)
-          idea_managers: Ideenplattform (Admin)
-          moderators: Globale Moderatoren
-          valuators: Budgetgutachter
-          users: Benutzer
-        notifications: Notification
+          idea_managers: Ideen-Administratoren
+          moderators: Moderatoren
+          valuators: Budget-Administratoren
+          users: Nutzer
+        notifications: Benachrichtigungen
         notifications_subitems:
-          modal_notifications: Popup Benachrichtigungen
+          modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
@@ -44,7 +50,7 @@ de:
         aria_label: Mängelmelder Navigation
         items:
           deficiency_reports: Mängelmelder
-          officers: Sachbearbeiter*inen
+          officers: Sachbearbeiter
           categories: Kategorien
           statuses: Status
           settings: Funktionen

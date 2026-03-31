@@ -1,3 +1,8 @@
+:root {
+  --kern-font-size-14: 0.875rem;
+  --theme-metric-border-radius-default: 0.25rem;
+}
+
 [class^=kern-col], [class*=kern-col] {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

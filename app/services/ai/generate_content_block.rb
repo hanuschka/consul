@@ -37,6 +37,10 @@ class Ai::GenerateContentBlock < ApplicationService
 
       #{text_modification_instruction}
 
+      IMPORTANT: You MUST NOT include any JavaScript in the output. No <script>
+      tags, no inline event handlers (onclick, onload, etc.), no javascript:
+      URLs. Output only pure HTML and CSS.
+
       Output response in #{target_language} language.
     TEXT
   end

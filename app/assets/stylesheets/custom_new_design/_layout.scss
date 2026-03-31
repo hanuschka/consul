@@ -75,7 +75,13 @@
     }
 
     .notification:hover::before {
-      color: $brand;
+      color: var(--brand-color);
+    }
+
+    .notification--title {
+      font-size: inherit;
+      font-weight: bold;
+      margin: 0;
     }
   }
 }

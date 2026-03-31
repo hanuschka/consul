@@ -5,9 +5,7 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container mb-5">
-  <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_legislation_draft_version_path(@projekt_phase), text: t(".create_button"), style: :primary %>
-  </div>
+  <%= new_resource_link(new_adm_projekts_phase_legislation_draft_version_path(@projekt_phase), t(".create_button")) %>
 
   <% if @process.draft_versions.any? %>
     <div class="kern-table-responsive" tabindex="0">
@@ -55,8 +53,6 @@
       </table>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_draft_versions") %>
-    </div>
+    <%= empty_state(title: t(".no_draft_versions_title"), description: t(".no_draft_versions_description"), icon: "description") %>
   <% end %>
 </div>

@@ -1,0 +1,27 @@
+<% budget = investment.budget %>
+<% disabled = !budget.current_phase.kind.in?(%w[accepting reviewing]) %>
+
+<%= render Kern::FormFieldComponent.new(
+  label: t("adm.valuation.investments.form.feasibility_title"),
+  hint: t("adm.valuation.investments.form.feasibility_hint"),
+  divider: false) do %>
+  <%= form_with(model: investment, url: adm_valuation_investment_path(investment), method: :patch) do |f| %>
+    <%= render "shared/errors", resource: investment %>
+
+    <div class="mb-3">
+      <%= f.collection_radio_buttons :feasibility,
+        Budget::Investment::FEASIBILITIES.map { |v| [v, t("adm.attribute_editor.budget/investment.feasibility_label_options.#{v}")] },
+        :first, :last, disabled: disabled %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.text_area :valuator_explanation, class: "kern-input", rows: 6, disabled: disabled, label: false %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.check_box :valuation_finished, disabled: disabled %>
+    </div>
+
+    <%= form_submit_button(disabled: disabled) %>
+  <% end %>
+<% end %>

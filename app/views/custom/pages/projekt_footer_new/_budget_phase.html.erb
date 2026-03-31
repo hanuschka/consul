@@ -21,18 +21,24 @@
 
   <% if @budget.present? %>
     <% if params[:section] == "results" && can?(:read_results, @budget) %>
-      <%= render "pages/projekt_footer_new/budget/results" %>
+      <div class="<%= 'js-studio-hide-on-preview' if !@budget.results_enabled? %>">
+        <%= render "pages/projekt_footer_new/budget/results" %>
+      </div>
     <% elsif params[:section] == "key_metrics" && can?(:read_stats, @budget) && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_kpi_stats")) %>
-      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+      <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_kpi_stats') %>">
+        <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+      </div>
     <% elsif params[:section] == "analysis" && can?(:read_stats, @budget) && Ai::Settings.ai_available? && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_ai_stats")) %>
-      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+      <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_ai_stats') %>">
+        <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+      </div>
     <% else %>
     <% if @budget.current_phase.kind == 'informing' %>
       <div class="flex-layout">
         <div class="new-card">
-          <h4>
+          <h2>
             Noch keine Vorschläge vorhanden
-            </h3>
+          </h2>
             <% if @budget.phases.accepting.starts_at.present? %>
               <div>
                 Vorschläge können erst in der nächsten Phase
@@ -95,6 +101,6 @@
 
     <% end %>
   <% else %>
-    <h3>Dieses Projekt Phase hat kein zugehöriges Budget</h3>
+    <h2>Dieses Projekt Phase hat kein zugehöriges Budget</h2>
   <% end %>
 <% end %>

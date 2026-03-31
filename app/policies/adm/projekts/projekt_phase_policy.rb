@@ -30,6 +30,14 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
   private
 
   def projekt_from_record
-    @record.projekt
+    if @record.is_a?(Class)
+      nil
+    elsif @record.is_a?(Projekt)
+      @record
+    elsif @record.is_a?(ProjektPhaseSetting)
+      @record.projekt_phase.projekt
+    else
+      @record.projekt
+    end
   end
 end

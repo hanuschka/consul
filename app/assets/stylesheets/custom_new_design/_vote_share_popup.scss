@@ -33,19 +33,19 @@ $share-color-copy-link: #555;
   gap: 6px;
   padding: 2px 12px;
   font-size: 16px;
-  color: $brand;
+  color: var(--brand-color);
   background: white;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 150ms ease;
 
   &:hover {
-    background-color: rgba($brand, 0.08);
+    background-color: color-mix(in srgb, var(--brand-color) 8%, transparent);
   }
 
   i {
     font-size: 14px;
-    color: $brand;
+    color: var(--brand-color);
   }
 }
 

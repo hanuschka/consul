@@ -1,6 +1,8 @@
 module Adm
   module LandingPages
     class ManagersController < Adm::LandingPages::BaseController
+      include Admin::PendingRoleAssignable
+
       def index
         authorize LandingPageManager, policy_class: Adm::LandingPages::LandingPageManagerPolicy
 
@@ -44,7 +46,14 @@ module Adm
 
         params[:role] = "landing_page_manager"
         @users = User.search(params[:search]).where.missing(:landing_page_manager).limit(4)
+        check_pending_for_search
       end
+
+      private
+
+        def pending_role_type
+          "LandingPageManager"
+        end
     end
   end
 end

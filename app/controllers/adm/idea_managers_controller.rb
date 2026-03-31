@@ -1,5 +1,7 @@
 module Adm
   class IdeaManagersController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, IdeaManager]
       @pagy, @idea_managers = pagy(policy_scope([:adm, IdeaManager]).order(id: :desc))
@@ -30,6 +32,7 @@ module Adm
       authorize [:adm, IdeaManager], :index?
       params[:role] = "idea_manager"
       @users = User.search(params[:search]).where.missing(:idea_manager).limit(4)
+      check_pending_for_search
     end
   end
 end

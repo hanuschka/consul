@@ -1,0 +1,15 @@
+<tr class="kern-table__row" id="<%= dom_id(proposal, :bulk_vote) %>">
+  <td class="kern-table__cell"><%= proposal.id %></td>
+  <td class="kern-table__cell"><%= link_to proposal.title, proposal_path(proposal), target: "_blank" %></td>
+  <td class="kern-table__cell"><%= t("adm.officing.proposal_phases.bulk_votes.saved") if local_assigns[:updated] %></td>
+  <td class="kern-table__cell">
+    <%= form_with url: update_bulk_votes_adm_officing_proposal_phase_path(proposal_phase), class: "d-flex align-items-center gap-2" do |f| %>
+      <%= f.hidden_field :proposal_id, value: proposal.id %>
+      <%= f.number_field :officing_bulk_votes,
+        value: proposal.officing_bulk_votes,
+        label: false,
+        min: 0 %>
+      <%= kern_button(icon: "save", text: t("adm.officing.proposal_phases.bulk_votes.update"), type: :submit) %>
+    <% end %>
+  </td>
+</tr>

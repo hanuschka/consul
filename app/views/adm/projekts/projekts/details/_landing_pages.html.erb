@@ -6,7 +6,8 @@
         SiteCustomization::Page.landing,
         :id,
         :title,
-        { include_blank: t("custom.admin.projekts.edit.no_landing_page") }
+        { include_blank: t("custom.admin.projekts.edit.no_landing_page") },
+        { class: "kern-form-select__select" }
       ) %>
     </div>
     <%= form_submit_button %>

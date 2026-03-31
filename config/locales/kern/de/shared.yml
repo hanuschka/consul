@@ -8,7 +8,9 @@ de:
     edit: "Bearbeiten"
     cancel: "Abbrechen"
     delete: "Löschen"
+    remove: "Entfernen"
     confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
+    confirm_remove: "Sind Sie sicher, dass Sie dies entfernen möchten?"
     toggle_submenu: "Untermenü für %{title} umschalten"
     navbar_more: "Mehr"
     moderation_statuses:
@@ -20,6 +22,10 @@ de:
       username: "Benutzername"
       email: "E-Mail"
       actions: "Aktionen"
+      filter:
+        search_placeholder: "%{column_label} suchen..."
+        apply: "Filter anwenden"
+        close: "Schließen"
       sort:
         action_label: "Sortieren nach %{column_label}, %{direction}"
         status_text_sorted: "Sortiert nach %{column_label} in %{direction} Reihenfolge"

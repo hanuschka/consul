@@ -1,5 +1,7 @@
 <div data-controller="kern--form--image"
      data-kern--form--image-auto-submit-value="<%= @auto_submit %>">
+  <%= hidden_field_tag :remove_image, "false", data: { kern__form__image_target: "destroy" } %>
+
   <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
        data-kern--form--image-target="inputWrapper">
     <%= @form.file_field @attribute,

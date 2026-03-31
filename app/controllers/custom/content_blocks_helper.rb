@@ -5,6 +5,7 @@ module ContentBlocksHelper
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
     block_body = block&.body.presence || default_content || ""
+    block_body = convert_br_to_paragraphs(block_body)
 
     if custom_prefix
       block_body = "#{custom_prefix} #{block_body}"
@@ -77,7 +78,7 @@ module ContentBlocksHelper
     res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?}>#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end
@@ -114,7 +115,7 @@ module ContentBlocksHelper
   end
 
   def render_projekt_content_block(block)
-    block_body = block&.body
+    block_body = convert_br_to_paragraphs(block&.body)
     key = block.key
 
     if current_user&.administrator?
@@ -126,11 +127,19 @@ module ContentBlocksHelper
     res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end
 
     AdminWYSIWYGSanitizer.new.sanitize(res)
+  end
+
+  def convert_br_to_paragraphs(html)
+    return html if html.blank?
+
+    result = html.gsub(/<br\s*\/?>/, "</p><p>")
+    result = result.gsub(/<p>\s*<\/p>/, "")
+    result
   end
 end

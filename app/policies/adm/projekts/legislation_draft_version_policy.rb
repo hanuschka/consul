@@ -9,6 +9,10 @@ class Adm::Projekts::LegislationDraftVersionPolicy < ApplicationPolicy
     permitted?
   end
 
+  def draft_text?
+    permitted?
+  end
+
   def destroy?
     permitted?
   end

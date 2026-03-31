@@ -15,7 +15,7 @@ button {
 .custom-new-design {
   // .button:not(div#page-content .button) {
   .button {
-    background-color: $brand;
+    background-color: var(--brand-color);
     color: white;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -25,7 +25,7 @@ button {
     transition: background-color 0.1s ease;
 
     &:hover, &:focus {
-      background-color: lighten($brand, 6%);
+      background-color: color-mix(in srgb, var(--brand-color), white 6%);
       color: white;
     }
 
@@ -39,9 +39,9 @@ button {
     }
 
     &.-selected {
-      background-color: rgba($brand, 0.15) !important;
-      color: $brand !important;
-      outline: 1px solid $brand !important;
+      background-color: color-mix(in srgb, var(--brand-color) 15%, transparent) !important;
+      color: var(--brand-color) !important;
+      outline: 1px solid var(--brand-color) !important;
     }
 
     &.-round {
@@ -115,14 +115,14 @@ button {
 
     &.hollow {
       background-color: transparent;
-      border: 1px solid $brand;
-      color: $brand;
+      border: 1px solid var(--brand-color);
+      color: var(--brand-color);
 
       &:hover  {
-        background: rgba($brand, 0.1);
+        background: var(--brand-color-lighter);
       }
       &:focus, &:active {
-        background: rgba($brand, 0.3);
+        background: color-mix(in srgb, var(--brand-color) 30%, transparent);
       }
 
       &.alert {
@@ -209,13 +209,13 @@ button {
   }
 
   .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
-    background-color: $brand;
+    background-color: var(--brand-color);
   }
 }
 
 .square-back-button {
   border-radius: 5px;
-  background-color: $brand;
+  background-color: var(--brand-color);
   color: white;
 
   &:hover {

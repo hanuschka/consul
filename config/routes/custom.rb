@@ -89,3 +89,5 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
 resources :projekt_content_block_templates, only: [:index]
+
+post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping

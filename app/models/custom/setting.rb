@@ -54,7 +54,7 @@ class Setting < ApplicationRecord
 
         # metadata
         "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
-        "url": "http://example.com", # Public-facing URL of the app.
+        "url": "https://deine-stadt.de", # Public-facing URL of the app.
         "mailer_from_address": "noreply@consul.dev",
         "mailer_from_name": "CONSUL",
         "meta_title": nil,
@@ -165,6 +165,7 @@ class Setting < ApplicationRecord
         # Emails under the domain's subdomains will also be included
         "email_domain_for_officials": "",
         # CONSUL installation's organization name
+        "brand_color": "",
         "newsletter_brand_color": "#004a83",
         "proposal_notification_minimum_interval_in_days": 3,
         "direct_message_max_per_day": 3,
@@ -204,10 +205,6 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
-        "welcomepage.usage_stats": true,
-        "welcomepage.platform_activity": true,
-        "welcomepage.newsletter_subscription": false,
-        "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.show_in_main_menu": false,

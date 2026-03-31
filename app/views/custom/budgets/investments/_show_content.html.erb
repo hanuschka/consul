@@ -280,9 +280,11 @@
         <% end %>
 
         <% if current_user&.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <%= render "budgets/investments/actions", investment: @investment %>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <%= render "budgets/investments/actions", investment: @investment %>
+            <% end %>
+          </div>
         <% end %>
 
         <% if can?(:edit, @investment) %>

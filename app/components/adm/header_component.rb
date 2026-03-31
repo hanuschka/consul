@@ -1,18 +1,26 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false)
+  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
     @narrow = narrow
+    @frontend_url = frontend_url
+  end
+
+  def before_render
+    @frontend_url ||= helpers.root_path
   end
 
   def breadcrumb_item(breadcrumb, is_last)
-    item = content_tag(:li,
-                class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
-                aria: (is_last ? { current: "page" } : {})
-    ) do
+    li_options = {
+      class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
+      aria: (is_last ? { current: "page" } : {})
+    }
+    li_options[:id] = breadcrumb[:id] if breadcrumb[:id].present?
+
+    item = content_tag(:li, **li_options) do
       breadcrumb_item_content(breadcrumb, is_last)
     end
 

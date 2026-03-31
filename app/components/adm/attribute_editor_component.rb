@@ -59,6 +59,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:wide] == true
   end
 
+  def stacked?
+    @kind == :rich_text
+  end
+
   def inline?
     @options[:inline] == true
   end

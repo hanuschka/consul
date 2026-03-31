@@ -19,8 +19,14 @@ application.register("sortable", SortableController)
 import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
 application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
 
+import ComponentsAdmPageTitleSyncController from "./components/adm/page_title_sync_controller"
+application.register("components-adm-page-title-sync", ComponentsAdmPageTitleSyncController)
+
 import ComponentsAdmNewNavbarItemController from "./components/adm/new_navbar_item_controller"
 application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarItemController)
+
+import IconFilterController from "./icon_filter_controller"
+application.register("icon-filter", IconFilterController)
 
 
 
@@ -95,4 +101,7 @@ application.register("clipboard", ClipboardController)
 
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
+
+import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
+application.register("adm-markdown-editor", AdmMarkdownEditorController)
 

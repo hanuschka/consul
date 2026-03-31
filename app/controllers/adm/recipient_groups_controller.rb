@@ -77,6 +77,8 @@ module Adm
 
       @recipient_group.destroy!
       redirect_to adm_recipient_groups_path, notice: t(".success")
+    rescue ActiveRecord::DeleteRestrictionError
+      redirect_to adm_recipient_groups_path, alert: t(".restricted")
     end
 
     def select_options

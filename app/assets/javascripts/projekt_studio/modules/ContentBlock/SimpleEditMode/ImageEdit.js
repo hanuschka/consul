@@ -39,7 +39,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
 
   buildOverlay() {
     const overlay = document.createElement("div")
-    overlay.className = "js-image-edit-overlay image-edit-overlay js-projekt-studio-hide-on-preview"
+    overlay.className = "js-image-edit-overlay image-edit-overlay js-studio-hide-on-preview"
     overlay.style.display = "none"
     overlay.innerHTML = `
       <div class="image-edit-overlay--height-control">

@@ -50,8 +50,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_questions") %>
-    </div>
+    <%= empty_state(title: t(".no_questions_title"), description: t(".no_questions_description"), icon: "quiz") %>
   <% end %>
 </div>

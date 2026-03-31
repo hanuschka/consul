@@ -6,7 +6,7 @@ de:
         aria_label: Themenseiten Navigation
         items:
           landing_pages: Themenseiten
-          managers: Manager*innen
+          managers: Manager
       landing_pages:
         index:
           title: Themenseiten
@@ -21,17 +21,23 @@ de:
             no_landing_pages: Es wurden noch keine Themenseiten erstellt.
         edit:
           title: Themenseite bearbeiten
-          managers_title: Themenseiten Manager*innen
-          managers_description: Wählen Sie aus, welche Manager*innen diese Themenseite verwalten dürfen.
+          managers_title: Themenseiten Manager
+          managers_description: Wählen Sie aus, welche Manager diese Themenseite verwalten dürfen.
+        navbar_items:
+          title: Navigation
+          description: >
+            Konfigurieren Sie die Navigationselemente für diese Themenseite.
+            Per Drag & Drop können Sie die Reihenfolge anpassen.
+          new_item: Neuen Eintrag erstellen
         update:
           success: Der Wert wurde erfolgreich aktualisiert.
       managers:
         index:
-          title: Themenseiten Manager*innen
+          title: Themenseiten Manager
           new_link: Erstellen
           manage_all_landing_pages: Alle verwalten
-          no_landing_page_managers: Es sind keine Themenseiten Manager*innen vorhanden.
+          no_landing_page_managers: Es sind keine Themenseiten Manager vorhanden.
         new:
-          title: Themenseiten Manager*in hinzufügen
-          search_label: Nutzer*in suchen
-          search_description: Suchen Sie nach Nutzer*innen, um sie als Themenseiten Manager*in hinzuzufügen.
+          title: Themenseiten Manager hinzufügen
+          search_label: Nutzer suchen
+          search_description: Suchen Sie nach Nutzer, um sie als Themenseiten Manager hinzuzufügen.

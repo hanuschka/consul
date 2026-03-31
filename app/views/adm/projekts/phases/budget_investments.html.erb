@@ -60,6 +60,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <p><%= t(".no_investments") %></p>
+    <%= empty_state(title: t(".no_investments_title"), description: t(".no_investments_description"), icon: "savings") %>
   <% end %>
 </div>

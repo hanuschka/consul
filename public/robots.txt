@@ -12,6 +12,7 @@ Disallow: /*?*order
 Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
+Disallow: /*?*page
 Disallow: user_id
 
 User-agent: Bingbot
@@ -23,6 +24,7 @@ Disallow: /*?*order
 Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
+Disallow: /*?*page
 Disallow: user_id
 
 User-agent: facebookexternalhit
@@ -34,6 +36,7 @@ Disallow: /*?*order
 Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
+Disallow: /*?*page
 Disallow: user_id
 
 User-agent: *

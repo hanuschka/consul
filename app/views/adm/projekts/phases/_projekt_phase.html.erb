@@ -35,7 +35,7 @@
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% projekt_phase_table_actions(projekt_phase).each do |action| %>
-        <% actions.with_action(label: action[:label], url: action[:url]) %>
+        <% actions.with_action(label: action[:label], url: action[:url], icon: action[:icon]) %>
       <% end %>
     <% end %>
   </td>

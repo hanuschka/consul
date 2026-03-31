@@ -5,13 +5,7 @@
     <div class="navbar-item__content">
       <span class="navbar-item__title"><%= navbar_item.title %></span>
       <span class="navbar-item__url">
-        <% if navbar_item.kind == 'presets' %>
-          <%= public_send(NavbarItem::PRESETS[navbar_item.preset.to_sym]) %>
-        <% elsif navbar_item.kind == 'projekts' %>
-          <%= navbar_item.projekt.page.url %>
-        <% elsif navbar_item.kind == 'external' %>
-          <%= navbar_item.external_url %>
-        <% end %>
+        <%= navbar_item_url(navbar_item) %>
       </span>
     </div>
 
@@ -19,7 +13,8 @@
       <%= t("adm.navbar_items.form.kinds.#{navbar_item.kind}") %>
     </span>
 
-    <%= link_to adm_navbar_item_path(navbar_item),
+    <% delete_path = navbar_item.landing_page.present? ? adm_landing_pages_landing_page_navbar_item_path(navbar_item.landing_page, navbar_item) : adm_navbar_item_path(navbar_item) %>
+    <%= link_to delete_path,
                 data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
                 class: "navbar-item__delete" do %>
       <span class="material-symbols-outlined">delete</span>

@@ -105,6 +105,24 @@ module AdmHelper
     tabs
   end
 
+  def legislation_draft_version_tabs(draft_version, current_action: nil)
+    current_action ||= action_name
+    phase = draft_version.projekt_phase
+
+    [
+      {
+        label: I18n.t("adm.projekts.legislation_draft_versions.tabs.edit"),
+        url: edit_adm_projekts_phase_legislation_draft_version_path(phase, draft_version),
+        current: current_action == "edit"
+      },
+      {
+        label: I18n.t("adm.projekts.legislation_draft_versions.tabs.draft_text"),
+        url: draft_text_adm_projekts_phase_legislation_draft_version_path(phase, draft_version),
+        current: current_action == "draft_text"
+      }
+    ]
+  end
+
   def pages_tabs(current_slug: nil)
     current_slug ||= params[:slug]
 

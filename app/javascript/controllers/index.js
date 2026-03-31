@@ -99,3 +99,6 @@ application.register("adm-newsletters--recipient-group-builder", AdmNewslettersR
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 
+import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
+application.register("adm-markdown-editor", AdmMarkdownEditorController)
+

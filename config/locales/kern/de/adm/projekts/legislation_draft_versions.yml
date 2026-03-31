@@ -6,6 +6,9 @@ de:
           title: Neuen Textentwurf erstellen
         create:
           success: Textentwurf wurde erfolgreich erstellt.
+        tabs:
+          edit: Bearbeiten
+          draft_text: Entwurfstext
         edit:
           title: Textentwurf bearbeiten
         update:
@@ -47,3 +50,31 @@ de:
             mehr verfassen. Nutzen Sie diese Option, wenn der Beteiligungsprozess abgeschlossen ist und
             das Ergebnis dokumentiert werden soll.
           submit: Speichern
+        draft_text:
+          title: Entwurfstext
+          save: Speichern
+          fullscreen: Vollbild
+          preview_placeholder: Vorschau erscheint hier...
+          hint:
+            intro: "Der Text wird im Markdown-Format verfasst. Änderungen werden rechts in der Vorschau angezeigt."
+            markdown: Markdown
+            result: Ergebnis
+            examples:
+              - markdown: "# Überschrift 1"
+                result: Große Überschrift
+              - markdown: "## Überschrift 2"
+                result: Mittlere Überschrift
+              - markdown: "### Überschrift 3"
+                result: Kleine Überschrift
+              - markdown: "**Fettschrift**"
+                result: Fettschrift
+              - markdown: "*Kursivschrift*"
+                result: Kursivschrift
+              - markdown: "- Listenpunkt"
+                result: Aufzählungsliste
+              - markdown: "1. Nummeriert"
+                result: Nummerierte Liste
+              - markdown: "> Zitat"
+                result: Zitatblock
+              - markdown: "Leerzeile zwischen Absätzen"
+                result: Neuer Absatz

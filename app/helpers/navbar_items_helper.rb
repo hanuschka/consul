@@ -2,7 +2,11 @@ module NavbarItemsHelper
   def navbar_item_url(item)
     case item.kind
     when "presets"
-      public_send(NavbarItem::PRESETS[item.preset.to_sym])
+      if item.landing_page.present?
+        landing_page_preset_url(item)
+      else
+        global_preset_url(item)
+      end
     when "projekts"
       item.projekt.page.url
     when "external"
@@ -12,5 +16,31 @@ module NavbarItemsHelper
 
   def navbar_item_link_attrs(item)
     item.external? ? ' target="_blank" rel="noopener noreferrer"' : ''
+  end
+
+  private
+
+  def global_preset_url(item)
+    case item.preset
+    when "projekts" then projekts_path
+    when "events" then projekt_events_path
+    when "investments" then investments_path
+    when "proposals" then proposals_path
+    when "polls" then polls_path
+    when "deficiency_reports" then deficiency_reports_path
+    when "ideas" then ideas_path
+    end
+  end
+
+  def landing_page_preset_url(item)
+    slug = item.landing_page.slug
+
+    case item.preset
+    when "projekts" then landing_page_projekts_path(slug)
+    when "events" then landing_page_events_path(slug)
+    when "investments" then landing_page_investments_path(slug)
+    when "proposals" then landing_page_proposals_path(slug)
+    when "polls" then landing_page_polls_path(slug)
+    end
   end
 end

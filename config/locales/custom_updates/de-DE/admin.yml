@@ -32,10 +32,10 @@ de:
           state_block_title: Status des Vorschlags
           physical_votes_updated: Physical votes updated!
           feasibility: Durchführbarkeit
-          price: Preisliche Einschätzung der Verwaltung (€)
-          price_first_year: Preisliche Einschätzung der laufende Kosten im ersten Jahr (€)
+          price: Gesamtkosten
+          price_first_year: Jährliche Folgekosten (intern)
           price_explanation: Erläuterung der Verwaltung
-          duration: Zeitrahmen
+          duration: Umsetzungszeitraum (intern)
           valuation_finished_label: Gutachten
           valuation_finished:
             "true": abgeschlossen

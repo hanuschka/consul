@@ -13,6 +13,10 @@
           investment: @investment, projekt_phase: @projekt_phase, admins: @admins %>
   <% end %>
 
+  <% unless @admins.any? %>
+    <%= empty_state(title: t(".no_administrators"), icon: "admin_panel_settings") %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(
     label: t(".valuator_groups"),
     hint: t(".valuator_groups_hint")) do %>
@@ -20,11 +24,19 @@
           investment: @investment, projekt_phase: @projekt_phase, valuator_groups: @valuator_groups %>
   <% end %>
 
+  <% unless @valuator_groups.any? %>
+    <%= empty_state(title: t(".no_valuator_groups"), icon: "groups") %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(
     label: t(".valuators"),
     hint: t(".valuators_hint")) do %>
     <%= render "adm/projekts/budget_investments/people/valuators",
           investment: @investment, projekt_phase: @projekt_phase, valuators: @valuators %>
+  <% end %>
+
+  <% unless @valuators.any? %>
+    <%= empty_state(title: t(".no_valuators"), icon: "person_search") %>
   <% end %>
 
 </div>

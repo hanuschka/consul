@@ -158,6 +158,7 @@ namespace :adm do
           put :hide
           put :unhide
           put :ignore_flag
+          patch :toggle_image_concealed
         end
       end
     end

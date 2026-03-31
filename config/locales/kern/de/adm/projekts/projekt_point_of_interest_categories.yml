@@ -15,9 +15,9 @@ de:
           has_pins: Kategorie kann nicht gelöscht werden, da noch Pins zugeordnet sind.
         form:
           name_label: Name
-          name_hint: Geben Sie den Namen der Kategorie ein.
+          name_hint: "Der Name der Kategorie wird im Frontend als Filteroption und als Bezeichnung an den zugehörigen Pins angezeigt. Wählen Sie einen kurzen, verständlichen Begriff, der die Art des Ortes klar beschreibt – z. B. 'Spielplatz', 'Schule' oder 'Grünfläche'. Der Name sollte für Bürger auf Anhieb nachvollziehbar sein."
           color_label: Farbe
-          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          color_hint: "Die Farbe wird im Frontend als visuelle Kennzeichnung der Kategorie auf der Karte und in der Filterliste angezeigt. Wählen Sie eine Farbe, die sich gut von anderen Kategorien unterscheidet und auf dem Kartenhintergrund erkennbar bleibt. Vermeiden Sie ähnliche Farbtöne für verschiedene Kategorien, um eine klare Zuordnung zu ermöglichen."
           icon_label: Symbol
-          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
+          icon_hint: "Das Symbol wird im Frontend auf der Karte als Pin-Icon und in der Filterliste neben dem Kategorienamen angezeigt. Wählen Sie ein Symbol, das die Art des Ortes intuitiv vermittelt – z. B. einen Baum für Grünflächen oder ein Buch für Bildungseinrichtungen. Ein passendes Symbol erleichtert Nutzern die schnelle Orientierung auf der Karte."
           submit: Speichern

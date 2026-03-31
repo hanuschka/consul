@@ -3,7 +3,7 @@
     <th scope="row" class="kern-table__header">
       <%= budget_phase.name %>
       <% if budget_phase.current? %>
-        <span class="kern-badge kern-badge--success"><%= t("adm.projekts.phases.budget_phases.table.current") %></span>
+        <span class="kern-status-dot kern-status-dot--active" title="<%= t("adm.projekts.phases.budget_phases.table.current") %>"></span>
       <% end %>
     </th>
     <td class="kern-table__cell"><%= budget_phase.starts_at&.strftime("%d.%m.%Y") %></td>

@@ -4,16 +4,19 @@ de:
       index:
         title: Adressen
         intro_text_p1_lead: >
-          Die registrierten Adressen müssen demokratie.today vorab als CSV-Datei bereitgestellt werden.
-          Die Datei muss folgende Standardspalten enthalten:
+          Die Adressdaten müssen demokratie.today vorab als CSV-Datei bereitgestellt werden.
+          Jede Adresse enthält folgende Standardfelder:
         intro_list:
           street_number_extension: Hausnummerzusatz
           district: Gebiet (z. B. Stadtteil)
         intro_text_p1_extra: >
-          Darüber hinaus können zusätzliche Spalten für weitere geografische Einheiten wie Wahlkreise, Wahlbezirke oder Quartiere ergänzt werden.
+          Zusätzliche Spalten für weitere geografische Einheiten (z. B. Wahlkreise, Wahlbezirke oder Quartiere) können jederzeit ergänzt werden.
         intro_text_p2: >
-          Diese Gebietszuordnungen stehen anschließend in den Beteiligungsbeschränkungen (unter „Gebietsbeschränkung") zur Auswahl
-          und dienen außerdem der automatisierten Zuordnung von Projekten zu bestimmten Regionen.
+          Diese Zuordnungen stehen anschließend in den Beteiligungsbeschränkungen zur Auswahl
+          und dienen der automatisierten Zuordnung von Projekten zu Gebieten.
+          Wenden Sie sich an demokratie.today, wenn Sie Adressdaten aktualisieren oder erweitern möchten.
+        empty_title: "Noch keine Adressen importiert"
+        empty_description: "Bitte stellen Sie demokratie.today eine CSV-Datei mit den Adressdaten bereit, um den Import einzurichten."
         table:
           city: Stadt
           plz: PLZ

@@ -1,9 +1,8 @@
-<%= content_for :title, [@projekt.name, t("adm.projekts.projekts.index.title")].join(" | ") %>
+<%= content_for :title, [@projekt.page.title, t("adm.projekts.projekts.index.title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) do |header| %>
+<%= render Adm::HeaderComponent.new(title: @projekt.page.title, breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
   <% header.with_hint do %>
-    <h3 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h3>
-    <p class="kern-body"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
     <dl class="kern-description-list kern-description-list--col">
       <div class="kern-description-list-item">
         <dt class="kern-description-list-item__key"><%= t(".intro_text_standard_title") %></dt>
@@ -18,7 +17,7 @@
         <dd class="kern-description-list-item__value"><%= t(".intro_text_visible_description") %></dd>
       </div>
     </dl>
-    <p class="kern-body"><%= t(".intro_text_p2") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
   <% end %>
 <% end %>
 
@@ -51,6 +50,6 @@
       </table>
     </div>
   <% else %>
-    <p class="kern-body"><%= t(".no_phases") %></p>
+    <%= empty_state(title: t(".no_phases_title"), description: t(".no_phases_description"), icon: "dashboard_customize") %>
   <% end %>
 </div>

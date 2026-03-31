@@ -101,6 +101,6 @@
       </div>
     <% end %>
   <% else %>
-    <p class="kern-body"><%= t(".no_answers") %></p>
+    <%= empty_state(title: t(".no_answers_title"), description: t(".no_answers_description"), icon: "description") %>
   <% end %>
 </div>

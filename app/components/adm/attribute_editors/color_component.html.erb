@@ -13,5 +13,5 @@
         disabled: disabled?,
         data: { "adm-color-picker-target": "colorInput" } %>
 
-  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
+  <%= kern_button(icon: "save", text: I18n.t("shared.submit"), autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
 <% end %>

@@ -78,7 +78,7 @@ module ContentBlocksHelper
     res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?}>#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end
@@ -127,7 +127,7 @@ module ContentBlocksHelper
     res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end

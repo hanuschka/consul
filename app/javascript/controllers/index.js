@@ -19,8 +19,14 @@ application.register("sortable", SortableController)
 import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
 application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
 
+import ComponentsAdmPageTitleSyncController from "./components/adm/page_title_sync_controller"
+application.register("components-adm-page-title-sync", ComponentsAdmPageTitleSyncController)
+
 import ComponentsAdmNewNavbarItemController from "./components/adm/new_navbar_item_controller"
 application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarItemController)
+
+import IconFilterController from "./icon_filter_controller"
+application.register("icon-filter", IconFilterController)
 
 
 
@@ -32,6 +38,9 @@ application.register("kern--form--nested-entries", KernFormNestedEntriesControll
 
 import KernFormCheckFilter from "./kern_form_check_filter_controller"
 application.register("kern-form-check-filter", KernFormCheckFilter)
+
+import KernRegisteredAddressSelectorController from "./kern/registered_address_selector_controller"
+application.register("kern--registered-address-selector", KernRegisteredAddressSelectorController)
 
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)

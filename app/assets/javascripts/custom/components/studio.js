@@ -51,7 +51,6 @@
     SiteContentBlockEditor: {
       initialize() {
         if (typeof ProjektStudio === "undefined") return
-        if (ProjektStudio.isProjektPage()) return
         if (!this.hasSiteContentBlocks()) return
 
         this.wrapContentBlocks();
@@ -86,7 +85,13 @@
 
           block.parentNode.replaceChild(wrappedElement, block);
 
-          $(wrappedElement).find("[data-tooltip]").foundation();
+          if (wrappedElement.closest("aside, .sidebar, footer")) {
+            wrappedElement.classList.add("-compact-mode");
+          }
+
+          $(wrappedElement).foundation();
+
+          App.ImageGallery.initialize();
         });
       }
     }

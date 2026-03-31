@@ -25,14 +25,15 @@
 
       this.scrollbarWidth = this.getScrollbarWidth();
 
-      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container">
+      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
                                   <div class="gloader visible"></div>
                                   <div class="goverlay"></div>
                                   <div class="gcontainer">
                                     <div id="glightbox-slider" class="gslider"></div>
-                                    <button class="gnext gbtn" tabindex="0" aria-label="Nächste" data-customattribute="example">{nextSVG}</button>
-                                    <button class="gprev gbtn" tabindex="1" aria-label="Vorherige">{prevSVG}</button>
-                                    <button class="gclose gbtn" tabindex="2" aria-label="Schließen">{closeSVG}</button>
+                                    <button class="gnext gbtn" tabindex="0" aria-label="Nächste">{nextSVG}</button>
+                                    <button class="gprev gbtn" tabindex="0" aria-label="Vorherige">{prevSVG}</button>
+                                    <button class="gclose gbtn" tabindex="0" aria-label="Schließen (ESC)">{closeSVG}</button>
+                                    <div class="glightbox-esc-hint" aria-live="polite">ESC = Schließen</div>
                                   </div>
                                 </div>`;
 
@@ -51,17 +52,32 @@
       });
 
       this.lightbox.on('open', () => {
+        this.triggerElement = document.activeElement;
+
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {
           stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
         }
+
+        setTimeout(() => {
+          var closeBtn = document.querySelector(".gclose");
+
+          if (closeBtn) {
+            closeBtn.focus();
+          }
+        }, 100);
       });
       this.lightbox.on('close', () => {
         var stickyHeader = this.getStickyHeader();
 
         if (stickyHeader) {
           stickyHeader.style.paddingRight = "0";
+        }
+
+        if (this.triggerElement) {
+          this.triggerElement.focus();
+          this.triggerElement = null;
         }
       });
       this.lightbox.on('slide_after_load', (data) => {

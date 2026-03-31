@@ -45,8 +45,6 @@
       </table>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_categories") %>
-    </div>
+    <%= empty_state(title: t(".no_categories_title"), description: t(".no_categories_description"), icon: "category") %>
   <% end %>
 </div>

@@ -296,6 +296,12 @@ export default class LeafletAdapter extends BaseAdapter {
       clearSearchLabel: "Suche zurücksetzen"
     })
     this.map.addControl(searchControl)
+
+    const searchInput = this.container.querySelector('.leaflet-control-geosearch input[type="text"]')
+    if (searchInput) {
+      searchInput.setAttribute("title", "Nach Adresse suchen")
+      searchInput.setAttribute("aria-label", "Nach Adresse suchen")
+    }
   }
 
   setupClustering() {

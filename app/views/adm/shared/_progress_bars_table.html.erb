@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-start gap-2 mb-4">
-  <%= kern_link_button new_url, text: t("adm.projekts.phases.progress_bars.create_button"), style: :primary %>
+  <%= kern_link_button new_url, text: t("adm.projekts.phases.progress_bars.create_button"), style: :secondary %>
 </div>
 
 <% if progress_bars.any? %>
@@ -32,5 +32,5 @@
     </table>
   </div>
 <% else %>
-  <p class="kern-body"><%= t("adm.projekts.phases.progress_bars.no_progress_bars") %></p>
+  <%= empty_state(title: t("adm.projekts.phases.progress_bars.no_progress_bars_title"), description: t("adm.projekts.phases.progress_bars.no_progress_bars_description"), icon: "trending_up") %>
 <% end %>

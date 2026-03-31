@@ -2,71 +2,93 @@
   <%= f.hidden_field :question_id, value: @question.id %>
 
   <% if @question.can_accept_open_answer? %>
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:open_answer)) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:open_answer),
+      hint: t(".hints.open_answer")) do %>
       <%= f.check_box :open_answer %>
     <% end %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-    label: Poll::Question::Answer.human_attribute_name(:title)) do %>
-    <%= f.text_field :title, label: false %>
+  <%= render Kern::FormFieldComponent.new(
+    label: Poll::Question::Answer.human_attribute_name(:title),
+    hint: t(".hints.title"),
+    stacked: true) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".hints.title_placeholder") %>
   <% end %>
 
   <% if @question.allows_additional_info? %>
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:description)) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:description),
+      hint: t(".hints.description"),
+      stacked: true) do %>
       <%= f.rich_text_area :description, label: false %>
     <% end %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:more_info_link)) do %>
-      <%= f.text_field :more_info_link, label: false %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:more_info_link),
+      hint: t(".hints.more_info_link"),
+      stacked: true) do %>
+      <%= f.text_field :more_info_link, label: false, placeholder: t(".hints.more_info_link_placeholder") %>
     <% end %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:more_info_iframe)) do %>
-      <%= f.text_field :more_info_iframe, label: false %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:more_info_iframe),
+      hint: t(".hints.more_info_iframe"),
+      stacked: true) do %>
+      <%= f.text_field :more_info_iframe, label: false, placeholder: t(".hints.more_info_iframe_placeholder") %>
     <% end %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-    label: t(".image_label")) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: t(".image_label"),
+    hint: t(".hints.image"),
+    stacked: true) do %>
     <%= render Kern::Form::GalleryableImagesComponent.new(form: f) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-    label: t(".documents_label")) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: t(".documents_label"),
+    hint: t(".hints.documents"),
+    stacked: true) do %>
     <%= render Kern::Form::DocumentsComponent.new(form: f) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-    label: t(".video_label")) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: t(".video_label"),
+    hint: t(".hints.video"),
+    stacked: true) do %>
     <%= f.fields_for :videos do |video_form| %>
       <div class="mb-3">
         <%= render Kern::FormFieldComponent.new(divider: false,
-          label: Poll::Question::Answer::Video.human_attribute_name(:title)) do %>
-          <%= video_form.text_field :title, label: false %>
+          label: t(".video_title_label"),
+          hint: t(".hints.video_title"),
+          stacked: true) do %>
+          <%= video_form.text_field :title, label: false, placeholder: t(".hints.video_title_placeholder") %>
         <% end %>
         <%= render Kern::FormFieldComponent.new(divider: false,
-          label: Poll::Question::Answer::Video.human_attribute_name(:url)) do %>
-          <%= video_form.text_field :url, label: false %>
+          label: t(".video_url_label"),
+          hint: t(".hints.video_url"),
+          stacked: true) do %>
+          <%= video_form.text_field :url, label: false, placeholder: t(".hints.video_url_placeholder") %>
         <% end %>
       </div>
     <% end %>
   <% end %>
 
   <% if @question.poll.in_wizard_mode? && @question.votation_type.vote_type == "unique" && @question.parent_question.blank? %>
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:next_question_id)) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:next_question_id),
+      hint: t(".hints.next_question"),
+      stacked: true) do %>
       <%= f.select :next_question_id,
             @question.sibling_questions,
             { include_blank: true },
             { class: "kern-select" } %>
     <% end %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: Poll::Question::Answer.human_attribute_name(:terminates_poll)) do %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question::Answer.human_attribute_name(:terminates_poll),
+      hint: t(".hints.terminates_poll")) do %>
       <%= f.check_box :terminates_poll %>
     <% end %>
   <% end %>

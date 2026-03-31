@@ -37,7 +37,7 @@ class ProposalsController
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekt_ids = @resources.pluck("projekt_phases.projekt_id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
     @categories = Tag.category.joins(:taggings)
       .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq

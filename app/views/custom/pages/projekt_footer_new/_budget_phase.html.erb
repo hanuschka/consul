@@ -30,9 +30,9 @@
     <% if @budget.current_phase.kind == 'informing' %>
       <div class="flex-layout">
         <div class="new-card">
-          <h4>
+          <h2>
             Noch keine Vorschläge vorhanden
-            </h3>
+          </h2>
             <% if @budget.phases.accepting.starts_at.present? %>
               <div>
                 Vorschläge können erst in der nächsten Phase
@@ -95,6 +95,6 @@
 
     <% end %>
   <% else %>
-    <h3>Dieses Projekt Phase hat kein zugehöriges Budget</h3>
+    <h2>Dieses Projekt Phase hat kein zugehöriges Budget</h2>
   <% end %>
 <% end %>

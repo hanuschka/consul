@@ -16,11 +16,21 @@ de:
           success: Benachrichtigungen wurden erfolgreich gesendet.
         form:
           type_label: Typ
+          type_hint: "Legt fest, ob diese Stimme eine befürwortende (Pro) oder ablehnende (Contra) Position darstellt. Pro- und Contra-Stimmen werden im Frontend in getrennten Bereichen angezeigt und ermöglichen den Teilnehmern einen strukturierten Überblick über die verschiedenen Standpunkte zum Thema."
           pro: Pro
           contra: Contra
           name_label: Name
-          party_label: Partei
-          position_label: Position
-          note_label: Anmerkung
-          image_label: Bild
+          name_hint: "Name der Person, die diese Position vertritt. Der Name wird im Frontend zusammen mit dem Profilbild und der Partei angezeigt. Verwenden Sie den vollständigen Namen, wie er öffentlich kommuniziert werden soll – z. B. 'Dr. Maria Schmidt' oder 'Thomas Müller, Stadtrat'."
+          name_placeholder: "z. B. Dr. Maria Schmidt"
+          party_label: Partei / Organisation
+          party_hint: "Optionale Angabe der Partei, Fraktion oder Organisation, der die Person angehört. Die Zugehörigkeit wird im Frontend unterhalb des Namens angezeigt und gibt den Teilnehmern zusätzlichen Kontext zur Einordnung der Position. Lassen Sie das Feld leer, wenn keine Zuordnung gewünscht ist."
+          party_placeholder: "z. B. SPD, Bündnis 90/Die Grünen"
+          position_label: Kurzposition
+          position_hint: "Kurze, prägnante Zusammenfassung der Kernposition in einem Satz. Die Kurzposition wird im Frontend als Überschrift der Stimme angezeigt und sollte den Standpunkt auf den Punkt bringen – z. B. 'Investition in Radwege stärkt die Mobilität' oder 'Kosten stehen in keinem Verhältnis zum Nutzen'."
+          position_placeholder: "z. B. Investition stärkt die nachhaltige Mobilität"
+          note_label: Begründung
+          note_hint: "Ausführliche Erläuterung der Position, die im Frontend unterhalb der Kurzposition angezeigt wird. Beschreiben Sie die Argumente, Hintergründe und Fakten, die die Position stützen. Der Text sollte sachlich und nachvollziehbar formuliert sein, damit Teilnehmer die Argumentation verstehen können."
+          note_placeholder: "Erläutern Sie die Argumente und Hintergründe dieser Position..."
+          image_label: Profilbild
+          image_hint: "Optionales Foto der Person, das im Frontend neben der Stimme angezeigt wird. Verwenden Sie ein Porträtfoto im Hochformat oder quadratisch. Das Bild wird als kleines Profilbild dargestellt und sollte die Person klar erkennbar zeigen. Empfohlene Mindestgröße: 200 x 200 Pixel. Formate: JPG, PNG."
           submit: Speichern

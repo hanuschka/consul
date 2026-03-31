@@ -108,3 +108,6 @@ en:
       sidebar_section:
         show: 'Show section'
         hide: 'Hide section'
+    layouts:
+      footer:
+        navigation_heading: Footer navigation

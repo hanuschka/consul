@@ -12,7 +12,7 @@
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint"), stacked: true) do %>
     <div class="icon-selector">
       <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
         <% icon = icon_array.first %>

@@ -20,6 +20,9 @@
         var $content = $sidebarCard.find(".sidebar-card--content");
         $content.toggle();
         $sidebarCard.find(".icon-chevron-down").toggleClass("-rotated");
+
+        var isExpanded = $content.is(":visible");
+        $(e.currentTarget).attr("aria-expanded", isExpanded);
       }
 
       this.reInitializeMap();

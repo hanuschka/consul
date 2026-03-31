@@ -42,6 +42,6 @@
       </tbody>
     </table>
   <% else %>
-    <p class="kern-body kern-body--small"><%= t('.no_layers') %></p>
+    <%= kern_alert(title: t('.no_layers'), style: :info) %>
   <% end %>
 </div>

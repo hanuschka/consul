@@ -49,12 +49,10 @@
 
           <% if phase.name == 'budget_phase' && phase.budget.present? %>
 
-            <span class='js-icon-toggle-budget-phases toggle-arrow focusable js-prevent-key-scroll'
-                  role="button"
-                  tabindex="0"
+            <button class='js-icon-toggle-budget-phases toggle-arrow js-prevent-key-scroll'
                   aria-expanded="false"
                   aria-label="<%= t('custom.links.projekts_filter.arrow_label') %>" >
-            </span>
+            </button>
 
             <div class='sidebar-projekt-budget-phases'>
               <%= render Pages::Projekts::SidebarBudgetPhasesComponent.new(phase.budget) %>

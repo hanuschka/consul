@@ -157,5 +157,7 @@ de:
             actions: Aktionen
         update:
           success: Projekt erfolgreich aktualisiert.
+        notify_reviewers:
+          success: Benachrichtigung erfolgreich gesendet.
         destroy:
           success: Projekt erfolgreich gelöscht.

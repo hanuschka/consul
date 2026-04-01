@@ -821,4 +821,3 @@
 //     }
 //   };
 // }).call(this);
->>>>>>> new-connection

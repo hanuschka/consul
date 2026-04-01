@@ -15,8 +15,14 @@ class ProjektPhase::CommentPhase < ProjektPhase
     comments.count
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_comment"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions comments]
+    %w[duration naming restrictions comments email_templates]
   end
 
   def safe_to_destroy?

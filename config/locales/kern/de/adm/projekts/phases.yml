@@ -332,6 +332,8 @@ de:
           title: KI Bewertungskriterien
           empty_title: KI Bewertungskriterien nicht verfügbar
           empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-gestützten Bewertungskriterien zu aktivieren.
+        email_templates:
+          title: E-Mail-Vorlagen
         ai_settings:
           title: KI Anweisung
           empty_title: KI Anweisung nicht verfügbar
@@ -512,3 +514,4 @@ de:
           settings: Einstellungen
           user_resource_criteria: KI Bewertungskriterien
           comments: Kommentare
+          email_templates: E-Mail-Vorlagen

@@ -96,6 +96,7 @@ class ProjektPhase < ApplicationRecord
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
+  has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -329,6 +330,10 @@ class ProjektPhase < ApplicationRecord
 
   def setting(key)
     setting = settings.find { |s| s.key == key }
+  end
+
+  def customizable_email_templates
+    raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
   def admin_nav_bar_items

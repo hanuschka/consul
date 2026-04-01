@@ -4,7 +4,13 @@ module ContentBlocksHelper
   def render_custom_block(key, projekt: nil, custom_prefix: nil, default_content: nil, return_path: nil)
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
-    block_body = block&.body.presence || default_content || ""
+    block_body =
+      if content_block_body_blank?(block&.body)
+        default_content || ""
+      else
+        block&.body
+      end
+
     block_body = convert_br_to_paragraphs(block_body)
 
     if custom_prefix
@@ -133,6 +139,15 @@ module ContentBlocksHelper
     end
 
     AdminWYSIWYGSanitizer.new.sanitize(res)
+  end
+
+  def content_block_body_blank?(body)
+    return true if body.blank?
+
+    without_empty_tags = body.gsub(/<br\s*\/?>/, "")
+    without_empty_tags = without_empty_tags.gsub(/<\/?(p|div|span)(\s[^>]*)?>/, "")
+    without_empty_tags = without_empty_tags.gsub(/[\s\u00A0]/, "")
+    without_empty_tags.blank?
   end
 
   def convert_br_to_paragraphs(html)

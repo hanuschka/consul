@@ -22,7 +22,7 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
-          email_templates: E-Mail-Vorlagen
+          email_templates: System-E-Mails
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
@@ -43,6 +43,7 @@ de:
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
+          email_templates: E-Mail-Vorlagen
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken

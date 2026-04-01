@@ -26,8 +26,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.documents"),             path: adm_documents_path },
-        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" },
-        { label: t("adm.menu.items.application_subitems.email_templates"),       path: adm_global_email_templates_path }
+        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" }
       ]
     end
 
@@ -48,6 +47,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def notifications_subitems
       [
         { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" },
+        { label: t("adm.menu.items.notifications_subitems.email_templates"), path: adm_global_email_templates_path },
         { label: t("adm.menu.items.notifications_subitems.modal_notifications"), path: adm_modal_notifications_path }
       ]
     end

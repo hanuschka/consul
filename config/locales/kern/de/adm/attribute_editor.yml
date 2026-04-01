@@ -99,10 +99,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           subtitle_description: "Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt."
           landing_hide_title_and_subtitle_label: Titel und Untertitel auf der Themenseite ausblenden
           landing_hide_title_and_subtitle_description: "Blendet den Titel und Untertitel der Themenseite im Frontend aus. Diese Angaben dienen dann ausschließlich der internen Konfiguration und werden nicht über dem Hintergrundbild angezeigt."
-          landing_hide_all_top_nav_links_label: Links in der Top-Navigation ausblenden
-          landing_hide_all_top_nav_links_description: "Blendet sämtliche Links aus, die in der Top-Navigation der Startseite enthalten sind. So bleibt die Themen- oder Gebietsseite übersichtlich und frei von globalen Navigationspunkten."
-          landing_show_projekts_overview_label: Projektübersicht in Hauptnavigation anzeigen
-          landing_show_projekts_overview_description: "Zeigt in der Top-Navigation dieser Themenseite eine Projektübersicht – analog zur Startseite. Wenn deaktiviert, wird die Projektübersicht auf allen zugehörigen Projektseiten dieser Themenseite nicht angezeigt."
+
+
           landing_site_logo_follow_to_landing_page_label: Klick auf Logo führt zu dieser Zielseite
           landing_site_logo_follow_to_landing_page_description: "Wenn aktiviert, führt ein Klick auf das Logo in der Top-Navigation nicht zur allgemeinen Startseite, sondern zur aktuell konfigurierten Themen- oder Gebietsseite."
           landing_navigation_link_color_label: Farbe der Links in der Top-Navigation

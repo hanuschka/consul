@@ -5,8 +5,8 @@
 <div class="kern-container my-5">
   <%= form_with model: [:adm, @recipient_group] do |f| %>
 
-    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name)) do %>
-      <%= f.text_field :name, label: false %>
+    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t(".name_hint")) do %>
+      <%= f.text_field :name, label: false, placeholder: "z. B. Alle Abonnenten" %>
     <% end %>
 
     <%= form_submit_button(text: t("adm.recipient_groups.edit.submit")) %>

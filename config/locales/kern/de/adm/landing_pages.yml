@@ -11,7 +11,7 @@ de:
         index:
           title: Themenseiten
           new_landing_page: Neue Themenseite erstellen
-          page_hint: "Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Per Drag & Drop können Sie die Reihenfolge der Seiten anpassen."
+          page_hint: "Themenseiten sind eigenständige Bereiche innerhalb Ihrer Plattform – für Zielgruppen (z. B. Jugendbeteiligung), Themen (z. B. Bauleitplanung) oder Gebiete (z. B. einzelne Gemeinden auf Landkreisebene). Jede Themenseite kann ein eigenes Hintergrundbild, Logo, Navigation und individuelle Texte erhalten. Per Drag & Drop passen Sie die Reihenfolge an."
           no_items_title: Keine Themenseiten vorhanden
           no_items_description: Sobald Themenseiten erstellt werden, werden diese hier angezeigt.
           table:
@@ -21,23 +21,23 @@ de:
               status: Status
             no_landing_pages: Es wurden noch keine Themenseiten erstellt.
         new:
-          title: Neue Themenseite
+          title: Neue Themenseite erstellen
           submit: Themenseite erstellen
           hints:
-            slug: >
-              Die URL-Kennung der Themenseite (z.B. "jugend" ergibt /jugend). Nur Buchstaben, Zahlen, Bindestriche und Unterstriche erlaubt.
+            title: Der Titel dient als interne Bezeichnung der Themenseite und kann optional als Hauptüberschrift über dem Hintergrundbild angezeigt werden. Die Sichtbarkeit im Frontend lässt sich in den Seiteneinstellungen steuern. Wählen Sie einen aussagekräftigen Titel, der das Thema oder die Zielgruppe klar benennt, z. B. Jugendbeteiligung oder Beteiligung in Musterstadt.
+            slug: Der URL-Pfad bestimmt die Webadresse der Themenseite, z. B. ergibt jugendbeteiligung die URL ihre-domain.de/jugendbeteiligung. Verwenden Sie einen kurzen, eindeutigen und gut lesbaren Pfad ohne Leer- oder Sonderzeichen. Nur Kleinbuchstaben, Zahlen und Bindestriche sind erlaubt. Der Pfad kann nach der Erstellung geändert werden.
         create:
           success: Die Themenseite wurde erfolgreich erstellt.
         edit:
           title: Themenseite bearbeiten
           page_hint: "Hier konfigurieren Sie die ausgewählte Themenseite. Sie können Logos, Hintergrundbilder, Titel und Untertitel anpassen sowie Navigationselemente und Inhaltskarten verwalten. Über die Navigationseinstellungen legen Sie fest, welche Links auf der Themenseite angezeigt werden. Inhaltskarten steuern die Darstellung der Projekte auf der Seite."
           managers_title: Themenseiten Manager
-          managers_description: Wählen Sie aus, welche Manager diese Themenseite verwalten dürfen.
+          managers_description: Legen Sie fest, welche Themenseiten-Manager Zugriff auf diese Seite erhalten. Ausgewählte Manager können Inhalte, Navigation, Bilder und Texte dieser Themenseite bearbeiten. Manager müssen zuvor unter Themenseiten > Manager angelegt worden sein. Änderungen an der Zuordnung werden sofort wirksam.
         navbar_items:
           title: Navigation
           description: >
-            Konfigurieren Sie die Navigationselemente für diese Themenseite.
-            Per Drag & Drop können Sie die Reihenfolge anpassen.
+            Legen Sie fest, welche Navigationseinträge auf dieser Themenseite angezeigt werden, z. B. Links zu Projekten, externen Seiten oder Ankerpunkten.
+            Per Drag & Drop können Sie die Reihenfolge der Einträge anpassen. Über den „Bearbeiten"-Button lassen sich Titel, URL und weitere Optionen konfigurieren.
           new_item: Neuen Eintrag erstellen
         update:
           success: Der Wert wurde erfolgreich aktualisiert.
@@ -45,7 +45,7 @@ de:
         index:
           title: Themenseiten Manager
           page_hint: Hier verwalten Sie die Themenseiten-Manager. Manager können die ihnen zugewiesenen Themenseiten bearbeiten und deren Inhalte pflegen. Nutzer mit der Option Alle verwalten haben Zugriff auf sämtliche Themenseiten. Fügen Sie neue Manager hinzu, indem Sie registrierte Nutzer über die Schaltfläche Erstellen suchen und zuweisen.
-          new_link: Erstellen
+          new_link: Neuen Themenseiten Manager hinzufügen
           manage_all_landing_pages: Alle verwalten
           no_landing_page_managers: Es sind keine Themenseiten Manager vorhanden.
           no_items_title: Keine Themenseiten Manager vorhanden

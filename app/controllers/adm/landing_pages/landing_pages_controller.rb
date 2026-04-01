@@ -19,7 +19,7 @@ module Adm
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
 
         @breadcrumbs = [
-          { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path },
+          { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", url: adm_landing_pages_root_path },
           { name: t(".title") }
         ]
       end
@@ -32,7 +32,7 @@ module Adm
           redirect_to edit_adm_landing_pages_landing_page_path(@landing_page), notice: t(".success")
         else
           @breadcrumbs = [
-            { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path },
+            { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", url: adm_landing_pages_root_path },
             { name: t("adm.landing_pages.landing_pages.new.title") }
           ]
           render :new, status: :unprocessable_entity

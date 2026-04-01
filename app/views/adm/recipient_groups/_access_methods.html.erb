@@ -1,7 +1,7 @@
 <div data-step>
   <%= form_with model: [:adm, RecipientGroup.new] do |form| %>
-    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), divider: false, inline: true) do %>
-      <%= form.text_field :name, label: false %>
+    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t("adm.recipient_groups.edit.name_hint"), divider: false) do %>
+      <%= form.text_field :name, label: false, placeholder: "z. B. Alle Abonnenten" %>
 
       <%= form.hidden_field :origin_class_name, value: origin_class_name %>
       <%= form.hidden_field :origin_class_object_id, value: origin_class_object_id %>

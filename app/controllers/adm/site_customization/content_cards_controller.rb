@@ -8,10 +8,7 @@ module Adm
         @content_card = ::SiteCustomization::ContentCard.find(params[:id])
         @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
-        @breadcrumbs = [
-          parent_breadcrumb,
-          { name: @content_card.title }
-        ]
+        @breadcrumbs = parent_breadcrumbs + [{ name: @content_card.title }]
       end
 
       def update
@@ -51,15 +48,29 @@ module Adm
           @landing_page ||= @content_card.landing_page
         end
 
-        def redirect_path
-          landing_page.present? ? "#" : adm_homepage_path(anchor: "content-cards-table")
+        def adm_menu_component
+          @content_card&.landing_page.present? ? Adm::LandingPages::MenuComponent.new : super
         end
 
-        def parent_breadcrumb
+        def redirect_path
           if landing_page.present?
-            { name: "lp", url: "#" }
+            edit_adm_landing_pages_landing_page_path(landing_page)
           else
-            { name: t("adm.menu.items.home"), icon: "home", url: adm_homepage_path }
+            adm_homepage_path(anchor: "content-cards-table")
+          end
+        end
+
+        def parent_breadcrumbs
+          if landing_page.present?
+            [
+              { name: t("adm.landing_pages.title"), icon: "web", url: adm_landing_pages_root_path },
+              { name: landing_page.title, url: edit_adm_landing_pages_landing_page_path(landing_page) }
+            ]
+          else
+            [
+              { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+              { name: t("adm.menu.items.application_subitems.homepage"), url: adm_homepage_path }
+            ]
           end
         end
     end

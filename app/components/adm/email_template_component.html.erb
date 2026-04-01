@@ -16,55 +16,63 @@
     </summary>
 
     <div class="adm-admin-phase__body pt-3">
-      <div class="kern-row mb-4">
-        <div class="kern-col-12 kern-col-md-3">
-          <div class="kern-title kern-title--small"><%= t(".trigger") %></div>
-          <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".trigger_description") %></p>
-        </div>
-        <div class="kern-col-12 kern-col-md-7">
-          <div class="adm-email-template-preview"><%= description %></div>
+      <div class="mb-4">
+        <div class="kern-title kern-title--small mb-2"><%= t(".trigger") %></div>
+        <div class="kern-row">
+          <div class="kern-col-12 kern-col-md-3">
+            <p class="kern-body kern-body--small mb-0"><%= t(".trigger_description") %></p>
+          </div>
+          <div class="kern-col-12 kern-col-md-7">
+            <div class="adm-email-template-preview"><%= description %></div>
+          </div>
         </div>
       </div>
 
       <% if default_template_preview.present? %>
-        <div class="kern-row mb-4">
-          <div class="kern-col-12 kern-col-md-3">
-            <div class="kern-title kern-title--small"><%= t(".default_template") %></div>
-            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".default_template_description") %></p>
-          </div>
-          <div class="kern-col-12 kern-col-md-7">
-            <div class="adm-email-template-preview"><%= default_template_preview.html_safe %></div>
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= t(".default_template") %></div>
+          <div class="kern-row">
+            <div class="kern-col-12 kern-col-md-3">
+              <p class="kern-body kern-body--small mb-0"><%= t(".default_template_description") %></p>
+            </div>
+            <div class="kern-col-12 kern-col-md-7">
+              <div class="adm-email-template-preview"><%= default_template_preview.html_safe %></div>
+            </div>
           </div>
         </div>
       <% end %>
 
       <%= form_with model: @email_template, url: path, method: :patch do |form| %>
-        <div class="kern-row mb-4">
-          <div class="kern-col-12 kern-col-md-3">
-            <div class="kern-title kern-title--small"><%= t(".subject") %></div>
-            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".subject_description") %></p>
-          </div>
-          <div class="kern-col-12 kern-col-md-7">
-            <%= form.text_field :subject, label: false, class: "kern-form-input__input" %>
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= t(".subject") %></div>
+          <div class="kern-row">
+            <div class="kern-col-12 kern-col-md-3">
+              <p class="kern-body kern-body--small mb-0"><%= t(".subject_description") %></p>
+            </div>
+            <div class="kern-col-12 kern-col-md-7">
+              <%= form.text_field :subject, label: false, class: "kern-form-input__input" %>
+            </div>
           </div>
         </div>
 
-        <div class="kern-row mb-4">
-          <div class="kern-col-12 kern-col-md-3">
-            <div class="kern-title kern-title--small"><%= t(".body") %></div>
-            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".body_description") %></p>
-            <% if variables.any? %>
-              <p class="kern-body kern-body--small mt-2 mb-0">
-                <%= t(".available_variables") %>:<br>
-                <%= variables_hint.html_safe %>
-              </p>
-            <% end %>
-          </div>
-          <div class="kern-col-12 kern-col-md-7">
-            <%= form.text_area :body,
-              value: sanitized_body,
-              label: false,
-              data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= t(".body") %></div>
+          <div class="kern-row">
+            <div class="kern-col-12 kern-col-md-3">
+              <p class="kern-body kern-body--small mb-0"><%= t(".body_description") %></p>
+              <% if variables.any? %>
+                <p class="kern-body kern-body--small mt-2 mb-0">
+                  <%= t(".available_variables") %>:<br>
+                  <%= variables_hint.html_safe %>
+                </p>
+              <% end %>
+            </div>
+            <div class="kern-col-12 kern-col-md-7">
+              <%= form.text_area :body,
+                value: sanitized_body,
+                label: false,
+                data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+            </div>
           </div>
         </div>
 

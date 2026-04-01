@@ -14,8 +14,8 @@ class Adm::GlobalEmailTemplatesController < Adm::BaseController
     end
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.application"), icon: "desktop_windows" },
-      { name: t("adm.global_email_templates.title") }
+      { name: t("adm.menu.items.notifications"), icon: "send" },
+      { name: t("adm.global_email_templates.index.title") }
     ]
   end
 end

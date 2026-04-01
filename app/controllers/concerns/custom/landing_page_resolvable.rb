@@ -46,9 +46,6 @@ module LandingPageResolvable
   end
 
   def set_landing_page_topbar_ui_variables(landing_page)
-    @ui_show_projekts_overview = landing_page.landing_show_projekts_overview
-    @ui_hide_topbar_links = landing_page.landing_hide_all_top_nav_links
-
     if landing_page.landing_site_logo_for_transparent_background.attached?
       @ui_site_logo_transparent_background = url_for(landing_page.landing_site_logo_for_transparent_background)
     end

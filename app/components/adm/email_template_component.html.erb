@@ -19,9 +19,10 @@
       <div class="kern-row mb-4">
         <div class="kern-col-12 kern-col-md-3">
           <div class="kern-title kern-title--small"><%= t(".trigger") %></div>
+          <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".trigger_description") %></p>
         </div>
         <div class="kern-col-12 kern-col-md-7">
-          <p class="kern-body mb-0"><%= description %></p>
+          <div class="adm-email-template-preview"><%= description %></div>
         </div>
       </div>
 
@@ -29,6 +30,7 @@
         <div class="kern-row mb-4">
           <div class="kern-col-12 kern-col-md-3">
             <div class="kern-title kern-title--small"><%= t(".default_template") %></div>
+            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".default_template_description") %></p>
           </div>
           <div class="kern-col-12 kern-col-md-7">
             <div class="adm-email-template-preview"><%= default_template_preview.html_safe %></div>
@@ -40,6 +42,7 @@
         <div class="kern-row mb-4">
           <div class="kern-col-12 kern-col-md-3">
             <div class="kern-title kern-title--small"><%= t(".subject") %></div>
+            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".subject_description") %></p>
           </div>
           <div class="kern-col-12 kern-col-md-7">
             <%= form.text_field :subject, label: false, class: "kern-form-input__input" %>
@@ -49,6 +52,7 @@
         <div class="kern-row mb-4">
           <div class="kern-col-12 kern-col-md-3">
             <div class="kern-title kern-title--small"><%= t(".body") %></div>
+            <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".body_description") %></p>
             <% if variables.any? %>
               <p class="kern-body kern-body--small mt-2 mb-0">
                 <%= t(".available_variables") %>:<br>

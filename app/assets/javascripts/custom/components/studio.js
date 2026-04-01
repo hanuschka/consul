@@ -68,6 +68,7 @@
           const contentBlockId = block.dataset.contentBlockId;
           const updateUrl = block.dataset.updateUrl;
           const aiUrl = block.dataset.aiUrl;
+          const defaultContent = block.dataset.defaultContent;
 
           const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
             block.innerHTML,
@@ -82,6 +83,10 @@
           const tempContainer = document.createElement("div");
           tempContainer.innerHTML = wrappedHTML;
           const wrappedElement = tempContainer.firstElementChild;
+
+          if (defaultContent) {
+            wrappedElement.dataset.defaultContent = defaultContent;
+          }
 
           block.parentNode.replaceChild(wrappedElement, block);
 

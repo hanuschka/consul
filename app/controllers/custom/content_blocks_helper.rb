@@ -26,7 +26,9 @@ module ContentBlocksHelper
         sanitized_body = process_iframe_embeds(sanitized_body)
       end
 
-      res = build_inline_editable_block(key, block, sanitized_body, inline_urls).html_safe
+      sanitized_default_content = prepare_default_content(default_content)
+
+      res = build_inline_editable_block(key, block, sanitized_body, inline_urls, default_content: sanitized_default_content).html_safe
     else
       res = build_standard_block(key, block, block_body, projekt, return_path)
 
@@ -56,11 +58,16 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls)
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil)
     res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
+
+    if default_content.present?
+      res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""
+    end
+
     res << ">#{block_body}</div>"
 
     res
@@ -139,6 +146,12 @@ module ContentBlocksHelper
     end
 
     AdminWYSIWYGSanitizer.new.sanitize(res)
+  end
+
+  def prepare_default_content(default_content)
+    return nil if default_content.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(default_content)
   end
 
   def content_block_body_blank?(body)

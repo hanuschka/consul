@@ -41,6 +41,18 @@ body:has(.projekt-page--admin-topbar) {
     }
   }
 }
+.projekt-content-block--default-notification {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  padding: 2px 0px;
+  color: #2e7d32;
+}
+
+.projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {
+  display: none;
+}
+
 .content-block--item-action-wrapper {
   list-style: none;
   margin-bottom: 10px;

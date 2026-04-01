@@ -1,0 +1,11 @@
+de:
+  components:
+    adm:
+      email_template_component:
+        trigger: Auslöser
+        subject: Betreff
+        body: Inhalt
+        available_variables: "Verfügbare Variablen"
+        send_test: Test-E-Mail senden
+        customized: Angepasst
+        default_template: Standard-Vorlage

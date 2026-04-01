@@ -17,7 +17,9 @@ namespace :adm do
     resources :phases, only: [:update] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
+
       member do
+        get :email_templates
         # Phase configuration
         get :duration
         get :naming

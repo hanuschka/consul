@@ -1,0 +1,19 @@
+.adm-email-template-preview {
+  background: color-mix(in srgb, var(--kern-color-layout-border) 20%, transparent);
+  border: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-layout-border, #e0e0e0);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+  padding: var(--kern-metric-space-default, 16px);
+  font-size: var(--kern-font-size-14, 14px);
+  line-height: 1.6;
+  color: var(--kern-color-layout-text-default);
+
+  p, h1, h2, h3 {
+    margin: 0 0 0.5em;
+  }
+
+  h1 { font-size: 1.1em; font-weight: 600; }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

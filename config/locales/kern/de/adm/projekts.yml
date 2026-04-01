@@ -56,10 +56,10 @@ de:
           try_again: "Erneut versuchen"
         new:
           title: Neues Projekt erstellen
-          intro_title: Projektname eingeben
-          intro_text: Geben Sie einen Namen für das neue Projekt ein. Nach der Erstellung können Sie weitere Details wie Laufzeit, Sichtbarkeit und Beteiligungsphasen konfigurieren.
+          intro_title: Neues Beteiligungsprojekt anlegen
+          intro_text: Projekte sind der zentrale Baustein Ihrer Beteiligungsplattform. Jedes Projekt kann mehrere Beteiligungsphasen enthalten – z. B. Umfragen, Vorschläge, Abstimmungen oder Veranstaltungen. Nach der Erstellung konfigurieren Sie Laufzeit, Sichtbarkeit, Beschränkungen und die einzelnen Phasen. Projekte können einer Themenseite zugeordnet oder eigenständig auf der Startseite angezeigt werden.
           name_label: Projektname
-          name_hint: Der Name wird im Frontend und in der Übersicht angezeigt.
+          name_hint: Der Projektname wird als Titel auf der Projektseite, in der Projektübersicht und in der Navigation angezeigt. Er sollte das Thema der Beteiligung klar und verständlich benennen, damit Bürger auf einen Blick erkennen, worum es geht. Der Name kann nach der Erstellung jederzeit in den Projekteinstellungen geändert werden.
           name_placeholder: z.B. Bürgerbeteiligung Stadtentwicklung 2026
           create_projekt: Projekt erstellen
         create:

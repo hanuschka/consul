@@ -44,19 +44,27 @@
 
     <% if @available_kinds.include?("projekts") %>
       <div class="mb-4" style="display: <%= f.object.kind == "projekts" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="projekts">
-        <fieldset class="kern-fieldset">
-          <legend class="kern-label mb-3">
-            <%= t(".projekt_label") %>
-          </legend>
-          <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
-            <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
-              <div class="kern-form-check">
-                <%= cb.radio_button(class: "kern-form-check__radio") %>
-                <%= cb.label(class: "kern-label") %>
-              </div>
-            <% end %>
-          <div>
-        </fieldset>
+        <% if @available_projekts.any? %>
+          <fieldset class="kern-fieldset">
+            <legend class="kern-label mb-3">
+              <%= t(".projekt_label") %>
+            </legend>
+            <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
+              <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
+                <div class="kern-form-check">
+                  <%= cb.radio_button(class: "kern-form-check__radio") %>
+                  <%= cb.label(class: "kern-label") %>
+                </div>
+              <% end %>
+            <div>
+          </fieldset>
+        <% else %>
+          <%= empty_state(
+            title: t(".no_projekts_title"),
+            description: t(".no_projekts_description"),
+            icon: "folder_off"
+          ) %>
+        <% end %>
       </div>
     <% end %>
 

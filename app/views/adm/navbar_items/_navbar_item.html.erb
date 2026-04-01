@@ -23,7 +23,7 @@
 
   <div data-sortable-children class="navbar-item__children">
     <% navbar_item.children.order(:position).each do |child| %>
-      <%= render child %>
+      <%= render partial: "adm/navbar_items/navbar_item", locals: { navbar_item: child } %>
     <% end %>
   </div>
 </div>

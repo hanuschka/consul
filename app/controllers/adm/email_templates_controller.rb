@@ -32,7 +32,7 @@ class Adm::EmailTemplatesController < Adm::BaseController
     def render_component
       render turbo_stream: turbo_stream.replace(
         helpers.dom_id(@email_template),
-        Adm::EmailTemplateComponent.new(@email_template)
+        Adm::EmailTemplateComponent.new(@email_template, open: true)
       )
     end
 

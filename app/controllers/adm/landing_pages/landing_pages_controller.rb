@@ -83,7 +83,7 @@ module Adm
 
         def landing_page_params
           params.require(:site_customization_page).permit(
-            :title, :status, :slug,
+            :title, :subtitle, :status, :slug,
             :landing_hide_title_and_subtitle,
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,

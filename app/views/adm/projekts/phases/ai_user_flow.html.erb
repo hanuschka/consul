@@ -5,9 +5,17 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container my-5">
-  <% setting = @projekt_phase.settings.find_by(key: "feature.resource.create_proposal_with_ai") %>
-  <% if setting %>
-    <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+  <% ai_flow_setting_key =
+    if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+      "feature.resource.create_proposal_with_ai"
+    elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      "feature.resource.create_investment_with_ai"
+    end %>
+  <% if ai_flow_setting_key %>
+    <% setting = @projekt_phase.settings.find_by(key: ai_flow_setting_key) %>
+    <% if setting %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
   <% end %>
 
   <div

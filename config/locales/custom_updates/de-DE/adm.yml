@@ -30,3 +30,5 @@ de:
         resource:
           create_proposal_with_ai: Vorschlag mit KI erstellen
           create_proposal_with_ai_description: Zeigt die Schaltfläche "Vorschlag mit KI erstellen" an
+          create_investment_with_ai: Investitionsvorschlag mit KI erstellen
+          create_investment_with_ai_description: Zeigt die Schaltfläche "Investitionsvorschlag mit KI erstellen" an

@@ -120,7 +120,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
   end
 
-<<<<<<< HEAD
   def import_projekt
     authorize [:adm, :projekts, Projekt], :create?
 
@@ -130,7 +129,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     ]
 
     @dt_import_url = build_dt_import_url
-=======
+  end
+
   def notify_reviewers
     authorize [:adm, :projekts, @projekt], :update?
 
@@ -145,7 +145,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.update!(show_content_background: !@projekt.show_content_background)
 
     render json: { show_content_background: @projekt.show_content_background }
->>>>>>> new-connection
   end
 
   def toggle_activated

@@ -2,13 +2,13 @@ de:
   adm:
     officing_managers:
       index:
-        title: Wahlhelfer
-        empty_title: "Keine Wahlhelfer vorhanden"
-        empty_description: "Fügen Sie über den Button oben einen neuen Wahlhelfer hinzu."
-        new_link: Neuer Wahlhelfer
+        title: Abstimmungshelfer
+        empty_title: "Keine Abstimmungshelfer vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Abstimmungshelfer hinzu."
+        new_link: Neuen Abstimmungshelfer hinzufügen
       new:
-        title: Neuer Wahlhelfer
+        title: Neuen Abstimmungshelfer hinzufügen
         search_label: Nutzer durchsuchen
-        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Wahlhelfer hinzugefügt werden. Wahlhelfer können Abstimmungen vor Ort durchführen und Stimmen für Bürger erfassen.
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Abstimmungshelfer hinzugefügt werden. Abstimmungshelfer können Abstimmungen vor Ort durchführen und Stimmen für Bürger erfassen.
       search:
         no_results: Keine Nutzer gefunden mit diesen Kriterien.

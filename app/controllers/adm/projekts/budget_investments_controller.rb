@@ -4,8 +4,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits]
-  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits]
+  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
+  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits toggle_image_concealed]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -49,7 +49,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   def administer
     authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
 
-    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
   end
 
   def people
@@ -135,6 +135,14 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @investment.reload
   end
 
+  def toggle_image_concealed
+    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.image.toggle!(:concealed)
+
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
+  end
+
   def destroy
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
@@ -171,7 +179,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer people milestones progress_bars audits].map do |tab_action|
+      @tabs = %w[show people milestones progress_bars audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(

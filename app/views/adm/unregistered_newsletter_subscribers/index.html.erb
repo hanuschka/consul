@@ -45,6 +45,7 @@
                   <% actions.with_action(
                     label: t('.table.delete'),
                     url: adm_unregistered_newsletter_subscriber_path(subscriber),
+                    icon: "delete", style: :delete,
                     data: { turbo_method: :delete, turbo_confirm: t('.table.delete_confirm') }
                   ) %>
                 <% end %>

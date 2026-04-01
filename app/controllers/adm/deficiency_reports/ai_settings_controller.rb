@@ -16,7 +16,7 @@ class Adm::DeficiencyReports::AiSettingsController < Adm::DeficiencyReports::Bas
 
     @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.ai_settings") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.ai_settings"), icon: "smart_toy" }]
   end
 
   def update

@@ -1,6 +1,7 @@
 <div class="ai-proposal-flow--loader js-ai-proposal-loader" hidden>
   <div class="ai-proposal-flow--loader-inner">
-    <%= render Shared::SpinnerComponent.new %>
+    <%= render Shared::SpinnerComponent.new(size: :large) %>
+
     <strong><%= t(message_key) %></strong>
     <p><%= t(submessage_key) %></p>
   </div>

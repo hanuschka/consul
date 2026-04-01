@@ -177,7 +177,9 @@ de:
         organization_name: "Vorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Vorschlag"
         image_title: "Bildtitel"
-        duration: Zeitrahmen (intern)
+        price: Gesamtkosten
+        price_first_year: Jährliche Folgekosten (intern)
+        duration: Umsetzungszeitraum (intern)
         feasibility_feasible: Entspricht den Kriterien
         feasibility_undecided: Noch nicht bewertet
         feasibility_unfeasible: Entspricht nicht den Kriterien

@@ -5,7 +5,7 @@ de:
         title: Administratoren
         empty_title: "Keine Administratoren vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Administrator hinzu."
-        new_link: Neuer Administrator
+        new_link: Neuen Administrator hinzufügen
         no_administrators: Keine Administratoren vorhanden.
         hint: Hier verwalten Sie die Plattformadministratoren. Administratoren haben vollen Zugriff auf alle Einstellungen und Verwaltungsbereiche der Plattform. Über „Neuer Administrator" können Sie registrierte Nutzer als Administratoren hinzufügen.
       new:

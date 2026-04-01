@@ -26,6 +26,7 @@
   </td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
       <% actions.with_action(label: t(".details"), url: details_adm_projekts_projekt_path(projekt), icon: "settings") %>
       <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekts_projekt_path(projekt), icon: "visibility") %>
       <% actions.with_action(label: t(".projekt_managers"), url: projekt_managers_adm_projekts_projekt_path(projekt), icon: "supervisor_account") %>

@@ -5,7 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb-list my-3">
             <% if @back_button_url %>
-              <li class="breadcrumb-item mr-3">
+              <li class="breadcrumb-item breadcrumb-item--back">
                 <%= link_to @back_button_url, class: "breadcrumb-back-button", data: { turbo_action: "advance" } do %>
                   <span class="material-symbols-outlined" aria-hidden="true">arrow_back_ios</span>
                   <span><%= t("shared.back") %></span>

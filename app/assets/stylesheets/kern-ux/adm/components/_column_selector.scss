@@ -1,0 +1,71 @@
+// Column selector dropdown for kern-table
+.adm-column-selector {
+  position: relative;
+  display: inline-flex;
+}
+
+.adm-column-selector__toggle {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--kern-grey-600);
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid var(--kern-color-layout-border);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+
+  .material-symbols-outlined {
+    font-size: 16px !important;
+  }
+
+  &:hover {
+    background-color: var(--kern-grey-100);
+    color: var(--kern-grey-800);
+  }
+}
+
+.adm-column-selector__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 220px;
+  max-height: 360px;
+  overflow-y: auto;
+  background: var(--kern-color-layout-background-default, #fff);
+  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+
+  &--open {
+    display: block;
+  }
+}
+
+.adm-column-selector__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-size: var(--kern-font-size-14, 14px);
+  color: var(--kern-color-layout-text-default);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--kern-grey-100);
+  }
+}
+
+.adm-column-selector__checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}

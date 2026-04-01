@@ -4,7 +4,7 @@ class Adm::DeficiencyReports::StatusesController < Adm::DeficiencyReports::BaseC
   def index
     @statuses = policy_scope(DeficiencyReport::Status, policy_scope_class: Adm::DeficiencyReports::StatusPolicy::Scope)
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.statuses") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.statuses"), icon: "flag" }]
   end
 
   def new
@@ -67,7 +67,7 @@ class Adm::DeficiencyReports::StatusesController < Adm::DeficiencyReports::BaseC
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.deficiency_reports.statuses.index.title"), url: adm_deficiency_reports_statuses_path },
+        { name: t("adm.deficiency_reports.statuses.index.title"), url: adm_deficiency_reports_statuses_path, icon: "flag" },
         { name: action_title }
       ]
     end

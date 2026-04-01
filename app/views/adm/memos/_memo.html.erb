@@ -1,0 +1,38 @@
+<li class="mb-3" id="<%= dom_id(memo) %>">
+  <div class="adm-memo p-3">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <%= avatar_image(memo.user, seed: memo.user_id, size: 32, class: "float-left", aria: { live: "off" }) %>
+      <div class="kern-body kern-body--small">
+        <strong><%= link_to memo.user.name, user_path(memo.user) %></strong>
+        <% if memo.user.display_official_position_badge? %>
+          &nbsp;&bull;&nbsp;
+          <%= render Shared::OfficialPositionBadgeComponent.new(user: memo.user) %>
+        <% end %>
+        &nbsp;&bull;&nbsp;
+        <%= l memo.created_at.to_datetime, format: :datetime %>
+      </div>
+    </div>
+
+    <div class="kern-body mb-2">
+      <%= simple_format sanitize_and_auto_link(memo.text), {}, sanitize: false %>
+    </div>
+
+    <div class="kern-body kern-body--small">
+      <% if policy([:adm, memo]).send_notification? %>
+        <%= link_to t("adm.memos.memo.send_notification"), adm_memo_send_notification_path(memo), data: { turbo_method: :post } %>
+        <% if memo.last_notification_sent_at.present? %>
+          (<%= t("adm.memos.memo.last_notification", datetime: l(memo.last_notification_sent_at.to_datetime, format: :datetime)) %>)
+        <% end %>
+      <% end %>
+
+      <% if policy([:adm, Memo.new(memoable: memo.root_memoable)]).create? %>
+        <details class="mt-2">
+          <summary><%= t("adm.memos.memo.reply") %></summary>
+          <%= render "adm/memos/form", memoable: memo %>
+        </details>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "adm/memos/memos_tree", memos: memo.children.order(created_at: :desc), memoable: memo %>
+</li>

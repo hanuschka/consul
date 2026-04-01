@@ -14,6 +14,12 @@ module NavbarItemsHelper
     end
   end
 
+  def navbar_item_preset_for_landing_page?(landing_page, preset)
+    return false if landing_page.blank?
+
+    NavbarItem.for_landing_page(landing_page.id).where(kind: :presets, preset: preset).exists?
+  end
+
   def navbar_item_link_attrs(item)
     item.external? ? ' target="_blank" rel="noopener noreferrer"' : ''
   end

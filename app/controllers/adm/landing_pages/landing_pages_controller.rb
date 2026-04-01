@@ -19,7 +19,7 @@ module Adm
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
 
         @breadcrumbs = [
-          { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path },
+          { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", url: adm_landing_pages_root_path },
           { name: t(".title") }
         ]
       end
@@ -32,7 +32,7 @@ module Adm
           redirect_to edit_adm_landing_pages_landing_page_path(@landing_page), notice: t(".success")
         else
           @breadcrumbs = [
-            { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path },
+            { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", url: adm_landing_pages_root_path },
             { name: t("adm.landing_pages.landing_pages.new.title") }
           ]
           render :new, status: :unprocessable_entity
@@ -83,8 +83,8 @@ module Adm
 
         def landing_page_params
           params.require(:site_customization_page).permit(
-            :title, :status, :slug,
-            :landing_hide_title_and_subtitle, :landing_hide_all_top_nav_links, :landing_show_projekts_overview,
+            :title, :subtitle, :status, :slug,
+            :landing_hide_title_and_subtitle,
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
             :landing_desktop_header_image, :landing_mobile_header_image,

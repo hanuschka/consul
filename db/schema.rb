@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_31_105651) do
+ActiveRecord::Schema.define(version: 2026_04_01_124612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2815,11 +2815,9 @@ ActiveRecord::Schema.define(version: 2026_03_31_105651) do
     t.string "locale"
     t.bigint "projekt_id"
     t.boolean "landing_show_in_top_nav", default: false
-    t.boolean "landing_hide_all_top_nav_links", default: false
     t.boolean "landing_hide_title_and_subtitle", default: false
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
-    t.boolean "landing_show_projekts_overview", default: true
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"

@@ -471,6 +471,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     redirect_to age_ranges_for_stats_adm_projekts_phase_path(@projekt_phase), flash: { success: t("adm.attribute.update.success") }
   end
 
+  def email_templates
+    authorize_phase(:update?)
+
+    @email_templates = @projekt_phase.customizable_email_templates.map do |mailer_class, mailer_action|
+      @projekt_phase.email_templates.find_or_create_by!(mailer_class: mailer_class, mailer_action: mailer_action, locale: I18n.locale)
+    end
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
   def ai_settings
     authorize_phase(:update?)
 

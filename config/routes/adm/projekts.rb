@@ -17,7 +17,9 @@ namespace :adm do
     resources :phases, only: [:update] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
+
       member do
+        get :email_templates
         # Phase configuration
         get :duration
         get :naming
@@ -181,6 +183,7 @@ namespace :adm do
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create]

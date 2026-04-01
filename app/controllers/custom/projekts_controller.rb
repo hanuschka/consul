@@ -16,7 +16,6 @@ class ProjektsController < ApplicationController
         SiteCustomization::Page
           .published
           .landing
-          .where(landing_show_projekts_overview: true)
           .find_by(slug: landing_page_slug)
 
       if @landing_page.nil?

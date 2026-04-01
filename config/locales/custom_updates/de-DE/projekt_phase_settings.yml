@@ -147,6 +147,9 @@ de:
             public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
             public_ai_stats: KI-Analyse öffentlich anzeigen
             public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
+          resource:
+            create_investment_with_ai: Investitionsvorschlag mit KI erstellen
+            create_investment_with_ai_description: Zeigt die Schaltfläche "Investitionsvorschlag mit KI erstellen" an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.

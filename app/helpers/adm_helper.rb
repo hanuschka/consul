@@ -46,7 +46,8 @@ module AdmHelper
     "projekt_point_of_interest_pins" => "pin_drop",
     "map_resources_overview" => "layers",
     "legislation_process_draft_versions" => "description",
-    "age_ranges_for_stats" => "pie_chart"
+    "age_ranges_for_stats" => "pie_chart",
+    "email_templates" => "mail"
   }.freeze
 
   def projekt_phase_table_actions(projekt_phase)

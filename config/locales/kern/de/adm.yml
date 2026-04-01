@@ -22,6 +22,7 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+          email_templates: System-E-Mails
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
@@ -42,10 +43,17 @@ de:
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
+          email_templates: E-Mail-Vorlagen
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
         apps: Apps
+    email_templates:
+      send_test:
+        success: "Test-E-Mail wurde an %{email} gesendet."
+    global_email_templates:
+      index:
+        title: E-Mail-Vorlagen
     deficiency_reports:
       title: Mängelmelder
       menu:

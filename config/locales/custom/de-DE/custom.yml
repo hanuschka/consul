@@ -28,6 +28,44 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code-Editor"
+        title_sidebar: "Code-Editor für Sidebar-Bereich"
+        title_footer: "Code-Editor für Footer-Bereich"
+        save: "Speichern"
+        cancel: "Abbrechen"
+    projekt_content_blocks:
+      create:
+        success: Inhaltsblock erstellt
+        error: Fehler beim Erstellen des Inhaltsblocks
+      update:
+        success: Inhaltsblock aktualisiert
+        error: Fehler beim Aktualisieren des Inhaltsblocks
+      destroy:
+        success: Inhaltsblock gelöscht
+        error: Fehler beim Löschen des Inhaltsblocks
+      update_position:
+        success: Position des Inhaltsblocks aktualisiert
+        error: Fehler beim Aktualisieren der Position des Inhaltsblocks
+      change_with_ai:
+        success: Inhaltsblock aktualisiert
+      import:
+        success: Dokument wurde erfolgreich importiert
+        categories: Kategorien
+        sdg_goals: SDG-Ziele
+        no_file: Keine Datei hochgeladen
+        user_prompt_placeholder: |
+          „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
+          „Erstelle zusätzlich einen eigenen Inhaltsblock in leichter Sprache."
+          „Kürze die Einleitung und mache den Einstieg verständlicher."
+          „Fasse lange Abschnitte in Stichpunkten zusammen."
+          „Ordne die Inhalte logisch neu, falls die Reihenfolge im Dokument unklar ist."
+      generate_from_prompt:
+        success: Inhalte wurden erfolgreich generiert
+        no_prompt: Bitte geben Sie einen Prompt ein
+      destroy_all:
+        success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:
       my_posts:
         title: 'Meine Beiträge'
@@ -76,6 +114,7 @@ de:
     layouts:
       footer:
         impressum: Impressum
+        navigation_heading: Fußzeilennavigation
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         demokratie: demokratie.today
         demokratie_url: "https://demokratie.today/"
@@ -280,6 +319,8 @@ de:
           only_citizens: Nur Bürger:innen
           only_geozones: Nur Bürger:innen des Stadtteils
     proposals:
+      vote_share:
+        share_button: Teilen
       form:
         tags_custom: Nutzer-Tags
         tags_placeholder: Trennen Sie die Tags mit einem Komma (',')

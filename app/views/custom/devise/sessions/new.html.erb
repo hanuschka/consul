@@ -16,11 +16,18 @@
       <% end %>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <%= f.text_field :login, autofocus: true, label: false, placeholder: t("devise_views.sessions.new.login_label"),
-                         "aria-label": t("devise_views.sessions.new.login_label") %>
+        <%= f.text_field :login,
+                         autofocus: true,
+                         autocomplete: "email",
+                         label: t("devise_views.sessions.new.login_label"),
+                         label_options: { class: "show-for-sr" },
+                         placeholder: t("devise_views.sessions.new.login_label") %>
 
-        <%= f.password_field :password, autocomplete: "off", label: false, placeholder: t("devise_views.sessions.new.password_label"),
-                             "aria-label": t("devise_views.sessions.new.password_label") %>
+        <%= f.password_field :password,
+                             autocomplete: "current-password",
+                             label: t("devise_views.sessions.new.password_label"),
+                             label_options: { class: "show-for-sr" },
+                             placeholder: t("devise_views.sessions.new.password_label") %>
 
         <%= f.submit(t("devise_views.sessions.new.submit"), class: "button expanded") %>
 
@@ -60,7 +67,7 @@
       </div>
 
       <div class="small-12 column">
-        <%= f.password_field :password, autocomplete: "off" %>
+        <%= f.password_field :password, autocomplete: "current-password" %>
         <%= link_to t("devise_views.shared.links.new_password"), new_password_path(resource_name), class: "float-right" %>
       </div>
 

@@ -1,0 +1,29 @@
+de:
+  adm:
+    unregistered_newsletter_subscribers:
+      index:
+        title: Nicht registrierte Abonnenten
+        intro_text_p1: >
+          Hier sehen Sie Personen, die sich für den Newsletter angemeldet haben, ohne ein Benutzerkonto
+          auf der Plattform zu besitzen. Diese Abonnenten haben ihre E-Mail-Adresse über das öffentliche
+          Newsletter-Formular auf der Startseite eingetragen.
+        intro_text_p2: >
+          Der Bestätigungsstatus zeigt an, ob die E-Mail-Adresse per Double-Opt-in verifiziert wurde.
+          Nur bestätigte Abonnenten erhalten tatsächlich Newsletter. Über den CSV-Export können Sie
+          die Liste für externe Systeme herunterladen.
+        table:
+          id: Id
+          email: Email
+          confirmed: Bestätigt
+          created_at: Angelegt am
+          actions: Aktionen
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Abonnenten löschen möchten?
+          confirmed_yes: Ja
+          confirmed_no: Nein
+        empty: Keine nicht registrierten Abonnenten vorhanden.
+        empty_title: Keine nicht registrierten Abonnenten vorhanden
+        empty_description: "Sobald sich Personen ohne Benutzerkonto über das Newsletter-Formular auf der Startseite anmelden, erscheinen sie hier."
+        download_csv: CSV herunterladen
+      destroy:
+        success: Abonnent wurde erfolgreich gelöscht.

@@ -11,6 +11,11 @@ class OfficingManager < ApplicationRecord
       .map(&:poll)
   end
 
+  def officing_voting_phases
+    projekt_phases
+      .where("type = 'ProjektPhase::VotingPhase' AND (lock_on IS NULL OR lock_on >= ?)", Time.zone.now.to_date)
+  end
+
   def officing_proposal_phases
     projekt_phases
       .where("type = 'ProjektPhase::ProposalPhase' AND (lock_on IS NULL OR lock_on >= ?)", Time.zone.now.to_date)

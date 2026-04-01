@@ -10,7 +10,9 @@
   <%= render "poll_subnav" %>
 
   <% if can? :csv_answers_votes, @poll %>
-    <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
+    <div class="js-studio-hide-on-preview">
+      <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
+    </div>
   <% end %>
 
   <div class="row margin" data-equalizer data-equalize-on="medium">
@@ -37,6 +39,13 @@
         <div style="margin-bottom:0.5rem;margin-top:-0.5rem;"><%= AdminWYSIWYGSanitizer.new.sanitize(question.description) %></div>
         <div class="results-table-wrapper">
           <table id="question_<%= question.id %>_results_table" class='results-table'>
+            <thead class="show-for-sr">
+              <tr>
+                <th scope="col"><%= t("custom.polls.results.table.votes") %></th>
+                <th scope="col"><%= t("custom.polls.results.table.answer") %></th>
+                <th scope="col"><%= t("custom.polls.results.table.details") %></th>
+              </tr>
+            </thead>
             <tbody>
               <%- question.question_answers.each do |answer| %>
                 <tr>
@@ -104,21 +113,22 @@
               <% end %>
             </tbody>
           </table>
-          <% if can? :csv_answers_streets, question %>
-            <%= link_to t("custom.polls.results.question_street_details_csv_link"), polls_question_csv_answers_streets_path(question.id, format: :csv) %>
-          <% end %>
-          <% if can? :csv_answers_votes, question %>
-            &nbsp;|&nbsp;
-            <%= link_to t("custom.polls.results.question_answer_details_csv_link"), polls_question_csv_answers_votes_path(question.id, format: :csv) %>
-          <% end %>
-          <% if can? :csv_open_answers, question %>
-            <% question_answer_with_open_answers = question.question_answers.find_by(open_answer: true) %>
-            <% if question_answer_with_open_answers.present? %>
+          <div class="js-studio-hide-on-preview">
+            <% if can? :csv_answers_streets, question %>
+              <%= link_to t('custom.polls.results.question_street_details_csv_link'), polls_question_csv_answers_streets_path(question.id, format: :csv) %>
               &nbsp;|&nbsp;
-              <%= link_to t("custom.polls.results.open_answers_csv_link"), polls_question_csv_open_answers_path(question.id, format: :csv) %>
             <% end %>
-          <% end %>
-
+            <% if can? :csv_answers_votes, question %>
+              <%= link_to t('custom.polls.results.question_answer_details_csv_link'), polls_question_csv_answers_votes_path(question.id, format: :csv) %>
+            <% end %>
+            <% if can? :csv_open_answers, question %>
+              <% question_answer_with_open_answers = question.question_answers.find_by(open_answer: true) %>
+              <% if question_answer_with_open_answers.present? %>
+                &nbsp;|&nbsp;
+                <%= link_to t("custom.polls.results.open_answers_csv_link"), polls_question_csv_open_answers_path(question.id, format: :csv) %>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>

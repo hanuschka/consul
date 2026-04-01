@@ -1,11 +1,9 @@
 <% if placement == 'desktop' %>
   <li class="nav-element main-navigation-item-account--wrapper top-level-item js-access-top-level-menu js-prevent-key-scroll"
-      aria-label='<%= t('custom.links.menu.konto_icon', count: current_user.unread_notifications_count) if placement == "desktop" %>'
       aria-expanded="false"
-      <%= "tabindex=0" if placement == 'desktop' %>
       >
 
-      <%= link_to account_path, class: 'account-items-icon main-navigation-item-user-account', tabindex: "-1" do %>
+      <%= link_to account_path, class: 'account-items-icon main-navigation-item-user-account', aria: { label: t("custom.layouts.header.account_link") } do %>
         <div
             class="main-navigation-item--account--image-wrapper"
             title="<%= t("custom.layouts.header.account_link") %>"
@@ -27,7 +25,7 @@
       <% end %>
 
       <ul class="nav-flyout-block">
-        <%= render "devise/menu/login_items_new" %>
+        <%= render "devise/menu/login_items_user_facing" %>
       </ul>
   </li>
 <% end %>
@@ -35,11 +33,8 @@
 <% if placement == 'mobile' %>
   <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") %>
 
-  <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
-      tabindex="0"
-      aria-label='<%= t("devise_views.menu.login_items.logout") %>'
-      >
-    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, tabindex: "-1", aria: { hidden: true } do %>
+  <li class='nav-element flyout-item js-access-flyout-menu-item focusable'>
+    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete do %>
       <i class="fas fa-sign-out-alt main-navigation--link-icon"> </i>
       <%= t("devise_views.menu.login_items.logout") %>
     <% end %>

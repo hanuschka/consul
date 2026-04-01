@@ -3,7 +3,8 @@ de:
     accessibility:
       shared:
         switch-view-button:
-          aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+          to-list: "Zur Listenansicht wechseln"
+          to-tile: "Zur Kachelansicht wechseln"
         missing-image:
           aria-label: "Kein Bild verfügbar"
       search:
@@ -11,6 +12,8 @@ de:
           aria-label: "Suchfeld. Geben Sie hier Ihren Suchbegriff ein."
         search_button:
           aria-label: "Suchbutton. Klicken Sie, um die Suche zu starten."
+        reset_button:
+          aria-label: "Suchfeld zurücksetzen"
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
@@ -25,11 +28,41 @@ de:
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
           save_button: "Speichern Schaltfläche. Klicken Sie, um die Änderungen zu speichern."
         notifications:
-          aria-label: "Benachrichtigungsfilter"
+          aria_label: "Benachrichtigungsfilter"
+          tab_label: "Benachrichtigungsfilter"
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
+        glightbox-image-alt: "%{resource_type}: %{title}. Vergrößerte Ansicht."
+      share-links:
+        whatsapp: "Auf WhatsApp teilen"
+        facebook: "Auf Facebook teilen"
+        twitter: "Auf X (Twitter) teilen"
+        telegram: "Auf Telegram teilen"
+        linkedin: "Auf LinkedIn teilen"
+        email: "Per E-Mail teilen"
+        copy-link: "Link kopieren"
+      sidebar:
+        user_avatar_title: "Profil von %{name} öffnen"
+      map:
+        marker-label: "Kartenmarkierung"
+        toggle_label: "Karte anzeigen"
+      phases:
+        scroll_left: "Phasen nach links scrollen"
+        scroll_right: "Phasen nach rechts scrollen"
+      skip_links:
+        skip_to_content: "Direkt zum Inhalt"
+        skip_to_navigation: "Direkt zur Navigation"
+      navigation:
+        main: "Hauptnavigation"
+        mobile: "Mobilnavigation"
       events:
         projekt-aria-label: "Projekt: %{projekt_name}"
+      session_timeout:
+        title: "Sitzung läuft bald ab"
+        description: "Ihre Sitzung läuft aufgrund von Inaktivität bald ab. Sie werden automatisch abgemeldet. Möchten Sie Ihre Sitzung verlängern?"
+        remaining_time: "Verbleibende Zeit:"
+        extend: "Sitzung verlängern"
+        logout: "Jetzt abmelden"
     map:
       aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:
@@ -50,6 +83,7 @@ de:
         ideas: Ideen
         investments_overview: Budgetübersicht
         projekts_overview: Projekte
+        projekt_events: Veranstaltungen
         new_entry_label: Beitrag erstellen
         new_entry: + Beitrag erstellen
         new_entries:

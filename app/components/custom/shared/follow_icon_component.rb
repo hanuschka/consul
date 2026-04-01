@@ -44,6 +44,10 @@ class Shared::FollowIconComponent < ApplicationComponent
     end
 
     def icon_color
-      pick_text_color(@resource&.sentiment&.color || "#004a83")
+      if @resource&.sentiment.present?
+        pick_text_color(@resource.sentiment.color)
+      else
+        "#666"
+      end
     end
 end

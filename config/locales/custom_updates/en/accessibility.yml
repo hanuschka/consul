@@ -3,7 +3,8 @@ en:
     accessibility:
       shared:
         switch-view-button:
-          aria-label: "Switch view button"
+          to-list: "Switch to list view"
+          to-tile: "Switch to tile view"
         missing-image:
           aria-label: "Image not available"
       search:
@@ -11,6 +12,8 @@ en:
           aria-label: "Search input field"
         search_button:
           aria-label: "Search button"
+        reset_button:
+          aria-label: "Clear search field"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."
@@ -26,10 +29,40 @@ en:
           save_button: "Save button. Click to save the changes."
         notifications:
           aria-label: "Filter notifications"
+          tab_label: "Notification filters"
       banner-image:
         glightbox-aria-label: "Banner image. Click to enlarge the image."
+        glightbox-image-alt: "%{resource_type}: %{title}. Enlarged view."
+      share-links:
+        whatsapp: "Share on WhatsApp"
+        facebook: "Share on Facebook"
+        twitter: "Share on X (Twitter)"
+        telegram: "Share on Telegram"
+        linkedin: "Share on LinkedIn"
+        email: "Share via email"
+        copy-link: "Copy link"
+      sidebar:
+        user_avatar_title: "Open profile of %{name}"
+      map:
+        marker-label: "Map marker"
+        toggle_label: "Show map"
+      phases:
+        scroll_left: "Scroll phases left"
+        scroll_right: "Scroll phases right"
+      skip_links:
+        skip_to_content: "Skip to content"
+        skip_to_navigation: "Skip to navigation"
+      navigation:
+        main: "Main navigation"
+        mobile: "Mobile navigation"
       events:
         projekt-aria-label: "Project: %{projekt_name}"
+      session_timeout:
+        title: "Session expiring soon"
+        description: "Your session is about to expire due to inactivity. You will be logged out automatically. Would you like to extend your session?"
+        remaining_time: "Time remaining:"
+        extend: "Extend session"
+        logout: "Log out now"
     map:
       aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:
@@ -48,7 +81,9 @@ en:
         archived_projekts_label: Archived projects
         deficiency_reports: Deficiency reports
         ideas: Ideas
+        investments_overview: Budget overview
         projekts_overview: Projects
+        projekt_events: Events
         new_entry_label: Create new post
         new_entry: + Create new post
         new_entries:

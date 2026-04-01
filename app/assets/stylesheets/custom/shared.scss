@@ -85,7 +85,7 @@
   }
 
   &.filtered {
-    background: $brand;
+    background: var(--brand-color);
 
     a {
       color: $white;
@@ -249,7 +249,7 @@
 .communities-show blockquote,
 .topic-show blockquote,
 .milestone-content blockquote {
-  background-color: $secondary;
+  background-color: var(--brand-color-secondary);
   font-size: 1.25em;
   padding-top: 10px;
   padding-bottom: 8px;
@@ -271,33 +271,21 @@
 // Overriding foundation
 
 .button:hover, .button:focus {
-  background-color: $secondary;
-  color: $black;
+  background-color: var(--brand-color-secondary);
+  color: var(--brand-color)
 }
 
 .callout.primary {
-  background-color: $secondary;
-  color: $white;
+  background-color: $dt-base-secondary;
+  color: $black;
 }
 
-.additional-content {
-  .filter-subnav {
-    background: $secondary;
-
-    a {
-      color: $black;
-    }
-  }
-
-  .tabs .tabs-title > a[aria-selected="true"],
-  .tabs .tabs-title > a:hover,
-  .tabs .tabs-title > a.is-active {
-    color: $brand;
-  }
+.additional-content .filter-subnav {
+  background: var(--brand-color-secondary);
 }
 
 .comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
-  background: $accent;
+  background: var(--brand-color-accent);
   border-radius: 5px;
 }
 
@@ -363,13 +351,16 @@ form .checkbox-label--aligned {
 
 // Toggle arrow
 
-span.toggle-arrow {
+.toggle-arrow {
   position: absolute;
   right: 0;
   top: 0;
   width: 14px;
   cursor: pointer;
   color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
 
   &:after {
     content: "\f107";
@@ -386,7 +377,7 @@ span.toggle-arrow {
   }
 }
 
-.d-flex {
+.d-flex, .u-flex {
   display: flex;
 }
 
@@ -399,12 +390,28 @@ span.toggle-arrow {
   justify-content: space-between;
 }
 
+.u-gap-5 {
+  gap: 5px;
+}
+
+.u-gap-7 {
+  gap: 7px;
+}
+
 .u-gap-10 {
   gap: 10px;
 }
 
-.u-gap-5 {
-  gap: 5px;
+.u-gap-15 {
+  gap: 15px;
+}
+
+.u-gap-20 {
+  gap: 20px;
+}
+
+.u-gap-30 {
+  gap: 30px;
 }
 
 .d-flex-start {
@@ -435,6 +442,11 @@ span.toggle-arrow {
 .collapse-text-widget--inner-content {
   position: relative;
   overflow: hidden;
+  margin-bottom: 5px;
+
+  p {
+    margin-bottom: 0;
+  }
 
   &::after {
     content: "";
@@ -476,6 +488,7 @@ span.toggle-arrow {
 }
 
 .collapse-text-widget--expand-button {
+  position: relative;
   display: none;
   margin-top: 5px;
   cursor: pointer;
@@ -483,7 +496,15 @@ span.toggle-arrow {
   text-transform: uppercase;
   font-size: 12px;
   font-weight: bold;
-  color: #808080;
+  color: #737373;
+  padding: 7px 10px;
+  border-radius: 5px;
+  margin: 0 auto;
+  transition: 50ms ease background-color;
+
+  &:hover {
+    background-color: #ebebeb;
+  }
 }
 
 // User registration form
@@ -492,6 +513,18 @@ span.toggle-arrow {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+
+  legend {
+    flex-basis: 100%;
+    font-size: 0.875rem;
+    color: #0a0a0a;
+    margin-bottom: 0.5rem;
+    padding: 0;
+  }
 
   label {
     flex-basis: 100%;

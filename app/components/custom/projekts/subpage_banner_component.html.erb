@@ -1,0 +1,48 @@
+<div class="projekt-subpage-banner">
+  <div class="projekt-subpage-banner--content">
+    <div class="projekt-subpage-banner--text-section">
+      <h1 class="projekt-subpage-banner--phase-title">
+        <%= @title %>
+      </h1>
+
+      <div class="projekt-subpage-banner--projekt-info">
+        <%= link_to projekt_url, class: "projekt-subpage-banner--projekt-title" do %>
+          <h3 class="projekt-subpage-banner--projekt-title">
+            <%= projekt_title %>
+          </h3>
+        <% end %>
+
+        <% if @date_range.present? %>
+          <div class="projekt-subpage-banner--phase-dates">
+            <i class="fa fa-calendar"></i>
+            <%= @date_range %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if projekt_subtitle.present? %>
+        <div class="projekt-subpage-banner--projekt-subtitle">
+          <%= sanitize(projekt_subtitle, tags: ["br"]) %>
+        </div>
+      <% end %>
+
+      <div class="projekt-subpage-banner--breadcrumbs">
+        <%= helpers.breadcrumbs_links(@projekt) %>
+      </div>
+    </div>
+
+    <% if has_image? %>
+      <div class="projekt-subpage-banner--image">
+        <%= link_to projekt_url do %>
+          <%= render(
+            Shared::ResourceImageComponent.new(
+              image_url: image_url,
+              image_placeholder_icon_class: "fa-comments",
+              resource: @custom_page
+            )
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

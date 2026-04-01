@@ -56,5 +56,15 @@ $welcometextpositionlarge:    rem-calc(25);
 $welcomespan:                 $brand;
 
 
+:root {
+  --brand-color: #{$brand};
+  --brand-color-hover: color-mix(in srgb, var(--brand-color) 5%, transparent);
+  --brand-color-lighter: color-mix(in srgb, var(--brand-color) 10%, transparent);
+  --brand-color-secondary: color-mix(in srgb, var(--brand-color), white 70%);
+  --brand-color-accent: color-mix(in srgb, var(--brand-color), white 50%);
+  --brand-color-dark: color-mix(in srgb, var(--brand-color), black 30%);
+  --main-background-color: #{$main-background-color};
+}
+
 // fonts
 @import "custom_fonts";

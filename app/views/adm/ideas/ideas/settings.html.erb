@@ -1,0 +1,16 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.show_in_main_menu"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.admins_must_assign_officer"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.officers_can_administer_assigned_reports"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.officers_can_edit_assigned_reports"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.enable_comments"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.intro_text"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.enable_geoman_controls_in_maps"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.admin_acceptance_required"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.document_upload"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "ideas.external_video"), :value, :boolean) %>
+</div>

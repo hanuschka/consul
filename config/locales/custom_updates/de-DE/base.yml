@@ -129,9 +129,10 @@ de:
         admin_link: Administration
         home_link: Start Seite
         projekt_events_link: Veranstaltungen
-        projekt_management: Projektmanager
+        projekt_management: Projekte
+        landing_pages: Themenseiten
         deficiency_report_management: Mängelmelder
-        idea_management: Ideenplattform
+        idea_management: Ideen
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: Öffentlichkeitsbeteiligung
@@ -177,7 +178,7 @@ de:
         starts_in_days:
           one: Startet in 1 Tag
           other: Startet in %{count} Tagen
-        no_dates: Vortlaufend
+        no_dates: Fortlaufend
       form:
         projekt_assignment: Projektzuordnung
         star_message: Alle mit (*) gekennzeichneten Felder sind Pflichtfelder

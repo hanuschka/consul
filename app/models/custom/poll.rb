@@ -10,9 +10,17 @@ class Poll < ApplicationRecord
 
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
 
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
+
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
 
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
 
@@ -76,7 +84,15 @@ class Poll < ApplicationRecord
   end
 
   def advanced_stats_enabled?
-    projekt_phase.feature?("resource.advanced_stats_enabled")
+    true
+  end
+
+  def report_visible_for_citizens?
+    projekt_phase.feature?("resource.report_visible_for_citizens")
+  end
+
+  def evaluation_enabled?
+    projekt_phase.feature?("resource.evaluation_enabled")
   end
 
   def show_open_answer_author_name?

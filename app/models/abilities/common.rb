@@ -37,6 +37,10 @@ module Abilities
         poll.related&.author&.id == user.id
       end
 
+      can [:report, :download_report_section, :download_all_report_sections], Poll do |poll|
+        poll.report_visible_for_citizens? && poll.projekt&.visible_for?(user)
+      end
+
       can [:retire_form, :retire], Proposal, author_id: user.id
 
       can :read, Legislation::Proposal

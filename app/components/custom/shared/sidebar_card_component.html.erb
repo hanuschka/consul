@@ -1,14 +1,12 @@
 <div class="sidebar-card js-sidebar-card <%= class_name %>" >
   <% if @title.present? %>
-    <div class="sidebar-card--title js-sidebar-card--title">
+    <button class="sidebar-card--title js-sidebar-card--title" aria-expanded="false">
       <div class="d-flex sidebar-card--title-inner">
         <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>
-        <h2 class="sidebar-card--title-text">
-          <%= @title %>
-        </h2>
+        <%= content_tag heading_tag, @title, class: "sidebar-card--title-text" %>
       </div>
       <div class="icon-chevron-down sidebar-collapse-icon"></div>
-    </div>
+    </button>
   <% end %>
 
   <div class="sidebar-card--content">

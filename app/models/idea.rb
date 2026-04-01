@@ -91,9 +91,8 @@ class Idea < ApplicationRecord
     end
   end
 
-  def get_default_officer
-    map_location&.get_district&.default_idea_officer ||
-      category&.default_idea_officer
+  def accepted?
+    admin_accepted_at.present?
   end
 
   def remaining_days

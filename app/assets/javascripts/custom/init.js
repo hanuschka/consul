@@ -22,8 +22,25 @@
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
-      App.ProposalAssistant.initialize();
+      App.SharedModal.initialize();
+      App.KlaroAccessibility.initialize();
+      App.VoiceAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
+      App.BarChartComponent.initialize();
+      App.AreaChartComponent.initialize();
+      App.PieChartComponent.initialize();
+      App.HeatmapComponent.initialize();
+      App.StatsRefresh.initialize();
+      App.AiQuestionPolling.initialize();
+      App.CkeditorInlineStylesWorkarounds.initialize();
+      App.ContentBlockTemplatesSelector.initialize();
+      App.AdminTopbarViewMode.initialize();
+      App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.AiProposalFlow.initialize();
+      App.UserResourceCriteria.initialize();
+      App.Studio.SiteContentBlockEditor.initialize();
+      App.FlashMessages.initialize();
+      App.SessionTimeoutWarning.initialize();
     }
   };
 }).call(this);

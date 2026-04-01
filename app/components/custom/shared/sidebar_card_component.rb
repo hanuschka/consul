@@ -9,13 +9,19 @@ class Shared::SidebarCardComponent < ApplicationComponent
     description: nil,
     icon_name: "info",
     class_name: nil,
-    opened_on_mobile: false
+    opened_on_mobile: false,
+    heading_level: 2
   )
     @title = title
     @icon_name = icon_name
     @class_name = class_name
     @description = description
     @opened_on_mobile = opened_on_mobile
+    @heading_level = heading_level
+  end
+
+  def heading_tag
+    "h#{@heading_level}"
   end
 
   def class_name

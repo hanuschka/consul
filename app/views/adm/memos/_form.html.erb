@@ -1,0 +1,11 @@
+<div id="memo-form-<%= dom_id(memoable) %>" class="memo-form">
+  <%= form_with(model: Memo.new, url: adm_memos_create_path(memoable), method: :post) do |f| %>
+    <%= f.hidden_field :memoable_id, value: memoable.id %>
+    <%= f.hidden_field :memoable_type, value: memoable.class.name %>
+    <%= f.hidden_field :parent_id, value: memoable.is_a?(Memo) ? memoable.id : nil %>
+    <%= f.text_area :text, label: false, rows: 3 %>
+    <div class="mt-3">
+      <%= form_submit_button(text: t("adm.memos.form.submit"), icon: "add") %>
+    </div>
+  <% end %>
+</div>

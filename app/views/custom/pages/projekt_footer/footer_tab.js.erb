@@ -32,4 +32,6 @@ $('#footer-content').foundation();
 
 $("html, body").animate({ scrollTop: $("#<%= params["scroll_to"] || "footer-content" %>").offset().top - 100 }, 500);
 
-App.Map.refreshMapsIn('#footer-content');
+if (App.Map && App.Map.refreshMapsIn) {
+  App.Map.refreshMapsIn('#footer-content');
+}

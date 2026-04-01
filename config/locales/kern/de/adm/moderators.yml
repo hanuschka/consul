@@ -5,7 +5,7 @@ de:
         title: Moderatoren
         empty_title: "Keine Moderatoren vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Moderator hinzu."
-        new_link: Neuer Moderator
+        new_link: Neuen Moderator hinzufügen
         no_moderators: Keine Moderatoren vorhanden.
       new:
         title: Neuer Moderator

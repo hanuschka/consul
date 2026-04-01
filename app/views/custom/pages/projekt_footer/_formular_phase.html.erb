@@ -5,7 +5,7 @@
     <aside class="margin-bottom">
       <% if current_user&.administrator? %>
         <div class="js-studio-hide-on-preview">
-          <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+          <%= link_to "Zu den Antworten", formular_answers_adm_projekts_phase_path(@projekt_phase), target: "_blank", class: "button" %>
         </div>
       <% end %>
     </aside>

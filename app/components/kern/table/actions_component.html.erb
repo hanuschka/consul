@@ -2,7 +2,7 @@
   <%= link_to '#', class: 'text-decoration-none px-2', role: "button", data: { action: 'table-actions#toggleMenu', table_actions_target: 'button', "aria-haspopup": 'true', "aria-expanded": 'false' } do %>
     <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
   <% end %>
-  <div class="kern-table__actions-menu d-flex flex-column gap-1 p-2 z-1 d-none" data-table-actions-target="menu">
+  <div class="kern-table__actions-menu d-flex flex-column gap-1 p-2 d-none" data-table-actions-target="menu">
     <% actions.each do |action| %>
       <%= action %>
     <% end %>

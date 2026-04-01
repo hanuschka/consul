@@ -1,0 +1,19 @@
+<div class="kern-row">
+  <div class="kern-col-12 kern-col-md-10">
+    <hr class="kern-divider my-5" aria-hidden="true" />
+  </div>
+</div>
+
+<div id="memos-container">
+  <div class="kern-title kern-title--small mb-3"><%= t("adm.memos.title") %></div>
+
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-10">
+      <% if policy([:adm, Memo.new(memoable: memoable)]).create? %>
+        <%= render "adm/memos/form", memoable: memoable %>
+      <% end %>
+
+      <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
+    </div>
+  </div>
+</div>

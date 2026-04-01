@@ -1,7 +1,7 @@
 de:
   adm:
     projekts:
-      title: Projekt Management
+      title: Projekte
       menu:
         aria_label: Projekts Navigation
         items:
@@ -66,6 +66,7 @@ de:
           success: Das Projekt wurde erfolgreich erstellt.
         projekt:
           top_level_projekt: Top-Level-Projekt
+          frontend_page: Projektseite
           details: Projektdetails
           visibility: Sichtbarkeit & Darstellung
           projekt_managers: Projektmanager
@@ -163,5 +164,7 @@ de:
             actions: Aktionen
         update:
           success: Projekt erfolgreich aktualisiert.
+        notify_reviewers:
+          success: Benachrichtigung erfolgreich gesendet.
         destroy:
           success: Projekt erfolgreich gelöscht.

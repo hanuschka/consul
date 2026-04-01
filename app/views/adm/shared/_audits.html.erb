@@ -44,7 +44,7 @@
               <% if audit_show_path %>
                 <td class="kern-table__cell">
                   <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                    <% actions.with_action(label: t("shared.show"), url: audit_show_path.call(audit)) %>
+                    <% actions.with_action(label: t("shared.show"), url: audit_show_path.call(audit), icon: "visibility") %>
                   <% end %>
                 </td>
               <% end %>

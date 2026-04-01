@@ -26,10 +26,11 @@
               <td class="kern-table__cell"><%= value.email_pattern %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t('.table.edit'), url: edit_adm_individual_group_value_path(@individual_group, value)) %>
+                  <% actions.with_action(label: t('.table.edit'), url: edit_adm_individual_group_value_path(@individual_group, value), icon: "edit", style: :edit) %>
                   <% actions.with_action(
                     label: t('.table.delete'),
                     url: adm_individual_group_value_path(@individual_group, value),
+                    icon: "delete", style: :delete,
                     data: { turbo_method: :delete, turbo_confirm: t('.table.delete_confirm') }
                   ) %>
                 <% end %>

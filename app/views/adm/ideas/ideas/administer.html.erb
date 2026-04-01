@@ -5,15 +5,15 @@
 <%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
 
 <div class="kern-container mb-5">
-  <%= render Kern::FormFieldComponent.new(label: t(".votes_needed_for_success")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".votes_needed_for_success"), hint: t(".votes_needed_for_success_hint")) do %>
     <%= render "adm/ideas/ideas/administer/votes_needed_for_success", idea: @idea %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".timeframe")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".timeframe"), hint: t(".timeframe_hint")) do %>
     <%= render "adm/ideas/ideas/administer/timeframe", idea: @idea %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".officer")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".officer"), hint: t(".officer_hint")) do %>
     <%= render "adm/ideas/ideas/administer/officer", idea: @idea %>
   <% end %>
 </div>

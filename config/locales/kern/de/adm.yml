@@ -36,7 +36,7 @@ de:
           idea_managers: Ideen-Administratoren
           moderators: Moderatoren
           valuators: Budget-Administratoren
-          officing_managers: Wahlhelfer
+          officing_managers: Abstimmungshelfer
           users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
@@ -47,10 +47,11 @@ de:
         stats: Statistiken
         apps: Apps
     deficiency_reports:
+      title: Mängelmelder
       menu:
         aria_label: Mängelmelder Navigation
         items:
-          deficiency_reports: Mängelmelder
+          deficiency_reports: Meldungen
           officers: Sachbearbeiter
           categories: Kategorien
           statuses: Status
@@ -59,10 +60,11 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
-          ai_settings: KI prompt
+          ai_settings: KI Sprachassistent
     ideas:
+      title: Ideen
       menu:
-        aria_label: Ideenplattform Menü
+        aria_label: Ideen Navigation
         items:
           ideas: Ideen
           officers: Sachbearbeiter

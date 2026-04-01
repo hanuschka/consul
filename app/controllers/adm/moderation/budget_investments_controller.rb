@@ -12,7 +12,7 @@ class Adm::Moderation::BudgetInvestmentsController < Adm::Moderation::BaseContro
     @flags_count_header_options = { sort: true }
 
     @breadcrumbs = [
-      { name: I18n.t("adm.moderation.menu.title") },
+      { name: I18n.t("adm.moderation.menu.title"), icon: "payments" },
       { name: I18n.t("adm.moderation.menu.budget_investments") }
     ]
   end

@@ -5,11 +5,11 @@
 <%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
 
 <div class="kern-container mb-5">
-  <%= render Kern::FormFieldComponent.new(label: t(".status")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".status"), hint: t(".status_hint")) do %>
     <%= render "adm/deficiency_reports/deficiency_reports/administer/status", deficiency_report: @deficiency_report %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".responsible")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".responsible"), hint: t(".responsible_hint")) do %>
     <%= render "adm/deficiency_reports/deficiency_reports/administer/responsible", deficiency_report: @deficiency_report %>
   <% end %>
 </div>

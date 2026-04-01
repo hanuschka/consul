@@ -42,7 +42,7 @@
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".warning_text_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".warning_text_label"), hint: t(".warning_text_hint"), stacked: true) do %>
     <%= f.rich_text_area :warning_text, label: false %>
   <% end %>
 

@@ -5,7 +5,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
     @categories = policy_scope(DeficiencyReport::Category, policy_scope_class: Adm::DeficiencyReports::CategoryPolicy::Scope)
                     .order(:given_order)
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.categories") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.categories"), icon: "category" }]
   end
 
   def new
@@ -70,7 +70,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.deficiency_reports.categories.index.title"), url: adm_deficiency_reports_categories_path },
+        { name: t("adm.deficiency_reports.categories.index.title"), url: adm_deficiency_reports_categories_path, icon: "category" },
         { name: action_title }
       ]
     end

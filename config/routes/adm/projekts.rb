@@ -158,7 +158,14 @@ namespace :adm do
           put :hide
           put :unhide
           put :ignore_flag
+          patch :toggle_image_concealed
         end
+      end
+    end
+
+    resources :memos, only: [:create] do
+      member do
+        post :send_notification
       end
     end
 
@@ -166,15 +173,14 @@ namespace :adm do
       collection do
         get :import_projekt
       end
-      member do
-        get :details
-        get :visibility
-        get :projekt_managers
-        get :map
-        get :phases
-        patch :toggle_activated
-        patch :update_default_phase
-      end
+      get :details, on: :member
+      get :visibility, on: :member
+      get :projekt_managers, on: :member
+      get :map, on: :member
+      get :phases, on: :member
+      patch :toggle_activated, on: :member
+      post :notify_reviewers, on: :member
+      patch :toggle_hide_content_background, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create]

@@ -12,7 +12,6 @@ module ContentBlocksHelper
     end
 
     inline_urls = site_content_block_inline_urls(block)
-
     if inline_urls
       sanitized_body = AdminWYSIWYGSanitizer.new.sanitize(block_body)
 

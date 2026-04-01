@@ -14,4 +14,6 @@ if ($(".legislation-annotatable").length) {
 $('#footer-content').foundation();
 
 
-App.Map.refreshMapsIn('#footer-content');
+if (App.Map && App.Map.refreshMapsIn) {
+  App.Map.refreshMapsIn('#footer-content');
+}

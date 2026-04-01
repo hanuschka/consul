@@ -35,6 +35,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         # Plattformweit
         { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
         { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },
+        { label: t("adm.menu.items.profiles_subitems.officing_managers"), path: adm_officing_managers_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path },
 
         # Bereichsspezifisch
@@ -46,6 +47,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def notifications_subitems
       [
         { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" },
+        { label: t("adm.menu.items.notifications_subitems.email_templates"), path: adm_global_email_templates_path },
         { label: t("adm.menu.items.notifications_subitems.modal_notifications"), path: adm_modal_notifications_path }
       ]
     end

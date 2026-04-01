@@ -33,6 +33,9 @@ application.register("icon-filter", IconFilterController)
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
 
+import AdmCriteriaListController from "./adm/criteria_list_controller"
+application.register("adm-criteria-list", AdmCriteriaListController)
+
 import KernFormNestedEntriesController from "./kern/form/nested_entries_controller"
 application.register("kern--form--nested-entries", KernFormNestedEntriesController)
 
@@ -101,4 +104,10 @@ application.register("clipboard", ClipboardController)
 
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
+
+import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
+application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
+
+import AdmColumnSelectorController from "./adm/column_selector_controller"
+application.register("adm-column-selector", AdmColumnSelectorController)
 

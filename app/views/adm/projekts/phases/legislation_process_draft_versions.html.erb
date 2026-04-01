@@ -43,8 +43,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_legislation_draft_version_path(@projekt_phase, draft_version)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_legislation_draft_version_path(@projekt_phase, draft_version), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_legislation_draft_version_path(@projekt_phase, draft_version), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_legislation_draft_version_path(@projekt_phase, draft_version), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>

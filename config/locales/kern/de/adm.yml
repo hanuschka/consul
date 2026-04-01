@@ -22,6 +22,7 @@ de:
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+          email_templates: System-E-Mails
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
@@ -36,20 +37,29 @@ de:
           idea_managers: Ideen-Administratoren
           moderators: Moderatoren
           valuators: Budget-Administratoren
+          officing_managers: Abstimmungshelfer
           users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
+          email_templates: E-Mail-Vorlagen
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
         apps: Apps
+    email_templates:
+      send_test:
+        success: "Test-E-Mail wurde an %{email} gesendet."
+    global_email_templates:
+      index:
+        title: E-Mail-Vorlagen
     deficiency_reports:
+      title: Mängelmelder
       menu:
         aria_label: Mängelmelder Navigation
         items:
-          deficiency_reports: Mängelmelder
+          deficiency_reports: Meldungen
           officers: Sachbearbeiter
           categories: Kategorien
           statuses: Status
@@ -58,10 +68,11 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
-          ai_settings: KI prompt
+          ai_settings: KI Sprachassistent
     ideas:
+      title: Ideen
       menu:
-        aria_label: Ideenplattform Menü
+        aria_label: Ideen Navigation
         items:
           ideas: Ideen
           officers: Sachbearbeiter

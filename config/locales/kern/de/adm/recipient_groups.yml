@@ -59,7 +59,8 @@ de:
           authors_of_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung gewonnen haben
       edit:
         title: Empfängergruppe bearbeiten
-        submit: Empfängergruppe speichern
+        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
+        submit: Speichern
       create:
         success: Empfängergruppe wurde erfolgreich erstellt.
       update:

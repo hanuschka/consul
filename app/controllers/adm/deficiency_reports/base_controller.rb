@@ -6,6 +6,10 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
 
   private
 
+    def adm_header_title
+      I18n.t("adm.deficiency_reports.title")
+    end
+
     def adm_menu_component
       Adm::DeficiencyReports::MenuComponent.new
     end

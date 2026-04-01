@@ -62,9 +62,9 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: question.bundle_question? ? t(".table.edit_questions") : t(".table.edit_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question)) %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, question)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: question.bundle_question? ? t(".table.edit_questions") : t(".table.edit_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "list") %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "edit", style: :edit, divider: true) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>

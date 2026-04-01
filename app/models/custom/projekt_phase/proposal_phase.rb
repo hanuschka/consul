@@ -60,7 +60,9 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   has_many :resources, foreign_key: :projekt_phase_id, class_name: "Proposal",
                        inverse_of: :projekt_phase, dependent: :destroy
 
-  alias_method :proposals, :resources
+  def proposals
+    resources
+  end
 
   after_create :copy_map_settings_from_projekt
 
@@ -88,12 +90,19 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     !selectable_by_users?
   end
 
+  def customizable_email_templates
+    [
+      ["Mailer", "proposal_created"],
+      ["NotificationServiceMailer", "new_proposal"]
+    ]
+  end
+
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
       proposals comments
       projekt_labels sentiments map
-      officing_managers ai_settings user_resource_criteria
+      officing_managers email_templates ai_settings ai_user_flow
     ]
   end
 

@@ -17,7 +17,9 @@ namespace :adm do
     resources :phases, only: [:update] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
+
       member do
+        get :email_templates
         # Phase configuration
         get :duration
         get :naming
@@ -52,13 +54,18 @@ namespace :adm do
         get :sentiments
 
         # Users & permissions
-        get :user_resource_criteria
+        get :ai_user_flow
+        post :create_user_resource_criterion
+        patch :update_user_resource_criterion
+        delete :destroy_user_resource_criterion
+        patch :reorder_user_resource_criteria
         get :officing_managers
         get :officing_manager_audits
         get :age_ranges_for_stats
 
         # AI
         get :ai_settings
+        patch :update_ai_settings
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications
@@ -153,7 +160,14 @@ namespace :adm do
           put :hide
           put :unhide
           put :ignore_flag
+          patch :toggle_image_concealed
         end
+      end
+    end
+
+    resources :memos, only: [:create] do
+      member do
+        post :send_notification
       end
     end
 
@@ -164,6 +178,9 @@ namespace :adm do
       get :map, on: :member
       get :phases, on: :member
       patch :toggle_activated, on: :member
+      post :notify_reviewers, on: :member
+      patch :toggle_hide_content_background, on: :member
+      patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create]

@@ -32,10 +32,10 @@ de:
           state_block_title: Status des Vorschlags
           physical_votes_updated: Physical votes updated!
           feasibility: Durchführbarkeit
-          price: Preisliche Einschätzung der Verwaltung (€)
-          price_first_year: Preisliche Einschätzung der laufende Kosten im ersten Jahr (€)
+          price: Gesamtkosten
+          price_first_year: Jährliche Folgekosten (intern)
           price_explanation: Erläuterung der Verwaltung
-          duration: Zeitrahmen
+          duration: Umsetzungszeitraum (intern)
           valuation_finished_label: Gutachten
           valuation_finished:
             "true": abgeschlossen
@@ -715,7 +715,8 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
-          ai_settings: KI Anweisung
+          ai_settings: Sprachassistent
+          ai_user_flow: AI Flow Assistent
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -836,7 +837,7 @@ de:
           map_layers:
             title: Kartenebenen
         ai_settings:
-          page_title: KI Prompt
+          page_title: Sprachassistent
           questions: Welche Fragen sollen den Bürgern gestellt werden?
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?

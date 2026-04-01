@@ -1,12 +1,15 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
-  <h2 class="kern-title kern-title--small mb-3"><%= t(".hint_title") %></h2>
-  <p class="kern-body mb-3 mb-md-0"><%= t(".hint_text") %></p>
-
-  <hr class="kern-divider mb-5" aria-hidden="true">
+  <% if policy([:adm, :landing_pages, :landing_page]).create? %>
+    <%= new_resource_link(new_adm_landing_pages_landing_page_path, t(".new_landing_page")) %>
+  <% end %>
 
   <% if @landing_pages.any? %>
     <table class="kern-table content-cards-table" id="content-cards-table">
@@ -23,6 +26,6 @@
       </tbody>
     </table>
   <% else %>
-    <%= t(".table.no_landing_pages") %>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "web") %>
   <% end %>
 </div>

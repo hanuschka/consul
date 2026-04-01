@@ -43,7 +43,7 @@ de:
   admin:
     projekt_phases:
       user_resource_criteria:
-        title: "Bewertungskriterien"
+        title: "AI Flow Assistent"
         add_criterion: "Kriterium hinzufügen"
         text_placeholder: "Kriterium beschreiben …"
         save: "Speichern"

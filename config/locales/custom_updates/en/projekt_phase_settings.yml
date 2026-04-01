@@ -29,3 +29,6 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+          resource:
+            create_investment_with_ai: Create investment proposal with AI
+            create_investment_with_ai_description: Shows the "Create investment proposal with AI" button

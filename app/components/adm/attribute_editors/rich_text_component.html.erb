@@ -9,7 +9,7 @@
       label: false,
       disabled: disabled?,
       aria: aria_attributes,
-      data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+      data: { controller: "ckeditor", ckeditor_toolbar_value: @options[:toolbar] || ck_editor_class(current_user) } %>
   </div>
 
   <%= form_submit_button(autofocus: request.format.turbo_stream?, disabled: disabled?) %>

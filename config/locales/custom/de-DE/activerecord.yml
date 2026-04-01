@@ -621,6 +621,7 @@ de:
             image:
               image_width: "Die Breite muss %{required_width}px betragen"
               image_height: "Die Höhe muss %{required_height}px betragen"
+              image_dimensions: "Benötigtes Format: %{required_width} × %{required_height} Pixel"
         comment:
           attributes:
             valuation:

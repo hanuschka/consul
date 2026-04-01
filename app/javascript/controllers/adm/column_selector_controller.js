@@ -34,7 +34,8 @@ export default class extends Controller {
       const field = header.dataset.field || header.closest("[data-field]")?.dataset.field
       if (!field) return
 
-      const text = header.textContent.trim()
+      const labelEl = header.querySelector(`#${field}-label`)
+      const text = labelEl ? labelEl.textContent.trim() : header.firstElementChild?.textContent.trim() || header.textContent.trim()
       this.fields.push(field)
 
       const label = document.createElement("label")

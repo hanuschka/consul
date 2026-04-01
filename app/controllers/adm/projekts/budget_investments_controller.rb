@@ -20,7 +20,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         @breadcrumbs = breadcrumbs_for_action(@investment.title)
       end
       format.pdf do
-        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment)
+        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment, @projekt_phase)
         send_data pdf_content.render, filename: "budget_investment_#{@investment.id}.pdf", type: "application/pdf"
       end
     end

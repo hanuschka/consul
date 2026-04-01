@@ -33,6 +33,9 @@ de:
           page_hint: "Hier konfigurieren Sie die ausgewählte Themenseite. Sie können Logos, Hintergrundbilder, Titel und Untertitel anpassen sowie Navigationselemente und Inhaltskarten verwalten. Über die Navigationseinstellungen legen Sie fest, welche Links auf der Themenseite angezeigt werden. Inhaltskarten steuern die Darstellung der Projekte auf der Seite."
           managers_title: Themenseiten Manager
           managers_description: Legen Sie fest, welche Themenseiten-Manager Zugriff auf diese Seite erhalten. Ausgewählte Manager können Inhalte, Navigation, Bilder und Texte dieser Themenseite bearbeiten. Manager müssen zuvor unter Themenseiten > Manager angelegt worden sein. Änderungen an der Zuordnung werden sofort wirksam.
+          managers_empty_title: Keine Themenseiten-Manager vorhanden
+          managers_empty_description: Es sind noch keine Themenseiten-Manager angelegt. Erstellen Sie zunächst einen Manager, um diesen anschließend dieser Themenseite zuzuweisen.
+          managers_empty_link: Manager anlegen
         navbar_items:
           title: Navigation
           description: >

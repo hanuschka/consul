@@ -2,6 +2,12 @@ $("#filter-subnav li").removeClass("is-active")
 $("li#filter-subnav-<%= @current_tab_phase.name %>").addClass("is-active")
 $("#footer-content").removeClass("show-loader");
 $("#footer-content").html("<%= j render("pages/projekt_footer/#{@current_tab_phase.name}") %>");
+setTimeout(function() {
+  $('#footer-content').find('[data-map]').each(function() {
+    App.Map.destroyMapForElementId(this.id);
+    App.Map.initializeMapForElementId(this.id);
+  });
+}, 50);
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();
@@ -12,6 +18,3 @@ if ($(".legislation-annotatable").length) {
 }
 
 $('#footer-content').foundation();
-
-
-App.Map.refreshMapsIn('#footer-content');

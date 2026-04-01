@@ -4,10 +4,11 @@
   <td class="kern-table__cell"><%= l(modal_notification.active_to, format: :long) if modal_notification.active_to %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t('adm.modal_notifications.index.table.edit'), url: edit_adm_modal_notification_path(modal_notification)) %>
+      <% actions.with_action(label: t('adm.modal_notifications.index.table.edit'), url: edit_adm_modal_notification_path(modal_notification), icon: "edit", style: :edit) %>
       <% actions.with_action(
         label: t('adm.modal_notifications.index.table.delete'),
         url: adm_modal_notification_path(modal_notification),
+        icon: "delete", style: :delete,
         data: { turbo_method: :delete, turbo_confirm: t('adm.modal_notifications.index.table.delete_confirm') }
       ) %>
     <% end %>

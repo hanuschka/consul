@@ -41,26 +41,26 @@ de:
         total_duration_end_description: Enddatum
       image:
         attachment_label: Bild
-        attachment_description: Bild für den Newsletter.
+        attachment_description: "Das Bild wird im oberen Bereich des Newsletters als visueller Aufmacher angezeigt, direkt unterhalb des Logos und oberhalb des Titels. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zum Newsletter-Inhalt passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG. Das Bild ist ein Pflichtfeld und muss vor dem Versand hochgeladen werden."
       newsletter:
         recipient_group_id_label: Empfängergruppe
-        recipient_group_id_description: An welche Empfängergruppe soll dieser Newsletter gesendet werden?
+        recipient_group_id_description: 'Legt fest, an welche Empfängergruppe dieser Newsletter versendet wird. Empfängergruppen werden unter <a href="/adm/recipient_groups" target="_blank">Benachrichtigungen > Empfängergruppen</a> verwaltet und können z. B. nach Gebiet, Interessengebiet oder Registrierungsstatus zusammengestellt sein. Nur Nutzer, die der gewählten Gruppe zugeordnet sind, erhalten die E-Mail. Wenn Sie alle registrierten Nutzer erreichen möchten, wählen Sie die entsprechende Standardgruppe.'
         from_label: Absender
-        from_description: E-Mail-Adresse des Absenders.
+        from_description: "Die E-Mail-Adresse, die als Absender im Posteingang der Empfänger angezeigt wird. Wichtig: Die Domain (alles nach dem @) darf nicht geändert werden, da der E-Mail-Versand sonst fehlschlägt. Nur der Teil vor dem @ kann angepasst werden. Antworten der Empfänger werden an diese Adresse gesendet – stellen Sie sicher, dass das Postfach aktiv überwacht wird."
         subject_label: Betreff
-        subject_description: Betreffzeile der Newsletter-E-Mail.
+        subject_description: "Der Betreff erscheint als erste Zeile im Posteingang der Empfänger und entscheidet maßgeblich, ob die E-Mail geöffnet wird. Wählen Sie einen kurzen, aussagekräftigen Text, der das Thema des Newsletters klar benennt. Empfohlene Länge: 40 bis 60 Zeichen. Vermeiden Sie generische Formulierungen wie Newsletter Nr. 5."
         title_label: Titel
-        title_description: Wird als Überschrift im Newsletter angezeigt.
+        title_description: "Wird als große Überschrift im oberen Bereich des Newsletters angezeigt, direkt unterhalb des Logos. Der Titel sollte das zentrale Thema der Ausgabe auf den Punkt bringen und visuell Aufmerksamkeit erzeugen. Er kann vom Betreff abweichen – während der Betreff für den Posteingang optimiert ist, darf der Titel im Newsletter ausführlicher oder gestalterisch freier sein."
         title_color_label: Titelfarbe
-        title_color_description: Farbe der Titelüberschrift.
+        title_color_description: "Bestimmt die Schriftfarbe der Hauptüberschrift im Newsletter. Verwenden Sie eine Farbe, die zum Corporate Design Ihrer Kommune passt und auf dem Hintergrund gut lesbar ist. Dunkle Farben auf hellem Hintergrund bieten den besten Kontrast. Geben Sie den Wert als Hex-Code ein (z. B. #1B3A5C). Bei leerem Feld wird die Standardfarbe verwendet."
         subtitle_label: Untertitel
-        subtitle_description: Wird unterhalb des Titels im Newsletter angezeigt.
+        subtitle_description: Wird direkt unterhalb des Titels im Newsletter angezeigt und bietet Raum für eine ergänzende Erläuterung oder einen Slogan. Nutzen Sie den Untertitel, um den Titel inhaltlich zu vertiefen. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt und der Titel steht allein.
         subtitle_color_label: Untertitelfarbe
-        subtitle_color_description: Farbe des Untertitels.
+        subtitle_color_description: "Bestimmt die Schriftfarbe des Untertitels im Newsletter. Wählen Sie eine Farbe, die sich dezent vom Titel absetzt, aber dennoch gut lesbar ist – z. B. ein etwas hellerer Ton desselben Farbtons. Geben Sie den Wert als Hex-Code ein (z. B. #4A6A8A). Bei leerem Feld wird die Standardfarbe verwendet."
         greeting_label: Begrüßung
-        greeting_description: Begrüßungstext am Anfang des Newsletters.
+        greeting_description: Der Begrüßungstext wird am Anfang des Newsletter-Inhalts angezeigt, vor dem eigentlichen Haupttext. Nutzen Sie eine freundliche, persönliche Anrede. Eine gute Begrüßung schafft Nähe und motiviert zum Weiterlesen. Der Text kann bei Bedarf auch einen kurzen Einstiegssatz enthalten.
         body_label: Inhalt
-        body_description: Hauptinhalt des Newsletters.
+        body_description: "Der Hauptinhalt des Newsletters. Hier können Sie Texte, Links, Bilder und Formatierungen einfügen, um die Empfänger über aktuelle Beteiligungsprojekte, Ergebnisse oder Veranstaltungen zu informieren. Strukturieren Sie den Inhalt mit Absätzen und Zwischenüberschriften, damit er auch beim Überfliegen gut erfassbar ist. Der Editor unterstützt Rich-Text-Formatierung."
       site_customization/content_block:
         body_label: Newsletter-Fußbereich
         body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."

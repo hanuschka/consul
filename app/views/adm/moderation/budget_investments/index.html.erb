@@ -1,6 +1,10 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
 
 <%= render Adm::TabsComponent.new(tabs: [
   { label: t(".tabs.pending_flag_review"), url: adm_moderation_budget_investments_path(filter: "pending_flag_review"), current: @current_filter == "pending_flag_review" },
@@ -34,5 +38,7 @@
     <div class="my-5">
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
+  <% else %>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "savings") %>
   <% end %>
 </div>

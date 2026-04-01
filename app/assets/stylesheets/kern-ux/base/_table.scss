@@ -73,30 +73,48 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: var(--kern-8) 0;
   position: fixed;
-  z-index: 1050;
+  z-index: 9999;
 }
 
 
 .kern-table__actions-menu-item {
-  color: inherit;
+  color: var(--kern-grey-700);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  border-radius: var(--kern-4);
 
   &:hover,
   &:focus {
-    background-color: var(--kern-grey-100);
-    border-radius: var(--kern-4);
+    background-color: var(--kern-grey-050);
+    color: var(--kern-grey-700);
   }
 
   &--edit {
-    color: var(--kern-color-action-default);
+    color: var(--adm-color-primary);
+
+    &:hover,
+    &:focus {
+      color: var(--adm-color-primary);
+    }
   }
 
   &--delete {
     color: var(--kern-color-error);
+
+    &:hover,
+    &:focus {
+      background-color: oklch(62.8% 0.2577 29.23 / 0.06);
+      color: var(--kern-color-error);
+    }
   }
 }
 
 .kern-table__actions-menu-icon {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+}
+
+.kern-divider {
+  border: none;
+  border-top: 1px solid var(--kern-grey-100);
+  margin-inline: 0.5rem;
 }

@@ -37,6 +37,7 @@
                   <% actions.with_action(
                     label: t(".table.remove_user"),
                     url: remove_user_adm_individual_group_value_path(@individual_group, @individual_group_value, user_id: user.id),
+                    icon: "delete", style: :delete,
                     data: { turbo_method: :delete, turbo_confirm: t(".table.remove_user_confirm") }
                   ) %>
                 <% end %>
@@ -74,6 +75,7 @@
                   <% actions.with_action(
                     label: t(".table.remove_email"),
                     url: remove_email_from_auto_join_emails_adm_individual_group_value_path(@individual_group, @individual_group_value, email: email),
+                    icon: "delete", style: :delete,
                     data: { turbo_method: :delete, turbo_confirm: t(".table.remove_email_confirm") }
                   ) %>
                 <% end %>

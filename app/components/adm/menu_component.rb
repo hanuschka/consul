@@ -35,13 +35,13 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         # Plattformweit
         { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
         { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },
+        { label: t("adm.menu.items.profiles_subitems.officing_managers"), path: adm_officing_managers_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path },
 
         # Bereichsspezifisch
         { label: t("adm.menu.items.profiles_subitems.idea_managers"), path: adm_idea_managers_path },
         { label: t("adm.menu.items.profiles_subitems.deficiency_report_managers"), path: adm_deficiency_report_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path },
-        { label: t("adm.menu.items.profiles_subitems.officing_managers"), path: adm_officing_managers_path }
+        { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path }
       ]
     end
     def notifications_subitems

@@ -108,3 +108,6 @@ application.register("adm-markdown-editor", AdmMarkdownEditorController)
 import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
 application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
 
+import AdmColumnSelectorController from "./adm/column_selector_controller"
+application.register("adm-column-selector", AdmColumnSelectorController)
+

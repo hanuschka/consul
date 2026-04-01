@@ -59,7 +59,7 @@ de:
           authors_of_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung gewonnen haben
       edit:
         title: Empfängergruppe bearbeiten
-        submit: Empfängergruppe speichern
+        submit: Speichern
       create:
         success: Empfängergruppe wurde erfolgreich erstellt.
       update:

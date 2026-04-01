@@ -1,6 +1,10 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title")) %>
+<%= render Adm::HeaderComponent.new(title: t(".title")) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
   <% if @investments.any? %>
@@ -27,7 +31,7 @@
               <td class="kern-table__cell"><%= truncate(investment.valuators.map(&:name).join(", "), length: 30) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t(".table.edit"), url: edit_adm_valuation_investment_path(investment)) %>
+                  <% actions.with_action(label: t(".table.edit"), url: edit_adm_valuation_investment_path(investment), icon: "edit", style: :edit) %>
                 <% end %>
               </td>
             </tr>
@@ -40,11 +44,6 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <div class="kern-alert__header">
-        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
-        <span class="kern-title"><%= t(".no_investments") %></span>
-      </div>
-    </div>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "savings") %>
   <% end %>
 </div>

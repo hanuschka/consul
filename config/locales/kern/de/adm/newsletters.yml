@@ -50,6 +50,8 @@ de:
         hints:
           subject: "Der Betreff erscheint als Überschrift in der E-Mail und im Posteingang der Empfänger. Wählen Sie einen kurzen, aussagekräftigen Text, der das Thema des Newsletters klar benennt. Ein guter Betreff erhöht die Öffnungsrate und hilft Empfängern, den Newsletter thematisch einzuordnen. Empfohlene Länge: 40 bis 60 Zeichen."
           recipient_group: "Wählen Sie die Empfängergruppe, an die dieser Newsletter gesendet werden soll. Empfängergruppen definieren, welche Nutzer den Newsletter erhalten – z. B. alle registrierten Nutzer, Abonnenten bestimmter Projekte oder manuell zusammengestellte Gruppen. Neue Empfängergruppen können Sie unter dem gleichnamigen Tab anlegen und verwalten."
+        placeholders:
+          subject: "z. B. Neue Beteiligungsprojekte im März 2026"
       edit:
         title: Newsletter bearbeiten
       create:

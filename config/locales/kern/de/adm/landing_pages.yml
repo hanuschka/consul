@@ -11,9 +11,9 @@ de:
         index:
           title: Themenseiten
           new_landing_page: Neue Themenseite erstellen
-          hint_title: Hinweis zu den Themenseiten
-          hint_text: >
-            Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile einer Gemeinde erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Die Gestaltungsmöglichkeiten ähneln denen der allgemeinen Startseite und schaffen Raum für visuelle und sprachliche Differenzierung.
+          page_hint: "Themenseiten ermöglichen eine gezielte Ansprache bestimmter Zielgruppen oder Orte innerhalb Ihrer Plattform. So können beispielsweise eigene Seiten für Jugendbeteiligung, Bauleitplanverfahren oder einzelne Ortsteile erstellt werden – jeweils mit eigenem Hintergrundbild, Logo und individuellen Texten. Per Drag & Drop können Sie die Reihenfolge der Seiten anpassen."
+          no_items_title: Keine Themenseiten vorhanden
+          no_items_description: Sobald Themenseiten erstellt werden, werden diese hier angezeigt.
           table:
             header:
               name: Themenseiten
@@ -30,6 +30,7 @@ de:
           success: Die Themenseite wurde erfolgreich erstellt.
         edit:
           title: Themenseite bearbeiten
+          page_hint: "Hier konfigurieren Sie die ausgewählte Themenseite. Sie können Logos, Hintergrundbilder, Titel und Untertitel anpassen sowie Navigationselemente und Inhaltskarten verwalten. Über die Navigationseinstellungen legen Sie fest, welche Links auf der Themenseite angezeigt werden. Inhaltskarten steuern die Darstellung der Projekte auf der Seite."
           managers_title: Themenseiten Manager
           managers_description: Wählen Sie aus, welche Manager diese Themenseite verwalten dürfen.
         navbar_items:
@@ -43,10 +44,13 @@ de:
       managers:
         index:
           title: Themenseiten Manager
+          page_hint: Hier verwalten Sie die Themenseiten-Manager. Manager können die ihnen zugewiesenen Themenseiten bearbeiten und deren Inhalte pflegen. Nutzer mit der Option Alle verwalten haben Zugriff auf sämtliche Themenseiten. Fügen Sie neue Manager hinzu, indem Sie registrierte Nutzer über die Schaltfläche Erstellen suchen und zuweisen.
           new_link: Erstellen
           manage_all_landing_pages: Alle verwalten
           no_landing_page_managers: Es sind keine Themenseiten Manager vorhanden.
+          no_items_title: Keine Themenseiten Manager vorhanden
+          no_items_description: Sobald Themenseiten Manager hinzugefügt werden, werden diese hier angezeigt.
         new:
           title: Themenseiten Manager hinzufügen
           search_label: Nutzer suchen
-          search_description: Suchen Sie nach Nutzer, um sie als Themenseiten Manager hinzuzufügen.
+          search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Themenseiten Manager hinzugefügt werden. Manager können Inhalte ihrer zugewiesenen Themenseiten bearbeiten und verwalten.

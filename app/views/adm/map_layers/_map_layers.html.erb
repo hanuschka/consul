@@ -27,11 +27,15 @@
               <%= render Kern::Table::ActionsComponent.new do |actions| %>
                 <% actions.with_action(
                   label: t('.actions.edit'),
-                  url: edit_adm_map_layer_path(layer)
+                  url: edit_adm_map_layer_path(layer),
+                  icon: "edit",
+                  style: :edit
                 ) %>
                 <% actions.with_action(
                   label: t('.actions.delete'),
                   url: adm_map_layer_path(layer),
+                  icon: "delete",
+                  style: :delete,
                   method: :delete,
                   data: { turbo_confirm: t('.actions.delete_confirm') }
                 ) %>

@@ -120,8 +120,9 @@ projekt_id: @projekt)
     end
 
     def show_ai_flow_link?
-      return false if !@projekt_phase.is_a?(ProjektPhase::ProposalPhase)
-      return false if !@projekt_phase.feature?("resource.create_proposal_with_ai")
+      feature_key = ai_flow_feature_key
+      return false if feature_key.blank?
+      return false if !@projekt_phase.feature?(feature_key)
 
       if Ai::Settings.ai_available?
         true
@@ -134,8 +135,20 @@ projekt_id: @projekt)
       !Ai::Settings.ai_available?
     end
 
+    def ai_flow_feature_key
+      if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+        "resource.create_proposal_with_ai"
+      elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        "resource.create_investment_with_ai"
+      end
+    end
+
     def ai_flow_link_path
-      generate_proposal_new_path(projekt_phase_id: @projekt_phase.id)
+      if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        generate_budget_investment_new_path(projekt_phase_id: @projekt_phase.id)
+      else
+        generate_proposal_new_path(projekt_phase_id: @projekt_phase.id)
+      end
     end
 
     def new_button_html

@@ -25,9 +25,10 @@ class IndividualGroupValue < ApplicationRecord
       else
         auto_join_emails << email unless auto_join_emails.include?(email)
       end
-
-      save!
     end
+
+    auto_join_emails.reject!(&:blank?)
+    save!
   end
 
   def remove_auto_join_email(email)

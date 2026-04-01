@@ -5,15 +5,16 @@ App.Utils = {
     return style.getPropertyValue('--brand-color').trim() || '#004a83';
   },
 
-  getLeafletMarkerHTML(color, iconClass) {
+  getLeafletMarkerHTML(color, iconClass, title) {
     color = color || App.Utils.getBrandColor();
     iconClass = iconClass || "circle";
+    title = title || "Kartenmarkierung";
 
     return L.divIcon({
       className: "map-marker",
       iconSize: [30, 30],
       iconAnchor: [15, 40],
-      html: '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'
+      html: '<div class="map-icon icon-' + iconClass + '" role="img" aria-label="' + title + '" style="background-color: ' + color + '"></div>'
     });
   },
 

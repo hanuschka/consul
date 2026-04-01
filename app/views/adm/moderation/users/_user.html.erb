@@ -1,0 +1,17 @@
+<tr id="<%= dom_id(user, :moderation) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header"><%= user.username %></th>
+  <td class="kern-table__cell">
+    <% if user.hidden? %>
+      <%= t("adm.moderation.users.index.statuses.#{moderation_user_status(user)}") %>
+    <% else %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.users.index.actions.hide"),
+                          url: hide_adm_moderation_user_path(user),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.users.index.confirm_hide", name: user.username) } %>
+        <%= c.with_action label: t("adm.moderation.users.index.actions.block"),
+                          url: block_adm_moderation_user_path(user),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.users.index.confirm_block", name: user.username) } %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

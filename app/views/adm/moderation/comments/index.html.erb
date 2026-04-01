@@ -1,0 +1,44 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  { label: t(".tabs.pending_flag_review"), url: adm_moderation_comments_path(filter: "pending_flag_review"), current: @current_filter == "pending_flag_review" },
+  { label: t(".tabs.with_ignored_flag"), url: adm_moderation_comments_path(filter: "with_ignored_flag"), current: @current_filter == "with_ignored_flag" },
+  { label: t(".tabs.hidden"), url: adm_moderation_comments_path(filter: "hidden"), current: @current_filter == "hidden" },
+  { label: t(".tabs.all"), url: adm_moderation_comments_path(filter: "all"), current: @current_filter == "all" }
+]) %>
+
+<div class="kern-container">
+  <% if @comments.present? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <%= render Kern::Table::HeaderComponent.new(:body, Comment.human_attribute_name(:body), **@body_header_options) %>
+            <th scope="col" class="kern-table__header"><%= t(".projekt") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".author") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:flags_count, t(".flags_count"), **@flags_count_header_options) %>
+            <th scope="col" class="kern-table__header" style="width: 200px"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @comments.each do |comment| %>
+            <%= render "comment", comment: comment %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="my-5">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  <% else %>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "comment") %>
+  <% end %>
+</div>

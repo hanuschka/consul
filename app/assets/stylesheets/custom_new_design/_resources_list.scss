@@ -3,7 +3,7 @@
     margin-bottom: 40px;
   }
 
-  @media (max-width: 970px) {
+  @media (max-width: $small-tablet-viewport-start) {
     .resources-list {
       .resources-list--switch-view-button {
         display: none;
@@ -20,7 +20,8 @@
       display: none;
     }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="email"] {
       height: 40px;
       margin-bottom: 0;
       padding-right: 20px;
@@ -127,14 +128,14 @@
   }
 
   .resources-list--filter-title {
-    color: $medium-gray-1;
+    color: $main-text-color;
     margin-right: 12px;
     display: flex;
     align-items: center;
   }
 
   .resources-list--filter-label {
-    color: $medium-gray-1;
+    color: $main-text-color;
   }
 
   .resources-list--switch-view-button {
@@ -179,7 +180,7 @@
   .resources-list--inner {
     // display: grid;
     // grid-template-columns: repeat(3, 1fr);
-    grid-gap: 12px;
+    gap: 12px;
     display: flex;
     justify-items: center;
     align-items: flex-start;

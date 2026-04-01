@@ -1,7 +1,7 @@
 class Sidebar::Filters::GeozoneAffiliationsCardComponent < ApplicationComponent
-  def initialize(geozones:, resource_name:, selected_affiliated_geozones:)
-    @geozones = geozones
+  def initialize(districts:, resource_name:, selected_affiliated_districts:)
+    @districts = districts
     @resource_name = resource_name
-    @selected_affiliated_geozones = selected_affiliated_geozones
+    @selected_affiliated_districts = selected_affiliated_districts
   end
 end

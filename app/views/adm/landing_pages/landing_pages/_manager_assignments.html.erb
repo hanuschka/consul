@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "manager_assignments" do %>
+  <%= form_with model: landing_page, url: adm_landing_pages_landing_page_path(landing_page) do |f| %>
+    <%= hidden_field_tag :respond_with, "manager_assignments" %>
+    <%= f.collection_check_boxes :landing_page_manager_ids, LandingPageManager.includes(:user).order(:id), :id, :name,
+      legend: false do |cb| %>
+      <div class="kern-form-check mb-3">
+        <%= cb.check_box(class: "kern-form-check__checkbox") %>
+        <%= cb.label(class: "kern-label") %>
+      </div>
+    <% end %>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

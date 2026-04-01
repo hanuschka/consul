@@ -1,15 +1,34 @@
 .projekt-event-item-new {
   display: flex;
+
+  @media(max-width: $mobile-viewport-start) {
+    flex-direction: column;
+  }
+}
+
+.projekt-event-item-new--inner {
+  display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid #dcdcdc;
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
+  // padding-top: 25px !important;
+  padding-top: 5px !important;
+  // border-bottom: 1px solid #dcdcdc;
+  // padding-bottom: 25px !important;
   font-size: 16px;
   flex-wrap: nowrap;
   flex-direction: column;
+  align-items: flex-start;
+  flex-direction: row;
 
-  @media screen and (min-width: 40em) {
-    flex-direction: row;
+  @media(max-width: $big-tablet-viewport-start) {
+    flex-direction: column;
+  }
+}
+
+.projekt-event-item-new--column {
+  width: 100%;
+
+  @media(max-width: $small-tablet-viewport-start) {
+    flex-direction: column;
   }
 }
 
@@ -19,6 +38,7 @@
 
 .projekt-event-item-new-image {
   min-width: 300px;
+  max-width: 300px;
   // margin-top: 20px;
   border-radius: 7px;
   overflow: hidden;
@@ -54,22 +74,46 @@ h2.projekt-event-item-new-body--title {
   border-radius: 10px;
   box-shadow: inset 0px 3px 6px #0000000F, 0px 3px 6px #00000024;
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
+
+  @media(max-width: $mobile-viewport-start) {
+    display: flex;
+    width: auto;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0;
+  }
 }
 
 .projekt-event-item-new-calendar-column {
   margin-bottom: 20px;
+
+  @media(max-width: $mobile-viewport-start) {
+    display: flex;
+  }
 }
 
 .projekt-event-item-new-calendar--separator {
   line-height: 0.5;
+
+  @media(max-width: $mobile-viewport-start) {
+    margin: 0 10px;
+  }
 }
 
 .projekt-event-item-new-calendar--enddatetime {
-  margin-top: -11px
+  margin-top: -11px;
+
+  @media(max-width: $mobile-viewport-start) {
+    margin-top: 0;
+    display: flex;
+    width: auto;
+    align-items: center;
+  }
 }
 
 .projekt-event-item-new--description-text-wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .projekt-event-item-new-body--details {
@@ -101,12 +145,22 @@ h2.projekt-event-item-new-body--title {
   color: #FF4120;
   font-weight: 500;
   font-size: 18px;
+
+  @media(max-width: $mobile-viewport-start) {
+    margin-right: 5px;
+  }
 }
 
 .projekt-event-item-new-calendar-daynumber {
   font-size: 42px;
   font-weight: 500;
   margin-top: -14px;
+
+  @media(max-width: $mobile-viewport-start) {
+    display: flex;
+    margin-top: 0;
+    font-size: 40px;
+  }
 }
 
 .projekt-event-tab-title {

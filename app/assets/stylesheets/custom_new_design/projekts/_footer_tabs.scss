@@ -10,7 +10,7 @@
     flex: 0 0 auto;
 
     &:hover {
-      background-color: $brand-hover;
+      background-color: var(--brand-color-hover);
     }
 
     @media screen and (min-width: $small-tablet-viewport-start) {
@@ -22,10 +22,10 @@
     }
 
     h2 {
-      color: $brand;
+      color: var(--brand-color);
       font-size: 24px;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -39,15 +39,17 @@
       }
     }
 
-    $phase-tab-color: mix($main-background-color, $brand, 90%);
-
     &.is-active {
-      /* background: $brand-lighter; */
-      background: $phase-tab-color;
+      background: color-mix(in srgb, var(--brand-color) 20%, transparent);
+      border-color: color-mix(in srgb, var(--brand-color) 20%, transparent);
+
+      h2 {
+        color: var(--brand-color);
+      }
     }
 
     &.ui-sortable-helper {
-      background: rgba($phase-tab-color, 0.7);
+      background: color-mix(in srgb, var(--brand-color) 7%, var(--main-background-color) 63%);
 
       .projekt-phase--actions {
         backdrop-filter: unset;
@@ -73,17 +75,15 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding-top: 2px;
       padding-left: 19px;
       padding-right: 12px;
-      padding-bottom: 3px;
       transition: 50ms ease opacity;
       justify-content: space-between;
 
       .projekt-frame-icon-button {
         &:hover {
           cursor: pointer;
-          background-color: rgba($brand, 0.1);
+          background-color: var(--brand-color-lighter);
         }
       }
     }
@@ -95,7 +95,7 @@
     }
 
     .projekt-frame-icon-button {
-      color: $brand;
+      color: var(--brand-color);
     }
   }
 }

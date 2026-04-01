@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "details__landing_pages" do %>
+  <%= form_with model: projekt, url: adm_projekts_projekt_path(projekt) do |f| %>
+    <div class="mb-4">
+      <%= f.collection_select(
+        :landing_page_id,
+        SiteCustomization::Page.landing,
+        :id,
+        :title,
+        { include_blank: t("custom.admin.projekts.edit.no_landing_page") },
+        { class: "kern-form-select__select" }
+      ) %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

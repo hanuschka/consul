@@ -1,12 +1,10 @@
 <% accesskey = 1 %>
-<% Projekt.top_level.includes([page: :translations]).for_navigation(current_user).where.missing(:landing_pages).each do |active_projekt| %>
+<% Projekt.top_level.includes([page: :translations]).for_navigation(current_user).where(landing_page_id: nil).each do |active_projekt| %>
   <% accesskey += 1 %>
   <% projekt_children_to_show_in_menu = active_projekt.children.for_navigation(current_user) %>
   <% projekt_children_to_show_in_menu = Projekt.where(id: projekt_children_to_show_in_menu.map(&:id)).sort_by_order_number.includes(:projekt_settings, page: [:translations]) %>
 
   <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
-      <%= "tabindex=0" if placement == "desktop" %>
-      aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'
       <%= "aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
       <%= "accesskey=#{accesskey}" if accesskey < 9 && placement == "desktop" %> >
 
@@ -15,11 +13,11 @@
     </div>
 
     <% if placement == 'mobile' && projekt_children_to_show_in_menu.any? %>
-      <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
-        tabindex="0"
+      <button class='nav-toggle-arrow js-toggle-mobile-flyout-item'
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
+        aria-expanded="false"
       >
-      </div>
+      </button>
     <% end %>
 
     <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: projekt_children_to_show_in_menu, placement: placement } if projekt_children_to_show_in_menu.any? %>

@@ -1,31 +1,36 @@
+<%
+  use_landing_projekts_for_overview_link =
+    (@custom_page.present? && @custom_page.landing?) ||
+    @ui_landing_page.present?
+%>
+<%
+  has_submenu = !use_landing_projekts_for_overview_link && @projekts_for_overview_page_navigation&.any?
+%>
+<%
+  projekt_link_path =
+    if use_landing_projekts_for_overview_link
+      landing_page_projekts_path(@ui_landing_page&.slug || @custom_page&.slug)
+    else
+      projekts_path
+    end
+%>
+
 <li class="nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll"
-    <%= "aria-label='#{t('custom.links.menu.projekts_overview')}'" if placement == 'desktop' %>
-    <%= "tabindex=0" if placement == 'desktop' %>
+  <%= 'aria-expanded="false"' if has_submenu %>
 >
   <div class="flyout-item-name projekt-name">
-    <% use_landing_projekts_for_overview_link = @custom_page.present? && @custom_page.landing? && @custom_page.landing_show_projekts_overview? %>
-    <%
-        projekt_link_path =
-          if use_landing_projekts_for_overview_link
-            landing_page_projekts_path(@custom_page.slug)
-          else
-            projekts_path
-          end
-    %>
-    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), data: { turbolinks: false } %>
+    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, data: { turbolinks: false } %>
   </div>
 
-  <% unless use_landing_projekts_for_overview_link %>
-    <% if placement == 'mobile' && @projekts_for_overview_page_navigation.any? %>
-      <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
-        tabindex="0"
+  <% if has_submenu %>
+    <% if placement == 'mobile' %>
+      <button class='nav-toggle-arrow js-toggle-mobile-flyout-item'
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
+        aria-expanded="false"
         >
-      </div>
+      </button>
     <% end %>
-    <% if @projekts_for_overview_page_navigation.any? %>
-      <%= render partial: 'shared/subnavigation_flyout_projekts',
-        locals: { projekts: @projekts_for_overview_page_navigation, placement: placement, skip_subprojekts: true, called_from: "subnavigation_projekts_overview" } %>
-    <% end %>
+    <%= render partial: 'shared/subnavigation_flyout_projekts',
+      locals: { projekts: @projekts_for_overview_page_navigation, placement: placement, skip_subprojekts: true, called_from: "subnavigation_projekts_overview" } %>
   <% end %>
 </li>

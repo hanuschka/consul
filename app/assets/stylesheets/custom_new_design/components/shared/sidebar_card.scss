@@ -1,3 +1,5 @@
+$sidebar-card-horizontal-padding: 22px;
+
 .sidebar-card {
   position: relative;
   background: white;
@@ -10,6 +12,11 @@
 
   .sidebar-collapse-icon {
     display: none;
+  }
+
+  .button {
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 
   .sidebar-card--content { // margin-top: 12px;
@@ -71,10 +78,15 @@
   .options-group {
     margin-bottom: 5px;
   }
+
+  .social-share-button .ssb-icon {
+    width: 47px;
+    height: 47px;
+  }
 }
 
 .sidebar-card--section {
-  padding: 18px 25px;
+  padding: 18px $sidebar-card-horizontal-padding;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -106,12 +118,12 @@
   margin-bottom: 0 !important;
   color: black;
   font-weight: 500;
-  padding: 18px 25px;
+  padding: 18px $sidebar-card-horizontal-padding;
   padding-bottom: 15px;
   user-select: none;
 
   @media(max-width: $mobile-viewport-start) {
-    padding: 15px 25px;
+    padding: 15px $sidebar-card-horizontal-padding;
   }
 
   .sidebar--icon {
@@ -135,7 +147,7 @@
 
 .sidebar-card--description {
   // margin-bottom: 10px;
-  padding: 0 25px;
+  padding: 0 $sidebar-card-horizontal-padding;
 }
 
 .sidebar-card--section + .sidebar-card--section {

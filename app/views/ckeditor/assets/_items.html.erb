@@ -1,5 +1,5 @@
 <% if @assets.any? %>
   <%= render collection: @assets, partial: "ckeditor/assets/item", as: :asset %>
 <% else %>
-  <div class="cb-img-dialog__loading">Keine Bilder gefunden.</div>
+  <div class="file-upload-manager-dialog--loading">Keine Bilder gefunden.</div>
 <% end %>

@@ -20,7 +20,8 @@
 
   <%= render Shared::MapComponent.new(
     features: @proposals_coordinates,
-    process: 'proposals'
+    process: 'proposals',
+    collapsible: true
   ) %>
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
@@ -66,9 +67,9 @@
       <% end %>
 
       <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(
-        geozones: @geozones,
+        districts: @districts,
         resource_name: @resource_name,
-        selected_affiliated_geozones: @affiliated_geozones
+        selected_affiliated_districts: @affiliated_districts
       ) %>
 
       <%= render Sidebar::Filters::GeozoneRestrictionsCardComponent.new(

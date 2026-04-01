@@ -1,4 +1,4 @@
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <%= link_to t("custom.shared.download_pdf"), idea_management_idea_path(idea, format: :pdf),
       class: "float-right small clear #{'js-update-screenshot' if idea.map_location.present?}",
@@ -6,13 +6,13 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <h2><%= idea.title %></h2>
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <strong><%= t("custom.admin.ideas.show.created_at") %>:</strong>
     <%= l(idea.created_at, format: "%d %b %Y") %>
@@ -31,13 +31,13 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <%= auto_link_already_sanitized_html wysiwyg(idea.description) %>
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns">
     <% if idea.approximated_address.present? %>
       <div class='margin-bottom'>
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 medium-8 columns">
     <div class="margin-top margin-bottom">
       <strong>Autor:</strong>

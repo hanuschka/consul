@@ -21,8 +21,7 @@ class Admin::AiSettings::FormComponent < ApplicationComponent
         .refresh!
         .by_provider(provider.to_sym)
         .chat_models
-        .sort_by { |model| model.created_at || Time.new(2000) }
-        .reverse
+        .sort_by { |model| model.created_at || Time.new(2000) } .reverse
         .map { |model| [model.id, model.id] }
     end
 end

@@ -7,6 +7,8 @@ html{
 body.custom-new-design {
   font-family: $new-body-font-family;
   color: $main-text-color;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   h1, h2, h3, h4, h5 {
     font-family: $new-header-font-family;
@@ -55,6 +57,13 @@ ul.no-ul-style {
       left: 10px;
     }
   }
+
+  &:has(.projekt-page--admin-topbar)  {
+    .notice-container {
+      top: 110px + $admin-topbar-height;
+    }
+  }
+
 
   .wrapper.has-custom-fixed-tabs .notice-container {
     @media screen and (max-width: $small-tablet-viewport-start) {
@@ -112,7 +121,7 @@ ul.no-ul-style {
 
   h3 {
     // font-size: 38px;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 500;
     line-height: 1.2;
     margin-bottom: 1rem;
@@ -234,4 +243,13 @@ a.resources--info-count {
 
 .custom-page-content a:not(.accordion-title) {
   text-decoration: underline;
+}
+
+body.custom-new-design {
+  p a,
+  .callout a,
+  .notification-body a,
+  .comment-body a {
+    text-decoration: underline;
+  }
 }

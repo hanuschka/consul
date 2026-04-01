@@ -1,0 +1,40 @@
+.map-feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.map-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  font-size: 0.9em;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.map-feature-pill--label {
+  background-color: var(--kern-grey-100);
+  color: var(--kern-grey-700);
+}
+
+input:checked + .map-feature-pill--label {
+  background-color: var(--kern-darkblue-750);
+  color: #fff;
+}
+
+.map-feature-pill--sentiment {
+  background-color: var(--kern-grey-100);
+  color: var(--kern-grey-700);
+}
+
+input:checked + .map-feature-pill--sentiment {
+  background-color: var(--pill-color);
+  color: var(--pill-text-color);
+  border-color: var(--pill-color);
+}

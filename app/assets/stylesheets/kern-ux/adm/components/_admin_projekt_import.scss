@@ -4,7 +4,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 6px 14px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: #6b7280;
   background: transparent;
@@ -16,6 +16,10 @@
   &:hover {
     background: #f3f4f6;
     color: #374151;
+  }
+
+  &.-hidden {
+    display: none;
   }
 }
 

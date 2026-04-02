@@ -6,18 +6,7 @@
     breadcrumbs: @breadcrumbs,
     back_button_url: adm_projekts_root_path,
     compact: true
-  ) do |header|
-    header.with_actions do %>
-      <button
-        type="button"
-        class="admin-projekt-import--reset-button"
-        data-action="click->adm-projekt-import#resetImport"
-      >
-        <i class="fa fa-plus" aria-hidden="true"></i>
-        <%= t(".reset_import") %>
-      </button>
-    <% end %>
-  <% end %>
+  ) %>
 
   <% if @dt_import_url.present? %>
     <div class="kern-container">

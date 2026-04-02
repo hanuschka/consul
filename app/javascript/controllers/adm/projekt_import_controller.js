@@ -26,6 +26,17 @@ export default class extends Controller {
     if (data.event_type === "Consul.projekt_import_failed" && data.params) {
       this.showError(data.params.error)
     }
+
+    if (data.event_type === "Consul.import_reset_complete") {
+      window.location.reload()
+    }
+  }
+
+  resetImport() {
+    const iframe = this.iframeWrapperTarget.querySelector("iframe")
+    if (!iframe) return
+
+    iframe.contentWindow.postMessage({ event_type: "Consul.resetImport" }, "*")
   }
 
   showError(message) {

@@ -1,52 +1,60 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(
-  title: t(".title"),
-  breadcrumbs: @breadcrumbs,
-  back_button_url: adm_projekts_root_path
-) %>
-
-<% if @dt_import_url.present? %>
-  <div
-    class="kern-container mb-5"
-    data-controller="adm-projekt-import"
-  >
-    <div
-      class="admin-projekt-import--iframe-wrapper"
-      data-adm-projekt-import-target="iframeWrapper"
-    >
-      <iframe
-        src="<%= @dt_import_url %>"
-        class="admin-projekt-import--iframe"
-        allow="clipboard-write"
-      ></iframe>
-    </div>
-
-    <div
-      class="admin-projekt-import--error -hidden"
-      data-adm-projekt-import-target="error"
-    >
-      <div class="admin-projekt-import--error-icon">
-        <i class="fa fa-exclamation-circle"></i>
-      </div>
-      <h3 class="admin-projekt-import--error-title">
-        <%= t(".error_title") %>
-      </h3>
-      <p
-        class="admin-projekt-import--error-message"
-        data-adm-projekt-import-target="errorMessage"
-      ></p>
+<div data-controller="adm-projekt-import">
+  <%= render Adm::HeaderComponent.new(
+    title: t(".title"),
+    breadcrumbs: @breadcrumbs,
+    back_button_url: adm_projekts_root_path,
+    compact: true
+  ) do |header|
+    header.with_actions do %>
       <button
         type="button"
-        class="admin-projekt-import--retry-button"
-        data-action="click->adm-projekt-import#retry"
+        class="admin-projekt-import--reset-button"
+        data-action="click->adm-projekt-import#resetImport"
       >
-        <%= t(".try_again") %>
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <%= t(".reset_import") %>
       </button>
+    <% end %>
+  <% end %>
+
+  <% if @dt_import_url.present? %>
+    <div class="kern-container">
+      <div data-adm-projekt-import-target="iframeWrapper">
+        <%= render Shared::AdminIframeComponent.new(
+          src: @dt_import_url,
+          css_class: "admin-projekt-import--iframe",
+          allow: "clipboard-write"
+        ) %>
+      </div>
+
+      <div
+        class="admin-projekt-import--error -hidden"
+        data-adm-projekt-import-target="error"
+      >
+        <div class="admin-projekt-import--error-icon">
+          <i class="fa fa-exclamation-circle"></i>
+        </div>
+        <h3 class="admin-projekt-import--error-title">
+          <%= t(".error_title") %>
+        </h3>
+        <p
+          class="admin-projekt-import--error-message"
+          data-adm-projekt-import-target="errorMessage"
+        ></p>
+        <button
+          type="button"
+          class="admin-projekt-import--retry-button"
+          data-action="click->adm-projekt-import#retry"
+        >
+          <%= t(".try_again") %>
+        </button>
+      </div>
     </div>
-  </div>
-<% else %>
-  <div class="kern-container mb-5">
-    <p class="kern-body"><%= t(".dt_not_connected") %></p>
-  </div>
-<% end %>
+  <% else %>
+    <div class="kern-container mb-5">
+      <p class="kern-body"><%= t(".dt_not_connected") %></p>
+    </div>
+  <% end %>
+</div>

@@ -1,24 +1,21 @@
-.admin-projekt-import--iframe-wrapper {
-  position: relative;
-  min-height: 500px;
-}
+.admin-projekt-import--reset-button {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
 
-.admin-projekt-import--iframe {
-  display: block;
-  width: 100%;
-  min-height: 500px;
-  border: none;
-  border-radius: 12px;
-  background-image: url("custom/loader_animations/90-ring-gray.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 50px 50px;
-}
-
-.admin-projekt-import--iframe-wrapper,
-.admin-projekt-import--error {
-  &.-hidden {
-    display: none;
+  &:hover {
+    background: #f3f4f6;
+    color: #374151;
   }
 }
 
@@ -28,6 +25,10 @@
   align-items: center;
   text-align: center;
   padding: 60px 24px;
+
+  &.-hidden {
+    display: none;
+  }
 }
 
 .admin-projekt-import--error-icon {

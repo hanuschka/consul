@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_01_124612) do
+ActiveRecord::Schema.define(version: 2026_04_01_131406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -436,6 +436,7 @@ ActiveRecord::Schema.define(version: 2026_04_01_124612) do
     t.text "ai_idea_text"
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
+    t.datetime "published_at"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -536,8 +537,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_124612) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
-    t.boolean "hide_money", default: false
     t.bigint "projekt_id"
+    t.boolean "hide_money", default: false
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
@@ -1248,15 +1249,6 @@ ActiveRecord::Schema.define(version: 2026_04_01_124612) do
     t.index ["user_id"], name: "index_landing_page_managers_on_user_id"
   end
 
-  create_table "landing_pages_projekts", force: :cascade do |t|
-    t.bigint "site_customization_page_id", null: false
-    t.bigint "projekt_id", null: false
-    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
-    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
-    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
-    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
-  end
-
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
     t.string "quote"
     t.text "ranges"
@@ -1548,6 +1540,7 @@ ActiveRecord::Schema.define(version: 2026_04_01_124612) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
+    t.string "polygon_color", default: "#008000"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"

@@ -43,7 +43,7 @@ de:
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
-          email_templates: E-Mail-Vorlagen
+          email_templates: System-E-Mails
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
@@ -53,7 +53,7 @@ de:
         success: "Test-E-Mail wurde an %{email} gesendet."
     global_email_templates:
       index:
-        title: E-Mail-Vorlagen
+        title: System-E-Mails
     deficiency_reports:
       title: Mängelmelder
       menu:

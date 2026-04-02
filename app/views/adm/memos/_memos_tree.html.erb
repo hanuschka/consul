@@ -1,6 +1,6 @@
-<%= tag.ul class: ("#{'ml-4 mt-2' if memoable.is_a?(Memo)}"),
-           id: memoable.is_a?(Memo) ? dom_id(memoable, :tree) : "memos_tree" do %>
+<div class="<%= 'adm-memo__replies' if memoable.is_a?(Memo) %>"
+     id="<%= memoable.is_a?(Memo) ? dom_id(memoable, :tree) : 'memos_tree' %>">
   <% memos.each do |memo| %>
     <%= render "adm/memos/memo", memo: memo %>
   <% end %>
-<% end %>
+</div>

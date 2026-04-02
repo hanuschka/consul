@@ -160,6 +160,27 @@ module AdmHelper
     end
   end
 
+  def relative_time(datetime)
+    return "" if datetime.blank?
+
+    seconds = (Time.current - datetime).to_i
+
+    if seconds < 60
+      "gerade eben"
+    elsif seconds < 3600
+      minutes = seconds / 60
+      "vor #{minutes} Min."
+    elsif seconds < 86_400
+      hours = seconds / 3600
+      "vor #{hours} Std."
+    elsif seconds < 604_800
+      days = seconds / 86_400
+      days == 1 ? "vor 1 Tag" : "vor #{days} Tagen"
+    else
+      l(datetime, format: :datetime)
+    end
+  end
+
   def moderation_status(resource)
     if resource.hidden?
       t("shared.moderation_statuses.hidden")

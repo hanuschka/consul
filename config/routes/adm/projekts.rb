@@ -165,7 +165,7 @@ namespace :adm do
       end
     end
 
-    resources :memos, only: [:create] do
+    resources :memos, only: [:create, :destroy] do
       member do
         post :send_notification
       end

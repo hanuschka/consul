@@ -48,6 +48,11 @@ de:
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
         apps: Apps
+        developer: Bereich für Entwickler
+        developer_subitems:
+          ai_settings: KI-Einstellungen
+          external_api_keys: API-Schlüssel
+          api_clients: API-Clients
     email_templates:
       send_test:
         success: "Test-E-Mail wurde an %{email} gesendet."

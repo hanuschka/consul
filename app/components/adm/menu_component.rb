@@ -6,8 +6,9 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
       { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems, divider: true },
-      { label: t("adm.menu.items.stats"),         icon: "bar_chart_4_bars", path: adm_statistics_path },
-      { label: t("adm.menu.items.apps"),          icon: "dashboard",        path: adm_apps_path }
+      { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: adm_statistics_path },
+      { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
+      { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
   end
 
@@ -44,6 +45,14 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path }
       ]
     end
+    def developer_subitems
+      [
+        { label: t("adm.menu.items.developer_subitems.ai_settings"),       path: adm_ai_settings_path,       active_prefix: "/adm/ai_settings" },
+        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" },
+        { label: t("adm.menu.items.developer_subitems.api_clients"),       path: adm_api_clients_path,       active_prefix: "/adm/api_clients" }
+      ]
+    end
+
     def notifications_subitems
       [
         { label: t("adm.menu.items.notifications_subitems.newsletters"), path: adm_newsletters_path, active_prefix: "/adm/newsletters" },

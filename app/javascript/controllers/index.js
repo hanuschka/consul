@@ -102,6 +102,9 @@ application.register("adm-newsletters--recipient-group-builder", AdmNewslettersR
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 
+import SharedAdminIframeController from "./shared/admin_iframe_controller"
+application.register("shared--admin-iframe", SharedAdminIframeController)
+
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
 
@@ -113,4 +116,10 @@ application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
 
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
+
+import AdmAutogrowController from "./adm/autogrow_controller"
+application.register("adm-autogrow", AdmAutogrowController)
+
+import HiddenTokenController from "./hidden_token_controller"
+application.register("hidden-token", HiddenTokenController)
 

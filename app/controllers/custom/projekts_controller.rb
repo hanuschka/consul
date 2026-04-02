@@ -52,7 +52,7 @@ class ProjektsController < ApplicationController
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
-    @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
+    @categories = @projekts.flat_map { |p| p.tags.category.to_a }.uniq.compact.sort
     @tag_cloud = tag_cloud
     take_only_by_tag_names unless @search_terms.present?
 

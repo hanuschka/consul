@@ -32,8 +32,11 @@
 
   .kern-error {
     position: absolute;
-    bottom: -2rem;
+    bottom: -3rem;
     left: var(--kern-metric-space-default, 16px);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 }
 

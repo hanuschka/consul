@@ -12,7 +12,7 @@
     <% if image_errors.any? %>
       <p class="kern-error" role="alert">
         <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
-        <span class="kern-body"><%= image_errors.join(", ") %></span>
+        <span class="kern-body"><%= image_errors.join(". ") %></span>
       </p>
     <% end %>
   </div>

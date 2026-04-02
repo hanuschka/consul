@@ -1,0 +1,91 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t(".title"),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_api_clients_path,
+  narrow: true
+) %>
+
+<div class="kern-container kern-container--form my-5">
+  <%= render "form" %>
+
+  <% if @api_client.user.present? %>
+    <hr class="kern-divider my-5" aria-hidden="true">
+
+    <h3 class="mb-3"><%= t("adm.api_clients.form.service_user_form_title") %></h3>
+
+    <div class="kern-alert kern-alert--info mb-4" role="alert">
+      <div class="kern-alert__body">
+        <p><%= t("adm.api_clients.form.service_user_explanation") %></p>
+      </div>
+    </div>
+
+    <%= form_with model: [:adm, @api_client.user], local: true do |f| %>
+      <% if @api_client.user.errors.any? %>
+        <div class="kern-alert kern-alert--danger mb-4" role="alert">
+          <div class="kern-alert__body">
+            <p><%= t("adm.api_clients.form.service_user_errors_message", count: @api_client.user.errors.count) %> <%= t("adm.api_clients.form.service_user_errors_title") %></p>
+            <ul>
+              <% @api_client.user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+
+      <h4 class="mb-3"><%= t("adm.api_clients.form.service_user_avatar_title") %></h4>
+
+      <% if @api_client.user.image.blank? %>
+        <% @api_client.user.build_image %>
+      <% end %>
+
+      <% if @api_client.user.image.present? && @api_client.user.image.attachment.present? %>
+        <div class="mb-3">
+          <img
+            src="<%= url_for(@api_client.user.image.attachment) %>"
+            alt="<%= @api_client.user.name %>"
+            style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--kern-gray-300);"
+          >
+        </div>
+      <% end %>
+
+      <%= f.fields_for :image do |image_builder| %>
+        <div class="mb-4">
+          <%= image_builder.file_field :attachment, accept: "image/*" %>
+        </div>
+      <% end %>
+
+      <h4 class="mb-3"><%= t("adm.api_clients.form.service_user_background_image_title") %></h4>
+
+      <% if @api_client.user.background_image.attached? %>
+        <div class="mb-3">
+          <img
+            src="<%= url_for(@api_client.user.background_image) %>"
+            alt="<%= @api_client.user.name %> background"
+            style="width: 100%; max-width: 300px; height: auto; border-radius: 4px; border: 2px solid var(--kern-gray-300);"
+          >
+        </div>
+      <% end %>
+
+      <div class="mb-4">
+        <%= f.file_field :background_image, accept: "image/*" %>
+      </div>
+
+      <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:username)) do %>
+        <%= f.text_field :username, label: false, placeholder: User.human_attribute_name(:username) %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:first_name)) do %>
+        <%= f.text_field :first_name, label: false, placeholder: User.human_attribute_name(:first_name) %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:last_name)) do %>
+        <%= f.text_field :last_name, label: false, placeholder: User.human_attribute_name(:last_name) %>
+      <% end %>
+
+      <%= form_submit_button(text: t("adm.api_clients.form.update_service_user")) %>
+    <% end %>
+  <% end %>
+</div>

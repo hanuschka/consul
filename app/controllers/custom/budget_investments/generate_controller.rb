@@ -12,29 +12,53 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
     investment = build_and_save_draft(draft_data)
     redirect_to generate_budget_investment_edit_draft_path(investment)
   rescue StandardError => e
+    raise e if Rails.env.development?
+
     Rails.logger.error("[AiProposalFlow] generate_draft failed: #{e.message}")
+
     flash[:error] = I18n.t("ai_proposal_flow.generate_error")
-    redirect_to generate_budget_investment_new_path(projekt_phase_id: @projekt_phase.id)
+
+    redirect_to generate_budget_investment_new_path(projekt_phase_id: @projekt_phase.id, idea_text: params[:idea_text])
   end
 
   def edit_draft
     @generate_image_url = ai_generate_image_path
     @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_budget_investment_new_path(projekt_phase_id: @draft_resource.projekt_phase.id)
+    @back_to_new_url    = generate_budget_investment_new_path(
+      projekt_phase_id: @draft_resource.projekt_phase.id,
+      idea_text: @draft_resource.ai_idea_text
+    )
+
     render "ai_proposal_flow/edit_draft"
   end
 
   def update_draft
-    @draft_resource.update!(draft_resource_params)
-    evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
-    @draft_resource.update!(ai_evaluation_result: evaluation)
-    redirect_to generate_budget_investment_evaluation_path(@draft_resource)
+    params_with_image_user = draft_resource_params_with_image_user
+    @draft_resource.update!(params_with_image_user)
+
+    if @draft_resource.projekt_phase.user_resource_criteria.exists?
+      evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
+      @draft_resource.update!(ai_evaluation_result: evaluation)
+
+      redirect_to generate_budget_investment_evaluation_path(@draft_resource)
+    else
+      @draft_resource.update!(draft: false, published_at: Time.current)
+
+      redirect_to generate_budget_investment_success_path(@draft_resource)
+    end
+
   rescue StandardError => e
     Rails.logger.error("[AiProposalFlow] update_draft failed: #{e.message}")
+
     flash[:error] = I18n.t("ai_proposal_flow.evaluate_error")
+
     @generate_image_url = ai_generate_image_path
     @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_budget_investment_new_path(projekt_phase_id: @draft_resource.projekt_phase.id)
+    @back_to_new_url    = generate_budget_investment_new_path(
+      projekt_phase_id: @draft_resource.projekt_phase.id,
+      idea_text: @draft_resource.ai_idea_text
+    )
+
     render "ai_proposal_flow/edit_draft"
   end
 
@@ -67,7 +91,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
       investment = Budget::Investment.new(
         draft: true,
         budget: @projekt_phase.budget,
-        heading: @projekt_phase.budget.headings.first,
+        heading: @projekt_phase.budget.heading,
         author: current_user,
         ai_idea_text: params[:idea_text],
         ai_image_prompt: draft_data["image_prompt"]
@@ -82,10 +106,20 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
       investment
     end
 
+    def draft_resource_params_with_image_user
+      params_hash = draft_resource_params.to_h
+
+      if params_hash[:image_attributes].present?
+        params_hash[:image_attributes][:user_id] = current_user.id
+      end
+
+      params_hash
+    end
+
     def draft_resource_params
       params.require(:budget_investment).permit(
         :title, :description, :tag_list, :video_url, :on_behalf_of,
-        image_attributes: [:attachment, :title, :credits, :cached_attachment, :_destroy]
+        image_attributes: [:attachment, :title, :credits, :cached_attachment, :_destroy, :user_id]
       )
     end
 

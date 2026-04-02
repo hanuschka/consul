@@ -3,6 +3,10 @@ class Adm::MemoPolicy < ApplicationPolicy
     memoable_policy.update?
   end
 
+  def destroy?
+    @record.user_id == @user&.id
+  end
+
   def send_notification?
     @record.user_id == @user&.id
   end

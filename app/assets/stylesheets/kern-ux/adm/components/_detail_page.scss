@@ -142,7 +142,16 @@
   }
 }
 
-// --- Section title (top-level page sections: Status, Verwaltung, Inhalt) ---
+// --- Section container (top-level page sections) ---
+.adm-detail-section {
+  background: var(--kern-grey-50, #f9fafb);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+// --- Section title (top-level page sections: Bewertung, Bürgervorschlag, Interne Notizen) ---
 .adm-detail-section-title {
   font-size: 1.125rem;
   font-weight: 700;
@@ -334,9 +343,6 @@ form:has(> .adm-detail-media-card__action) {
     border-bottom: none;
   }
 
-  &:nth-child(even) {
-    background: color-mix(in srgb, var(--kern-color-layout-border) 20%, transparent);
-  }
 }
 
 .adm-detail-table__label {
@@ -652,9 +658,5 @@ form:has(> .adm-detail-media-card__action) {
 
   .adm-detail-table__row {
     border-color: var(--kern-color-layout-border);
-
-    &:nth-child(even) {
-      background: color-mix(in srgb, var(--kern-color-layout-border) 15%, transparent);
-    }
   }
 }

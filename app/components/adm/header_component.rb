@@ -1,11 +1,13 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
+  renders_one :actions
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, frontend_url: nil)
+  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
     @narrow = narrow
+    @compact = compact
     @frontend_url = frontend_url
   end
 
@@ -35,13 +37,15 @@ class Adm::HeaderComponent < ApplicationComponent
     icon_html = breadcrumb[:icon].present? ? icon_tag(breadcrumb[:icon]) : "".html_safe
     label = breadcrumb[:name]
 
+    label_html = tag.span(label, class: "breadcrumb-label")
+
     if is_last
-      tag.span { icon_html + label }
+      tag.span { icon_html + label_html }
     elsif breadcrumb[:url].blank?
-      tag.span { icon_html + label }
+      tag.span { icon_html + label_html }
     else
       link_to breadcrumb[:url] do
-        icon_html + label
+        icon_html + label_html
       end
     end
   end

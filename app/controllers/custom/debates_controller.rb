@@ -168,7 +168,14 @@ class DebatesController < ApplicationController
   def show
     super
 
-    @projekt = @debate.projekt_phase.projekt
+    @projekt = @debate.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to root_path
+
+      return
+    end
+
     @related_contents = Kaminari.paginate_array(@debate.relationed_contents).page(params[:page]).per(5)
 
     @geozones = Geozone.all

@@ -7,6 +7,7 @@ module Adm
       "idea_manager" => IdeaManager,
       "moderator" => Moderator,
       "valuator" => Valuator,
+      "officing_manager" => OfficingManager,
       "landing_page_manager" => LandingPageManager
     }.freeze
 

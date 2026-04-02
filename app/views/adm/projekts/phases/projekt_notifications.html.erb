@@ -29,8 +29,8 @@
               <td class="kern-table__cell"><%= l(notification.created_at.to_date) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_notification_path(@projekt_phase, notification)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_notification_path(@projekt_phase, notification), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_notification_path(@projekt_phase, notification), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_notification_path(@projekt_phase, notification), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>

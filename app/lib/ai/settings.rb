@@ -90,11 +90,16 @@ module Ai::Settings
   end
 
   def self.current_llm_model
-    RubyLLM.models.refresh!
+    # RubyLLM.models.refresh!
 
-    if current_llm_provider == "ollama"
-      Setting["ai.llm_custom_model"]
-    elsif current_llm_provider == "openai"
+    custom_model = Setting["ai.llm_custom_model"]
+    custom_endpoint = Setting["ai.llm_api_endpoint"]
+
+    if custom_model.present? && (current_llm_provider == "ollama" || custom_endpoint.present?)
+      return custom_model
+    end
+
+    if current_llm_provider == "openai"
       DEFAULT_GPT_MODEL
     else
       Setting["ai.llm_model"]

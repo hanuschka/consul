@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
 
   def index
     authorize [:adm, :projekts, Projekt]
@@ -118,6 +118,22 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.destroy!
 
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
+  end
+
+  def notify_reviewers
+    authorize [:adm, :projekts, @projekt], :update?
+
+    NotificationServices::NewProjektNotifier.call(@projekt)
+
+    redirect_to page_path(@projekt.page.slug), notice: t(".success")
+  end
+
+  def toggle_hide_content_background
+    authorize [:adm, :projekts, @projekt], :update?
+
+    @projekt.update!(show_content_background: !@projekt.show_content_background)
+
+    render json: { show_content_background: @projekt.show_content_background }
   end
 
   def toggle_activated

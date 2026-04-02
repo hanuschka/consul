@@ -9,6 +9,10 @@ class Adm::HeaderComponent < ApplicationComponent
     @frontend_url = frontend_url
   end
 
+  def before_render
+    @frontend_url ||= helpers.root_path
+  end
+
   def breadcrumb_item(breadcrumb, is_last)
     li_options = {
       class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
@@ -31,13 +35,15 @@ class Adm::HeaderComponent < ApplicationComponent
     icon_html = breadcrumb[:icon].present? ? icon_tag(breadcrumb[:icon]) : "".html_safe
     label = breadcrumb[:name]
 
+    label_html = tag.span(label, class: "breadcrumb-label")
+
     if is_last
-      tag.span { icon_html + label }
+      tag.span { icon_html + label_html }
     elsif breadcrumb[:url].blank?
-      tag.span { icon_html + label }
+      tag.span { icon_html + label_html }
     else
       link_to breadcrumb[:url] do
-        icon_html + label
+        icon_html + label_html
       end
     end
   end

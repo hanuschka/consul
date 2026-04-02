@@ -90,9 +90,8 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :slug, :landing, :more_info_flag,
         :print_content_flag, :status,
         :landing_show_in_top_nav,
-        :landing_hide_all_top_nav_links,
+
         :landing_hide_title_and_subtitle,
-        :landing_show_projekts_overview,
         :landing_navigation_link_color,
         :landing_site_logo_follow_to_landing_page,
         :landing_desktop_header_image,

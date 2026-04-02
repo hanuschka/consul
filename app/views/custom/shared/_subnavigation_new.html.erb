@@ -1,31 +1,27 @@
 <ul class="main-menu">
   <li class="content-items">
     <ul class="content-items-list">
-      <% if NavbarItem.any? %>
-        <%= render partial: "shared/navbar_items", locals: { placement: placement } %>
+      <% landing_page_for_nav = @ui_landing_page %>
+      <% has_navbar_items = landing_page_for_nav.present? ? NavbarItem.for_landing_page(landing_page_for_nav.id).any? : NavbarItem.global.any? %>
+      <% if has_navbar_items %>
+        <%= render partial: "shared/navbar_items", locals: { placement: placement, landing_page: landing_page_for_nav } %>
       <% else %>
 
-        <% if @ui_hide_topbar_links && @ui_show_projekts_overview %>
-          <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } %>
+        <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) ||
+              @custom_page&.landing? ||
+              @ui_landing_page.present? %>
+          <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
         <% end %>
-
-        <% unless @ui_hide_topbar_links %>
-          <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) ||
-                (@custom_page&.landing? && @custom_page&.landing_show_projekts_overview?) ||
-                (@ui_landing_page.present? && @ui_show_projekts_overview) %>
-            <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
-          <% end %>
-          <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
-          <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
-          <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } unless launch_page %>
-          <%= render partial: 'shared/subnavigation_landing_pages', locals: { placement: placement } unless launch_page %>
-          <%= render partial: 'shared/subnavigation_deficiency_reports', locals: { placement: placement } if deficiency_reports_feature?('show_in_main_menu') && !launch_page %>
-          <%= render partial: 'shared/subnavigation_ideas', locals: { placement: placement } if ideas_feature?('show_in_main_menu') && !launch_page %>
-          <%= render partial: 'shared/subnavigation_investments_overview', locals: { placement: placement } %>
-          <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
-          <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
-          <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
-        <% end %>
+        <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
+        <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
+        <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } unless launch_page %>
+        <%= render partial: 'shared/subnavigation_landing_pages', locals: { placement: placement } unless launch_page %>
+        <%= render partial: 'shared/subnavigation_deficiency_reports', locals: { placement: placement } if deficiency_reports_feature?('show_in_main_menu') && !launch_page %>
+        <%= render partial: 'shared/subnavigation_ideas', locals: { placement: placement } if ideas_feature?('show_in_main_menu') && !launch_page %>
+        <%= render partial: 'shared/subnavigation_investments_overview', locals: { placement: placement } %>
+        <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
+        <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
+        <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
 
         <% if @ui_landing_page %>
           <% @ui_landing_page.landing_projekts.top_level.includes([page: :translations]).for_navigation(current_user).each do |active_projekt| %>

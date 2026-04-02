@@ -106,7 +106,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
-          "feature.resource.show_comments": "active",
+          "feature.resource.show_comments": "",
           "feature.resource.show_open_answer_author_name": ""
         },
 
@@ -131,6 +131,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
+          "feature.resource.create_investment_with_ai": "",
           "feature.resource.show_report_button_in_sidebar": "active",
           "feature.resource.show_follow_button_in_sidebar": "",
           "feature.resource.show_community_button_in_sidebar": "",

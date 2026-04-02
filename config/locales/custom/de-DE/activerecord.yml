@@ -177,7 +177,9 @@ de:
         organization_name: "Vorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Vorschlag"
         image_title: "Bildtitel"
-        duration: Zeitrahmen (intern)
+        price: Gesamtkosten
+        price_first_year: Jährliche Folgekosten (intern)
+        duration: Umsetzungszeitraum (intern)
         feasibility_feasible: Entspricht den Kriterien
         feasibility_undecided: Noch nicht bewertet
         feasibility_unfeasible: Entspricht nicht den Kriterien
@@ -383,12 +385,12 @@ de:
         body: Inhalt
       site_customization/page:
         landing_show_in_top_nav: "Themen/Gebietsseite in der Hauptnavigation anzeigen"
-        landing_hide_all_top_nav_links: "Sämtliche Links in der Top Navigation auf dieser Themen/Gebietsseite ausblenden"
+
         landing_hide_title_and_subtitle: "Informationsbox mit Titel und Untertitel ausblenden"
         landing_mobile_header_image: "Mobile Header Bild"
         landing_site_logo: "Site logo"
         landing_site_logo_for_white_background: "Site logo for white background"
-        landing_show_projekts_overview: "Projektübersicht für diese Zielseite in Hauptnavigation anzeigen"
+
         landing_navigation_link_color: "Farbe der Links in der Top-Navigation"
         landing_site_logo_follow_to_landing_page: "Klick auf Logo führt auf die Zielseite, statt auf die Homepage"
       tag:
@@ -619,6 +621,7 @@ de:
             image:
               image_width: "Die Breite muss %{required_width}px betragen"
               image_height: "Die Höhe muss %{required_height}px betragen"
+              image_dimensions: "Benötigtes Format: %{required_width} × %{required_height} Pixel"
         comment:
           attributes:
             valuation:

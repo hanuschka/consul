@@ -7,7 +7,7 @@ class Adm::Moderation::UsersController < Adm::Moderation::BaseController
     @pagy, @users = pagy(base_scope)
 
     @breadcrumbs = [
-      { name: I18n.t("adm.moderation.menu.title") },
+      { name: I18n.t("adm.moderation.menu.title"), icon: "block" },
       { name: I18n.t("adm.moderation.menu.users") }
     ]
   end

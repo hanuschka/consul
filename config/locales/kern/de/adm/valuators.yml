@@ -5,7 +5,7 @@ de:
         title: Budget-Administratoren
         empty_title: "Keine Budget-Administratoren vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Budget-Administrator hinzu."
-        new_link: Neuer Budget-Administrator
+        new_link: Neuen Budget-Administrator hinzufügen
         no_valuators: Keine Budget-Administratoren vorhanden.
       new:
         title: Neuer Budget-Administrator

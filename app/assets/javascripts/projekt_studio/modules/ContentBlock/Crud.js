@@ -69,7 +69,7 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   addContentBlock(previousContentBlockWrapper, contentBlockTemplate) {
-    console.log(previousContentBlockWrapper)
+    // console.log(previousContentBlockWrapper)
     const previousContentBlockId = previousContentBlockWrapper ? previousContentBlockWrapper.dataset.contentBlockId : null;
     const draftContentBlockIndex = this.generateDraftIndex();
 
@@ -196,7 +196,10 @@ ProjektStudio.ContentBlock.Crud = {
       ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
     }
 
-    if (saveVersion && oldContent !== newContentTrimmed) {
+    const defaultContent = contentBlockWrapper.dataset.defaultContent;
+    const willShowDefault = defaultContent && this.isContentEmpty(newContentTrimmed);
+
+    if (saveVersion && !willShowDefault && oldContent !== newContentTrimmed) {
       ProjektStudio.ContentBlock.ChangeHistory.saveVersion(contentBlock, contentBlockWrapper, oldContent);
     }
 
@@ -224,8 +227,48 @@ ProjektStudio.ContentBlock.Crud = {
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
     contentBlock.innerHTML = updatedContentBlock.innerHTML;
+
+    if (willShowDefault) {
+      contentBlock.innerHTML = defaultContent;
+      this.showDefaultContentNotification(contentBlockWrapper);
+    }
+
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
+  },
+
+  showDefaultContentNotification(wrapper) {
+    const toolbar = wrapper.querySelector(".projekt-content-block--toolbar");
+    let notification = toolbar.querySelector(".js-default-content-notification");
+
+    if (notification) return
+
+    notification = document.createElement("span");
+    notification.className = "projekt-content-block--default-notification js-default-content-notification";
+    notification.textContent = "Standardinhalt wird angezeigt";
+    toolbar.prepend(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  },
+
+  isContentEmpty(html) {
+    const stripped = html
+      .replace(/<br\s*\/?>/gi, "")
+      .replace(/<\/?(p|div|span)(\s[^>]*)?>/gi, "")
+      .replace(/[\s\u00A0]/g, "");
+
+    return stripped.length === 0;
+  },
+
+  convertBrToParagraphs(html) {
+    if (!html) return html;
+
+    let result = html.replace(/<br\s*\/?>/gi, "</p><p>");
+    result = result.replace(/<p>\s*<\/p>/g, "");
+
+    return result;
   },
 
   deleteContentBlock(contentBlockWrapper) {

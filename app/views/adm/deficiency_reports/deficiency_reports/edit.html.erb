@@ -10,37 +10,37 @@
           method: :patch, multipart: true do |form| %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.title")) do %>
+        label: t(".labels.title"), hint: t(".hints.title")) do %>
         <%= form.text_field :title, label: false %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.description")) do %>
+        label: t(".labels.description"), hint: t(".hints.description")) do %>
         <%= form.rich_text_area :description, label: false %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.image")) do %>
+        label: t(".labels.image"), hint: t(".hints.image")) do %>
         <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.documents")) do %>
+        label: t(".labels.documents"), hint: t(".hints.documents")) do %>
         <%= render Kern::Form::DocumentsComponent.new(form: form) %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.video_url")) do %>
+        label: t(".labels.video_url"), hint: t(".hints.video_url")) do %>
         <%= form.text_field :video_url, label: false %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.on_behalf_of")) do %>
+        label: t(".labels.on_behalf_of"), hint: t(".hints.on_behalf_of")) do %>
         <%= form.text_field :on_behalf_of, label: false %>
       <% end %>
 
       <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".labels.category")) do %>
+        label: t(".labels.category"), hint: t(".hints.category")) do %>
         <div data-feature-style-mode="color">
           <div data-feature-style-mode="icon">
             <div class="map-feature-pills">

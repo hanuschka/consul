@@ -6,7 +6,6 @@ en:
           import_projekt: Import project from file
         import_projekt:
           title: Import project from file
-          reset_import: "Back to file upload"
           dt_not_connected: "The DemokratieToday service is not connected. Please set up the connection first."
           error_title: "Import failed"
           try_again: "Try again"

@@ -1,28 +1,3 @@
-.admin-projekt-import--reset-button {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 6px 14px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #6b7280;
-  background: transparent;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 120ms ease, color 120ms ease;
-
-  &:hover {
-    background: #f3f4f6;
-    color: #374151;
-  }
-
-  &.-hidden {
-    display: none;
-  }
-}
-
 .admin-projekt-import--error {
   display: flex;
   flex-direction: column;

@@ -51,7 +51,6 @@ de:
             actions: Aktionen
         import_projekt:
           title: Projekt aus Datei importieren
-          reset_import: "Zurück zum Datei-Upload"
           dt_not_connected: "Der DemokratieToday-Dienst ist nicht verbunden. Bitte richten Sie zuerst die Verbindung ein."
           error_title: "Import fehlgeschlagen"
           try_again: "Erneut versuchen"

@@ -49,6 +49,10 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::PollQuestionPolicy
       when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
         Adm::Projekts::BudgetPolicy
+      when "ExternalApiKey"
+        Adm::ExternalApiKeyPolicy
+      when "ApiClient"
+        Adm::ApiClientPolicy
       when "SiteCustomization::EmailTemplate"
         Adm::SiteCustomization::EmailTemplatePolicy
       when "SiteCustomization::Page"

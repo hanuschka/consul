@@ -153,32 +153,6 @@
   }
 }
 
-.adm-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: var(--kern-color-layout-background-default, #fff);
-  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
-  border-radius: var(--kern-metric-border-radius-default, 4px);
-  padding: 10px 36px 10px 12px;
-  font-size: 0.875rem;
-  font-family: inherit;
-  color: var(--kern-color-content-default);
-  width: 100%;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  transition: border-color 0.15s ease;
-
-  &:focus {
-    outline: none;
-    border-color: var(--kern-color-action-default);
-  }
-
-  &:hover {
-    border-color: var(--kern-grey-400);
-  }
-}
 
 .no-horizontal-scroll {
   overflow-x: auto;

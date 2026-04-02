@@ -1,10 +1,15 @@
 de:
   adm:
     memos:
-      title: Memos
+      title: Interne Notizen
+      hint: Nur für Admins und Projektmanager sichtbar. Über die Glocke können Kollegen per E-Mail benachrichtigt werden.
       form:
-        submit: Memo erstellen
+        submit: Notiz erstellen
+        placeholder: Interne Notiz schreiben...
+        placeholder_reply: Antwort schreiben...
       memo:
         reply: Antworten
         send_notification: Benachrichtigung senden
         last_notification: "Letzte Benachrichtigung gesendet am %{datetime}"
+        delete: Löschen
+        delete_confirm: Möchten Sie diese Notiz wirklich löschen?

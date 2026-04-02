@@ -9,7 +9,7 @@ en:
         llm_model: AI Model
         llm_model_description: Select the AI model to use for processing requests
         llm_custom_model: Custom Model
-        llm_custom_model_description: Enter the model name for Ollama provider
+        llm_custom_model_description: Enter a custom model name (used with Ollama or when a custom API endpoint is set)
         llm_api_endpoint: API Endpoint
         llm_api_endpoint_description: Custom API endpoint URL for OpenAI-compatible services (e.g., Azure OpenAI, proxy services)
         llm_api_key: API Key

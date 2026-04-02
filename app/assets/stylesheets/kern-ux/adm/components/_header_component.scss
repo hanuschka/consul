@@ -66,8 +66,16 @@
       align-items: center;
       max-width: 220px;
       overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
+
+      .breadcrumb-icon {
+        flex-shrink: 0;
+      }
+
+      .breadcrumb-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     > a.breadcrumb-back-button {

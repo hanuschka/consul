@@ -1,0 +1,14 @@
+de:
+  adm:
+    ai_settings:
+      flash:
+        updated: KI-Einstellung erfolgreich aktualisiert
+      index:
+        title: KI-Einstellungen
+        intro: >
+          Konfigurieren Sie die KI-/LLM-Einstellungen für Ihre Plattform.
+        setting_name: Einstellung
+        value: Wert
+        update: Aktualisieren
+        no_settings: Keine KI-Einstellungen verfügbar
+        enter_api_key: API-Schlüssel eingeben

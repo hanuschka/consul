@@ -6,7 +6,7 @@
   back_button_url: adm_external_api_keys_path
 ) %>
 
-<div class="kern-container kern-container--form my-5">
+<div class="kern-container my-5">
   <div class="d-flex justify-content-end mb-4">
     <%= kern_link_button edit_adm_external_api_key_path(@external_api_key), text: t("adm.shared.edit"), icon: "edit" %>
   </div>
@@ -28,10 +28,12 @@
     </p>
 
     <% if @external_api_key.value.present? %>
-      <p>
-        <strong><%= t("adm.external_api_keys.show.api_value") %></strong><br>
-        <%= render Admin::HiddenTokenWidgetComponent.new(token: @external_api_key.value) %>
-      </p>
+      <div class="mb-3">
+        <strong><%= t("adm.external_api_keys.show.api_value") %></strong>
+        <div class="mt-2">
+          <%= render Adm::HiddenTokenWidgetComponent.new(token: @external_api_key.value) %>
+        </div>
+      </div>
     <% else %>
       <%= kern_alert(title: t("adm.external_api_keys.show.default_key_note_title"), style: :info) do %>
         <p><%= t("adm.external_api_keys.show.default_key_note_description") %></p>

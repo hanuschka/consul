@@ -2,6 +2,8 @@ de:
   adm:
     shared:
       show: Anzeigen
+      hide: Ausblenden
+      copy: Kopieren
       edit: Bearbeiten
       delete: Löschen
       created_at: Erstellt am

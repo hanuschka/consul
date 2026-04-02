@@ -32,7 +32,7 @@
       label: t("adm.external_api_keys.edit.value"),
       hint: t("adm.external_api_keys.edit.value_hint")
     ) do %>
-      <%= f.password_field :value, label: false, class: "kern-input", placeholder: t("adm.external_api_keys.edit.value_placeholder") %>
+      <%= f.password_field :value, label: false, class: "kern-input", placeholder: t("adm.external_api_keys.edit.value_placeholder"), value: @external_api_key.value %>
     <% end %>
 
     <%= form_submit_button %>

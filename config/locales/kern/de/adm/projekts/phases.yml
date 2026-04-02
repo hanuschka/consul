@@ -333,11 +333,11 @@ de:
           empty_title: KI Bewertungskriterien nicht verfügbar
           empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-gestützten Bewertungskriterien zu aktivieren.
         email_templates:
-          title: E-Mail-Vorlagen
+          title: System-E-Mails
         ai_settings:
-          title: KI Anweisung
-          empty_title: KI Anweisung nicht verfügbar
-          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-Anweisungen zu aktivieren.
+          title: KI Sprachassistent
+          empty_title: KI Sprachassistent nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um den KI Sprachassistenten zu aktivieren.
         legislation_process_draft_versions:
           title: Textentwürfe
           create_button: Neuen Textentwurf erstellen
@@ -498,7 +498,7 @@ de:
           officing_manager_audits: Änderungslog
           poll_questions: Fragen
           projekt_questions: Kurzumfragen
-          ai_settings: KI Anweisung
+          ai_settings: KI Sprachassistent
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
@@ -514,4 +514,4 @@ de:
           settings: Einstellungen
           user_resource_criteria: KI Bewertungskriterien
           comments: Kommentare
-          email_templates: E-Mail-Vorlagen
+          email_templates: System-E-Mails

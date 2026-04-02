@@ -69,8 +69,16 @@ class SiteCustomization::Image < ApplicationRecord
       if name.in?(%w[logo_header logo_header_for_transparent])
         errors.add(:image, :max_image_height, max_height: required_height) unless height <= required_height
       else
-        errors.add(:image, :image_width, required_width: required_width) unless width == required_width
-        errors.add(:image, :image_height, required_height: required_height) unless height == required_height
+        wrong_width = width != required_width
+        wrong_height = height != required_height
+
+        if wrong_width && wrong_height
+          errors.add(:image, :image_dimensions, required_width: required_width, required_height: required_height)
+        elsif wrong_width
+          errors.add(:image, :image_width, required_width: required_width)
+        elsif wrong_height
+          errors.add(:image, :image_height, required_height: required_height)
+        end
       end
     end
 end

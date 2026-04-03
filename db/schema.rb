@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_01_131406) do
+ActiveRecord::Schema.define(version: 2026_04_03_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "age_range_translations", force: :cascade do |t|
     t.bigint "age_range_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name"
     t.index ["age_range_id"], name: "index_age_range_translations_on_age_range_id"
     t.index ["locale"], name: "index_age_range_translations_on_locale"
@@ -183,6 +183,23 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
     t.string "access_token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "api_request_logs", force: :cascade do |t|
+    t.string "http_method", null: false
+    t.string "request_path", null: false
+    t.string "full_url"
+    t.jsonb "query_params", default: {}, null: false
+    t.jsonb "body_params", default: {}, null: false
+    t.integer "response_status"
+    t.integer "api_client_id"
+    t.boolean "pushed_to_dt", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["api_client_id"], name: "index_api_request_logs_on_api_client_id"
+    t.index ["created_at"], name: "index_api_request_logs_on_created_at"
+    t.index ["pushed_to_dt"], name: "index_api_request_logs_on_pushed_to_dt"
+    t.index ["request_path"], name: "index_api_request_logs_on_request_path"
   end
 
   create_table "apps", force: :cascade do |t|
@@ -716,8 +733,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "deficiency_report_category_translations", force: :cascade do |t|
     t.bigint "deficiency_report_category_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name"
     t.index ["deficiency_report_category_id"], name: "index_d61b31ba5bbffdea13be0cd92b8cb671cb6d18b5"
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
@@ -777,8 +794,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "deficiency_report_status_translations", force: :cascade do |t|
     t.bigint "deficiency_report_status_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "title"
     t.text "description"
     t.index ["deficiency_report_status_id"], name: "index_9003f0b89e1dd7ed97cbb6fd7a245a79809763a3"
@@ -799,8 +816,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "deficiency_report_translations", force: :cascade do |t|
     t.bigint "deficiency_report_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "title"
     t.text "description"
     t.text "summary"
@@ -1579,8 +1596,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "modal_notification_translations", force: :cascade do |t|
     t.bigint "modal_notification_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "title"
     t.text "html_content"
     t.index ["locale"], name: "index_modal_notification_translations_on_locale"
@@ -2007,6 +2024,7 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "end_datetime"
+    t.string "summary"
     t.bigint "projekt_phase_id"
     t.boolean "open_ended", default: false
     t.string "language"
@@ -2027,8 +2045,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "projekt_label_translations", force: :cascade do |t|
     t.bigint "projekt_label_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name"
     t.index ["locale"], name: "index_projekt_label_translations_on_locale"
     t.index ["projekt_label_id"], name: "index_projekt_label_translations_on_projekt_label_id"
@@ -2140,21 +2158,21 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "projekt_phase_translations", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "phase_tab_name"
+    t.text "cta_button_name"
     t.text "resource_form_title"
+    t.text "resource_form_intro"
     t.string "labels_name"
     t.string "sentiments_name"
-    t.string "cta_button_name"
+    t.string "resource_form_title_placeholder"
     t.text "description"
     t.string "comment_form_title"
     t.string "comment_form_button"
+    t.text "resource_form_description_placeholder"
     t.text "welcome_text_in_show"
     t.string "support_button_text"
-    t.text "resource_form_intro"
-    t.text "resource_form_title_placeholder"
-    t.text "resource_form_description_placeholder"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2305,8 +2323,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "projekt_translations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "description"
     t.index ["locale"], name: "index_projekt_translations_on_locale"
     t.index ["projekt_id"], name: "index_projekt_translations_on_projekt_id"
@@ -2336,6 +2354,7 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "on_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.string "import_file_status"
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
@@ -2653,8 +2672,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
   create_table "sentiment_translations", force: :cascade do |t|
     t.bigint "sentiment_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name"
     t.index ["locale"], name: "index_sentiment_translations_on_locale"
     t.index ["sentiment_id"], name: "index_sentiment_translations_on_sentiment_id"
@@ -2973,6 +2992,8 @@ ActiveRecord::Schema.define(version: 2026_04_01_131406) do
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
+    t.string "keycloak_link"
+    t.text "keycloak_id_token", default: ""
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

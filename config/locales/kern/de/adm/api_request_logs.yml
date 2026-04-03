@@ -1,0 +1,22 @@
+de:
+  adm:
+    api_request_logs:
+      index:
+        title: API-Anfragen-Logs
+        intro: >
+          Protokollierte Anfragen an die öffentliche API.
+        id: ID
+        http_method: Methode
+        request_path: Pfad
+        response_status: Status
+        api_client: API-Client
+        no_logs: Keine API-Anfragen-Logs vorhanden.
+      show:
+        http_method: HTTP-Methode
+        request_path: Anfrage-Pfad
+        full_url: Vollständige URL
+        response_status: Antwort-Status
+        api_client: API-Client
+        created_at: Erstellt am
+        query_params: Query-Parameter
+        body_params: Body-Parameter

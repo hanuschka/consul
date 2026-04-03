@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
   private
     def sanitize_pagination_params
-      %i[page per_page].each do |key|
+      %i[page per_page resource_browse_mode_page].each do |key|
         if params[key].present? && !params[key].is_a?(String) && !params[key].is_a?(Numeric)
           params[key] = nil
         end

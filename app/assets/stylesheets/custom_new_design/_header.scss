@@ -630,10 +630,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .subnavigation {
       left: 0;
       right: 0;
-      // top: 0;
       top: 60px;
       padding: 20px 30px;
       max-width: 320px;
+
     }
 
     .header--responsive-menu-title {
@@ -867,6 +867,12 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 body:has(.projekt-page--admin-topbar) {
   header.topbar-header {
     margin-top: var(--admin-topbar-height);
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    #responsive-menu .subnavigation {
+      top: calc(60px + var(--admin-topbar-height));
+    }
   }
 }
 

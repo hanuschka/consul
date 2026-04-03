@@ -1,6 +1,7 @@
 class Kern::Form::DocumentsComponent < ApplicationComponent
-  def initialize(form:)
+  def initialize(form:, show_hint: true)
     @form = form
+    @show_hint = show_hint
   end
 
   private

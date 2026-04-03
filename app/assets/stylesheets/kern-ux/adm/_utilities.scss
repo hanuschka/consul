@@ -134,6 +134,26 @@
   }
 }
 
+.adm-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--kern-grey-600);
+  text-decoration: none;
+  white-space: nowrap;
+
+  .material-symbols-outlined {
+    font-size: 16px !important;
+  }
+
+  &:hover {
+    color: var(--kern-grey-800);
+  }
+}
+
+
 .no-horizontal-scroll {
   overflow-x: auto;
   scrollbar-width: none;

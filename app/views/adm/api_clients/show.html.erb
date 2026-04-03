@@ -1,0 +1,103 @@
+<%= content_for :title, @api_client.name %>
+
+<%= render Adm::HeaderComponent.new(
+  title: @api_client.name,
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_api_clients_path
+) %>
+
+<div class="kern-container kern-container--form my-5">
+  <div class="d-flex justify-content-end mb-4">
+    <%= kern_link_button edit_adm_api_client_path(@api_client), text: t("adm.shared.edit"), icon: "edit" %>
+  </div>
+
+  <div class="kern-card p-4 mb-4">
+    <p class="mb-3">
+      <strong><%= ApiClient.human_attribute_name(:service_user_email) %></strong><br>
+      <%= @api_client.service_user_email %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= ApiClient.human_attribute_name(:access_level) %></strong><br>
+      <span class="kern-badge kern-badge--<%= @api_client.access_level == 'admin' ? 'danger' : 'primary' %>">
+        <%= t("adm.api_clients.access_level.#{@api_client.access_level}") %>
+      </span>
+    </p>
+
+    <div class="kern-alert kern-alert--info mb-4" role="alert">
+      <div class="kern-alert__body">
+        <% t("adm.api_clients.form.access_level_description").split("\n\n").each do |paragraph| %>
+          <p class="mb-1 fs-2"><%= paragraph %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <p class="mb-2">
+      <strong><%= ApiClient.human_attribute_name(:auth_token) %></strong>
+    </p>
+
+    <div class="mb-3" style="height: 55px;">
+      <%= render Adm::HiddenTokenWidgetComponent.new(token: @api_client.access_token) %>
+    </div>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <%= button_to regenerate_token_adm_api_client_path(@api_client),
+        method: :post,
+        class: "kern-btn kern-btn--danger",
+        data: { turbo_confirm: t("adm.api_clients.form.regenerate_token_confirmation") } do %>
+        <span class="kern-label material-symbols-outlined" aria-hidden="true">sync</span>
+        <span class="kern-label"><%= t("adm.api_clients.form.regenerate_token") %></span>
+      <% end %>
+      <p class="fs-2 text-muted mb-0" style="max-width: 320px;">
+        <%= t("adm.api_clients.form.regenerate_token_explanation") %>
+      </p>
+    </div>
+
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__body">
+        <p class="mb-2 fs-2"><em><%= t("adm.api_clients.show.auth_token_explanation_text") %></em></p>
+        <p class="mb-1 fw-medium"><%= t("adm.api_clients.show.auth_token_example_title") %></p>
+        <code class="fs-2"><%= t("adm.api_clients.show.auth_token_example") %></code>
+      </div>
+    </div>
+  </div>
+
+  <% if @api_client.user.present? %>
+    <h3 class="mb-3"><%= t("adm.api_clients.show.service_user_title") %></h3>
+
+    <%= kern_alert(title: t("adm.api_clients.show.service_user_warning_title"), style: :warning) do %>
+      <p><%= t("adm.api_clients.form.service_user_explanation") %></p>
+      <p><%= t("adm.api_clients.show.service_user_login_warning") %></p>
+    <% end %>
+
+    <div class="kern-card p-4 mt-3">
+      <div class="mb-3">
+        <% if @api_client.user.image&.attachment&.attached? %>
+          <%= image_tag(
+            @api_client.user.image.variant(:medium),
+            style: "border-radius: 50%; max-width: 100px; height: auto;",
+            alt: @api_client.user.name
+          ) %>
+        <% else %>
+          <div
+            style="width: 100px; height: 100px; border-radius: 50%; background-color: var(--kern-gray-200); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--kern-gray-600); font-size: 40px;"
+          >
+            <%= @api_client.user.first_letter_of_name %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @api_client.user.first_name.present? || @api_client.user.last_name.present? %>
+        <p class="mb-2">
+          <strong><%= t("adm.api_clients.show.service_user_name") %></strong><br>
+          <%= "#{@api_client.user.first_name} #{@api_client.user.last_name}".strip %>
+        </p>
+      <% end %>
+
+      <p class="mb-0">
+        <strong><%= User.human_attribute_name(:username) %></strong><br>
+        <%= @api_client.user.username %>
+      </p>
+    </div>
+  <% end %>
+</div>

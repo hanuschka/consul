@@ -13,6 +13,15 @@ module Adm::MemoActions
     render "adm/memos/create"
   end
 
+  def destroy
+    @memo = Memo.find(params[:id])
+    authorize [:adm, @memo], policy_class: Adm::MemoPolicy
+
+    @memo.hide
+
+    render "adm/memos/destroy"
+  end
+
   def send_notification
     @memo = Memo.find(params[:id])
     authorize [:adm, @memo], policy_class: Adm::MemoPolicy

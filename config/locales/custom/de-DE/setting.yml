@@ -7,7 +7,7 @@ de:
         llm_model: KI-Modell
         llm_model_description: Wählen Sie das KI-Modell für die Verarbeitung von Anfragen
         llm_custom_model: Benutzerdefiniertes Modell
-        llm_custom_model_description: Geben Sie den Modellnamen für Ollama-Anbieter ein
+        llm_custom_model_description: Benutzerdefinierter Modellname (für Ollama oder bei benutzerdefiniertem API-Endpunkt)
         llm_api_endpoint: API-Endpunkt
         llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
         llm_api_key: API-Schlüssel

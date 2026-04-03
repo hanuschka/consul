@@ -22,4 +22,15 @@ module Adm::MemosHelper
       send_notification_adm_projekts_memo_path(memo)
     end
   end
+
+  def adm_memo_path(memo)
+    case memo.root_memoable
+    when DeficiencyReport
+      adm_deficiency_reports_memo_path(memo)
+    when Idea
+      adm_ideas_memo_path(memo)
+    when Budget::Investment
+      adm_projekts_memo_path(memo)
+    end
+  end
 end

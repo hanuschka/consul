@@ -59,7 +59,7 @@ class Poll < ApplicationRecord
   end
 
   def find_or_create_stats_version
-    ends_at = projekt_phase.end_date
+    ends_at = projekt_phase&.end_date
 
     if ends_at.present? &&
         ((Time.zone.today - ends_at.to_date).to_i <= 3) &&
@@ -76,6 +76,8 @@ class Poll < ApplicationRecord
   end
 
   def stats_age_groups
+    return [] if projekt_phase.blank?
+
     projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
   end
 

@@ -8,8 +8,8 @@
         <span class="small">
           <% if projekt.parent.present? %>
             >> <%= projekt.parent.title %>
-          <% else %>
-            <%= t(".top_level_projekt") %>
+          <% elsif projekt.landing_page.present? %>
+            <%= projekt.landing_page.title %>
           <% end %>
         </span>
       </div>

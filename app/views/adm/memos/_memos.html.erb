@@ -1,19 +1,16 @@
-<div class="kern-row">
-  <div class="kern-col-12 kern-col-md-10">
-    <hr class="kern-divider my-5" aria-hidden="true" />
-  </div>
-</div>
-
 <div id="memos-container">
-  <div class="kern-title kern-title--small mb-3"><%= t("adm.memos.title") %></div>
+  <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="adm-detail-section-title m-0"><%= t("adm.memos.title") %></h2>
+    <%= render Adm::HintComponent.new do %>
+      <%= t("adm.memos.hint") %>
+    <% end %>
+  </div>
 
-  <div class="kern-row">
-    <div class="kern-col-12 kern-col-md-10">
-      <% if policy([:adm, Memo.new(memoable: memoable)]).create? %>
-        <%= render "adm/memos/form", memoable: memoable %>
-      <% end %>
+  <% if policy([:adm, Memo.new(memoable: memoable)]).create? %>
+    <%= render "adm/memos/form", memoable: memoable %>
+  <% end %>
 
-      <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
-    </div>
+  <div class="adm-memos-timeline">
+    <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
   </div>
 </div>

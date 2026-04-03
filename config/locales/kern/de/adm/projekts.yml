@@ -93,7 +93,9 @@ de:
             geozone_affiliated_entire_city: Stadtweit
             geozone_affiliated_only_geozones: Zuordnung zu Stadtteil
             geozones_label: Gebiete
+            geozones_empty: Es sind noch keine Gebiete angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
             districts_label: Stadtteile
+            districts_empty: Es sind noch keine Stadtteile angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
         visibility:
           title: Sichtbarkeit & Darstellung
           hint_title: Hinweis zur Sichtbarkeit

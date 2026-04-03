@@ -27,6 +27,12 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::NewsfeedPhase"
   ].freeze
 
+  DEPRECATED_PHASE_TYPES = [
+    "ProjektPhase::DebatePhase"
+  ].freeze
+
+  ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
@@ -116,7 +122,7 @@ class ProjektPhase < ApplicationRecord
   validate :type_must_be_valid
 
   def self.find_sti_class(type_name)
-    if PROJEKT_PHASES_TYPES.include?(type_name)
+    if ALL_PHASE_TYPES.include?(type_name)
       super
     else
       self
@@ -521,10 +527,10 @@ class ProjektPhase < ApplicationRecord
     def type_must_be_valid
       if type.blank?
         errors.add(:type,
-"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
-      elsif !PROJEKT_PHASES_TYPES.include?(type)
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
+      elsif !ALL_PHASE_TYPES.include?(type)
         errors.add(:type,
-"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
       end
     end
 end

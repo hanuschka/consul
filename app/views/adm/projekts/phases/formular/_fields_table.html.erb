@@ -24,7 +24,7 @@
           <td class="kern-table__cell">
             <%= render Kern::Table::ActionsComponent.new do |actions| %>
               <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_formular_field_path(@projekt_phase, field), icon: "edit", style: :edit) %>
-              <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_formular_field_path(@projekt_phase, field), icon: "delete", style: :delete, divider: true, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+              <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_formular_field_path(@projekt_phase, field), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
             <% end %>
           </td>
         </tr>

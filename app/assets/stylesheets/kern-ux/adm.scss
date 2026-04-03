@@ -10,9 +10,16 @@
 @use "adm/components/icon_selector";
 @use "adm/components/flash_component";
 @use "adm/components/empty_state";
+@use "adm/components/detail_page";
 @use "adm/components/home_dashboard";
 @use "adm/components/statistics";
+@use "adm/components/markdown_editor";
 @use "adm/components/apps";
+@use "adm/components/criteria_list";
+@use "adm/components/memos";
+@use "adm/components/column_selector";
+@use "adm/components/table";
+@use "adm/components/email_template_component";
 @use "components/map";
 @use "components/subnavigation_konto_component";
 

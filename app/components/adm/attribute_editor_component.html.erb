@@ -21,11 +21,13 @@
         </div>
       </div>
     <% else %>
-      <div
-        id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
-        class="kern-title kern-title--small mb-3">
-        <%= label %>
-      </div>
+      <% unless hide_label? %>
+        <div
+          id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
+          class="kern-title kern-title--small mb-3">
+          <%= label %>
+        </div>
+      <% end %>
 
       <% if wide? || stacked? %>
         <% if description.present? %>

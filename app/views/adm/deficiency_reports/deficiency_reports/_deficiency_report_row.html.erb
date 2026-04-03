@@ -19,15 +19,16 @@
   <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.administer"), url: administer_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "visibility") %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.administer"), url: administer_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "settings") %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "history") %>
       <% if deficiency_report.feedback_form.present? %>
-        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report)) %>
+        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "feedback") %>
       <% end %>
       <% actions.with_action(
         label: t("shared.delete"),
         url: adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        icon: "delete", style: :delete, divider: true,
         data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
       ) %>
     <% end %>

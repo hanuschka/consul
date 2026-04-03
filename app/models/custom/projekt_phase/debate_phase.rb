@@ -2,7 +2,9 @@ class ProjektPhase::DebatePhase < ProjektPhase
   has_many :resources, -> { all }, foreign_key: :projekt_phase_id, class_name: "Debate",
                                    inverse_of: :projekt_phase, dependent: :destroy
 
-  alias_method :debates, :resources
+  def debates
+    resources
+  end
 
   def name
     "debate_phase"

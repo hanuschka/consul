@@ -4,7 +4,7 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
     @categories = policy_scope(Idea::Category, policy_scope_class: Adm::Ideas::CategoryPolicy::Scope)
                     .order(:given_order)
 
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.categories") }]
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.categories"), icon: "category" }]
   end
 
   def new
@@ -67,7 +67,7 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.ideas.categories.index.title"), url: adm_ideas_categories_path },
+        { name: t("adm.ideas.categories.index.title"), url: adm_ideas_categories_path, icon: "category" },
         { name: action_title }
       ]
     end

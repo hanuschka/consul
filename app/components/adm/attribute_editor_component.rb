@@ -71,6 +71,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options.fetch(:divider, true)
   end
 
+  def hide_label?
+    @options[:hide_label] == true
+  end
+
   private
 
     def i18n_key(type)

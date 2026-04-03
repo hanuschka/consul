@@ -7,6 +7,7 @@ class Kern::Table::HeaderComponent < ApplicationComponent
     @sort = options.delete(:sort)
     @search = options.delete(:search)
     @filter_options = options.delete(:filter_options)&.reject { |k, _v| k.nil? } || {}
+    @data_field = options.delete(:data_field)
   end
 
   private

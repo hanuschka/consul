@@ -98,14 +98,16 @@
       </tbody>
     </table>
     <% unless question.bundle_question? %>
-      <% if helpers.can? :csv_answers_streets, question %>
-        <%= link_to t('custom.polls.results.question_street_details_csv_link'), polls_question_csv_answers_streets_path(question.id, format: :csv),
-                    onclick: "this.parentElement.insertAdjacentHTML('beforeend', '<p style=\"font-size:smaller;color:red;\">Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist.</p>');" %>
-        &nbsp;|&nbsp;
-      <% end %>
-      <% if helpers.can? :csv_answers_votes, question %>
-        <%= link_to t('custom.polls.results.question_answer_details_csv_link'), polls_question_csv_answers_votes_path(question.id, format: :csv) %>
-      <% end %>
+      <div class="js-studio-hide-on-preview">
+        <% if helpers.can? :csv_answers_streets, question %>
+          <%= link_to t('custom.polls.results.question_street_details_csv_link'), polls_question_csv_answers_streets_path(question.id, format: :csv),
+                      onclick: "this.parentElement.insertAdjacentHTML('beforeend', '<p style=\"font-size:smaller;color:red;\">Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist.</p>');" %>
+          &nbsp;|&nbsp;
+        <% end %>
+        <% if helpers.can? :csv_answers_votes, question %>
+          <%= link_to t('custom.polls.results.question_answer_details_csv_link'), polls_question_csv_answers_votes_path(question.id, format: :csv) %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>

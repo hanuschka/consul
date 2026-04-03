@@ -3,10 +3,10 @@ de:
     projekt_managers:
       index:
         title: Projektmanager
-        new_link: Neuer Projektmanager
+        new_link: Neuen Projektmanager hinzufügen
         no_projekt_managers: Keine Projektmanager vorhanden.
       new:
-        title: Neuer Projektmanager
+        title: Neuen Projektmanager hinzufügen
         search_label: Nutzer durchsuchen
         search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Profile</a> gelistet sind. Diese können Sie anschließend als Projektmanager hinzufügen.
       search:

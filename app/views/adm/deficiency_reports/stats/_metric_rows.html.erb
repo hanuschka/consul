@@ -1,0 +1,86 @@
+<% now = Time.zone.now %>
+<% max_count = groups.map { |_, reports| reports.count }.max || 1 %>
+
+<div class="adm-metric-rows">
+  <% groups.each do |group, reports| %>
+    <% total = reports.count %>
+    <% pct = max_count.positive? ? ((total.to_f / max_count) * 100).round(0) : 0 %>
+    <% week = reports.where(created_at: now.beginning_of_week..now.end_of_week).count %>
+    <% month = reports.where(created_at: now.beginning_of_month..now.end_of_month).count %>
+    <% year = reports.where(created_at: now.beginning_of_year..now.end_of_year).count %>
+
+    <div class="adm-metric-row">
+      <div class="adm-metric-row__name" title="<%= group&.name || t("adm.deficiency_reports.stats.show.without_status") %>">
+        <%= group&.name || t("adm.deficiency_reports.stats.show.without_status") %>
+      </div>
+
+      <div class="adm-metric-row__bar">
+        <div class="adm-metric-row__bar-fill" style="width: <%= pct %>%"></div>
+      </div>
+
+      <div class="adm-metric-row__total"><%= total %></div>
+
+      <div class="adm-metric-row__periods">
+        <div class="adm-metric-row__period">
+          <span class="adm-metric-row__period-value"><%= week %></span>
+          <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.week") %></span>
+        </div>
+        <div class="adm-metric-row__period">
+          <span class="adm-metric-row__period-value"><%= month %></span>
+          <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.month") %></span>
+        </div>
+        <div class="adm-metric-row__period">
+          <span class="adm-metric-row__period-value"><%= year %></span>
+          <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.year") %></span>
+        </div>
+      </div>
+
+      <% if type.in?([:category, :responsible]) %>
+        <% feedback = reports.joins(:feedback_form) %>
+        <% feedback_count = feedback.count %>
+        <% if feedback_count.positive? %>
+          <div class="adm-metric-row__satisfaction">
+            <div class="adm-metric-row__rating" title="<%= t("adm.deficiency_reports.stats.show.satisfaction") %>">
+              <span class="material-symbols-outlined">thumb_up</span>
+              <%= feedback.average("deficiency_report_feedback_forms.overall_satisfaction")&.round(1) %>
+            </div>
+            <div class="adm-metric-row__rating" title="<%= t("adm.deficiency_reports.stats.show.response_time") %>">
+              <span class="material-symbols-outlined">schedule</span>
+              <%= feedback.average("deficiency_report_feedback_forms.response_time_satisfaction")&.round(1) %>
+            </div>
+            <div class="adm-metric-row__rating" title="<%= t("adm.deficiency_reports.stats.show.communication") %>">
+              <span class="material-symbols-outlined">chat</span>
+              <%= feedback.average("deficiency_report_feedback_forms.communication_satisfaction")&.round(1) %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Total row %>
+  <% total_all = all_reports.count %>
+  <% week_all = all_reports.where(created_at: now.beginning_of_week..now.end_of_week).count %>
+  <% month_all = all_reports.where(created_at: now.beginning_of_month..now.end_of_month).count %>
+  <% year_all = all_reports.where(created_at: now.beginning_of_year..now.end_of_year).count %>
+
+  <div class="adm-metric-rows__total-row">
+    <div class="adm-metric-row__name"><%= t("adm.deficiency_reports.stats.show.total_row") %></div>
+    <div class="adm-metric-row__bar"></div>
+    <div class="adm-metric-row__total"><%= total_all %></div>
+    <div class="adm-metric-row__periods">
+      <div class="adm-metric-row__period">
+        <span class="adm-metric-row__period-value"><%= week_all %></span>
+        <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.week") %></span>
+      </div>
+      <div class="adm-metric-row__period">
+        <span class="adm-metric-row__period-value"><%= month_all %></span>
+        <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.month") %></span>
+      </div>
+      <div class="adm-metric-row__period">
+        <span class="adm-metric-row__period-value"><%= year_all %></span>
+        <span class="adm-metric-row__period-label"><%= t("adm.deficiency_reports.stats.show.periods.year") %></span>
+      </div>
+    </div>
+  </div>
+</div>

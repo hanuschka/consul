@@ -63,6 +63,9 @@ namespace :adm do
   resources :valuators, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
+  resources :officing_managers, only: [:index, :new, :destroy] do
+    post :search, on: :collection
+  end
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member
@@ -92,8 +95,21 @@ namespace :adm do
   end
   # notifications
 
+  resources :email_templates, only: [:update] do
+    post :send_test, on: :member
+  end
+  resources :global_email_templates, only: [:index]
+
   resource :statistics, controller: "statistics", only: [:show]
   resource :apps, controller: "apps", only: [:show]
+
+  resources :ai_settings, only: [:index, :update] do
+    patch :update_api_key, on: :collection
+  end
+  resources :external_api_keys, only: [:index, :show, :edit, :update]
+  resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    post :regenerate_token, on: :member
+  end
 
   namespace :site_customization do
     get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug

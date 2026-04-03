@@ -1,11 +1,13 @@
 module Adm::ProjektsHelper
   def projekt_thumbnail(projekt)
-    first_image = projekt.images.blobs.first if projekt.images.attached?
-
-    if first_image.present?
-      image_tag(url_for(first_image.variant(resize_to_fill: [48, 48])),
+    if projekt.image&.attached?
+      image_tag(projekt.image.variant(:thumb2),
                 class: "thumbnail thumbnail--image",
-                alt: projekt.page.title)
+                alt: projekt.page&.title)
+    elsif projekt.images.attached?
+      image_tag(url_for(projekt.images.blobs.first.variant(resize_to_fill: [48, 48])),
+                class: "thumbnail thumbnail--image",
+                alt: projekt.page&.title)
     else
       content_tag(:div, class: "thumbnail") do
         content_tag(:span, "folder", class: "material-symbols-outlined", "aria-hidden": "true")

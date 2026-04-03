@@ -283,11 +283,13 @@
         <% end %>
 
         <% if current_user.present? && current_user.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <div class="js-moderator-proposal-actions">
-              <%= render "proposals/actions", proposal: proposal %>
-            </div>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <div class="js-moderator-proposal-actions">
+                <%= render "proposals/actions", proposal: proposal %>
+              </div>
+            <% end %>
+          </div>
         <% end %>
       </aside>
     </div>

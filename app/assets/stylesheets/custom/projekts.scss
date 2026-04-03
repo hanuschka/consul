@@ -1734,6 +1734,9 @@ span.projekt-backlink:before {
 }
 
 .projekt-image-upload-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   border-radius: 50%;
   color: #303030 !important;

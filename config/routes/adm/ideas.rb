@@ -14,6 +14,12 @@ namespace :adm do
     resources :districts, only: [:index, :edit, :update]
     get :settings, to: "ideas#settings", as: :settings
 
+    resources :memos, only: [:create, :destroy] do
+      member do
+        post :send_notification
+      end
+    end
+
     # Ideas resource with path: "" (matched after specific resources)
     resources :ideas, only: [:show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "idea_audits"

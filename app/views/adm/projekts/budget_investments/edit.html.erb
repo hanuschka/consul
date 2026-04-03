@@ -9,124 +9,172 @@
         url: adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
         method: :patch, multipart: true do |form| %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: t("adm.attribute_editor.budget/investment.title_label")) do %>
-      <%= form.text_field :title, label: false %>
-    <% end %>
+    <%# === Section header === %>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="adm-detail-section-title m-0"><%= t("adm.projekts.budget_investments.show.content_title") %></h2>
+      <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+            text: t("shared.cancel"), icon: "close", style: :secondary, data: { turbo_frame: "investment_content" }) %>
+    </div>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: t("adm.attribute_editor.budget/investment.description_label")) do %>
-      <%= form.rich_text_area :description, label: false %>
-    <% end %>
+    <%# === Title + Description in card === %>
+    <div class="adm-content-card mb-4">
+      <div class="adm-content-card__body">
+        <div class="kern-form-input mb-3">
+          <%= form.text_field :title, label: false,
+                class: "kern-form-input__input adm-detail-title-input",
+                placeholder: t("adm.attribute_editor.budget/investment.title_label") %>
+        </div>
+        <%= form.rich_text_area :description, label: false %>
+      </div>
+    </div>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: t("adm.attribute_editor.budget/investment.image_label", default: "Bild")) do %>
-      <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
-    <% end %>
+    <%# === Image + Map side-by-side === %>
+    <% show_image = true %>
+    <% show_map = @projekt_phase.feature?("form.show_map") %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-      label: t("adm.attribute_editor.budget/investment.on_behalf_of_label")) do %>
-      <%= form.text_field :on_behalf_of, label: false %>
-    <% end %>
-
-    <% if @projekt_phase.feature?("form.enable_external_video") %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t("adm.attribute_editor.budget/investment.video_url_label")) do %>
-        <%= form.text_field :video_url, label: false %>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t("adm.attribute_editor.budget/investment.implementation_performer_label")) do %>
-        <%= form.select :implementation_performer,
-          Budget::Investment.implementation_performers.keys.map { |k|
-            [t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{k}"), k]
-          }, { include_blank: true }, { label: false } %>
-      <% end %>
-
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t("adm.attribute_editor.budget/investment.implementation_contribution_label")) do %>
-        <%= form.text_field :implementation_contribution, label: false %>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t("adm.attribute_editor.budget/investment.user_cost_estimate_label")) do %>
-        <%= form.text_field :user_cost_estimate, label: false %>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.feature?("form.labels") && @projekt_phase.projekt_labels.any? %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: @projekt_phase.projekt_labels_label_text) do %>
-        <div data-feature-style-mode="icon">
-          <div class="map-feature-pills">
-            <%= form.collection_check_boxes :projekt_label_ids, @projekt_phase.projekt_labels, :id, :name do |cb|
-              cb.check_box(style: "display:none") +
-              cb.label(
-                id: dom_id(cb.object),
-                class: "map-feature-pill map-feature-pill--label",
-                data: {
-                  "icon-name" => cb.object.icon,
-                  "icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode
-                }
-              ) {
-                tag.i(class: "fas fa-#{cb.object.icon}") + " #{cb.text}"
-              }
-            end %>
+    <% if show_image || show_map %>
+      <div class="adm-detail-media-grid <%= (show_image && show_map) ? 'adm-detail-media-grid--two' : '' %> mb-4">
+        <% if show_image %>
+          <div class="adm-detail-media-card">
+            <div class="adm-detail-media-card__label">
+              <span class="material-symbols-outlined" aria-hidden="true">image</span>
+              <%= t("adm.projekts.budget_investments.show.image") %>
+              <% if @investment.image&.attachment&.attached? %>
+                <%= button_to toggle_image_concealed_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+                      method: :patch,
+                      class: "adm-detail-media-card__action",
+                      data: { turbo_frame: "investment_content" } do %>
+                  <%= @investment.image.concealed? ? t("adm.projekts.budget_investments.edit.show_image") : t("adm.projekts.budget_investments.edit.hide_image") %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="adm-detail-media-card__image <%= 'adm-detail-media-card__image--concealed' if @investment.image&.concealed? %>">
+              <%= render Kern::Form::ImageableImageComponent.new(form: form, show_actions: false) %>
+            </div>
           </div>
-        </div>
-      <% end %>
-    <% end %>
+        <% end %>
 
-    <% if @projekt_phase.feature?("form.sentiments") && @projekt_phase.sentiments.any? %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: @projekt_phase.sentiment_label_text) do %>
-        <div data-feature-style-mode="color">
-          <div class="map-feature-pills">
-            <%= form.collection_radio_buttons :sentiment_id, @projekt_phase.sentiments, :id, :name, include_hidden: false do |rb|
-              rb.radio_button(style: "display:none") +
-              rb.label(
-                id: dom_id(rb.object),
-                class: "map-feature-pill map-feature-pill--sentiment",
-                data: { color: rb.object.color },
-                style: "--pill-color:#{rb.object.color};--pill-text-color:#{pick_text_color(rb.object.color)}"
-              ) { rb.text }
-            end %>
+        <% if show_map %>
+          <div class="adm-detail-media-card">
+            <div class="adm-detail-media-card__label">
+              <span class="material-symbols-outlined" aria-hidden="true">map</span>
+              <%= t("adm.projekts.budget_investments.show.map") %>
+            </div>
+            <%= form.fields_for :map_location do |ml_form| %>
+              <%= render Kern::MapComponent.new(
+                map_location: @investment.map_location,
+                form: ml_form,
+                editable: true,
+                admin_editor: false,
+                height: 350
+              ) %>
+            <% end %>
           </div>
-        </div>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.feature?("form.show_map") %>
-      <div class="kern-row">
-        <div class="kern-col-10">
-          <%= form.fields_for :map_location do |ml_form| %>
-            <%= render Kern::MapComponent.new(
-              map_location: @investment.map_location,
-              form: ml_form,
-              editable: true,
-              admin_editor: false,
-              height: 500
-            ) %>
-          <% end %>
-        </div>
+        <% end %>
       </div>
     <% end %>
 
-    <% if @projekt_phase.feature?("form.allow_attached_documents") %>
-      <%= render Kern::FormFieldComponent.new(divider: false, inline: true,
-        label: t(".documents")) do %>
-        <%= render Kern::Form::DocumentsComponent.new(form: form) %>
-      <% end %>
-    <% end %>
 
-    <div class="d-flex gap-2 mb-4">
+    <%# === Additional Fields (table layout like show view) === %>
+    <div class="adm-detail-table mb-4">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".on_behalf_of") %></div>
+        <div class="adm-detail-table__value"><%= form.text_field :on_behalf_of, label: false, placeholder: t(".on_behalf_of_placeholder") %></div>
+      </div>
+
+      <% if @projekt_phase.feature?("form.enable_external_video") %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t("adm.projekts.budget_investments.show.video_url") %></div>
+          <div class="adm-detail-table__value"><%= form.text_field :video_url, label: false, placeholder: "https://..." %></div>
+        </div>
+      <% end %>
+
+      <% if @projekt_phase.feature?("form.show_implementation_option_fields") %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t("adm.projekts.budget_investments.show.implementation_performer") %></div>
+          <div class="adm-detail-table__value">
+            <%= form.select :implementation_performer,
+              Budget::Investment.implementation_performers.keys.map { |k|
+                [t("adm.attribute_editor.budget/investment.implementation_performer_label_options.#{k}"), k]
+              }, { include_blank: t(".select_placeholder") }, { label: false } %>
+          </div>
+        </div>
+
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t("adm.projekts.budget_investments.show.implementation_contribution") %></div>
+          <div class="adm-detail-table__value"><%= form.text_field :implementation_contribution, label: false, placeholder: t("adm.projekts.budget_investments.show.implementation_contribution") %></div>
+        </div>
+      <% end %>
+
+      <% if @projekt_phase.feature?("form.show_user_cost_estimate") %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t("adm.projekts.budget_investments.show.user_cost_estimate") %></div>
+          <div class="adm-detail-table__value"><%= form.text_field :user_cost_estimate, label: false, placeholder: "0" %></div>
+        </div>
+      <% end %>
+
+      <% if @projekt_phase.feature?("form.labels") && @projekt_phase.projekt_labels.any? %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= @projekt_phase.projekt_labels_label_text %></div>
+          <div class="adm-detail-table__value">
+            <div data-feature-style-mode="icon">
+              <div class="map-feature-pills">
+                <%= form.collection_check_boxes :projekt_label_ids, @projekt_phase.projekt_labels, :id, :name do |cb|
+                  cb.check_box(style: "display:none") +
+                  cb.label(
+                    id: dom_id(cb.object),
+                    class: "map-feature-pill map-feature-pill--label",
+                    data: {
+                      "icon-name" => cb.object.icon,
+                      "icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode
+                    }
+                  ) {
+                    tag.i(class: "fas fa-#{cb.object.icon}") + " #{cb.text}"
+                  }
+                end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @projekt_phase.feature?("form.sentiments") && @projekt_phase.sentiments.any? %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= @projekt_phase.sentiment_label_text %></div>
+          <div class="adm-detail-table__value">
+            <div data-feature-style-mode="color">
+              <div class="map-feature-pills">
+                <%= form.collection_radio_buttons :sentiment_id, @projekt_phase.sentiments, :id, :name, include_hidden: false do |rb|
+                  rb.radio_button(style: "display:none") +
+                  rb.label(
+                    id: dom_id(rb.object),
+                    class: "map-feature-pill map-feature-pill--sentiment",
+                    data: { color: rb.object.color },
+                    style: "--pill-color:#{rb.object.color};--pill-text-color:#{pick_text_color(rb.object.color)}"
+                  ) { rb.text }
+                end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @projekt_phase.feature?("form.allow_attached_documents") %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label">
+            <%= t("adm.projekts.budget_investments.show.documents") %>
+            <p class="mt-1 mb-0" style="font-weight: normal; font-size: 0.75rem; color: var(--kern-grey-500);"><%= t("components.kern.form.documents_component.hint", max_documents: @investment.class.max_documents_allowed, accepted_types: Document.humanized_accepted_content_types, max_size: @investment.class.max_file_size) %></p>
+          </div>
+          <div class="adm-detail-table__value"><%= render Kern::Form::DocumentsComponent.new(form: form, show_hint: false) %></div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# === Action buttons === %>
+    <div class="d-flex gap-2 mt-4 mb-4">
       <%= kern_button(text: t("shared.submit"), icon: "save", type: "submit") %>
       <%= kern_link_button(adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
-            text: t("shared.cancel"), style: :secondary) %>
+            text: t("shared.cancel"), style: :secondary, data: { turbo_frame: "investment_content" }) %>
     </div>
   <% end %>
 <% end %>

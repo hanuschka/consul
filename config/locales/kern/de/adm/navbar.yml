@@ -14,3 +14,5 @@ de:
           Besucher der Plattform sichtbar. Prüfen Sie neue Einträge daher vor der Veröffentlichung
           sorgfältig auf korrekte Verlinkung und Bezeichnung.
         new_item: "Neuen Eintrag erstellen"
+        no_items_title: "Keine Navigationselemente vorhanden"
+        no_items_description: "Erstellen Sie einen neuen Eintrag, um die Hauptnavigation Ihrer Plattform zu gestalten."

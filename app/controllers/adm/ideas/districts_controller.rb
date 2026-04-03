@@ -2,7 +2,7 @@ class Adm::Ideas::DistrictsController < Adm::Ideas::BaseController
   def index
     @districts = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::Ideas::DistrictPolicy::Scope)
 
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.districts") }]
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.districts"), icon: "location_city" }]
   end
 
   def edit
@@ -24,7 +24,7 @@ class Adm::Ideas::DistrictsController < Adm::Ideas::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.ideas.districts.index.title"), url: adm_ideas_districts_path },
+        { name: t("adm.ideas.districts.index.title"), url: adm_ideas_districts_path, icon: "location_city" },
         { name: action_title }
       ]
     end

@@ -36,7 +36,7 @@ module AdmHelper
     "officing_managers" => "badge",
     "officing_manager_audits" => "history",
     "ai_settings" => "smart_toy",
-    "user_resource_criteria" => "checklist",
+    "ai_user_flow" => "checklist",
     "projekt_notifications" => "notifications",
     "projekt_events" => "event",
     "projekt_livestreams" => "videocam",
@@ -46,7 +46,8 @@ module AdmHelper
     "projekt_point_of_interest_pins" => "pin_drop",
     "map_resources_overview" => "layers",
     "legislation_process_draft_versions" => "description",
-    "age_ranges_for_stats" => "pie_chart"
+    "age_ranges_for_stats" => "pie_chart",
+    "email_templates" => "mail"
   }.freeze
 
   def projekt_phase_table_actions(projekt_phase)
@@ -105,6 +106,36 @@ module AdmHelper
     tabs
   end
 
+  def legislation_draft_version_tabs(draft_version, current_action: nil)
+    current_action ||= action_name
+    phase = draft_version.projekt_phase
+
+    [
+      {
+        label: I18n.t("adm.projekts.legislation_draft_versions.tabs.edit"),
+        url: edit_adm_projekts_phase_legislation_draft_version_path(phase, draft_version),
+        current: current_action == "edit"
+      },
+      {
+        label: I18n.t("adm.projekts.legislation_draft_versions.tabs.draft_text"),
+        url: draft_text_adm_projekts_phase_legislation_draft_version_path(phase, draft_version),
+        current: current_action == "draft_text"
+      }
+    ]
+  end
+
+  def pages_tabs(current_slug: nil)
+    current_slug ||= params[:slug]
+
+    %w[privacy conditions impressum].map do |slug|
+      {
+        label: I18n.t("adm.site_customization.pages.tabs.#{slug}"),
+        url: adm_site_customization_edit_page_by_slug_path(slug: slug),
+        current: current_slug == slug
+      }
+    end
+  end
+
   def overview_page_tabs(current_action: nil)
     current_action ||= action_name
 
@@ -126,6 +157,27 @@ module AdmHelper
         url: send("#{action}_adm_projekts_projekt_path", projekt),
         current: current_action == action
       }
+    end
+  end
+
+  def relative_time(datetime)
+    return "" if datetime.blank?
+
+    seconds = (Time.current - datetime).to_i
+
+    if seconds < 60
+      "gerade eben"
+    elsif seconds < 3600
+      minutes = seconds / 60
+      "vor #{minutes} Min."
+    elsif seconds < 86_400
+      hours = seconds / 3600
+      "vor #{hours} Std."
+    elsif seconds < 604_800
+      days = seconds / 86_400
+      days == 1 ? "vor 1 Tag" : "vor #{days} Tagen"
+    else
+      l(datetime, format: :datetime)
     end
   end
 

@@ -1,0 +1,29 @@
+de:
+  adm:
+    external_api_keys:
+      flash:
+        updated: API-Schlüssel erfolgreich aktualisiert
+      index:
+        title: Externe API-Schlüssel
+        intro: >
+          Verwalten Sie API-Schlüssel für Drittanbieter-Dienste.
+        service: Dienst
+        name: Schlüsselname
+        value: Wert
+        value_set: Gesetzt
+        value_empty: Standard
+        empty_api_keys: Es wurden noch keine API-Schlüssel erstellt
+      show:
+        key: Name
+        api_value: Schlüsselwert
+        default_key_note_title: Standard-API-Schlüssel
+        default_key_note_description: >
+          Kein benutzerdefinierter API-Schlüssel gesetzt, System verwendet
+          einen Standard-API-Schlüssel von DemokratieToday. Das Setzen
+          eines benutzerdefinierten Schlüssels setzt den Standard außer Kraft.
+      edit:
+        title: API-Schlüssel bearbeiten
+        value: Wert
+        value_hint: Geben Sie den API-Schlüssel für diesen Dienst ein.
+        value_placeholder: API-Schlüssel eingeben
+        name_hint: Eindeutiger Bezeichner für diesen API-Schlüssel.

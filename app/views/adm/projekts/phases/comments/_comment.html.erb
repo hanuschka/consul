@@ -7,15 +7,18 @@
       <% if policy([:adm, comment]).unhide? %>
         <% actions.with_action(label: t("adm.projekts.phases.comments.table.unhide"),
                                url: unhide_adm_projekts_phase_comment_path(projekt_phase, comment),
+                               icon: "visibility", style: :edit,
                                data: { turbo_method: :put }) %>
       <% elsif policy([:adm, comment]).hide? %>
         <% if comment.flags_count > 0 && !comment.ignored_flag? %>
           <% actions.with_action(label: t("adm.projekts.phases.comments.table.ignore_flag"),
                                  url: ignore_flag_adm_projekts_phase_comment_path(projekt_phase, comment),
+                                 icon: "flag", style: :delete,
                                  data: { turbo_method: :put }) %>
         <% end %>
         <% actions.with_action(label: t("adm.projekts.phases.comments.table.hide"),
                                url: hide_adm_projekts_phase_comment_path(projekt_phase, comment),
+                               icon: "visibility_off", style: :delete,
                                data: { turbo_method: :put, turbo_confirm: t("adm.projekts.phases.comments.table.confirm_hide") }) %>
       <% end %>
     <% end %>

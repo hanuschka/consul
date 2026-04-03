@@ -8,7 +8,7 @@ class Adm::DeficiencyReports::OfficersController < Adm::DeficiencyReports::BaseC
         .order("users.username ASC")
     )
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.officers") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.officers"), icon: "badge" }]
   end
 
   def search

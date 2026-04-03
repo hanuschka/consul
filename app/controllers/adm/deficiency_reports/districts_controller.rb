@@ -2,7 +2,7 @@ class Adm::DeficiencyReports::DistrictsController < Adm::DeficiencyReports::Base
   def index
     @districts = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::DeficiencyReports::DistrictPolicy::Scope)
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.districts") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.districts"), icon: "location_city" }]
   end
 
   def edit
@@ -34,7 +34,7 @@ class Adm::DeficiencyReports::DistrictsController < Adm::DeficiencyReports::Base
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.deficiency_reports.districts.index.title"), url: adm_deficiency_reports_districts_path },
+        { name: t("adm.deficiency_reports.districts.index.title"), url: adm_deficiency_reports_districts_path, icon: "location_city" },
         { name: action_title }
       ]
     end

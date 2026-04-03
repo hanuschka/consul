@@ -53,6 +53,8 @@ class Adm::BaseController < ActionController::Base
         Adm::ExternalApiKeyPolicy
       when "ApiClient"
         Adm::ApiClientPolicy
+      when "ApiRequestLog"
+        Adm::ApiRequestLogPolicy
       when "SiteCustomization::EmailTemplate"
         Adm::SiteCustomization::EmailTemplatePolicy
       when "SiteCustomization::Page"

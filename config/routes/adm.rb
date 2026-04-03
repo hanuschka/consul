@@ -110,6 +110,7 @@ namespace :adm do
   resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     post :regenerate_token, on: :member
   end
+  resources :api_request_logs, only: [:index, :show]
 
   namespace :site_customization do
     get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug

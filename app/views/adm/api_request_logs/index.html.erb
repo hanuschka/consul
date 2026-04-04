@@ -8,6 +8,15 @@
 
 <div class="kern-container my-5">
   <% if @api_request_logs.any? %>
+    <div class="d-flex justify-content-end mb-4">
+      <%= button_to destroy_all_adm_api_request_logs_path,
+        method: :delete,
+        class: "kern-btn kern-btn--danger",
+        data: { turbo_confirm: t(".destroy_all_confirm") } do %>
+        <span class="kern-label material-symbols-outlined" aria-hidden="true">delete</span>
+        <span class="kern-label"><%= t(".destroy_all") %></span>
+      <% end %>
+    </div>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">

@@ -11,6 +11,13 @@ class Adm::ApiRequestLogsController < Adm::BaseController
     ]
   end
 
+  def destroy_all
+    authorize [:adm, ApiRequestLog.new], :destroy_all?, policy_class: Adm::ApiRequestLogPolicy
+    ApiRequestLog.delete_all
+
+    redirect_to adm_api_request_logs_path, notice: t("adm.api_request_logs.destroy_all.success")
+  end
+
   def show
     @api_request_log = ApiRequestLog.find(params[:id])
     authorize [:adm, @api_request_log], policy_class: Adm::ApiRequestLogPolicy

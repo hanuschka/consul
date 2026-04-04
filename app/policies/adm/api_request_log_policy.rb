@@ -7,6 +7,10 @@ class Adm::ApiRequestLogPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def destroy_all?
+    @user&.administrator?
+  end
+
   class Scope < Scope
     def resolve
       scope

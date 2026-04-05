@@ -193,7 +193,7 @@
         App.ResponsiveMenu.toggleMenu($(this))
       });
 
-      $("body").on("keyup", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function() {
+      $("body").on("keyup", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function(event) {
         var $menuOpen = $(this).closest('.nav-element').attr('aria-expanded') == 'true'
         if ( ( event.which == 40 && !$menuOpen ) || // down arrow
              ( event.which == 38 && $menuOpen )  ) { // up arrow

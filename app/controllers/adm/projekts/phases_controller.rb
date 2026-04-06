@@ -79,6 +79,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @projekt_phase.update(frontend_visibility: !@projekt_phase.frontend_visibility)
   end
 
+  def destroy
+    authorize_phase(:destroy?)
+    @projekt_phase.hide
+    redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+      notice: t(".success")
+  end
+
   def general_settings
     authorize_phase(:update?)
     @breadcrumbs = [

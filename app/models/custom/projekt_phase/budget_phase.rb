@@ -147,6 +147,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget.nil?
   end
 
+  def after_hide
+    budget&.investments&.each(&:hide)
+  end
+
   def authors_of_feasible_ids
     budget.investments.feasible.pluck(:author_id).uniq
   end

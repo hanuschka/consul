@@ -114,6 +114,10 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.empty?
   end
 
+  def after_hide
+    proposals.each(&:hide)
+  end
+
   def proposal_limit_exceeded?(user)
     max_active_proposals_per_user = Setting["extended_option.proposals.max_active_proposals_per_user"].to_i
     user.proposals.where(retired_at: nil).count >= max_active_proposals_per_user

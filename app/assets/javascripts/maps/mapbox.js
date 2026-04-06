@@ -71,6 +71,7 @@
 
     initMap(callback) {
       const instance = this;
+      this.initialPitch = 53;
 
       function initMapInstance() {
         mapboxgl.accessToken = instance.element.dataset.mapboxPublicToken;
@@ -78,7 +79,7 @@
           container: instance.element,
           center: [instance.mapCenterLongitude, instance.mapCenterLatitude],
           zoom: instance.zoom,
-          pitch: 53,
+          pitch: instance.initialPitch,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
           cooperativeGestures: true,
@@ -154,6 +155,7 @@
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
+        instance.addResetViewControl();
         instance.setupPlugins();
         instance.setupEventListenersForUpdatingFormInputs();
         instance.setupEventListenersForUpdatingMapCenter();
@@ -162,6 +164,10 @@
 
     setupExpandControl() {
       this.map.addControl(new ExpandControl(this), 'top-right');
+    }
+
+    addResetViewControl() {
+      this.map.addControl(new ResetViewControl(this), 'top-right');
     }
 
     setupLayers() {
@@ -1045,6 +1051,41 @@
           map.resize();
           this.mapboxMapInstance.toggleControlVisibility();
         }
+      });
+
+      return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
+
+  class ResetViewControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = '<i class="fas fa-home"></i>';
+      button.title = 'Ansicht zurücksetzen';
+
+      this._container.appendChild(button);
+
+      button.addEventListener('click', () => {
+        map.flyTo({
+          center: [this.mapboxMapInstance.mapCenterLongitude, this.mapboxMapInstance.mapCenterLatitude],
+          zoom: this.mapboxMapInstance.zoom,
+          pitch: this.mapboxMapInstance.initialPitch,
+          bearing: 0
+        });
       });
 
       return this._container;

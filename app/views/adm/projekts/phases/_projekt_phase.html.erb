@@ -1,4 +1,7 @@
-<tr class="kern-table__row" id="<%= dom_id(projekt_phase) %>">
+<tr class="kern-table__row" id="<%= dom_id(projekt_phase) %>" data-sortable-id="<%= projekt_phase.id %>">
+  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+    <span class="material-symbols-outlined">drag_indicator</span>
+  </td>
   <th scope="row" class="kern-table__header">
     <%= projekt_phase.title %>
   </th>

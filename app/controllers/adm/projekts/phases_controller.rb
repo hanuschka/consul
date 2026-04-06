@@ -1,7 +1,7 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   before_action :find_projekt, only: [:new, :create]
-  before_action :find_projekt_phase, except: [:new, :create]
-  before_action :set_back_button_url, except: [:new, :create, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
+  before_action :find_projekt_phase, except: [:new, :create, :reorder]
+  before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
 
   def new
     authorize [:adm, :projekts, ProjektPhase], :create?
@@ -24,6 +24,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     else
       redirect_to new_adm_projekts_projekt_phase_path(@projekt), alert: @projekt_phase.errors.full_messages.join(", ")
     end
+  end
+
+  def reorder
+    authorize [:adm, :projekts, ProjektPhase], :update?
+    ordered_ids = params[:tree].map { |item| item[:id] }
+    ProjektPhase.order_phases(ordered_ids)
+    head :ok
   end
 
   def update

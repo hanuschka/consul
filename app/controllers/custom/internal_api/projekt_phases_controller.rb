@@ -18,11 +18,20 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
       phase_tab_name: params[:name],
       start_date: params[:start_date],
       end_date: params[:end_date],
-      active: params[:active] != "false"
+      active: params[:active] != "false",
+      cta_button_name: params[:cta_button_name],
+      description: params[:description],
+      user_status: params[:user_status],
+      age_range_id: params[:age_range_id],
+      geozone_restricted: params[:geozone_restricted],
+      frontend_visibility: params.fetch(:frontend_visibility, true)
     )
 
     if phase.save
-      render json: { id: phase.id, message: "Phase created" }, status: :created
+      response = { id: phase.id, message: "Phase created" }
+      response[:poll_id] = phase.polls.first&.id if phase.respond_to?(:polls)
+
+      render json: response, status: :created
     else
       render json: { errors: phase.errors.full_messages }, status: :unprocessable_entity
     end
@@ -162,8 +171,12 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
       :start_date,
       :end_date,
       :phase_tab_name,
+      :cta_button_name,
+      :description,
       :geozone_restricted,
       :user_status,
+      :age_range_id,
+      :frontend_visibility
     )
   end
 end

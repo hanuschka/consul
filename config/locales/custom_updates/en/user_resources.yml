@@ -5,6 +5,7 @@ en:
         title: "Create new %{label}"
         page_description: "The platform lives from your contributions! Tell us what moves you – and then share your ideas with others. There is no right or wrong, every contribution counts. Thank you for taking the time and getting involved!"
         submit_button: Publish now
+        privacy_policy_heading: "Privacy Policy & Terms of Use"
         map_location_label: Map
         map_location_instructions: "Where should your contribution be implemented? Place a “pin” to bring others into the picture."
         map_location_instructions_mandatory: "Please place a pin on the map (mandatory)."

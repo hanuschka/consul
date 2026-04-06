@@ -24,7 +24,8 @@ class Admin::MenuComponent < ApplicationComponent
       dashboard_links,
       ai_settings_link,
       external_api_keys_link,
-      api_clients_link
+      api_clients_link,
+      api_request_logs_link
     ]
   end
 
@@ -609,6 +610,15 @@ class Admin::MenuComponent < ApplicationComponent
         admin_api_clients_path,
         controller_name == "api_clients",
         class: "api-clients-link"
+      ]
+    end
+
+    def api_request_logs_link
+      [
+        t("custom.admin.menu.api_request_logs"),
+        admin_api_request_logs_path,
+        controller_name == "api_request_logs",
+        class: "api-request-logs-link"
       ]
     end
 end

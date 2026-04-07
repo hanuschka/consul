@@ -10,12 +10,20 @@
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p2") %>
+    <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
+      <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p2_pending_review") %>
+    <% else %>
+      <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p2_published") %>
+    <% end %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.notify_author_about_submission.p3") %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
-      t("custom.deficiency_reports.mailers.notify_author_about_submission.p3",
+      t("custom.deficiency_reports.mailers.notify_author_about_submission.p4",
         account_link: link_to(
           t("custom.deficiency_reports.mailers.notify_author_about_submission.account_link_text"),
           account_url

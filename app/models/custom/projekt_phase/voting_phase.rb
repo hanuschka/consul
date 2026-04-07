@@ -36,6 +36,10 @@ class ProjektPhase::VotingPhase < ProjektPhase
     polls.empty?
   end
 
+  def after_hide
+    polls.each(&:hide)
+  end
+
   def poll
     polls.order(:id).first
   end

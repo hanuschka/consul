@@ -12,7 +12,7 @@
     padding: 0;
     z-index: 1000;
     margin-bottom: 0;
-    max-width: auto;
+    max-width: none;
     height: 90px;
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -623,8 +623,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     header, .wrapper > header {
-      height: 36px !important;
-      max-width: auto;
+      height: $topbar-height-mobile;
+      max-width: none;
     }
 
     .subnavigation {
@@ -872,6 +872,7 @@ body:has(.projekt-page--admin-topbar) {
   @media (max-width: $small-tablet-viewport-start) {
     #responsive-menu .subnavigation {
       top: calc(60px + var(--admin-topbar-height));
+      height: calc(100vh - 70px - var(--admin-topbar-height));
     }
   }
 }

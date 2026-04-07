@@ -94,7 +94,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
-          "option.resource.minimum_supports_to_show": "0"
+          "option.resource.minimum_supports_to_show": "0",
+          "option.resource.max_submissions_per_user": ""
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -139,7 +140,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
-          "feature.resource.hide_ballots_count": ""
+          "feature.resource.hide_ballots_count": "",
+          "option.resource.max_submissions_per_user": ""
         },
 
         "ProjektPhase::CommentPhase" => {

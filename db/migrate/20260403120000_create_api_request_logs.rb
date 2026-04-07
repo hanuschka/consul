@@ -8,13 +8,11 @@ class CreateApiRequestLogs < ActiveRecord::Migration[6.1]
       t.jsonb :body_params, default: {}, null: false
       t.integer :response_status
       t.integer :api_client_id
-      t.boolean :pushed_to_dt, default: false
       t.timestamps
     end
 
     add_index :api_request_logs, :request_path
     add_index :api_request_logs, :api_client_id
     add_index :api_request_logs, :created_at
-    add_index :api_request_logs, :pushed_to_dt
   end
 end

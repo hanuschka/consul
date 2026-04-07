@@ -23,8 +23,16 @@ class Api::BaseController < ActionController::API
 
       if client.present?
         @current_client = client
+        @internal_api_client = false
       else
-        raise UnauthorizedError, "Invalid or missing API token."
+        internal_client = InternalApiClient.find_by(auth_token: token)
+
+        if internal_client.present?
+          @current_client = internal_client
+          @internal_api_client = true
+        else
+          raise UnauthorizedError, "Invalid or missing API token."
+        end
       end
     end
 
@@ -32,13 +40,21 @@ class Api::BaseController < ActionController::API
       @current_client
     end
 
+    def internal_api_client?
+      @internal_api_client == true
+    end
+
     def check_read_access!
+      return if internal_api_client?
+
       unless current_client&.can_read_public_data?
         raise ForbiddenError, "You do not have permission to read this resource."
       end
     end
 
     def check_admin_access!
+      return if internal_api_client?
+
       unless current_client&.admin?
         raise ForbiddenError, "You do not have permission to perform this action. Admin access required."
       end

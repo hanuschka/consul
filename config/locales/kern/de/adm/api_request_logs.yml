@@ -11,6 +11,10 @@ de:
         response_status: Status
         api_client: API-Client
         no_logs: Keine API-Anfragen-Logs vorhanden.
+        destroy_all: Alle Logs löschen
+        destroy_all_confirm: Alle API-Anfragen-Logs wirklich löschen?
+      destroy_all:
+        success: Alle API-Anfragen-Logs wurden gelöscht.
       show:
         http_method: HTTP-Methode
         request_path: Anfrage-Pfad

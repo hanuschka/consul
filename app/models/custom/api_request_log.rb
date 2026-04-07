@@ -4,8 +4,6 @@ class ApiRequestLog < ApplicationRecord
   validates :http_method, presence: true
   validates :request_path, presence: true
 
-  scope :not_pushed, -> { where(pushed_to_dt: false) }
-
   HTTP_METHOD_BADGE_VARIANTS = {
     "GET" => "info",
     "POST" => "success",

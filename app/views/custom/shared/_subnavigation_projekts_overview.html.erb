@@ -16,7 +16,7 @@
 %>
 
 <li class="nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll"
-  <%= 'aria-expanded="false"' if has_submenu %>
+  <%= 'aria-haspopup="true" aria-expanded="false"' if has_submenu %>
 >
   <div class="flyout-item-name projekt-name">
     <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, data: { turbolinks: false } %>

@@ -5,7 +5,7 @@
   <% projekt_children_to_show_in_menu = Projekt.where(id: projekt_children_to_show_in_menu.map(&:id)).sort_by_order_number.includes(:projekt_settings, page: [:translations]) %>
 
   <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
-      <%= "aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
+      <%= "aria-haspopup=true aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
       <%= "accesskey=#{accesskey}" if accesskey < 9 && placement == "desktop" %> >
 
     <div class='flyout-item-name projekt-name'>

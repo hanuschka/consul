@@ -36,7 +36,6 @@ class ApiRequestLogs::CreateAndPushJob < ApplicationJob
         logged_at: log.created_at.iso8601
       )
 
-    log.update_column(:pushed_to_dt, true)
   rescue => e
     Rails.logger.error("[ApiRequestLog] Failed to push log #{log.id} to DT: #{e.message}")
   end

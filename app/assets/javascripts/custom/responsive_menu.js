@@ -240,12 +240,18 @@
         App.ResponsiveMenu.trapFocus();
       });
 
+      var recentTouch = false;
+      document.addEventListener("touchstart", function() {
+        recentTouch = true;
+        setTimeout(function() { recentTouch = false; }, 500);
+      }, true);
+
       $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
-        $(this).attr("aria-expanded", "true");
+        if (!recentTouch) $(this).attr("aria-expanded", "true");
       });
 
       $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
-        $(this).attr("aria-expanded", "false");
+        if (!recentTouch) $(this).attr("aria-expanded", "false");
       });
 
       App.ResponsiveMenu.initPriorityPlus();

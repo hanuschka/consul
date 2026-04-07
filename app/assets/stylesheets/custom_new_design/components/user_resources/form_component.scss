@@ -142,7 +142,8 @@ textarea.user-resources-form--banner-editor-title {
     box-shadow: none;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $mobile-viewport-start) {
+    font-size: 24px;
     height: 260px;
   }
 }

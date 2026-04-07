@@ -1,0 +1,42 @@
+de:
+  adm:
+    map_layers:
+      new:
+        title: Neue Kartenebene
+      edit:
+        title: Kartenebene bearbeiten
+      create:
+        success: Kartenebene erfolgreich erstellt.
+      update:
+        success: Kartenebene erfolgreich aktualisiert.
+      destroy:
+        success: Kartenebene erfolgreich gelöscht.
+      form:
+        protocol_label: Protokoll
+        submit: Speichern
+        labels:
+          presentation: Kartendarstellung
+        hints:
+          name: Bezeichnung der Kartenebene, wie sie im Frontend für den Nutzer angezeigt wird.
+          provider: URL der externen Kartenquelle, über die die Kartenebene eingebunden wird.
+          attribution: "Text, der als Quellen- oder Lizenzhinweis unten rechts in der Karte angezeigt wird (z. B. ‚© Leaflet‘ oder ‚Daten: OpenStreetMap‘). Die Angabe ist häufig verpflichtend und sollte gemäß den Nutzungsbedingungen des Anbieters erfolgen."
+          layer_names: Technischer Name der Kartenebene gemäß der Capabilities-Datei des WMS-Dienstes. Mehrere Ebenen können kommagetrennt ohne Leerzeichen angegeben werden. Dieser Name ist nicht identisch mit der Bezeichnung, die Nutzern im Kartenmenü angezeigt wird.
+          presentation: Legen Sie fest, wie diese Kartenebene beim Laden der Karte angezeigt wird. Sie können die Ebene als Basiskarte festlegen, sie standardmäßig einblenden oder als transparent markieren.
+          opacity: Markiert diese Kartenebene als transparent. Dadurch bleiben darunterliegende Basiskarten oder zusätzliche Layer sichtbar, wenn beide gleichzeitig angezeigt werden.
+      map_layers:
+        title: WMS-Kartenlayer hinzufügen
+        description: Hier können zusätzliche Kartenlayer über einen WMS-Dienst eingebunden werden. Die Layer müssen als öffentliche WMS-URLs verfügbar sein.
+        table:
+          name: Name der Kartenebene
+          type: Typ
+          layer_names: Layername
+          base: Base
+          layer: Layer
+        actions:
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Kartenebene löschen möchten?
+        no_layers: Keine Kartenebenen vorhanden.
+        no_layers_title: Keine Kartenebenen vorhanden
+        no_layers_description: "Fügen Sie über den Button oben eine WMS-Kartenebene hinzu, um zusätzliche Layer auf der Karte darzustellen."
+        add_layer: Kartenebene hinzufügen

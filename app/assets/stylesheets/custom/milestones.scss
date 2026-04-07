@@ -6,6 +6,6 @@
 
   li.future-milestone::before {
     background: transparent;
-    border: 3px solid $brand;
+    border: 3px solid var(--brand-color);
   }
 }

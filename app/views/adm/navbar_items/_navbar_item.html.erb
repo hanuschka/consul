@@ -1,0 +1,29 @@
+<div class="<%= navbar_item.parent.present? ? 'mb-2' : 'mb-3' %> navbar-item" data-sortable-id="<%= navbar_item.id %>">
+  <div class="navbar-item__card">
+    <span data-sortable-handle class="navbar-item__handle material-symbols-outlined">drag_indicator</span>
+
+    <div class="navbar-item__content">
+      <span class="navbar-item__title"><%= navbar_item.title %></span>
+      <span class="navbar-item__url">
+        <%= navbar_item_url(navbar_item) %>
+      </span>
+    </div>
+
+    <span class="navbar-item__badge navbar-item__badge--<%= navbar_item.kind %>">
+      <%= t("adm.navbar_items.form.kinds.#{navbar_item.kind}") %>
+    </span>
+
+    <% delete_path = navbar_item.landing_page.present? ? adm_landing_pages_landing_page_navbar_item_path(navbar_item.landing_page, navbar_item) : adm_navbar_item_path(navbar_item) %>
+    <%= link_to delete_path,
+                data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
+                class: "navbar-item__delete" do %>
+      <span class="material-symbols-outlined">delete</span>
+    <% end %>
+  </div>
+
+  <div data-sortable-children class="navbar-item__children">
+    <% navbar_item.children.order(:position).each do |child| %>
+      <%= render partial: "adm/navbar_items/navbar_item", locals: { navbar_item: child } %>
+    <% end %>
+  </div>
+</div>

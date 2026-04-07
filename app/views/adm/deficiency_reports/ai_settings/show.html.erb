@@ -1,0 +1,59 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <% @ai_settings&.each do |setting| %>
+    <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+  <% end %>
+
+  <% if InternalApiClient.active_dt? && @ai_assistant_config.present? %>
+    <%= form_with url: adm_deficiency_reports_ai_settings_path, method: :patch do |f| %>
+      <%= hidden_field_tag :assistant_codename, @assistant_codename %>
+
+      <%= render Kern::FormFieldComponent.new(label: t(".questions"), hint: t(".questions_hint")) do %>
+        <%= f.text_area :questions,
+          placeholder: @ai_assistant_config["default_questions"],
+          value: @ai_assistant_config["questions"],
+          rows: 5,
+          label: false %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: t(".criteria"), hint: t(".criteria_hint")) do %>
+        <%= f.text_area :criteria,
+          placeholder: @ai_assistant_config["default_criteria"],
+          value: @ai_assistant_config["criteria"],
+          rows: 5,
+          label: false %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: t(".parting_words"), hint: t(".parting_words_hint")) do %>
+        <%= f.text_area :parting_words,
+          placeholder: @ai_assistant_config["default_parting_words"],
+          value: @ai_assistant_config["parting_words"],
+          rows: 5,
+          label: false %>
+      <% end %>
+
+      <%= form_submit_button(text: t(".update_button")) %>
+    <% end %>
+  <% elsif @ai_assistant_config_response["error"].present? %>
+    <div class="kern-alert kern-alert--danger" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+        <span class="kern-title"><%= @ai_assistant_config_response["error"] %></span>
+      </div>
+    </div>
+  <% else %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".not_connected") %></span>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,37 @@
+de:
+  adm:
+    modal_notifications:
+      index:
+        title: Popup-Benachrichtigungen
+        intro_text_p1: >
+          Popup-Benachrichtigungen werden Nutzern beim Besuch der Plattform als modaler Dialog angezeigt.
+          Sie eignen sich für wichtige Hinweise, z. B. Wartungsankündigungen, neue Beteiligungsmöglichkeiten
+          oder zeitlich begrenzte Informationen.
+        intro_text_p2: >
+          Über den Zeitraum (Aktiv von/bis) steuern Sie, wann die Benachrichtigung sichtbar ist.
+          Jeder Nutzer sieht eine Popup-Benachrichtigung nur einmal pro Sitzung.
+        empty_title: "Keine Popup-Benachrichtigungen vorhanden"
+        empty_description: "Erstellen Sie eine neue Popup-Benachrichtigung, um Nutzer auf wichtige Inhalte hinzuweisen."
+        new_modal_notification: Neue Popup-Benachrichtigung
+        table:
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Popup-Benachrichtigung löschen möchten?
+      new:
+        title: Popup-Benachrichtigung erstellen
+      edit:
+        title: Popup-Benachrichtigung bearbeiten
+      create:
+        success: Popup-Benachrichtigung wurde erfolgreich erstellt.
+      update:
+        success: Popup-Benachrichtigung wurde erfolgreich aktualisiert.
+      destroy:
+        success: Popup-Benachrichtigung wurde erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        hints:
+          active_from: "Ab diesem Datum wird die Popup-Benachrichtigung Nutzern beim Besuch der Plattform angezeigt. Lassen Sie das Feld leer, wenn die Benachrichtigung sofort nach dem Erstellen sichtbar sein soll. Das Datum kann jederzeit nachträglich geändert werden."
+          active_to: "Ab diesem Datum wird die Popup-Benachrichtigung nicht mehr angezeigt. Lassen Sie das Feld leer, wenn die Benachrichtigung dauerhaft sichtbar bleiben soll. Abgelaufene Benachrichtigungen bleiben in der Übersicht erhalten und können bei Bedarf reaktiviert werden."
+          title: "Der Titel wird als Überschrift im Popup-Dialog angezeigt. Wählen Sie einen kurzen, aussagekräftigen Text, der das Thema der Benachrichtigung auf den Punkt bringt. Der Titel ist das Erste, was Nutzer lesen, und sollte zum Weiterlesen motivieren."
+          html_content: "Der Inhalt wird unterhalb des Titels im Popup-Dialog angezeigt. Nutzen Sie den Editor, um den Text zu formatieren, Links einzufügen oder Bilder hinzuzufügen. Halten Sie den Text möglichst kurz und handlungsorientiert, da Popup-Dialoge auf Mobilgeräten wenig Platz bieten."

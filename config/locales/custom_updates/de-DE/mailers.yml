@@ -33,6 +33,9 @@ de:
     newsletter_subscription_for_existing_user:
       subject: Anmeldung zum Newsletter
       p1_html: Es gab einen Versuch, sich mit Ihrer E-Mail-Adresse für unseren Newsletter anzumelden. Da Sie bereits über ein Consul-Konto verfügen, möchten wir Sie bitten, sich einzuloggen und die Option zum Empfang des Newsletters in Ihren <a href=%{link}>Konto-Einstellungen</a> zu aktivieren.
+    csv_download_ready:
+      subject: Daten-Export
+      p1_html: 'Sie haben einen Export beantragt. Die Daten wurden exportiert und stehen zum Download bereit: <a href="%{url}">CSV herunterladen</a>'
     file_ready:
       subject: Daten-Export
       p1_html: Sie haben einen Export beantragt. Die Daten wurden nun exportiert und sind im Anhang anbei.
@@ -40,14 +43,13 @@ de:
       subject: Upload der CSV-Daten erfolgreich abgeschlossen.
       p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
-      subject: Ihr Beitrag verstößt gegen die Netiquette.
-      title: Ihr Beitrag verstößt gegen die Netiquette.
+      subject: Ihr Vorschlag verstößt gegen die Zulassungsbedingungen.
       hi: "Hallo %{username},"
-      text1: "wir haben Ihren Beitrag geprüft: %{text}"
-      text2: "Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
-      text3: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
+      text1: "wir haben Ihren Themenvorschlag %{text} geprüft."
+      text2: "Leider verstößt er gegen die Zulassungsbedingungen unserer Themenwahl. Wir haben Ihren Vorschlag daher entfernt."
+      text3: Die Zulassungsbedingungen können Sie %{netiquette_link} nachlesen.
       netiquette_link_text: hier
-      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
+      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Zulassungsbedingungen einhält.
       sincerely: Mit freundlichen Grüßen
     comment:
       subject: Ihr Vorschlag wurde kommentiert.
@@ -96,6 +98,9 @@ de:
       hi: "Hallo,"
       p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
       p2: Wenn Sie Ihre ursprünglich hinterlegte E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor. Sollten Sie den Verifizierungsversuch nicht initiiert haben, dann wenden Sie sich bitte an die Administratoren der Beteiligungssoftware.
+    projekt_event_registration_confirmation:
+      body: "Hallo %{name}, bitte bestätigen Sie Ihre Anmeldung zur Veranstaltung \"%{event}\", indem Sie auf den folgenden Link klicken."
+      confirm_link: "Anmeldung bestätigen"
     user_verification_failed:
       subject: Verifizierungsversuch fehlgeschlagen
       hi: "Hallo %{username},"

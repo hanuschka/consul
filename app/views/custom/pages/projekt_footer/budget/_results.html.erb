@@ -17,16 +17,22 @@
                                   investments: @investments.incompatible %>
     <% end %>
 
-    <p>
-      <%= link_to url_to_footer_tab(section: 'overview', remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
-        <small><%= t("budgets.results.investment_proyects") %></small>
-      <% end %><br>
-      <%= link_to url_to_footer_tab(section: 'overview', filter: "unselected", remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
-        <small><%= t("budgets.results.not_selected_investment_proyects") %></small>
-      <% end %><br>
-      <%= link_to url_to_footer_tab(section: 'overview', filter: "unfeasible", remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
-        <small><%= t("budgets.results.unfeasible_investment_proyects") %></small>
-      <% end %>
-    </p>
+    <ul class="no-bullet">
+      <li>
+        <%= link_to url_to_footer_tab(section: 'overview', remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
+          <small><%= t("budgets.results.investment_proyects") %></small>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to url_to_footer_tab(section: 'overview', filter: "unselected", remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
+          <small><%= t("budgets.results.not_selected_investment_proyects") %></small>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to url_to_footer_tab(section: 'overview', filter: "unfeasible", remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
+          <small><%= t("budgets.results.unfeasible_investment_proyects") %></small>
+        <% end %>
+      </li>
+    </ul>
   </div>
 </div>

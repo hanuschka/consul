@@ -4,6 +4,10 @@
   <% end %>
 <% end %>
 
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <%= render UserResources::FormComponent.new(
   @proposal,
   url: proposals_path,

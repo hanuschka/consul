@@ -23,7 +23,7 @@
   font-weight: 400;
   line-height: 1.5;
   color: $white;
-  background: $brand;
+  background: var(--brand-color);
   text-decoration: none;
   text-align: center;
 }
@@ -31,7 +31,7 @@
 .iframe-consent-button:hover,
 .iframe-consent-button:focus,
 .iframe-consent-button:focus {
-  background: lighten($brand, 5%);
+  background: color-mix(in srgb, var(--brand-color), white 5%);
   text-decoration: none;
   color: $white;
 }

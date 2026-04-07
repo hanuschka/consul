@@ -1,0 +1,19 @@
+<div class="kern-container mb-5" style="margin-top:-20px;">
+  <div class="adm-tabs-wrapper" data-controller="tabs-scroll">
+    <button type="button" class="adm-tabs-arrow adm-tabs-arrow--left" data-tabs-scroll-target="leftArrow" data-action="click->tabs-scroll#scrollLeft" aria-label="Scroll left">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    <div class="no-horizontal-scroll" data-tabs-scroll-target="scrollContainer">
+      <nav class="adm-tabs" aria-label="<%= t('.aria_label', default: 'Secondary navigation') %>">
+        <% tabs.each do |tab| %>
+          <%= link_to tab.url, class: tab_classes(tab), data: tab_data(tab), aria: { current: (tab.current ? "page" : nil) } do %>
+            <%= tab.label %>
+          <% end %>
+        <% end %>
+      </nav>
+    </div>
+    <button type="button" class="adm-tabs-arrow adm-tabs-arrow--right" data-tabs-scroll-target="rightArrow" data-action="click->tabs-scroll#scrollRight" aria-label="Scroll right">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+  </div>
+</div>

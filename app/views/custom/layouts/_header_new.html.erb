@@ -1,17 +1,15 @@
 <% launch_page ||= false %>
 
-<header>
+<header class="topbar-header">
   <div class="js-sticky-header top-bar-wrapper">
     <div class="top-bar-background-wrapper">
       <div class="top-bar" data-white-text="<%= extended_feature?('general.use_white_top_navigation_text') %>">
-        <span data-responsive-toggle="responsive-menu"
-              class="hamburger-menu header--mobile-hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
-              role="button"
-              tabindex="0"
+        <button data-responsive-toggle="responsive-menu"
+              class="hamburger-menu header--mobile-hamburger-menu js-toggle-mobile-menu js-prevent-key-scroll"
               aria-expanded="false"
               aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
               <span class="menu-icon dark" data-toggle></span>
-        </span>
+        </button>
 
         <div class="top-bar--title">
 
@@ -29,9 +27,12 @@
         </div>
 
         <div class="header--navigation expanded not-print hide-for-small-only">
-          <div class="hader--subnavigation-wrapper hide-for-small-only">
+          <nav
+            class="hader--subnavigation-wrapper hide-for-small-only"
+            aria-label="<%= t('custom.accessibility.navigation.main') %>"
+          >
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
-          </div>
+          </nav>
 
           <% if !launch_page && !user_signed_in? %>
             <div class='header--account-buttons show-on-desktop hide-on-mobile'>
@@ -47,8 +48,10 @@
   </header>
   <div class="header--responsive-menu-wrapper">
     <div id="responsive-menu" class='header--responsive-menu not-print'>
-      <div class="subnavigation">
-
+      <nav
+        class="subnavigation"
+        aria-label="<%= t('custom.accessibility.navigation.mobile') %>"
+      >
         <% if current_user.present? && !current_user.guest? %>
           <div class="header--responsive-menu--user">
             <div class="header--responsive-menu--user-avatar">
@@ -62,7 +65,7 @@
               <%= current_user.name %>
             </div>
             <%= link_to(t("layouts.header.my_account_link"), user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
-            <%= link_to t("layouts.header.administration"), admin_root_path if current_user.administrator? %>
+            <%= link_to t("layouts.header.administration"), adm_root_path if current_user.administrator? %>
           </div>
         <% end %>
 
@@ -88,6 +91,6 @@
         <div class="small-12 column">
           <%= render "shared/top_links" %>
         </div>
-      </div>
+      </nav>
     </div>
   </div>

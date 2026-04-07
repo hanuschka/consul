@@ -23,6 +23,8 @@ de:
             active: Aktiv
             visible: Sichtbar
             actions: Aktionen
+            delete: Löschen
+            confirm_delete: "Sind Sie sicher? Damit wird die Phase \"%{name}\" und alle zugehörigen Inhalte gelöscht."
         new:
           title: Neue Beteiligungsphase erstellen
           intro_title: Beteiligungsmodul auswählen
@@ -35,6 +37,8 @@ de:
           success: Die Beteiligungsphase wurde erfolgreich erstellt.
         update:
           success: Die Beteiligungsphase wurde erfolgreich aktualisiert.
+        destroy:
+          success: Die Beteiligungsphase und alle zugehörigen Inhalte wurden gelöscht.
         duration:
           title: Laufzeit
           dates_label: Laufzeit der Phase

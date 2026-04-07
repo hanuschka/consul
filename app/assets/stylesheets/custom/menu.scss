@@ -225,8 +225,8 @@ span.icon-account {
 
 
   .top-level-item > .nav-toggle-arrow:after {
-    top: -9px;
-    left: 3px;
+    top: 4px;
+    left: 4px;
   }
 
   .flyout-item .nav-toggle-arrow:after {
@@ -297,7 +297,6 @@ span.icon-account {
   .subnavigation a.home-items-icon {
     display: inline-block;
     width: 20px;
-    display: inline-block;
     height: 100%;
 
     &:focus {

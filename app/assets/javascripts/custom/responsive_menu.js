@@ -193,7 +193,7 @@
         App.ResponsiveMenu.toggleMenu($(this))
       });
 
-      $("body").on("keyup", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function() {
+      $("body").on("keyup", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function(event) {
         var $menuOpen = $(this).closest('.nav-element').attr('aria-expanded') == 'true'
         if ( ( event.which == 40 && !$menuOpen ) || // down arrow
              ( event.which == 38 && $menuOpen )  ) { // up arrow
@@ -240,12 +240,18 @@
         App.ResponsiveMenu.trapFocus();
       });
 
+      var recentTouch = false;
+      document.addEventListener("touchstart", function() {
+        recentTouch = true;
+        setTimeout(function() { recentTouch = false; }, 500);
+      }, true);
+
       $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
-        $(this).attr("aria-expanded", "true");
+        if (!recentTouch) $(this).attr("aria-expanded", "true");
       });
 
       $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
-        $(this).attr("aria-expanded", "false");
+        if (!recentTouch) $(this).attr("aria-expanded", "false");
       });
 
       App.ResponsiveMenu.initPriorityPlus();

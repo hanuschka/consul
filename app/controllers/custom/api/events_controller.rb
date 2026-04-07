@@ -101,7 +101,15 @@ class Api::EventsController < Api::BaseController
       :end_datetime,
       :location,
       :weblink,
-      :open_ended
+      :open_ended,
+      :language,
+      :wheelchair_accessible,
+      :accessible_toilet,
+      :disabled_parking_nearby,
+      :tactile_guidance_systems,
+      :induction_loop_available,
+      :assistance_dogs_welcome,
+      :sign_language_interpreter
     )
   end
 

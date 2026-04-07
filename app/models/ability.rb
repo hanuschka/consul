@@ -3,6 +3,8 @@ class Ability
 
   def initialize(user)
     if user # logged-in users
+      can :use, :voice_assistant
+
       merge Abilities::Valuator.new(user) if user.valuator?
       merge Abilities::ProjektManager.new(user) if user.projekt_manager? && !user.administrator?
       merge Abilities::DeficiencyReportManager.new(user) if user.deficiency_report_manager?

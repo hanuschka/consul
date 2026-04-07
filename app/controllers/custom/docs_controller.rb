@@ -4,11 +4,15 @@ class DocsController < ApplicationController
   before_action :set_spec_url, only: [:api, :api_alt]
 
   def api
-    render :api, layout: false
+    respond_to do |format|
+      format.html { render :api, layout: false }
+    end
   end
 
   def api_alt
-    render :api_alt, layout: false
+    respond_to do |format|
+      format.html { render :api_alt, layout: false }
+    end
   end
 
   private

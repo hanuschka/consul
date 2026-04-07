@@ -111,7 +111,14 @@ namespace :projekt_management do
       end
     end
 
-    resources :projekt_content_blocks, only: [:create]
+    resources :projekt_content_blocks, only: [:create] do
+      collection do
+        post :import_document
+        post :generate_from_prompt
+        get :import_status
+        delete :destroy_all
+      end
+    end
   end
 
   resources :projekt_content_blocks, only: [:destroy, :update] do
@@ -173,6 +180,7 @@ namespace :projekt_management do
     member do
       post :send_notifications
     end
+    resources :projekt_event_registrations, only: [:index, :destroy]
   end
 
   resources :proposals, only: :index do
@@ -199,7 +207,12 @@ namespace :projekt_management do
 
   namespace :site_customization do
     resources :pages, only: [:update]
-    resources :content_blocks, only: [:edit, :update]
+    resources :content_blocks, only: [:edit, :update] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
   end
 
   scope module: :poll do

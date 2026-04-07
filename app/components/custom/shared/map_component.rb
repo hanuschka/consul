@@ -1,16 +1,22 @@
 class Shared::MapComponent < ApplicationComponent
   def initialize(
-    mappable: nil, # map center, zoom, altitu
-    features: {}, # map features, e.g. markers, polygons (comes from collection)
-    editable: false, # if true user can edit the features
+    mappable: nil,
+    features: {},
+    editable: false,
     process: nil,
-    placement: nil # used to determine the placement of the map (e.g. in a modal or on a page
+    placement: nil,
+    collapsible: false
   )
     @mappable = mappable
     @features = features
     @editable = editable
     @process = process
     @placement = placement
+    @collapsible = collapsible
+  end
+
+  def collapsible?
+    @collapsible && !@editable
   end
 
   def map_div
@@ -51,6 +57,7 @@ class Shared::MapComponent < ApplicationComponent
         options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
         options[:map_center_altitude] = map_location&.altitude
+        options[:vc_map_module_url] = Rails.application.secrets.vc_map_module
       end
 
       options

@@ -1,0 +1,37 @@
+<div style="display:<%= display_style %>"
+     data-kern--registered-address-selector-target="regularFields">
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-8">
+      <%= @f.text_field :city_name,
+        autocomplete: "address-level2",
+        placeholder: t("custom.devise_views.users.registrations.new.city_name_label"),
+        label: false %>
+    </div>
+    <div class="kern-col-12 kern-col-md-4">
+      <%= @f.text_field :plz,
+        autocomplete: "postal-code",
+        placeholder: t("custom.devise_views.users.registrations.new.plz_label"),
+        label: false %>
+    </div>
+  </div>
+  <div class="kern-row mb-3">
+    <div class="kern-col-12">
+      <%= @f.text_field :street_name,
+        autocomplete: "street-address",
+        placeholder: t("custom.devise_views.users.registrations.new.street_name_label"),
+        label: false %>
+    </div>
+  </div>
+  <div class="kern-row mb-3">
+    <div class="kern-col-12 kern-col-md-6">
+      <%= @f.text_field :street_number,
+        placeholder: t("custom.devise_views.users.registrations.new.street_number_label"),
+        label: false %>
+    </div>
+    <div class="kern-col-12 kern-col-md-6">
+      <%= @f.text_field :street_number_extension,
+        placeholder: t("custom.devise_views.users.registrations.new.street_number_extension_label"),
+        label: false %>
+    </div>
+  </div>
+</div>

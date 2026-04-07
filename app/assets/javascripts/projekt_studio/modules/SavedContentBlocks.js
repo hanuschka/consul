@@ -97,7 +97,7 @@ ProjektStudio.SavedContentBlocks = {
     const templateContentElement = container.querySelector(".js-content-block-template-content")
     templateContentElement.innerHTML = content
 
-    // this.turnOffEditModeForItem(container)
+    this.turnOffEditModeForItem(container)
 
     $.ajax({
       url: `/admin/saved_content_blocks/${savedContentBlockId}`,
@@ -138,6 +138,8 @@ ProjektStudio.SavedContentBlocks = {
     const container = this.getFormContainer(e.currentTarget)
     const editor = this.getEditorForContainer(container)
     const content = editor.getValue();
+    const savedContentBlockType = container.dataset.savedContentBlockType;
+    const userSpecific = savedContentBlockType === 'user';
 
     editor.setValue("")
 
@@ -147,14 +149,23 @@ ProjektStudio.SavedContentBlocks = {
       headers: {
         'X-Embedded-Frame': ProjektStudio.isEmbedded
       },
-      data: { saved_content_block: { content }}
-    }).then(({ saved_content_block_item_html }) => {
+      data: { saved_content_block: { content, user_specific: userSpecific }}
+    })
+    .then(({ saved_content_block_item_html }) => {
       container.classList.remove("-form-opened")
 
       this.addNewSavedContentBlockOnUI({
         saved_content_block_item_html,
         container
       })
+    })
+    .catch((response) => {
+      if (response.error && response.error.message) {
+        alert(`Fehler beim Erstellen der Inhaltsblockvorlage: ${response.error.message}`)
+      }
+      else {
+        alert("Fehler beim Erstellen der Inhaltsblockvorlage")
+      }
     })
   },
 
@@ -182,17 +193,27 @@ ProjektStudio.SavedContentBlocks = {
           'X-Embedded-Frame': ProjektStudio.isEmbedded
         }
       })
+      .then(() => {
+        container.remove()
 
-      container.remove()
-
-      const selector =`.js-saved-content-block-item[data-saved-content-block-id="${savedContentBlockId}"]`
-      const elementsToRemove = document.querySelectorAll(selector)
-      elementsToRemove.forEach((element) => element.remove())
+        const selector =`.js-saved-content-block-item[data-saved-content-block-id="${savedContentBlockId}"]`
+        const elementsToRemove = document.querySelectorAll(selector)
+        elementsToRemove.forEach((element) => element.remove())
+      })
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Löschen der Inhaltsblockvorlage: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Löschen der Inhaltsblockvorlage")
+        }
+      })
     }
   },
 
   addNewSavedContentBlockOnUI({saved_content_block_item_html, container}) {
-    const templatesList = document.querySelector(".js-saved-content-blocks-list")
+    const tabPanel = container.closest(".tabs-panel")
+    const templatesList = tabPanel.querySelector(".js-saved-content-blocks-list")
 
     templatesList.insertAdjacentHTML("beforeend", saved_content_block_item_html)
 
@@ -233,15 +254,9 @@ ProjektStudio.SavedContentBlocks = {
 
   getEditorName(container) {
     const editorName = container.dataset.editorName
+    const surroundingContentBlockId = ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId
 
-    const surroundingContentBlockId =
-        ProjektStudio.ContentBlock.Crud.addContentBlockAfter
-        .dataset
-        .contentBlockId
-
-    const scopedToContentBlockEditorName = `${editorName}-content-block-${surroundingContentBlockId}`
-
-    return scopedToContentBlockEditorName
+    return `${editorName}-content-block-${surroundingContentBlockId}`
   },
 
   getFormContainer(element) {

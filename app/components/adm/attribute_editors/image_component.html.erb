@@ -1,0 +1,12 @@
+<%= form_with model: @record, url: path do |form| %>
+  <%= hidden_field_tag :kind, "image" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+
+  <%= render Kern::Form::ImageComponent.new(form: form, attribute: @attribute, auto_submit: true) %>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-controller="auto-remove">
+    <%= flash[:success] %>
+  </div>
+<% end %>

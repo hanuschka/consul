@@ -7,13 +7,16 @@
           var showWarning = true;
         }
 
-        if ( showWarning && this.hostname.length && location.hostname !== this.hostname ) {
+        if (event.currentTarget.matches(".glightbox-link, .glightbox")) {
+          return
+        }
 
+        if (showWarning && event.currentTarget.hostname.length && location.hostname !== event.currentTarget.hostname) {
           var answer = window.confirm("Mit Bestätigung stimmen Sie zu, die Webseite zu verlassen.");
-          if ( !answer ) {
+
+          if (!answer) {
             event.preventDefault()
           }
-
         }
       });
     }

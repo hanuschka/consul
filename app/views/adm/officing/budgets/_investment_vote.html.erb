@@ -1,0 +1,26 @@
+<% voted = offline_user.voted_for?(investment) %>
+<% label = "#{investment.title} ##{investment.id}" %>
+<% label += " — #{investment.formatted_price}" if investment.formatted_price.present? %>
+
+<%= render Kern::FormFieldComponent.new(
+  inline: true,
+  label: label,
+  divider: true) do %>
+
+  <% if voted %>
+    <% if budget.distributed_voting? %>
+      <% vote = investment.votes_for.where(voter: offline_user).first %>
+      <p class="mb-2"><%= t(".weight", count: vote&.vote_weight || 1) %></p>
+    <% end %>
+    <%= form_with(url: adm_officing_budget_investment_vote_path(budget, investment, offline_user_id: offline_user.id), method: :delete) do %>
+      <%= form_submit_button(text: t(".revoke"), style: :secondary) %>
+    <% end %>
+  <% else %>
+    <%= form_with(url: adm_officing_budget_investment_votes_path(budget, investment_id: investment.id, offline_user_id: offline_user.id), method: :post, class: "d-flex align-items-center gap-2") do |f| %>
+      <% if budget.distributed_voting? %>
+        <%= select_tag :vote_weight, options_for_select((1..3).map { |i| [i, i] }), class: "kern-form-input__input" %>
+      <% end %>
+      <%= kern_button(icon: "how_to_vote", text: t(".support"), type: :submit) %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,5 +1,31 @@
 de:
+  internal_api_clients:
+    connect:
+      success: "Erfolgreich mit DT verbunden."
   admin:
+    connection:
+      index:
+        title: "DT API Connection Status"
+        connection_error_label: "Error:"
+        checks:
+          dt_connected:
+            label_ok: "DT API connected"
+            label_fail: "DT API not connected"
+            description_ok: "The DT API client is registered and has a valid service token."
+            description_fail: "No DT API client registered or service token missing."
+            hint: "Local config check only — no HTTP request is made."
+          api_accessible:
+            label_ok: "DT API accessible"
+            label_fail: "DT API not accessible"
+            description_ok: "The DT API endpoint is reachable and responding without server errors."
+            description_fail: "The DT API endpoint timed out or returned a server error (5xx)."
+            hint: "Makes an HTTP request to the status endpoint; passes if response is non-5xx."
+          connection_works:
+            label_ok: "DT connection works"
+            label_fail: "DT connection failed"
+            description_ok: "Authentication is valid and the connection is fully operational."
+            description_fail: "The connection check returned an unexpected response or authentication failed."
+            hint: "Requires HTTP 200 with authenticated: true in the JSON response body."
     header:
       title: Verwaltung
     actions:
@@ -737,6 +763,7 @@ de:
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
       api_clients: API-Clients
+      api_request_logs: API-Anfragen-Logs
       managers: Verwalter*innen
       sdg_managers: SDG Manager*innen
       moderators: Moderator*innen
@@ -793,6 +820,24 @@ de:
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
       machine_learning: "AI / Machine learning"
+    api_request_logs:
+      index:
+        title: API-Anfragen-Logs
+        id: ID
+        http_method: Methode
+        request_path: Pfad
+        response_status: Status
+        api_client: API-Client
+        no_logs: Keine API-Anfragen-Logs vorhanden.
+      show:
+        http_method: HTTP-Methode
+        request_path: Anfrage-Pfad
+        full_url: Vollständige URL
+        response_status: Antwort-Status
+        api_client: API-Client
+        created_at: Erstellt am
+        query_params: Query-Parameter
+        body_params: Body-Parameter
     api_clients:
       edit_button: "Bearbeiten"
       access_level:
@@ -1513,8 +1558,8 @@ de:
           budgets: Offene Haushalte
           budget_investments: Investitionsvorschläge
           unverified_users: Nicht verifizierte Benutzer*innen
-          user_level_three: Benutzer*innen auf Stufe 3
-          user_level_two: Benutzer*innen auf Stufe 2
+          user_level_three: Verifiziert
+          user_level_two: Registriert
           users: Benutzer*innen gesamt
           verified_users: Verifizierte Benutzer*innen
           verified_users_who_didnt_vote_proposals: Verifizierte Benutzer*innen, die nicht für Vorschläge abgestimmt haben

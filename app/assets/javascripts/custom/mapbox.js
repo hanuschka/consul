@@ -88,6 +88,17 @@
    setupEventListeners() {
       var self = this;
 
+      $(this.element).on('keydown', function(event) {
+        if (event.which === 27) {
+          var popups = document.querySelectorAll('.mapboxgl-popup');
+          popups.forEach(function(popup) {
+            if (popup.parentNode) {
+              popup.parentNode.removeChild(popup);
+            }
+          });
+        }
+      });
+
       if (this.$categorySelect) {
         this.$categorySelect.on("change", function(e) {
           // self.updateMarkerStyleFromCategorySelect(e.target);
@@ -1842,12 +1853,16 @@
       var button = document.createElement('button');
       button.type = 'button';
       button.className = 'mapbox-layer-control-button';
-      button.innerHTML = '<i class="fas fa-layer-group"></i>'; // Layers icon
+      button.innerHTML = '<i class="fas fa-layer-group"></i>';
       button.title = 'Kartenebenen';
+      button.setAttribute('aria-label', 'Kartenebenen');
+      button.setAttribute('aria-expanded', 'false');
 
       // Create dropdown container
       var dropdown = document.createElement('div');
       dropdown.className = 'mapbox-layer-control-dropdown';
+      dropdown.setAttribute('role', 'group');
+      dropdown.setAttribute('aria-label', 'Kartenebenen');
       dropdown.style.display = 'none';
 
       // Add POI labels section
@@ -1888,13 +1903,41 @@
       // Toggle dropdown on button click
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        var isOpen = dropdown.style.display === 'none';
+        dropdown.style.display = isOpen ? 'block' : 'none';
+        button.setAttribute('aria-expanded', String(isOpen));
+
+        if (isOpen) {
+          var firstFocusable = App.FocusTrap.getFocusableElements(dropdown)[0];
+
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
+        }
       });
 
       // Close dropdown when clicking outside
       document.addEventListener('click', (e) => {
         if (!this._container.contains(e.target)) {
           dropdown.style.display = 'none';
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // ESC key closes dropdown and returns focus to button
+      this._container.addEventListener('keydown', (e) => {
+        if (dropdown.style.display === 'none') return;
+
+        if (e.key === 'Escape' || e.which === 27) {
+          e.preventDefault();
+          e.stopPropagation();
+          dropdown.style.display = 'none';
+          button.setAttribute('aria-expanded', 'false');
+          button.focus();
+        }
+
+        if (e.key === 'Tab' || e.which === 9) {
+          App.FocusTrap.handleTabKey(e, this._container);
         }
       });
 

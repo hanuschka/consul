@@ -11,5 +11,10 @@ App.Followable.update("<%= dom_id(@follow.followable) %>",
                       "<%= j render("layouts/flash") %>")
 <% end %>
 
+$("#<%= dom_id(@proposal) %>_votes .js-copy-data-url").on("click", function(event) {
+  event.preventDefault();
+  navigator.clipboard.writeText($(this).data("url"));
+});
+
 $("div[data-voted-badge=<%= @proposal.id %>]").addClass('hide');
 

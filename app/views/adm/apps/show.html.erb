@@ -1,0 +1,70 @@
+<%= content_for :title, t("adm.apps.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.apps.show.title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p><%= t("adm.apps.show.intro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+
+  <% @categories.each do |cat| %>
+    <div class="adm-dashboard__section">
+
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true"><%= cat[:icon] %></span>
+        <h3><%= cat[:category] %></h3>
+      </div>
+
+      <div class="adm-apps">
+        <% cat[:apps].each do |app| %>
+          <div class="adm-app-card">
+
+            <div class="adm-app-card__header">
+              <div class="adm-app-card__icon">
+                <% if app[:logo].present? %>
+                  <%= image_tag app[:logo], alt: app[:name], class: "adm-app-card__logo" %>
+                <% else %>
+                  <span class="material-symbols-outlined"><%= app[:icon] %></span>
+                <% end %>
+              </div>
+              <span class="adm-app-card__status adm-app-card__status--<%= app[:status] %>">
+                <span class="material-symbols-outlined">
+                  <%= app[:status] == "active" ? "check_circle" : app[:status] == "waiting_for_activation" ? "hourglass_top" : "radio_button_unchecked" %>
+                </span>
+                <%= t("adm.apps.show.status.#{app[:status]}") %>
+              </span>
+            </div>
+
+            <h3 class="adm-app-card__name"><%= app[:name] %></h3>
+
+            <p class="adm-app-card__description"><%= app[:description] %></p>
+
+            <div class="adm-app-card__footer">
+              <% if app[:status] == "inactive" %>
+                <a href="mailto:hello@demokratie.today?subject=App-Anfrage:%20<%= CGI.escape(app[:name]) %>"
+                   class="adm-app-card__cta">
+                  <span class="material-symbols-outlined">mail</span>
+                  <%= t("adm.apps.show.request") %>
+                </a>
+              <% elsif app[:status] == "waiting_for_activation" %>
+                <span class="adm-app-card__cta adm-app-card__cta--pending">
+                  <span class="material-symbols-outlined">hourglass_top</span>
+                  <%= t("adm.apps.show.pending") %>
+                </span>
+              <% else %>
+                <span class="adm-app-card__cta adm-app-card__cta--active">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <%= t("adm.apps.show.active_label") %>
+                </span>
+              <% end %>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  <% end %>
+
+</div>

@@ -1,8 +1,113 @@
 en:
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code Editor"
+        title_sidebar: "Code Editor for Sidebar Section"
+        title_footer: "Code Editor for Footer Section"
+        save: "Save"
+        cancel: "Cancel"
+    projekt_content_blocks:
+      create:
+        success: Content block created
+        error: Error creating content block
+      update:
+        success: Content block updated
+        error: Error updating content block
+      destroy:
+        success: Content block destroyed
+        error: Error destroying content block
+      update_position:
+        success: Content block position updated
+        error: Error updating content block position
+      change_with_ai:
+        success: Content block updated
+      import:
+        success: Document has been successfully imported
+        categories: Categories
+        sdg_goals: SDG Goals
+        no_file: No file uploaded
+        user_prompt_placeholder: |
+          "Formulate section XY in a more comprehensible way for the public."
+          "Additionally create a separate content block in plain language."
+          "Shorten the introduction and make the beginning more understandable."
+          "Summarize long sections in bullet points."
+          "Rearrange the content logically if the order in the document is unclear."
+      generate_from_prompt:
+        success: Content has been successfully generated
+        no_prompt: Please enter a prompt
+      destroy_all:
+        success: All content blocks deleted
+    projekt:
+      content_block_templates_selector:
+        loading: "Loading content block templates..."
+        fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
+        tabs:
+          internal_content_blocks: Internal content blocks
+          own_content_blocks: Own content blocks
+        saved_content_blocks:
+          global_explanation: "Internal content blocks are reusable HTML templates that can be used by all users. They can be edited by administrators and project managers and are available across projects."
+          global_create_title: Create new internal content block template
+          global_add_button: Add new internal content block
+          global_form_heading: Create new internal content block template
+          user_explanation: "Own content blocks are personal HTML templates that are only visible and usable by you. You can create and manage them according to your individual needs."
+          user_create_title: Create new own content block template
+          user_add_button: Add new own content block
+          user_form_heading: Create new own content block template
+          html_code_hint: Add HTML code here
+          save: Save
+          cancel: Cancel
+    proposals:
+      vote_share:
+        share_button: Share
     projekts:
       new:
         first_level: 'First level'
         second_level: 'Second level'
         third_level: 'Third level'
         fourth_level: 'Fourth level'
+      content_start_section:
+        title: "Start your project with one of the following options"
+        file_import_button:
+          title: Upload document
+          button_title: Import file
+          description: Create a visually appealing project page by automatically structuring content from a PDF or Word file.
+          action: Get started →
+        prompt_button:
+          title: Enter prompt
+          button_title: Enter prompt
+          description: Create a visually appealing project page by describing the project and generating content using AI.
+          action: Get started →
+        template_button:
+          title: Choose template
+          button_title: Choose template
+          description: Create a single content block by selecting a template and adapting it specifically to your project.
+          action: Get started →
+        empty_block_button:
+          title: Empty block
+          button_title: Empty block
+          description: Create a single content block and design the content and structure completely according to your own specifications.
+          action: Get started →
+        file_import_preview:
+          select_other_file: Choose file
+          cancel: Cancel
+          additional_instructions: "Additional instructions for the AI (optional):"
+          submit: Get started
+        prompt_form:
+          header: Enter prompt
+          label: "Describe the project and what content should be created:"
+          placeholder: "E.g. Create a project description for a new playground with information about location, facilities and schedule..."
+          cancel: Cancel
+          submit: Generate content
+        loader:
+          message: Processing document...
+      sidebar_filter:
+        phases:
+          title: 'Phases'
+          all_phases: 'All phases'
+      sidebar_section:
+        show: 'Show section'
+        hide: 'Hide section'
+    layouts:
+      footer:
+        navigation_heading: Footer navigation

@@ -1,0 +1,39 @@
+<div
+  data-controller="hidden-token"
+  data-hidden-token-token-value="<%= @token %>"
+  data-hidden-token-show-title-value="<%= t('adm.shared.show') %>"
+  data-hidden-token-hide-title-value="<%= t('adm.shared.hide') %>"
+  style="flex-grow: 1; display: flex; gap: 8px; align-items: flex-start;"
+>
+  <code
+    data-hidden-token-target="display"
+    class="break-word"
+    style="min-width: 270px; min-height: 43px; flex: 1; padding: 8px; display: flex; align-items: center; background-color: var(--kern-color-layout-background-hued, #f9f9f9); border: 1px solid var(--kern-color-layout-border, #ddd); border-radius: 3px; font-size: 1.1rem; overflow-wrap: break-word; word-break: break-all;"
+  >
+    <% if @token.present? %>
+      ••••••••••••••••
+    <% end %>
+  </code>
+  <button
+    data-hidden-token-target="toggleBtn"
+    data-action="click->hidden-token#toggle"
+    type="button"
+    class="kern-btn kern-btn--secondary"
+    style="min-width: 35px; min-height: 35px; padding: 9px;"
+    title="<%= t('adm.shared.show') %>"
+    <%= 'disabled' if @token.blank? %>
+  >
+    <span class="material-symbols-outlined" data-hidden-token-target="toggleIcon" aria-hidden="true" style="font-size: 18px;">visibility</span>
+  </button>
+  <button
+    data-hidden-token-target="copyBtn"
+    data-action="click->hidden-token#copy"
+    type="button"
+    class="kern-btn kern-btn--secondary"
+    style="min-width: 35px; min-height: 35px; padding: 9px;"
+    title="<%= t('adm.shared.copy') %>"
+    <%= 'disabled' if @token.blank? %>
+  >
+    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 18px;">content_copy</span>
+  </button>
+</div>

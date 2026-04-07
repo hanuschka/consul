@@ -1,0 +1,43 @@
+de:
+  adm:
+    tags:
+      index:
+        title: Tags
+        intro_title: Hinweis zu den Tags
+        intro_text_p1: >
+          Tags dienen der thematischen Verbindung einzelner Projekte auf globaler Plattformebene.
+          Sie werden auf der Projektübersichtsseite als Filteroption angeboten und ermöglichen den
+          Nutzern eine gezielte Suche nach Themenbereichen. Jeder Tag kann beliebig vielen Projekten
+          zugewiesen werden und erscheint dort als klickbares Filterelement.
+        intro_text_p2: >
+          Im Unterschied dazu stehen die Kategorien in den Beteiligungsphasen „Vorschläge” und „Budget”.
+          Diese Kategorien sind ausschließlich innerhalb der jeweiligen Beteiligungsphase gültig und haben
+          keinen globalen Bezug zu anderen Projekten. Tags hingegen wirken projektübergreifend und eignen
+          sich daher besonders für wiederkehrende Themenschwerpunkte.
+        new_tag: Neuen Tag erstellen
+        empty_title: Keine Tags vorhanden
+        empty_description: Erstellen Sie einen neuen Tag, um Projekte thematisch zu verbinden.
+        table:
+          name: Name des Tags
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Tag löschen möchten?
+      new:
+        title: Neuen Tag erstellen
+      edit:
+        title: Tag bearbeiten
+      create:
+        success: Tag erfolgreich erstellt.
+      update:
+        success: Tag erfolgreich aktualisiert.
+      destroy:
+        success: Tag erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        hints:
+          name: >
+            Geben Sie einen kurzen, aussagekräftigen Namen für den Tag ein. Dieser wird auf der
+            Projektübersichtsseite als Filteroption angezeigt und sollte den thematischen Schwerpunkt
+            klar benennen. Vermeiden Sie zu allgemeine Begriffe, damit Nutzer die gewünschten Projekte
+            gezielt finden können.

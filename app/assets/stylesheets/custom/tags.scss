@@ -21,8 +21,8 @@
     background: #e0e0e0;
   }
   &.selected{
-    background: $tagsbackgroundcolor;
-    color: $tagstextcolor;
+    background: color-mix(in srgb, var(--brand-color), white 65%);
+    color: var(--brand-color);
   }
 }
 

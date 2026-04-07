@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      attribute_editors:
+        documents_component:
+          save: Speichern

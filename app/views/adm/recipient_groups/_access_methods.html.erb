@@ -1,0 +1,18 @@
+<div data-step>
+  <%= form_with model: [:adm, RecipientGroup.new] do |form| %>
+    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t("adm.recipient_groups.edit.name_hint"), divider: false) do %>
+      <%= form.text_field :name, label: false, placeholder: "z. B. Alle Abonnenten" %>
+
+      <%= form.hidden_field :origin_class_name, value: origin_class_name %>
+      <%= form.hidden_field :origin_class_object_id, value: origin_class_object_id %>
+
+      <div class="my-4">
+        <%= form.collection_radio_buttons :access_method,
+          options_for_access_methods.map(&:first),
+          :itself, ->(m) { t("adm.recipient_groups.new.access_methods.#{m}") } %>
+      </div>
+
+      <%= form_submit_button %>
+    <% end %>
+  <% end %>
+</div>

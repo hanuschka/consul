@@ -3,15 +3,12 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   initialize() {
     const $document = $(document);
-    $document.on("click", ".js-html-edit-content-block", this.handleEnterHtmlEditMode.bind(this));
     $document.on("click", ".js-code-edit-content-block", this.handleEnterCodeEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.handleCancelHtmlEditMode.bind(this));
-    $document.on("click", ".js-save-edit-html-projekt-content-block", this.handleSaveFromCkeditor.bind(this));
   },
 
-  handleEnterHtmlEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target)
-    this.enterHtmlEditMode(contentBlockWrapper, contentBlock)
+  switchToHtmlEditMode(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    this.enterHtmlEditMode(contentBlockWrapper, contentBlock);
   },
 
   handleEnterCodeEditMode(e) {
@@ -31,18 +28,24 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   enterHtmlEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
-    contentBlockWrapper.classList.add("-html-edit-mode")
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
+    contentBlockWrapper.classList.add("-html-edit-mode", "-in-edit-mode")
+    contentBlockWrapper.dataset.editMode = 'html';
+
+    const originalContent = contentBlock.innerHTML;
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     contentBlock.innerHTML = `
+      <div class="js-html-edit-mode-original-content" style="display: none;">
+        ${originalContent}
+      </div>
       <textarea
         name="body"
         id="${this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)}"
         rows="8"
-        class="html-area extended-a"
+        class="html-area extended-a js-studio-hide-on-preview"
         style="visibility: hidden; display: none;"
       >
-         ${contentBlock.innerHTML}
+         ${originalContent}
       </textarea>
     `
 
@@ -51,7 +54,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   enterCodeEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
-    contentBlockWrapper.classList.add("-code-edit-mode")
+    contentBlockWrapper.classList.add("-code-edit-mode", "-in-edit-mode")
 
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
@@ -93,7 +96,8 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   saveFromCkeditor(contentBlockWrapper, contentBlock) {
     if (contentBlockWrapper.classList.contains("-html-edit-mode")) {
-      contentBlockWrapper.classList.remove("-html-edit-mode")
+      contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
+      contentBlockWrapper.dataset.editMode = '';
 
       const editorId = this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)
 
@@ -106,8 +110,30 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     }
   },
 
+  updateContentBlockFromCKEditor(contentBlockWrapper, contentBlock) {
+    const editorId = this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId);
+    if (App.HTMLEditor.instances[editorId]) {
+      const newContent = App.HTMLEditor.instances[editorId].getData().trim();
+      contentBlock.innerHTML = newContent;
+    }
+  },
+
+  exitHtmlEditMode(contentBlockWrapper, restoreContent = false) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+
+    if (restoreContent) {
+      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+    } else {
+      this.updateContentBlockFromCKEditor(contentBlockWrapper, contentBlock);
+    }
+
+    contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
+    contentBlockWrapper.dataset.editMode = '';
+
+    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
+  },
+
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {
-    contentBlockWrapper.classList.remove("-html-edit-mode")
-    ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+    this.exitHtmlEditMode(contentBlockWrapper, true);
   }
 };

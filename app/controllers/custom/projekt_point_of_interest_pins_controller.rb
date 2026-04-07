@@ -1,6 +1,7 @@
 class ProjektPointOfInterestPinsController < ApplicationController
   include MapLocationAttributes
   include GuestUsers
+  include LandingPageResolvable
 
   before_action :set_projekt_phase, except: [:json_data]
 
@@ -9,6 +10,8 @@ class ProjektPointOfInterestPinsController < ApplicationController
   def new
     @pin = @projekt_phase.projekt_point_of_interest_pins.build
     authorize! :create, @pin
+
+    resolve_landing_page_for_projekt(@projekt_phase.projekt)
   end
 
   def create
@@ -20,6 +23,8 @@ class ProjektPointOfInterestPinsController < ApplicationController
     if @pin.save
       redirect_to @projekt_phase.url,  notice: t("custom.projekt_phases.point_of_interest_phases.pins.create.notice")
     else
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+
       render :new
     end
   end

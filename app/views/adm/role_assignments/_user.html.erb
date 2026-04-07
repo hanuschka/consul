@@ -1,0 +1,15 @@
+<tr class="kern-table__row" id=<%= dom_id(user) %>>
+  <th scope="row" class="kern-table__header"><%= user.username %></th>
+  <td class="kern-table__cell"><%= user.email %></td>
+  <td class="kern-table__cell">
+    <% if user.send(params[:role]).present? %>
+      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--secondary", method: :delete do %>
+        <span class="kern-label"><%= t('.remove') %></span>
+      <% end %>
+    <% else %>
+      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--primary" do %>
+        <span class="kern-label"><%= t('.add') %></span>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

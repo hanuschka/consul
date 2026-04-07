@@ -9,6 +9,26 @@ class SiteCustomization::ContentCard < ApplicationRecord
     events
   ].freeze
 
+  DEFAULT_SETTINGS = {
+    "active_projekts" => { "limit" => 3 },
+    "current_projekts" => { "limit" => 3 },
+    "latest_user_activity" => {},
+    "current_polls" => { "limit" => 3 },
+    "latest_resources" => {
+      "debates_limit" => 3,
+      "proposals_limit" => 3,
+      "investments_limit" => 3,
+      "deficiency_reports_limit" => 0
+    },
+    "expired_projekts" => { "limit" => 3 },
+    "events" => { "limit" => 3 }
+  }.freeze
+
+  store :settings
+  store_accessor :settings, *DEFAULT_SETTINGS.map { |_k, v| v.keys }.flatten.uniq
+
+  belongs_to :landing_page, class_name: "SiteCustomization::Page", optional: true
+
   translates :title, touch: true
   include Globalizable
 
@@ -41,7 +61,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
 
       find_or_create_by!(find_or_create_by_params) do |card|
         card.title = default_titles[kind]
-        card.settings = default_settings[kind] || {}
+        card.settings = DEFAULT_SETTINGS[kind]
         card.given_order = KINDS.index(kind) + 1
       end
     end.sort_by(&:given_order)
@@ -62,33 +82,6 @@ class SiteCustomization::ContentCard < ApplicationRecord
       "latest_resources" => "Neueste Beiträge",
       "expired_projekts" => "Abgeschlossene Projekte",
       "events" => "Veranstaltungen"
-    }
-  end
-
-  def self.default_settings
-    {
-      "active_projekts" => {
-        "limit" => 3
-      },
-      "current_projekts" => {
-        "limit" => 3
-      },
-      "latest_user_activity" => {},
-      "current_polls" => {
-        "limit" => 3
-      },
-      "latest_resources" => {
-        "debates_limit" => 3,
-        "proposals_limit" => 3,
-        "investments_limit" => 3,
-        "deficiency_reports_limit" => 0
-      },
-      "expired_projekts" => {
-        "limit" => 3
-      },
-      "events" => {
-        "limit" => 3
-      }
     }
   end
 end

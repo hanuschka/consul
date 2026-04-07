@@ -92,3 +92,5 @@ Rails.application.configure do
     config.hosts << host
   end
 end
+
+Rack::MiniProfiler.config.position = 'bottom-right'

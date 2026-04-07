@@ -8,19 +8,23 @@ class ProposalsController
   include RandomSeed
   include GuestUsers
   include CustomHelper
+  include LandingPageResolvable
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
 
   def index_customization
+    resolve_landing_page_from_slug
+
     if params[:order].nil?
       @current_order = Setting["selectable_setting.proposals.default_order"]
     end
     @resource_name = "proposal"
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -32,10 +36,14 @@ class ProposalsController
     remove_archived_from_order_links
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
+
+    if @landing_page.present?
+      @scoped_projekt_ids = @scoped_projekt_ids & landing_page_scoped_projekt_ids
+    end
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekt_ids = @resources.joins(:projekt_phase).pluck("projekt_phases.projekt_id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
     @categories = Tag.category.joins(:taggings)
       .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
@@ -48,6 +56,7 @@ class ProposalsController
     @resources =
       @resources
         .where(admin_accepted: true)
+        .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
         .includes(:translations, :image, :projekt_labels, :votes_for)
 
@@ -96,6 +105,10 @@ class ProposalsController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
@@ -103,6 +116,10 @@ class ProposalsController
 
     params[:projekt_phase_id] = @proposal&.projekt_phase&.id
     params[:projekt_id] = @selected_projekt&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def update
@@ -120,28 +137,23 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
-      redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
 
       Mailer.proposal_created(@proposal).deliver_later
 
-      if @proposal.projekt_phase.active?
-        redirect_to page_path(
-          @proposal.projekt_phase.projekt.page.slug,
-          anchor: "filter-subnav",
-          projekt_phase_id: @proposal.projekt_phase.id,
-          order: params[:order]
-        ), notice: t("proposals.notice.published")
-      else
-        redirect_to proposals_path(
-          resources_order: params[:order]
-        ), notice: t("proposals.notice.published")
-      end
+      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end
@@ -162,7 +174,13 @@ class ProposalsController
 
   def show
     super
-    @projekt = @proposal.projekt_phase.projekt
+    @projekt = @proposal.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to proposals_path
+
+      return
+    end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
       head :not_found, content_type: "text/html" and return
@@ -175,22 +193,10 @@ class ProposalsController
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
                                 .page(params[:page]).per(5)
 
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
-    @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
-    landing_page_slug = params[:landing_page_slug]
-    if landing_page_slug.present?
-      @landing_page =
-        @projekt
-          .landing_pages
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      else
-        redirect_to proposal_path(@proposal) and return
-      end
-    end
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
@@ -228,14 +234,14 @@ class ProposalsController
   end
 
   def created
-    @resource_name = 'proposal'
-    @affiliated_geozones = []
+    @resource_name = "proposal"
+    @affiliated_districts = []
     @restricted_geozones = []
-
   end
 
   def flag
-    Flag.flag(current_user, @proposal)
+    flag = Flag.flag(current_user, @proposal)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @proposal.update!(ignored_flag_at: nil)
 
     redirect_to @proposal
@@ -254,10 +260,10 @@ class ProposalsController
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,
                     projekt_label_ids: [],
-                    image_attributes: image_attributes,
+                    image_attributes:,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],
-                    map_location_attributes: map_location_attributes]
+                    map_location_attributes:]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
     end

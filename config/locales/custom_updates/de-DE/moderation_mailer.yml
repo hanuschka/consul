@@ -1,0 +1,9 @@
+de:
+  custom:
+    moderation_mailer:
+      flag_report:
+        subject: "Ein Vorschlag wurde gemeldet"
+        greeting: "Hallo,"
+        body_prefix: "der Vorschlag"
+        body_suffix: "auf Consul wurde gemeldet."
+        review_link: Zur Vorschlagsmoderation.

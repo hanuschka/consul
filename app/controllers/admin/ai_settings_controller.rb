@@ -54,12 +54,14 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def show_model_field?
-      provider = Setting["ai.llm_provider"]
-      provider.to_s.downcase != "ollama"
+      provider = Setting["ai.llm_provider"].to_s.downcase
+
+      !provider.in?(["ollama", "openai"]) && Setting["ai.llm_api_endpoint"].blank?
     end
 
     def show_custom_model_field?
-      provider = Setting["ai.llm_provider"]
-      provider.to_s.downcase == "ollama"
+      provider = Setting["ai.llm_provider"].to_s.downcase
+
+      provider == "ollama" || Setting["ai.llm_api_endpoint"].present?
     end
 end

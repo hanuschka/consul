@@ -48,6 +48,14 @@ ProjektStudio.ContentBlock.DomHelpers = {
     return element.classList.contains("orbit-slide")
   },
 
+  scrollToContentBlockTop(contentBlockWrapper) {
+    const toolbar = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
+    const anchor = toolbar || contentBlockWrapper;
+    setTimeout(() => {
+      anchor.scrollIntoView({ block: "center" });
+    }, 0);
+  },
+
   moveMarginToWrapper(contentBlockWrapper) {
     const contentBlock = this.getContentBlock(contentBlockWrapper);
     if (!contentBlock || !contentBlockWrapper) return;

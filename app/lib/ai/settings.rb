@@ -1,4 +1,7 @@
 module Ai::Settings
+  DEFAULT_GPT_MODEL = "gpt-5.4"
+  # DEFAULT_GPT_MODEL = "gpt-5.2"
+
   def self.ai_available?
     return false unless Rails.application.secrets.dig(:ai, :enabled) == true
 
@@ -87,16 +90,17 @@ module Ai::Settings
   end
 
   def self.current_llm_model
-    RubyLLM.models.refresh!
+    custom_model = Setting["ai.llm_custom_model"]
+    custom_endpoint = Setting["ai.llm_api_endpoint"]
 
-    if current_llm_provider == "ollama"
-      Setting["ai.llm_custom_model"]
+    if custom_model.present? && (current_llm_provider == "ollama" || custom_endpoint.present?)
+      return custom_model
+    end
+
+    if current_llm_provider == "openai"
+      DEFAULT_GPT_MODEL
     else
-      if current_llm_provider == "openai" && Setting["ai.llm_model"].blank?
-        "gpt-5.2"
-      else
-        Setting["ai.llm_model"]
-      end
+      Setting["ai.llm_model"]
     end
   end
 

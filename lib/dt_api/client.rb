@@ -15,8 +15,9 @@ class DtApi::Client
     end
   end
 
-  def initialize(api_token = nil)
+  def initialize(api_token = nil, use_cache: false)
     @api_token = api_token || InternalApiClient&.dt&.service_api_token
+    @use_cache = use_cache
   end
 
   def projekts
@@ -32,9 +33,11 @@ class DtApi::Client
   end
 
   def ai_assistant_configs
-    @projekts ||= DtApi::Resources::ClientAiAssistantConfigs.new(
-      self
-    )
+    @ai_assistant_configs ||= DtApi::Resources::ClientAiAssistantConfigs.new(self)
+  end
+
+  def ai
+    @ai ||= DtApi::Resources::Ai.new(self)
   end
 
   def voice_assistant
@@ -43,79 +46,114 @@ class DtApi::Client
     )
   end
 
+  def connection
+    @connection ||= DtApi::Resources::Connection.new(self)
+  end
+
   def content_block_templates
     @content_block_templates ||= DtApi::Resources::ContentBlockTemplates.new(self)
   end
 
-  def get_with_auth(url, query: nil)
-    self.class.get(
-      url,
-      query: query,
-      **base_headers,
-      **auth_settings,
-    )
+  def consul_api_request_logs
+    @consul_api_request_logs ||= DtApi::Resources::ConsulApiRequestLogs.new(self)
   end
 
-  def post_with_auth(url, body:, multipart: false)
-    self.class.post(
-      url,
-      multipart: multipart,
-      **base_headers,
-      **auth_settings,
-      body: body
-    )
-  end
+  def get(url, query: nil)
+    if @use_cache
+      return get_with_cache(url, query:)
+    end
 
-  def patch_with_auth(url, body:, multipart: false)
-    self.class.patch(
-      url,
-      multipart: multipart,
-      **base_headers,
-      **auth_settings,
-      body: body
-    )
-  end
-
-  def delete_with_auth(url)
-    self.class.delete(
-      url,
-      **base_headers,
-      **auth_settings
-    )
-  end
-
-  def base_headers
-    if Rails.env.development?
-      {
-        headers: {
-          "X-Consul-Development-Domain" => Rails.application.secrets.server_name,
-          Authorization: "Bearer #{@api_token}"
-        }
-      }
-    else
-      {
-        headers: {
-          Authorization: "Bearer #{@api_token}"
-        }
-      }
+    wrap_with_response_object(url) do
+      self.class.get(url, query:, **base_headers, **auth_settings)
     end
   end
 
-  def auth_settings
-    additional_settings = {}
+  def post(url, body:, multipart: false)
+    wrap_with_response_object(url) do
+      self.class.post(url, multipart:, **base_headers, **auth_settings, body:)
+    end
+  end
 
-    if Rails.env.production?
-      username = Rails.application.secrets.dt[:http_username]
-      password = Rails.application.secrets.dt[:http_password]
+  def patch(url, body:, multipart: false)
+    wrap_with_response_object(url) do
+      self.class.patch(url, multipart:, **base_headers, **auth_settings, body:)
+    end
+  end
 
-      if username.present? && password.present?
-        additional_settings[:basic_auth] = {
-          username: username,
-          password: password
-        }
+  def delete(url)
+    wrap_with_response_object(url) do
+      self.class.delete(url, **base_headers, **auth_settings)
+    end
+  end
+
+  private
+
+    def get_with_cache(url, query:)
+      cache_key = DtApi::Caching.build_cache_key(url, query)
+
+      begin
+        response = self.class.get(url, query:, **base_headers, **auth_settings)
+      rescue => e
+        DtApi::ErrorReporter.report_exception(e, context: cache_key)
+
+        return DtApi::Response.new(
+          nil,
+          cached_response: DtApi::Caching.cached_response_or_raise(cache_key, e)
+        )
+      end
+
+      if response.success?
+        DtApi::Caching.update_cache_if_different(cache_key, response.parsed_response)
+
+        DtApi::Response.new(response)
+      else
+        DtApi::ErrorReporter.report_error(response, context: cache_key)
+
+        DtApi::Response.new(
+          response,
+          cached_response: DtApi::Caching.cached_response_or_raise(cache_key, response)
+        )
       end
     end
 
-    additional_settings
-  end
+    def wrap_with_response_object(url)
+      response = DtApi::Response.new(yield)
+
+      if !response.success?
+        DtApi::ErrorReporter.report_error(response, context: url)
+      end
+
+      response
+    rescue => e
+      DtApi::ErrorReporter.report_exception(e, context: url)
+      raise
+    end
+
+    def base_headers
+      headers = { Authorization: "Bearer #{@api_token}" }
+
+      if Rails.env.development?
+        headers["X-Consul-Development-Domain"] = Rails.application.secrets.server_name
+      end
+
+      { headers: }
+    end
+
+    def auth_settings
+      additional_settings = {}
+
+      if Rails.env.production?
+        username = Rails.application.secrets.dt[:http_username]
+        password = Rails.application.secrets.dt[:http_password]
+
+        if username.present? && password.present?
+          additional_settings[:basic_auth] = {
+            username:,
+            password:
+          }
+        end
+      end
+
+      additional_settings
+    end
 end

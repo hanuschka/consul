@@ -1,0 +1,14 @@
+<%= form_with model: @individual_group_value,
+  url: @individual_group_value.new_record? ? adm_individual_group_values_path(@individual_group) : adm_individual_group_value_path(@individual_group, @individual_group_value) do |f| %>
+  <%= f.hidden_field :individual_group_id, value: @individual_group.id %>
+
+  <%= render Kern::FormFieldComponent.new(label: IndividualGroupValue.human_attribute_name(:name)) do %>
+    <%= f.text_field :name, label: false, placeholder: IndividualGroupValue.human_attribute_name(:name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: IndividualGroupValue.human_attribute_name(:email_pattern), hint: t(".hints.email_pattern")) do %>
+    <%= f.text_field :email_pattern, label: false, placeholder: IndividualGroupValue.human_attribute_name(:email_pattern) %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

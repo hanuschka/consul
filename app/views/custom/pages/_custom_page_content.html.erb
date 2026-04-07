@@ -12,8 +12,9 @@
             <div
               class="projekt-content-block js-projekt-content-block"
               data-id="<%= content_block.id %>"
-              <% if content_block.margin_bottom.present? && content_block.margin_bottom > 0 %>
-                style="margin-bottom: <%= content_block.margin_bottom %>px;"
+              <% effective_margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>
+              <% if effective_margin > 0 %>
+                style="margin-bottom: <%= effective_margin %>px;"
               <% end %>
             >
               <%= process_custom_content_if_needed(content_block&.body)&.html_safe %>
@@ -23,9 +24,9 @@
       </div>
     </div>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.any? %>
+    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
-      <div class="projekt-content-blocks-delete-section">
+      <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-studio-hide-on-preview">
         <%= button_to(
           [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
           method: :delete,
@@ -45,9 +46,6 @@
   <% end %>
 </div>
 
-<% if show_admin_controls_for_projekt?(@custom_page&.projekt)  %>
-  <%= render(ProjektStudio::FileUploadDialogComponent.new) %>
-<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

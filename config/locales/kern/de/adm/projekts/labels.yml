@@ -1,0 +1,21 @@
+de:
+  adm:
+    projekts:
+      labels:
+        new:
+          title: Neues Label erstellen
+        edit:
+          title: Label bearbeiten
+        create:
+          success: Label erfolgreich erstellt.
+        update:
+          success: Label erfolgreich aktualisiert.
+        destroy:
+          success: Label erfolgreich gelöscht.
+        form:
+          name_label: Name
+          name_hint: Geben Sie einen aussagekräftigen Namen für das Label ein, z. B. „Klimaschutz", „Verkehr" oder „Soziales". Der Name wird im Frontend als Filteroption und als Beschriftung an den Vorschlägen angezeigt. Wählen Sie eine kurze, eindeutige Bezeichnung, die den thematischen Bereich klar vermittelt.
+          icon_search_placeholder: "Symbol suchen (z. B. Auto, Baum, Haus)..."
+          icon_label: Symbol
+          icon_hint: Wählen Sie ein passendes Symbol für das Label aus. Das Icon wird im Frontend neben dem Label-Namen an den Vorschlägen angezeigt und erleichtert die visuelle Zuordnung. Wählen Sie ein Symbol, das den thematischen Bereich des Labels auf einen Blick erkennbar macht – z. B. ein Blatt für Umwelt oder ein Auto für Verkehr.
+          submit: Speichern

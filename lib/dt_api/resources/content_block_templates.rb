@@ -5,7 +5,10 @@ class DtApi::Resources::ContentBlockTemplates
     @client = client
   end
 
-  def all
-    @client.get_with_auth(BASE_PATH)
+  def all(section: nil)
+    query = {}
+    query[:section] = section if section.present?
+
+    @client.get(BASE_PATH, query: query.presence)
   end
 end

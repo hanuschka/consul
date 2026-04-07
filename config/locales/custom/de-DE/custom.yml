@@ -12,6 +12,13 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code-Editor"
+        title_sidebar: "Code-Editor für Sidebar-Bereich"
+        title_footer: "Code-Editor für Footer-Bereich"
+        save: "Speichern"
+        cancel: "Abbrechen"
     projekt_content_blocks:
       create:
         success: Inhaltsblock erstellt
@@ -91,6 +98,7 @@ de:
     layouts:
       footer:
         impressum: Impressum
+        navigation_heading: Fußzeilennavigation
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         demokratie: demokratie.today
         demokratie_url: "https://demokratie.today/"
@@ -296,6 +304,8 @@ de:
           only_citizens: Nur Bürger:innen
           only_geozones: Nur Bürger:innen des Stadtteils
     proposals:
+      vote_share:
+        share_button: Teilen
       form:
         tags_custom: Nutzer-Tags
         tags_placeholder: Trennen Sie die Tags mit einem Komma (',')

@@ -27,10 +27,10 @@ de:
           description: Erstellen Sie einen einzelnen Inhaltsblock und gestalten Sie Inhalte und Struktur vollständig nach Ihren eigenen Vorgaben.
           action: Jetzt starten →
         file_import_preview:
-          select_other_file: Andere Datei wählen
+          select_other_file: Datei wählen
           cancel: Abbrechen
           additional_instructions: "Zusätzliche Anweisungen für die KI (optional):"
-          submit: Dokument importieren
+          submit: Jetzt starten
         prompt_form:
           header: Prompt eingeben
           label: "Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:"
@@ -42,9 +42,23 @@ de:
     projekt:
       back_to_projekt_overview: zurück zur Projektübersicht
       content_block_templates_selector:
+        loading: "Inhaltsblockvorlagen werden geladen..."
+        fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
+        tabs:
+          internal_content_blocks: Interne Inhaltsblöcke
+          own_content_blocks: Eigene Inhaltsblöcke
         saved_content_blocks:
           global_explanation: "Interne Inhaltsblöcke sind wiederverwendbare HTML-Vorlagen, die von allen Benutzern verwendet werden können. Sie können von Administratoren und Projektmanagern bearbeitet werden und stehen projektübergreifend zur Verfügung."
+          global_create_title: Neue interne Inhaltsblockvorlage erstellen
+          global_add_button: Neuen internen Inhaltsblock hinzufügen
+          global_form_heading: Neue interne Inhaltsblockvorlage erstellen
           user_explanation: "Eigene Inhaltsblöcke sind persönliche HTML-Vorlagen, die nur für Sie sichtbar und verwendbar sind. Sie können diese nach Ihren individuellen Bedürfnissen erstellen und verwalten."
+          user_create_title: Neue eigene Inhaltsblockvorlage erstellen
+          user_add_button: Neuen eigenen Inhaltsblock hinzufügen
+          user_form_heading: Neue eigene Inhaltsblockvorlage erstellen
+          html_code_hint: HTML Code hier hinzufügen
+          save: Speichern
+          cancel: Abbrechen
       page:
         breadcrumbs:
           homepage: Startseite

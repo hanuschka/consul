@@ -1,0 +1,80 @@
+de:
+  adm:
+    projekts:
+      legislation_draft_versions:
+        new:
+          title: Neuen Textentwurf erstellen
+        create:
+          success: Textentwurf wurde erfolgreich erstellt.
+        tabs:
+          edit: Bearbeiten
+          draft_text: Entwurfstext
+        edit:
+          title: Textentwurf bearbeiten
+        update:
+          success: Textentwurf wurde erfolgreich aktualisiert.
+        destroy:
+          success: Textentwurf wurde erfolgreich gelöscht.
+        form:
+          title_label: Versionstitel
+          title_placeholder: "z. B. Satzungsentwurf v2 – Überarbeitete Fassung"
+          title_hint: >
+            Geben Sie einen aussagekräftigen Titel für diesen Textentwurf ein, z. B. „Satzungsentwurf v2"
+            oder „Überarbeitete Fassung Klimaschutzkonzept". Der Titel wird im Frontend in der Versionsauswahl
+            angezeigt und hilft Nutzern, verschiedene Fassungen voneinander zu unterscheiden. Halten Sie den
+            Titel kurz und eindeutig.
+          changelog_label: Änderungsprotokoll
+          changelog_placeholder: "z. B. Abschnitt 3 überarbeitet, neuer Paragraph zu Lärmschutz ergänzt"
+          changelog_hint: >
+            Beschreiben Sie die wesentlichen Änderungen gegenüber der vorherigen Version. Das Änderungsprotokoll
+            wird im Frontend angezeigt und hilft Nutzern nachzuvollziehen, was sich geändert hat – z. B.
+            „Abschnitt 3 überarbeitet, neuer Paragraph zu Lärmschutz ergänzt". Lassen Sie das Feld bei der
+            ersten Version leer.
+          body_label: Entwurfstext
+          body_placeholder: "Geben Sie hier den vollständigen Text des Entwurfs ein..."
+          body_hint: >
+            Geben Sie den vollständigen Text des Entwurfs ein. Der Text wird im Frontend zur Kommentierung
+            bereitgestellt – Nutzer können einzelne Absätze markieren und kommentieren. Strukturieren Sie den
+            Text mit Absätzen und Überschriften, damit Nutzer gezielt Feedback zu einzelnen Passagen geben
+            können. Markdown-Formatierung wird unterstützt.
+          status_label: Veröffentlichungsstatus
+          status_hint: >
+            Legt fest, ob dieser Textentwurf öffentlich sichtbar ist. Im Status „Entwurf" ist die Version nur
+            für Administratoren sichtbar und kann in Ruhe vorbereitet werden. Im Status „Veröffentlicht" wird
+            der Text im Frontend für alle Nutzer angezeigt und kann kommentiert werden. Der Status kann
+            jederzeit geändert werden.
+          final_version_label: Kommentierung sperren
+          final_version_hint: >
+            Markiert diesen Textentwurf als endgültige Fassung. Sobald aktiviert, wird die Kommentierung
+            für diese Version gesperrt – Nutzer können den Text noch lesen, aber keine neuen Kommentare
+            mehr verfassen. Nutzen Sie diese Option, wenn der Beteiligungsprozess abgeschlossen ist und
+            das Ergebnis dokumentiert werden soll.
+          submit: Speichern
+        draft_text:
+          title: Entwurfstext
+          save: Speichern
+          fullscreen: Vollbild
+          preview_placeholder: Vorschau erscheint hier...
+          hint:
+            intro: "Der Text wird im Markdown-Format verfasst. Änderungen werden rechts in der Vorschau angezeigt."
+            markdown: Markdown
+            result: Ergebnis
+            examples:
+              - markdown: "# Überschrift 1"
+                result: Große Überschrift
+              - markdown: "## Überschrift 2"
+                result: Mittlere Überschrift
+              - markdown: "### Überschrift 3"
+                result: Kleine Überschrift
+              - markdown: "**Fettschrift**"
+                result: Fettschrift
+              - markdown: "*Kursivschrift*"
+                result: Kursivschrift
+              - markdown: "- Listenpunkt"
+                result: Aufzählungsliste
+              - markdown: "1. Nummeriert"
+                result: Nummerierte Liste
+              - markdown: "> Zitat"
+                result: Zitatblock
+              - markdown: "Leerzeile zwischen Absätzen"
+                result: Neuer Absatz

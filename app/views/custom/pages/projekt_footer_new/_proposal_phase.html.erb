@@ -3,11 +3,15 @@
 <% unless embedded? %>
   <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
-  <% if params[:section] == "key_metrics" && can?(:read_stats, @projekt_phase) %>
-    <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+  <% if params[:section] == "key_metrics" && can?(:read_stats, @projekt_phase) && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_kpi_stats")) %>
+    <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_kpi_stats') %>">
+      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+    </div>
 
-  <% elsif params[:section] == "analysis" && can?(:read_stats, @projekt_phase) && Ai::Settings.ai_available? %>
-    <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+  <% elsif params[:section] == "analysis" && can?(:read_stats, @projekt_phase) && Ai::Settings.ai_available? && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_ai_stats")) %>
+    <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_ai_stats') %>">
+      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+    </div>
 
   <% else %>
     <div class="flex justify-between items-center">
@@ -27,7 +31,8 @@
           </div>
           <%= render Navigation::ProposalBrowseNavigationComponent.new(
             resources: @proposals,
-            projekt_phase: @projekt_phase
+            projekt_phase: @projekt_phase,
+            current_order: @current_order
           ) %>
           <% current_proposal = @proposals.first %>
           <div class="current-proposal">
@@ -72,7 +77,7 @@
               <%= render_custom_block content_block_sidebar_name %>
 
               <% if projekt_phase_feature?(@projekt_phase, "general.browse_mode_in_phase_footer") && !browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
-                <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
+                <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse", order: @current_order),
                   remote: true,
                   class: "button with-icon" do %>
                   <i class="fa-window-maximize fas"></i>

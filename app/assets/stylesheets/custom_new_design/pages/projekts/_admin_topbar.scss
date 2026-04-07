@@ -1,0 +1,70 @@
+// $projekt-page-admin-topbar-border-color: color-mix(in srgb, var(--brand-color) 95%, $main-background-color 5%);
+
+.projekt-page--admin-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  width: 100%;
+  border-bottom: 1px solid;
+  border-color: color-mix(in srgb, var(--brand-color) 80%, $main-background-color 20%);
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--brand-color) 10%, $main-background-color 95%);
+  display: flex;
+  align-items: center;
+  height: var(--admin-topbar-height);
+
+  .button {
+    margin: 0;
+    padding: 6px 12px !important;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding: 6px 5px !important;
+    }
+  }
+}
+
+.projekt-page--admin-topbar--inner {
+  margin: auto;
+  width: 100%;
+  max-width: var(--tobar-max-width);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.projekt-page--admin-topbar-left,
+.projekt-page--admin-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  @media(max-width: $medium-tablet-viewport-start) {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.projekt-page--admin-topbar-left {
+  @media(max-width: $small-tablet-viewport-start) {
+    display: none;
+  }
+}
+
+.projekt-page--admin-topbar-right {
+}
+
+@media (max-width: $small-tablet-viewport-start) {
+  .projekt-page--admin-topbar--inner {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .projekt-page--admin-topbar-right {
+    width: 100%;
+    flex-wrap: wrap;
+    order: 3;
+  }
+}

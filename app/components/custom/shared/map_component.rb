@@ -1,16 +1,22 @@
 class Shared::MapComponent < ApplicationComponent
   def initialize(
-    mappable: nil, # map center, zoom, altitu
-    features: {}, # map features, e.g. markers, polygons (comes from collection)
-    editable: false, # if true user can edit the features
+    mappable: nil,
+    features: {},
+    editable: false,
     process: nil,
-    placement: nil # used to determine the placement of the map (e.g. in a modal or on a page
+    placement: nil,
+    collapsible: false
   )
     @mappable = mappable
     @features = features
     @editable = editable
     @process = process
     @placement = placement
+    @collapsible = collapsible
+  end
+
+  def collapsible?
+    @collapsible && !@editable
   end
 
   def map_div
@@ -47,10 +53,11 @@ class Shared::MapComponent < ApplicationComponent
       options[:map_features_limit] = map_features_limit if @editable
 
       if rendering_library == "mapbox"
-        options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
+        options[:mapbox_public_token] = ExternalApiKey.mapbox_public_token
         options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
-        options[:map_center_altitude] = map_location&.altitude 
+        options[:map_center_altitude] = map_location&.altitude
+        options[:vc_map_module_url] = Rails.application.secrets.vc_map_module
       end
 
       options
@@ -77,8 +84,11 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def admin_features
-      return {} if admin_editor?
-      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
+      if admin_editor?
+        return { type: "FeatureCollection", features: [] }.to_json
+      elsif @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
+        return map_location.features.to_json
+      end
 
       @mappable.try(:projekt_phase)&.map_location&.features&.to_json ||
         @mappable.try(:projekt)&.map_location&.features&.to_json
@@ -95,7 +105,8 @@ class Shared::MapComponent < ApplicationComponent
     def admin_editor?
       return false unless @editable
 
-      @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase) || map_location.default?
+      admin_mappables = [Projekt, ProjektPhase, RegisteredAddress::District]
+      admin_mappables.any? { |klass| @mappable.is_a?(klass) } || map_location.default?
     end
 
     def editing_projekt_map?

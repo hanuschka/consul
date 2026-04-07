@@ -2,6 +2,8 @@
   id="filter-subnav-<%= phase.id %>"
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
+  role="tab"
+  aria-selected="<%= phase.id == params[:projekt_phase_id] %>"
 >
   <%= link_to tab_url,
     onclick: "$('#footer-content').addClass('show-loader');",
@@ -14,46 +16,31 @@
       <%= tab_title %>
       <%= "(#{phase.resource_count})" if phase.resource_count.present? %>
     </h2>
+
     <div class='tab-info-summary'>
       <% if phase.is_a?(ProjektPhase::MilestonePhase) && phase.milestones.any?  %>
-        <span>
-          <i class="far fa-calendar"></i>
-          <%= format_date(phase.milestones.last.publication_date.to_date) %>
-        </span>
-
+        <span><i class="far fa-calendar"></i><%= format_date(phase.milestones.last.publication_date.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::ProjektNotificationPhase) && phase.projekt_notifications.any? %>
-        <span>
-          <i class="far fa-calendar"></i>
-          <%= format_date(phase.projekt_notifications.last.updated_at.to_date) %>
-        </span>
-
+        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_notifications.last.updated_at.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::EventPhase) && phase.projekt_events.sort_by_incoming.any? %>
-        <span>
-          <i class="far fa-calendar"></i>
-          <%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %>
-        </span>
-
+        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::LivestreamPhase) && phase.projekt_livestreams.any? %>
-        <span>
-          <i class="far fa-calendar"></i>
-          <%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %>
-        </span>
-
+        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::BudgetPhase) && phase.budget.present? %>
-        <span>
-          <span class='time-icon'><%= format_date_range(phase.budget.phases.published.first.starts_at, phase.budget.phases.published.last.ends_at) %></span>
-        </span>
-
-      <% elsif phase.start_date.present? %>
-        <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
+        <span class="time-icon"><%= format_date_range(phase.budget.current_phase.starts_at.to_date, (phase.budget.current_phase.ends_at.to_date - 1.day)) %></span>
+      <% elsif phase.start_date.present? && phase.regular? %>
+        <span class="time-icon"><%= format_date_range(phase.start_date, phase.end_date) %></span>
+      <% else phase.regular? %>
+        <span class="time-icon"><%= t("custom.shared.dates.no_dates") %></span>
       <% end %>
 
-      <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>
-        <span class='geo-restriction-icon'><%= get_projekt_phase_restriction_name(phase) %></span>
-      <% end %>
+      <%= phase_user_status_restriction_name(phase) if phase.regular? %>
 
-      <% if phase.age_restriction.present? %>
-        <span class='age-restriction-icon'><%= phase.age_restriction.name %></span>
+      <% if phase.regular? && phase.user_status != "guest" %>
+        <%= phase_geo_restriction_name(phase) %>
+        <%= phase_extended_geozone_restriction_name(phase) %>
+        <%= phase_age_restriction_name(phase) %>
+        <%= phase_individual_group_value_restriction_name(phase) %>
       <% end %>
     </div>
   <% end %>
@@ -106,7 +93,7 @@
             </i>
           </button>
         <% end %>
-        <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>

@@ -1,0 +1,13 @@
+<div class="ai-stats-card">
+  <h3 class="ai-stats-card--title"><%= @title %></h3>
+  <div
+    class="pie-chart-container"
+    data-pie-chart
+    data-chart-labels="<%= labels_json %>"
+    data-chart-values="<%= values_json %>"
+    <% if colors_json %>data-chart-colors="<%= colors_json %>"<% end %>
+    <% unless show_legend? %>data-chart-hide-legend="true"<% end %>
+    <% if labels_at_edges? %>data-chart-labels-at-edges="true"<% end %>>
+    <canvas></canvas>
+  </div>
+</div>

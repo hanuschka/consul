@@ -1,0 +1,21 @@
+<div class="timeline-stats ai-stats-card">
+  <% submissions = submissions_chart_data %>
+  <% if submissions[:labels].any? %>
+    <%= render Charts::AreaChartComponent.new(
+      title: t("custom.participation_stats.timeline.submissions_over_time"),
+      labels: submissions[:labels],
+      values: submissions[:values],
+      total: total_submissions
+    ) %>
+  <% end %>
+
+  <% comments_data = comments_chart_data %>
+  <% if comments_data[:labels].any? %>
+    <%= render Charts::AreaChartComponent.new(
+      title: t("custom.participation_stats.timeline.comments_over_time"),
+      labels: comments_data[:labels],
+      values: comments_data[:values],
+      total: total_comments
+    ) %>
+  <% end %>
+</div>

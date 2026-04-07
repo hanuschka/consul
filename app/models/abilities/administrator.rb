@@ -61,6 +61,8 @@ module Abilities
       can [:search, :create, :index, :destroy], ::Manager
       can [:create, :read, :destroy], ::SDG::Manager
       can [:search, :index], ::User
+      can [:index, :show, :new, :create, :edit, :update, :destroy], ::InternalApiClient
+      can [:index, :show, :new, :create, :edit, :update, :destroy, :regenerate_token], ::ApiClient
 
       can :manage, Dashboard::Action
 
@@ -89,7 +91,8 @@ module Abilities
 
       can [:index, :create, :update, :destroy], Geozone
 
-      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications], Poll
+      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications, :report, :evaluation, :refresh_ai_stats, :ai_stats_status, :download_report_section, :download_all_report_sections],
+Poll
       can [:read, :create, :update, :destroy, :available], Poll::Booth
       can [:search, :create, :index, :destroy], ::Poll::Officer
       can [:create, :destroy, :manage], ::Poll::BoothAssignment
@@ -125,7 +128,8 @@ module Abilities
       can [:manage], ::Legislation::DraftVersion
       can [:manage], ::Legislation::Question
       can [:manage], ::Legislation::Proposal
-      cannot :comment_as_moderator, [::Legislation::Question, Legislation::Annotation, ::Legislation::Proposal]
+      cannot :comment_as_moderator,
+[::Legislation::Question, Legislation::Annotation, ::Legislation::Proposal]
 
       can [:create], Document
       can [:destroy], Document, documentable_type: "Poll::Question::Answer"
@@ -136,7 +140,6 @@ module Abilities
 
       can :manage, LocalCensusRecord
       can [:create, :read], LocalCensusRecords::Import
-
 
       #custom
       can [:manage], ::DeficiencyReport::Officer
@@ -151,7 +154,8 @@ module Abilities
       can [:manage], Idea
 
       can [:csv_answers_votes, :regenerate_contexted_clones], Poll
-      can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
+      can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type],
+Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
@@ -164,7 +168,7 @@ module Abilities
       can [:index, :update], RegisteredAddress::District
       can [:index], RegisteredAddress::Street
 
-      can [:results, :stats], Poll, projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}
+      can [:results, :stats], Poll
 
       can :manage, Projekt
       can :manage, ProjektSetting
@@ -206,6 +210,8 @@ module Abilities
       can :manage, RecipientGroup
       can :manage, ProjektPointOfInterestPin
       can :manage, ProjektPointOfInterestCategory
+
+      can :index, :projekt_content_block_templates
     end
   end
 end

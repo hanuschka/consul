@@ -2,15 +2,25 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: %i[process_bund_id_response]
 
   def send_bund_id_request
-    request.headers["Turbolinks-Referrer"] = nil
     saml_redirect_request_url = BundIdServices::RedirectRequestMaker.call(user_id: current_user&.id, purpose: params[:purpose])
+    request.session_options[:skip] = true
 
     redirect_to(saml_redirect_request_url, allow_other_host: true)
   end
 
   def process_bund_id_response
     auth_data = BundIdServices::ResponseProcessor.call(params[:SAMLResponse])
-    user_id, purpose, request_time = Rails.application.message_verifier(:bund_id).verify(params["RelayState"]) if params["RelayState"]
+
+    if params["RelayState"].present?
+      relay_state = RelayState.where("created_at > ?", 1.hour.ago).find_by(token: params["RelayState"])
+
+      if relay_state.present?
+        user_id = relay_state.data["user_id"]
+        purpose = relay_state.data["purpose"]
+        request_time = relay_state.created_at.to_i
+        relay_state.destroy!
+      end
+    end
 
     if user_id.present? && purpose == "verification"
       if Time.zone.at(request_time) < 15.minutes.ago

@@ -1,0 +1,29 @@
+<%= form_with model: [:adm, @map_layer] do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:name), hint: t(".hints.name")) do %>
+    <%= f.text_field :name, label: false, placeholder: MapLayer.human_attribute_name(:name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:provider), hint: t(".hints.provider")) do %>
+    <%= f.text_field :provider, label: false, placeholder: MapLayer.human_attribute_name(:provider) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:attribution), hint: t(".hints.attribution")) do %>
+    <%= f.text_field :attribution, label: false, placeholder: MapLayer.human_attribute_name(:attribution) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:layer_names), hint: t(".hints.layer_names")) do %>
+    <%= f.text_field :layer_names, label: false, placeholder: MapLayer.human_attribute_name(:layer_names) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".labels.presentation"), hint: t(".hints.presentation")) do %>
+    <%= f.check_box :base %>
+    <%= f.check_box :show_by_default %>
+    <%= f.check_box :transparent %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:opacity), hint: t(".hints.opacity")) do %>
+    <%= f.text_field :opacity, label: false %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

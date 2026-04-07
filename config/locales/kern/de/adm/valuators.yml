@@ -1,0 +1,15 @@
+de:
+  adm:
+    valuators:
+      index:
+        title: Budget-Administratoren
+        empty_title: "Keine Budget-Administratoren vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Budget-Administrator hinzu."
+        new_link: Neuen Budget-Administrator hinzufügen
+        no_valuators: Keine Budget-Administratoren vorhanden.
+      new:
+        title: Neuer Budget-Administrator
+        search_label: Nutzer durchsuchen
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Budget-Administrator hinzugefügt werden. Budget-Administratoren bewerten Budgetvorschläge und prüfen deren Umsetzbarkeit und Kosten.
+      search:
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.

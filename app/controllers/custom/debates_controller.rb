@@ -8,6 +8,7 @@ class DebatesController < ApplicationController
   include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
+  include LandingPageResolvable
 
   before_action :authenticate_user!, except: [:index, :show], unless: -> { current_user&.guest? }
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
@@ -24,8 +25,9 @@ class DebatesController < ApplicationController
     # related_projekts = Projekt.where(id: related_projekt_ids)
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -92,11 +94,19 @@ class DebatesController < ApplicationController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
     @selected_projekt = @debate&.projekt_phase&.projekt
     params[:projekt_phase_id] = @debate&.projekt_phase&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def create
@@ -128,6 +138,12 @@ class DebatesController < ApplicationController
       end
     else
       @selected_projekt = @debate&.projekt_phase&.projekt
+      @projekt_phase = @debate&.projekt_phase
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end
@@ -152,17 +168,25 @@ class DebatesController < ApplicationController
   def show
     super
 
-    @projekt = @debate.projekt_phase.projekt
+    @projekt = @debate.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to root_path
+
+      return
+    end
+
     @related_contents = Kaminari.paginate_array(@debate.relationed_contents).page(params[:page]).per(5)
 
     @geozones = Geozone.all
 
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
+    resolve_landing_page_for_projekt(@projekt)
 
     if request.path != debate_path(@debate)
       redirect_to debate_path(@debate), status: :moved_permanently
@@ -181,7 +205,8 @@ class DebatesController < ApplicationController
   end
 
   def flag
-    Flag.flag(current_user, @debate)
+    flag = Flag.flag(current_user, @debate)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     @debate.update!(ignored_flag_at: nil)
 
     redirect_to @debate

@@ -1,7 +1,7 @@
 <div class="sidebar-resource-author sidebar-card">
   <div class="sidebar-resource-author--background-image">
     <% if show_background_image? %>
-      <%= image_tag(user.background_image.variant(resize: "300x300>")) %>
+      <%= image_tag(user.background_image.variant(resize_to_limit: [300, 300])) %>
     <% end %>
   </div>
   <div class="sidebar-resource-author--info">
@@ -22,19 +22,19 @@
     <% end %>
 
     <% unless on_behalf_of? %>
-      <div class="sidebar-resource-author--registration-date">
+      <p class="sidebar-resource-author--registration-date">
         <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
-      </div>
+      </p>
 
       <!-- #cli
-      <div class="users-profile-banner--info-line">
+      <p class="users-profile-banner--info-line">
         <%# if user.level_three_verified? %>
           <span class="icon-check"></span>
           <%#= t("account.show.verified_account") %>
         <%# else %>
           <%#= t("custom.account.show.not_verified_account") %>
         <%# end %>
-      </div>
+      </p>
       -->
 
       <div class="sidebar-resource-author--resources">

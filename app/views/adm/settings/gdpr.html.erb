@@ -1,0 +1,17 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.gdpr.gdpr_conformity"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.gdpr.link_out_warning"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.gdpr.two_click_iframe_solution"), :value, :boolean) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.gdpr.devise_timeout_min"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.gdpr.devise_verification_token_validity_days"), :value, :string) %>
+</div>

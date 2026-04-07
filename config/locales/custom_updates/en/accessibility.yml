@@ -49,9 +49,6 @@ en:
       phases:
         scroll_left: "Scroll phases left"
         scroll_right: "Scroll phases right"
-      skip_links:
-        skip_to_content: "Skip to content"
-        skip_to_navigation: "Skip to navigation"
       navigation:
         main: "Main navigation"
         mobile: "Mobile navigation"

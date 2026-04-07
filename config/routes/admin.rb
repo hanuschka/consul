@@ -356,6 +356,7 @@ as: :destroy_user_resource_criterion
       post :regenerate_token
     end
   end
+  resources :api_request_logs, only: [:index, :show]
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom

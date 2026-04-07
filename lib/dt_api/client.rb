@@ -54,6 +54,10 @@ class DtApi::Client
     @content_block_templates ||= DtApi::Resources::ContentBlockTemplates.new(self)
   end
 
+  def consul_api_request_logs
+    @consul_api_request_logs ||= DtApi::Resources::ConsulApiRequestLogs.new(self)
+  end
+
   def get(url, query: nil)
     if @use_cache
       return get_with_cache(url, query:)

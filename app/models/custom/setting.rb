@@ -276,7 +276,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.show_suggested_proposals_in_proposal_sidebar": false,
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
-        "extended_option.proposals.max_active_proposals_per_user": 100,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,

@@ -14,7 +14,7 @@ namespace :adm do
 
     resources :milestone_statuses, except: %i[show]
 
-    resources :phases, only: [:update] do
+    resources :phases, only: [:update, :destroy] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
 
@@ -183,7 +183,9 @@ namespace :adm do
       patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
-      resources :phases, only: [:new, :create]
+      resources :phases, only: [:new, :create] do
+        patch :reorder, on: :collection
+      end
       resources :manager_assignments, only: [:update]
       patch :update_default_phase, on: :member
     end

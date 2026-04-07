@@ -62,6 +62,10 @@ ul.no-ul-style {
     .notice-container {
       top: 110px + $admin-topbar-height;
     }
+
+    .custom-fixed-tabs--content {
+      top: 60px + $admin-topbar-height;
+    }
   }
 
 

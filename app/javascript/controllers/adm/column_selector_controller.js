@@ -98,7 +98,7 @@ export default class extends Controller {
 
   setCookie(name, value) {
     const date = new Date()
-    date.setTime(date.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year
     document.cookie = `${name}=${encodeURIComponent(value)};expires=${date.toUTCString()};path=/`
   }
 }

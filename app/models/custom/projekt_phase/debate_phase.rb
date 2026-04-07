@@ -34,6 +34,10 @@ class ProjektPhase::DebatePhase < ProjektPhase
     debates.empty?
   end
 
+  def after_hide
+    debates.each(&:hide)
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

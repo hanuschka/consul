@@ -2,7 +2,7 @@ class Adm::DeficiencyReports::OfficialAnswerTemplatesController < Adm::Deficienc
   def index
     @official_answer_templates = policy_scope(DeficiencyReport::OfficialAnswerTemplate, policy_scope_class: Adm::DeficiencyReports::OfficialAnswerTemplatePolicy::Scope)
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.official_answer_templates") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.official_answer_templates"), icon: "description" }]
   end
 
   def new
@@ -55,7 +55,7 @@ class Adm::DeficiencyReports::OfficialAnswerTemplatesController < Adm::Deficienc
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.deficiency_reports.official_answer_templates.index.title"), url: adm_deficiency_reports_official_answer_templates_path },
+        { name: t("adm.deficiency_reports.official_answer_templates.index.title"), url: adm_deficiency_reports_official_answer_templates_path, icon: "description" },
         { name: action_title }
       ]
     end

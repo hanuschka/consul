@@ -10,6 +10,7 @@
 
       this.createMap();
       this.setupExpandControl();
+      this.addResetViewControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
@@ -193,6 +194,39 @@
 
       const expandControl = new L.Control.Expand({ position: 'topright' })
       this.map.addControl(expandControl);
+    }
+
+    addResetViewControl() {
+      const instance = this;
+
+      L.Control.ResetView = L.Control.extend({
+        onAdd: function() {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+
+          container.appendChild(button);
+
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            instance.map.setView(instance.mapCenterLatLng, instance.zoom, { animate: true });
+          });
+
+          return container;
+        },
+
+        onRemove() {}
+      });
+
+      const resetControl = new L.Control.ResetView({ position: 'topright' });
+      this.map.addControl(resetControl);
     }
 
     setupLayers() {

@@ -9,6 +9,8 @@ class NavbarItem < ApplicationRecord
     ideas: :ideas_path
   }.freeze
 
+  LANDING_PAGE_ALLOWED_PRESETS = %i[projekts events investments proposals polls].freeze
+
   has_many :children, class_name: "NavbarItem",
                       foreign_key: "parent_id",
                       dependent: :nullify,
@@ -17,12 +19,16 @@ class NavbarItem < ApplicationRecord
                       optional: true,
                       inverse_of: :children
   belongs_to :projekt, optional: true
+  belongs_to :landing_page, class_name: "SiteCustomization::Page",
+                            optional: true
 
   enum kind: { presets: 0, projekts: 1, external: 2 }
 
   validates :kind, presence: true
 
   scope :top_level, -> { where(parent_id: nil).order(:position) }
+  scope :global, -> { where(landing_page_id: nil) }
+  scope :for_landing_page, ->(landing_page_id) { where(landing_page_id: landing_page_id) }
 
   def self.presets
     PRESETS

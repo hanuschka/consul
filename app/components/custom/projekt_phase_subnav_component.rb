@@ -24,7 +24,8 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         text: t("custom.projekt_phases.subnav.key_metrics"),
         url:  url_to_footer_tab(section: "key_metrics", remote: true),
         active: params[:section] == "key_metrics",
-        section: "key_metrics"
+        section: "key_metrics",
+        hide_on_preview: !@projekt_phase.feature?("general.public_kpi_stats")
       }
     end
 
@@ -34,7 +35,8 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         url:  url_to_footer_tab(section: "analysis", remote: true),
         active: params[:section] == "analysis",
         disabled: !Ai::Settings.ai_available?,
-        section: "analysis"
+        section: "analysis",
+        hide_on_preview: !@projekt_phase.feature?("general.public_ai_stats")
       }
     end
 
@@ -60,5 +62,9 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
     def any_public_stats_enabled?
       @projekt_phase.feature?("general.public_kpi_stats") ||
         @projekt_phase.feature?("general.public_ai_stats")
+    end
+
+    def hide_subnav_on_preview?
+      !any_public_stats_enabled?
     end
 end

@@ -8,7 +8,7 @@
   <%= new_resource_link(new_adm_projekts_phase_label_path(@projekt_phase), t(".create_button")) %>
 
   <% if @projekt_labels.empty? %>
-    <p><%= t(".no_labels") %></p>
+    <%= empty_state(title: t(".no_labels_title"), description: t(".no_labels_description"), icon: "label") %>
   <% else %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
@@ -30,8 +30,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_label_path(@projekt_phase, label)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_label_path(@projekt_phase, label), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_label_path(@projekt_phase, label), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_label_path(@projekt_phase, label), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>

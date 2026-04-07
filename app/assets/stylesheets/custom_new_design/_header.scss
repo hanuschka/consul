@@ -12,7 +12,7 @@
     padding: 0;
     z-index: 1000;
     margin-bottom: 0;
-    max-width: auto;
+    max-width: none;
     height: 90px;
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -328,6 +328,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   .top-bar--title {
     flex-grow: initial;
     user-select: none;
+    min-width: 150px;
 
     a img {
       max-height: 52px;
@@ -511,8 +512,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     top: 0;
     left: 0;
     right: 0;
-    max-height: 100vh;
-    overflow-y: auto;
 
     .subnavigation {
       width: 100%;
@@ -624,17 +623,17 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     header, .wrapper > header {
-      height: 36px !important;
-      max-width: auto;
+      height: $topbar-height-mobile;
+      max-width: none;
     }
 
     .subnavigation {
       left: 0;
       right: 0;
-      // top: 0;
       top: 60px;
       padding: 20px 30px;
       max-width: 320px;
+
     }
 
     .header--responsive-menu-title {
@@ -868,6 +867,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 body:has(.projekt-page--admin-topbar) {
   header.topbar-header {
     margin-top: var(--admin-topbar-height);
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    #responsive-menu .subnavigation {
+      top: calc(60px + var(--admin-topbar-height));
+      height: calc(100vh - 70px - var(--admin-topbar-height));
+    }
   }
 }
 

@@ -1,6 +1,11 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.newsletters.index.title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
 
 <%= render Adm::TabsComponent.new(tabs: [
   { label: t("adm.newsletters.index.tabs.list"), url: adm_newsletters_path },
@@ -29,10 +34,11 @@
               <td scope="row" class="kern-table__header"><%= recipient_group.name %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t('.table.edit'), url: edit_adm_recipient_group_path(recipient_group)) %>
+                  <% actions.with_action(label: t('.table.edit'), url: edit_adm_recipient_group_path(recipient_group), icon: "edit", style: :edit) %>
                   <% actions.with_action(
                     label: t('.table.delete'),
                     url: adm_recipient_group_path(recipient_group),
+                    icon: "delete", style: :delete,
                     data: { turbo_method: :delete, turbo_confirm: t('.table.delete_confirm') }
                   ) %>
                 <% end %>
@@ -47,6 +53,10 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <%= kern_alert(title: t('.empty'), style: :info) %>
+    <%= empty_state(
+      title: t(".empty_title"),
+      description: t(".empty_description"),
+      icon: "send"
+    ) %>
   <% end %>
 </div>

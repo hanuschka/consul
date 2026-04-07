@@ -34,7 +34,7 @@ de:
           title: Abstimmung
           voting_for: "Abstimmung für Offline-Nutzer #%{user}"
           votes_cast: Abgegebene Stimmen
-          no_investments: Keine Investitionsvorschläge zur Abstimmung verfügbar.
+          no_investments: Keine Vorschläge zur Abstimmung verfügbar.
           next_ballot: Nächster Stimmzettel
         investment_ballot:
           vote: Abstimmen

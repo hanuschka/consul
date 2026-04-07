@@ -14,10 +14,12 @@ namespace :adm do
 
     resources :milestone_statuses, except: %i[show]
 
-    resources :phases, only: [:update] do
+    resources :phases, only: [:update, :destroy] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
+
       member do
+        get :email_templates
         # Phase configuration
         get :duration
         get :naming
@@ -52,13 +54,18 @@ namespace :adm do
         get :sentiments
 
         # Users & permissions
-        get :user_resource_criteria
+        get :ai_user_flow
+        post :create_user_resource_criterion
+        patch :update_user_resource_criterion
+        delete :destroy_user_resource_criterion
+        patch :reorder_user_resource_criteria
         get :officing_managers
         get :officing_manager_audits
         get :age_ranges_for_stats
 
         # AI
         get :ai_settings
+        patch :update_ai_settings
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications
@@ -81,8 +88,14 @@ namespace :adm do
       resources :projekt_point_of_interest_categories, except: %i[index show]
       resources :milestones, controller: "milestones/phases", except: %i[index show]
       resources :progress_bars, controller: "progress_bars/phases", except: %i[index show]
-      resources :legislation_draft_versions, except: %i[index show]
-      resources :formular_fields, except: %i[index show]
+      resources :legislation_draft_versions, except: %i[index show] do
+        get :draft_text, on: :member
+      end
+      resources :formular_fields, except: %i[index show] do
+        collection do
+          post :reorder
+        end
+      end
       resources :projekt_events, except: %i[index show] do
         member do
           post :send_notifications
@@ -147,7 +160,14 @@ namespace :adm do
           put :hide
           put :unhide
           put :ignore_flag
+          patch :toggle_image_concealed
         end
+      end
+    end
+
+    resources :memos, only: [:create, :destroy] do
+      member do
+        post :send_notification
       end
     end
 
@@ -158,9 +178,14 @@ namespace :adm do
       get :map, on: :member
       get :phases, on: :member
       patch :toggle_activated, on: :member
+      post :notify_reviewers, on: :member
+      patch :toggle_hide_content_background, on: :member
+      patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
-      resources :phases, only: [:new, :create]
+      resources :phases, only: [:new, :create] do
+        patch :reorder, on: :collection
+      end
       resources :manager_assignments, only: [:update]
       patch :update_default_phase, on: :member
     end

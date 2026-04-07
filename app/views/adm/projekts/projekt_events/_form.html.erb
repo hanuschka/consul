@@ -1,18 +1,26 @@
 <%= form_with model: @projekt_event, url: url do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".title_label")) do %>
-    <%= f.text_field :title, label: false, required: true %>
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+    <%= f.text_field :title, label: false, required: true, placeholder: t(".title_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".location_label")) do %>
-    <%= f.text_field :location, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
+    <%= f.rich_text_area :description, label: false, rows: 10 %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".datetime_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".image_label"), hint: t(".image_hint")) do %>
+    <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".location_label"), hint: t(".location_hint")) do %>
+    <%= f.text_field :location, label: false, placeholder: t(".location_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".datetime_label"), hint: t(".datetime_hint")) do %>
     <%= f.datetime_local_field :datetime, label: false, required: true %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".end_datetime_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".end_datetime_label"), hint: t(".end_datetime_hint")) do %>
     <%= f.datetime_local_field :end_datetime, label: false %>
   <% end %>
 
@@ -20,15 +28,15 @@
     <%= f.check_box :open_ended %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".weblink_label")) do %>
-    <%= f.text_field :weblink, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".weblink_label"), hint: t(".weblink_hint")) do %>
+    <%= f.text_field :weblink, label: false, placeholder: t(".weblink_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".language_label")) do %>
-    <%= f.text_field :language, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".language_label"), hint: t(".language_hint")) do %>
+    <%= f.text_field :language, label: false, placeholder: t(".language_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".accessibility_legend")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".accessibility_legend"), hint: t(".accessibility_hint")) do %>
     <%= f.check_box :wheelchair_accessible %>
     <%= f.check_box :accessible_toilet %>
     <%= f.check_box :disabled_parking_nearby %>
@@ -36,14 +44,6 @@
     <%= f.check_box :induction_loop_available %>
     <%= f.check_box :assistance_dogs_welcome %>
     <%= f.check_box :sign_language_interpreter %>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
-    <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: t(".description_label")) do %>
-    <%= f.rich_text_area :description, label: false, rows: 10 %>
   <% end %>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>

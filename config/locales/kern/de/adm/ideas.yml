@@ -4,7 +4,10 @@ de:
       ideas:
         index:
           title: Ideen
+          page_hint: "Hier sehen Sie alle eingereichten Ideen. Die Tabelle zeigt Titel, Sichtbarkeit, Kategorie, Sachbearbeiter und Status jeder Idee. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Idee, um Details einzusehen, den Sachbearbeiter zuzuweisen, eine offizielle Antwort zu verfassen oder die Idee zu bearbeiten."
           no_ideas: Keine Ideen vorhanden
+          no_items_title: Keine Ideen vorhanden
+          no_items_description: Sobald Ideen eingereicht werden, werden diese hier angezeigt.
           table:
             id: ID
             admin_accepted: Sichtbarkeit
@@ -15,7 +18,7 @@ de:
             status: Status
             location: Standort
             category: Kategorie
-            officer: Sachbearbeiter*in
+            officer: Sachbearbeiter
         idea_row:
           frontend_link: Frontend
         edit:
@@ -27,13 +30,20 @@ de:
           district_placeholder: "-- Bezirk wählen --"
           labels:
             title: Titel
+            title_hint: Der Titel der Idee wird auf der Übersichtsseite und in der Detailansicht angezeigt. Er sollte prägnant und aussagekräftig formuliert sein, damit Bürgerinnen und Bürger den Inhalt der Idee auf einen Blick erfassen können. Änderungen am Titel werden sofort auf der Plattform sichtbar und in Suchergebnissen übernommen.
             description: Beschreibung
+            description_hint: Die Beschreibung enthält alle Details zur Idee und wird in der Detailansicht angezeigt. Nutzen Sie die Textformatierung, um die Inhalte übersichtlich zu gliedern. Eine gut strukturierte Beschreibung hilft den Bürgerinnen und Bürgern, den Vorschlag besser zu verstehen und fundiert darüber abzustimmen.
             image: Bild
+            image_hint: Das Titelbild wird in der Übersicht und in der Detailansicht der Idee angezeigt. Es dient als visueller Aufhänger und erhöht die Aufmerksamkeit für den Beitrag. Empfohlen werden Bilder im Querformat mit einer Mindestbreite von 800 Pixeln. Unterstützte Formate sind JPG, PNG und WebP. Zu große Dateien werden automatisch komprimiert.
             documents: Dokumente
+            documents_hint: Hier können ergänzende Dokumente zur Idee hochgeladen werden, zum Beispiel Gutachten, Pläne oder Stellungnahmen. Die Dateien werden in der Detailansicht der Idee zum Download angeboten. Unterstützte Formate sind PDF, DOC, DOCX, XLS, XLSX, CSV und weitere gängige Dateitypen. Mehrere Dokumente können gleichzeitig hinzugefügt werden.
             video_url: Video-URL
+            video_url_hint: Fügen Sie eine Video-URL von YouTube oder Vimeo ein, um ein erklärendes Video in der Detailansicht der Idee einzubetten. Das Video wird automatisch als Player dargestellt und bietet den Bürgerinnen und Bürgern eine zusätzliche Möglichkeit, den Vorschlag visuell nachzuvollziehen. Andere Videoplattformen werden nicht unterstützt.
             category: Kategorie
+            category_hint: Die Kategorie ordnet die Idee einem thematischen Bereich zu und ermöglicht die Filterung in der Übersicht. Jede Kategorie verfügt über eine eigene Farbe und ein optionales Symbol zur visuellen Unterscheidung. Falls keine Kategorie passt, kann die Auswahl leer gelassen werden. Die Zuordnung ist jederzeit nachträglich änderbar.
             map_location: Kartenstandort
             on_behalf_of: Im Auftrag von
+            on_behalf_of_hint: Dieses Feld gibt an, ob die Idee im Namen einer anderen Person oder Organisation eingereicht wurde. Der eingetragene Name wird in der Detailansicht der Idee öffentlich angezeigt. Lassen Sie das Feld leer, wenn die Idee direkt vom angemeldeten Benutzer eingereicht wurde und keine Vertretung vorliegt.
         tabs:
           show: Anzeigen
           administer: Administrieren
@@ -82,8 +92,11 @@ de:
         administer:
           title: Administrieren
           votes_needed_for_success: Benötigte Stimmen
+          votes_needed_for_success_hint: Legen Sie fest, wie viele Stimmen eine Idee erreichen muss, um als erfolgreich zu gelten. Sobald die festgelegte Stimmenzahl erreicht ist, wird die Idee als erfolgreich markiert und kann zur weiteren Bearbeitung weitergeleitet werden. Ein Wert von null bedeutet, dass keine Mindeststimmenzahl erforderlich ist.
           timeframe: Zeitrahmen (Tage)
+          timeframe_hint: Der Zeitrahmen bestimmt, wie viele Tage die Idee ab Veröffentlichung für Abstimmungen geöffnet bleibt. Nach Ablauf des Zeitraums werden keine weiteren Stimmen angenommen und der Status der Idee wird automatisch aktualisiert. Ein Wert von null bedeutet, dass kein zeitliches Limit für die Abstimmung gesetzt wird.
           officer: Sachbearbeiter
+          officer_hint: Der Sachbearbeiter ist die zuständige Person für die Bearbeitung und Beantwortung dieser Idee. Er erhält Benachrichtigungen über neue Kommentare und Statusänderungen und kann eine offizielle Antwort verfassen. Wird kein Sachbearbeiter zugewiesen, greift der Standard-Sachbearbeiter der jeweiligen Kategorie oder des Gebiets.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
         settings:
@@ -102,8 +115,11 @@ de:
       categories:
         index:
           title: Kategorien
+          page_hint: "Hier verwalten Sie die Kategorien für Ideen. Kategorien ordnen Ideen thematischen Bereichen zu und ermöglichen die Filterung in der Übersicht. Jede Kategorie kann eine eigene Farbe, ein Symbol und einen Standard-Sachbearbeiter haben. Per Drag & Drop passen Sie die Reihenfolge an. Kategorien mit zugewiesenen Ideen können nicht gelöscht werden."
           new_category: Neue Kategorie
           no_categories: Keine Kategorien vorhanden
+          no_items_title: Keine Kategorien vorhanden
+          no_items_description: Erstellen Sie eine neue Kategorie, um Ideen zu klassifizieren.
           table:
             name: Name
             color: Farbe
@@ -135,9 +151,12 @@ de:
       officers:
         index:
           title: Sachbearbeiter
-          search_label: Benutzer suchen
-          search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
+          page_hint: "Hier verwalten Sie die Sachbearbeiter für Ideen. Sachbearbeiter können eingereichte Ideen bearbeiten, deren Umsetzbarkeit bewerten und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Sachbearbeiter können Kategorien und Gebieten als Standardverantwortliche zugeordnet werden."
+          search_label: Nutzer suchen
+          search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Ideen hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Ideen, bewerten deren Umsetzbarkeit und kommunizieren mit den Einreichern.
           no_officers: Keine Sachbearbeiter vorhanden
+          no_items_title: Keine Sachbearbeiter vorhanden
+          no_items_description: Suchen Sie nach einem Nutzer und weisen Sie die Sachbearbeiter-Rolle zu.
           table:
             name: Name
             email: E-Mail
@@ -148,16 +167,20 @@ de:
             name: Name
             email: E-Mail
         user_not_found:
-          user_not_found: Benutzer nicht gefunden
+          user_not_found: Nutzer nicht gefunden
       districts:
         index:
           title: Gebeite
+          page_hint: "Hier sehen Sie die Gebiete, die aus den registrierten Adressen übernommen werden. Jedem Gebiet kann ein Standard-Sachbearbeiter zugewiesen werden, der automatisch für neue Ideen aus diesem Gebiet zuständig ist. Die Zuweisung kann bei einzelnen Ideen nachträglich überschrieben werden."
           no_districts: Keine Gebiete vorhanden
+          no_items_title: Keine Gebiete vorhanden
+          no_items_description: Gebiete werden aus den registrierten Adressen übernommen und hier angezeigt.
           table:
             default_officer: Standard-Sachbearbeiter
         edit:
           title: Bezirk bearbeiten
           no_officer: "-- Kein Sachbearbeiter --"
+          default_idea_officer_hint: Der Standard-Sachbearbeiter wird automatisch allen neuen Ideen zugewiesen, die aus diesem Gebiet eingereicht werden. Er erhält Benachrichtigungen und ist für die Bearbeitung der Ideen zuständig. Diese Zuweisung kann bei einzelnen Ideen nachträglich überschrieben werden. Ohne Zuweisung bleibt das Feld leer.
           submit: Speichern
         update:
           success: Bezirk wurde erfolgreich aktualisiert.

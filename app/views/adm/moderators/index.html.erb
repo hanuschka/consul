@@ -8,12 +8,7 @@
   <% if @moderators.any? %>
     <%= render 'adm/role_assignments/roles', roles: @moderators, pagy: @pagy %>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <div class="kern-alert__header">
-        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
-        <span class="kern-title"><%= t(".no_moderators") %></span>
-      </div>
-    </div>
+    <%= empty_state(title: t(".empty_title"), description: t(".empty_description"), icon: "shield_person") %>
   <% end %>
 
   <%= render partial: "adm/role_assignments/pending_role_assignments", locals: { pending_role_assignments: @pending_role_assignments } %>

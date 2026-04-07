@@ -1,6 +1,6 @@
 <%= content_for :title, @newsletter.subject %>
 
-<%= render Adm::HeaderComponent.new(title: @newsletter.subject, breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::HeaderComponent.new(title: @newsletter.subject, breadcrumbs: @breadcrumbs, back_button_url: adm_newsletters_path, narrow: true) %>
 
 <div class="kern-container my-5">
   <%= render Adm::AttributeEditorComponent.new(@newsletter, :subject, :string) %>

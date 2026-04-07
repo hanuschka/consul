@@ -4,7 +4,7 @@
   <% content_for :admin_topbar_actions do %>
     <% if @custom_page.landing? %>
       <% if current_user&.administrator? %>
-        <%= link_to edit_adm_projekts_landing_page_path(@custom_page),
+        <%= link_to edit_adm_landing_pages_landing_page_path(@custom_page),
               class: "button hollow projekt-page--admin-topbar-button",
               target: "_blank" do %>
           <i class="fas fa-edit"></i>
@@ -15,7 +15,7 @@
       <%= render "pages/topbar/admin_topbar_projekt_actions" %>
     <% else %>
       <% if current_user&.administrator? %>
-        <%= link_to edit_admin_site_customization_page_path(@custom_page),
+        <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
               class: "button hollow projekt-page--admin-topbar-button",
               target: "_blank" do %>
           <i class="fas fa-edit"></i>
@@ -92,7 +92,7 @@
     <% if @custom_page.projekt.present? %>
       <% if native_projekt_studio?(@projekt) %>
         <div
-          class="js-projekt-studio-hide-on-preview"
+          class="js-studio-hide-on-preview"
           style="position: relative; height: 1px;"
         >
           <div
@@ -105,7 +105,7 @@
               aria-pressed="<%= @custom_page.projekt.show_content_background %>"
               data-projekt-id="<%= @custom_page.projekt.id %>"
               data-show-background="<%= @custom_page.projekt.show_content_background %>"
-              data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+              data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
             ></button>
             <span
               class="projekt-studio--toggle-background-label"

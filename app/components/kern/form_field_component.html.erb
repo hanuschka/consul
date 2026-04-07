@@ -5,8 +5,25 @@
         <% if label %>
           <div class="kern-title kern-title--small mb-3 mb-md-0"><%= label %></div>
         <% end %>
+        <% if hint %>
+          <p class="kern-body kern-body--small mt-2 mb-0"><%= hint %></p>
+        <% end %>
       </div>
       <div class="kern-col-12 kern-col-md-5">
+        <%= content %>
+      </div>
+    </div>
+  <% elsif stacked %>
+    <% if label %>
+      <div class="kern-title kern-title--small mb-3"><%= label %></div>
+    <% end %>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <p class="kern-body mb-4"><%= hint %></p>
+      </div>
+    </div>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
         <%= content %>
       </div>
     </div>

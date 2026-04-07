@@ -10,6 +10,7 @@ class Adm::BaseController < ActionController::Base
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  helper KernHelper
   helper_method :adm_menu_component, :adm_header_title
 
   private
@@ -48,6 +49,14 @@ class Adm::BaseController < ActionController::Base
         Adm::Projekts::PollQuestionPolicy
       when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
         Adm::Projekts::BudgetPolicy
+      when "ExternalApiKey"
+        Adm::ExternalApiKeyPolicy
+      when "ApiClient"
+        Adm::ApiClientPolicy
+      when "ApiRequestLog"
+        Adm::ApiRequestLogPolicy
+      when "SiteCustomization::EmailTemplate"
+        Adm::SiteCustomization::EmailTemplatePolicy
       when "SiteCustomization::Page"
         Adm::SiteCustomization::PagePolicy
       when "SiteCustomization::Image"

@@ -36,6 +36,7 @@ export default class MapboxAdapter extends BaseAdapter {
       this.createMap(container, options)
       this.addInstructionOverlay()
       this.setupExpandControl()
+      this.addResetViewControl()
       this.setupPlugins()
       this.setupFormSyncListeners()
     })
@@ -121,11 +122,15 @@ export default class MapboxAdapter extends BaseAdapter {
 
     mapboxgl.accessToken = options.mapboxPublicToken
 
+    this.initialCenter = [options.longitude, options.latitude]
+    this.initialZoom = options.zoom
+    this.initialPitch = 53
+
     this.map = new mapboxgl.Map({
       container: container,
       center: [options.longitude, options.latitude],
       zoom: options.zoom,
-      pitch: 53,
+      pitch: this.initialPitch,
       preserveDrawingBuffer: true,
       style: options.mapboxStyleId || "mapbox://styles/mapbox/streets-v12",
       cooperativeGestures: true,
@@ -181,6 +186,40 @@ export default class MapboxAdapter extends BaseAdapter {
     }
 
     this.map.addControl(new ExpandControl(), "top-right")
+  }
+
+  addResetViewControl() {
+    const instance = this
+
+    class ResetViewControl {
+      onAdd(map) {
+        this._container = document.createElement("div")
+        this._container.className = "mapboxgl-ctrl mapboxgl-ctrl-group"
+
+        const button = document.createElement("button")
+        button.type = "button"
+        button.innerHTML = '<span class="material-symbols-outlined">home</span>'
+        button.title = "Ansicht zurücksetzen"
+
+        button.addEventListener("click", () => {
+          map.flyTo({
+            center: instance.initialCenter,
+            zoom: instance.initialZoom,
+            pitch: instance.initialPitch,
+            bearing: 0
+          })
+        })
+
+        this._container.appendChild(button)
+        return this._container
+      }
+
+      onRemove() {
+        this._container.parentNode.removeChild(this._container)
+      }
+    }
+
+    this.map.addControl(new ResetViewControl(), "top-right")
   }
 
   toggleControlVisibility() {

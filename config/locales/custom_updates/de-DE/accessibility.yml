@@ -49,13 +49,9 @@ de:
       phases:
         scroll_left: "Phasen nach links scrollen"
         scroll_right: "Phasen nach rechts scrollen"
-      skip_links:
-        skip_to_content: "Direkt zum Inhalt"
-        skip_to_navigation: "Direkt zur Navigation"
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"
-        footer: "Fußzeilennavigation"
       events:
         projekt-aria-label: "Projekt: %{projekt_name}"
       session_timeout:

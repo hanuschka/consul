@@ -26,7 +26,7 @@
 
     <% if show_admin_controls_for_projekt?(@custom_page&.projekt) %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
-      <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-projekt-studio-hide-on-preview">
+      <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-studio-hide-on-preview">
         <%= button_to(
           [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
           method: :delete,
@@ -46,9 +46,6 @@
   <% end %>
 </div>
 
-<% if show_admin_controls_for_projekt?(@custom_page&.projekt)  %>
-  <%= render(ProjektStudio::FileUploadDialogComponent.new) %>
-<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

@@ -6,60 +6,76 @@
 
 <div class="kern-container mb-5">
   <% if @investments.any? %>
-    <div class="d-flex justify-content-end gap-2 mb-4">
-      <% if @budget.balloting_or_later? %>
-        <%= kern_link_button calculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
-              text: t(".calculate_winners"), icon: "calculate", style: :secondary,
-              data: { turbo_method: :put, turbo_confirm: t(".calculate_winners_confirm") } %>
-        <%= kern_link_button recalculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
-              text: t(".recalculate_winners"), icon: "sync", style: :secondary,
-              data: { turbo_method: :put, turbo_confirm: t(".recalculate_winners_confirm") } %>
-      <% end %>
-      <%= kern_link_button budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters),
-            text: t(".download_csv"), icon: "download", style: :secondary, data: { turbo: false } %>
-    </div>
-  <% end %>
+    <div data-controller="adm-column-selector"
+         data-adm-column-selector-cookie-value="adm-budget-investments-columns"
+         data-adm-column-selector-defaults-value="id,created_at,title,feasibility,valuation_finished,total_votes,selected,winner"
+         data-action="click@window->adm-column-selector#close">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="adm-column-selector">
+            <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
+              <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
+              <%= t(".columns") %>
+            </button>
+            <div class="adm-column-selector__menu" data-adm-column-selector-target="menu">
+              <div data-adm-column-selector-target="list"></div>
+            </div>
+          </div>
+          <% if @budget.balloting_or_later? %>
+            <%= kern_link_button calculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
+                  text: t(".calculate_winners"), icon: "calculate", style: :secondary,
+                  data: { turbo_method: :put, turbo_confirm: t(".calculate_winners_confirm") } %>
+            <%= kern_link_button recalculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
+                  text: t(".recalculate_winners"), icon: "sync", style: :secondary,
+                  data: { turbo_method: :put, turbo_confirm: t(".recalculate_winners_confirm") } %>
+          <% end %>
+        </div>
+        <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          <%= t(".download_csv") %>
+        </a>
+      </div>
 
-  <% if @investments.any? %>
-    <div class="kern-table-responsive" tabindex="0">
-      <table class="kern-table">
-        <thead class="kern-table__head">
-          <tr class="kern-table__row">
-            <th scope="col" class="kern-table__header"><%= t(".table.id") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.created_at") %></th>
-            <%= render Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:moderation_status, t(".table.moderation"), **@moderation_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:feasibility, t(".table.feasibility"), **@feasibility_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:valuation_finished, t(".table.valuation_finished"), **@valuation_finished_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:total_votes, t(".table.total_votes"), **@total_votes_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:preselected, t(".table.preselected"), **@preselected_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:selected, t(".table.selected"), **@selected_header_options) %>
-            <% if @budget.show_money? %>
-              <th scope="col" class="kern-table__header"><%= t(".table.price") %></th>
-            <% end %>
-            <th scope="col" class="kern-table__header"><%= t(".table.balloters") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.total_ballot_votes") %></th>
-            <%= render Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options) %>
-            <%= render Kern::Table::HeaderComponent.new(:winner, t(".table.winner"), **@winner_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.admin") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.valuator") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
-          </tr>
-        </thead>
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table kern-table--small kern-table--striped" data-adm-column-selector-target="table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header" data-field="id"><%= t(".table.id") %></th>
+              <th scope="col" class="kern-table__header" data-field="created_at"><%= t(".table.created_at") %></th>
+              <%= render Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options.merge(data_field: "title")) %>
+              <%= render Kern::Table::HeaderComponent.new(:moderation_status, t(".table.moderation"), **@moderation_header_options.merge(data_field: "moderation_status")) %>
+              <%= render Kern::Table::HeaderComponent.new(:feasibility, t(".table.feasibility"), **@feasibility_header_options.merge(data_field: "feasibility")) %>
+              <%= render Kern::Table::HeaderComponent.new(:valuation_finished, t(".table.valuation_finished"), **@valuation_finished_header_options.merge(data_field: "valuation_finished")) %>
+              <%= render Kern::Table::HeaderComponent.new(:total_votes, t(".table.total_votes"), **@total_votes_header_options.merge(data_field: "total_votes")) %>
+              <%= render Kern::Table::HeaderComponent.new(:preselected, t(".table.preselected"), **@preselected_header_options.merge(data_field: "preselected")) %>
+              <%= render Kern::Table::HeaderComponent.new(:selected, t(".table.selected"), **@selected_header_options.merge(data_field: "selected")) %>
+              <% if @budget.show_money? %>
+                <th scope="col" class="kern-table__header" data-field="price"><%= t(".table.price") %></th>
+              <% end %>
+              <th scope="col" class="kern-table__header" data-field="balloters"><%= t(".table.balloters") %></th>
+              <th scope="col" class="kern-table__header" data-field="total_ballot_votes"><%= t(".table.total_ballot_votes") %></th>
+              <%= render Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options.merge(data_field: "district")) %>
+              <%= render Kern::Table::HeaderComponent.new(:winner, t(".table.winner"), **@winner_header_options.merge(data_field: "winner")) %>
+              <th scope="col" class="kern-table__header" data-field="admin"><%= t(".table.admin") %></th>
+              <th scope="col" class="kern-table__header" data-field="author"><%= t(".table.author") %></th>
+              <th scope="col" class="kern-table__header" data-field="valuator"><%= t(".table.valuator") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
+            </tr>
+          </thead>
 
         <tbody class="kern-table__body">
           <% @investments.each do |investment| %>
             <%= render "adm/projekts/phases/budget_investments/budget_investment", investment: investment, projekt_phase: @projekt_phase, budget: @budget %>
           <% end %>
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
 
-    <div class="my-5">
-      <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
+      <div class="my-5">
+        <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
+      </div>
     </div>
   <% else %>
-    <p><%= t(".no_investments") %></p>
+    <%= empty_state(title: t(".no_investments_title"), description: t(".no_investments_description"), icon: "savings") %>
   <% end %>
 </div>

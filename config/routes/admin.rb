@@ -41,14 +41,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
-      get    :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#index"
-      post   :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#create",
+      get    :ai_user_flow,                to: "projekt_phases/user_resource_criteria#index"
+      post   :ai_user_flow,                to: "projekt_phases/user_resource_criteria#create",
 as: :create_user_resource_criterion
-      patch  "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
+      patch  "ai_user_flow/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
 as: :update_user_resource_criterion
-      delete "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
+      delete "ai_user_flow/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
 as: :destroy_user_resource_criterion
-      patch  :reorder_user_resource_criteria,        to: "projekt_phases/user_resource_criteria#reorder"
+      patch  :reorder_ai_user_flow,        to: "projekt_phases/user_resource_criteria#reorder"
     end
 
     resources :formular, only: [] do
@@ -356,6 +356,7 @@ as: :destroy_user_resource_criterion
       post :regenerate_token
     end
   end
+  resources :api_request_logs, only: [:index, :show]
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom

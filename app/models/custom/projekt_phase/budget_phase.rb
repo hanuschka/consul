@@ -174,7 +174,15 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      :organization if user.organization?
+      return :organization if user.organization?
+
+      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+    end
+
+    def submissions_limit_exceeded?(user)
+      return false if max_submissions_per_user.zero?
+
+      budget.investments.where(author: user).count >= max_submissions_per_user
     end
 
     def create_budget

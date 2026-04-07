@@ -10,3 +10,4 @@
 
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.map_features_limit"), :value, :string) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.description_max_length"), :value, :string) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.resource.max_submissions_per_user"), :value, :string) %>

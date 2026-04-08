@@ -1,0 +1,32 @@
+de:
+  adm:
+    users:
+      index:
+        title: Nutzer verwalten
+        columns: Spalten
+        csv_export_button: CSV Export
+        csv_export_notice: Der Export wird vorbereitet. Sie erhalten eine E-Mail mit einem Download-Link.
+        table:
+          email: E-Mail
+          first_name: Vorname
+          last_name: Nachname
+          city_name: Stadt
+          street_address: Adresse
+          plz: PLZ
+          district: Bezirk
+          document_type: Dokument
+          document_last_digits: Letzte Ziffern
+          date_of_birth: Geburtsdatum
+          roles: Rollen
+          unique_stamp: Unique Stamp
+          created_at: Erstellt am
+          last_sign_in: Letzter Login
+          verified_at: Verifiziert am
+      user:
+        table:
+          actions:
+            verify: Verifizieren
+            unverify: Verifizierung aufheben
+            edit: Bearbeiten
+      csv_download:
+        not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.

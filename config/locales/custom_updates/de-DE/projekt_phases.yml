@@ -2,19 +2,55 @@ de:
   custom:
     projekt_phases:
       subnav:
-        stats: Statistiken
+        key_metrics: Kennzahlen
+        analysis: Analyse
+        full_stats: Auswertung auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge
+          budget_phase: Investitionsvorschläge
+          comment_phase: Kommentare
       stats:
+        title: Statistiken
+        banner_title: "Auswertung der %{phase_title}"
+        back_to_phase: Zurück zum Projekt
+        refresh_stats_button: "Statistiken aktualisieren"
+        refresh_stats_last_updated: "Aktualisiert:"
+        processing_stats: "Wird verarbeitet..."
+        refresh_ai_stats_button: "AI-Statistiken aktualisieren"
+        refresh_ai_stats_last_updated: "Aktualisiert:"
+        refresh_ai_stats_loading: "Bitte warten, AI-Statistiken werden aktualisiert..."
+        refresh_ai_stats_loading_note: "Die Aktualisierung kann je nach Anzahl der Ressourcen und Kommentare einige Minuten dauern."
+        refresh_ai_stats_error: "Fehler beim Aktualisieren der AI-Statistiken. Bitte versuchen Sie es erneut."
+        generate_ai_summary_button: "AI-Summary generieren"
+        ai_summary_generated: "AI Summary wurde erfolgreich generiert"
         proposal_phase:
-          total_proposals_title: "Vorschläge"
-          total_proposals: "Gesamtzahl der Vorschläge"
-          total_authors_title: "Autoren"
-          total_authors: "Autoren"
-          total_supports_title: "Unterstützungen"
-          total_supports: "Gesamtzahl der Unterstützungen"
-          total_supports_weight_title: "Unterstützungsgewicht"
-          total_supports_weight: "Gesamtunterstützungsgewicht"
+          total_unique_participants_count:
+            title: Gesamtteilnehmer
+            tooltip: Anzahl der eindeutigen Nutzer, die aktiv am Beteiligungsprozess teilgenommen haben. Berücksichtigt werden Autoren von Vorschlägen, Unterstützer sowie Nutzer, die Kommentare verfasst haben.
+          visible_proposals_count:
+            title: Eingereichte Vorschläge
+            tooltip: Anzahl aller eingereichten und aktuell sichtbaren Vorschläge in dieser Beteiligungsphase. Ausgeblendete Vorschläge werden nicht mitgezählt.
+          proposal_authors_count:
+            title: Aktive Autoren
+            tooltip: Anzahl der unterschiedlichen Nutzer, die mindestens einen sichtbaren Vorschlag erstellt haben. Mehrere Vorschläge eines Nutzers werden nur einmal gezählt.
+          unique_supporters_count:
+            title: Unterstützer
+            tooltip: Anzahl der eindeutigen Nutzer, die mindestens einen Vorschlag unterstützt oder bewertet haben.
+          total_votes_count:
+            title: Unterstützungen gesamt
+            tooltip: Gesamtanzahl aller abgegebenen Unterstützungen über alle Vorschläge hinweg. Ein Nutzer kann mehrere Stimmen abgeben.
+          online_votes_count:
+            title: Online-Unterstützungen
+            tooltip: Anzahl aller Unterstützungen, die direkt über die Online-Plattform abgegeben wurden.
+          offline_votes_count:
+            title: Offline-Unterstützungen
+            tooltip: Anzahl aller Unterstützungen, die außerhalb der Plattform erfasst und nachträglich eingepflegt wurden.
+          visible_comments_count:
+            title: Öffentliche Kommentare
+            tooltip: Gesamtanzahl aller veröffentlichten Kommentare zu Vorschlägen. Ausgeblendete Kommentare werden nicht mitgezählt.
+          reported_proposals_count:
+            title: Gemeldete Vorschläge
+            tooltip: Anzahl der Vorschläge, die mindestens einmal von Nutzern gemeldet wurden. Ein Vorschlag wird unabhängig von der Anzahl der Meldungen nur einmal gezählt.
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht
@@ -53,7 +89,9 @@ de:
             past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
             submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
           proposal_phase:
-            proposals_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen pro Tag %{proposals_limit} erreicht
+            submissions_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen (%{max_submissions}) für diese Phase erreicht.
+          budget_phase:
+            submissions_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Investitionsvorschlägen (%{max_submissions}) für diese Phase erreicht.
           point_of_interest_phase:
             not_enabled: Hinzufügen von Pins ist nicht aktiviert
             max_pins_reached: Die maximale Anzahl an Pins pro Nutzer*in ist auf %{max_pin_number} begrenzt. Sie haben diese Anzahl bereits erreicht.

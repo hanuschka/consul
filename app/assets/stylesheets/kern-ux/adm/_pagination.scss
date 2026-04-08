@@ -1,0 +1,23 @@
+.pagy.nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+
+  a {
+    padding: 0.5em;
+    border: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
+    line-height: 1;
+    min-width: 34px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+
+    &.current {
+      background-color: var(--kern-color-feedback-info-background);
+    }
+
+    &:hover {
+      background-color: var(--kern-color-feedback-info-background);
+    }
+  }
+}

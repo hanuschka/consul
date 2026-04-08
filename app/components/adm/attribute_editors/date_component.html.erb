@@ -1,0 +1,22 @@
+<%= form_with model: @record, url: path do |form| %>
+  <%= hidden_field_tag :kind, "date" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+
+  <% input_options = {
+        label: false,
+        class: "kern-form-input__input",
+        disabled: disabled?,
+        data: {"components-adm-attribute-editor-target": "input" },
+        aria: aria_attributes
+      } %>
+
+  <%= form.date_field @attribute, **input_options %>
+
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-controller="auto-remove">
+    <%= flash[:success] %>
+  </div>
+<% end %>

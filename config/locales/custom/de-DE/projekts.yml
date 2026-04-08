@@ -1,11 +1,64 @@
 de:
   custom:
+    projekts:
+      sidebar_section:
+        show: 'Bereich anzeigen'
+        hide: 'Bereich ausblenden'
+      content_start_section:
+        title: "Starten Sie Ihr Projekt mit einer der folgenden Optionen"
+        file_import_button:
+          title: Dokument hochladen
+          button_title: Datei importieren
+          description: Erstellen Sie eine visuell ansprechende Projektseite, indem Inhalte aus einer PDF- oder Word-Datei automatisch strukturiert werden.
+          action: Jetzt starten →
+        prompt_button:
+          title: Prompt eingeben
+          button_title: Prompt eingeben
+          description: Erstellen Sie eine visuell ansprechende Projektseite, indem Sie das Projekt beschreiben und Inhalte mithilfe von KI generieren lassen.
+          action: Jetzt starten →
+        template_button:
+          title: Vorlage wählen
+          button_title: Vorlage wählen
+          description: Erstellen Sie einen einzelnen Inhaltsblock, indem Sie eine Vorlage auswählen und diese gezielt an Ihr Projekt anpassen.
+          action: Jetzt starten →
+        empty_block_button:
+          title: Leerer Block
+          button_title: Leerer Block
+          description: Erstellen Sie einen einzelnen Inhaltsblock und gestalten Sie Inhalte und Struktur vollständig nach Ihren eigenen Vorgaben.
+          action: Jetzt starten →
+        file_import_preview:
+          select_other_file: Datei wählen
+          cancel: Abbrechen
+          additional_instructions: "Zusätzliche Anweisungen für die KI (optional):"
+          submit: Jetzt starten
+        prompt_form:
+          header: Prompt eingeben
+          label: "Beschreiben Sie das Projekt und welche Inhalte erstellt werden sollen:"
+          placeholder: "Z.B. Erstelle eine Projektbeschreibung für einen neuen Spielplatz mit Informationen zu Standort, Ausstattung und Zeitplan..."
+          cancel: Abbrechen
+          submit: Inhalte generieren
+        loader:
+          message: Dokument wird verarbeitet...
     projekt:
       back_to_projekt_overview: zurück zur Projektübersicht
       content_block_templates_selector:
+        loading: "Inhaltsblockvorlagen werden geladen..."
+        fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
+        tabs:
+          internal_content_blocks: Interne Inhaltsblöcke
+          own_content_blocks: Eigene Inhaltsblöcke
         saved_content_blocks:
           global_explanation: "Interne Inhaltsblöcke sind wiederverwendbare HTML-Vorlagen, die von allen Benutzern verwendet werden können. Sie können von Administratoren und Projektmanagern bearbeitet werden und stehen projektübergreifend zur Verfügung."
+          global_create_title: Neue interne Inhaltsblockvorlage erstellen
+          global_add_button: Neuen internen Inhaltsblock hinzufügen
+          global_form_heading: Neue interne Inhaltsblockvorlage erstellen
           user_explanation: "Eigene Inhaltsblöcke sind persönliche HTML-Vorlagen, die nur für Sie sichtbar und verwendbar sind. Sie können diese nach Ihren individuellen Bedürfnissen erstellen und verwalten."
+          user_create_title: Neue eigene Inhaltsblockvorlage erstellen
+          user_add_button: Neuen eigenen Inhaltsblock hinzufügen
+          user_form_heading: Neue eigene Inhaltsblockvorlage erstellen
+          html_code_hint: HTML Code hier hinzufügen
+          save: Speichern
+          cancel: Abbrechen
       page:
         breadcrumbs:
           homepage: Startseite

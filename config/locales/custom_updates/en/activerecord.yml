@@ -7,6 +7,9 @@ en:
       deficiency_report_manager:
         one: Deficiency reporting admin
         other: Deficiency reporting admins
+      deficiency_report/feedback_form:
+        one: Feedback form
+        other: Feedback forms
       deficiency_report/officer_group:
         one: Deficiency report officer group
         other: Deficiency report officer groups
@@ -81,6 +84,10 @@ en:
           attributes:
             email:
               invalid: Please enter a valid email format
+        deficiency_report/feedback_form:
+          attributes:
+            overall_satisfaction:
+              blank: Please select an option.
     attributes:
       map_location:
         latitude: Latitude
@@ -109,6 +116,13 @@ en:
         category: Category
         status: Status
         responsible: Responsible
+      deficiency_report/feedback_form:
+        overall_satisfaction: Overall satisfaction
+        response_time_satisfaction: Response time
+        communication_satisfaction: Communication
+        resolved: Request resolved
+        what_liked_note: What did you like
+        what_improve_note: What can we improve
       debate:
         on_behalf_of: Create debate on behalf of someone
       proposal:
@@ -185,6 +199,10 @@ en:
       projekt_question:
         show_answers_count: Show number of votes in front-end
         comments_enabled: Activates open answers
+      projekt_event_registration:
+        first_name: First name
+        last_name: Last name
+        email: Email
       projekt_event:
         title: Event title
         location: Event location
@@ -192,6 +210,16 @@ en:
         open_ended: Open ended
         end_datetime: Ending
         weblink: Link
+        language: Language
+        wheelchair_accessible: Wheelchair accessible
+        accessible_toilet: Accessible toilet available
+        disabled_parking_nearby: Disabled parking nearby
+        tactile_guidance_systems: Tactile guidance systems available
+        induction_loop_available: Induction loop available
+        assistance_dogs_welcome: Assistance dogs welcome
+        sign_language_interpreter: Sign language interpreter available
+        confirmation_email_text: Confirmation email text
+        waitlist_email_text: Waitlist email text
       projekt_notification:
         title: Title
         body: Body

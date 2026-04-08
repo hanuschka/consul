@@ -53,6 +53,12 @@ class Projekt < ApplicationRecord
 
   has_and_belongs_to_many :geozone_affiliations, class_name: "Geozone",
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :registered_address_district_affiliations,
+    class_name: "RegisteredAddress::District",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "projekt_id",
+    association_foreign_key: "registered_address_district_id",
+    after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
@@ -88,11 +94,7 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
-  has_and_belongs_to_many :landing_pages,
-    class_name: 'SiteCustomization::Page',
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'projekt_id',
-    association_foreign_key: 'site_customization_page_id'
+  belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
@@ -128,6 +130,15 @@ class Projekt < ApplicationRecord
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+  attribute :show_content_background, :boolean, default: false
+
+  enum import_file_status: {
+    never_run: "never_run",
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: true, _default: "never_run"
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -283,13 +294,6 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
-  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
-    if landing_page_id.blank?
-      joins(:landing_pages).distinct
-    else
-      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
-    end
-  }
 
   ##################
 
@@ -525,7 +529,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process

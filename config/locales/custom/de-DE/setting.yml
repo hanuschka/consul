@@ -7,7 +7,7 @@ de:
         llm_model: KI-Modell
         llm_model_description: Wählen Sie das KI-Modell für die Verarbeitung von Anfragen
         llm_custom_model: Benutzerdefiniertes Modell
-        llm_custom_model_description: Geben Sie den Modellnamen für Ollama-Anbieter ein
+        llm_custom_model_description: Benutzerdefinierter Modellname (für Ollama oder bei benutzerdefiniertem API-Endpunkt)
         llm_api_endpoint: API-Endpunkt
         llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
         llm_api_key: API-Schlüssel
@@ -126,24 +126,8 @@ de:
           devise_verification_token_validity_days: Gültigkeit des Verifikationslinks in Tagen
           devise_verification_token_validity_days_description: Legen Sie fest, wie lange der Verifikationslink gültig ist
         proposals:
-          max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
-          max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest
           description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
           description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
-
-
-      projekts:
-        overview_page: Projektübersichtsseite in Navigation anzeigen
-        overview_page_description: Zeigt die Projektübersichtsseite in der Navigation an
-        show_archived:
-          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
-          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
-        second_level_projekts_in_active_filter: Zweite Ebene für aktive Projekte anzeigen
-        second_level_projekts_in_active_filter_description: Zeigt eine zweite Ebene im Projektfilter für aktive Projekte standardmäßig an
-        second_level_projekts_in_archived_filter: Zweite Ebene für archivierte Projekte anzeigen
-        second_level_projekts_in_archived_filter_description: Zeigt eine zweite Ebene im Projektfilter für archivierte Projekte standardmäßig an
-        set_default_sorting_to_newest: Standardsortierung auf "Neueste" unstellen
-        set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
 
       extra_fields:
         registration:

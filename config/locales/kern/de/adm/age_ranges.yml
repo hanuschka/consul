@@ -1,0 +1,62 @@
+de:
+  adm:
+    age_ranges:
+      index:
+        title: Altersgruppen
+        intro_title: Hinweis zu Altersgruppen
+        intro_text_p1: >
+          Altersgruppen werden in zwei Varianten gepflegt: für Altersbeschränkungen in Beteiligungsphasen
+          und für die statistische Auswertung. Gruppen für Beschränkungen schränken die Teilnahme an einer
+          Beteiligungsphase auf Nutzer eines bestimmten Altersbereichs ein. Gruppen für
+          Statistiken dienen ausschließlich der Auswertung und haben keinen Einfluss auf die
+          Teilnahmeberechtigung.
+        intro_text_p2: >
+          Die Reihenfolge der Altersgruppen innerhalb jedes Tabs kann per Drag & Drop angepasst werden.
+          Diese Reihenfolge beeinflusst die Darstellung in Auswahllisten und statistischen Auswertungen.
+          Jede Gruppe benötigt einen Namen sowie eine Altersuntergrenze und -obergrenze.
+        new_age_range: Neue Altersgruppe erstellen
+        empty_title: Keine Altersgruppen vorhanden
+        empty_description: Erstellen Sie eine neue Altersgruppe für Altersbeschränkungen oder statistische Auswertungen.
+        filters:
+          for_restrictions: Altersbeschränkung
+          for_stats: Altersgruppen für Statistiken
+        table:
+          name: Name
+          range: Altersgruppe
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Altersgruppe löschen möchten?
+      new:
+        title: Neue Altersgruppe erstellen
+      edit:
+        title: Altersgruppe bearbeiten
+      create:
+        success: Altersgruppe erfolgreich erstellt.
+      update:
+        success: Altersgruppe erfolgreich aktualisiert.
+      destroy:
+        success: Altersgruppe erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        hints:
+          name: >
+            Geben Sie einen aussagekräftigen Namen für die Altersgruppe ein, z. B. „Jugendliche (14–17)" oder
+            „Senioren (65+)". Dieser Name wird in Auswahllisten der Beteiligungsphasen sowie in statistischen
+            Auswertungen angezeigt. Ein klar benannter Altersbereich erleichtert sowohl die Konfiguration von
+            Altersbeschränkungen als auch die spätere Auswertung.
+          min_age: >
+            Legen Sie die untere Altersgrenze für diese Gruppe fest. Nutzer, deren Alter unter diesem Wert liegt,
+            werden bei einer aktiven Altersbeschränkung von der Teilnahme an der jeweiligen Beteiligungsphase
+            ausgeschlossen. Bei Gruppen für die statistische Auswertung dient dieser Wert der korrekten
+            Zuordnung in den Auswertungsberichten.
+          max_age: >
+            Legen Sie die obere Altersgrenze für diese Gruppe fest. Nutzer, deren Alter über diesem Wert liegt,
+            werden bei einer aktiven Altersbeschränkung von der Teilnahme an der jeweiligen Beteiligungsphase
+            ausgeschlossen. Achten Sie darauf, dass sich die Altersbereiche der verschiedenen Gruppen nicht
+            überschneiden, um eine eindeutige Zuordnung zu gewährleisten.
+          only_for_stats: >
+            Wenn diese Option aktiviert ist, wird die Altersgruppe ausschließlich für statistische Auswertungen
+            verwendet und steht nicht als Altersbeschränkung in Beteiligungsphasen zur Verfügung. Diese Einstellung
+            kann nach dem Erstellen nicht mehr geändert werden. Nutzen Sie diese Option für Altersgruppen, die nur
+            der Analyse und Berichterstattung dienen sollen.

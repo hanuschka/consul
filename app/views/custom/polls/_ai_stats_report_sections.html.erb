@@ -1,0 +1,12 @@
+<section class="ai-stats-card margin-bottom">
+  <h3 class="ai-stats-card--title"><%= content["title"] %></h3>
+  <div class="ai-stats-card--content">
+    <%= sanitize(content["content"], tags: %w[h4 p ul li strong em]) %>
+  </div>
+  <div class="ai-stats-card--actions u-flex u-gap-10">
+    <%= render Polls::DownloadButtonsComponent.new(
+      poll: poll,
+      path_helper: :download_report_section_poll_path
+    ) %>
+  </div>
+</section>

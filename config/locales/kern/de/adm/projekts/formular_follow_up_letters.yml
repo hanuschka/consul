@@ -1,0 +1,22 @@
+de:
+  adm:
+    projekts:
+      formular_follow_up_letters:
+        create:
+          success: Follow-up E-Mail wurde erfolgreich erstellt.
+        edit:
+          title: Follow-up E-Mail bearbeiten
+        update:
+          success: Follow-up E-Mail wurde erfolgreich aktualisiert.
+        destroy:
+          success: Follow-up E-Mail wurde erfolgreich gelöscht.
+        send_emails:
+          success: E-Mails werden versendet.
+        form:
+          subject_label: Betreff
+          subject_hint: Betreff der E-Mail.
+          body_label: Nachricht
+          body_hint: Inhalt der E-Mail.
+          show_follow_up_button_label: Follow-up Button anzeigen
+          show_follow_up_button_hint: Zeigt einen Follow-up Button in der E-Mail an.
+          submit: Speichern

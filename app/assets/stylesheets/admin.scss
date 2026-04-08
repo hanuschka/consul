@@ -865,13 +865,11 @@ table {
 .fullscreen {
 
   .fullscreen-container {
+    display: flex;
+    flex-direction: row-reverse;
 
     a {
       line-height: 3rem;
-
-      @include breakpoint(medium) {
-        float: right;
-      }
     }
 
     .markdown-editor-header {
@@ -898,7 +896,6 @@ table {
 
       @include breakpoint(medium) {
         display: inline-block;
-        float: right;
         padding-left: 1rem;
       }
     }

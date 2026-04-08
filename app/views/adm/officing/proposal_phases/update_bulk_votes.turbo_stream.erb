@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@proposal, :bulk_vote) do %>
+  <%= render "adm/officing/proposal_phases/bulk_vote_row", proposal: @proposal, proposal_phase: @proposal_phase, updated: true %>
+<% end %>

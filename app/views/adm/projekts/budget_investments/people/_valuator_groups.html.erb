@@ -1,0 +1,23 @@
+<%= turbo_frame_tag "investment_valuator_groups" do %>
+  <% if valuator_groups.any? %>
+    <%= form_with model: investment,
+          url: frame_update_adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+          method: :patch do |f| %>
+      <div class="kern-row mb-4">
+        <%= f.collection_check_boxes :valuator_group_ids, valuator_groups, :id, :name do |b| %>
+          <div class="kern-col-12 kern-col-md-6 mb-2">
+            <div class="kern-form-check">
+              <%= b.check_box class: "kern-form-check__checkbox" %>
+              <%= b.label class: "kern-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <%= form_submit_button %>
+    <% end %>
+
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+    <% end %>
+  <% end %>
+<% end %>

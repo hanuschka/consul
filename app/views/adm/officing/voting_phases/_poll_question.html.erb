@@ -1,0 +1,183 @@
+<% if question.bundle_question? %>
+  <h4 class="fs-5 mb-2"><%= question.title %></h4>
+  <% if question.description.present? %>
+    <p class="text-muted mb-4"><%= sanitize(question.description) %></p>
+  <% end %>
+  <% if question.context.present? %>
+    <p class="text-muted mb-4"><%= t("adm.officing.voting_phases.poll_question.context", answer: question.context.title) %></p>
+  <% end %>
+  <hr class="kern-divider mb-5" aria-hidden="true" />
+
+  <% question.nested_questions.each do |nested_question| %>
+    <% nested_answers = (user_answers_by_question[nested_question.id] || []) %>
+    <% nested_answers_by_title = nested_answers.index_by(&:answer) %>
+    <% nested_used_weight = nested_answers.sum(&:answer_weight) %>
+    <% nested_votes_exhausted = nested_question.max_votes.present? && nested_used_weight >= nested_question.max_votes %>
+
+    <% nested_hint_parts = [] %>
+    <% nested_hint_parts << sanitize(nested_question.description) if nested_question.description.present? %>
+    <% if nested_question.votation_type&.show_hint_callout? %>
+      <% nested_hint_parts << t("poll_questions.description.#{nested_question.vote_type}",
+           maximum: nested_question.max_votes,
+           cap: (nested_question.votation_type.max_votes_per_answer || nested_question.max_votes)) %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      label: "#{nested_question.title}#{' *' if nested_question.answer_mandatory?}",
+      hint: nested_hint_parts.any? ? safe_join(nested_hint_parts, tag.br + tag.br) : nil,
+      divider: true) do %>
+
+      <% nested_question.question_answers.each do |question_answer| %>
+        <% next if question_answer.open_answer? %>
+        <% existing_answer = nested_answers_by_title[question_answer.title] %>
+
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= question_answer.title %></div>
+
+          <% if existing_answer.present? %>
+            <div class="d-flex align-items-center gap-2">
+              <% if nested_question.votation_type&.multiple_with_weight? %>
+                <span class="kern-body text-muted"><%= t("adm.officing.voting_phases.poll_question.weight", count: existing_answer.answer_weight) %></span>
+              <% end %>
+              <%= form_with(
+                url: adm_officing_voting_phase_poll_answer_path(voting_phase, existing_answer,
+                  offline_user_id: offline_user.id, question_id: nested_question.id),
+                method: :delete) do %>
+                <%= kern_button(text: t("adm.officing.voting_phases.poll_question.revoke"), type: :submit, style: :primary,
+                  "aria-label" => "#{t("adm.officing.voting_phases.poll_question.revoke")} #{question_answer.title}") %>
+              <% end %>
+            </div>
+          <% elsif nested_votes_exhausted %>
+            <span class="kern-body text-muted"><%= t("adm.officing.voting_phases.poll_question.no_votes_left") %></span>
+          <% else %>
+            <%= form_with(
+              url: adm_officing_voting_phase_poll_answers_path(voting_phase,
+                offline_user_id: offline_user.id, question_id: nested_question.id,
+                answer: question_answer.title),
+              method: :post) do |f| %>
+
+              <div class="d-flex align-items-center gap-2">
+                <% if nested_question.votation_type&.multiple_with_weight? && nested_question.max_votes.present? %>
+                  <% available = [nested_question.max_votes - nested_used_weight, nested_question.votation_type.max_votes_per_answer].compact.min %>
+                  <% if available > 0 %>
+                    <%= f.select :answer_weight, (1..available).to_a, { selected: 1 }, { label: false, "aria-label" => t("adm.officing.voting_phases.poll_question.weight_label", answer: question_answer.title) } %>
+                  <% end %>
+                <% end %>
+
+                <%= kern_button(icon: "how_to_vote",
+                  text: t("adm.officing.voting_phases.poll_question.vote"),
+                  type: :submit, style: :secondary,
+                  "aria-label" => "#{t("adm.officing.voting_phases.poll_question.vote")} #{question_answer.title}") %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if nested_question.open_question_answer.present? %>
+        <% open_qa = nested_question.open_question_answer %>
+        <% existing_open = nested_answers_by_title[open_qa.title] %>
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= open_qa.title %></div>
+          <%= form_with(
+            url: update_open_answer_adm_officing_voting_phase_poll_answers_path(voting_phase,
+              offline_user_id: offline_user.id, question_id: nested_question.id,
+              answer: open_qa.title),
+            method: :post) do |f| %>
+            <%= f.text_area :open_answer_text, value: existing_open&.open_answer_text, label: false, placeholder: open_qa.title, "aria-label" => open_qa.title, class: "mb-3" %>
+            <%= kern_button(
+              text: t("adm.officing.voting_phases.poll_question.save_open_answer"),
+              type: :submit, style: :secondary) %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+<% else %>
+  <% answers_by_title = user_answers.index_by(&:answer) %>
+  <% used_weight = user_answers.sum(&:answer_weight) %>
+  <% votes_exhausted = question.max_votes.present? && used_weight >= question.max_votes %>
+
+  <% hint_parts = [] %>
+  <% if question.context.present? %>
+    <% hint_parts << t("adm.officing.voting_phases.poll_question.context", answer: question.context.title) %>
+  <% end %>
+  <% hint_parts << sanitize(question.description) if question.description.present? %>
+  <% if question.votation_type&.show_hint_callout? %>
+    <% hint_parts << t("poll_questions.description.#{question.vote_type}",
+         maximum: question.max_votes,
+         cap: (question.votation_type.max_votes_per_answer || question.max_votes)) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(
+    label: "#{question.title}#{' *' if question.answer_mandatory?}",
+    hint: hint_parts.any? ? safe_join(hint_parts, tag.br + tag.br) : nil,
+    divider: true) do %>
+
+    <% question.question_answers.each do |question_answer| %>
+      <% next if question_answer.open_answer? %>
+      <% existing_answer = answers_by_title[question_answer.title] %>
+
+      <div class="mb-4">
+        <div class="kern-title kern-title--small mb-2"><%= question_answer.title %></div>
+
+        <% if existing_answer.present? %>
+          <div class="d-flex align-items-center gap-2">
+            <% if question.votation_type&.multiple_with_weight? %>
+              <span class="kern-body text-muted"><%= t("adm.officing.voting_phases.poll_question.weight", count: existing_answer.answer_weight) %></span>
+            <% end %>
+            <%= form_with(
+              url: adm_officing_voting_phase_poll_answer_path(voting_phase, existing_answer,
+                offline_user_id: offline_user.id, question_id: question.id),
+              method: :delete) do %>
+              <%= kern_button(text: t("adm.officing.voting_phases.poll_question.revoke"), type: :submit, style: :primary,
+                "aria-label" => "#{t("adm.officing.voting_phases.poll_question.revoke")} #{question_answer.title}") %>
+            <% end %>
+          </div>
+        <% elsif votes_exhausted %>
+          <span class="kern-body text-muted"><%= t("adm.officing.voting_phases.poll_question.no_votes_left") %></span>
+        <% else %>
+          <%= form_with(
+            url: adm_officing_voting_phase_poll_answers_path(voting_phase,
+              offline_user_id: offline_user.id, question_id: question.id,
+              answer: question_answer.title),
+            method: :post) do |f| %>
+
+            <div class="d-flex align-items-center gap-2">
+              <% if question.votation_type&.multiple_with_weight? && question.max_votes.present? %>
+                <% available = [question.max_votes - used_weight, question.votation_type.max_votes_per_answer].compact.min %>
+                <% if available > 0 %>
+                  <%= f.select :answer_weight, (1..available).to_a, { selected: 1 }, { label: false, "aria-label" => t("adm.officing.voting_phases.poll_question.weight_label", answer: question_answer.title) } %>
+                <% end %>
+              <% end %>
+
+              <%= kern_button(icon: "how_to_vote",
+                text: t("adm.officing.voting_phases.poll_question.vote"),
+                type: :submit, style: :secondary,
+                "aria-label" => "#{t("adm.officing.voting_phases.poll_question.vote")} #{question_answer.title}") %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if question.open_question_answer.present? %>
+      <% open_qa = question.open_question_answer %>
+      <% existing_open = answers_by_title[open_qa.title] %>
+      <div class="mb-4">
+        <div class="kern-title kern-title--small mb-2"><%= open_qa.title %></div>
+        <%= form_with(
+          url: update_open_answer_adm_officing_voting_phase_poll_answers_path(voting_phase,
+            offline_user_id: offline_user.id, question_id: question.id,
+            answer: open_qa.title),
+          method: :post) do |f| %>
+          <%= f.text_area :open_answer_text, value: existing_open&.open_answer_text, label: false, placeholder: open_qa.title, "aria-label" => open_qa.title, class: "mb-3" %>
+          <%= kern_button(
+            text: t("adm.officing.voting_phases.poll_question.save_open_answer"),
+            type: :submit, style: :secondary) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

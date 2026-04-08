@@ -1,0 +1,13 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @investment.title, breadcrumbs: @breadcrumbs, back_button_url: budget_investments_adm_projekts_phase_path(@projekt_phase)) %>
+
+<%= render Adm::TabsComponent.new(tabs: @tabs) %>
+
+<div class="kern-container mb-5">
+  <%= render "adm/shared/progress_bars_table",
+        progress_bars: @progress_bars,
+        new_url: new_adm_projekts_phase_budget_investment_progress_bar_path(@projekt_phase, @investment),
+        edit_url: ->(pb) { edit_adm_projekts_phase_budget_investment_progress_bar_path(@projekt_phase, @investment, pb) },
+        delete_url: ->(pb) { adm_projekts_phase_budget_investment_progress_bar_path(@projekt_phase, @investment, pb) } %>
+</div>

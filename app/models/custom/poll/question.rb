@@ -21,6 +21,7 @@ class Poll::Question < ApplicationRecord
                        foreign_key: :context_id,
                        optional: true
 
+  validates :votation_type, presence: true
   validate :validate_parent_question_id
 
   scope :root_questions, -> {
@@ -59,7 +60,8 @@ class Poll::Question < ApplicationRecord
   end
 
   def sibling_questions
-    (poll.questions.where(parent_question_id: nil).to_a - [self]).map { |question| [question.title, question.id] }
+    (poll.questions.where(parent_question_id: nil).to_a - [self]).map do |question|
+ [question.title, question.id] end
   end
 
   def allows_additional_info?
@@ -74,7 +76,7 @@ class Poll::Question < ApplicationRecord
     return unless template_for_context?
     return if context.present?
 
-    poll.questions.with_context(ctx).find_by(title: title) || clone_for_context(ctx)
+    poll.questions.with_context(ctx).find_by(title:) || clone_for_context(ctx)
   end
 
   def regenerate_contexted_clones

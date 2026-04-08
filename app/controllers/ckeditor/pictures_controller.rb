@@ -40,6 +40,7 @@ class Ckeditor::PicturesController < ApplicationController
           url: picture.url_content(editor_id: params[:editor_id]),
           thumb_url: picture.url_thumb(editor_id: params[:editor_id]),
           gallery_thumb_url: picture.gallery_thumb_url,
+          custom_thumb_url: picture.custom_thumb_url(width: 925),
           created_at: picture.created_at.strftime("%d.%m.%Y")
         )
     else
@@ -69,15 +70,17 @@ class Ckeditor::PicturesController < ApplicationController
     picture = Ckeditor::Picture.find(params[:id])
     authorize! :update, picture
 
-    width =  params[:width]
-    height = params[:height]
+    width = params[:width].to_i
+    height = params[:height].to_i
+    pad = params[:pad].to_i
 
-    width = 1200 if width.blank?
-    height = 1200 if height.blank?
+    width = 1200 if width.zero?
+    height = 1200 if height.zero?
 
     thumb_url = picture.custom_thumb_url(
       width: width,
-      height: height
+      height: height,
+      pad: pad
     )
 
     render json: {

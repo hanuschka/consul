@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@comment) do %>
+  <%= render "adm/projekts/phases/comments/comment", comment: @comment, projekt_phase: @projekt_phase %>
+<% end %>

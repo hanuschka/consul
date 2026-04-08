@@ -20,11 +20,11 @@ class Projekts::ToggleSectionWithSettingComponent < ViewComponent::Base
   end
 
   def on_title
-
+    I18n.t("custom.projekts.sidebar_section.hide")
   end
 
   def off_title
-
+    I18n.t("custom.projekts.sidebar_section.show")
   end
 
   def disabled_class

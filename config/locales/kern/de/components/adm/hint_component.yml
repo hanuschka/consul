@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      hint_component:
+        link_text: Hinweis
+        close: Schließen

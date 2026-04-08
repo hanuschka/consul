@@ -4,6 +4,10 @@
 
 .notice-text {
   margin-right: 30px;
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .callout {

@@ -1,0 +1,15 @@
+<%= form_with url: helpers.adm_ai_setting_path(setting), scope: :setting, local: true, method: :patch do |form| %>
+  <div class="d-flex align-items-start gap-2">
+    <div class="flex-grow-1">
+      <% case key %>
+      <% when "ai.llm_provider" %>
+        <%= form.select :value, ai_provider_options, { include_blank: "Select provider" }, { label: false, class: "kern-select" } %>
+      <% when "ai.llm_model" %>
+        <%= form.select :value, ai_model_options, { include_blank: "Select model" }, { label: false, class: "kern-select" } %>
+      <% else %>
+        <%= form.text_field :value, label: false, class: "kern-input" %>
+      <% end %>
+    </div>
+    <%= helpers.kern_button(icon: "save", type: "submit") %>
+  </div>
+<% end %>

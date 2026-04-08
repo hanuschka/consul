@@ -31,6 +31,14 @@
       <% end %>
     <% end %>
 
+    <% if budget_investment.should_show_ballots_count? %>
+      <% c.with_footer_section do %>
+        <strong>
+          <%= t("custom.budgets.investments.investment.qualified_supports", count: budget_investment.total_ballot_votes) %>
+        </strong>
+      <% end %>
+    <% end %>
+
     <% if budget_investment.should_show_votes? && location_allows_votes? %>
       <% c.with_footer_section do %>
         <div id="<%= dom_id(budget_investment) %>_votes"

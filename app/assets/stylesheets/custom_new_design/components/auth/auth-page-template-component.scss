@@ -1,25 +1,5 @@
 .custom-new-design {
   .auth-page-template--oauth {
-    .row {
-      display: flex;
-      // justify-content: center;
-      flex-wrap: wrap;
-      column-gap: 18px;
-    }
-    .column {
-      &:first-child {
-        width: 100%;
-      }
-      width: 150px;
-
-      @media(max-width: $small-tablet-viewport-start) {
-        width: auto;
-        width: 47%;
-        // flex-grow: 1;
-        // max-width: 100px;
-      }
-    }
-
     .auth-divider {
       width: 100%;
       margin-bottom: 0;
@@ -157,6 +137,13 @@
     @media(max-width: $small-tablet-viewport-start) {
       font-size: 20px;
     }
+
+    .custom-content-block-body p {
+      line-height: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      margin-bottom: inherit;
+    }
   }
 
   .auth-page-template--form-section {
@@ -235,6 +222,11 @@
     background-color: #e5e5e5;
     margin-bottom: 25px;
     margin-top: 25px;
+  }
+
+
+  .auth-page-template--body a {
+    text-decoration: underline;
   }
 }
 

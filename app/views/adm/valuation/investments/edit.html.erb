@@ -1,0 +1,22 @@
+<%= content_for :title, @investment.title %>
+
+<%= render Adm::HeaderComponent.new(
+  title: @investment.title,
+  back_button_url: adm_valuation_investments_path,
+  breadcrumbs: [
+    { name: t("adm.valuation.investments.index.title"), url: adm_valuation_investments_path },
+    { name: @investment.title }
+  ]
+) %>
+
+<div class="kern-container">
+  <div class="my-5">
+    <%= render "investment_details", investment: @investment %>
+  </div>
+
+  <hr class="kern-divider" />
+
+  <div class="my-5">
+    <%= render "valuation_form", investment: @investment %>
+  </div>
+</div>

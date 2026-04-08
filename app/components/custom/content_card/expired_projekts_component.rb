@@ -6,7 +6,7 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
     @limit = @content_card.settings["limit"].to_i
     @projekts =
       if custom_page.present?
-        custom_page.landing_projekts
+        custom_page.landing_projekts.show_in_homepage
       else
         Projekt.show_in_homepage
       end

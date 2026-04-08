@@ -1,13 +1,16 @@
 <main class="padding-on-mobile">
   <div class="auth-page-template flex-layout">
     <div class="auth-page-template--legend">
-      <div class="auth-page-template--legend-head">
-        <div class="auth-page-template--legend-title">
-          <%= Setting["org_name"] %>
+      <% if SiteCustomization::ContentBlock.find_by(name: "custom", key: "auth_page_legend.#{controller_name}", locale: I18n.locale)&.body.blank? %>
+        <div class="auth-page-template--legend-head">
+          <div class="auth-page-template--legend-title">
+            <%= Setting["org_name"] %>
+          </div>
         </div>
-      </div>
+      <% end %>
+
       <div class="auth-page-template--legend-text">
-        <%= t("custom.users.shared.auth_page.legend") %>
+        <%= helpers.render_custom_block("auth_page_legend.#{controller_name}", default_content: t("custom.users.shared.auth_page.legend")) %>
       </div>
     </div>
     <div class="auth-page-template--form-section">

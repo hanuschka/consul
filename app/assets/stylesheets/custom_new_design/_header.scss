@@ -2,13 +2,17 @@
   .top-bar-wrapper {
     position: fixed;
     width: 100%;
+
+    @media (max-width: 480px) {
+      position: static;
+    }
   }
 
   header {
     padding: 0;
     z-index: 1000;
     margin-bottom: 0;
-    max-width: auto;
+    max-width: none;
     height: 90px;
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -85,24 +89,24 @@
   }
 
   .homepage-image-header--title {
-    opacity: 0.77;
-    background: white;
+    background: #ffffffcc;
     display: inline-block;
     padding: 20px 30px;
     line-height: 1.3;
-    color: $brand;
+    color: var(--brand-color);
     font-size: 32px;
     margin-bottom: 30px;
     border-radius: 4px;
     word-wrap: break-word;
     max-width: 100%;
+    backdrop-filter: blur(5px);
   }
 
   .homepage-image-header--title-wrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 1245px;
+    max-width: $topbar-max-width;
     padding-top: 240px;
     margin: auto;
 
@@ -147,13 +151,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     margin-top: 0.65rem;
 
     label {
-      color: $dark
+      color: $dark;
     }
 
     .locale-switcher {
 
       &:focus {
-        outline: 3px solid #ffbf47 !important
+        outline: $outline-focus !important;
       }
     }
   }
@@ -177,8 +181,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: black !important;
-    color: white !important;
+    background: #dedede !important;
+    color: black !important;
   }
 
   .locale .locale-form select {
@@ -239,9 +243,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
     z-index: 1000;
     background-color: white;
+
+    @media (max-width: 480px) {
+      position: static;
+    }
+
 
     .top-bar {
       .header--navigation ul.main-menu li.nav-element a,
@@ -320,6 +328,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   .top-bar--title {
     flex-grow: initial;
     user-select: none;
+    min-width: 150px;
 
     a img {
       max-height: 52px;
@@ -334,12 +343,11 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     width: 100%;
     height: 60px;
     background: transparent;
-    // margin-top: 8px;
 
-    // @media(max-width: $small-tablet-viewport-start) {
-    //   display: none;
-    // }
-    //
+    @media(max-width: $big-tablet-viewport-start) {
+      margin-left: 25px;
+    }
+
     ul li {
       margin-right: 0;
     }
@@ -347,6 +355,11 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     ul {
       list-style: none;
       margin: 0;
+    }
+
+    .content-items-list,
+    .account-admin-items-list {
+      display: contents;
     }
 
     .content-items {
@@ -357,12 +370,15 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         color: black !important;
         margin-right: 30px;
         font-size: 20px;
-        // font-size: 18px;
-        // font-weight: 500;
         padding-top: 5px;
         padding-bottom: 5px;
         display: flex;
         align-items: center;
+
+        @media(max-width: $big-tablet-viewport-start) {
+          margin-right: 15px;
+          font-size: 17px;
+        }
 
         a {
           width: 100%;
@@ -392,7 +408,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     width: 25px;
     color: white;
     height: 25px;
-    background: #58a958;
+    background-color: #2a6b2a;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -476,6 +492,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     height: 50px !important;
     border-radius: 38px !important;
     white-space: nowrap;
+    flex-shrink: 0;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding: 15px 1.2em !important;
+      font-size: 16px !important;
+      height: 42px !important;
+    }
   }
 
   .header--responsive-menu-wrapper {
@@ -491,7 +514,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     right: 0;
 
     .subnavigation {
-      // z-index: 1005;
       width: 100%;
       max-width: 100%;
     }
@@ -564,6 +586,9 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   .header--mobile-hamburger-menu {
     position: static;
     display: none;
+    background: none;
+    border: none;
+    padding: 0;
 
     @media(max-width: $small-tablet-viewport-start) {
       display: block;
@@ -576,7 +601,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 
   .header--responsive-menu-sign-auth-button {
     width: auto;
-    background: $responsive-menu-contrast-color !important;
+    background: var(--brand-color) !important;
     color: $responsive-menu-background-color !important;
     border-radius: 5px !important;
     padding: 10px 20px;
@@ -588,23 +613,27 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   @media (max-width: $small-tablet-viewport-start) {
+    .header--navigation {
+      display: none;
+    }
+
     .top-bar {
       justify-content: space-between !important;
       padding-top: 5px;
     }
 
     header, .wrapper > header {
-      height: 70px !important;
-      max-width: auto;
+      height: $topbar-height-mobile;
+      max-width: none;
     }
 
     .subnavigation {
       left: 0;
       right: 0;
-      // top: 0;
       top: 60px;
       padding: 20px 30px;
       max-width: 320px;
+
     }
 
     .header--responsive-menu-title {
@@ -764,6 +793,86 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       font-weight: bold;
       font-size: 18px;
       margin-bottom: -7px;
+    }
+  }
+}
+
+// -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------
+
+[data-navbar] {
+  display: contents;
+
+  // Desktop: hide toggle buttons — flyouts open on hover via existing CSS
+  @media screen and (min-width: $small-tablet-viewport-start) {
+    button[data-navbar-toggle] {
+      display: none;
+    }
+
+    li.nav-element[aria-expanded="true"] > ul.nav-flyout-block {
+      display: block;
+    }
+  }
+
+  // Mobile: style toggle buttons (renders outside #responsive-menu so old
+  // .nav-toggle-arrow rules don't apply)
+  @media screen and (max-width: $small-tablet-viewport-start - 1) {
+    button[data-navbar-toggle] {
+      background: none;
+      border: none;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      cursor: pointer;
+      padding: 0;
+      color: inherit;
+      font-size: 0;
+
+      &::after {
+        content: "\f078";
+        font-family: "Font Awesome 5 Free";
+        font-weight: bold;
+        font-size: 0.75rem;
+        position: absolute;
+        transition: transform 0.25s;
+      }
+    }
+
+    .top-level-item > button[data-navbar-toggle] {
+      top: 9px;
+      right: 0;
+
+      &::after {
+        top: -9px;
+        left: 3px;
+      }
+    }
+
+    .flyout-item > button[data-navbar-toggle] {
+      top: 9px;
+      right: 0;
+
+      &::after {
+        top: -2px;
+        left: 3px;
+      }
+    }
+
+    li[aria-expanded="true"] > button[data-navbar-toggle]::after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+
+body:has(.projekt-page--admin-topbar) {
+  header.topbar-header {
+    margin-top: var(--admin-topbar-height);
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    #responsive-menu .subnavigation {
+      top: calc(60px + var(--admin-topbar-height));
+      height: calc(100vh - 70px - var(--admin-topbar-height));
     }
   }
 }

@@ -14,10 +14,14 @@ class WelcomeController < ApplicationController
     @mobile_header = Widget::Card.header.where(title: "header_mobile").first
     @content_cards = SiteCustomization::ContentCard.homepage.active.to_a
 
-    if Setting.new_design_enabled?
-      render :index_new
-    else
-      render :index
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
     end
   end
 

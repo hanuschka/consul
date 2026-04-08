@@ -33,14 +33,15 @@
         <div class="column medium-6">
           <%= render "custom/formular_answers/form", formular_answer: @formular_answer, formular_fields: @formular_fields %>
         </div>
-
       <% end %>
     </div>
 
     <div id="formular-sidebar" class="small-12 medium-3 column">
       <aside class="margin-bottom">
         <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
-          <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+          <div class="js-studio-hide-on-preview">
+            <%= link_to "Zu den Antworten", formular_answers_adm_projekts_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+          </div>
         <% end %>
       </aside>
     </div>

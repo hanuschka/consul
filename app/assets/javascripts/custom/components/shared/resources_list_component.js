@@ -53,10 +53,15 @@
 
       if (switchButton) {
         var switchButtonIcon = switchButton.querySelector("i");
-        console.log("switchButtonIcon", switchButtonIcon)
 
         switchButtonIcon.classList.toggle("fa-grip-vertical");
         switchButtonIcon.classList.toggle("fa-bars");
+
+        var isNowWide = this.isResourcesListInWideMode(resourcesList);
+        var newLabel = isNowWide ? switchButton.dataset.labelToList : switchButton.dataset.labelToTile;
+
+        switchButton.setAttribute("title", newLabel);
+        switchButton.setAttribute("aria-label", newLabel);
       }
     }
   };

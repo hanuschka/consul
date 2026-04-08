@@ -20,7 +20,7 @@
 
   input:checked + .projekt-label {
     color: #fff !important;
-    background-color: $brand !important;
+    background-color: var(--brand-color) !important;
   }
 
   .projekt-labels-selector--checkboxes {
@@ -33,7 +33,7 @@
 
 .projekt-labels {
   .projekt-label:not(label) {
-    background-color: $brand;
+    background-color: var(--brand-color);
   }
 }
 

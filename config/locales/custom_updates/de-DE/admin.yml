@@ -32,10 +32,10 @@ de:
           state_block_title: Status des Vorschlags
           physical_votes_updated: Physical votes updated!
           feasibility: Durchführbarkeit
-          price: Preisliche Einschätzung der Verwaltung (€)
-          price_first_year: Preisliche Einschätzung der laufende Kosten im ersten Jahr (€)
+          price: Gesamtkosten
+          price_first_year: Jährliche Folgekosten (intern)
           price_explanation: Erläuterung der Verwaltung
-          duration: Zeitrahmen
+          duration: Umsetzungszeitraum (intern)
           valuation_finished_label: Gutachten
           valuation_finished:
             "true": abgeschlossen
@@ -74,6 +74,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           responsible_name: Sachbearbeiter*in
           only_hidden: Nur gelöschte Meldungen anzeigen
@@ -209,6 +210,7 @@ de:
           author: Autor
           status_title: Status
           approximater_location: Standort
+          district_name: Gebiet
           category_name: Kategorie
           officer_name: Sachbearbeiter*in
           actions: Aktionen
@@ -304,7 +306,7 @@ de:
           success: Gebiet erfolgreich aktualisiert
         attributes:
           name: Name
-          coordinates: Koordinaten
+          boundaries: Grenzen
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -456,6 +458,10 @@ de:
             information_block_title: Informationen
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
+            geo_affiliation_geozones_label: Gebiete
+            geo_affiliation_geozones_empty: Es sind noch keine Gebiete angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
+            geo_affiliation_districts_label: Stadtteile
+            geo_affiliation_districts_empty: Es sind noch keine Stadtteile angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
             landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
@@ -502,6 +508,7 @@ de:
             tags: Tags
             tags_hint: Klicken Sie auf einen oder mehrere Tags, um Sie für dieses Projekt dem/der Nutzer:in anzubieten.
             refresh_page: Sollten Sie die Funktionen bereits aktiviert haben, sie werden aber hier nicht angezeigt, dann laden Sie diese Seite bitte neu.
+          no_landing_page: "— Keine Themenseite —"
           flash:
             update_notice: Projekt wurde erfolgreich aktualisiert.
         edit_projekt: Editieren
@@ -610,6 +617,8 @@ de:
             title: Inhaltskarten für %{page_title}
             link: Inhaltskarten
           form:
+            landing_desktop_header_image: Titelbild (Desktop)
+            landing_mobile_header_image: Titelbild (Mobil)
             landing_site_logo_for_transparent_background: Individuelles Logo für diese Landingpage auf transparentem Hintergrund
             landing_site_logo_for_white_background: Individuelles Logo für diese Landingpage auf weißem Hintergrund
         pages:
@@ -669,6 +678,10 @@ de:
       projekt_events:
         edit:
           title: Veranstaltung bearbeiten
+          accessibility_features: Barrierefreiheit
+          max_attendees_placeholder: "Leer lassen für unbegrenzt"
+          confirmation_email_text: "Bestätigungs-E-Mail-Text"
+          waitlist_email_text: "Wartelisten-E-Mail-Text"
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite
@@ -704,7 +717,8 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
-          ai_settings: KI Anweisung
+          ai_settings: KI Sprachassistent
+          ai_user_flow: KI Textassistent
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -825,7 +839,7 @@ de:
           map_layers:
             title: Kartenebenen
         ai_settings:
-          page_title: KI Prompt
+          page_title: Sprachassistent
           questions: Welche Fragen sollen den Bürgern gestellt werden?
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
@@ -856,6 +870,21 @@ de:
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
+          registrations_confirmed: "%{confirmed} / %{max} bestätigt"
+          registrations_waitlisted:
+            one: "%{count} auf Warteliste"
+            other: "%{count} auf Warteliste"
+          registrations_pending:
+            one: "%{count} Bestätigung ausstehend"
+            other: "%{count} Bestätigungen ausstehend"
+          registrations_details: "Anmeldungen anzeigen"
+          export_csv: "CSV exportieren"
+          registration_user_id: "Benutzer-ID"
+          registration_user: "Benutzer"
+          registration_email: "E-Mail"
+          registration_status: "Status"
+          registration_date: "Anmeldedatum"
+          registration_deleted: "Anmeldung wurde gelöscht."
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen

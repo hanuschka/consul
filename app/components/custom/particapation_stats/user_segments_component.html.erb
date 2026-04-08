@@ -1,0 +1,43 @@
+<div class="user-segments-stats">
+  <h3 class="user-segments-stats--title"><%= t("custom.shared.user_segments.title") %></h3>
+
+  <%# <% if age? %1> %>
+  <%#   <% age_data = age_chart_data %1> %>
+  <%#   <% if age_data[:labels].any? %1> %>
+  <%#     <%= render Charts::BarChartComponent.new( %>
+  <%#       title: t("custom.shared.user_segments.age"), %>
+  <%#       labels: age_data[:labels], %>
+  <%#       values: age_data[:values], %>
+  <%#       orientation: "horizontal", %>
+  <%#       use_percentage: true %>
+  <%#     ) %1> %>
+  <%#   <% end %1> %>
+  <%# <% end %1> %>
+
+  <% if geozone? %>
+    <% geozone_data = geozone_chart_data %>
+    <% if geozone_data[:labels].any? %>
+      <%= render Charts::BarChartComponent.new(
+        title: t("custom.shared.user_segments.area"),
+        labels: geozone_data[:labels],
+        values: geozone_data[:values],
+        orientation: "horizontal",
+        use_percentage: true
+      ) %>
+    <% end %>
+  <% end %>
+
+  <% if individual_group? %>
+    <% individual_groups_data.each do |group_data| %>
+      <% if group_data[:labels].any? %>
+        <%= render Charts::BarChartComponent.new(
+          title: group_data[:name],
+          labels: group_data[:labels],
+          values: group_data[:values],
+          orientation: "horizontal",
+          use_percentage: true
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

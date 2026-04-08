@@ -1,4 +1,4 @@
-class Custom::Projekts::ContentBlockTemplateItemComponent < ViewComponent::Base
+class Projekts::ContentBlockTemplateItemComponent < ViewComponent::Base
   def initialize(template_name:, template_dir:)
     @template_name = template_name
     @template_dir = template_dir

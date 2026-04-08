@@ -1,0 +1,38 @@
+<%= content_for :title, t("adm.homepage.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.homepage.show.title"), breadcrumbs: @breadcrumbs, frontend_url: root_path) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "header_image"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "mobile_header_image"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_header"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_header_for_transparent"), :image, :image) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "brand_color"), :value, :color) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.general.title"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.general.subtitle"), :value, :string) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.general.homepage_button_text"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.general.homepage_button_link"), :value, :string) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "welcomepage.usage_stats"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "welcomepage.newsletter_subscription"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "welcomepage.platform_activity"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "welcomepage.projekt_search"), :value, :boolean) %>
+
+
+  <div class="content-cards-intro">
+    <h2 class="kern-title kern-title--small mb-3"><%= t("adm.homepage.show.content_cards_title") %></h2>
+    <p class="kern-body mb-4 mb-md-0">
+      <%= t("adm.homepage.show.content_cards_description") %>
+    </p>
+  </div>
+
+  <%= render Adm::SiteCustomization::ContentCardsComponent.new %>
+</div>

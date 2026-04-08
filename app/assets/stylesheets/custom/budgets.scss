@@ -13,7 +13,7 @@
     margin-bottom: .5rem;
 
     &.current-phase-tab {
-      background-color: $brand;
+      background-color: var(--brand-color);
 
       .phase-name,
       .phase-date-range {
@@ -29,7 +29,7 @@
 
   .phase-name {
     font-weight: bold;
-    color: $brand;
+    color: var(--brand-color);
   }
 
   .phase-date-range {
@@ -45,7 +45,7 @@
   .sticky-ballot-progress-bar {
     position: sticky;
     top: 90px;
-    z-index: 1000;
+    z-index: 500;
 
     @media screen and (max-width: $small-tablet-viewport-start) {
       top: 109px;
@@ -151,7 +151,7 @@
     background-color: white;
 
     &:hover {
-      background-color: $brand;
+      background-color: var(--brand-color);
     }
   }
 

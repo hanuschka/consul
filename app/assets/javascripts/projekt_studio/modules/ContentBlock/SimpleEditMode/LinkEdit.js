@@ -32,6 +32,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       })
     }
     else {
+      this.hidePopup()
+
       contentBlock
         .querySelectorAll(".js-content-block-link-wrapper")
         .forEach((linkWrapper) => {
@@ -52,6 +54,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       linkWrapper.style.justifyContent = link.parentElement.style.justifyContent;
     }
 
+    // TODO: try to use jquery "wrap" method
     link.parentNode.insertBefore(linkWrapper, link);
     linkWrapper.appendChild(link);
 

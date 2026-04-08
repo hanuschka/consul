@@ -565,3 +565,6 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   Enabled: true
+
+Style/HashSyntax:
+  Enabled: false

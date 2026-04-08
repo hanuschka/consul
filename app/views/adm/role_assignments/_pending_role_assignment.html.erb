@@ -1,0 +1,10 @@
+<tr class="kern-table__row" id="<%= dom_id(pending) %>">
+  <th scope="row" class="kern-table__header"><%= pending.email %></th>
+  <td class="kern-table__cell"><%= l(pending.created_at, format: :short) %></td>
+  <td class="kern-table__cell">
+    <%= link_to t("adm.pending_role_assignments.remove"),
+          destroy_pending_adm_role_assignment_path(pending_id: pending.id, role: pending.role_type.underscore),
+          data: { turbo_method: :delete, turbo_confirm: t("adm.pending_role_assignments.confirm_remove") },
+          class: "kern-link" %>
+  </td>
+</tr>

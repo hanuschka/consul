@@ -16,6 +16,14 @@ post "update_selected_parent_projekt", to: "projekts#update_selected_parent_proj
 
 get :events, to: "projekt_events#index", as: :projekt_events
 
+resources :projekt_events, only: [] do
+  resources :projekt_event_registrations, only: [:create, :destroy]
+end
+
+get "projekt_event_registrations/confirm/:token",
+    to: "projekt_event_registrations#confirm",
+    as: :confirm_projekt_event_registration
+
 resources :projekt_livestreams, only: [:show] do
   member do
     post :new_questions
@@ -25,8 +33,18 @@ end
 resources :projekt_phases, only: [] do
   member do
     get :map_html
+    get :stats
     post :toggle_subscription
     post :refresh_stats
+    post :refresh_ai_stats
+    get :ai_stats_status
+    post :create_stat_question
+    get :stat_question_status
+    get :download_stat_answer
+    delete :delete_stat_question
+    get :download_all_stat_answers
+    get :download_topic_clustering
+    get :download_semantic_clustering
   end
 end
 

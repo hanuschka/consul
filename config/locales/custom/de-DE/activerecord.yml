@@ -177,7 +177,9 @@ de:
         organization_name: "Vorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Vorschlag"
         image_title: "Bildtitel"
-        duration: Zeitrahmen (intern)
+        price: Gesamtkosten
+        price_first_year: Jährliche Folgekosten (intern)
+        duration: Umsetzungszeitraum (intern)
         feasibility_feasible: Entspricht den Kriterien
         feasibility_undecided: Noch nicht bewertet
         feasibility_unfeasible: Entspricht nicht den Kriterien
@@ -383,12 +385,12 @@ de:
         body: Inhalt
       site_customization/page:
         landing_show_in_top_nav: "Themen/Gebietsseite in der Hauptnavigation anzeigen"
-        landing_hide_all_top_nav_links: "Sämtliche Links in der Top Navigation auf dieser Themen/Gebietsseite ausblenden"
+
         landing_hide_title_and_subtitle: "Informationsbox mit Titel und Untertitel ausblenden"
         landing_mobile_header_image: "Mobile Header Bild"
         landing_site_logo: "Site logo"
         landing_site_logo_for_white_background: "Site logo for white background"
-        landing_show_projekts_overview: "Projektübersicht für diese Zielseite in Hauptnavigation anzeigen"
+
         landing_navigation_link_color: "Farbe der Links in der Top-Navigation"
         landing_site_logo_follow_to_landing_page: "Klick auf Logo führt auf die Zielseite, statt auf die Homepage"
       tag:
@@ -471,11 +473,12 @@ de:
         title: Antwort
         description: Beschreibung
       poll/question/answer/video:
-        title: Externes Video Titel
-        url: Externes Video URL
+        title: Videotitel
+        url: Video-URL
       newsletter:
-        recipient_group_id: Adressatengruppe
-        segment_recipient: Empfänger*innen
+        recipient_group: Empfängergruppe
+        recipient_group_id: Empfängergruppe
+        segment_recipient: Empfänger
         subject: Betreff
         from: "Absender-Email-Adresse (muss auf @domain.de enden)"
         greeting: Ansprache
@@ -534,6 +537,13 @@ de:
         document_number: Dokumentennummer
         date_of_birth: Geburtsdatum
         postal_code: Postleitzahl
+      api_client:
+        name: Name
+        domain: Domäne
+        service_user_email: Service-Benutzer E-Mail
+        access_level: Zugriffsstufe
+        auth_token: Authentifizierungstoken
+        service_api_token: Service-API-Token
     errors:
       models:
         user:
@@ -581,6 +591,10 @@ de:
           attributes:
             document_type:
               inclusion: ist nicht in der Liste enthalten, zulässig sind die Werte 1 für Personalausweis, 2 für Reisepass und 3 für Aufenthaltsberechtigung.
+        api_client:
+          attributes:
+            domain:
+              uniqueness: wird bereits verwendet
         proposal:
           attributes:
             tag_list:
@@ -607,6 +621,8 @@ de:
             image:
               image_width: "Die Breite muss %{required_width}px betragen"
               image_height: "Die Höhe muss %{required_height}px betragen"
+              max_image_height: "Die Höhe darf maximal %{max_height}px betragen"
+              image_dimensions: "Benötigtes Format: %{required_width} × %{required_height} Pixel"
         comment:
           attributes:
             valuation:

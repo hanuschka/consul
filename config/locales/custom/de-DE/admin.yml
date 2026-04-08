@@ -1,5 +1,31 @@
 de:
+  internal_api_clients:
+    connect:
+      success: "Erfolgreich mit DT verbunden."
   admin:
+    connection:
+      index:
+        title: "DT API Connection Status"
+        connection_error_label: "Error:"
+        checks:
+          dt_connected:
+            label_ok: "DT API connected"
+            label_fail: "DT API not connected"
+            description_ok: "The DT API client is registered and has a valid service token."
+            description_fail: "No DT API client registered or service token missing."
+            hint: "Local config check only — no HTTP request is made."
+          api_accessible:
+            label_ok: "DT API accessible"
+            label_fail: "DT API not accessible"
+            description_ok: "The DT API endpoint is reachable and responding without server errors."
+            description_fail: "The DT API endpoint timed out or returned a server error (5xx)."
+            hint: "Makes an HTTP request to the status endpoint; passes if response is non-5xx."
+          connection_works:
+            label_ok: "DT connection works"
+            label_fail: "DT connection failed"
+            description_ok: "Authentication is valid and the connection is fully operational."
+            description_fail: "The connection check returned an unexpected response or authentication failed."
+            hint: "Requires HTTP 200 with authenticated: true in the JSON response body."
     header:
       title: Verwaltung
     actions:
@@ -736,6 +762,8 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
+      api_request_logs: API-Anfragen-Logs
       managers: Verwalter*innen
       sdg_managers: SDG Manager*innen
       moderators: Moderator*innen
@@ -792,6 +820,72 @@ de:
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
       machine_learning: "AI / Machine learning"
+    api_request_logs:
+      index:
+        title: API-Anfragen-Logs
+        id: ID
+        http_method: Methode
+        request_path: Pfad
+        response_status: Status
+        api_client: API-Client
+        no_logs: Keine API-Anfragen-Logs vorhanden.
+      show:
+        http_method: HTTP-Methode
+        request_path: Anfrage-Pfad
+        full_url: Vollständige URL
+        response_status: Antwort-Status
+        api_client: API-Client
+        created_at: Erstellt am
+        query_params: Query-Parameter
+        body_params: Body-Parameter
+    api_clients:
+      edit_button: "Bearbeiten"
+      access_level:
+        public_data: "Öffentliche Daten"
+        admin: "Admin"
+      index:
+        title: API-Clients
+        id: API-Client ID
+        create_new: "Neuen API-Client erstellen"
+        no_api_clients: Keine API-Clients vorhanden.
+      show:
+        tokens: Tokens
+        show_token: "Anzeigen"
+        hide_token: "Ausblenden"
+        copy_token: "Kopieren"
+        copied: "Kopiert!"
+        token_hidden_message: "Token ist verborgen. Klicken Sie zunächst auf \"Anzeigen\", um ihn anzuzeigen und zu kopieren."
+        auth_token_explanation_text: "Fügen Sie diesen Token im Authorization-Header Ihrer API-Anfragen ein. Verwenden Sie ihn als Bearer-Token im Format: Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+        auth_token_example_title: "HTTP-Beispiel:"
+        auth_token_example: "Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+        service_user_title: "Service-Benutzer"
+        service_user_name: "Name"
+        service_user_login_warning: "Hinweis: Sie sollten sich nicht direkt mit diesem Service-Benutzer anmelden. Verwenden Sie stattdessen die API-Authentifizierungsmethoden."
+      form:
+        create_title: "Neuen API-Client erstellen"
+        edit_title: "API-Client bearbeiten"
+        created: "API-Client erfolgreich erstellt"
+        updated: "API-Client erfolgreich aktualisiert"
+        deleted: "API-Client erfolgreich gelöscht"
+        domain_hint: "optional"
+        service_user_explanation: "Dieser Service-Benutzer ist mit diesem API-Client verknüpft und wird für die API-Authentifizierung verwendet."
+        service_user_form_title: "Service-Benutzerinformationen aktualisieren"
+        service_user_avatar_title: "Avatar"
+        service_user_errors_message: "%{count} Fehler"
+        service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
+        update_service_user: "Service-Benutzer aktualisieren"
+        service_user_email_note: "Diese E-Mail sollte eindeutig sein und sich von anderen Benutzer-E-Mails unterscheiden, die bereits in API-Clients verwendet werden."
+        service_user_email_description: "E-Mail des Service-Benutzerkontos. Dieser Service-Benutzer wird als Autor fungieren, wenn Ressourcen (Vorschläge, Ideen, Mängelmeldungen) über diesen API-Client erstellt werden."
+        access_level_public_data: "Schreibgeschützter Zugriff (nur GET-Anfragen)."
+        access_level_admin: "Vollständiger Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen von Ressourcen."
+        access_level_description: |
+          Öffentliche Daten: Schreibgeschützter Zugriff (nur GET-Anfragen).
+
+          Admin: Vollständiger Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen von Ressourcen.
+        regenerate_token: "Token erneuern"
+        regenerate_token_explanation: "Erstellt ein neuen Token und macht den aktuellen ungültig. Verwenden Sie dies, wenn der Token kompromittiert wurde oder um die Anmeldedaten regelmäßig zu aktualisieren."
+        regenerate_token_confirmation: "Sind Sie sicher, dass Sie diesen Token erneuern möchten? Alle bestehenden Integrationen, die den alten Token verwenden, funktionieren nicht mehr."
+        token_regenerated: "API-Token erfolgreich erneuert"
     administrators:
       index:
         title: Administrator*innen
@@ -1382,6 +1476,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag
@@ -1463,8 +1558,8 @@ de:
           budgets: Offene Haushalte
           budget_investments: Investitionsvorschläge
           unverified_users: Nicht verifizierte Benutzer*innen
-          user_level_three: Benutzer*innen auf Stufe 3
-          user_level_two: Benutzer*innen auf Stufe 2
+          user_level_three: Verifiziert
+          user_level_two: Registriert
           users: Benutzer*innen gesamt
           verified_users: Verifizierte Benutzer*innen
           verified_users_who_didnt_vote_proposals: Verifizierte Benutzer*innen, die nicht für Vorschläge abgestimmt haben

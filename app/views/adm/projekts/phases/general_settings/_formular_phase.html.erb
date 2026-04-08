@@ -1,0 +1,2 @@
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.general.submissions_limit"), :value, :string) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.general.primary_formular_cutoff_date"), :value, :date) %>

@@ -1,0 +1,8 @@
+de:
+  activerecord:
+    errors:
+      models:
+        site_customization/email_template:
+          attributes:
+            mailer_action:
+              not_registered: ist keine registrierte E-Mail-Vorlage

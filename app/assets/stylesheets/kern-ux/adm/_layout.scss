@@ -1,0 +1,69 @@
+@use "sass:map";
+@use "../abstracts/breakpoints" as breakpoints;
+
+html {
+  overflow-y: scroll;
+}
+
+header {
+  height: var(--kern-adm-header-height);
+  background-color: var(--adm-color-primary);
+  color: #fff;
+  position:relative;
+  overflow:visible;
+  background-image:linear-gradient(
+    135deg,
+    #0d2d9c 0%,
+    #123aa8 55%,
+    #1b5fd6 115%
+  );
+
+  .header__decorations {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+}
+
+aside {
+  position: fixed;
+  min-height: calc(100vh - var(--kern-adm-header-height));
+  z-index: 1000;
+  min-width: 290px;
+  border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
+}
+
+.adm-layout {
+  min-height: calc(100vh - var(--kern-adm-header-height));
+  align-items: stretch;
+}
+
+.main-container {
+  border-top: 1px solid transparent;
+}
+
+main {
+  min-width: 0;
+}
+
+.kern-container {
+  @media (min-width: map.get(breakpoints.$grid-breakpoints, xl)) {
+    max-width: 92%;
+  }
+
+  @media (min-width: map.get(breakpoints.$grid-breakpoints, xxl)) {
+    max-width: 1250px;
+  }
+
+  &--form {
+    > * {
+      max-width: 680px;
+    }
+  }
+
+  &--full {
+    max-width: 100%;
+  }
+}
+

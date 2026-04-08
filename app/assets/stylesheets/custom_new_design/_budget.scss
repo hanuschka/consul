@@ -38,7 +38,7 @@
 
     .tabs .tabs-title > a {
       text-decoration: underline;
-      color: $brand;
+      color: var(--brand-color);
     }
 
     .tabs .tabs-title {

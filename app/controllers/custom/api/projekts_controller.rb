@@ -1,220 +1,259 @@
 class Api::ProjektsController < Api::BaseController
   include MapLocationAttributes
   include ImageAttributes
+  include Translatable
 
-  before_action :find_projekt, only: [
-    :update, :update_page, :import, :update_title_image,
-    :update_managers_list
-  ]
-  before_action :process_tags, only: [:update]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_page, :update_body]
 
-  skip_authorization_check
+  def index
+    check_read_access!
 
-  def overview
-    current_visible_projekts =
-      Projekt
-        .activated
-        .with_published_custom_page
-        .show_in_overview_page
-        .regular
-
-    current_visible_projekts
-      .where(for_global_overview: false)
-      .update_all(for_global_overview: true)
-
-    overview_projekts =
-      Projekt
-        .where(for_global_overview: true)
-        .includes(:page, :projekt_phases, :map_location)
-
-    render json: {
-      projekts: overview_projekts.map do |projekt|
-        Projekts::SerializeForOverview.call(projekt)
+    only_public =
+      if current_client.public_data?
+        true
+      else
+        params[:only_public] != 'false'
       end
-    }
+
+    if only_public
+      projekts =
+        Projekt
+          .activated
+          .with_published_custom_page
+          .show_in_overview_page
+    else
+      projekts = Projekt.regular
+    end
+
+    valid_filters = %w[index_order_all index_order_underway index_order_ongoing index_order_upcoming index_order_expired index_order_individual_list]
+    valid_filters.push("index_order_drafts") if current_client.admin?
+    current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
+    projekts = projekts.send(current_filter)
+
+    if projekts.is_a?(ActiveRecord::Relation)
+      projekts =
+        projekts
+          .includes(:projekt_settings, :translations)
+          .order(created_at: :asc)
+    elsif projekts.is_a?(Array)
+      projekts = projekts.sort_by { |p| p.created_at }
+    end
+
+    include_phases = params[:include_phases] == 'true'
+    include_content_blocks = params[:include_content_blocks] == 'true'
+
+    includes_hash = {}
+    includes_hash[:content_blocks] = {} if include_content_blocks
+    includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
+
+    if include_phases
+      includes_hash[:projekt_phases] = [
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
+      ]
+    end
+
+    projekts = projekts.includes(includes_hash) if includes_hash.any?
+
+    serailized_projekts = ProjektSerializer.serialize_collection(
+      projekts,
+      include_phases: include_phases,
+      include_content_blocks: include_content_blocks,
+      current_api_client: current_client
+    )
+
+    render json: { data: { projekts: serailized_projekts } }
+  end
+
+  def show
+    check_read_access!
+
+    if current_client.public_data?
+      page_published = @projekt.page&.status == 'published'
+      show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
+
+      unless @projekt.activated? && page_published && show_in_overview
+        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
+      end
+    end
+
+    include_phases = params[:include_phases] == 'true'
+    include_content_blocks = params[:include_content_blocks] == 'true'
+
+    serailized_projekt = ProjektSerializer.new(
+      @projekt,
+      include_phases: include_phases,
+      include_content_blocks: include_content_blocks,
+      current_api_client: current_client
+    ).serialize
+
+    render json: { data: { projekt: serailized_projekt } }
   end
 
   def create
-    projekt = Projekt.new
+    check_admin_access!
+    projekt = Projekt.new(projekt_params)
 
-    if import_projekt(projekt: projekt)
-      render json: {
-        projekt: projekt.serialize,
-        message: "Projekt created"
-      }
-    else
-      render json: { message: "Error creating projekt" }
-    end
-  end
+    if projekt.save
+      Projekt.ensure_order_integrity
+      process_image_with_base64(projekt.page, params[:projekt][:image_attributes])
 
-  def import
-    if import_projekt(projekt: @projekt)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+      create_default_content_block(projekt)
+
+      serailized_projekt = ProjektSerializer.new(projekt).serialize
+
+      render json: { data: { projekt: serailized_projekt } }, status: 201
     else
-      render json: { message: "Error importing projekt" }
+      render json: { error: { messages: projekt.errors.messages }}, status: 422
     end
   end
 
   def update
+    check_admin_access!
     if @projekt.update(projekt_params)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+      Projekt.ensure_order_integrity
+
+      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+
+      render json: { data: { projekt: serailized_projekt } }
     else
-      render json: { message: "Error updating projekt" }
+      render json: { error: { messages: @projekt.errors.messages }}, status: 422
     end
   end
 
   def update_page
+    check_admin_access!
     if @projekt.page.update(projekt_page_params)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+      process_image_with_base64(@projekt.page, params[:projekt][:image_attributes])
+      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+
+      render json: { data: { projekt: serailized_projekt } }
     else
-      render json: { message: "Error updating projekt page" }
+      render json: { error: { messages: @projekt.page.errors.full_messages } }, status: 422
     end
   end
 
-  def update_title_image
-    @projekt.page.image = Image.new(
-      attachment: params[:title_image],
-      user: User.administrators.first
-    )
+  def destroy
+    check_admin_access!
+    if @projekt.destroy
+      @projekt.children.each do |child|
+        child.update(parent: nil)
+      end
 
-    if @projekt.page.save
-      render json: { status: { message: "Projekt page title image updated" }}
+      render json: { message: "Projekt destroyed"}
     else
-      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
+      render json: { error: { messages: @projekt.errors.messages  } }, status: 422
     end
   end
 
-  def update_managers_list
-    if params[:allowed_projekt_managers_ids].present?
-      params[:allowed_projekt_managers_ids].each do |id|
-        projekt_manager = ProjektManager.find_by(user_id: id)
+  def update_setting
+    check_admin_access!
+    setting = @projekt.projekt_settings.find_by(key: setting_params[:key])
 
-        next unless projekt_manager.present?
-
-        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
-          projekt_id: @projekt.id
-        )
-
-        if assignment.permissions.exclude?("manage")
-          permission_set = Set.new(assignment.permissions)
-          permission_set << "manage"
-
-          # Update column directly to not trigger callbacks
-          assignment.update_column(:permissions, permission_set.to_a)
-        end
-      end
+    unless setting
+      return render json: { error: { messages: ["Setting not found"] } }, status: 404
     end
 
-    if params[:not_allowed_projekt_managers_ids].present?
-      params[:not_allowed_projekt_managers_ids].each do |id|
-        projekt_manager = ProjektManager.find_by(user_id: id)
+    if setting.update(value: setting_params[:value])
+      render json: {
+        data: {
+          setting: {
+            id: setting.id,
+            key: setting.key,
+            value: setting.value,
+            projekt_id: setting.projekt_id
+          }
+        },
+        message: "Setting updated successfully"
+      }
+    else
+      render json: { error: { messages: setting.errors.full_messages } }, status: 422
+    end
+  end
 
-        next unless projekt_manager.present?
+  def update_body
+    check_admin_access!
 
-        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
-          projekt_id: @projekt.id
-        )
+    first_content_block = @projekt.content_blocks.order(:position).first
 
-        if assignment.permissions.include?("manage")
-          permission_set = assignment.permissions - ["manage"]
-          assignment.update_column(:permissions, permission_set)
-        end
-      end
+    unless first_content_block
+      return render json: { error: { messages: ["No content block found for this project"] } }, status: 404
     end
 
-    render json: { status: { message: "Users updated" }}
+    if first_content_block.update(content_block_body_params)
+      serialized_content_block = ContentBlockSerializer.new(first_content_block).serialize
+
+      render json: {
+        data: { content_block: serialized_content_block },
+        message: "Content block body updated successfully"
+      }
+    else
+      render json: { error: { messages: first_content_block.errors.full_messages } }, status: 422
+    end
   end
 
   private
 
-  def find_projekt
-    @projekt = Projekt.find(params[:id])
-  end
-
-  def import_projekt(projekt:)
-    import_params = {
-      projekt: projekt, projekt_params: import_projekt_params,
-    }
-
-    if params[:author_user_id].present?
-      import_params[:author_user] = User.find_by(id: params[:author_user_id])
-    end
-
-    Projekts::ImportService.call(**import_params)
-  end
-
   def projekt_params
-    params.require(:projekt).permit(
-      :title, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+    attributes = [
+      :name, :parent_id, :total_duration_start, :total_duration_end,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :tag_list, :related_sdg_list,
-
-      site_customization_page: [:title],
-      geozone_affiliation_ids: [],
-      sdg_goal_ids: [],
+      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
       map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes,
-      projekt_notifications: [:title, :body],
-      project_events: [:id, :title, :location, :datetime, :weblink],
-      projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
-    )
+      projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
+    ]
+    params.require(:projekt).permit(attributes, translation_params(Projekt))
   end
 
   def projekt_page_params
-    params.require(:site_customization_page).permit(
-      :title, :subtitle, :image
+    params.require(:page).permit(
+      :title, :subtitle
     )
-  end
-
-  def import_projekt_params
-    params.require(:projekt).permit(
-      :title,
-      :subtitle,
-      :summary,
-      :greeting,
-      :additional_information,
-      :page_content,
-      :greeting_title,
-      :greeting_quote,
-      :greeting_accordion_title,
-      :summary_title,
-      :contact_information,
-      :start_date, :end_date,
-      :show_map, :show_navigator_in_projekts_page_sidebar,
-      :show_notification_subscription_toggler,
-      :show_phases_in_projekt_page_sidebar,
-      :projekt_page_sharing,
-      :title_image,
-      :greeting_image,
-      :faq_json,
-      :timeline_json,
-      images: [],
-      documents: [],
-      geozone_affiliation_ids: [], sdg_goal_ids: [],
-      individual_group_value_ids: [],
-      map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes,
-      projekt_notifications: [:title, :body],
-      project_events: [:id, :title, :location, :datetime, :weblink],
-      projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
-    )
-      # timeline: [:title, :description, :daterange],
-      # faq: [:title, :text],
   end
 
   def process_tags
-    if params[:projekt].present? && params[:projekt][:tag_list_predefined].present?
+    if params[:projekt].present?
       params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
       params[:projekt].delete(:tag_list_predefined)
     end
   end
 
   def map_location_params
-    if params[:map_location]
-      params.require(:map_location).permit(map_location_attributes)
-    else
-      params.permit(map_location_attributes)
-    end
+    params.require(:projekt)
+      .require(:map_location_attributes)
+      .permit(map_location_attributes)
+  end
+
+  def find_projekt
+    @projekt = Projekt
+      .includes(
+        projekt_phases: [
+          :settings,
+          :individual_group_values,
+          :geozone_restrictions
+        ]
+      )
+      .find(params[:id])
+  end
+
+  def setting_params
+    params.require(:setting).permit(:key, :value)
+  end
+
+  def content_block_body_params
+    params.require(:projekt).permit(:body)
+  end
+
+  def create_default_content_block(projekt)
+    # Create a blank content block for projects created through the API
+    projekt.content_blocks.create!(
+      name: "custom",
+      locale: "de",
+      body: "",
+      key: "projekt_content_block_#{projekt.id}_1_#{Time.now.to_i}",
+      position: 1
+    )
   end
 end

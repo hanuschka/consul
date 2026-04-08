@@ -28,6 +28,11 @@ body.admin .tabs-title > a[aria-selected='true'],
   background: #e8e8e8;
 }
 
+.subfooter p {
+  margin: 0;
+}
+
+
 .row.full-width {
   max-width: 100%;
 
@@ -99,7 +104,7 @@ body>header, .wrapper>header, .top-bar {
 .process-summary .debate-summary,
 .process-summary .proposal-summary,
 .process-summary .annotation-summary {
-  background-color: $module-index-panel-background;
+  background-color: var(--brand-color-secondary);
 }
 
 .margin-top-25 {
@@ -180,7 +185,7 @@ ul.tabs li.tabs-title {
 
   .sign-up-button {
     margin-right: 1rem;
-    background-color: $brand;
+    background-color: var(--brand-color);
     color: $white !important;
   }
 }
@@ -230,5 +235,9 @@ ul.tabs li.tabs-title {
 @media screen and (max-width: $small-tablet-viewport-start) {
   .wrapper.has-custom-fixed-tabs {
     margin-top: 64px;
+
+    @media (max-width: 480px) {
+      margin-top: 0;
+    }
   }
 }

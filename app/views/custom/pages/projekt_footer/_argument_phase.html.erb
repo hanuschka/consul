@@ -3,7 +3,7 @@
 <div class="projekt-arguments-container column">
   <div class="projekt-argument-column">
     <% if @projekt_arguments_pro.any? %>
-      <h3 class="projekt-argument-column-title"><%= t('custom.projekts.projekt_arguments.pro') %></h3>
+      <h2 class="projekt-argument-column-title"><%= t('custom.projekts.projekt_arguments.pro') %></h2>
       <% @projekt_arguments_pro.each do |projekt_argument| %>
         <%= render Projekts::ProjektArguments::ListItem.new(projekt_argument: projekt_argument) %>
       <% end %>
@@ -15,7 +15,7 @@
 
   <div class="projekt-argument-column">
     <% if @projekt_arguments_cons.any? %>
-      <h3 class="projekt-argument-column-title"><%= t('custom.projekts.projekt_arguments.cons') %></h3>
+      <h2 class="projekt-argument-column-title"><%= t('custom.projekts.projekt_arguments.cons') %></h2>
       <% @projekt_arguments_cons.each do |projekt_argument| %>
         <%= render Projekts::ProjektArguments::ListItem.new(projekt_argument: projekt_argument) %>
       <% end %>

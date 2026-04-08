@@ -1,0 +1,20 @@
+<%= form_with model: @projekt_livestream, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".url_label"), hint: t(".url_hint")) do %>
+    <%= f.url_field :url, label: false, required: true, placeholder: t(".url_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".title_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".starts_at_label"), hint: t(".starts_at_hint")) do %>
+    <%= f.datetime_local_field :starts_at, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
+    <%= f.text_area :description, label: false, rows: 6, placeholder: t(".description_placeholder") %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

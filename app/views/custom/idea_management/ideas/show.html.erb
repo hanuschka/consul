@@ -11,7 +11,7 @@
        current_user.administrator? %>
   <% if can?(:edit, @idea) %>
     <hr>
-    <div class="row expanded full-width">
+    <div class="row expanded u-full-width">
       <div class="small-12 large-8 columns margin-bottom">
         <%= render "custom/idea_management/ideas/show/administer", idea: @idea %>
       </div>
@@ -21,7 +21,7 @@
 
 <hr>
 
-<div class="row expanded full-width">
+<div class="row expanded u-full-width">
   <div class="small-12 large-8 columns margin-bottom">
     <%= render "admin/memos/memos", memoable: @idea %>
   </div>

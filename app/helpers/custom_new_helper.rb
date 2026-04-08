@@ -8,8 +8,10 @@ module CustomNewHelper
       back_path =
         if session[:back_path].present? && session[:back_path] != request.fullpath
           session[:back_path]
-        else
+        elsif fallback_path.present?
           fallback_path
+        else
+          :back
         end
 
       back_link_to(back_path)
@@ -19,7 +21,7 @@ module CustomNewHelper
   def custom_new_design_body_class
     css_class = Setting.new_design_enabled? ? "custom-new-design" : ""
 
-    if CustomFeatures.enabled?(:ai)
+    if Ai::Settings.ai_available?
       css_class += ' -ai-enabled'
     end
 

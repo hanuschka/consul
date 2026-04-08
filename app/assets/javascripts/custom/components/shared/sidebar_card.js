@@ -20,14 +20,22 @@
         var $content = $sidebarCard.find(".sidebar-card--content");
         $content.toggle();
         $sidebarCard.find(".icon-chevron-down").toggleClass("-rotated");
+
+        var isExpanded = $content.is(":visible");
+        $(e.currentTarget).attr("aria-expanded", isExpanded);
       }
 
       this.reInitializeMap();
     },
 
     reInitializeMap: function() {
-      App.Map.destroy();
-      App.Map.initialize();
+      const sidebarCard = event.target.closest(".sidebar-card")
+      const $mapContainer = $(sidebarCard).find("*[data-map]:visible");
+
+      if ($mapContainer.length === 0) { return; }
+
+      App.Map.destroyMapForElementId($mapContainer.attr("id"));
+      App.Map.initializeMapForElementId($mapContainer.attr("id"));
     }
   };
 }).call(this);

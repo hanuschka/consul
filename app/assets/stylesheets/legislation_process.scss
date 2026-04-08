@@ -74,7 +74,7 @@
       margin-top: 0;
 
       &:hover:not(.is-active) {
-        background: $brand-lighter;
+        background: var(--brand-color-lighter);
       }
 
       &::after {
@@ -103,6 +103,7 @@
   span {
     color: $dark;
     font-size: $small-font-size;
+    font-weight: 500;
   }
 
   .is-active {
@@ -268,7 +269,7 @@
     }
 
     .control input:checked ~ .control-indicator {
-      background-color: $brand;
+      background-color: var(--brand-color);
       border: 0;
     }
 

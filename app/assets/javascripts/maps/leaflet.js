@@ -10,6 +10,7 @@
 
       this.createMap();
       this.setupExpandControl();
+      this.addResetViewControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
@@ -17,6 +18,8 @@
       this.setupEventListenersForUpdatingFormInputs();
       this.toggleControlVisibility();
       this.setupEventListenersForUpdatingMapCenter();
+
+      this.placeCenterMarker = this.placeCenterMarker.bind(this)
     }
 
     initializeProperties() {
@@ -77,6 +80,8 @@
 
       this.map.addControl(zoomControl);
 
+      this.setupEscKeyHandler();
+
       this.map.pm.setGlobalOptions({
         markerStyle: {
           icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor),
@@ -97,6 +102,16 @@
       }
     }
 
+    setupEscKeyHandler() {
+      const map = this.map;
+
+      $(this.element).on('keydown', function(event) {
+        if (event.which === 27) {
+          map.closePopup();
+        }
+      });
+    }
+
     setupEventListenersForNewFeatures() {
       const instance = this;
 
@@ -111,6 +126,28 @@
 
         instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
+    }
+
+    // Public Interface method for assistant map update and external use
+    // DO NOT DELETE
+    setMarkerTo(lat, lng, shouldScroll) {
+      this.map.panTo(new L.LatLng(lat, lng));
+
+      if (this.editingProjektMap) {
+        this.placeCenterMarker([lat, lng])
+      } else {
+        const marker = L.marker([lat, lng], {
+          icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor)
+        });
+        marker.addTo(this.map);
+        this.map.fire('pm:create', { layer: marker, shape: 'Marker' });
+      }
+
+      if (shouldScroll) {
+        this.map.getContainer().scrollIntoView({
+          block: "center", inline: "nearest"
+        })
+      }
     }
 
     setupExpandControl() {
@@ -157,6 +194,39 @@
 
       const expandControl = new L.Control.Expand({ position: 'topright' })
       this.map.addControl(expandControl);
+    }
+
+    addResetViewControl() {
+      const instance = this;
+
+      L.Control.ResetView = L.Control.extend({
+        onAdd: function() {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+
+          container.appendChild(button);
+
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            instance.map.setView(instance.mapCenterLatLng, instance.zoom, { animate: true });
+          });
+
+          return container;
+        },
+
+        onRemove() {}
+      });
+
+      const resetControl = new L.Control.ResetView({ position: 'topright' });
+      this.map.addControl(resetControl);
     }
 
     setupLayers() {
@@ -234,16 +304,16 @@
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML('#ff0000')
+            icon: App.Utils.getLeafletMarkerHTML('#008000', null, 'Verwaltungseintrag')
           });
         },
         style: {
-          color: '#ff0000',
+          color: '#008000',
           weight: 2,
           fillOpacity: 0.2
         },
         onEachFeature: (feature, layer) => {
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
           layer.pm.disable();
           layer.pm.setOptions({
             draggable: false,
@@ -273,7 +343,7 @@
     }
 
     renderAdminFeaturesNote() {
-      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in grün sind vom System vorgegeben';
       const adminShapeExplainer = L.control({
         position: 'bottomleft'
       });
@@ -282,7 +352,7 @@
         const container = L.DomUtil.create('div', 'my-attribution');
         container.innerHTML = adminShapeExplainerText;
         container.className += ' leaflet-control-attribution';
-        container.style.color = '#ff0000';
+        container.style.color = '#008000';
         return container;
       };
 
@@ -290,12 +360,18 @@
     }
 
     setupPlugins() {
-      L.control.locate({
+      var locateControl = L.control.locate({
         icon: 'fa fa-map-marker',
         strings: {
           title: 'Meine Position anzeigen'
         }
       }).addTo(this.map);
+
+      var locateButton = locateControl.getContainer().querySelector('a');
+      if (locateButton) {
+        locateButton.setAttribute('aria-label', 'Meine Position anzeigen');
+        locateButton.querySelector('.fa').setAttribute('aria-hidden', 'true');
+      }
 
       const searchControl = new GeoSearch.GeoSearchControl({
         provider: new GeoSearch.OpenStreetMapProvider(),
@@ -307,6 +383,12 @@
       });
       this.map.addControl(searchControl);
 
+      const searchInput = this.element.querySelector('.leaflet-control-geosearch input[type="text"]');
+      if (searchInput) {
+        searchInput.setAttribute('title', 'Nach Adresse suchen');
+        searchInput.setAttribute('aria-label', 'Nach Adresse suchen');
+      }
+
       this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
       // Leaflet.Deflate plugin
@@ -314,8 +396,10 @@
         minSize: 30,
         markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
+          var title = shape.feature.properties.feature_category_name || shape.feature.properties.title || "Kartenmarkierung";
+
           return {
-            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name ),
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name, title),
           }
         }
 
@@ -330,8 +414,10 @@
 
         L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
+            var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
+              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle),
             });
           },
           style: function (feature) {
@@ -371,7 +457,7 @@
         });
       }
       if (this.editingProjektMap) {
-        this.placeCenterMarker(this.mapCenterLatLng, this);
+        this.placeCenterMarker(this.mapCenterLatLng);
       }
     }
 
@@ -429,15 +515,15 @@
           title: 'Zentrum markieren',
           block: 'custom',
           toggle: true,
-          onClick: function() {
-            const isToggled = !self.map.pm.Toolbar.buttons.centerMarker.toggled();
+          onClick: () => {
+            const isToggled = !this.map.pm.Toolbar.buttons.centerMarker.toggled();
 
             if (isToggled) {
-              self.map.on('click', function(e) {
-                self.placeCenterMarker(e.latlng, self);
+              this.map.on('click', function(e) {
+                self.placeCenterMarker(e.latlng);
               });
             } else {
-              self.map.off('click');
+              this.map.off('click');
             }
           }
         })
@@ -481,9 +567,9 @@
       editToolbar.insertBefore(customDragButtonContainer, editToolbar.firstChild);
     }
 
-    placeCenterMarker(centerLatLng, instance) {
-      if (instance.centerMarker) {
-        instance.map.removeLayer(instance.centerMarker);
+    placeCenterMarker(centerLatLng) {
+      if (this.centerMarker) {
+        this.map.removeLayer(this.centerMarker);
       }
 
       const centerMarker = L.marker(centerLatLng, {
@@ -491,10 +577,10 @@
         icon: App.Utils.getLeafletMarkerHTML()
       })
 
-      instance.centerMarker = centerMarker;
-      instance.map.addLayer(centerMarker);
-      instance.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
-      instance.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
+      this.centerMarker = centerMarker;
+      this.map.addLayer(centerMarker);
+      this.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
+      this.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
     }
 
     setupEventListenersForEditableFeature(map, layer) {

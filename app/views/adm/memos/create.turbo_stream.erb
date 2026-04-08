@@ -1,0 +1,13 @@
+<% if @memoable.is_a?(Memo) %>
+  <%= turbo_stream.prepend dom_id(@memoable, :tree) do %>
+    <%= render "adm/memos/memo", memo: @memo %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.prepend "memos_tree" do %>
+    <%= render "adm/memos/memo", memo: @memo %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "memo-form-#{dom_id(@memo.root_memoable)}" do %>
+  <%= render "adm/memos/form", memoable: @memo.root_memoable %>
+<% end %>

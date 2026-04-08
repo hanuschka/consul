@@ -1,0 +1,5 @@
+de:
+  components:
+    adm:
+      tabs_component:
+        aria_label: Sekundäre Navigation

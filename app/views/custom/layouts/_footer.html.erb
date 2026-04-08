@@ -1,9 +1,9 @@
 <footer class="not-print">
   <div class="row">
     <div class="small-12 large-4 column">
-      <p style="font-size:35px;font-weight:500;margin-top:20px;margin-bottom:30px;line-height:1.2;">
+      <h2 style="font-size:35px;font-weight:500;margin-top:20px;margin-bottom:30px;line-height:1.2;">
         <%= t("layouts.header.open_gov") %>
-      </p>
+      </h2>
 
       <p class="info">
         <%= sanitize(t("custom.layouts.footer.description",
@@ -24,12 +24,14 @@
 
   <div class="subfooter row">
     <div class="small-12 medium-8 column">
-      <span><%= t("layouts.footer.copyright", year: Time.current.year) %></span>&nbsp;|
+      <h2 class="show-for-sr"><%= t("custom.layouts.footer.navigation_heading") %></h2>
+      <p class="inline-block"><%= t("layouts.footer.copyright", year: Time.current.year) %>&nbsp;|</p>
       <ul class="no-bullet inline-block">
         <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy"), data: { turbolinks: false } %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions"), data: { turbolinks: false } %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility"), data: { turbolinks: false } %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum"), data: { turbolinks: false } %>&nbsp;|</li>
+        <li class="inline-block"><%#= link_to t("layouts.footer.api_docs"), api_docs_path, target: "_blank" %>&nbsp;|</li>
         <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
           <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette"), data: { turbolinks: false } %>&nbsp;|</li>
         <% end %>

@@ -1,1 +1,3 @@
 $("#username").html("<%= j render(Users::Account::UsernameComponent.new(user: @account, edit_mode: true, show_form: true)) %>");
+var usernameInput = document.querySelector("#username input[type='text']");
+if (usernameInput) { usernameInput.focus(); }

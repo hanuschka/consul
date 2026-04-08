@@ -1,0 +1,480 @@
+// ── Dashboard home page ────────────────────────────────────────────────────
+
+.adm-dashboard {
+  &__section {
+    margin-bottom: 2.5rem;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.625rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--kern-color-layout-border, #e0e0e0);
+
+    .material-symbols-outlined {
+      font-size: 1.375rem;
+      color: var(--adm-color-primary, #1b5fd6);
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--kern-typography-color-default, #222);
+    }
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__intro {
+    margin-bottom: 2rem;
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--kern-typography-color-muted, #555);
+    max-width: 680px;
+  }
+
+  &__stats-link {
+    margin-bottom: 2.5rem;
+
+    .material-symbols-outlined {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// ── Stat card ─────────────────────────────────────────────────────────────
+
+.adm-stat-card {
+  flex: 1;
+  min-width: 155px;
+  max-width: 230px;
+  padding: 1rem 1.25rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--kern-color-layout-border, #e4e7ec);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  &__icon {
+    font-size: 1.1rem;
+    color: var(--adm-color-primary, #1b5fd6);
+    background: rgba(27, 95, 214, 0.09);
+    padding: 0.375rem;
+    border-radius: 8px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  &__info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: var(--kern-typography-color-muted, #bbb);
+    cursor: default;
+    line-height: 1;
+    transition: color 0.15s;
+
+    .material-symbols-outlined {
+      font-size: 0.95rem;
+    }
+
+    &:hover {
+      color: var(--adm-color-primary, #1b5fd6);
+    }
+
+    &[data-tiptext]::after {
+      content: attr(data-tiptext);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      right: -0.5rem;
+      background: rgba(25, 25, 25, 0.92);
+      color: #fff;
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 400;
+      width: 220px;
+      white-space: normal;
+      line-height: 1.45;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 200;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    }
+
+    &[data-tiptext]:hover::after,
+    &[data-tiptext]:focus::after {
+      opacity: 1;
+    }
+  }
+
+  &__value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--kern-typography-color-default, #111);
+  }
+
+  &__label {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--kern-typography-color-muted, #555);
+  }
+
+  &__meta {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    min-height: 1.4rem;
+  }
+
+  &__ratio {
+    font-size: 0.72rem;
+    color: var(--kern-typography-color-muted, #888);
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  &__trend {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    white-space: nowrap;
+
+    &--up {
+      color: #1a7a3e;
+      background: rgba(26, 122, 62, 0.12);
+    }
+
+    &--down {
+      color: #c25700;
+      background: rgba(194, 87, 0, 0.12);
+    }
+
+    &--neutral {
+      color: var(--kern-typography-color-muted, #888);
+      background: rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  // Variants
+  &--accent &__value,
+  &--accent &__icon {
+    color: var(--adm-color-primary, #1b5fd6);
+  }
+
+  &--warning &__value,
+  &--warning &__icon {
+    color: #c25700;
+  }
+
+  // Split card: two metrics side by side
+  &--split {
+    min-width: 260px;
+    max-width: 340px;
+  }
+
+  // Triple card: three metrics side by side
+  &--triple {
+    min-width: 340px;
+    max-width: 460px;
+
+    .adm-stat-card__value {
+      font-size: 1.875rem;
+    }
+  }
+
+  &__body {
+    display: flex;
+    gap: 0;
+    margin-top: 0.1rem;
+    flex: 1;
+  }
+
+  &__metric {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    &:not(:first-child) {
+      padding-left: 1rem;
+      border-left: 1px solid var(--kern-color-layout-border, #e0e0e0);
+    }
+
+    &:not(:last-child) {
+      padding-right: 1rem;
+    }
+  }
+}
+
+// ── demokratie.today link tiles ───────────────────────────────────────────
+
+.adm-dt-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  max-width: 680px;
+}
+
+.adm-dt-link-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
+  text-decoration: none;
+  color: var(--kern-typography-color-default, #222);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.13);
+    transform: translateY(-3px);
+    text-decoration: none;
+    color: var(--kern-typography-color-default, #222);
+  }
+
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    display: block;
+  }
+
+  span {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+}
+
+// ── Metric rows ──────────────────────────────────────────────────────────
+
+.adm-metric-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.adm-metric-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid var(--kern-color-layout-border, #e4e7ec);
+  border-radius: 10px;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  &__name {
+    flex: 0 0 160px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--kern-typography-color-default, #222);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__bar {
+    flex: 1;
+    min-width: 80px;
+    max-width: 200px;
+    height: 6px;
+    background: var(--kern-grey-100, #e8e8e8);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    background: var(--adm-color-primary, #1b5fd6);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  &__total {
+    flex: 0 0 auto;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--kern-typography-color-default, #111);
+    min-width: 3rem;
+    text-align: right;
+  }
+
+  &__periods {
+    flex: 1;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  &__period {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3rem;
+
+    &-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--kern-typography-color-default, #222);
+      line-height: 1;
+    }
+
+    &-label {
+      font-size: 0.6875rem;
+      color: var(--kern-typography-color-muted, #888);
+      margin-top: 0.2rem;
+      white-space: nowrap;
+    }
+  }
+
+  &__satisfaction {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--kern-typography-color-muted, #666);
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+
+    .material-symbols-outlined {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.adm-metric-rows__total-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  margin-top: 0.25rem;
+  border-top: 2px solid var(--kern-color-layout-border, #e0e0e0);
+
+  .adm-metric-row__name {
+    color: var(--kern-typography-color-muted, #555);
+  }
+
+  .adm-metric-row__total {
+    color: var(--kern-typography-color-muted, #555);
+  }
+
+  .adm-metric-row__period-value {
+    color: var(--kern-typography-color-muted, #555);
+  }
+}
+
+// ── Dark mode ─────────────────────────────────────────────────────────────
+
+.kern-dark {
+  .adm-stat-card {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+
+    &__icon {
+      background: rgba(126, 179, 255, 0.15);
+      color: #7eb3ff;
+    }
+
+    &__value {
+      color: #fff;
+    }
+
+    &__label {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    &__ratio {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &__metric:not(:first-child) {
+      border-left-color: rgba(255, 255, 255, 0.12);
+    }
+
+    &--accent &__value,
+    &--accent &__icon {
+      color: #7eb3ff;
+    }
+
+    &--warning &__value,
+    &--warning &__icon {
+      color: #ffaa5c;
+    }
+  }
+
+  .adm-dt-link-card {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.87);
+
+    &:hover {
+      color: #fff;
+    }
+
+    span {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  .adm-metric-row {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &__bar {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &__bar-fill {
+      background: #7eb3ff;
+    }
+
+    &__rating {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+}

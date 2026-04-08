@@ -14,8 +14,14 @@ class ProjektPhase::EventPhase < ProjektPhase
     projekt_events.count
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_projekt_event"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[naming settings].push(resources_name)
+    %w[naming general_settings].push(resources_name, "email_templates")
   end
 
   def safe_to_destroy?

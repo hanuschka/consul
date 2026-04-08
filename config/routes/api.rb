@@ -74,6 +74,7 @@
     resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
     resources :budgets, only: [:index, :show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
+      resources :budget_phases, controller: "budgets/phases", only: [:index, :show, :update]
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
 

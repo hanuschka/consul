@@ -71,22 +71,34 @@ export default class extends Controller {
     const menu = this.menuTarget;
     const button = this.buttonTarget;
     const buttonRect = button.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    const padding = 8;
 
     menu.style.top = "";
     menu.style.bottom = "";
     menu.style.left = "";
     menu.style.right = "";
+    menu.style.maxHeight = "";
+    menu.style.overflowY = "";
 
     menu.style.left = `${buttonRect.left}px`;
     menu.style.top = `${buttonRect.bottom}px`;
 
     const menuRect = menu.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
 
-    if (menuRect.bottom > viewportHeight) {
-      menu.style.top = "";
-      menu.style.bottom = `${viewportHeight - buttonRect.top}px`;
+    const spaceBelow = viewportHeight - buttonRect.bottom - padding;
+    const spaceAbove = buttonRect.top - padding;
+
+    if (menuRect.height > spaceBelow) {
+      if (spaceAbove > spaceBelow) {
+        menu.style.top = "";
+        menu.style.bottom = `${viewportHeight - buttonRect.top}px`;
+        menu.style.maxHeight = `${spaceAbove}px`;
+      } else {
+        menu.style.maxHeight = `${spaceBelow}px`;
+      }
+      menu.style.overflowY = "auto";
     }
 
     if (menuRect.right > viewportWidth) {

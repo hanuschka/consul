@@ -43,7 +43,8 @@
       resources :comments, only: [:index, :create, :show, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:index, :create, :show, :update, :destroy]
-      resources :milestones, only: [:index]
+      resources :milestones, only: [:index, :create]
+      resources :progress_bars, only: [:index, :create, :show, :update, :destroy]
 
       resource :iframe, only: [:show, :update]
     end

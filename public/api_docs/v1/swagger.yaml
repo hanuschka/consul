@@ -4707,7 +4707,7 @@ paths:
     parameters:
     - name: projekt_phase_id
       in: path
-      description: Projekt Phase ID
+      description: Projekt Phase ID (MilestonePhase)
       required: true
       schema:
         type: integer
@@ -4718,7 +4718,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates. Each milestone spans a date range and contains status information about completed activities.
+        Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -4781,6 +4781,84 @@ paths:
                         type: array
                         items:
                           type: string
+        '404':
+          description: projekt phase not found
+    post:
+      summary: Create a milestone
+      tags:
+      - Milestones
+      security:
+      - bearer_auth: []
+      description: |-
+        Create a new milestone for a MilestonePhase. Milestones require a publication_date and either a description or a status_id.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '201':
+          description: milestone created with status_id instead of description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      milestone:
+                        type: object
+                    required:
+                    - milestone
+                required:
+                - data
+        '422':
+          description: missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: projekt phase not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                milestone:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Milestone title (max 80 characters)
+                    description:
+                      type: string
+                      description: Milestone description. Required unless status_id
+                        is provided.
+                    publication_date:
+                      type: string
+                      format: date
+                      description: Publication date in YYYY-MM-DD format. Required.
+                    custom_date:
+                      type: string
+                      nullable: true
+                      description: Custom display date text (optional)
+                    status_id:
+                      type: integer
+                      nullable: true
+                      description: Milestone status ID (optional). When provided,
+                        description becomes optional.
+              required:
+              - milestone
+        description: Milestone attributes
   "/api/{invalid_path}":
     parameters:
     - name: invalid_path
@@ -7160,6 +7238,218 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/projekt_phases/{projekt_phase_id}/progress_bars":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List progress bars
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve all progress bars for a projekt phase.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: progress bars returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bars:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - progress_bars
+                required:
+                - data
+        '404':
+          description: projekt phase not found
+    post:
+      summary: Create a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Create a new progress bar for a projekt phase. Only one primary bar allowed per phase. Secondary bars require a title.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '201':
+          description: secondary progress bar created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bar:
+                        type: object
+                    required:
+                    - progress_bar
+                required:
+                - data
+        '422':
+          description: invalid percentage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: projekt phase not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                progress_bar:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Progress bar label. Required for secondary bars,
+                        optional for primary.
+                    kind:
+                      type: string
+                      enum:
+                      - primary
+                      - secondary
+                      description: Bar type. Only one primary per phase allowed.
+                    percentage:
+                      type: integer
+                      description: Completion percentage (0-100)
+              required:
+              - progress_bar
+        description: Progress bar attributes
+  "/api/progress_bars/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Progress Bar ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve a single progress bar by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: progress bar found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bar:
+                        type: object
+                    required:
+                    - progress_bar
+                required:
+                - data
+        '404':
+          description: progress bar not found
+    patch:
+      summary: Update a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Update a progress bar's percentage, title, or kind.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '200':
+          description: progress bar updated
+        '422':
+          description: invalid update
+        '404':
+          description: progress bar not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                progress_bar:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Progress bar label. Required for secondary bars,
+                        optional for primary.
+                    kind:
+                      type: string
+                      enum:
+                      - primary
+                      - secondary
+                      description: Bar type. Only one primary per phase allowed.
+                    percentage:
+                      type: integer
+                      description: Completion percentage (0-100)
+              required:
+              - progress_bar
+        description: Progress bar attributes to update
+    delete:
+      summary: Delete a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Delete a progress bar permanently.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      responses:
+        '200':
+          description: progress bar deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: progress bar not found
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id

@@ -323,6 +323,10 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def max_submissions_per_user
+    option("resource.max_submissions_per_user").to_i
+  end
+
   def option(key)
     option = settings.find { |s| s.key == "option.#{key}" }
 

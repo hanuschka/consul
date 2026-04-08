@@ -1,0 +1,35 @@
+<tr id="<%= dom_id(user) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header" data-field="username"><%= user.username %></th>
+  <td class="kern-table__cell" data-field="email"><%= user.email %></td>
+  <td class="kern-table__cell" data-field="first_name"><%= user.first_name %></td>
+  <td class="kern-table__cell" data-field="last_name"><%= user.last_name %></td>
+  <td class="kern-table__cell" data-field="city_name"><%= user.city_name %></td>
+  <td class="kern-table__cell" data-field="street_address"><%= user.formatted_address %></td>
+  <td class="kern-table__cell" data-field="plz"><%= user.plz %></td>
+  <td class="kern-table__cell" data-field="district"><%= user.district&.name %></td>
+  <td class="kern-table__cell" data-field="document_type"><%= user.document_type %></td>
+  <td class="kern-table__cell" data-field="document_last_digits"><%= user.document_last_digits %></td>
+  <td class="kern-table__cell" data-field="gender">
+    <%= t("custom.devise_views.users.gender.#{user.gender}") if user.gender.present? %>
+  </td>
+  <td class="kern-table__cell" data-field="date_of_birth">
+    <%= l(user.date_of_birth, format: "%d.%m.%Y") if user.date_of_birth %>
+  </td>
+  <td class="kern-table__cell" data-field="roles"><%= user.roles.map { |r| r.to_s.titleize }.join(", ") %></td>
+  <td class="kern-table__cell" data-field="unique_stamp"><%= user.unique_stamp %></td>
+  <td class="kern-table__cell" data-field="created_at"><%= l(user.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="last_sign_in">
+    <%= l(user.current_sign_in_at || user.created_at, format: "%d.%m.%Y") %>
+  </td>
+  <td class="kern-table__cell" data-field="verified_at">
+    <%= l(user.verified_at, format: "%d.%m.%Y") if user.verified_at %>
+  </td>
+  <td class="kern-table__cell" data-field="reverify"><%= human_boolean(user.reverify) %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |c| %>
+      <% c.with_action label: t(".table.actions.verify"), url: verify_adm_user_path(user), method: :patch, show: !user.verified? %>
+      <% c.with_action label: t(".table.actions.unverify"), url: unverify_adm_user_path(user), method: :patch, show: user.verified? %>
+      <% c.with_action label: t(".table.actions.edit"), url: edit_adm_user_path(user) %>
+    <% end %>
+  </td>
+</tr>

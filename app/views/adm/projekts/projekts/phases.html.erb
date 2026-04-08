@@ -32,6 +32,7 @@
       <table class="kern-table">
         <thead class="kern-table__head">
           <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"></th>
             <%= render Kern::Table::HeaderComponent.new(:phase_tab_name, t(".table.phase_tab_name"), **@name_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.start_date") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.end_date") %></th>
@@ -42,7 +43,7 @@
             <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>
         </thead>
-        <tbody class="kern-table__body">
+        <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_projekts_projekt_phases_path(@projekt) %>">
           <% @projekt_phases.each do |projekt_phase| %>
             <%= render "adm/projekts/phases/projekt_phase", projekt_phase: projekt_phase %>
           <% end %>

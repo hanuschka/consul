@@ -623,7 +623,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     header, .wrapper > header {
-      height: 36px !important;
+      height: $topbar-height-mobile;
       max-width: none;
     }
 

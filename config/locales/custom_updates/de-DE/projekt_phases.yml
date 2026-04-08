@@ -89,7 +89,9 @@ de:
             past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
             submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
           proposal_phase:
-            proposals_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen pro Tag %{proposals_limit} erreicht
+            submissions_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen (%{max_submissions}) für diese Phase erreicht.
+          budget_phase:
+            submissions_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Investitionsvorschlägen (%{max_submissions}) für diese Phase erreicht.
           point_of_interest_phase:
             not_enabled: Hinzufügen von Pins ist nicht aktiviert
             max_pins_reached: Die maximale Anzahl an Pins pro Nutzer*in ist auf %{max_pin_number} begrenzt. Sie haben diese Anzahl bereits erreicht.

@@ -127,7 +127,7 @@ module AdmHelper
   def pages_tabs(current_slug: nil)
     current_slug ||= params[:slug]
 
-    %w[privacy conditions impressum].map do |slug|
+    %w[privacy conditions impressum contact_us].map do |slug|
       {
         label: I18n.t("adm.site_customization.pages.tabs.#{slug}"),
         url: adm_site_customization_edit_page_by_slug_path(slug: slug),

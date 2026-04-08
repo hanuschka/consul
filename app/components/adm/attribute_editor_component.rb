@@ -90,7 +90,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     end
 
     def record_type_key
-      @record_type_key ||= @record.class.base_class.name.underscore
+      @record_type_key ||= @record.class.base_class.name.underscore.tr("/", "-")
     end
 
     def suffix

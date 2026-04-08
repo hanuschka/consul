@@ -1,6 +1,10 @@
 module Ai::RubyLlmFactory
   def self.chat
-    init.chat(model: Ai::Settings.current_llm_model, assume_model_exists: true)
+    init.chat(
+      model: Ai::Settings.current_llm_model,
+      provider: Ai::Settings.current_llm_provider.to_sym,
+      assume_model_exists: true
+    )
   end
 
   def self.chat_with_json_output(output_schema)

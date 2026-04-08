@@ -1,0 +1,33 @@
+<tr id="<%= dom_id(idea) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header">
+    <%= link_to truncate(idea.title, length: 60), idea_path(idea), target: "_blank", class: "kern-link", title: idea.title %>
+  </th>
+  <td class="kern-table__cell">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      idea,
+      :accepted?,
+      path: toggle_accepted_adm_ideas_idea_path(idea)
+    ) %>
+    <% if idea.admin_accepted_at.present? %>
+      <small><%= l(idea.admin_accepted_at, format: "%d.%m.%Y") %></small>
+    <% end %>
+  </td>
+  <td class="kern-table__cell"><%= l(idea.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell"><%= link_to idea.author.username, user_path(idea.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell"><%= t("ideas.status.#{idea.status}") %></td>
+  <td class="kern-table__cell"><%= idea.category&.name %></td>
+  <td class="kern-table__cell"><%= idea.officer&.name %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.show"), url: adm_ideas_idea_path(idea), icon: "open_in_new") %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.administer"), url: administer_adm_ideas_idea_path(idea), icon: "settings") %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.audits"), url: audits_adm_ideas_idea_path(idea), icon: "history") %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_ideas_idea_path(idea),
+        icon: "delete", style: :delete, divider: true,
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+      ) %>
+    <% end %>
+  </td>
+</tr>

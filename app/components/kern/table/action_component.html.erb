@@ -1,0 +1,9 @@
+<% if divider? %>
+  <hr class="kern-divider my-1" aria-hidden="true" />
+<% end %>
+<%= link_to @url, class: css_classes, **@options do %>
+  <% if @icon.present? %>
+    <span class="material-symbols-outlined kern-table__actions-menu-icon" aria-hidden="true"><%= @icon %></span>
+  <% end %>
+  <span><%= @label %></span>
+<% end %>

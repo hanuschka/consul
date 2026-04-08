@@ -44,6 +44,12 @@
     <% end %>
   <% end %>
 
+  <% if current_user&.has_pm_permission_to?(:manage, @projekt_phase.projekt) %>
+    <%= render Sidebar::ExportListComponent.new(
+      path: projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase, **request.query_parameters, format: :csv)
+    ) %>
+  <% end %>
+
   <% if params[:section] == "stats" && can?(:read_stats, @budget) %>
     <% if @budget.selecting_or_later? %>
       <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>

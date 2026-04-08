@@ -3,13 +3,13 @@
 <%= form_with model: official_answer_template, url: form_path do |f| %>
   <%= render "shared/errors", resource: official_answer_template %>
 
-  <div class="row expanded full-width">
+  <div class="row expanded u-full-width">
     <div class="small-12 medium-6 column">
       <%= f.text_field :title %>
     </div>
   </div>
 
-  <div class="row expanded full-width">
+  <div class="row expanded u-full-width">
     <div class="small-12 medium-6 column">
       <%= f.text_area :text,
         value: AdminWYSIWYGSanitizer.new.sanitize(official_answer_template.text),
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="row expanded full-width">
+  <div class="row expanded u-full-width">
     <div class="small-12 column">
       <%= f.submit(value: t("custom.admin.deficiency_reports.official_answer_templates.form.submit_button"),
                   class: "button success") %>

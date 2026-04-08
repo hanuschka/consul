@@ -1,13 +1,25 @@
 <% flash.delete("timedout") %>
+<div class="show-for-sr js-flash-live-region" aria-live="polite" aria-atomic="true"></div>
 <% flash.each do |flash_key, flash_message| %>
-  <div id="<%= flash_key %>" data-alert class="notice-container callout-slide" data-closable>
-    <div class="callout notice <%= flash_key %>">
-      <button class="close-button" aria-label="<%= t("application.close") %>" type="button" data-close>
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <div class="notice-text" role="alert">
-        <%= sanitize(flash_message) if flash_key.to_sym.in?([:notice, :alert, :success, :error]) %>
+  <% if flash_key.to_sym.in?([:notice, :alert, :success, :error]) %>
+    <div
+      id="<%= flash_key %>"
+      data-alert
+      class="notice-container callout-slide js-flash-message"
+      data-closable
+      data-flash-text="<%= sanitize(flash_message) %>"
+    >
+      <div class="callout notice <%= flash_key %>">
+        <button
+          class="close-button"
+          aria-label="<%= t("application.close") %>"
+          type="button"
+          data-close
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="notice-text" tabindex="-1"></div>
       </div>
     </div>
-  </div>
+  <% end %>
 <% end %>

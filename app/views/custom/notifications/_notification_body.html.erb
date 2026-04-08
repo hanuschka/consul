@@ -1,0 +1,24 @@
+<div>
+  <% if notification.present? %>
+    <% if notification.notifiable_action %>
+      <em><%= t("notifications.notification.action.#{notification.notifiable_action}", count: notification.counter) %></em>
+    <% elsif notification.notifiable.class.name == "DeficiencyReport" %>
+      <%= "Neue #{notification.notifiable.class.model_name.human}: " %>
+    <% elsif notification.notifiable.is_a?(Comment) && notification.notifiable.parent.present? %>
+      <%= "Kommentarantwort: "  %>
+    <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment", "Projekt"]) %>
+      <%= "#{notification.notifiable.class.model_name.human}: " %>
+    <% elsif notification.notifiable.class.name.in?(["ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"]) %>
+      <%= "#{notification.notifiable.title}: " %>
+    <% end %>
+  <% end %>
+  <h3 class="notification--title" id="<%= dom_id(notification) if notification %>_title">
+    <%= title %>
+  </h3>
+  <% if body.present? %>
+    <div class="notification--body"><%= sanitize(body.to_s.gsub(/<p>\s*<\/p>/, "")) %></div>
+  <% end %>
+</div>
+<p class="time">
+  <%= l(timestamp, format: :datetime) %>
+</p>

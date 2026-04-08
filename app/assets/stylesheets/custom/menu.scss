@@ -21,7 +21,7 @@ body > header .locale.locale-custom,
     .locale-switcher {
 
       &:focus {
-        outline: 3px solid #ffbf47 !important
+        outline: $outline-focus !important;
       }
     }
   }
@@ -66,6 +66,9 @@ body > header .locale.locale-custom,
   .hamburger-menu {
     position: absolute;
     margin-left: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   .top-bar-title {
@@ -212,6 +215,9 @@ span.icon-account {
     height: 20px;
     position: absolute;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   .top-level-item > .nav-toggle-arrow {
@@ -236,8 +242,8 @@ span.icon-account {
 
 
   .top-level-item > .nav-toggle-arrow:after {
-    top: -9px;
-    left: 3px;
+    top: 4px;
+    left: 4px;
   }
 
   .flyout-item .nav-toggle-arrow:after {
@@ -256,6 +262,38 @@ span.icon-account {
 }
 
 
+
+
+// Desktop submenu indicator (arrow/chevron) for items with submenus
+
+@media screen and (min-width: 40em) {
+  .main-menu li.nav-element.top-level-item[aria-expanded] > .flyout-item-name a::after {
+    content: "\f078";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    font-size: 0.55em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+    display: inline-block;
+    transition: transform 0.25s;
+  }
+
+  .main-menu li.nav-element.top-level-item[aria-expanded="true"] > .flyout-item-name a::after {
+    transform: rotate(180deg);
+  }
+
+  .main-menu li.nav-element.flyout-item:has(> ul.nav-flyout-block) > .projekt-name-group > .flyout-item-name a::after {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    font-size: 0.55em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+    display: inline-block;
+    float: right;
+    margin-top: 0.5em;
+  }
+}
 
 
 // Styling main menu layout in desktop
@@ -280,13 +318,12 @@ span.icon-account {
   }
 
   #navigation_bar {
-    background-color: $top-level-menu-background-color;
+    background-color: var(--brand-color);
   }
 
   .subnavigation a.home-items-icon {
     display: inline-block;
     width: 20px;
-    display: inline-block;
     height: 100%;
 
     &:focus {
@@ -317,6 +354,11 @@ span.icon-account {
   .content-items {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .content-items-list,
+  .account-admin-items-list {
+    display: contents;
   }
 
   .account-admin-items {
@@ -372,12 +414,12 @@ span.icon-account {
 
   .main-menu {
 
-    li.nav-element:hover > ul.nav-flyout-block {
+    li.nav-element:hover:not(.-esc-dismissed) > ul.nav-flyout-block,
+    li.nav-element:focus-within:not(.-esc-dismissed) > ul.nav-flyout-block {
       display: block !important;
     }
 
-    li.nav-element:focus {
-      outline: $outline-focus;
+    li.nav-element:focus-within {
       z-index: 1000;
     }
 

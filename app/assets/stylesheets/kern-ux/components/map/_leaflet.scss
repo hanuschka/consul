@@ -1,0 +1,103 @@
+// Leaflet vendor CSS imports
+@import "leaflet/dist/leaflet.css";
+@import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
+@import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+@import "leaflet-geosearch/dist/geosearch.css";
+@import "leaflet.locatecontrol/dist/L.Control.Locate.css";
+
+// Leaflet overrides for kern design
+.leaflet-control-zoom a,
+.leaflet-control-layers-toggle {
+  background-color: var(--kern-color-white, #fff) !important;
+}
+
+.leaflet-bar a {
+  color: var(--kern-color-gray-700, #333) !important;
+
+  .material-symbols-outlined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Expand control button
+.leaflet-bar a.leaflet-control-expand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.leaflet-control-geosearch {
+  form {
+    input {
+      font-family: inherit;
+    }
+  }
+}
+
+// Geoman toolbar adjustments
+.leaflet-pm-toolbar {
+  .leaflet-pm-icon-marker,
+  .leaflet-pm-icon-polyline,
+  .leaflet-pm-icon-polygon,
+  .leaflet-pm-icon-rectangle,
+  .leaflet-pm-icon-circle,
+  .leaflet-pm-icon-edit,
+  .leaflet-pm-icon-delete,
+  .leaflet-pm-icon-cut,
+  .leaflet-pm-icon-rotate {
+    background-color: var(--kern-color-white, #fff);
+  }
+}
+
+// Custom drag/select mode icon (Material Design pan_tool)
+.control-icon.leaflet-pm-icon-custom-drag {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24' fill='%235b5b5b'%3E%3Cpath d='M440-40q-17 0-32.5-6T378-64L100-342l27-27q11-11 25.5-17.5T185-390l95 28v-398q0-17 11.5-28.5T320-800q17 0 28.5 11.5T360-760v320h40v-400q0-17 11.5-28.5T440-880q17 0 28.5 11.5T480-840v400h40v-360q0-17 11.5-28.5T560-840q17 0 28.5 11.5T600-800v360h40v-280q0-17 11.5-28.5T680-760q17 0 28.5 11.5T720-720v360q0 134-93 227T400-40h40Z'/%3E%3C/svg%3E");
+  background-size: 18px 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+// Map marker styles
+.map-marker {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.map-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    font-family: "Material Symbols Outlined";
+    font-variation-settings: "FILL" 1;
+    color: #fff;
+    font-size: 16px;
+    transform: rotate(45deg);
+  }
+
+  &.icon-circle::before {
+    content: "circle";
+  }
+
+  // Font Awesome icons (icon-* classes from custom/icons.scss)
+  &[class*="icon-"]:not(.icon-circle)::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 14px;
+  }
+}

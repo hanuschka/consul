@@ -24,8 +24,14 @@ class ProjektPhase::LivestreamPhase < ProjektPhase
     settings.find_by(key: "feature.general.show_questions_list").value.present?
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_projekt_livestream"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions].push(resources_name)
+    %w[duration naming restrictions].push(resources_name, "email_templates")
   end
 
   def safe_to_destroy?

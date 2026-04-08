@@ -1,0 +1,286 @@
+// --- Image edit overlay (floating, no DOM wrapping) ---
+
+.image-edit-overlay {
+  position: absolute;
+  z-index: 100;
+  pointer-events: none;
+  outline: 2px solid #0078d4;
+  outline-offset: 0;
+  border-radius: 2px;
+
+  .js-img-resize-handle,
+  .image-edit-overlay--actions button,
+  .image-edit-overlay--height-control,
+  .image-edit-overlay--height-control button,
+  .image-edit-overlay--height-control input {
+    pointer-events: all;
+  }
+}
+
+.image-edit-overlay--handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #0078d4;
+  border: 1px solid #fff;
+  border-radius: 2px;
+
+  &.-top-left {
+    top: -6px;
+    left: -6px;
+    cursor: nwse-resize;
+  }
+
+  &.-top-right {
+    top: -6px;
+    right: -6px;
+    cursor: nesw-resize;
+  }
+
+  &.-bottom-left {
+    bottom: -6px;
+    left: -6px;
+    cursor: nesw-resize;
+  }
+
+  &.-bottom-right {
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+  }
+}
+
+.image-edit-overlay--actions {
+  position: absolute;
+  bottom: 7px;
+  left: 8px;
+  display: flex;
+  gap: 7px;
+}
+
+.image-edit-overlay--action-button {
+  width: 32px;
+  height: 32px;
+  font-size: 17px;
+  background-color: #c7c7c7;
+  color: #434343;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 100ms background-color;
+
+  &:hover {
+    background-color: #bcbcbc;
+  }
+}
+
+.js-img-overlay-crop.-active {
+  background-color: #45ac50;
+  color: white;
+
+  &:hover {
+    background-color: #4aba56;
+  }
+}
+
+.image-edit-overlay--height-control {
+  display: flex;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  height: 25px;
+  z-index: 10;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 100px;
+
+  button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 0;
+    transition: background-color 0.2s ease;
+    height: 100%;
+    width: 35px;
+    backdrop-filter: blur(5px);
+    background: #ffffff66;
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    &:hover {
+      background: #ffffff80;
+    }
+
+    &:active {
+      background: #ffffffb0;
+    }
+  }
+
+  input[type="number"] {
+    width: 50px;
+    height: 100%;
+    padding: 4px 6px;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    background: #ffffff57;
+    outline: none;
+    margin-bottom: 0;
+    border-radius: 0;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+      background: #ffffffb0;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
+  }
+}
+
+// --- Loading overlay (floating, reusable) ---
+
+.image-edit-loading-overlay {
+  position: absolute;
+  z-index: 101;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 2px;
+
+  .loading-spinner-inline {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    z-index: 3;
+  }
+}
+
+.image-edit-loading-overlay--blur-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(15px);
+  z-index: 2;
+}
+
+.image-edit-loading-overlay--blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// --- Legacy styles kept for non-overlay contexts ---
+
+.projekt-content-block {
+  .orbit-image {
+    object-fit: cover;
+  }
+}
+
+.content-block--item-button {
+  display: none;
+  position: absolute;
+  font-size: 17px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 2;
+  margin-right: 0;
+  border: none;
+  right: 5px;
+  transition: 100ms ease background-color;
+
+  &.-small {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+}
+
+.projekt-content-block {
+  li:hover {
+    .content-block--item-button {
+      display: block;
+    }
+  }
+}
+
+.content-block--item-drag-handle {
+  bottom: -5px;
+  color: #004a83;
+  background-color: #b9daf5;
+
+  &.-small {
+    right: 20px;
+  }
+
+  &:hover {
+    background-color: $dt-base-transparent-background-hover;
+  }
+}
+
+.content-block--item-delete-button {
+  top: 0;
+  color: #a41717;
+  background-color: #ffdede;
+
+  &.-small {
+    right: -12px;
+  }
+
+  &:hover {
+    background-color: #facdcd;
+  }
+}
+
+.orbit-container {
+  .content-block--item-delete-button {
+    top: 15px;
+    right: 15px;
+  }
+}
+
+.projekt-content-block .image-gallery-with-ligthbox {
+  img {
+    object-fit: contain;
+  }
+}
+
+ul.grid-x, ul.row {
+  list-style: none !important;
+}

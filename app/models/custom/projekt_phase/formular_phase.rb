@@ -1,5 +1,5 @@
 class ProjektPhase::FormularPhase < ProjektPhase
-  has_one :formular, foreign_key: :projekt_phase_id, dependent: :restrict_with_exception,
+  has_one :formular, foreign_key: :projekt_phase_id, dependent: :destroy,
     inverse_of: :projekt_phase
 
   after_create :create_formular
@@ -17,7 +17,7 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions formular settings formular_answers]
+    %w[duration naming restrictions formular general_settings formular_answers]
   end
 
   def settings_in_tabs

@@ -2,8 +2,9 @@ class Shared::InFavorAgainstComponent < ApplicationComponent
   attr_reader :votable
   delegate :current_user, :votes_percentage, to: :helpers
 
-  def initialize(votable)
+  def initialize(votable, show_share_popup: false)
     @votable = votable
+    @show_share_popup = show_share_popup
   end
 
   private
@@ -21,6 +22,10 @@ class Shared::InFavorAgainstComponent < ApplicationComponent
       else
         { in_favor: "", against: "" }
       end
+    end
+
+    def voted_in_favor?
+      voting_user&.voted_as_when_voted_for(votable) == true
     end
 
     def agree_aria_label

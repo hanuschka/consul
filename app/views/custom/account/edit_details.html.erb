@@ -31,11 +31,12 @@
           ) %>
           <%= render Users::RegularAddressFieldsComponent.new(f: f, user: @account) %>
 
-          <div class="user-date-of-birth sign-up">
+          <fieldset class="user-date-of-birth sign-up">
+            <legend><%= User.human_attribute_name(:date_of_birth) %></legend>
             <%= f.date_select :date_of_birth,
-                              prompt: true,
-                              start_year: 1900, end_year: minimum_required_age.years.ago.year %>
-          </div>
+                              { prompt: true, start_year: 1900, end_year: minimum_required_age.years.ago.year },
+                              { autocomplete: "bday" } %>
+          </fieldset>
         <% end %>
 
         <% if @account.document_required? %>

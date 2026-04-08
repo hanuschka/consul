@@ -2,15 +2,19 @@ module FlagActions
   extend ActiveSupport::Concern
 
   def flag
-    Flag.flag(current_user, flaggable)
+    flag = Flag.flag(current_user, flaggable)
 
-    render "shared/_refresh_flag_actions", locals: { flaggable: flaggable }
+    if flag
+      Flags::NotifyModerationJob.perform_later(flag.id)
+    end
+
+    render "shared/_refresh_flag_actions", locals: { flaggable: }
   end
 
   def unflag
     Flag.unflag(current_user, flaggable)
 
-    render "shared/_refresh_flag_actions", locals: { flaggable: flaggable }
+    render "shared/_refresh_flag_actions", locals: { flaggable: }
   end
 
   private

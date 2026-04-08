@@ -13,18 +13,20 @@ class SiteCustomization::Page < ApplicationRecord
 
   has_many :comments, through: :projekt
 
-  has_and_belongs_to_many :landing_projekts,
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'site_customization_page_id',
-    association_foreign_key: 'projekt_id',
-    class_name: "Projekt"
+  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
+  has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
+  has_many :landing_page_managers, through: :landing_page_manager_assignments
+  has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
 
+  has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
   has_one_attached :landing_site_logo_for_transparent_background
   has_one_attached :landing_site_logo_for_white_background
 
   before_save :sanitize_title_and_subtitle
+  before_save :set_published_at
+  after_update :sync_projekt_for_global_overview
 
   scope :regular, -> {
     where(landing: false)
@@ -70,11 +72,35 @@ class SiteCustomization::Page < ApplicationRecord
 
   def sanitize_title_and_subtitle
     if title.present?
-      self.title = sanitize(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      # strip_tags could be imporant, since we have issue with copied text with rich html
+      self.title = CGI.unescapeHTML(
+        strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      )
     end
 
     if subtitle.present?
-      self.subtitle = sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      self.subtitle = CGI.unescapeHTML(
+        sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+      )
+    end
+  end
+
+  def set_published_at
+    if status_changed? && status == 'published'
+      self.published_at = Time.current
+    end
+  end
+
+  def sync_projekt_for_global_overview
+    return unless projekt.present?
+
+    changed_set = saved_changes.except('created_at', 'updated_at')
+    return if changed_set.empty?
+
+    if projekt.should_be_exported_for_global_overview?
+      if projekt.hidden_at.blank?
+        Projekts::OverviewProjektUpdatedJob.perform_later(projekt)
+      end
     end
   end
 end

@@ -9,6 +9,7 @@
     resources :projekts, shallow: true do
       member do
         patch :update_setting
+        patch :update_settings
         patch :update_page
         patch :update_body
       end
@@ -16,6 +17,7 @@
       resources :projekt_phases do
         member do
           patch :update_setting
+          patch :update_settings
         end
       end
     end
@@ -74,7 +76,11 @@
     resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
     resources :budgets, only: [:index, :show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
-      resources :budget_phases, controller: "budgets/phases", only: [:index, :show, :update]
+      resources :budget_phases, controller: "budgets/phases", only: [:index, :show, :update] do
+        collection do
+          patch :bulk_update
+        end
+      end
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
 

@@ -44,7 +44,9 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def create
     check_admin_access!
-    projekt_phase = @projekt.projekt_phases.new(projekt_phase_params)
+    phase_class = resolve_phase_class(params.dig(:projekt_phase, :type))
+    projekt_phase = phase_class.new(projekt_phase_params.except(:type))
+    projekt_phase.projekt = @projekt
 
     if projekt_phase.save
       serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase).serialize
@@ -113,6 +115,18 @@ class Api::ProjektPhasesController < Api::BaseController
       geozone_restriction_ids: [],
       settings_attributes: [:id, :key, :value, :_destroy],
     )
+  end
+
+  def resolve_phase_class(type_name)
+    return ProjektPhase if type_name.blank?
+
+    phase_class_map[type_name] || ProjektPhase
+  end
+
+  def phase_class_map
+    ProjektPhase::ALL_PHASE_TYPES.each_with_object({}) do |name, map|
+      map[name] = name.safe_constantize
+    end
   end
 
   def find_projekt

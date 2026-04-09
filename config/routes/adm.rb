@@ -1,7 +1,7 @@
 namespace :adm do
   root to: "home#show"
 
-  patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute, constraints: { record_type: %r{[^/]+(/[^/]+)?} }
+  patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute
 
   # application
   resource :homepage, controller: "homepage", only: [:show]
@@ -102,6 +102,8 @@ namespace :adm do
 
   resource :statistics, controller: "statistics", only: [:show]
   resource :apps, controller: "apps", only: [:show]
+  resource :connection, controller: "connection", only: [:show]
+  get "connect", to: "connection#show"
 
   resources :ai_settings, only: [:index, :update] do
     patch :update_api_key, on: :collection

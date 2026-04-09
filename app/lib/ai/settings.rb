@@ -90,8 +90,6 @@ module Ai::Settings
   end
 
   def self.current_llm_model
-    # RubyLLM.models.refresh!
-
     custom_model = Setting["ai.llm_custom_model"]
     custom_endpoint = Setting["ai.llm_api_endpoint"]
 

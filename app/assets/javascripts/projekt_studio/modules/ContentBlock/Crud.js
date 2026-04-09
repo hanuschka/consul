@@ -30,6 +30,7 @@ ProjektStudio.ContentBlock.Crud = {
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
 
     const updatedContent = ProjektStudio.utils.htmlToDomElement(templateHTML);
+    ProjektStudio.utils.removeFoundationIds(updatedContent);
     contentBlock.innerHTML = updatedContent.innerHTML;
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 
@@ -81,6 +82,7 @@ ProjektStudio.ContentBlock.Crud = {
     )
 
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
+    ProjektStudio.utils.removeFoundationIds(newContentBlockContainer);
 
     ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlockContainer);
 

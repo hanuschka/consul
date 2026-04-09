@@ -208,7 +208,7 @@ export default class extends Controller {
           ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize,
           ImageStyle, ImageTextAlternative, ImageToolbar, UploadFilesPlugin,
           Link, Bold, Italic, Underline, RemoveFormat,
-          HorizontalLine, GeneralHtmlSupport,
+          HorizontalLine, SourceEditing, GeneralHtmlSupport,
           RemoveWrappingParagraphsPlugin
         ],
         toolbarControls: [
@@ -219,7 +219,8 @@ export default class extends Controller {
           "alignment:left", "alignment:center", "alignment:right", "|",
           "fontColor", "|",
           "horizontalLine", "|",
-          "uploadFiles"
+          "uploadFiles", "|",
+          "sourceEditing"
         ]
       }
     } else {

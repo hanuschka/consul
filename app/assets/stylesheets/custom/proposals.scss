@@ -19,13 +19,13 @@
 
 .proposal-new {
   input[name='save_draft'] {
-    background: $secondary;
-    color: $brand;
+    background: var(--brand-color-secondary);
+    color: var(--brand-color);
 
     &:hover,
     &:focus {
       color: $white;
-      background: $brand;
+      background: var(--brand-color);
     }
   }
 

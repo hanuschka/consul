@@ -37,4 +37,6 @@ de:
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diese Kartenebene löschen möchten?
         no_layers: Keine Kartenebenen vorhanden.
+        no_layers_title: Keine Kartenebenen vorhanden
+        no_layers_description: "Fügen Sie über den Button oben eine WMS-Kartenebene hinzu, um zusätzliche Layer auf der Karte darzustellen."
         add_layer: Kartenebene hinzufügen

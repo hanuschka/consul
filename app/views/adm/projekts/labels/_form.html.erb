@@ -5,17 +5,19 @@
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint")) do %>
-    <div class="icon-selector">
-      <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
-        <% icon = icon_array.first %>
-        <label class="icon-option">
-          <%= f.radio_button :icon, icon, checked: @projekt_label.icon == icon %>
-          <i class="fas fa-<%= icon %>"></i>
-        </label>
-      <% end %>
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint"), stacked: true) do %>
+    <div>
+      <div class="icon-selector">
+        <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
+          <% icon = icon_array.first %>
+          <label class="icon-option">
+            <%= f.radio_button :icon, icon, checked: @projekt_label.icon == icon %>
+            <i class="fas fa-<%= icon %>"></i>
+          </label>
+        <% end %>
+      </div>
     </div>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

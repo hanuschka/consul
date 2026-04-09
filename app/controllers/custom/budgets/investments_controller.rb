@@ -12,6 +12,10 @@ module Budgets
                               projekt_phase_id: @budget.projekt_phase.id,
                               anchor: "filter-subnav")
       end
+
+      if @budget.projekt.present?
+        resolve_landing_page_for_projekt(@budget.projekt)
+      end
     end
 
     def create
@@ -24,6 +28,10 @@ module Budgets
         redirect_to budget_investment_path(@budget, @investment),
                     notice: t("flash.actions.create.budget_investment")
       else
+        if @budget.projekt.present?
+          resolve_landing_page_for_projekt(@budget.projekt)
+        end
+
         render :new
       end
     end
@@ -33,6 +41,10 @@ module Budgets
         redirect_to budget_investment_path(@budget, @investment),
                     notice: t("flash.actions.update.budget_investment")
       else
+        if @budget.projekt.present?
+          resolve_landing_page_for_projekt(@budget.projekt)
+        end
+
         render "edit"
       end
     end

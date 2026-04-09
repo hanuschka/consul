@@ -97,7 +97,7 @@
 
   .milestone-item--status {
     width: 100%;
-    background-color: $brand;
+    background-color: var(--brand-color);
     color: white;
     font-size: 18px;
     padding: 10px 25px;

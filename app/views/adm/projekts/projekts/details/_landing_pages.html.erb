@@ -1,7 +1,12 @@
 <%= turbo_frame_tag "details__landing_pages" do %>
   <%= form_with model: projekt, url: adm_projekts_projekt_path(projekt) do |f| %>
     <div class="mb-4">
-      <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) %>
+      <%= f.select(
+        :landing_page_id,
+        SiteCustomization::Page.landing.map { |p| [p.title, p.id] },
+        { include_blank: t("custom.admin.projekts.edit.no_landing_page") },
+        { label: false }
+      ) %>
     </div>
     <%= form_submit_button %>
   <% end %>

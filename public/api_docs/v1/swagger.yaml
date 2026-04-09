@@ -10046,11 +10046,10 @@ components:
               nullable: true
               description: Comma-separated list of related Sustainable Development
                 Goal IDs
-            landing_page_ids:
-              type: array
-              items:
-                type: integer
-              description: Array of landing page IDs associated with this projekt
+            landing_page_id:
+              type: integer
+              nullable: true
+              description: ID of the landing page associated with this projekt
             geozone_affiliation_ids:
               type: array
               items:
@@ -10159,11 +10158,10 @@ components:
               nullable: true
               description: Comma-separated list of related Sustainable Development
                 Goal IDs
-            landing_page_ids:
-              type: array
-              items:
-                type: integer
-              description: Array of landing page IDs associated with this projekt
+            landing_page_id:
+              type: integer
+              nullable: true
+              description: ID of the landing page associated with this projekt
             geozone_affiliation_ids:
               type: array
               items:

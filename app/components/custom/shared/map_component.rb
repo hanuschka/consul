@@ -1,16 +1,22 @@
 class Shared::MapComponent < ApplicationComponent
   def initialize(
-    mappable: nil, # map center, zoom, altitu
-    features: {}, # map features, e.g. markers, polygons (comes from collection)
-    editable: false, # if true user can edit the features
+    mappable: nil,
+    features: {},
+    editable: false,
     process: nil,
-    placement: nil # used to determine the placement of the map (e.g. in a modal or on a page
+    placement: nil,
+    collapsible: false
   )
     @mappable = mappable
     @features = features
     @editable = editable
     @process = process
     @placement = placement
+    @collapsible = collapsible
+  end
+
+  def collapsible?
+    @collapsible && !@editable
   end
 
   def map_div

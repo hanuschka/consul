@@ -15,8 +15,14 @@ class ProjektPhase::MilestonePhase < ProjektPhase
     milestones.count
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_projekt_milestone"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[naming general_settings milestones progress_bars]
+    %w[naming general_settings milestones progress_bars email_templates]
   end
 
   def safe_to_destroy?

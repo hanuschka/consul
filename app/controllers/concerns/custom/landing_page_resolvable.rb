@@ -3,10 +3,32 @@ module LandingPageResolvable
 
   private
 
+  def resolve_landing_page_from_slug
+    slug = params[:landing_page_slug]
+    return if slug.blank?
+
+    landing_page = SiteCustomization::Page.published.landing.find_by(slug: slug)
+
+    if landing_page.nil?
+      raise ActionController::RoutingError.new("Not Found")
+    end
+
+    @landing_page = landing_page
+    set_landing_page_topbar_ui_variables(landing_page)
+
+    landing_page
+  end
+
+  def landing_page_scoped_projekt_ids
+    return if @landing_page.blank?
+
+    @landing_page.landing_projekts.activated.ids
+  end
+
   def resolve_landing_page_for_projekt(projekt)
     return if projekt.blank?
 
-    landing_page = projekt.landing_pages.first
+    landing_page = projekt.landing_page
     return if landing_page.blank?
 
     @landing_page = landing_page
@@ -24,9 +46,6 @@ module LandingPageResolvable
   end
 
   def set_landing_page_topbar_ui_variables(landing_page)
-    @ui_show_projekts_overview = landing_page.landing_show_projekts_overview
-    @ui_hide_topbar_links = landing_page.landing_hide_all_top_nav_links
-
     if landing_page.landing_site_logo_for_transparent_background.attached?
       @ui_site_logo_transparent_background = url_for(landing_page.landing_site_logo_for_transparent_background)
     end

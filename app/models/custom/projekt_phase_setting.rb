@@ -84,6 +84,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.enable_proposal_notifications_tab": "",
           "feature.resource.enable_proposal_milestones_tab": "",
           "feature.resource.users_can_create_proposals": "active",
+          "feature.resource.create_proposal_with_ai": "",
           "feature.resource.allow_voting": "active",
           "feature.resource.quorum_for_proposals": "",
           "feature.resource.enable_up_and_down_voting": "",
@@ -93,7 +94,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
-          "option.resource.minimum_supports_to_show": "0"
+          "option.resource.minimum_supports_to_show": "0",
+          "option.resource.max_submissions_per_user": ""
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -103,10 +105,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.results_enabled": "",
           "feature.resource.intermediate_poll_results_for_admins": "active",
           "feature.resource.stats_enabled": "",
-          "feature.resource.advanced_stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
-          "feature.resource.show_comments": "active",
+          "feature.resource.show_comments": "",
           "feature.resource.show_open_answer_author_name": ""
         },
 
@@ -131,6 +132,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
+          "feature.resource.create_investment_with_ai": "",
           "feature.resource.show_report_button_in_sidebar": "active",
           "feature.resource.show_follow_button_in_sidebar": "",
           "feature.resource.show_community_button_in_sidebar": "",
@@ -138,7 +140,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
-          "feature.resource.hide_ballots_count": ""
+          "feature.resource.hide_ballots_count": "",
+          "option.resource.max_submissions_per_user": ""
         },
 
         "ProjektPhase::CommentPhase" => {

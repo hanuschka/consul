@@ -35,5 +35,9 @@ export default class extends Controller {
     this.previewTarget.classList.add("d-none")
     this.actionsTarget.classList.add("d-none")
     this.inputWrapperTarget.classList.remove("d-none")
+
+    if (this.autoSubmitValue) {
+      this.element.closest("form").requestSubmit()
+    }
   }
 }

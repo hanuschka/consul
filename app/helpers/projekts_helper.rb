@@ -1,20 +1,30 @@
 module ProjektsHelper
   def breadcrumbs_links(base_projekt, divider = '/', home_page_link = true)
-    divider_tag = content_tag(:div, divider, class: 'breadcrumbs-divider')
+    divider_tag = content_tag(:span, " #{divider} ", class: 'breadcrumbs-divider', "aria-hidden": "true")
 
-    links = base_projekt.breadcrumb_trail_ids.map do |projekt_id|
+    items = []
+
+    if home_page_link
+      items << link_to(t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item')
+    end
+
+    base_projekt.breadcrumb_trail_ids.each do |projekt_id|
       projekt = Projekt.find(projekt_id)
 
       if !projekt.page.published? || (projekt == base_projekt && home_page_link)
-        content_tag(:div, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
+        items << content_tag(:span, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
       else
-        link_to projekt.page.title, projekt.page.url, class: 'breadcrumbs-item'
+        items << link_to(projekt.page.title, projekt.page.url, class: 'breadcrumbs-item')
       end
     end
 
-    links.unshift(link_to t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item') if home_page_link
+    list_items = items.each_with_index.map do |item, index|
+      li_content = index > 0 ? (divider_tag + item) : item
+      content_tag(:li, li_content, class: 'breadcrumbs-list-item')
+    end
 
-    content_tag(:nav, safe_join(links, divider_tag).html_safe, class: 'custom-breadcrumbs', "aria-label": "Breadcrumb")
+    list = content_tag(:ol, safe_join(list_items), class: 'breadcrumbs-list')
+    content_tag(:nav, list, class: 'custom-breadcrumbs', "aria-label": "Breadcrumb")
   end
 
   def projekt_filter_resources_name
@@ -35,7 +45,7 @@ module ProjektsHelper
     url = projekt.page.url
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, url, class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
       link_to projekt.page.title, url, class: classes.join(" ")
     else
@@ -110,10 +120,10 @@ module ProjektsHelper
 
   def get_projekt_affiliation_name(projekt, only_name = false )
     affiliation_name = projekt.geozone_affiliated || "no_affiliation"
-    geozone_affiliations = projekt.geozone_affiliations
+    district_affiliations = projekt.registered_address_district_affiliations
 
-    if geozone_affiliations.exists? && affiliation_name == 'only_geozones'
-      return geozone_affiliations.pluck(:name).join(', ')
+    if district_affiliations.exists? && affiliation_name == 'only_geozones'
+      return district_affiliations.pluck(:name).join(', ')
     end
 
     return affiliation_name if only_name

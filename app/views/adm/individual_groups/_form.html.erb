@@ -4,12 +4,12 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: IndividualGroup.human_attribute_name(:kind), hint: t(".hints.kind")) do %>
-    <%= f.select :kind, IndividualGroup.kinds.keys.map { |k| [t(".kinds.#{k}"), k] }, {}, class: "kern-form-select__select" %>
+    <%= f.select :kind, IndividualGroup.kinds.keys.map { |k| [t(".kinds.#{k}"), k] }, { include_blank: false }, { label: false, class: "kern-form-select__select" } %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: IndividualGroup.human_attribute_name(:visible), hint: t(".hints.visible")) do %>
     <%= f.check_box :visible %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

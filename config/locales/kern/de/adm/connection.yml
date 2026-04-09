@@ -1,0 +1,28 @@
+de:
+  adm:
+    connection:
+      show:
+        title: "DT API Verbindungsstatus"
+        connection_error_label: "Fehler:"
+        errors:
+          no_client: "Kein registrierter DT-API-Client gefunden (InternalApiClient mit Name 'DT')."
+          no_token: "DT-API-Client gefunden, aber service_api_token fehlt."
+        checks:
+          dt_connected:
+            label_ok: "DT API verbunden"
+            label_fail: "DT API nicht verbunden"
+            description_ok: "Der DT-API-Client ist registriert und hat einen gültigen Service-Token."
+            description_fail: "Kein DT-API-Client registriert oder Service-Token fehlt."
+            hint: "Nur lokale Konfigurationsprüfung — es wird keine HTTP-Anfrage gesendet."
+          api_accessible:
+            label_ok: "DT API erreichbar"
+            label_fail: "DT API nicht erreichbar"
+            description_ok: "Der DT-API-Endpunkt ist erreichbar und antwortet ohne Serverfehler."
+            description_fail: "Der DT-API-Endpunkt hat ein Timeout oder einen Serverfehler (5xx) zurückgegeben."
+            hint: "Sendet eine HTTP-Anfrage an den Status-Endpunkt; besteht bei Antwort ohne 5xx."
+          connection_works:
+            label_ok: "DT-Verbindung funktioniert"
+            label_fail: "DT-Verbindung fehlgeschlagen"
+            description_ok: "Die Authentifizierung ist gültig und die Verbindung ist voll funktionsfähig."
+            description_fail: "Die Verbindungsprüfung hat eine unerwartete Antwort zurückgegeben oder die Authentifizierung ist fehlgeschlagen."
+            hint: "Erfordert HTTP 200 mit authenticated: true im JSON-Antwortkörper."

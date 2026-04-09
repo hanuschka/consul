@@ -51,4 +51,12 @@ class ApplicationPolicy
 
       attr_reader :user, :scope
   end
+
+  private
+
+    def can_moderate?
+      return false unless @user
+
+      @user.moderator? || @user.administrator?
+    end
 end

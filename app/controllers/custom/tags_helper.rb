@@ -7,7 +7,7 @@ module TagsHelper
     selected_tags = currently_selected_tags.join(',')
 
     updated_params = params.merge({tags: selected_tags}).permit(
-      :tags, :geozone_affiliation, :geozone_restriction, :affiliated_geozones, :restricted_geozones,
+      :tags, :geozone_affiliation, :geozone_restriction, :affiliated_districts, :restricted_geozones,
       :sdg_goals, :sdg_targets,
       :order,
       filter_projekt_ids: []

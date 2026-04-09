@@ -7,40 +7,15 @@
 <%= render Adm::HeaderComponent.new(title: @question.title, breadcrumbs: @breadcrumbs, back_button_url: back_url) %>
 
 <div class="kern-container mb-5">
-  <dl class="mb-4">
-    <% unless @question.bundle_question? %>
-      <dt class="kern-label"><%= VotationType.human_attribute_name(:vote_type) %></dt>
-      <dd class="kern-body mb-2"><%= I18n.t("activerecord.attributes.votation_type/vote_type.#{@question.votation_type.vote_type}") %></dd>
-    <% end %>
-
-    <dt class="kern-label"><%= Poll::Question.human_attribute_name(:answer_mandatory) %></dt>
-    <dd class="kern-body mb-2"><%= t("shared.#{@question.answer_mandatory?}") %></dd>
-
-    <% unless @question.bundle_question? %>
-      <dt class="kern-label"><%= Poll::Question.human_attribute_name(:show_images) %></dt>
-      <dd class="kern-body mb-2"><%= t("shared.#{@question.show_images?}") %></dd>
-    <% end %>
-  </dl>
-
-  <div class="d-flex gap-2 mb-4">
-    <%= kern_link_button edit_adm_projekts_phase_poll_question_path(@projekt_phase, @question),
-          text: @question.bundle_question? ? t(".edit_bundle") : t(".edit_question"),
-          icon: "edit", style: :secondary %>
-  </div>
-
   <% unless @question.bundle_question? %>
-    <h3 class="mb-3"><%= t(".answers_title") %></h3>
-
-    <div class="d-flex gap-2 mb-4">
-      <%= kern_link_button new_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question),
-            text: t(".add_answer"), icon: "add", style: :secondary %>
-    </div>
+    <%= new_resource_link(new_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question), t(".add_answer")) %>
 
     <% if @question.question_answers.any? %>
       <div class="kern-table-responsive" tabindex="0">
         <table class="kern-table">
           <thead class="kern-table__head">
             <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"></th>
               <th scope="col" class="kern-table__header"><%= t(".table.answer_title") %></th>
               <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
                 <th scope="col" class="kern-table__header"><%= t(".table.description") %></th>
@@ -49,7 +24,6 @@
               <th scope="col" class="kern-table__header"><%= t(".table.documents") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.videos") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
-              <th scope="col" class="kern-table__header"></th>
             </tr>
           </thead>
 
@@ -58,21 +32,21 @@
                  data-sortable-url-value="<%= order_answers_adm_projekts_phase_poll_question_poll_question_answers_path(@projekt_phase, @question) %>">
             <% @question.question_answers.each do |answer| %>
               <tr id="<%= dom_id(answer) %>" class="kern-table__row" data-sortable-id="<%= answer.id %>">
+                <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+                  <span class="material-symbols-outlined">drag_indicator</span>
+                </td>
                 <td class="kern-table__cell"><%= answer.title %></td>
                 <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
-                  <td class="kern-table__cell"><%= strip_tags(answer.description).truncate(80) %></td>
+                  <td class="kern-table__cell"><%= strip_tags(answer.description).truncate(30) %></td>
                 <% end %>
                 <td class="kern-table__cell"><%= answer.images.count %></td>
                 <td class="kern-table__cell"><%= answer.documents.count rescue 0 %></td>
                 <td class="kern-table__cell"><%= answer.videos.count %></td>
                 <td class="kern-table__cell">
                   <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer)) %>
-                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer), icon: "edit", style: :edit) %>
+                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, answer), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                   <% end %>
-                </td>
-                <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
-                  <span class="material-symbols-outlined">drag_indicator</span>
                 </td>
               </tr>
             <% end %>
@@ -80,13 +54,11 @@
         </table>
       </div>
     <% else %>
-      <p><%= t(".no_answers") %></p>
+      <%= empty_state(title: t(".no_answers_title"), description: t(".no_answers_description"), icon: "quiz") %>
     <% end %>
   <% end %>
 
   <% if @question.bundle_question? && @question.parent_question.blank? %>
-    <h3 class="mb-3"><%= t(".nested_questions_title") %></h3>
-
     <div class="d-flex gap-2 mb-4">
       <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase, poll_id: @question.poll.id, parent_question_id: @question.id),
             text: t(".add_nested_question"), icon: "add", style: :secondary %>
@@ -97,22 +69,28 @@
         <table class="kern-table">
           <thead class="kern-table__head">
             <tr class="kern-table__row">
-              <th scope="col" class="kern-table__header"><%= t(".table.answer_title") %></th>
+              <th scope="col" class="kern-table__header"></th>
+              <th scope="col" class="kern-table__header"><%= t(".table.nested_question_title") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.vote_type") %></th>
               <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
             </tr>
           </thead>
 
-          <tbody class="kern-table__body">
+          <tbody class="kern-table__body"
+                 data-controller="sortable"
+                 data-sortable-url-value="<%= order_questions_adm_projekts_phase_poll_questions_path(@projekt_phase) %>">
             <% @question.nested_questions.each do |nested_question| %>
-              <tr id="<%= dom_id(nested_question) %>" class="kern-table__row">
+              <tr id="<%= dom_id(nested_question) %>" class="kern-table__row" data-sortable-id="<%= nested_question.id %>">
+                <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+                  <span class="material-symbols-outlined">drag_indicator</span>
+                </td>
                 <td class="kern-table__cell"><%= nested_question.title %></td>
                 <td class="kern-table__cell"><%= I18n.t("activerecord.attributes.votation_type/vote_type.#{nested_question.votation_type.vote_type}") %></td>
                 <td class="kern-table__cell">
                   <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                    <% actions.with_action(label: t(".table.show_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, nested_question)) %>
-                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, nested_question)) %>
-                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, nested_question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                    <% actions.with_action(label: t(".table.show_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, nested_question), icon: "list") %>
+                    <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, nested_question), icon: "edit", style: :edit, divider: true) %>
+                    <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, nested_question), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                   <% end %>
                 </td>
               </tr>
@@ -121,7 +99,7 @@
         </table>
       </div>
     <% else %>
-      <p><%= t(".no_nested_questions") %></p>
+      <%= empty_state(title: t(".no_nested_questions_title"), description: t(".no_nested_questions_description"), icon: "layers") %>
     <% end %>
   <% end %>
 </div>

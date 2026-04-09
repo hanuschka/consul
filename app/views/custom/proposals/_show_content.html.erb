@@ -22,7 +22,9 @@
     <div class="flex-layout">
       <div class="main-column" id="proposal-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: proposals_path) %>
+          <% fallback_path = proposal.projekt_phase.present? ? page_path(proposal.projekt_phase.projekt.page.slug, projekt_phase_id: proposal.projekt_phase.id, anchor: "filter-subnav") : proposals_path %>
+
+          <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>
 
         <% if proposal.retired? %>
@@ -193,7 +195,11 @@
 
         <% if projekt_phase_feature?(proposal.projekt_phase, "resource.allow_voting") %>
           <%= render(Mobile::FixedBottomActionComponent.new) do %>
-            <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <%= render(Shared::SidebarCardComponent.new(
+              title: proposal.projekt_phase.projekt.page.slug == "themenwahl-2025" ? "Einwand" : "Unterstützung",
+              icon_name: "vote-yea",
+              opened_on_mobile: true
+            )) do |c| %>
               <div class="proposal-page--votes">
                 <%= render "proposals/support_status", proposal: proposal %>
               </div>
@@ -277,11 +283,13 @@
         <% end %>
 
         <% if current_user.present? && current_user.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <div class="js-moderator-proposal-actions">
-              <%= render "proposals/actions", proposal: proposal %>
-            </div>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <div class="js-moderator-proposal-actions">
+                <%= render "proposals/actions", proposal: proposal %>
+              </div>
+            <% end %>
+          </div>
         <% end %>
       </aside>
     </div>

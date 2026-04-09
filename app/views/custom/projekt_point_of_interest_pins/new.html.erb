@@ -1,3 +1,7 @@
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <main class="user-resources-form point-of-interest-map <%= " -no-image" unless feature?(:allow_images) %>">
   <%= translatable_form_for(@pin, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
   <%= hidden_field_tag :projekt_phase_id, @projekt_phase.id %>

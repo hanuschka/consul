@@ -36,8 +36,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_pins") %>
-    </div>
+    <%= empty_state(title: t(".no_pins_title"), description: t(".no_pins_description"), icon: "location_on") %>
   <% end %>
 </div>

@@ -1,0 +1,83 @@
+<div id="projekt-event-registration-<%= projekt_event.id %>" style="width: 100%;">
+  <% if projekt_event.registration_enabled? %>
+    <div class="projekt-event-item-new-body--details-row">
+      <i class="fa fa-users"></i>
+      <span>
+        <% if projekt_event.fully_booked? %>
+          <%= t("custom.projekt_events.registration.fully_booked") %>
+        <% else %>
+          <%= t("custom.projekt_events.registration.spots_available",
+                available: projekt_event.spots_available,
+                total: projekt_event.max_attendees) %>
+        <% end %>
+      </span>
+    </div>
+
+    <% if local_assigns[:registration_alert].present? %>
+      <div class="callout alert"><%= registration_alert %></div>
+    <% end %>
+
+    <div class="projekt-event-item-new-body--registration">
+      <% if user_signed_in? %>
+        <% my_registrations = projekt_event.registrations_by(current_user).order(:id) %>
+      <% else %>
+        <% my_registration_ids = Array(session[:registered_registration_ids]) %>
+        <% my_registrations = my_registration_ids.any? ?
+              projekt_event.projekt_event_registrations.where(id: my_registration_ids).order(:id) :
+              ProjektEventRegistration.none %>
+      <% end %>
+
+      <% if my_registrations.any? %>
+        <div class="projekt-event-registrations-list">
+          <% my_registrations.each do |registration| %>
+            <div class="projekt-event-registration-entry">
+              <span class="label <%= registration.status == 'confirmed' ? 'success' : (registration.status == 'pending_confirmation' ? 'secondary' : 'warning') %>">
+                <%= t("custom.projekt_events.registration.status_#{registration.status}") %>
+              </span>
+              <span><%= registration.display_name %></span>
+              <% unless registration.pending_confirmation? %>
+                <%= button_to t("custom.projekt_events.registration.cancel"),
+                      projekt_event_projekt_event_registration_path(projekt_event, registration),
+                      method: :delete,
+                      remote: true,
+                      class: "button small hollow alert" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% form_id = "registration-form-#{projekt_event.id}" %>
+      <button class="button small"
+              onclick="document.getElementById('<%= form_id %>').style.display='block'; this.style.display='none';">
+        <%= t(projekt_event.fully_booked? ? "custom.projekt_events.registration.join_waitlist" : "custom.projekt_events.registration.add_person") %>
+      </button>
+      <div id="<%= form_id %>" style="display: none;">
+        <div class="row">
+          <div class="columns medium-6">
+            <%= form_with model: ProjektEventRegistration.new,
+                          url: projekt_event_projekt_event_registrations_path(projekt_event),
+                          method: :post,
+                          local: false,
+                          class: "registration-form" do |f| %>
+              <%= f.text_field :first_name,
+                    placeholder: t("custom.projekt_events.registration.first_name"),
+                    value: (current_user&.first_name unless my_registrations.any?),
+                    required: true %>
+              <%= f.text_field :last_name,
+                    placeholder: t("custom.projekt_events.registration.last_name"),
+                    value: (current_user&.last_name unless my_registrations.any?),
+                    required: true %>
+              <%= f.email_field :email,
+                    placeholder: t("custom.projekt_events.registration.email"),
+                    value: (current_user&.email unless my_registrations.any?),
+                    required: true %>
+              <%= f.submit t(projekt_event.fully_booked? ? "custom.projekt_events.registration.join_waitlist" : "custom.projekt_events.registration.register"),
+                    class: "button small" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

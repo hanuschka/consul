@@ -1,0 +1,7 @@
+de:
+  adm:
+    modules:
+      show:
+        title: Module
+        hint: >
+          Hier aktivieren oder deaktivieren Sie die Module und Übersichtsseiten Ihrer Plattform. Ein Modul muss hier aktiviert sein, damit es unter „Applikation → Navigation" als Menüpunkt hinzugefügt werden kann. Deaktivierte Module sind im Frontend für Bürger nicht erreichbar — auch nicht über direkte Links. Aktivierte Module ohne Navigationseintrag bleiben über ihren Direktlink zugänglich, werden aber nicht im Menü beworben. Bestehende Inhalte bleiben bei Deaktivierung erhalten und werden bei erneuter Aktivierung wieder sichtbar.

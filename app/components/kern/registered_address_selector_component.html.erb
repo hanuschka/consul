@@ -1,0 +1,52 @@
+<div class="kern-form-input<%= " kern-form-input--error" if highlight_error?(@selected_city_id) %> mb-3">
+  <% if @labels %>
+    <%= label_tag :form_registered_address_city_id,
+      t("custom.devise_views.users.registrations.new.form_registered_address_city_label"),
+      class: "kern-label" %>
+  <% end %>
+  <%= select_tag :form_registered_address_city_id,
+    options_for_select(options_for_city_select, @selected_city_id),
+    prompt: t("custom.helpers.select.prompt_city"),
+    autocomplete: "address-level2",
+    class: "kern-form-input__input #{"kern-form-input__input--error" if highlight_error?(@selected_city_id)}",
+    data: {
+      kern__registered_address_selector_target: "city",
+      action: "change->kern--registered-address-selector#cityChanged"
+    } %>
+</div>
+
+<div class="kern-form-input<%= " kern-form-input--error" if highlight_error?(@selected_street_id) %> mb-3"
+     style="display: <%= selected_city.present? && @selected_city_id.to_s != '0' ? 'block' : 'none' %>"
+     data-kern--registered-address-selector-target="streetWrapper">
+  <% if @labels %>
+    <%= label_tag :form_registered_address_street_id,
+      t("custom.devise_views.users.registrations.new.form_registered_address_street_label"),
+      class: "kern-label" %>
+  <% end %>
+  <%= select_tag :form_registered_address_street_id,
+    options_for_select(options_for_street_select, @selected_street_id),
+    prompt: t("custom.helpers.select.prompt_street"),
+    class: "kern-form-input__input #{"kern-form-input__input--error" if highlight_error?(@selected_street_id)}",
+    data: {
+      kern__registered_address_selector_target: "streetSelect",
+      action: "change->kern--registered-address-selector#streetChanged"
+    } %>
+</div>
+
+<div class="kern-form-input<%= " kern-form-input--error" if highlight_error?(@selected_address_id) %> mb-3"
+     style="display: <%= (selected_city.present? && selected_street.present? && @selected_street_id.to_s != '0') ? 'block' : 'none' %>"
+     data-kern--registered-address-selector-target="addressWrapper">
+  <% if @labels %>
+    <%= label_tag :form_registered_address_id,
+      t("custom.devise_views.users.registrations.new.form_registered_address_label"),
+      class: "kern-label" %>
+  <% end %>
+  <%= select_tag :form_registered_address_id,
+    options_for_select(options_for_address_select, @selected_address_id),
+    prompt: t("custom.helpers.select.prompt_address"),
+    class: "kern-form-input__input #{"kern-form-input__input--error" if highlight_error?(@selected_address_id)}",
+    data: {
+      kern__registered_address_selector_target: "addressSelect",
+      action: "change->kern--registered-address-selector#addressChanged"
+    } %>
+</div>

@@ -49,14 +49,16 @@
             <%= @resource.category.name %>
           </span>
         </div>
-        <div class="resource-page-banner--detail">
-          <i class="fa fa-check-circle"></i>
-          <%= t("activerecord.attributes.deficiency_report.status") + ": " %>
-          <span class="deficiency-report-status" style="color:<%= @resource.status.color %>;">
-            <i class="fas fa-<%= @resource.status.icon %>"></i>
-            <%= @resource.status.title %>
-          </span>
-        </div>
+        <% if @resource.status.present? %>
+          <div class="resource-page-banner--detail">
+            <i class="fa fa-check-circle"></i>
+            <%= t("activerecord.attributes.deficiency_report.status") + ": " %>
+            <span class="deficiency-report-status" style="color:<%= @resource.status.color %>;">
+              <i class="fas fa-<%= @resource.status.icon %>"></i>
+              <%= @resource.status.title %>
+            </span>
+          </div>
+        <% end %>
         <% if current_user == @resource.author && Setting["deficiency_reports.admin_acceptance_required"].present? %>
           <div class="resource-page-banner--detail" style="align-items:baseline;">
             <i class="fas fa-file-alt"></i>
@@ -74,7 +76,15 @@
   </div>
 
   <% if resource.image.present? %>
-    <%= link_to big_image_url, target: "_blank", class: "glightbox resource-page-banner--image" do %>
+    <%= link_to big_image_url,
+      target: "_blank",
+      class: "glightbox resource-page-banner--image",
+      role: "button",
+      data: {
+        alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: resource.class.model_name.human, title: resource.title)
+      },
+      title: t("custom.accessibility.banner-image.glightbox-aria-label"),
+      aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
       <span class="image-maximize-button">
         <i class="fas fa-magnifying-glass-plus"></i>
       </span>

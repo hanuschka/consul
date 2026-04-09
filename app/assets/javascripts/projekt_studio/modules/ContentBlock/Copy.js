@@ -19,6 +19,7 @@ ProjektStudio.ContentBlock.Copy = {
   copyContentBlockToClipboard(contentBlock, button) {
     const clone = contentBlock.cloneNode(true);
     this.stripSimpleEditModeControls(clone);
+    ProjektStudio.utils.removeFoundationIds(clone);
     const contentBlockHTML = clone.innerHTML.trim();
 
     navigator.clipboard.writeText(contentBlockHTML).then(() => {
@@ -28,12 +29,6 @@ ProjektStudio.ContentBlock.Copy = {
 
   stripSimpleEditModeControls(clone) {
     clone.querySelectorAll(".js-content-block--list-control").forEach((el) => el.remove());
-
-    clone.querySelectorAll(".js-content-block-image-wrapper").forEach((wrapper) => {
-      const img = wrapper.querySelector("img");
-      if (img) wrapper.parentNode.insertBefore(img, wrapper);
-      wrapper.remove();
-    });
 
     clone.querySelectorAll(".js-content-block-link-wrapper").forEach((wrapper) => {
       const link = wrapper.querySelector("a");

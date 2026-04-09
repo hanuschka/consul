@@ -1,7 +1,7 @@
 namespace :adm do
   root to: "home#show"
 
-  patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute, constraints: { record_type: %r{[^/]+(/[^/]+)?} }
+  patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute
 
   # application
   resource :homepage, controller: "homepage", only: [:show]

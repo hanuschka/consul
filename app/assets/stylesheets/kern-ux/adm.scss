@@ -15,7 +15,6 @@
 @use "adm/components/statistics";
 @use "adm/components/markdown_editor";
 @use "adm/components/apps";
-@use "adm/components/admin_projekt_import";
 @use "adm/components/connection";
 @use "adm/components/criteria_list";
 @use "adm/components/memos";
@@ -34,3 +33,5 @@
 @use "adm/pagination";
 
 @use "adm/theme";
+
+@use "adm/components/admin_projekt_import";

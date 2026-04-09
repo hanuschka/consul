@@ -23,7 +23,7 @@ module Adm
     private
 
       def find_record
-        record_class = params[:record_type].classify.constantize
+        record_class = params[:record_type].tr("-", "/").classify.constantize
         record_class.find(params[:id])
       end
 
@@ -38,6 +38,7 @@ module Adm
         options = {}
         options[:select_options] = JSON.parse(params[:select_options]) if params[:select_options].present?
         options[:wide] = true if params[:wide].present?
+        options[:hide_label] = true if params[:hide_label].present?
         options[:inline] = true if params[:inline].present?
         options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
         options

@@ -156,7 +156,7 @@
             <tr>
               <td style="padding:25px 40px 0 40px;">
                 <div style="<%= css_for_mailer_text %>;font-size: 15px;">
-                    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
+                    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 590)) %>
                 </div>
               </td>
             </tr>

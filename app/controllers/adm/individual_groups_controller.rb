@@ -5,8 +5,19 @@ module Adm
       @pagy, @individual_groups = pagy(policy_scope([:adm, IndividualGroup]).order(:id))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.individual_groups") }
+      ]
+    end
+
+    def show
+      @individual_group = IndividualGroup.find(params[:id])
+      authorize [:adm, @individual_group]
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+        { name: t("adm.menu.items.application_subitems.individual_groups"), url: adm_individual_groups_path },
+        { name: @individual_group.name }
       ]
     end
 
@@ -15,7 +26,7 @@ module Adm
       authorize [:adm, @individual_group]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.individual_groups"), url: adm_individual_groups_path },
         { name: t(".title") }
       ]
@@ -37,7 +48,7 @@ module Adm
       authorize [:adm, @individual_group]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.individual_groups"), url: adm_individual_groups_path },
         { name: t(".title") }
       ]

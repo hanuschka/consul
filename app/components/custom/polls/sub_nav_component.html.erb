@@ -4,22 +4,22 @@
 
   <% if can?(:stats, poll) %>
     <%= link_to t("custom.polls.show.stats_menu"), stats_poll_path(id: poll.id),
-                class: ("is-active" if stats_menu?) %>
+                class: "#{'is-active' if stats_menu?} #{'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('resource.stats_enabled')}" %>
   <% end %>
 
   <% if can?(:results, poll) %>
     <%= link_to t("custom.polls.show.results_menu"), results_poll_path(id: poll.id),
-                class: ("is-active" if results_menu?),
+                class: "#{'is-active' if results_menu?} #{'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('resource.results_enabled')}",
                 data: { turbolinks: false } %>
   <% end %>
 
   <% if poll.report_visible_for_citizens? || can?(:edit, poll.projekt) || current_user&.administrator? %>
     <% if Ai::Settings.ai_available? %>
       <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
-                  class: ("is-active" if report_menu?) %>
+                  class: "#{'is-active' if report_menu?} #{'js-studio-hide-on-preview' if !poll.report_visible_for_citizens?}" %>
     <% else %>
       <span
-        class="ai-feature-disabled"
+        class="ai-feature-disabled <%= 'js-studio-hide-on-preview' if !poll.report_visible_for_citizens? %>"
         data-tooltip
         tabindex="0"
         title="<%= t('ai.disabled_tooltip') %>"
@@ -32,10 +32,10 @@
   <% if can?(:edit, poll.projekt) || current_user&.administrator? %>
     <% if Ai::Settings.ai_available? %>
       <%= link_to t("custom.polls.show.evaluation_menu"), evaluation_poll_path(id: poll.id),
-                  class: ("is-active" if evaluation_menu?) %>
+                  class: "#{'is-active' if evaluation_menu?} js-studio-hide-on-preview" %>
     <% else %>
       <span
-        class="ai-feature-disabled"
+        class="ai-feature-disabled js-studio-hide-on-preview"
         data-tooltip
         tabindex="0"
         title="<%= t('ai.disabled_tooltip') %>"

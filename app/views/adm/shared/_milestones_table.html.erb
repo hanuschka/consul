@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-start gap-2 mb-4">
-  <%= kern_link_button new_url, text: t("adm.projekts.phases.milestones.create_button") %>
+  <%= kern_link_button new_url, text: t("adm.projekts.phases.milestones.create_button"), style: :secondary %>
 </div>
 
 <% if milestones.any? %>
@@ -34,8 +34,8 @@
             </td>
             <td class="kern-table__cell">
               <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                <% actions.with_action(label: t("shared.edit"), url: edit_url.call(milestone)) %>
-                <% actions.with_action(label: t("shared.delete"), url: delete_url.call(milestone), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                <% actions.with_action(label: t("shared.edit"), url: edit_url.call(milestone), icon: "edit", style: :edit) %>
+                <% actions.with_action(label: t("shared.delete"), url: delete_url.call(milestone), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
               <% end %>
             </td>
           </tr>
@@ -44,5 +44,5 @@
     </table>
   </div>
 <% else %>
-  <p class="kern-body"><%= t("adm.projekts.phases.milestones.no_milestones") %></p>
+  <%= empty_state(title: t("adm.projekts.phases.milestones.no_milestones_title"), description: t("adm.projekts.phases.milestones.no_milestones_description"), icon: "flag") %>
 <% end %>

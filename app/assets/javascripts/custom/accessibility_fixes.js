@@ -109,6 +109,11 @@
           $menuItem.prev().focus()
         }
 
+        if ( event.which === 27 ) { // escape
+          $menuItem.attr('aria-expanded', false)
+          $menuItem.children('ul.nav-flyout-block').hide()
+        }
+
         if ( event.which === 13 && $(document.activeElement).hasClass('js-access-top-level-menu') ) {
 
           if ( $(document.activeElement).find('.flyout-item-name > a').length ) {
@@ -215,6 +220,22 @@
           $('[data-navbar] button[aria-expanded="true"]').attr('aria-expanded', 'false');
           $li.closest('[data-navbar]').find('li.top-level-item > a').first().focus();
         }
+      });
+
+      // ESC key dismisses hovered menu submenus (WCAG 1.4.13)
+      $(document).on('keydown', function(event) {
+        if (event.which !== 27) return;
+
+        var $hoveredItems = $('.main-menu li.nav-element:hover');
+
+        if ($hoveredItems.length) {
+          event.preventDefault();
+          $hoveredItems.addClass('-esc-dismissed');
+        }
+      });
+
+      $('body').on('mouseleave', '.main-menu li.nav-element.-esc-dismissed', function() {
+        $(this).removeClass('-esc-dismissed');
       });
 
       $('body').on('keyup', '.js-access-flyout-menu-item', function(event) {

@@ -7,7 +7,7 @@ module Adm
       authorize [:adm, @proposal]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
         { name: @proposal.title }
@@ -17,6 +17,29 @@ module Adm
         resize_to_limit: [500, 500],
         format: "jpeg"
       )
+    end
+
+    def hide
+      authorize [:adm, @proposal], :hide?
+
+      @proposal.hide
+      Activity.log(current_user, :hide, @proposal)
+      @proposal.reload
+    end
+
+    def ignore_flag
+      authorize [:adm, @proposal], :ignore_flag?
+
+      @proposal.ignore_flag
+      @proposal.reload
+    end
+
+    def unhide
+      authorize [:adm, @proposal], :unhide?
+
+      @proposal.restore
+      Activity.log(current_user, :restore, @proposal)
+      @proposal.reload
     end
 
     def toggle_admin_accepted
@@ -52,7 +75,7 @@ module Adm
       end
 
       def find_proposal
-        @proposal = @projekt_phase.proposals.find(params[:id])
+        @proposal = @projekt_phase.proposals.with_hidden.find(params[:id])
       end
 
       def proposal_params

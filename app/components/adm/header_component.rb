@@ -1,17 +1,26 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil)
+  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
+    @narrow = narrow
+    @frontend_url = frontend_url
+  end
+
+  def before_render
+    @frontend_url ||= resolve_frontend_url
   end
 
   def breadcrumb_item(breadcrumb, is_last)
-    item = content_tag(:li,
-                class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
-                aria: (is_last ? { current: "page" } : {})
-    ) do
+    li_options = {
+      class: ["breadcrumb-item", ("active" if is_last)].compact.join(" "),
+      aria: (is_last ? { current: "page" } : {})
+    }
+    li_options[:id] = breadcrumb[:id] if breadcrumb[:id].present?
+
+    item = content_tag(:li, **li_options) do
       breadcrumb_item_content(breadcrumb, is_last)
     end
 
@@ -23,12 +32,44 @@ class Adm::HeaderComponent < ApplicationComponent
   end
 
   def breadcrumb_item_content(breadcrumb, is_last)
+    icon_html = breadcrumb[:icon].present? ? icon_tag(breadcrumb[:icon]) : "".html_safe
+    label = breadcrumb[:name]
+
+    label_html = tag.span(label, class: "breadcrumb-label")
+
     if is_last
-      tag.strong(breadcrumb[:name])
+      tag.span { icon_html + label_html }
     elsif breadcrumb[:url].blank?
-      tag.span(breadcrumb[:name])
+      tag.span { icon_html + label_html }
     else
-      link_to breadcrumb[:name], breadcrumb[:url]
+      link_to breadcrumb[:url] do
+        icon_html + label_html
+      end
     end
   end
+
+  private
+
+    def resolve_frontend_url
+      projekt_phase = controller.instance_variable_get(:@projekt_phase)
+      projekt = controller.instance_variable_get(:@projekt) || projekt_phase&.projekt
+
+      if projekt
+        base = "/#{projekt.page.slug}"
+        return "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" if projekt_phase
+        return base
+      end
+
+      landing_page = controller.instance_variable_get(:@landing_page)
+      return "/#{landing_page.slug}" if landing_page&.slug.present?
+
+      return helpers.deficiency_reports_path if controller.class.module_parent_name == "Adm::DeficiencyReports"
+      return helpers.ideas_path if controller.class.module_parent_name == "Adm::Ideas"
+
+      helpers.root_path
+    end
+
+    def icon_tag(icon_name)
+      content_tag(:span, icon_name, class: "material-symbols-outlined breadcrumb-icon", aria: { hidden: true })
+    end
 end

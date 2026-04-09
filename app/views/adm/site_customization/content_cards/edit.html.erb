@@ -6,7 +6,7 @@
   <%= form_with model: @content_card, url: [:adm, @content_card], data: { turbo: false } do |f| %>
     <div class="kern-row">
       <div class="kern-col-md-8 kern-col-xl-4">
-        <%= localized_fields_for(f, :title, :text_field) %>
+        <%= f.text_field :title, class: "kern-form-input__input", label: t("adm.site_customization.content_cards.title") %>
 
         <% @content_card_settings.each do |key, _value| %>
           <div class="kern-row mb-5">

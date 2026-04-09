@@ -11,9 +11,13 @@
     :date
   ) %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".select_managers"), hint: t(".select_managers_hint")) do %>
-    <%= render "adm/projekts/phases/officing_managers/managers",
-               projekt_phase: @projekt_phase,
-               officing_managers: @officing_managers %>
+  <% if @officing_managers.any? %>
+    <%= render Kern::FormFieldComponent.new(label: t(".select_managers"), hint: t(".select_managers_hint")) do %>
+      <%= render "adm/projekts/phases/officing_managers/managers",
+                 projekt_phase: @projekt_phase,
+                 officing_managers: @officing_managers %>
+    <% end %>
+  <% else %>
+    <%= empty_state(title: t(".no_managers_title"), description: t(".no_managers_description"), icon: "badge") %>
   <% end %>
 </div>

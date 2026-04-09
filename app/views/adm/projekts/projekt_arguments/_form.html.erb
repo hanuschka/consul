@@ -1,28 +1,28 @@
 <%= form_with model: @projekt_argument, url: url do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".type_label"), required: true) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".type_label"), hint: t(".type_hint"), required: true) do %>
     <%= f.collection_radio_buttons :pro, [[true, t(".pro")], [false, t(".contra")]], :first, :last %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), required: true) do %>
-    <%= f.text_field :name, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint"), required: true) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".party_label")) do %>
-    <%= f.text_field :party, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".party_label"), hint: t(".party_hint")) do %>
+    <%= f.text_field :party, label: false, placeholder: t(".party_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".position_label"), required: true) do %>
-    <%= f.text_field :position, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".position_label"), hint: t(".position_hint"), required: true) do %>
+    <%= f.text_field :position, label: false, placeholder: t(".position_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".note_label"), required: true) do %>
-    <%= f.text_area :note, label: false, rows: 6 %>
+  <%= render Kern::FormFieldComponent.new(label: t(".note_label"), hint: t(".note_hint"), required: true, stacked: true) do %>
+    <%= f.text_area :note, label: false, rows: 6, placeholder: t(".note_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".image_label")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".image_label"), hint: t(".image_hint")) do %>
     <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

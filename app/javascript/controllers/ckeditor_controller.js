@@ -200,6 +200,29 @@ export default class extends Controller {
           "htmlEmbed", "uploadFiles"
         ]
       }
+    } else if (this.toolbarValue === "email") {
+      return {
+        plugins: [
+          Essentials, Font, Paragraph, Heading,
+          List, Alignment,
+          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize,
+          ImageStyle, ImageTextAlternative, ImageToolbar, UploadFilesPlugin,
+          Link, Bold, Italic, Underline, RemoveFormat,
+          HorizontalLine, SourceEditing, GeneralHtmlSupport,
+          RemoveWrappingParagraphsPlugin
+        ],
+        toolbarControls: [
+          "bold", "italic", "underline", "|",
+          "link", "|",
+          "heading", "|",
+          "bulletedList", "numberedList", "|",
+          "alignment:left", "alignment:center", "alignment:right", "|",
+          "fontColor", "|",
+          "horizontalLine", "|",
+          "uploadFiles", "|",
+          "sourceEditing"
+        ]
+      }
     } else {
       return {
         plugins: [Essentials, Font, Paragraph, Bold, Italic, RemoveWrappingParagraphsPlugin],

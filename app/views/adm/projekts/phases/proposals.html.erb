@@ -15,6 +15,7 @@
               <th scope="col" class="kern-table__header"><%= t(".table.admin_accepted") %></th>
             <% end %>
             <th scope="col" class="kern-table__header"><%= t(".table.title") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:moderation_status, t(".table.moderation"), **@moderation_header_options) %>
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>
@@ -32,8 +33,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_proposals") %>
-    </div>
+    <%= empty_state(title: t(".no_proposals_title"), description: t(".no_proposals_description"), icon: "lightbulb") %>
   <% end %>
 </div>

@@ -1,5 +1,7 @@
 <div data-controller="kern--form--image"
      data-kern--form--image-auto-submit-value="<%= @auto_submit %>">
+  <%= hidden_field_tag :remove_image, "false", data: { kern__form__image_target: "destroy" } %>
+
   <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
        data-kern--form--image-target="inputWrapper">
     <%= @form.file_field @attribute,
@@ -10,16 +12,16 @@
     <% if image_errors.any? %>
       <p class="kern-error" role="alert">
         <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
-        <span class="kern-body"><%= image_errors.join(", ") %></span>
+        <span class="kern-body"><%= image_errors.join(". ") %></span>
       </p>
     <% end %>
   </div>
 
   <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
     <% if show_preview? %>
-      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" }) %>
+      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" }) %>
     <% else %>
-      <%= tag.img alt: @attribute.to_s.humanize, style: "width: 100%;", data: { kern__form__image_target: "previewImage" } %>
+      <%= tag.img alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" } %>
     <% end %>
   </div>
 

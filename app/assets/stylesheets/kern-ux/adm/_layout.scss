@@ -34,6 +34,11 @@ aside {
   border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
 }
 
+.adm-layout {
+  min-height: calc(100vh - var(--kern-adm-header-height));
+  align-items: stretch;
+}
+
 .main-container {
   border-top: 1px solid transparent;
 }
@@ -49,6 +54,16 @@ main {
 
   @media (min-width: map.get(breakpoints.$grid-breakpoints, xxl)) {
     max-width: 1250px;
+  }
+
+  &--form {
+    > * {
+      max-width: 680px;
+    }
+  }
+
+  &--full {
+    max-width: 100%;
   }
 }
 

@@ -1,11 +1,13 @@
 module Adm
   class IdeaManagersController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, IdeaManager]
       @pagy, @idea_managers = pagy(policy_scope([:adm, IdeaManager]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.idea_managers") }
       ]
     end
@@ -14,7 +16,7 @@ module Adm
       authorize [:adm, IdeaManager], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.idea_managers"), url: adm_idea_managers_path },
         { name: t(".title") }
       ]
@@ -30,6 +32,7 @@ module Adm
       authorize [:adm, IdeaManager], :index?
       params[:role] = "idea_manager"
       @users = User.search(params[:search]).where.missing(:idea_manager).limit(4)
+      check_pending_for_search
     end
   end
 end

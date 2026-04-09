@@ -105,7 +105,7 @@ module Adm
           ]
         else
           [
-            { name: t("adm.menu.items.application") },
+            { name: t("adm.menu.items.application"), icon: "desktop_windows" },
             { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
             { name: title }
           ]

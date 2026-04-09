@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar"]
+  static targets = ["panel"]
 
   connect() {
     this.isOpen = false
@@ -16,15 +16,15 @@ export default class extends Controller {
   }
 
   open() {
-    this.sidebarTarget.classList.add("adm-hint__sidebar--open")
-    this.sidebarTarget.setAttribute("aria-hidden", "false")
+    this.panelTarget.classList.add("adm-hint__panel--open")
+    this.panelTarget.setAttribute("aria-hidden", "false")
     this.element.querySelector(".adm-hint__toggle").setAttribute("aria-expanded", "true")
     this.isOpen = true
   }
 
   close() {
-    this.sidebarTarget.classList.remove("adm-hint__sidebar--open")
-    this.sidebarTarget.setAttribute("aria-hidden", "true")
+    this.panelTarget.classList.remove("adm-hint__panel--open")
+    this.panelTarget.setAttribute("aria-hidden", "true")
     this.element.querySelector(".adm-hint__toggle").setAttribute("aria-expanded", "false")
     this.isOpen = false
   }

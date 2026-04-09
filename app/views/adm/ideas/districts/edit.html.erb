@@ -1,18 +1,16 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @district.name, breadcrumbs: @breadcrumbs, back_button_url: adm_ideas_districts_path) %>
 
 <div class="kern-container my-5">
-  <%= link_to t(".back"), adm_ideas_districts_path, class: "kern-link mb-4 inline-block" %>
-
-  <h3 class="text-xl font-bold mb-4"><%= @district.name %></h3>
 
   <%= form_with model: @district, url: adm_ideas_district_path(@district), method: :put do |f| %>
     <div class="mb-4">
-      <%= render Kern::FormFieldComponent.new(label: RegisteredAddress::District.human_attribute_name(:default_idea_officer)) do %>
-        <%= f.collection_select :idea_officer_id, Idea::Officer.all, :id, :name,
+      <%= render Kern::FormFieldComponent.new(label: ::RegisteredAddress::District.human_attribute_name(:default_idea_officer), inline: true, hint: t(".default_idea_officer_hint")) do %>
+        <%= f.select :idea_officer_id,
+          options_from_collection_for_select(Idea::Officer.all, :id, :name, @district.idea_officer_id),
           { include_blank: t(".no_officer") },
-          { class: "kern-select" } %>
+          { label: false } %>
       <% end %>
     </div>
 

@@ -14,6 +14,7 @@ namespace :admin do
       get :map
       patch :update_map
       get :proposals
+      get :comments
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -40,14 +41,14 @@ namespace :admin do
       get :projekt_point_of_interest_categories
       post :send_notifications
       get :map_resources_overview
-      get    :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#index"
-      post   :user_resource_criteria,                to: "projekt_phases/user_resource_criteria#create",
+      get    :ai_user_flow,                to: "projekt_phases/user_resource_criteria#index"
+      post   :ai_user_flow,                to: "projekt_phases/user_resource_criteria#create",
 as: :create_user_resource_criterion
-      patch  "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
+      patch  "ai_user_flow/:criterion_id", to: "projekt_phases/user_resource_criteria#update",
 as: :update_user_resource_criterion
-      delete "user_resource_criteria/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
+      delete "ai_user_flow/:criterion_id", to: "projekt_phases/user_resource_criteria#destroy",
 as: :destroy_user_resource_criterion
-      patch  :reorder_user_resource_criteria,        to: "projekt_phases/user_resource_criteria#reorder"
+      patch  :reorder_ai_user_flow,        to: "projekt_phases/user_resource_criteria#reorder"
     end
 
     resources :formular, only: [] do
@@ -355,6 +356,7 @@ as: :destroy_user_resource_criterion
       post :regenerate_token
     end
   end
+  resources :api_request_logs, only: [:index, :show]
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom
@@ -504,7 +506,12 @@ as: :destroy_user_resource_criterion
       resources :cards, except: [:show], as: :widget_cards
     end
     resources :images, only: [:index, :update, :destroy]
-    resources :content_blocks, except: [:show]
+    resources :content_blocks, except: [:show] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
     delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",
 as: "delete_heading_content_block"
     get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block",

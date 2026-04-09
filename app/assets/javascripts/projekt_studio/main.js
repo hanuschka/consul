@@ -21,26 +21,12 @@ window.ProjektStudio = {
     ProjektStudio.BuildWithPrompt.initialize()
 
     // Initialize ContentBlock submodules
-    ProjektStudio.ContentBlockTemplateSelector.initialize()
     ProjektStudio.ContentBlock.Render.initialize()
     ProjektStudio.ContentBlock.DragDrop.initialize()
-    ProjektStudio.ContentBlock.Crud.initialize()
-    ProjektStudio.ContentBlock.ChangeHistory.initialize()
-    ProjektStudio.ContentBlock.CKEditorMode.initialize()
     ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 
-    ProjektStudio.ContentBlock.EditModeSwitcher.initialize()
-    ProjektStudio.ContentBlock.EditModeButtons.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()
-    ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
-    ProjektStudio.ContentBlock.AiEditMode.initialize()
-    ProjektStudio.ContentBlock.CodeEditMode.initialize()
-    ProjektStudio.ContentBlock.Copy.initialize()
+    App.Studio.initContentBlockModules()
+
     ProjektStudio.SavedContentBlocks.initialize()
     ProjektStudio.FileImport.initialize()
     ProjektStudio.ToggleBackground.initialize()

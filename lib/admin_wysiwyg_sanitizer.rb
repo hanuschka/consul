@@ -42,6 +42,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-pswp-width data-pswp-height
       data-turbolinks
       data-box-shadow
+      data-glightbox
       url
     ]
   end

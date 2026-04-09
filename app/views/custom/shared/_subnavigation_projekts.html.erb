@@ -5,9 +5,7 @@
   <% projekt_children_to_show_in_menu = Projekt.where(id: projekt_children_to_show_in_menu.map(&:id)).sort_by_order_number.includes(:projekt_settings, page: [:translations]) %>
 
   <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
-      <%= "tabindex=0" if placement == "desktop" %>
-      aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'
-      <%= "aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
+      <%= "aria-haspopup=true aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
       <%= "accesskey=#{accesskey}" if accesskey < 9 && placement == "desktop" %> >
 
     <div class='flyout-item-name projekt-name'>
@@ -15,11 +13,11 @@
     </div>
 
     <% if placement == 'mobile' && projekt_children_to_show_in_menu.any? %>
-      <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
-        tabindex="0"
+      <button class='nav-toggle-arrow js-toggle-mobile-flyout-item'
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
+        aria-expanded="false"
       >
-      </div>
+      </button>
     <% end %>
 
     <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: projekt_children_to_show_in_menu, placement: placement } if projekt_children_to_show_in_menu.any? %>

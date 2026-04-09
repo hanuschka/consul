@@ -14,11 +14,16 @@ de:
           success: Meilenstein wurde erfolgreich gelöscht.
         form:
           status_label: Aktueller Status (optional)
+          status_hint_html: "Ordnen Sie dem Meilenstein einen Status zu, der den aktuellen Bearbeitungsstand signalisiert – z. B. 'In Planung', 'In Umsetzung' oder 'Abgeschlossen'. Der Status wird im Frontend neben dem Meilenstein angezeigt. %{manage_link}"
           no_statuses: Es wurde noch kein Status für diese Vorschläge definiert
           manage_statuses: Status verwalten
           description_label: Beschreibung
-          publication_date_label: Datum der Veröffentlichung
-          custom_date_label: Benutzerdefiniertes Datum
-          custom_date_hint: Optionaler Text, der anstelle des Veröffentlichungsdatums angezeigt wird.
+          description_hint: "Ausführliche Beschreibung des Meilensteins, die im Frontend angezeigt wird. Erläutern Sie, was in diesem Schritt erreicht wurde oder geplant ist. Geben Sie relevante Hintergründe, Entscheidungen oder nächste Schritte an. Der Text unterstützt Rich-Text-Formatierung mit Links und Hervorhebungen."
+          publication_date_label: Veröffentlichungsdatum
+          publication_date_hint: "Legt fest, ab wann der Meilenstein im Frontend sichtbar ist und bestimmt die chronologische Einordnung in der Zeitleiste. Meilensteine werden nach diesem Datum sortiert angezeigt. Verwenden Sie das tatsächliche Datum des Ereignisses oder den geplanten Zeitpunkt der Veröffentlichung."
+          custom_date_label: Anzeigedatum (optional)
+          custom_date_hint: "Optionaler Freitext, der im Frontend anstelle des Veröffentlichungsdatums angezeigt wird. Geeignet für ungenaue Zeitangaben wie 'Sommer 2026', 'Q3 2026' oder 'Nach Abschluss der Planungsphase'. Wenn leer, wird automatisch das oben eingetragene Veröffentlichungsdatum im Standardformat angezeigt."
+          custom_date_placeholder: "z. B. Sommer 2026"
           image_label: Titelbild
+          image_hint: "Optionales Bild, das im Frontend neben dem Meilenstein angezeigt wird. Verwenden Sie ein aussagekräftiges Bild im Querformat, das den Fortschritt oder das Ergebnis dieses Meilensteins visuell unterstützt. Empfohlene Mindestbreite: 800 Pixel. Unterstützte Formate: JPG, PNG."
           submit: Speichern

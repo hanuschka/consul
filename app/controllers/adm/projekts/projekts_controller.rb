@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
 
   def index
     authorize [:adm, :projekts, Projekt]
@@ -11,7 +11,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @end_date_header_options = { sort: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts") }
+      { name: t("adm.menu.items.projekts"), icon: "folder" }
     ]
   end
 
@@ -19,7 +19,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, Projekt], :create?
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
   end
@@ -38,8 +38,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def details
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
     ]
   end
@@ -48,8 +48,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -64,8 +64,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -73,8 +73,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def map
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -88,8 +88,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: @projekt.name },
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -118,6 +118,22 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.destroy!
 
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
+  end
+
+  def notify_reviewers
+    authorize [:adm, :projekts, @projekt], :update?
+
+    NotificationServices::NewProjektNotifier.call(@projekt)
+
+    redirect_to page_path(@projekt.page.slug), notice: t(".success")
+  end
+
+  def toggle_hide_content_background
+    authorize [:adm, :projekts, @projekt], :update?
+
+    @projekt.update!(show_content_background: !@projekt.show_content_background)
+
+    render json: { show_content_background: @projekt.show_content_background }
   end
 
   def toggle_activated

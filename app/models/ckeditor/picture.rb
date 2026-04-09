@@ -6,15 +6,13 @@ class Ckeditor::Picture < Ckeditor::Asset
                            file_size: { less_than: MAX_FILE_SIZE }
 
   def url_content(editor_id: nil)
-    file_path = if data_content_type == "image/gif"
-                  rails_blob_url(storage_data, only_path: true)
-                else
-                  rails_representation_url(
-                    storage_data.variant(resize_to_limit: [1500, 1500]), only_path: true
-                  )
-                end
-
-    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
+    if data_content_type == "image/gif"
+      blob_asset_path(storage_data.blob.key)
+    elsif absolute_path?(editor_id)
+      blob_variant_url(storage_data.blob.key, host: Setting["url"], w: 1500, h: 2000)
+    else
+      blob_variant_path(storage_data.blob.key, w: 1500, h: 2000)
+    end
   end
 
   def url_thumb(editor_id: nil)

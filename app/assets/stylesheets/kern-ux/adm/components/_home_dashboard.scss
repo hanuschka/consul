@@ -136,6 +136,11 @@
     font-weight: 700;
     line-height: 1;
     color: var(--kern-typography-color-default, #111);
+
+    // Shrink font for large numbers (6+ characters) so they don't overflow the card
+    &--compact {
+      font-size: 1.75rem;
+    }
   }
 
   &__label {

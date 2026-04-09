@@ -39,6 +39,7 @@ namespace :adm do
         get :poll_questions
         get :formular
         get :formular_answers
+        get :formular_follow_up_emails
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions

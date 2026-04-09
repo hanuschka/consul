@@ -218,8 +218,14 @@ class Mailer < ApplicationMailer
       manage_subscriptions_token(user)
     end
 
-    mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
-      f.html { render(layout: "newsletter_mail")}
+    if Setting["advanced_newsletter"].present?
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render(layout: "newsletter_mail") }
+      end
+    else
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render("mailer/newsletter_simple", layout: "mailer") }
+      end
     end
   end
 
@@ -262,6 +268,23 @@ class Mailer < ApplicationMailer
       mail_with_custom_template(nil, {
         "username" => @user.username
       }, to: @email_to, default_subject: t("mailers.manual_verification_confirmation.subject"))
+    end
+  end
+
+  def formular_answer_created(formular_answer)
+    @formular_answer = formular_answer
+    @author = User.find_by(id: formular_answer.submitter_id)
+    return if @author.blank?
+
+    @email_to = @author.email
+    @projekt_phase = formular_answer.formular.projekt_phase
+
+    with_user(@author) do
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @author.username,
+        "projekt_title" => @projekt_phase.projekt.page.title,
+        "phase_title" => @projekt_phase.title
+      }, to: @email_to, default_subject: t("mailers.formular_answer_created.subject"))
     end
   end
 

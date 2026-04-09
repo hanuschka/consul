@@ -28,10 +28,7 @@ de:
             „Maximal 500 Zeichen".
           kind_label: Feldtyp
           kind_hint: >
-            Bestimmt die Art des Eingabefelds im Frontend – z. B. Textfeld, Auswahlmenü, Checkbox oder
-            Datei-Upload. Der Feldtyp legt fest, wie Nutzer ihre Eingabe machen können und welche Daten
-            erfasst werden. Achtung: Der Feldtyp kann nach dem Erstellen nicht mehr geändert werden, da die
-            gespeicherten Daten vom Typ abhängen.
+            Bestimmt die Art des Eingabefelds im Frontend — z.B. Textfeld, Auswahlmenü, Checkbox oder Datei-Upload. Der Feldtyp legt fest, wie Nutzer ihre Eingabe machen und welche Daten erfasst werden. Der Typ „Beschreibung" erzeugt kein Eingabefeld, sondern dient als visueller Trenner, um das Formular in thematische Abschnitte zu gliedern. Achtung: Der Feldtyp kann nach dem Erstellen nicht mehr geändert werden.
           drop_down_options_label: Auswahloptionen
           drop_down_options_hint: >
             Geben Sie die Auswahlmöglichkeiten als kommagetrennte Liste ein – z. B. „Option A, Option B,
@@ -50,11 +47,13 @@ de:
             an den Nutzer gesendet wird. Wählen Sie einen klaren, informativen Betreff – z. B. „Ihre Eingabe
             wurde erfolgreich übermittelt" oder „Bestätigung Ihres Beitrags". Der Betreff erscheint in der
             Betreffzeile der E-Mail.
+          email_for_confirmation_subject_placeholder: z.B. Vielen Dank für Ihre Einsendung
           email_for_confirmation_text_label: Text der Bestätigungsmail
           email_for_confirmation_text_hint: >
             Verfassen Sie den Inhalt der Bestätigungsmail, die Nutzer nach dem Absenden des Formulars erhalten.
             Bedanken Sie sich für die Teilnahme und geben Sie ggf. Hinweise zum weiteren Verlauf – z. B. wann
             mit einer Rückmeldung zu rechnen ist. Der Text wird als Fließtext in der E-Mail dargestellt.
+          email_for_confirmation_text_placeholder: Ihre Nachricht an den Absender...
           required_label: Pflichtfeld
           required_hint: >
             Legt fest, ob dieses Formularfeld vor dem Absenden ausgefüllt werden muss. Pflichtfelder werden im

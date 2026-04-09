@@ -1,185 +1,208 @@
 <%= content_for :title, @deficiency_report.title %>
 
-<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_root_path) %>
 
 <%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
 
-<article class="kern-container mb-5">
-  <p class="kern-body kern-body--small mb-1">
-    <strong><%= t(".admin_accepted_status") %>:</strong>
-    <%= @deficiency_report.admin_accepted ? t(".accepted") : t(".not_accepted") %>
-  </p>
-  <p class="kern-body kern-body--small mb-1">
-    <strong><%= t(".status") %>:</strong>
-    <%= @deficiency_report.status&.title %>
-  </p>
-  <% if @deficiency_report.hidden_at.present? %>
-    <p class="kern-body kern-body--small mb-3">
-      <strong><%= t(".hidden_at") %>:</strong> <%= l(@deficiency_report.hidden_at, format: :long) %>
-    </p>
-  <% end %>
-
-  <p class="kern-body kern-body--small mb-3">
-    <strong><%= t(".author") %>:</strong>
-    <%= @deficiency_report.author.username %>
-  </p>
-
-  <p class="kern-body kern-body--small mb-3">
-    <strong><%= t(".created_at") %>:</strong> <%= l(@deficiency_report.created_at, format: :long) %>
-    <strong><%= t(".updated_at") %>:</strong> <%= l(@deficiency_report.updated_at, format: :long) %>
-  </p>
-
-  <% if @deficiency_report.approximated_address.present? %>
-    <p class="kern-body mb-3">
-      <strong><%= t(".address") %>:</strong>
-      <%= @deficiency_report.approximated_address %>
-    </p>
-  <% end %>
-
-  <p class="kern-body kern-body--small">
-    <%= link_to t(".view_on_site"), deficiency_report_path(@deficiency_report), target: "_blank", data: { turbo: false } %>
-  </p>
-  <p class="kern-body kern-body--small mb-3">
-    <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> <%= @deficiency_report.cached_votes_up %>
-    · <span class="material-symbols-outlined" aria-hidden="true">comment</span> <%= @deficiency_report.comments_count %>
-  </p>
-
-  <%= turbo_frame_tag "deficiency_report_content" do %>
-
-    <div class="d-flex gap-2 mb-4 justify-content-end">
-      <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "deficiency_report_content" }) %>
-      <%= kern_link_button(adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
-            text: t(".download_pdf"), icon: "download", style: :secondary,
+<div class="kern-container">
+  <div class="d-flex align-items-center justify-content-end gap-3 mt-1 mb-4">
+    <span class="adm-detail-meta__item">
+      <%= link_to deficiency_report_path(@deficiency_report), target: "_blank", rel: "noopener" do %>
+        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">open_in_new</span>
+        <%= t(".view_on_site") %>
+      <% end %>
+    </span>
+    <span class="adm-detail-meta__item">
+      <%= link_to adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
             data: @deficiency_report.map_location.present? ? {
               turbo: false,
               controller: "map-screenshot",
               map_screenshot_container_value: dom_id(@deficiency_report, "map"),
               action: "click->map-screenshot#capture"
-            } : { turbo: false }) %>
-    </div>
+            } : { turbo: false } do %>
+        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">download</span>
+        <%= t(".download_pdf") %>
+      <% end %>
+    </span>
+  </div>
+</div>
 
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".title_label") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @deficiency_report.title %></p>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
+<div class="kern-container mb-5">
 
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".description_label") %></strong>
+  <%# === Section 1: Meldung === %>
+  <section class="adm-detail-section">
+    <%= turbo_frame_tag "deficiency_report_content" do %>
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t(".section_content") %></h2>
+        <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+              text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" }) %>
       </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <div class="kern-body"><%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %></div>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
 
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".image_label") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <% if @image_url.present? %>
-          <%= image_tag(@image_url, style: "width: 100%;") %>
-        <% end %>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
-
-    <% if @deficiency_report.documents.any? %>
-      <div class="kern-row mb-3">
-        <div class="kern-col-12 kern-col-md-4">
-          <strong class="kern-body"><%= t(".documents_label") %></strong>
+      <%# === Title + Description in card === %>
+      <div class="adm-content-card mb-4">
+        <div class="adm-content-card__body">
+          <h3 class="adm-detail-content-title mb-2"><%= @deficiency_report.title %></h3>
+          <div class="adm-detail-description">
+            <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %>
+          </div>
         </div>
-        <div class="kern-col-12 kern-col-md-6">
-          <ul class="kern-body">
-            <% @deficiency_report.documents.each do |document| %>
-              <li><%= link_to document.title, document.attachment, target: :blank %></li>
+      </div>
+
+      <%# === Image + Map === %>
+      <% has_image = @image_url.present? %>
+      <% has_map = @deficiency_report.map_location.present? %>
+
+      <% if has_image || has_map %>
+        <div class="adm-detail-media-grid <%= (has_image && has_map) ? 'adm-detail-media-grid--two' : '' %> mb-4">
+          <% if has_image %>
+            <div class="adm-detail-media-card">
+              <div class="adm-detail-media-card__label">
+                <span class="material-symbols-outlined" aria-hidden="true">image</span>
+                <%= t(".image_label") %>
+              </div>
+              <%= image_tag(@image_url, style: "width: 100%;") %>
+            </div>
+          <% end %>
+
+          <% if has_map %>
+            <div class="adm-detail-media-card">
+              <div class="adm-detail-media-card__label">
+                <span class="material-symbols-outlined" aria-hidden="true">map</span>
+                <%= t(".map_label") %>
+              </div>
+              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# === Additional Fields Table === %>
+      <%
+        additional_rows = []
+
+        additional_rows << { label: t(".author"), value: @deficiency_report.author.username }
+        additional_rows << { label: t(".created_at"), value: l(@deficiency_report.created_at, format: :long) }
+
+        if @deficiency_report.approximated_address.present?
+          additional_rows << { label: t(".address"), value: @deficiency_report.approximated_address }
+        end
+
+        if @deficiency_report.on_behalf_of.present?
+          additional_rows << { label: t(".on_behalf_of_label"), value: @deficiency_report.on_behalf_of }
+        end
+
+        if @deficiency_report.category.present?
+          category_html = capture do %>
+            <span class="adm-detail-pill" style="background: color-mix(in srgb, <%= @deficiency_report.category.color %> 15%, transparent); color: <%= @deficiency_report.category.color %>;">
+              <% if @deficiency_report.category.icon.present? %>
+                <i class="fas fa-<%= @deficiency_report.category.icon %>"></i>
+              <% end %>
+              <%= @deficiency_report.category.name %>
+            </span>
+          <% end
+          additional_rows << { label: t(".category"), value: category_html }
+        end
+
+        if @deficiency_report.documents.any?
+          docs_html = capture do %>
+            <ul class="mb-0">
+              <% @deficiency_report.documents.each do |document| %>
+                <li>
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 16px; vertical-align: text-bottom;">attach_file</span>
+                  <%= link_to document.title, document.attachment, target: :blank %>
+                </li>
+              <% end %>
+            </ul>
+          <% end
+          additional_rows << { label: t(".documents_label"), value: docs_html }
+        end
+
+        if @deficiency_report.video_url.present?
+          additional_rows << { label: t(".video_url"), value: link_to(@deficiency_report.video_url, @deficiency_report.video_url, target: "_blank", rel: "noopener") }
+        end
+
+        if Setting["deficiency_reports.allow_voting"].present?
+          additional_rows << { label: t(".votes"), value: @deficiency_report.cached_votes_up }
+        end
+
+        if Setting["deficiency_reports.enable_comments"].present?
+          additional_rows << { label: t(".comments"), value: @deficiency_report.comments_count }
+        end
+      %>
+
+      <% if additional_rows.any? %>
+        <div class="adm-detail-table">
+          <% additional_rows.each do |row| %>
+            <div class="adm-detail-table__row">
+              <div class="adm-detail-table__label"><%= row[:label] %></div>
+              <div class="adm-detail-table__value"><%= row[:value] %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+    <% end %>
+  </section>
+
+  <%# === Section 2: Verwaltung === %>
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".section_admin") %></h2>
+
+    <%= render Kern::FormFieldComponent.new(label: t("adm.deficiency_reports.deficiency_reports.administer.status"), hint: t("adm.deficiency_reports.deficiency_reports.administer.status_hint")) do %>
+      <%= render "adm/deficiency_reports/deficiency_reports/administer/status", deficiency_report: @deficiency_report %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t("adm.deficiency_reports.deficiency_reports.administer.responsible"), hint: t("adm.deficiency_reports.deficiency_reports.administer.responsible_hint")) do %>
+      <%= render "adm/deficiency_reports/deficiency_reports/administer/responsible", deficiency_report: @deficiency_report %>
+    <% end %>
+
+    <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
+      <div class="adm-detail-table">
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t(".admin_accepted_status") %></div>
+          <div class="adm-detail-table__value">
+            <% if @deficiency_report.admin_accepted %>
+              <span class="kern-badge kern-badge--success"><%= t(".accepted") %></span>
+            <% else %>
+              <span class="kern-badge kern-badge--info"><%= t(".not_accepted") %></span>
             <% end %>
-          </ul>
+          </div>
         </div>
       </div>
-      <hr class="kern-divider mb-3">
+    <% end %>
+  </section>
+
+  <%# === Section 3: Offizielle Antwort === %>
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".official_answer") %></h2>
+
+    <% if DeficiencyReport::OfficialAnswerTemplate.any? %>
+      <%= render Kern::FormFieldComponent.new(label: t(".answer_template_label"), hint: t(".answer_template_hint"), divider: false) do %>
+        <select class="kern-form-select__select" style="width: 100%;"
+          onchange="if(this.value) { document.querySelectorAll('.ck-editor__editable').forEach(function(editor) { if(editor.ckeditorInstance) editor.ckeditorInstance.setData(this.value) }.bind(this)) }">
+          <option value=""><%= t(".answer_template_prompt") %></option>
+          <% DeficiencyReport::OfficialAnswerTemplate.all.each do |template| %>
+            <option value="<%= j(template.text.to_s) %>"><%= template.title %></option>
+          <% end %>
+        </select>
+      <% end %>
     <% end %>
 
-    <% if @deficiency_report.video_url.present? %>
-      <div class="kern-row mb-3">
-        <div class="kern-col-12 kern-col-md-4">
-          <strong class="kern-body"><%= t(".video_url") %></strong>
-        </div>
-        <div class="kern-col-12 kern-col-md-6">
-          <p class="kern-body"><%= link_to @deficiency_report.video_url, @deficiency_report.video_url, target: "_blank" %></p>
-        </div>
-      </div>
-      <hr class="kern-divider mb-3">
-    <% end %>
+    <%= render Adm::AttributeEditorComponent.new(
+      @deficiency_report,
+      :official_answer,
+      :rich_text,
+      path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+      label: t(".official_answer"),
+      description: t(".official_answer_hint"),
+      hide_label: true,
+      divider: false
+    ) %>
+  </section>
 
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".on_behalf_of_label") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @deficiency_report.on_behalf_of %></p>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
+  <%# === Section 4: Interne Notizen === %>
+  <section class="adm-detail-section">
+    <%= render "adm/memos/memos", memoable: @deficiency_report %>
+  </section>
 
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".category") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <% if @deficiency_report.category.present? %>
-          <span class="map-feature-pill map-feature-pill--sentiment"
-                data-color="<%= @deficiency_report.category.color %>"
-                style="--pill-color:<%= @deficiency_report.category.color %>;--pill-text-color:<%= pick_text_color(@deficiency_report.category.color) %>">
-            <% if @deficiency_report.category.icon.present? %>
-              <i class="fas fa-<%= @deficiency_report.category.icon %>"></i>
-            <% end %>
-            <%= @deficiency_report.category.name %>
-          </span>
-        <% end %>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
-
-    <div class="kern-row mb-3">
-      <div class="kern-col-12 kern-col-md-4">
-        <strong class="kern-body"><%= t(".responsible_label") %></strong>
-      </div>
-      <div class="kern-col-12 kern-col-md-6">
-        <p class="kern-body"><%= @deficiency_report.responsible&.name %></p>
-      </div>
-    </div>
-    <hr class="kern-divider mb-3">
-
-    <% if @deficiency_report.map_location.present? %>
-      <div class="kern-row mb-3">
-        <div class="kern-col-12 kern-col-md-4">
-          <strong class="kern-body"><%= t(".map_label") %></strong>
-        </div>
-        <div class="kern-col-12 kern-col-md-6">
-          <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location) %>
-        </div>
-      </div>
-      <hr class="kern-divider mb-3">
-    <% end %>
-
-  <% end %>
-
-  <%= render Adm::AttributeEditorComponent.new(
-    @deficiency_report,
-    :official_answer,
-    :rich_text,
-    path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-    label: t(".official_answer"),
-    description: t(".official_answer_hint")
-  ) %>
-
-  <%= render "adm/memos/memos", memoable: @deficiency_report %>
-</article>
+</div>

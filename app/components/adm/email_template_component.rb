@@ -14,6 +14,10 @@ class Adm::EmailTemplateComponent < ApplicationComponent
     I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description")
   end
 
+  def recipient
+    I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.recipient", default: nil)
+  end
+
   def variables
     @email_template.registered_variables
   end

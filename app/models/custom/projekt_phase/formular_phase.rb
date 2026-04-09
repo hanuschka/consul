@@ -17,7 +17,7 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions formular general_settings formular_answers]
+    %w[duration naming restrictions formular general_settings formular_answers formular_follow_up_emails email_templates]
   end
 
   def settings_in_tabs
@@ -28,6 +28,12 @@ class ProjektPhase::FormularPhase < ProjektPhase
     {
       "option.general.primary_formular_cutoff_date" => :date_field
     }
+  end
+
+  def customizable_email_templates
+    [
+      ["Mailer", "formular_answer_created"]
+    ]
   end
 
   def safe_to_destroy?

@@ -37,6 +37,9 @@ namespace :adm do
   end
   # application
 
+  # modules
+  resource :modules, controller: "modules", only: [:show]
+
   # profiles
   resource :role_assignment, only: [] do
     post :create
@@ -102,6 +105,8 @@ namespace :adm do
 
   resource :statistics, controller: "statistics", only: [:show]
   resource :apps, controller: "apps", only: [:show]
+  resource :connection, controller: "connection", only: [:show]
+  get "connect", to: "connection#show"
 
   resources :ai_settings, only: [:index, :update] do
     patch :update_api_key, on: :collection

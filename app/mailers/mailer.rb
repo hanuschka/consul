@@ -218,8 +218,14 @@ class Mailer < ApplicationMailer
       manage_subscriptions_token(user)
     end
 
-    mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
-      f.html { render(layout: "newsletter_mail")}
+    if Setting["advanced_newsletter"].present?
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render(layout: "newsletter_mail") }
+      end
+    else
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render("mailer/newsletter_simple", layout: "mailer") }
+      end
     end
   end
 

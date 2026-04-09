@@ -51,6 +51,7 @@ de:
         apps: Apps
         developer: Bereich für Entwickler
         developer_subitems:
+          connection: DT-Verbindung
           ai_settings: KI-Einstellungen
           external_api_keys: API-Schlüssel
           api_clients: API-Clients

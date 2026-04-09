@@ -1,7 +1,7 @@
 module Adm
   module SiteCustomization
     class PagesController < Adm::BaseController
-      SLUGS = %w[privacy conditions impressum].freeze
+      SLUGS = %w[privacy conditions impressum contact_us].freeze
 
       def edit
         @page = find_or_create_page(params[:slug])

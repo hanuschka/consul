@@ -38,7 +38,7 @@ module Adm
 
         def content_card_params
           params.require(:site_customization_content_card).permit(
-           :active,
+           :active, :title,
            *::SiteCustomization::ContentCard::DEFAULT_SETTINGS.map { |_k, v| v.keys }.flatten.uniq,
            translation_params(::SiteCustomization::ContentCard)
           )

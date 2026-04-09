@@ -3,6 +3,15 @@
   <td class="kern-table__cell"><%= officer.email %></td>
   <td class="kern-table__cell">
     <% if officer.persisted? %>
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        officer,
+        :manage_all?,
+        path: toggle_manage_all_adm_deficiency_reports_officer_path(officer)
+      ) %>
+    <% end %>
+  </td>
+  <td class="kern-table__cell">
+    <% if officer.persisted? %>
       <%= render Kern::Table::ActionsComponent.new do |actions| %>
         <% actions.with_action(
           label: t("shared.delete"),

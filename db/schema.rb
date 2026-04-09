@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_09_190803) do
+ActiveRecord::Schema.define(version: 2026_04_09_211203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -780,6 +780,7 @@ ActiveRecord::Schema.define(version: 2026_04_09_190803) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
   end
 
@@ -1122,6 +1123,7 @@ ActiveRecord::Schema.define(version: 2026_04_09_190803) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_idea_officers_on_user_id"
   end
 

@@ -5,6 +5,7 @@ de:
       menu:
         aria_label: Moderationsmenü
         title: Moderation
+        moderators: Team
         users: Nutzer blockieren
         proposals: Vorschläge
         budget_investments: Vorschläge (Budget)

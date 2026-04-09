@@ -51,15 +51,6 @@ namespace :adm do
   resources :administrators, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
-  resources :deficiency_report_managers, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
-  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy] do
-    post :search, on: :collection
-  end
-  resources :idea_managers, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
   resources :moderators, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end

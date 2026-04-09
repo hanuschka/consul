@@ -34,18 +34,11 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def profiles_subitems
       [
-        # Plattformweit
         { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
-        { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },
-        { label: t("adm.menu.items.profiles_subitems.officing_managers"), path: adm_officing_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path },
-
-        # Bereichsspezifisch
-        { label: t("adm.menu.items.profiles_subitems.idea_managers"), path: adm_idea_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.deficiency_report_managers"), path: adm_deficiency_report_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path }
+        { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]
     end
+
     def developer_subitems
       [
         { label: t("adm.menu.items.developer_subitems.ai_settings"),        path: adm_ai_settings_path,        active_prefix: "/adm/ai_settings" },

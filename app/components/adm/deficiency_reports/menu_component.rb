@@ -5,8 +5,8 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
 
   def menu_items
     [
-      { label: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem", path: adm_deficiency_reports_root_path },
       { label: t("adm.deficiency_reports.menu.items.officers"), icon: "badge", path: adm_deficiency_reports_officers_path },
+      { label: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem", path: adm_deficiency_reports_root_path },
       { label: t("adm.deficiency_reports.menu.items.categories"), icon: "category", path: adm_deficiency_reports_categories_path },
       { label: t("adm.deficiency_reports.menu.items.statuses"), icon: "flag", path: adm_deficiency_reports_statuses_path },
       { label: t("adm.deficiency_reports.menu.items.settings"), icon: "settings", path: adm_deficiency_reports_settings_path },

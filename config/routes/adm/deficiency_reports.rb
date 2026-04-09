@@ -4,6 +4,7 @@ namespace :adm do
 
     resources :officers, only: [:index, :create, :destroy] do
       post :search, on: :collection
+      patch :toggle_manage_all, on: :member
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do

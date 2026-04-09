@@ -1,9 +1,21 @@
 de:
   adm:
     deficiency_reports:
+      home:
+        title: Willkommen im Mängelmelder
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          open: Offen
+          closed: Geschlossen
+        quick_links:
+          all: Alle Meldungen
+          open: Offene Meldungen
+          closed: Geschlossene Meldungen
       menu:
         aria_label: Mängelmelder Navigation
         items:
+          home: Home
           officers: Team
           deficiency_reports: Meldungen
           categories: Kategorien

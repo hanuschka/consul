@@ -1,9 +1,21 @@
 de:
   adm:
     ideas:
+      home:
+        title: Willkommen im Ideenmanagement
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          active: Aktiv
+          archived: Archiviert
+        quick_links:
+          all: Alle Ideen
+          active: Aktive Ideen
+          pending: Ausstehende Ideen
       menu:
         aria_label: Ideen Navigation
         items:
+          home: Home
           officers: Team
           ideas: Ideen
           categories: Kategorien

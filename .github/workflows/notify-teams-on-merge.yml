@@ -23,24 +23,27 @@ jobs:
           COMMIT_AUTHOR: ${{ github.actor }}
           REPO: ${{ github.repository }}
         run: |
-          # Access Token via Refresh Token holen
-          TOKEN=$(curl -s -X POST \
+          # Access Token holen
+          TOKEN_RESPONSE=$(curl -s -X POST \
             "https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token" \
             -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&scope=Chat.ReadWrite+offline_access" \
-            | jq -r '.access_token')
+            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&scope=Chat.ReadWrite+offline_access")
 
-          # Nachricht
+          echo "Token response: $TOKEN_RESPONSE"
+
+          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.access_token')
+          echo "Token length: ${#TOKEN}"
+
           MESSAGE="✅ <b>Merge in new-connection</b><br><br><b>Repo:</b> ${REPO}<br><b>Autor:</b> ${COMMIT_AUTHOR}<br><b>Commit:</b> ${COMMIT_SHA:0:7}<br><b>Message:</b> ${COMMIT_MSG}<br><br>🔗 https://github.com/${REPO}/commit/${COMMIT_SHA}"
 
-          # DM senden
           send_message() {
             CHAT_ID=$1
-            curl -s -X POST \
+            RESULT=$(curl -s -X POST \
               "https://graph.microsoft.com/v1.0/chats/${CHAT_ID}/messages" \
               -H "Authorization: Bearer ${TOKEN}" \
               -H "Content-Type: application/json" \
-              -d "{\"body\":{\"contentType\":\"html\",\"content\":\"${MESSAGE}\"}}"
+              -d "{\"body\":{\"contentType\":\"html\",\"content\":\"${MESSAGE}\"}}")
+            echo "Result for $CHAT_ID: $RESULT"
           }
 
           send_message "${CHAT_ID_MIKE}"

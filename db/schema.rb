@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_03_120000) do
+ActiveRecord::Schema.define(version: 2026_04_09_190803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1701,8 +1701,10 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.bigint "created_by_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "invitation_token"
     t.index ["email", "role_type"], name: "index_pending_role_assignments_on_email_and_role_type", unique: true
     t.index ["email"], name: "index_pending_role_assignments_on_email"
+    t.index ["invitation_token"], name: "index_pending_role_assignments_on_invitation_token", unique: true, where: "(invitation_token IS NOT NULL)"
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 

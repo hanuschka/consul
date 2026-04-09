@@ -14,26 +14,22 @@
     </table>
   </div>
 <% else %>
-  <p><%= t('.no_results') %></p>
-<% end %>
-
-<% if local_assigns[:pending_role_email].present? %>
-  <div class="kern-alert kern-alert--warning mt-3" role="alert">
-    <div class="kern-alert__header">
-      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
-      <% if pending_already_exists %>
-        <span class="kern-title"><%= t("adm.pending_role_assignments.already_pending", email: pending_role_email) %></span>
-      <% else %>
-        <span class="kern-title"><%= t("adm.pending_role_assignments.offer_preassign", email: pending_role_email) %></span>
-      <% end %>
-    </div>
-    <% unless pending_already_exists %>
-      <div class="kern-alert__body mt-3">
+  <% if local_assigns[:pending_role_email].present? %>
+    <% if pending_already_exists %>
+      <%= empty_state(title: t("adm.pending_role_assignments.already_pending", email: pending_role_email), icon: "person_search") %>
+    <% else %>
+      <div class="adm-empty-state">
+        <div class="adm-empty-state__icon-wrap">
+          <span class="adm-empty-state__icon material-symbols-outlined" aria-hidden="true">person_search</span>
+        </div>
+        <p class="adm-empty-state__title"><%= t("adm.pending_role_assignments.offer_preassign", email: pending_role_email) %></p>
         <%= button_to create_pending_adm_role_assignment_path(email: pending_role_email, role: role),
-              class: "kern-btn kern-btn--primary", method: :post do %>
+              class: "kern-btn kern-btn--primary mt-3", method: :post, data: { turbo_frame: "_top" } do %>
           <span class="kern-label"><%= t("adm.pending_role_assignments.preassign_button") %></span>
         <% end %>
       </div>
     <% end %>
-  </div>
+  <% else %>
+    <%= empty_state(title: t('.no_results'), icon: "person_search") %>
+  <% end %>
 <% end %>

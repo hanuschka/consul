@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_09_211203) do
+ActiveRecord::Schema.define(version: 2026_04_10_120002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2680,6 +2680,44 @@ ActiveRecord::Schema.define(version: 2026_04_09_211203) do
     t.index ["goal_id"], name: "index_sdg_targets_on_goal_id"
   end
 
+  create_table "section_activities", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "section", null: false
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.string "action", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.index ["section", "created_at"], name: "index_section_activities_on_section_and_created_at"
+    t.index ["trackable_type", "trackable_id"], name: "index_section_activities_on_trackable_type_and_trackable_id"
+    t.index ["user_id"], name: "index_section_activities_on_user_id"
+  end
+
+  create_table "section_contact_people", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "section", null: false
+    t.string "role"
+    t.string "email"
+    t.string "phone"
+    t.integer "position", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["section", "position"], name: "index_section_contact_people_on_section_and_position"
+    t.index ["user_id"], name: "index_section_contact_people_on_user_id"
+  end
+
+  create_table "section_settings", force: :cascade do |t|
+    t.string "section", null: false
+    t.string "intro_text"
+    t.text "notice_message"
+    t.boolean "notice_active", default: false, null: false
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_section_settings_on_author_id"
+    t.index ["section"], name: "index_section_settings_on_section", unique: true
+  end
+
   create_table "sentiment_translations", force: :cascade do |t|
     t.bigint "sentiment_id", null: false
     t.string "locale", null: false
@@ -3301,6 +3339,9 @@ ActiveRecord::Schema.define(version: 2026_04_09_211203) do
   add_foreign_key "resource_sentiments", "sentiments"
   add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
+  add_foreign_key "section_activities", "users"
+  add_foreign_key "section_contact_people", "users"
+  add_foreign_key "section_settings", "users", column: "author_id"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

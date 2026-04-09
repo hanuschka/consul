@@ -17,7 +17,7 @@
 
 .user-list-item--background-image {
   height: 85px;
-  background-color: $brand;
+  background-color: var(--brand-color);
   width: 100%;
   overflow: hidden;
 }
@@ -52,6 +52,7 @@
 .user-list-item--registration-date {
   font-weight: 500;
   font-size: 14px;
+  margin: 0;
 }
 
 .user-list-item--name {

@@ -1,6 +1,6 @@
 <div class="participation-stats js-participation-stats js-participation-stats-key-metrics">
   <% if can?(:refresh_stats, @projekt_phase) %>
-    <div class="u-flex margin-bottom u-full-width u-justify-between u-align-start">
+    <div class="u-flex margin-bottom u-full-width u-justify-between u-align-start js-studio-hide-on-preview">
       <div class="u-flex u-gap-15">
         <%= render Shared::StatsRefreshButtonComponent.new(
           refresh_path: refresh_stats_projekt_phase_path(@projekt_phase),

@@ -14,13 +14,18 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="margin-bottom">
-          <% fallback_path = @poll.related.present? ? proposal_path(@poll.related) : polls_path %>
+          <% fallback_path = if @poll.related.present?
+                                proposal_path(@poll.related)
+                              elsif @poll.projekt_phase&.projekt&.page&.published?
+                                page_path(@poll.projekt_phase.projekt.page.slug)
+                              else
+                                polls_path
+                              end %>
           <%= resources_back_link(fallback_path: fallback_path) %>
         </div>
         <div class="resource-page--title-subline">
           <%= render_custom_block(
             "polls_show_welcome_text",
-            custom_prefix: current_user&.username.present? && !current_user.guest? ? "#{current_user&.username}," : nil,
             default_content: t("custom.polls.show.welcome_default_text")) %>
         </div>
       </div>

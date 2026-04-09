@@ -8,8 +8,8 @@
   <% if @deficiency_report_managers.any? %>
     <%= render 'adm/role_assignments/roles', roles: @deficiency_report_managers, pagy: @pagy %>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_deficiency_report_managers") %>
-    </div>
+    <%= empty_state(title: t(".empty_title"), description: t(".empty_description"), icon: "report") %>
   <% end %>
+
+  <%= render partial: "adm/role_assignments/pending_role_assignments", locals: { pending_role_assignments: @pending_role_assignments } %>
 </div>

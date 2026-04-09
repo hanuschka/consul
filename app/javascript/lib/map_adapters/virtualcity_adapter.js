@@ -159,6 +159,7 @@ export default class VirtualCityAdapter extends BaseAdapter {
 
   setupControls() {
     this.addZoomControls()
+    this.addResetViewControl()
     this.setupExpandControl()
   }
 
@@ -184,6 +185,22 @@ export default class VirtualCityAdapter extends BaseAdapter {
     })
 
     container.append(zoomIn, zoomOut)
+    this.container.appendChild(container)
+  }
+
+  addResetViewControl() {
+    const container = this.createControlContainer("reset-view-control")
+
+    const button = document.createElement("button")
+    button.type = "button"
+    button.innerHTML = '<span class="material-symbols-outlined">home</span>'
+    button.title = "Ansicht zurücksetzen"
+    button.addEventListener("click", e => {
+      e.preventDefault()
+      this.withCesiumMap(map => this.setDefaultView(map))
+    })
+
+    container.appendChild(button)
     this.container.appendChild(container)
   }
 

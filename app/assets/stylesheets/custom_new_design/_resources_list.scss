@@ -3,7 +3,7 @@
     margin-bottom: 40px;
   }
 
-  @media (max-width: 970px) {
+  @media (max-width: $small-tablet-viewport-start) {
     .resources-list {
       .resources-list--switch-view-button {
         display: none;
@@ -129,14 +129,14 @@
   }
 
   .resources-list--filter-title {
-    color: $medium-gray-1;
+    color: $main-text-color;
     margin-right: 12px;
     display: flex;
     align-items: center;
   }
 
   .resources-list--filter-label {
-    color: $medium-gray-1;
+    color: $main-text-color;
   }
 
   .resources-list--switch-view-button {

@@ -2,12 +2,14 @@ de:
   adm:
     idea_managers:
       index:
-        title: Ideenplattform (Admin)
-        new_link: Neuer Ideenplattform (Admin)
-        no_idea_managers: Keine Ideenplattform (Admin) vorhanden.
+        title: Ideen-Administratoren
+        empty_title: "Keine Ideen-Administratoren vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Ideen-Administrator hinzu."
+        new_link: Neuen Ideen-Administrator hinzufügen
+        no_idea_managers: Keine Ideen-Administratoren vorhanden.
       new:
-        title: Neuer Ideenplattform (Admin)
+        title: Neuen Ideen-Administrator hinzufügen
         search_label: Nutzer durchsuchen
-        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Profile</a> gelistet sind. Diese können Sie anschließend als Ideenplattform (Admin) hinzufügen.
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Ideen-Administrator hinzugefügt werden. Ideen-Administratoren verwalten eingereichte Ideen und können diese bearbeiten und zuweisen.
       search:
-        no_results: Keine Benutzer gefunden mit diesen Kriterien.
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.

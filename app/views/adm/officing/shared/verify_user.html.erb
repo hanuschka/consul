@@ -1,0 +1,66 @@
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.officing.verification.title"),
+  back_button_url: adm_officing_root_path
+) %>
+
+<div class="kern-container my-5">
+  <%= form_with model: @offline_user, url: url_for(action: :do_verify_user) do |f| %>
+    <%= render "shared/errors", resource: @offline_user %>
+
+    <div class="mb-4">
+      <%= form_submit_button(text: t("adm.officing.verification.skip_verification"), name: "skip_verification") %>
+    </div>
+
+    <hr class="kern-divider mb-5" />
+
+    <%= render Kern::FormFieldComponent.new(inline: true, divider: false, label: t("adm.officing.verification.first_name")) do %>
+      <%= f.text_field :first_name, autocomplete: "off", label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(inline: true, divider: false, label: t("adm.officing.verification.last_name")) do %>
+      <%= f.text_field :last_name, autocomplete: "off", label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(inline: true, divider: false, label: t("adm.officing.verification.gender")) do %>
+      <%= f.select :gender, options_for_gender_select, { prompt: t("custom.helpers.select.gender_prompt") }, { label: false } %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(inline: true, divider: false, label: t("adm.officing.verification.date_of_birth")) do %>
+      <%= f.date_field :date_of_birth, label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      inline: true, divider: false,
+      label: t("adm.officing.verification.address")) do %>
+
+      <div data-controller="kern--registered-address-selector"
+           data-kern--registered-address-selector-streets-url-value="/registered_addresses/streets"
+           data-kern--registered-address-selector-addresses-url-value="/registered_addresses/addresses"
+           data-kern--registered-address-selector-not-in-list-label-value="<%= t('custom.helpers.select.not_in_list') %>">
+
+        <%= render Kern::RegisteredAddressSelectorComponent.new(
+          resource: @offline_user,
+          selected_city_id: params[:form_registered_address_city_id].presence,
+          selected_street_id: params[:form_registered_address_street_id].presence,
+          selected_address_id: params[:form_registered_address_id].presence
+        ) %>
+
+        <%= render Kern::RegularAddressFieldsComponent.new(f: f, user: @offline_user) %>
+      </div>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      inline: true, divider: false,
+      label: t("adm.officing.verification.mark_as_verified")) do %>
+
+      <div class="kern-form-check">
+        <%= check_box_tag :mark_as_verified, "1", params[:mark_as_verified].presence == "1", id: "mark_as_verified", class: "kern-form-check__checkbox" %>
+        <%= label_tag :mark_as_verified, t("adm.officing.verification.mark_as_verified"), class: "kern-form-check__label" %>
+      </div>
+
+      <div class="mt-4">
+        <%= form_submit_button(text: t("adm.officing.verification.submit")) %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

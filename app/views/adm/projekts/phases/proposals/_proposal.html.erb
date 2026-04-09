@@ -10,10 +10,28 @@
     </td>
   <% end %>
   <th scope="row" class="kern-table__header"><%= proposal.title %></th>
+  <td class="kern-table__cell"><%= moderation_status(proposal) %></td>
   <td class="kern-table__cell"><%= proposal.author.username %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal)) %>
+      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility") %>
+      <% if policy([:adm, proposal]).unhide? %>
+        <% actions.with_action(label: t("adm.projekts.phases.proposals.table.unhide"),
+                               url: unhide_adm_projekts_phase_proposal_path(projekt_phase, proposal),
+                               icon: "visibility", style: :edit, divider: true,
+                               data: { turbo_method: :put }) %>
+      <% elsif policy([:adm, proposal]).hide? %>
+        <% if proposal.flags_count > 0 && !proposal.ignored_flag? %>
+          <% actions.with_action(label: t("adm.projekts.phases.proposals.table.ignore_flag"),
+                                 url: ignore_flag_adm_projekts_phase_proposal_path(projekt_phase, proposal),
+                                 icon: "flag", style: :delete, divider: true,
+                                 data: { turbo_method: :put }) %>
+        <% end %>
+        <% actions.with_action(label: t("adm.projekts.phases.proposals.table.hide"),
+                               url: hide_adm_projekts_phase_proposal_path(projekt_phase, proposal),
+                               icon: "visibility_off", style: :delete,
+                               data: { turbo_method: :put, turbo_confirm: t("adm.projekts.phases.proposals.table.confirm_hide", name: proposal.title) }) %>
+      <% end %>
     <% end %>
   </td>
 </tr>

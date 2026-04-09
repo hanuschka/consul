@@ -1,11 +1,13 @@
 module Adm
   class ModeratorsController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, Moderator]
       @pagy, @moderators = pagy(policy_scope([:adm, Moderator]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.moderators") }
       ]
     end
@@ -14,7 +16,7 @@ module Adm
       authorize [:adm, Moderator], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.moderators"), url: adm_moderators_path },
         { name: t(".title") }
       ]
@@ -30,6 +32,7 @@ module Adm
       authorize [:adm, Moderator], :index?
       params[:role] = "moderator"
       @users = User.search(params[:search]).where.missing(:moderator).limit(4)
+      check_pending_for_search
     end
   end
 end

@@ -1,5 +1,7 @@
 module Adm
   class DeficiencyReportManagersController < Adm::BaseController
+    include Admin::PendingRoleAssignable
+
     def index
       authorize [:adm, DeficiencyReportManager]
       @pagy, @deficiency_report_managers = pagy(
@@ -7,7 +9,7 @@ module Adm
       )
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.deficiency_report_managers") }
       ]
     end
@@ -16,7 +18,7 @@ module Adm
       authorize [:adm, DeficiencyReportManager], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles") },
+        { name: t("adm.menu.items.profiles"), icon: "3p" },
         { name: t("adm.menu.items.profiles_subitems.deficiency_report_managers"),
           url: adm_deficiency_report_managers_path },
         { name: t(".title") }
@@ -33,6 +35,7 @@ module Adm
       authorize [:adm, DeficiencyReportManager], :index?
       params[:role] = "deficiency_report_manager"
       @users = User.search(params[:search]).where.missing(:deficiency_report_manager).limit(4)
+      check_pending_for_search
     end
   end
 end

@@ -1,4 +1,13 @@
 .attribute-editor-component {
+  .kern-body {
+    font-size: var(--kern-font-size-16, 16px);
+    padding-right: var(--kern-metric-space-x-large, 2rem);
+  }
+
+  .kern-form-input__input {
+    font-size: var(--kern-font-size-16, 16px);
+  }
+
   .attribute-form.string,
   .attribute-form.date {
     form {

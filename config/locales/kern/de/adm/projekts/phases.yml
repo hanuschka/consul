@@ -23,22 +23,88 @@ de:
             active: Aktiv
             visible: Sichtbar
             actions: Aktionen
+            delete: Löschen
+            confirm_delete: "Sind Sie sicher? Damit wird die Phase \"%{name}\" und alle zugehörigen Inhalte gelöscht."
         new:
           title: Neue Beteiligungsphase erstellen
           intro_title: Beteiligungsmodul auswählen
           intro_text: Wählen Sie ein Beteiligungsmodul aus, um eine neue Phase für dieses Projekt zu erstellen. Jedes Modul bietet unterschiedliche Funktionen für die Bürgerbeteiligung.
           phase_type_label: Beteiligungsmodul
-          phase_type_hint: Wählen Sie das gewünschte Modul für die neue Beteiligungsphase aus.
+          phase_type_hint: Jedes Beteiligungsmodul bietet unterschiedliche Funktionen – z. B. Abstimmungen, Vorschläge, Umfragen oder Veranstaltungen. Wählen Sie das Modul, das am besten zum Ziel dieser Beteiligungsphase passt. Nach der Erstellung können Sie die Phase weiter konfigurieren, z. B. mit Laufzeiten, Beschränkungen und Darstellungsoptionen.
+          phases_overview_title: Übersicht der Beteiligungsmodule
+          phases_overview:
+            comment:
+              name: Kommentare
+              description: >
+                Offenes Diskussionsforum, in dem Nutzer Beiträge verfassen und auf bestehende Kommentare antworten können. Eignet sich für den allgemeinen Meinungsaustausch zu einem Thema oder Projekt. Kommentare können von Administratoren moderiert, ausgeblendet oder hervorgehoben werden. Ideal als niedrigschwelliger Einstieg in die Beteiligung, wenn es darum geht, Stimmungen und Meinungen zu erfassen.
+            proposal:
+              name: Vorschläge
+              description: >
+                Nutzer können eigene Verbesserungsvorschläge einreichen, die von anderen Teilnehmern unterstützt, kommentiert und bewertet werden. Vorschläge lassen sich auf einer Karte verorten, mit Labels und Stimmungsbildern versehen und per KI automatisch auswerten. Administratoren können Vorschläge moderieren, zusammenführen und den Status verfolgen. Besonders geeignet für Ideensammlungen, Bürgerwünsche und partizipative Planungsprozesse.
+            point_of_interest:
+              name: Orte von Interesse
+              description: >
+                Kartenbasierte Beteiligungsphase, in der Nutzer Standorte auf einer interaktiven Karte markieren und mit Kategorien versehen können. Jeder Eintrag kann beschrieben und kommentiert werden. Administratoren legen die verfügbaren Kategorien fest und können die maximale Anzahl an Pins pro Nutzer begrenzen. Eignet sich besonders für Mängelmeldungen, Standortvorschläge oder räumliche Bestandsaufnahmen im Stadtgebiet.
+            question:
+              name: Kurzumfrage
+              description: >
+                Einfache Frage-Antwort-Formate für schnelles Feedback zu konkreten Fragestellungen. Nutzer wählen aus vorgegebenen Antwortmöglichkeiten, die Ergebnisse werden in Echtzeit angezeigt. Administratoren können mehrere Fragen anlegen und die Darstellung konfigurieren. Ideal für kurze Meinungsabfragen, Stimmungsbilder oder die schnelle Priorisierung von Themen innerhalb eines Projekts.
+            voting:
+              name: Abstimmung
+              description: >
+                Strukturierte Abstimmungen mit verschiedenen Fragetypen wie Einfach- und Mehrfachauswahl, Bewertungsskalen oder Ja/Nein-Entscheidungen. Fragen können in thematischen Bündeln zusammengefasst werden. Unterstützt sowohl Online- als auch Offline-Abstimmungen mit separater Erfassung und Auditierung. Geeignet für verbindliche Entscheidungsprozesse, Bürgervoten und priorisierte Themenwahlen.
+            iframe:
+              name: Iframe
+              description: >
+                Einbettung externer Inhalte über einen Iframe direkt in die Projektseite. Damit lassen sich interaktive Karten, externe Umfragetools, 3D-Modelle, Visualisierungen oder andere Webanwendungen von Drittanbietern nahtlos integrieren. Die Konfiguration beschränkt sich auf die Angabe der URL — es werden keine weiteren Inhalte innerhalb der Plattform verwaltet.
+            budget:
+              name: Budget
+              description: >
+                Mehrstufiger Beteiligungshaushalt, der den gesamten Prozess von der Einreichung über die Prüfung bis zur Abstimmung abbildet. Nutzer können Investitionsvorschläge mit Kostenangaben einreichen, die anschließend von der Verwaltung auf Machbarkeit geprüft werden. In der Abstimmungsphase entscheiden die Bürger über die Verteilung des verfügbaren Budgets. Unterstützt Offline-Abstimmungen und automatische Gewinner-Ermittlung.
+            legislation:
+              name: Textbearbeitung
+              description: >
+                Kollaborative Textarbeit mit Versionierung für die gemeinsame Erarbeitung von Dokumenten. Nutzer können Entwürfe lesen, einzelne Absätze kommentieren und Änderungsvorschläge einbringen. Administratoren verwalten verschiedene Entwurfsversionen und können Kommentare gezielt zu Textpassagen zuordnen. Besonders geeignet für Satzungen, Leitlinien, Verordnungen oder andere Textdokumente, die öffentlich diskutiert werden sollen.
+            formular:
+              name: Formular
+              description: >
+                Benutzerdefinierte Formulare mit konfigurierbaren Pflicht- und Folgefeldern für strukturierte Eingaben. Administratoren gestalten das Formular mit verschiedenen Feldtypen und können Folge-E-Mails an Einreichende versenden. Eingegangene Antworten lassen sich in der Verwaltung einsehen und als CSV exportieren. Eignet sich für Anträge, Bewerbungen, Meldungen oder jede Art von standardisierter Datenerhebung.
+            event:
+              name: Veranstaltungen
+              description: >
+                Ankündigung und Verwaltung von Terminen wie Workshops, Informationsveranstaltungen, Bürgerversammlungen oder Ortsbegehungen. Jede Veranstaltung enthält Datum, Uhrzeit, Ort und eine Beschreibung. Teilnehmer können per E-Mail über neue Veranstaltungen benachrichtigt werden. Ideal, um Präsenzformate in den digitalen Beteiligungsprozess einzubinden und Termine zentral zu kommunizieren.
+            milestone:
+              name: Meilensteine
+              description: >
+                Darstellung des Projektfortschritts über Meilensteine und Fortschrittsbalken. Administratoren definieren wichtige Etappen mit Datum und Beschreibung sowie primäre und sekundäre Fortschrittsbalken zur visuellen Darstellung des Gesamtfortschritts. Nutzer sehen auf einen Blick, welche Schritte bereits abgeschlossen sind und was als Nächstes ansteht. Geeignet, um Transparenz über den Projektverlauf zu schaffen.
+            projekt_notification:
+              name: Benachrichtigungen
+              description: >
+                Versand von Ankündigungen und Mitteilungen an die Nutzer eines Projekts. Administratoren erstellen Benachrichtigungen mit Titel und Inhalt, die im Projekt angezeigt und optional per E-Mail versendet werden. Eignet sich für Statusupdates, Zwischenergebnisse, Terminänderungen oder wichtige Hinweise — überall dort, wo eine aktive Information der Teilnehmer erforderlich ist.
+            livestream:
+              name: Livestream
+              description: >
+                Einbettung von Live-Videos über YouTube oder Vimeo direkt in die Projektseite. Nutzer können die Übertragung verfolgen und optional über eine integrierte Fragefunktion Fragen an die Veranstalter stellen. Per E-Mail können Teilnehmer vorab über den Livestream-Termin informiert werden. Geeignet für die Übertragung von Ratssitzungen, Bürgerversammlungen, Expertengesprächen oder Informationsveranstaltungen.
+            argument:
+              name: Stimmen
+              description: >
+                Darstellung von Pro- und Contra-Argumenten zu einem Thema, z.B. von Experten, politischen Vertretern oder Interessengruppen. Jedes Argument kann mit einem Autorenbild, Namen und ausführlicher Begründung versehen werden. Administratoren ordnen die Argumente den Seiten Pro und Contra zu. Eignet sich zur strukturierten Abwägung kontroverser Themen und zur Darstellung unterschiedlicher Perspektiven.
+            newsfeed:
+              name: Newsfeed
+              description: >
+                Anzeige von Projektneuigkeiten und Statusmeldungen in chronologischer Reihenfolge. Funktioniert wie ein Nachrichtenfeed, über den Administratoren laufend über Entwicklungen, Entscheidungen oder neue Erkenntnisse im Projekt berichten können. Besonders geeignet für längerfristige Projekte, bei denen die Teilnehmer regelmäßig über den aktuellen Stand informiert werden sollen.
           select_phase_type: Bitte wählen...
           create_phase: Phase erstellen
         create:
           success: Die Beteiligungsphase wurde erfolgreich erstellt.
         update:
           success: Die Beteiligungsphase wurde erfolgreich aktualisiert.
+        destroy:
+          success: Die Beteiligungsphase und alle zugehörigen Inhalte wurden gelöscht.
         duration:
           title: Laufzeit
           dates_label: Laufzeit der Phase
-          dates_description: Wann soll die Phase beginnen und enden?
+          dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
         naming:
           title: Benennung
         restrictions:
@@ -48,15 +114,15 @@ de:
             <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
             <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
           user_status_label: Teilnahme nach Nutzerstatus
-          user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+          user_status_hint: "Legt fest, welchen Verifikationsstatus Nutzer mindestens haben müssen, um an dieser Phase teilzunehmen. Es gibt drei Stufen: Gastnutzer (ohne Registrierung), registrierte Nutzer (mit Plattform-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Höhere Stufen erfordern entsprechende Nachweise bei der Registrierung."
           geozone_label: Gebietsbeschränkung der Teilnahme
-          geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+          geozone_hint: "Schränkt die Teilnahme auf Nutzer ein, deren registrierte Adresse in einem bestimmten geografischen Gebiet liegt. Für die Nutzung muss ein Administrator vorab eine CSV-Datei mit den relevanten Adressen an demokratie.today übermitteln. Nach dem Import können die gewünschten Gebiete hier aktiviert und die Beschränkung für diese Phase zugewiesen werden."
           age_label: Altersbeschränkung der Teilnahme
-          age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden."
+          age_hint: "Schränkt die Teilnahme auf Nutzer ein, deren Alter innerhalb einer festgelegten Altersgruppe liegt. Die Altersgruppen werden von einem Administrator zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden. Nutzer ohne hinterlegtes Geburtsdatum werden aufgefordert, dieses vor der Teilnahme anzugeben."
           individual_groups_label: Beschränkung auf starke Gruppen
-          individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+          individual_groups_hint: "Schränkt die Teilnahme auf Mitglieder bestimmter Nutzergruppen ein, die vorab unter Einstellungen > Starke Gruppen angelegt wurden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen. Nur Nutzer, die einer der hier ausgewählten Gruppen zugeordnet sind, können an dieser Beteiligungsphase teilnehmen."
           extended_geozone_label: Erweiterte Gebietsbeschränkung
-          extended_geozone_hint: Erweiterte Gebietsbeschränkung nach registrierten Adressgruppen.
+          extended_geozone_hint: "Ermöglicht eine feinere Gebietsbeschränkung auf Basis registrierter Adressgruppen wie Wahlkreise, Quartiere oder Schulbezirke. Im Gegensatz zur einfachen Gebietsbeschränkung können hier mehrere Adressgruppen kombiniert werden. Die verfügbaren Gruppen basieren auf den von einem Administrator importierten Adressdaten und ermöglichen eine präzise Steuerung, welche Nutzer an der Phase teilnehmen dürfen."
           user_status:
             guest: Gäste (keine Registrierung erforderlich)
             registered: Registrierte Nutzer
@@ -64,7 +130,7 @@ de:
           geozone:
             no_restriction: Keine Einschränkung
             only_citizens: Nur Bürger
-            only_geozones: Nur bestimmte Bezirke
+            only_geozones: Nur bestimmte Gebiete
             only_streets: Nur bestimmte Straßen
             search_street: Straße suchen...
           extended_geozone:
@@ -79,18 +145,37 @@ de:
           title: Nutzerfunktionen
         proposals:
           title: Vorschläge
-          no_proposals: Keine Vorschläge vorhanden.
+          no_proposals_title: Keine Vorschläge vorhanden
+          no_proposals_description: Sobald Nutzer Vorschläge in dieser Beteiligungsphase einreichen, werden diese hier angezeigt und können moderiert werden.
           table:
             id: ID
             admin_accepted: Freigegeben
             title: Titel
+            moderation: Moderation
             author: Autor
             actions: Aktionen
             view: Anzeigen
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Meldung ignorieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
+        comments:
+          title: Kommentare
+          no_comments_title: Keine Kommentare vorhanden
+          no_comments_description: Sobald Nutzer Kommentare in dieser Beteiligungsphase verfassen, werden diese hier angezeigt und können moderiert werden.
+          table:
+            body: Kommentar
+            author: Autor
+            moderation: Moderation
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Meldung ignorieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Kommentar herausmoderiert."
         projekt_labels:
           title: Labels
           create_button: Neues Label erstellen
-          no_labels: Keine Labels vorhanden.
+          no_labels_title: Keine Labels vorhanden
+          no_labels_description: Erstellen Sie Labels, um Vorschläge thematisch zu kategorisieren. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die Filterung.
           table:
             icon: Icon
             name: Name
@@ -98,7 +183,8 @@ de:
         sentiments:
           title: Sentimente
           create_button: Neues Sentiment erstellen
-          no_sentiments: Keine Sentimente vorhanden.
+          no_sentiments_title: Keine Sentiments vorhanden
+          no_sentiments_description: Erstellen Sie Sentiments, um Nutzern eine emotionale Einordnung von Vorschlägen zu ermöglichen. Sentiments werden im Frontend als farbige Markierungen angezeigt.
           table:
             color: Farbe
             name: Name
@@ -110,15 +196,73 @@ de:
           lock_on: Sperrdatum
           lock_on_hint: Ab diesem Datum können keine Offline-Stimmen mehr abgegeben werden.
           select_managers: Abstimmungshelfer zuordnen
-          select_managers_hint: Wählen Sie die Abstimmungshelfer aus, die für diese Phase berechtigt sind.
+          select_managers_hint: "Wählen Sie aus der Liste die Abstimmungshelfer aus, die in dieser Phase Offline-Stimmen erfassen dürfen. Nur ausgewählte Helfer können über das Officing-Modul Stimmen im Namen von Bürgern abgeben. Die Zuordnung kann jederzeit geändert werden. Abstimmungshelfer müssen zuvor von einem Administrator im System angelegt worden sein."
+          no_managers_title: Keine Abstimmungshelfer vorhanden
+          no_managers_description: Es sind noch keine Abstimmungshelfer im System registriert. Abstimmungshelfer können von einem Administrator unter „Einstellungen" angelegt werden.
         poll_questions:
           title: Fragen
           create_question: Normale Frage erstellen
           create_bundle_question: Fragenbündel erstellen
+          intro_text_p1: >
+            Hier verwalten Sie die Fragen dieser Abstimmungsphase. Es gibt zwei Fragetypen:
+          intro_question_types:
+            normal:
+              title: Normale Frage
+              description: >
+                Eine eigenständige Frage mit eigenen Antwortoptionen und einem wählbaren Abstimmungsmodus
+                (z. B. Einzelstimme, Mehrfachauswahl oder Bewertungsskala). Jede Frage wird den Nutzern im
+                Frontend als einzelner Abstimmungsschritt angezeigt.
+            bundle:
+              title: Fragenbündel
+              description: >
+                Fasst mehrere thematisch zusammengehörige Unterfragen unter einer gemeinsamen Überschrift
+                zusammen. Im Frontend wird das Bündel als zusammenhängender Abschnitt dargestellt. Jede
+                Unterfrage kann einen eigenen Abstimmungsmodus und eigene Antwortoptionen haben.
+          bundle_intro_text_p1: >
+            Ein Fragenbündel fasst mehrere thematisch zusammengehörige Fragen unter einer gemeinsamen
+            Überschrift zusammen. Im Frontend wird das Bündel als ein zusammenhängender Abschnitt dargestellt,
+            in dem die Nutzer die enthaltenen Unterfragen nacheinander beantworten. Fragenbündel eignen sich
+            besonders, wenn ein Thema aus mehreren Perspektiven beleuchtet werden soll.
+          bundle_intro_text_p2: >
+            Nach dem Erstellen des Fragenbündels können Sie über die Detailansicht einzelne Unterfragen
+            hinzufügen. Jede Unterfrage kann eine eigene Fragestellung, Antwortoptionen und einen eigenen
+            Abstimmungsmodus haben. Die Reihenfolge der Unterfragen innerhalb des Bündels kann per
+            Drag & Drop angepasst werden.
+          intro_vote_types_title: Antwortoptionen im Überblick
+          intro_vote_types:
+            unique:
+              title: Einzelne Stimme
+              description: >
+                Jeder Nutzer kann genau eine Antwort pro Frage auswählen. Dies ist die
+                einfachste und häufigste Abstimmungsform – ideal für klare Ja/Nein-Entscheidungen
+                oder die Auswahl einer bevorzugten Option aus mehreren Alternativen.
+            multiple:
+              title: Mehrfachauswahl
+              description: >
+                Nutzer können ihre Stimmen gleichmäßig auf mehrere Antworten verteilen.
+                Geeignet, wenn Teilnehmer mehrere Optionen gleichzeitig befürworten dürfen.
+                Die maximale Anzahl der wählbaren Antworten wird beim Erstellen der Frage festgelegt.
+            multiple_with_weight:
+              title: Gewichtete Mehrfachauswahl
+              description: >
+                Nutzer verteilen ein festes Stimmbudget auf mehrere Antworten und gewichten
+                diese unterschiedlich stark. Besonders geeignet für Priorisierungsfragen,
+                z. B. bei Bürgerhaushalten, in denen Mittel auf verschiedene Vorschläge verteilt werden sollen.
+            rating_scale:
+              title: Bewertungsskala
+              description: >
+                Nutzer bewerten jede Antwortoption auf einer Skala (z. B. 1–5). Geeignet für
+                differenziertes Feedback, bei dem nicht nur eine Auswahl, sondern eine Abstufung
+                der Zustimmung oder Ablehnung erfasst werden soll.
+          intro_text_p2: >
+            Die Reihenfolge der Fragen in der Tabelle entspricht der Anzeigereihenfolge im Frontend.
+            Nutzen Sie die Ziehpunkte rechts, um die Reihenfolge zu ändern.
           no_questions: Dieser Abstimmung sind keine Fragen zugeordnet.
+          no_questions_title: Keine Fragen vorhanden
+          no_questions_description: Erstellen Sie einzelne Fragen oder Fragenbündel, um die Abstimmung inhaltlich zu gestalten. Jede Frage wird im Frontend als eigenständiger Abstimmungsschritt angezeigt.
           table:
-            title: Titel
-            type: Typ
+            title: Fragen
+            type: Abstimmungsmodus
             contextualized_by: "Kontextualisiert durch:"
             bundle_question: Fragenbündel
             edit_answers: Antwortliste
@@ -127,6 +271,8 @@ de:
         officing_manager_audits:
           title: Änderungslog Abstimmungshelfer
           no_audits: Keine Einträge vorhanden.
+          no_audits_title: Keine Änderungen vorhanden
+          no_audits_description: Sobald Abstimmungshelfer Offline-Stimmen erfassen oder Änderungen vornehmen, werden diese hier protokolliert.
           table:
             id: ID
             changes: Änderungen
@@ -135,6 +281,8 @@ de:
           title: Kategorien
           create_button: Neue Kategorie erstellen
           no_categories: Keine Kategorien vorhanden.
+          no_categories_title: Keine Kategorien vorhanden
+          no_categories_description: Erstellen Sie Kategorien, um die Orte von Interesse thematisch zu gruppieren. Kategorien werden im Frontend als Filteroption angezeigt.
           table:
             name: Name
             icon: Icon
@@ -143,6 +291,8 @@ de:
         projekt_point_of_interest_pins:
           title: Pins
           no_pins: Keine Pins vorhanden.
+          no_pins_title: Keine Pins vorhanden
+          no_pins_description: Sobald Nutzer im Frontend Orte von Interesse auf der Karte markieren, werden die Pins hier aufgelistet und können verwaltet werden.
           table:
             id: ID
             address: Adresse
@@ -154,10 +304,12 @@ de:
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
         projekt_questions:
           title: Kurzumfragen
-          create_button: Frage erstellen
+          create_button: Neue Frage erstellen
           send_notifications_button: Benachrichtigungen senden
           send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
           no_questions: Keine Kurzumfragen vorhanden.
+          no_questions_title: Keine Kurzumfragen vorhanden
+          no_questions_description: Erstellen Sie Kurzumfragen, um schnelles Feedback von Nutzern zu sammeln. Jede Frage kann mehrere Antwortoptionen enthalten und wird im Frontend in der Beteiligungsphase angezeigt.
           table:
             title: Titel
             question_options: Antworten
@@ -166,7 +318,8 @@ de:
         projekt_events:
           title: Veranstaltungen
           create_button: Neue Veranstaltung erstellen
-          no_events: Keine Veranstaltungen vorhanden.
+          no_events_title: Keine Veranstaltungen vorhanden
+          no_events_description: Erstellen Sie Veranstaltungen, um Termine wie Bürgerversammlungen, Workshops oder Informationsabende zu dieser Beteiligungsphase anzukündigen. Veranstaltungen werden im Frontend mit Datum, Ort und Beschreibung angezeigt.
           table:
             title: Titel
             location: Veranstaltungsort
@@ -177,8 +330,9 @@ de:
             send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         milestones:
           title: Meilensteine
-          create_button: Meilenstein hinzufügen
-          no_milestones: Keine Meilensteine vorhanden.
+          create_button: Neuen Meilenstein erstellen
+          no_milestones_title: Keine Meilensteine vorhanden
+          no_milestones_description: Erstellen Sie Meilensteine, um den Fortschritt dieser Beteiligungsphase transparent darzustellen. Meilensteine werden im Frontend chronologisch angezeigt und informieren Teilnehmer über wichtige Etappen und Ergebnisse.
           table:
             description: Beschreibung
             publication_date: Veröffentlichung
@@ -189,7 +343,8 @@ de:
         progress_bars:
           title: Fortschrittsbalken
           create_button: Neuen Fortschrittsbalken erstellen
-          no_progress_bars: Keine Fortschrittsbalken vorhanden.
+          no_progress_bars_title: Keine Fortschrittsbalken vorhanden
+          no_progress_bars_description: Erstellen Sie Fortschrittsbalken, um den Umsetzungsstand dieser Beteiligungsphase visuell darzustellen. Fortschrittsbalken werden im Frontend als prozentuale Anzeige dargestellt und geben Teilnehmern eine schnelle Übersicht über den aktuellen Stand.
           table:
             title: Titel
             kind: Typ
@@ -199,12 +354,15 @@ de:
             secondary: Sekundär
         projekt_arguments:
           title: Stimmen
-          create_button: Stimme erstellen
+          create_button: Neue Stimme erstellen
           send_notifications_button: Benachrichtigungen senden
           send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
           pro: Pro
           contra: Contra
-          no_arguments: Keine Stimmen vorhanden.
+          no_pro_arguments_title: Keine Pro-Stimmen vorhanden
+          no_pro_arguments_description: Erstellen Sie Pro-Stimmen, um befürwortende Positionen zu diesem Thema darzustellen. Stimmen werden im Frontend mit Name, Partei und Positionstext angezeigt und ermöglichen Teilnehmern einen Überblick über die verschiedenen Standpunkte.
+          no_contra_arguments_title: Keine Contra-Stimmen vorhanden
+          no_contra_arguments_description: Erstellen Sie Contra-Stimmen, um ablehnende oder kritische Positionen zu diesem Thema darzustellen. Stimmen werden im Frontend mit Name, Partei und Positionstext angezeigt und ergänzen die Pro-Stimmen um die Gegenperspektive.
           table:
             name: Name
             party: Partei
@@ -214,8 +372,9 @@ de:
             actions: Aktionen
         projekt_livestreams:
           title: Livestreams
-          create_button: Neuen Livestream hinzufügen
-          no_livestreams: Keine Livestreams vorhanden.
+          create_button: Neuen Livestream erstellen
+          no_livestreams_title: Keine Livestreams vorhanden
+          no_livestreams_description: Erstellen Sie Livestreams, um Veranstaltungen oder Informationsformate dieser Beteiligungsphase live zu übertragen. Livestreams werden im Frontend mit Titel, Startzeit und eingebettetem Videoplayer angezeigt und können über YouTube oder Vimeo eingebunden werden.
           table:
             title: Titel
             url: URL
@@ -228,21 +387,28 @@ de:
         projekt_notifications:
           title: Benachrichtigungen
           create_button: Neue Benachrichtigung erstellen
-          no_notifications: Keine Benachrichtigungen vorhanden.
+          no_notifications_title: Keine Benachrichtigungen vorhanden
+          no_notifications_description: Erstellen Sie Benachrichtigungen, um registrierte Nutzer über Neuigkeiten in dieser Beteiligungsphase zu informieren. Benachrichtigungen werden den Nutzern in ihrem Posteingang auf der Plattform angezeigt und können auf wichtige Termine oder Ergebnisse hinweisen.
           table:
             title: Titel
             body: Nachricht
             created_at: Erstellt am
             actions: Aktionen
         user_resource_criteria:
-          title: Bewertungskriterien
+          title: KI Bewertungskriterien
+          empty_title: KI Bewertungskriterien nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um die KI-gestützten Bewertungskriterien zu aktivieren.
+        email_templates:
+          title: System-E-Mails
         ai_settings:
-          title: KI Anweisung
-          not_yet_implemented: Diese Funktion wird in Kürze implementiert.
+          title: KI Sprachassistent
+          empty_title: KI Sprachassistent nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um den KI Sprachassistenten zu aktivieren.
         legislation_process_draft_versions:
           title: Textentwürfe
           create_button: Neuen Textentwurf erstellen
-          no_draft_versions: Keine Textentwürfe vorhanden.
+          no_draft_versions_title: Keine Textentwürfe vorhanden
+          no_draft_versions_description: Erstellen Sie einen Textentwurf, der im Frontend zur Kommentierung und Diskussion bereitgestellt wird. Mehrere Versionen können parallel existieren.
           table:
             title: Titel
             created_at: Erstellt am
@@ -252,11 +418,33 @@ de:
             actions: Aktionen
         formular:
           title: Formularfelder
+          hint_text_p1: >
+            Hier konfigurieren Sie die Felder des Formulars, das Nutzern im Frontend zur Eingabe
+            angezeigt wird. Es gibt zwei Kategorien von Feldern:
+          hint_types:
+            primary:
+              title: Primäre Felder
+              description: >
+                Werden im Hauptformular angezeigt und beim ersten Absenden erfasst. Typische
+                Beispiele sind Textfelder für Name oder Anliegen, Auswahlfelder für Kategorien
+                oder Checkboxen für Zustimmungen.
+            follow_up:
+              title: Follow-up Felder
+              description: >
+                Werden nach dem Absenden des Formulars in einem zweiten Schritt angezeigt.
+                Geeignet für ergänzende Angaben, die nicht alle Nutzer betreffen – z. B.
+                Kontaktdaten für Rückfragen oder detaillierte Beschreibungen.
+          hint_text_p2: >
+            Die Reihenfolge der Felder in der Tabelle entspricht der Anzeigereihenfolge im Frontend.
+            Nutzen Sie die Ziehpunkte, um die Reihenfolge zu ändern. Über den Feldtyp legen Sie fest,
+            ob ein Text-, Auswahl-, Datei- oder Kontrollkästchen-Feld erstellt wird.
           create_button: Neues Feld erstellen
           primary_fields_title: Primäre Felder
           follow_up_fields_title: Follow-up Felder
-          no_fields: Keine primären Felder vorhanden.
-          no_follow_up_fields: Keine Follow-up Felder vorhanden.
+          no_fields_title: Keine primären Felder vorhanden
+          no_fields_description: Erstellen Sie Formularfelder, die Nutzern im Frontend beim Ausfüllen des Formulars angezeigt werden – z. B. Textfelder, Auswahlfelder oder Checkboxen.
+          no_follow_up_fields_title: Keine Follow-up Felder vorhanden
+          no_follow_up_fields_description: Follow-up Felder werden nach dem Absenden des Formulars angezeigt und ermöglichen das Erfassen zusätzlicher Informationen in einem zweiten Schritt.
           table:
             name: Name
             kind: Typ
@@ -273,15 +461,18 @@ de:
             description: Beschreibung
         formular_answers:
           title: Einsendungen
-          emails_title: Follow-up E-Mails
-          new_email_title: Einsendungen & neue E-Mail erstellen
           download_csv: CSV herunterladen
-          create_email_draft: E-Mail-Entwurf erstellen
-          no_answers: Keine Einsendungen vorhanden.
+          no_answers_title: Keine Einsendungen vorhanden
+          no_answers_description: Sobald Nutzer das Formular in dieser Beteiligungsphase ausfüllen und absenden, werden ihre Einsendungen hier aufgelistet und können als CSV exportiert werden.
           table:
             submitter: Einsender-ID
             email: E-Mail
             submitted_at: Eingereicht am
+        formular_follow_up_emails:
+          title: Follow-up E-Mails
+          create_new: Neue Follow-up E-Mail
+          no_emails_title: Keine Follow-up E-Mails vorhanden
+          no_emails_description: Erstellen Sie eine neue Follow-up E-Mail, um Teilnehmer nach ihrer Formulareinsendung zu kontaktieren — z.B. für Rückfragen, Ergebnisse oder eine Nacherhebung.
           letters_table:
             subject: Betreff
             recipients: Empfänger
@@ -290,7 +481,6 @@ de:
             no_subject: "(Kein Betreff)"
             draft: Entwurf
             sent_at: "Gesendet am %{date}"
-            follow_up_emails: Follow-up E-Mail(s)
             send_emails: E-Mails versenden
             send_confirm: Möchten Sie die E-Mails wirklich versenden?
             delete_confirm: Möchten Sie diesen Entwurf wirklich löschen?
@@ -306,9 +496,9 @@ de:
         budget_edit:
           title: Editieren
           administrators: Administratoren
-          administrators_hint: Wählen Sie die Administratoren aus, die für dieses Budget zuständig sind.
+          administrators_hint: "Legt fest, welche Administratoren Zugriff auf die Verwaltung dieses Bürgerhaushalts haben. Zugewiesene Administratoren können Vorschläge prüfen, den Status ändern und Ergebnisse veröffentlichen. Entfernen Sie die Auswahl, wenn ein Administrator keinen Zugriff mehr auf dieses Budget haben soll."
           valuators: Gutachter
-          valuators_hint: Wählen Sie die Gutachter aus, die für dieses Budget zuständig sind.
+          valuators_hint: "Legt fest, welche Gutachter für die inhaltliche und fachliche Bewertung der eingereichten Vorschläge zuständig sind. Zugewiesene Gutachter können Machbarkeit, Kosten und Kriterien der Vorschläge beurteilen. Entfernen Sie die Auswahl, wenn ein Gutachter nicht mehr zuständig sein soll."
         budget_investments:
           title: Vorschläge
           calculate_winners: Gewinner ermitteln
@@ -316,7 +506,9 @@ de:
           recalculate_winners: Gewinner neu ermitteln
           recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
           download_csv: CSV herunterladen
-          no_investments: Keine Investitionsvorschläge vorhanden.
+          columns: Spalten
+          no_investments_title: Keine Vorschläge vorhanden
+          no_investments_description: Sobald Nutzer Vorschläge einreichen, werden diese hier angezeigt und können bewertet, geprüft und moderiert werden.
           table:
             id: ID
             created_at: Eingereicht
@@ -334,11 +526,26 @@ de:
             admin: Administrator
             author: Autor
             valuator: Gutachter
+            moderation: Moderation
             pdf_link: PDF
+            view: Anzeigen
+            manage: Verwalten
+            people: Gutachter & Administratoren
+            milestones: Meilensteine
+            progress_bars: Fortschrittsbalken
+            audits: Änderungslog
+            hide: Herausmoderieren
+            unhide: Wiederherstellen
+            ignore_flag: Als gelesen markieren
+            confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
             actions: Aktionen
         age_ranges_for_stats:
           title: Altersgruppen für Statistiken
-          hint: Wählen Sie die Altersgruppen aus, die für die statistische Auswertung der Beteiligung an dieser Phase berücksichtigt werden sollen.
+          hint: >
+            Wählen Sie die Altersgruppen aus, die für die statistische Auswertung dieser Beteiligungsphase
+            herangezogen werden. Die Auswertung zeigt, wie sich die Teilnahme auf die gewählten Altersgruppen
+            verteilt. Die verfügbaren Altersgruppen werden von einem Administrator zentral unter „Einstellungen >
+            Altersgruppen" verwaltet und müssen dort vorab angelegt werden.
         projekt_phase:
           duration: Laufzeit
           naming: Benennung
@@ -358,13 +565,14 @@ de:
           officing_manager_audits: Änderungslog
           poll_questions: Fragen
           projekt_questions: Kurzumfragen
-          ai_settings: KI Anweisung
+          ai_settings: KI Sprachassistent
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
           legislation_process_draft_versions: Textentwürfe
           formular: Formularfelder
           formular_answers: Einsendungen
+          formular_follow_up_emails: Follow-up E-Mails
           projekt_arguments: Stimmen
           projekt_notifications: Benachrichtigungen
           projekt_livestreams: Livestreams
@@ -372,4 +580,6 @@ de:
           milestones: Meilensteine
           progress_bars: Fortschrittsbalken
           settings: Einstellungen
-          user_resource_criteria: Bewertungskriterien
+          user_resource_criteria: KI Bewertungskriterien
+          comments: Kommentare
+          email_templates: System-E-Mails

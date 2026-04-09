@@ -2,6 +2,8 @@
   id="filter-subnav-<%= phase.id %>"
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
+  role="tab"
+  aria-selected="<%= phase.id == params[:projekt_phase_id] %>"
 >
   <%= link_to tab_url,
     onclick: "$('#footer-content').addClass('show-loader');",
@@ -91,7 +93,7 @@
             </i>
           </button>
         <% end %>
-        <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>

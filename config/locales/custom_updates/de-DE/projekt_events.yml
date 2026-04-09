@@ -26,7 +26,7 @@ de:
         register: "Anmelden"
         join_waitlist: "Auf Warteliste setzen"
         cancel: "Stornieren"
-        add_person: "Weitere Person anmelden"
+        add_person: "Zur Veranstaltung anmelden"
         first_name: "Vorname"
         last_name: "Nachname"
         email: "E-Mail"

@@ -8,15 +8,13 @@
       <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
     </h2>
 
-    <span data-responsive-toggle="responsive-menu"
+    <button data-responsive-toggle="responsive-menu"
           data-hide-for="medium"
-          class="hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
-          role="button"
-          tabindex="0"
+          class="hamburger-menu js-toggle-mobile-menu js-prevent-key-scroll"
           aria-expanded="false"
           aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
       <span class="menu-icon dark" data-toggle></span>
-    </span>
+    </button>
 
     <div class='header-right-group not-print'>
       <% if !launch_page && current_user.nil? %>

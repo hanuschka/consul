@@ -18,6 +18,8 @@ en:
           hi: "Dear %{username},"
           p1: "thank you for your %{deficiency_report_link}. Your submission has been successfully received."
           deficiency_report_link_text: deficiency report
-          p2: Please note that your report is not yet publicly visible. Our team will review the content before it can be approved and published. You will automatically receive an email as soon as the status of your report changes.
-          p3: "In your %{account_link} you can track which submissions you have made at any time."
+          p2_pending_review: "Please note that your report is <strong>not yet publicly visible</strong>. Our team will review the content before it can be approved and published."
+          p2_published: "Your report is now publicly visible."
+          p3: "You will automatically receive an email as soon as the status of your report changes."
+          p4: "In your %{account_link} you can track which submissions you have made at any time."
           account_link_text: user account

@@ -11,7 +11,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def path
     return @options[:path] if @options[:path].present?
 
-    adm_attribute_path(record_type: record_type_key, id: @record.id)
+    adm_attribute_path(record_type: record_type_key.tr("/", "-"), id: @record.id)
   end
 
   def label
@@ -53,6 +53,26 @@ class Adm::AttributeEditorComponent < ApplicationComponent
 
   def disabled?
     @options[:disabled] == true
+  end
+
+  def wide?
+    @options[:wide] == true
+  end
+
+  def stacked?
+    @kind == :rich_text
+  end
+
+  def inline?
+    @options[:inline] == true
+  end
+
+  def divider?
+    @options.fetch(:divider, true)
+  end
+
+  def hide_label?
+    @options[:hide_label] == true
   end
 
   private

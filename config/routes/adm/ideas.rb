@@ -4,15 +4,21 @@ namespace :adm do
 
     # Define specific resources first (matched before /:id)
     resources :officers, only: [:index, :create, :destroy] do
-      get :search, on: :collection
+      post :search, on: :collection
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
       post :order_categories, on: :collection
     end
 
-    resources :settings, only: :index
     resources :districts, only: [:index, :edit, :update]
+    get :settings, to: "ideas#settings", as: :settings
+
+    resources :memos, only: [:create, :destroy] do
+      member do
+        post :send_notification
+      end
+    end
 
     # Ideas resource with path: "" (matched after specific resources)
     resources :ideas, only: [:show, :edit, :update, :destroy], path: "" do

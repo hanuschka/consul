@@ -1,0 +1,65 @@
+<%= content_for :title, "##{@api_request_log.id}" %>
+
+<%= render Adm::HeaderComponent.new(
+  title: "#{@api_request_log.http_method} #{@api_request_log.request_path}",
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_api_request_logs_path
+) %>
+
+<div class="kern-container kern-container--form my-5">
+  <div class="kern-card p-4 mb-4">
+    <p class="mb-3">
+      <strong><%= t(".api_client") %></strong><br>
+      <% if @api_request_log.api_client.present? %>
+        <%= link_to @api_request_log.api_client.name, adm_api_client_path(@api_request_log.api_client) %>
+      <% else %>
+        —
+      <% end %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".http_method") %></strong><br>
+      <span class="kern-badge kern-badge--<%= @api_request_log.http_method_badge_variant %>"><%= @api_request_log.http_method %></span>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".request_path") %></strong><br>
+      <%= @api_request_log.request_path %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".full_url") %></strong><br>
+      <code class="fs-2"><%= @api_request_log.full_url %></code>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".response_status") %></strong><br>
+      <% if @api_request_log.response_status.present? %>
+        <span class="kern-badge kern-badge--<%= @api_request_log.response_status < 400 ? 'success' : 'danger' %>">
+          <%= @api_request_log.response_status %>
+        </span>
+      <% else %>
+        —
+      <% end %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".created_at") %></strong><br>
+      <%= l(@api_request_log.created_at, format: :long) %>
+    </p>
+
+    <% if @api_request_log.query_params.present? %>
+      <p class="mb-3">
+        <strong><%= t(".query_params") %></strong><br>
+        <code class="fs-2"><%= @api_request_log.query_params.to_json %></code>
+      </p>
+    <% end %>
+
+    <% if @api_request_log.body_params.present? %>
+      <p class="mb-0">
+        <strong><%= t(".body_params") %></strong><br>
+        <code class="fs-2"><%= @api_request_log.body_params.to_json %></code>
+      </p>
+    <% end %>
+  </div>
+</div>

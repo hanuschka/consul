@@ -1,0 +1,23 @@
+<li class="adm-connection-checks--badge -<%= status %>">
+  <span
+    class="adm-connection-checks--badge-icon material-symbols-outlined"
+    aria-hidden="true"
+  ><%= icon %></span>
+
+  <div class="adm-connection-checks--badge--body">
+    <div class="adm-connection-checks--badge-header">
+      <div class="adm-connection-checks--badge-label"><%= label %></div>
+    </div>
+    <p class="adm-connection-checks--badge-description"><%= description %></p>
+    <p class="adm-connection-checks--badge-hint"><%= hint %></p>
+
+    <% if error.present? %>
+      <div class="adm-connection-status--error-detail">
+        <div class="adm-connection-status--error-detail-label">
+          <%= t("adm.connection.show.connection_error_label") %>
+        </div>
+        <pre class="adm-connection-status--error-detail-message"><%= error %></pre>
+      </div>
+    <% end %>
+  </div>
+</li>

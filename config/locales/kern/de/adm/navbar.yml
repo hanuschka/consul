@@ -10,6 +10,8 @@ de:
           lässt sich per Drag & Drop anpassen. Navigationselemente können als direkte Links oder als
           Kategorien mit Untermenüs strukturiert werden – so entstehen übersichtliche, mehrstufige Menüs.
         intro_text_p2: >
+          Beim Erstellen eines neuen Eintrags stehen Ihnen drei Typen zur Verfügung: Systemseiten (z.B. Mängelmelder, Projektübersicht, Veranstaltungskalender), Projekte und eigene Links. Systemseiten sind nur auswählbar, wenn das jeweilige Modul unter „Module" aktiviert ist.
+        intro_text_p3: >
           Bitte beachten Sie: Änderungen an der Navigation sind nach dem Speichern sofort für alle
           Besucher der Plattform sichtbar. Prüfen Sie neue Einträge daher vor der Veröffentlichung
           sorgfältig auf korrekte Verlinkung und Bezeichnung.

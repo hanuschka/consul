@@ -4,8 +4,9 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     [
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
+      { label: t("adm.menu.items.modules"),       icon: "widgets",          path: adm_modules_path },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
-      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems, divider: true },
+      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems },
       { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: adm_statistics_path },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
       { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }

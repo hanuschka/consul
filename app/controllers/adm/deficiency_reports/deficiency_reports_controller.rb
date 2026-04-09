@@ -100,13 +100,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def administer
-    @deficiency_report = DeficiencyReport.find(params[:id])
-    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-
-    @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
-      { name: @deficiency_report.title }
-    ]
+    redirect_to adm_deficiency_reports_deficiency_report_path(params[:id])
   end
 
   def update_administer

@@ -33,20 +33,6 @@
       document.body.classList.toggle("-preview-mode", activated);
 
       const previewModeEnabled = document.body.classList.contains("-preview-mode");
-      const projektInfo = document.querySelector(".js-sidebar-projekt-info");
-
-      if (projektInfo) {
-        const projektInfoContent = projektInfo.querySelector(".custom-content-block-body");
-
-        if (!projektInfoContent) {
-          if (activated) {
-            projektInfo.classList.add("hide");
-          } else {
-            projektInfo.classList.remove("hide");
-          }
-        }
-      }
-
       const sdgList = document.querySelector(".js-sidebar-card .js-sdg-goal-tag-list");
       const anyCheckedSDG = sdgList ? sdgList.querySelector("input:checked") : false;
       const sdgSidebarCard = sdgList ? sdgList.closest(".js-sidebar-card") : null;
@@ -79,6 +65,33 @@
 
         $(deactivatedPhases).show();
       }
+
+      this.toggleEmptyContentBlocks(previewModeEnabled);
+    },
+
+    toggleEmptyContentBlocks(previewModeEnabled) {
+      if (previewModeEnabled) {
+        const contentBlocks = document.querySelectorAll(".js-projekt-content-block");
+        contentBlocks.forEach((block) => this.hideEmptyContentBlock(block));
+      } else {
+        document.querySelectorAll(".-hidden-by-preview").forEach((element) => {
+          element.classList.remove("-hidden-by-preview");
+          $(element).show();
+        });
+      }
+    },
+
+    hideEmptyContentBlock(block) {
+      const hasContent = block.textContent.trim().length > 0 ||
+        block.querySelector("img, iframe, video, embed, svg, canvas");
+
+      if (hasContent) return;
+
+      const sidebarCard = block.closest(".js-sidebar-card");
+      const targetElement = sidebarCard || block;
+
+      targetElement.classList.add("-hidden-by-preview");
+      $(targetElement).hide();
     },
   };
 }).call(this);

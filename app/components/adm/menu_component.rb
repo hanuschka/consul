@@ -35,6 +35,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def profiles_subitems
       [
         { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
+        { label: t("adm.menu.items.profiles_subitems.section_contact_people"), path: adm_section_contact_people_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]
     end

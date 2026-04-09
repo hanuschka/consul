@@ -2,9 +2,19 @@ de:
   adm:
     landing_pages:
       title: Themenseiten
+      home:
+        title: Willkommen bei den Themenseiten
+        stats:
+          total: Gesamt
+          published: Veröffentlicht
+          draft: Entwurf
+        quick_links:
+          new: Neue Themenseite
+          all: Alle Themenseiten
       menu:
         aria_label: Themenseiten Navigation
         items:
+          home: Home
           landing_pages: Themenseiten
           managers: Team
       landing_pages:

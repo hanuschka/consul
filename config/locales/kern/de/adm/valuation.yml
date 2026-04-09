@@ -2,9 +2,20 @@ de:
   adm:
     valuation:
       title: Gutachten
+      home:
+        title: Home
+        stats:
+          total: Investitionen gesamt
+          not_valued: Noch nicht bewertet
+          in_valuation: In Bewertung
+          valued: Abgeschlossen
+        quick_links:
+          all: Alle Investitionen
+          not_valued: Nicht bewertete
       menu:
         aria_label: Gutachten Navigation
         items:
+          home: Home
           valuators: Team
           investments: Vorschläge
       investments:

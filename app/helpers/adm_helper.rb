@@ -33,6 +33,7 @@ module AdmHelper
     "budget_investments" => "savings",
     "formular" => "assignment",
     "formular_answers" => "list_alt",
+    "formular_follow_up_emails" => "forward_to_inbox",
     "officing_managers" => "badge",
     "officing_manager_audits" => "history",
     "ai_settings" => "smart_toy",
@@ -87,7 +88,7 @@ module AdmHelper
   def deficiency_report_tabs(deficiency_report, current_action: nil)
     current_action ||= action_name
 
-    tabs = %w[show administer audits].map do |action|
+    tabs = %w[show audits].map do |action|
       {
         label: I18n.t("adm.deficiency_reports.deficiency_reports.tabs.#{action}"),
         url: send("#{action == 'show' ? '' : "#{action}_"}adm_deficiency_reports_deficiency_report_path", deficiency_report),

@@ -28,6 +28,20 @@
         </div>
       </div>
 
+      <% if recipient.present? %>
+        <div class="mb-4">
+          <div class="kern-title kern-title--small mb-2"><%= t(".recipient") %></div>
+          <div class="kern-row">
+            <div class="kern-col-12 kern-col-md-3">
+              <p class="kern-body kern-body--small mb-0"><%= t(".recipient_description") %></p>
+            </div>
+            <div class="kern-col-12 kern-col-md-7">
+              <div class="adm-email-template-preview"><%= recipient %></div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
       <% if default_template_preview.present? %>
         <div class="mb-4">
           <div class="kern-title kern-title--small mb-2"><%= t(".default_template") %></div>
@@ -50,7 +64,7 @@
               <p class="kern-body kern-body--small mb-0"><%= t(".subject_description") %></p>
             </div>
             <div class="kern-col-12 kern-col-md-7">
-              <%= form.text_field :subject, label: false, class: "kern-form-input__input" %>
+              <%= form.text_field :subject, label: false, class: "kern-form-input__input", placeholder: t(".subject_placeholder") %>
             </div>
           </div>
         </div>
@@ -76,12 +90,17 @@
           </div>
         </div>
 
-        <%= form_submit_button %>
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <%= kern_button(text: I18n.t("shared.submit"), icon: "save", type: "submit") %>
+
+          <% if @email_template.customized? %>
+            <%= kern_button(text: t(".send_test"), icon: "send", style: :secondary, type: :submit, form: "send_test_#{dom_id(@email_template)}") %>
+          <% end %>
+        </div>
       <% end %>
 
       <% if @email_template.customized? %>
-        <%= form_with url: send_test_path, method: :post, class: "mt-3" do %>
-          <%= kern_button(text: t(".send_test"), icon: "send", style: :secondary, type: :submit) %>
+        <%= form_with url: send_test_path, method: :post, html: { id: "send_test_#{dom_id(@email_template)}" } do %>
         <% end %>
       <% end %>
 

@@ -121,6 +121,19 @@ de:
           Umgebung der Beteiligungsplattform verlassen möchten, bevor Daten an Dritte übermittelt werden.
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
+      general:
+        enable_projekt_events_page: Veranstaltungskalender
+        enable_projekt_events_page_description: >
+          Aktiviert eine zentrale Übersichtsseite für alle öffentlichen Veranstaltungen aus den Beteiligungsprojekten. Bürger können dort kommende Workshops, Bürgerversammlungen und Informationsveranstaltungen einsehen. Die Seite kann über die Navigation erreichbar gemacht werden.
+        enable_investments_overview: Budgetübersicht
+        enable_investments_overview_description: >
+          Aktiviert eine zentrale Übersichtsseite, die alle Bürgervorschläge aus laufenden und abgeschlossenen Bürgerhaushalten zusammenfasst. Bürger können dort den Stand der Vorschläge, Machbarkeitsbewertungen und Abstimmungsergebnisse projektübergreifend einsehen.
+        enable_polls_overview: Abstimmungsübersicht
+        enable_polls_overview_description: >
+          Aktiviert eine zentrale Übersichtsseite, die alle laufenden und abgeschlossenen Abstimmungen aus den Beteiligungsprojekten zusammenfasst. Bürger können dort auf einen Blick sehen, wo sie aktuell abstimmen können und welche Ergebnisse bereits vorliegen.
+        enable_proposals_overview: Vorschlagsübersicht
+        enable_proposals_overview_description: >
+          Aktiviert eine zentrale Übersichtsseite, die alle eingereichten Bürgervorschläge aus den Beteiligungsprojekten projektübergreifend zusammenfasst. Bürger können dort Vorschläge durchsuchen, unterstützen und kommentieren, ohne zuerst ein konkretes Projekt aufrufen zu müssen.
     extended_option:
       general:
         title: Titel der Anwendung
@@ -192,35 +205,73 @@ de:
       external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
     deficiency_reports:
       show_in_main_menu: Mängelmelder in der Navigation
-      show_in_main_menu_description: Zeigt den Menüpunkt Mängelmelder in der Hauptnavigation an
+      show_in_main_menu_description: >
+        Wenn aktiviert, wird der Mängelmelder als eigenständiger Menüpunkt in der Hauptnavigation der Plattform angezeigt. Nutzer können so direkt über das Hauptmenü auf die Mängelübersicht zugreifen, ohne erst ein Projekt aufrufen zu müssen. Deaktivieren Sie diese Option, wenn der Mängelmelder nur innerhalb bestimmter Projekte sichtbar sein soll.
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
-      admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter zu
+      admins_must_assign_officer_description: >
+        Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
       officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Mängel
-      officers_can_administer_assigned_reports_description: Sachbearbeiter haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
+      officers_can_administer_assigned_reports_description: >
+        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Mangelmeldungen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Meldungen nur einsehen, aber nicht verwalten.
       officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Mängel
-      officers_can_edit_assigned_reports_description: Sachbearbeiter haben die volle Kontrolle über ihnen zugewiesene Mängel
+      officers_can_edit_assigned_reports_description: >
+        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Mangelmeldungen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Meldungen unvollständig oder fehlerhaft sind und vor der Bearbeitung angepasst werden müssen.
       allow_voting: Nutzer-Bewertung pro Mangel
-      allow_voting_description: Aktiviert die Nutzer-Bewertung für den Mängelmelder
+      allow_voting_description: >
+        Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.
       enable_comments: Kommentarfunktion
-      enable_comments_description: Nutzer können unterhalb eines Mangels kommentieren
+      enable_comments_description: >
+        Wenn aktiviert, können Nutzer unterhalb einer Mangelmeldung Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, Statusupdates oder ergänzende Hinweise zum gemeldeten Mangel. Kommentare können von Administratoren moderiert werden.
       intro_text: Einleitungstext für den Mängelmelder
-      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+      intro_text_description: >
+        Zeigt einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite an. Nutzen Sie diesen Text, um Bürgern den Zweck des Mängelmelders zu erklären, Hinweise zur Nutzung zu geben oder auf wichtige Rahmenbedingungen hinzuweisen — z.B. welche Arten von Mängeln gemeldet werden können und wie der Bearbeitungsprozess abläuft.
       enable_my_posts_filter: Meine Beiträge
-      enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-      enable_geoman_controls_in_maps: Kartenzeichnung durch Nutzer.
-      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
+      enable_my_posts_filter_description: >
+        Zeigt einen Filter auf der Mängelübersichtsseite, mit dem eingeloggte Nutzer gezielt nur ihre eigenen eingereichten Mangelmeldungen anzeigen lassen können. Dies erleichtert die Übersicht über den Status der eigenen Meldungen, ohne alle Einträge durchsuchen zu müssen.
+      enable_geoman_controls_in_maps: Zeichenwerkzeuge in Karten aktivieren
+      enable_geoman_controls_in_maps_description: >
+        Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn ein Mangel nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine beschädigte Straße oder ein verschmutztes Areal. Die Zeichnung wird zusammen mit der Meldung gespeichert.
       admin_acceptance_required: Administrator-Freigabe
-      admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+      admin_acceptance_required_description: >
+        Wenn aktiviert, müssen Administratoren neue Mangelmeldungen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Meldungen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene oder doppelte Meldungen direkt veröffentlicht werden.
       document_upload: Zusätzliche Dokumente
-      document_upload_description: Ermöglicht es den Nutzer Dokumente den Vorschlägen anzuhängen
+      document_upload_description: >
+        Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Mangelmeldungen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Gutachten, Korrespondenz mit Behörden oder detaillierte Beschreibungen, die über ein einfaches Textfeld hinausgehen.
       external_video: Externes Video einbinden
-      external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
+      external_video_description: >
+        Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Mangelmeldungen einzubetten. So können z.B. Videoaufnahmen eines Mangels, Erklärvideos oder Dokumentationen direkt in der Meldung angezeigt werden, ohne dass große Dateien hochgeladen werden müssen.
       voice_assistant: Sprachassistent für Mängelmeldungen
-      voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
-      send_feedback_form_link: Feedback-Formular
-      send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer, nachdem die Mängelmeldung abgeschlossen wurde
+      voice_assistant_description: >
+        Aktiviert einen KI-unterstützten Sprachassistenten, der Nutzer beim Erstellen von Mangelmeldungen unterstützt. Nutzer können den Mangel per Spracheingabe beschreiben, und der Assistent erstellt daraus automatisch eine strukturierte Meldung mit Titel und Beschreibung. Besonders geeignet für mobile Nutzung und barrierefreien Zugang.
+      send_feedback_form_link: Feedback-Formular versenden
+      send_feedback_form_link_description: >
+        Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
       show_create_report_button: Einreichen-Button für Mängelmeldungen
-      show_create_report_button_description: Zeigt einen Button zum Einreichen von Mängelmeldungen in der Seitenleiste der Mängelübersichtsseite an
+      show_create_report_button_description: >
+        Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+
+    process:
+      proposals: Vorschläge
+      proposals_description: >
+        Ermöglicht es Bürgern, eigene Verbesserungsvorschläge einzureichen, die von anderen Nutzern unterstützt und kommentiert werden können. Vorschläge können mit Standorten, Labels und Stimmungsbildern versehen werden. Bei ausreichender Unterstützung können sie zur Abstimmung weitergeleitet werden.
+      polls: Abstimmungen
+      polls_description: >
+        Aktiviert das Abstimmungsmodul, mit dem Bürger direkte Entscheidungen zu konkreten Fragestellungen treffen können. Abstimmungen unterstützen verschiedene Fragetypen wie Einfach- und Mehrfachauswahl. Sowohl Online- als auch Offline-Abstimmungen sind möglich.
+      budgets: Bürgerhaushalt
+      budgets_description: >
+        Aktiviert den Bürgerhaushalt, bei dem Bürger Investitionsvorschläge einreichen und über die Verteilung eines festgelegten Budgets abstimmen können. Der Prozess umfasst mehrere Phasen: Einreichung, Machbarkeitsprüfung durch die Verwaltung und finale Bürgerabstimmung.
+      legislation: Kollaborative Textbearbeitung
+      legislation_description: >
+        Ermöglicht kollaborative Textarbeit, bei der Bürger Entwürfe lesen, einzelne Absätze kommentieren und Änderungsvorschläge einbringen können. Geeignet für die gemeinsame Erarbeitung von Satzungen, Leitlinien oder Verordnungen im Rahmen von Beteiligungsverfahren.
+      projekts: Projektübersicht
+      projekts_description: >
+        Aktiviert die Projektübersichtsseite, auf der alle laufenden und abgeschlossenen Beteiligungsprojekte für Bürger zugänglich sind. Die Übersicht bietet Filtermöglichkeiten und zeigt den aktuellen Stand jedes Projekts. Einzelne Projekte bleiben auch bei deaktivierter Übersicht über direkte Links erreichbar.
+      deficiency_reports: Mängelmelder
+      deficiency_reports_description: >
+        Aktiviert den Mängelmelder, über den Bürger Schäden, Verschmutzungen oder andere Mängel im öffentlichen Raum melden können. Meldungen werden mit Standort, Kategorie und Beschreibung erfasst und können von Sachbearbeitern bearbeitet und beantwortet werden.
+      ideas: Ideenplattform
+      ideas_description: >
+        Aktiviert die Ideenplattform, auf der Bürger Ideen und Anregungen für die Stadtentwicklung einreichen können. Ideen können von anderen Nutzern bewertet und kommentiert werden. Das Modul eignet sich für offene Ideensammlungen ohne formalen Abstimmungsprozess.
 
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
@@ -247,24 +298,6 @@ de:
     # feature:
     #   map: Karten anzeigen
     #   map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
-    # extended_feature:
-    #   general:
-    #     elasticsearch: "Elasticsearch"
-    #     elasticsearch_description: "Elasticsearch ist die führende verteilte, RESTful, Open-Source-Such- und Analyse-Engine, die auf Geschwindigkeit, horizontale Skalierbarkeit, Zuverlässigkeit und einfache Verwaltung ausgelegt ist."
-    #     extended_editor_for_admins: Erweiterter Editor für den Admin-Panel
-    #     extended_editor_for_admins_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Admin-Panel erstellt werden
-    #     extended_editor_for_users: Erweiterter Editor für Nutzer im Frontend
-    #     extended_editor_for_users_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Frontend von Nutzern erstellt werden
-    #     language_switcher_in_menu: Sprachumschalter in Navigation anbieten
-    #     language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
-    #     enable_projekt_events_page: Veranstaltungskalender anzeigen
-    #     enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
-    #     enable_investments_overview: Budgetübersicht anzeigen
-    #     enable_investments_overview_description: Zeigt die Übersicht aller Budgetvorschläge in der Hauptnavigation an
-    #     enable_google_translate: Google Translate aktivieren
-    #     enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
-    #     show_guest_login_links: Zeige Gast-Login an
-    #     show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
     #   gdpr:
     #     show_cookie_banner: Cookies Banner anzeigen
     #     show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzer auf Tracking hinzuweisen

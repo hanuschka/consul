@@ -240,6 +240,8 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
+        "extended_feature.general.enable_polls_overview": false,
+        "extended_feature.general.enable_proposals_overview": false,
         "extended_feature.general.enable_google_translate": false,
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,

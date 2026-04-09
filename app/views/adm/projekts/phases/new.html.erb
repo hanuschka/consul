@@ -3,7 +3,14 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: phases_adm_projekts_projekt_path(@projekt)) do |header| %>
   <% header.with_hint do %>
     <h3 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h3>
-    <p class="kern-body"><%= t(".intro_text") %></p>
+    <p class="kern-body mb-4"><%= t(".intro_text") %></p>
+
+    <h3 class="kern-title kern-title--small mb-3"><%= t(".phases_overview_title") %></h3>
+    <% t(".phases_overview").each do |key, phase| %>
+      <p class="adm-hint__text adm-hint__text--spaced">
+        <strong><%= phase[:name] %></strong> — <%= phase[:description] %>
+      </p>
+    <% end %>
   <% end %>
 <% end %>
 

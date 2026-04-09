@@ -4,7 +4,7 @@ de:
       index:
         title: API-Anfragen-Logs
         intro: >
-          Protokollierte Anfragen an die öffentliche API.
+          Hier sehen Sie alle eingehenden API-Anfragen externer Clients an Ihre Plattform. Jeder Eintrag zeigt die verwendete HTTP-Methode, den angefragten Pfad, den Antwortstatus und den zugehörigen API-Client. So können Sie nachvollziehen, welche Anwendungen auf Ihre Daten zugreifen, fehlerhafte Anfragen erkennen und die API-Nutzung im Blick behalten.
         id: ID
         http_method: Methode
         request_path: Pfad

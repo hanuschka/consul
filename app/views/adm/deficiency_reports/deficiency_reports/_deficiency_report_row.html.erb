@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
   <th scope="row" class="kern-table__header" style="min-width: 250px; width: 250px; max-width: 250px;">
-    <%= link_to truncate(deficiency_report.title, length: 25), deficiency_report_path(deficiency_report), target: "_blank", class: "kern-link", title: deficiency_report.title %>
+    <%= link_to truncate(deficiency_report.title, length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title %>
   </th>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
     <td class="kern-table__cell">
@@ -19,8 +19,8 @@
   <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.show.view_on_site"), url: deficiency_report_path(deficiency_report), icon: "open_in_new") %>
       <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "visibility") %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.administer"), url: administer_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "settings") %>
       <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "history") %>
       <% if deficiency_report.feedback_form.present? %>
         <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "feedback") %>

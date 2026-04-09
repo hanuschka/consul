@@ -8,6 +8,8 @@ de:
       subject: Ihr Konto ist bereits bestätigt.
     proposal_created:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
+    formular_answer_created:
+      subject: "Vielen Dank für Ihre Einsendung!"
     comment:
       hi: Hallo
       new_comment_by: Es gibt einen neuen Kommentar von <strong>%{commenter}</strong>

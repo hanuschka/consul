@@ -265,6 +265,23 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def formular_answer_created(formular_answer)
+    @formular_answer = formular_answer
+    @author = User.find_by(id: formular_answer.submitter_id)
+    return if @author.blank?
+
+    @email_to = @author.email
+    @projekt_phase = formular_answer.formular.projekt_phase
+
+    with_user(@author) do
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @author.username,
+        "projekt_title" => @projekt_phase.projekt.page.title,
+        "phase_title" => @projekt_phase.title
+      }, to: @email_to, default_subject: t("mailers.formular_answer_created.subject"))
+    end
+  end
+
   def formular_answer_confirmation(formular_answer)
     @email_to = formular_answer.email_address
     return if @email_to.blank?

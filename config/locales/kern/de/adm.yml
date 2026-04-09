@@ -9,10 +9,11 @@ de:
         home: Home
         projekts: Projekte
         application: Applikation
+        modules: Module
         application_subitems:
           homepage: Startseite
           documents: Dokumente
-          pages: Seiten
+          pages: Systemseiten
           navbar: Navigation
           metadata_settings: Metadaten
           gdpr_settings: DSGVO

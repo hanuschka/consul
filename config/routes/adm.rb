@@ -37,6 +37,9 @@ namespace :adm do
   end
   # application
 
+  # modules
+  resource :modules, controller: "modules", only: [:show]
+
   # profiles
   resource :role_assignment, only: [] do
     post :create

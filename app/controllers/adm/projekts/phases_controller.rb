@@ -315,7 +315,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
     @formular_answers = @formular.formular_answers
-    @formular_follow_up_letters = @formular.formular_follow_up_letters
 
     respond_to do |format|
       format.html do
@@ -331,6 +330,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
           filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
       end
     end
+  end
+
+  def formular_follow_up_emails
+    authorize_phase(:update?)
+    @formular = @projekt_phase.formular
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
+    @formular_follow_up_letters = @formular.formular_follow_up_letters
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
   end
   def milestones
     authorize_phase(:update?)

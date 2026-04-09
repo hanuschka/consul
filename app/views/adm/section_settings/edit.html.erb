@@ -1,0 +1,37 @@
+<%= content_for :title, t(".title", section: section_label(@section_setting.section)) %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t(".title", section: section_label(@section_setting.section)),
+  breadcrumbs: @breadcrumbs,
+  narrow: true
+) %>
+
+<div class="kern-container kern-container--form my-5">
+  <%= form_with model: @section_setting, url: adm_section_setting_path(@section_setting.section), method: :patch do |f| %>
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".intro_text"),
+      hint: t(".intro_text_hint")
+    ) do %>
+      <%= f.text_field :intro_text, label: false, maxlength: 350, class: "kern-input",
+          placeholder: t(".intro_text_placeholder") %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".notice_message"),
+      hint: t(".notice_message_hint")
+    ) do %>
+      <%= f.text_area :notice_message, label: false, class: "kern-input", rows: 4,
+          placeholder: t(".notice_message_placeholder") %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      label: t(".notice_active"),
+      hint: t(".notice_active_hint"),
+      divider: false
+    ) do %>
+      <%= f.check_box :notice_active %>
+    <% end %>
+
+    <%= form_submit_button %>
+  <% end %>
+</div>

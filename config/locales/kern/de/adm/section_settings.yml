@@ -1,0 +1,23 @@
+de:
+  adm:
+    section_settings:
+      title: Sektions-Einstellungen
+      flash:
+        updated: Einstellungen wurden erfolgreich gespeichert.
+      sections:
+        ideas: Ideen
+        deficiency_reports: "M\u00E4ngelmelder"
+        projekts: Projekte
+        moderation: Moderation
+        valuation: Valuation
+        landing_pages: Themenseiten
+      edit:
+        title: "%{section} bearbeiten"
+        intro_text: Einleitungstext
+        intro_text_hint: "Kurzer Einleitungstext, der auf der Startseite des Bereichs angezeigt wird (max. 350 Zeichen)."
+        intro_text_placeholder: Einleitungstext eingeben...
+        notice_message: Hinweismeldung
+        notice_message_hint: Hinweismeldung, die den Nutzern im jeweiligen Bereich angezeigt wird.
+        notice_message_placeholder: Hinweismeldung eingeben...
+        notice_active: Hinweis aktiv
+        notice_active_hint: Wenn aktiviert, wird die Hinweismeldung im jeweiligen Bereich angezeigt.

@@ -1,0 +1,33 @@
+<%= form_with model: [:adm, @section_contact_person] do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user")) do %>
+    <%= f.select :user_id,
+      options_from_collection_for_select(User.where(id: @section_contact_person.user_id), :id, :name, @section_contact_person.user_id),
+      { include_blank: t(".select_user") },
+      { label: false, class: "kern-form-select__select", data: { controller: "user-select", user_select_url_value: search_adm_section_contact_people_path } } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:section), hint: t(".hints.section")) do %>
+    <%= f.select :section,
+      SectionContactPerson::SECTIONS.map { |s| [t("adm.section_contact_people.index.sections.#{s}"), s] },
+      { include_blank: t(".select_section") },
+      { label: false, class: "kern-form-select__select" } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:role), hint: t(".hints.role")) do %>
+    <%= f.text_field :role, label: false, placeholder: SectionContactPerson.human_attribute_name(:role) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:email), hint: t(".hints.email")) do %>
+    <%= f.email_field :email, label: false, placeholder: SectionContactPerson.human_attribute_name(:email) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:phone), hint: t(".hints.phone")) do %>
+    <%= f.text_field :phone, label: false, placeholder: SectionContactPerson.human_attribute_name(:phone) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:position), hint: t(".hints.position")) do %>
+    <%= f.number_field :position, label: false, placeholder: SectionContactPerson.human_attribute_name(:position) %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

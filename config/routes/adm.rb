@@ -65,6 +65,9 @@ namespace :adm do
     patch :unverify, on: :member
     get :csv_download, on: :collection
   end
+  resources :section_contact_people do
+    post :search, on: :collection
+  end
   # profiles
 
   # notifications
@@ -99,6 +102,7 @@ namespace :adm do
   resource :connection, controller: "connection", only: [:show]
   get "connect", to: "connection#show"
 
+  resources :section_settings, only: [:edit, :update], param: :section
   resources :ai_settings, only: [:index, :update] do
     patch :update_api_key, on: :collection
   end

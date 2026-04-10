@@ -7,8 +7,12 @@
   team_url: new_adm_landing_pages_manager_path,
   recent_items: @recent_items,
   recent_items_url: adm_landing_pages_landing_pages_list_path,
-  recent_item_columns: [
-    { label: t("shared.table.title"), value: ->(item) { item.title } }
+  recent_item_partial: "adm/landing_pages/landing_pages/landing_page",
+  recent_item_headers: [
+    t("adm.landing_pages.landing_pages.index.table.header.name"),
+    t("adm.landing_pages.landing_pages.index.table.header.url"),
+    t("adm.landing_pages.landing_pages.index.table.header.status"),
+    ""
   ],
   intro_text: @section_setting&.intro_text,
   quick_links: @quick_links,

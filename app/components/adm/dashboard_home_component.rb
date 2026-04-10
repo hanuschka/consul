@@ -2,10 +2,12 @@ class Adm::DashboardHomeComponent < ApplicationComponent
   delegate :empty_state, :time_ago_in_words, to: :helpers
 
   attr_reader :team_members, :team_url, :recent_items, :recent_items_url, :recent_item_columns,
+              :recent_item_partial, :recent_item_headers, :recent_item_as,
               :intro_text, :quick_links, :stats, :contact_persons, :notice,
               :activities, :section_settings_path
 
   def initialize(team_members:, team_url:, recent_items:, recent_items_url:, recent_item_columns: [],
+                 recent_item_partial: nil, recent_item_headers: [], recent_item_as: nil,
                  intro_text: nil, quick_links: [], stats: [], contact_persons: [],
                  notice: nil, activities: [], section_settings_path: nil)
     @team_members = team_members
@@ -13,6 +15,9 @@ class Adm::DashboardHomeComponent < ApplicationComponent
     @recent_items = recent_items
     @recent_items_url = recent_items_url
     @recent_item_columns = recent_item_columns
+    @recent_item_partial = recent_item_partial
+    @recent_item_headers = recent_item_headers
+    @recent_item_as = recent_item_as
     @intro_text = intro_text
     @quick_links = quick_links
     @stats = stats

@@ -4,7 +4,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @team_members = scoped_team_members
     @recent_items = policy_scope([:adm, :projekts, Projekt])
-                      .includes(page: :translations)
+                      .includes(:parent, :landing_page, image_attachment: :blob, images_attachments: :blob, page: :translations)
                       .order(updated_at: :desc).limit(10)
 
     @section_setting = SectionSetting.for_section("projekts")

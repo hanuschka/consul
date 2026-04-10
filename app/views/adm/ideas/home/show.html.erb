@@ -7,8 +7,17 @@
   team_url: adm_ideas_officers_path,
   recent_items: @recent_items,
   recent_items_url: adm_ideas_ideas_list_path,
-  recent_item_columns: [
-    { label: t("shared.table.title"), value: ->(item) { item.title }, url: ->(item) { adm_ideas_idea_path(item) } }
+  recent_item_partial: "adm/ideas/ideas/idea_row",
+  recent_item_as: :idea,
+  recent_item_headers: [
+    t("adm.ideas.ideas.index.table.title"),
+    t("adm.ideas.ideas.index.table.admin_accepted"),
+    t("adm.ideas.ideas.index.table.created_at"),
+    t("adm.ideas.ideas.index.table.author"),
+    t("adm.ideas.ideas.index.table.status"),
+    t("adm.ideas.ideas.index.table.category"),
+    t("adm.ideas.ideas.index.table.officer"),
+    t("shared.table.actions")
   ],
   intro_text: @section_setting&.intro_text,
   quick_links: @quick_links,

@@ -136,36 +136,49 @@
         <table class="kern-table">
           <thead class="kern-table__head">
             <tr class="kern-table__row">
-              <% recent_item_columns.each do |col| %>
-                <th scope="col" class="kern-table__header"><%= col[:label] %></th>
+              <% if recent_item_partial.present? %>
+                <% recent_item_headers.each do |header| %>
+                  <th scope="col" class="kern-table__header"><%= header %></th>
+                <% end %>
+              <% else %>
+                <% recent_item_columns.each do |col| %>
+                  <th scope="col" class="kern-table__header"><%= col[:label] %></th>
+                <% end %>
+                <th scope="col" class="kern-table__header"><%= t(".updated_at") %></th>
               <% end %>
-              <th scope="col" class="kern-table__header"><%= t(".updated_at") %></th>
             </tr>
           </thead>
           <tbody class="kern-table__body">
-            <% recent_items.each do |item| %>
-              <tr class="kern-table__row">
-                <% recent_item_columns.each_with_index do |col, i| %>
-                  <% if i == 0 %>
-                    <th scope="row" class="kern-table__header">
-                      <% if col[:url] %>
-                        <%= link_to col[:value].call(item), col[:url].call(item), class: "link strong" %>
-                      <% else %>
-                        <%= col[:value].call(item) %>
-                      <% end %>
-                    </th>
-                  <% else %>
-                    <td class="kern-table__cell">
-                      <% if col[:url] %>
-                        <%= link_to col[:value].call(item), col[:url].call(item), class: "kern-link" %>
-                      <% else %>
-                        <%= col[:value].call(item) %>
-                      <% end %>
-                    </td>
+            <% if recent_item_partial.present? %>
+              <% recent_items.each do |item| %>
+                <% local_name = recent_item_as || recent_item_partial.split("/").last.delete_prefix("_").to_sym %>
+                <%= render recent_item_partial, **{ local_name => item } %>
+              <% end %>
+            <% else %>
+              <% recent_items.each do |item| %>
+                <tr class="kern-table__row">
+                  <% recent_item_columns.each_with_index do |col, i| %>
+                    <% if i == 0 %>
+                      <th scope="row" class="kern-table__header">
+                        <% if col[:url] %>
+                          <%= link_to col[:value].call(item), col[:url].call(item), class: "link strong" %>
+                        <% else %>
+                          <%= col[:value].call(item) %>
+                        <% end %>
+                      </th>
+                    <% else %>
+                      <td class="kern-table__cell">
+                        <% if col[:url] %>
+                          <%= link_to col[:value].call(item), col[:url].call(item), class: "kern-link" %>
+                        <% else %>
+                          <%= col[:value].call(item) %>
+                        <% end %>
+                      </td>
+                    <% end %>
                   <% end %>
-                <% end %>
-                <td class="kern-table__cell"><%= l(item.updated_at, format: :short) %></td>
-              </tr>
+                  <td class="kern-table__cell"><%= l(item.updated_at, format: :short) %></td>
+                </tr>
+              <% end %>
             <% end %>
           </tbody>
         </table>

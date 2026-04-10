@@ -7,10 +7,13 @@
   team_url: new_adm_projekts_manager_path,
   recent_items: @recent_items,
   recent_items_url: adm_projekts_projekts_list_path,
-  recent_item_columns: [
-    { label: Projekt.model_name.human, value: ->(item) { item.title }, url: ->(item) { details_adm_projekts_projekt_path(item) } },
-    { label: Projekt.human_attribute_name("total_duration_start"), value: ->(item) { item.total_duration_start } },
-    { label: Projekt.human_attribute_name("total_duration_end"), value: ->(item) { item.total_duration_end } }
+  recent_item_partial: "adm/projekts/projekts/projekt",
+  recent_item_headers: [
+    Projekt.model_name.human,
+    Projekt.human_attribute_name("total_duration_start"),
+    Projekt.human_attribute_name("total_duration_end"),
+    t("adm.projekts.projekts.index.table.status"),
+    t("adm.projekts.projekts.index.table.actions")
   ],
   intro_text: @section_setting&.intro_text,
   quick_links: @quick_links,

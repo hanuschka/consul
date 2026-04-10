@@ -24,9 +24,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.moderation.home.quick_links.pending"), path: adm_moderation_proposals_path(filter: "pending_flag_review"), primary: true },
-      { label: t("adm.moderation.home.quick_links.comments"), path: adm_moderation_comments_path },
-      { label: t("adm.moderation.home.quick_links.users"), path: adm_moderation_users_path }
+      { label: t("adm.moderation.home.quick_links.all"), path: adm_moderation_proposals_path, primary: true }
     ]
 
     @breadcrumbs = [

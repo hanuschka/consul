@@ -19,8 +19,7 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.valuation.home.quick_links.all"), path: adm_valuation_investments_path, primary: true },
-      { label: t("adm.valuation.home.quick_links.not_valued"), path: adm_valuation_investments_path(advanced_filters: ["under_valuation"]) }
+      { label: t("adm.valuation.home.quick_links.all"), path: adm_valuation_investments_path, primary: true }
     ]
 
     @breadcrumbs = [

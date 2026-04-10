@@ -20,8 +20,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @quick_links = [
       { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true },
-      { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path },
-      { label: t("adm.projekts.home.quick_links.current"), path: adm_projekts_projekts_list_path(filter: "current") }
+      { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path }
     ]
 
     @breadcrumbs = [

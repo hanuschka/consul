@@ -17,9 +17,7 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.ideas.home.quick_links.all"), path: adm_ideas_ideas_list_path, primary: true },
-      { label: t("adm.ideas.home.quick_links.active"), path: adm_ideas_ideas_list_path(filter: "active") },
-      { label: t("adm.ideas.home.quick_links.pending"), path: adm_ideas_ideas_list_path(filter: "pending") }
+      { label: t("adm.ideas.home.quick_links.all"), path: adm_ideas_ideas_list_path, primary: true }
     ]
 
     @breadcrumbs = [

@@ -19,9 +19,7 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
     ]
 
     @quick_links = [
-      { label: t("adm.deficiency_reports.home.quick_links.all"), path: adm_deficiency_reports_deficiency_reports_list_path, primary: true },
-      { label: t("adm.deficiency_reports.home.quick_links.open"), path: adm_deficiency_reports_deficiency_reports_list_path(filter: "open") },
-      { label: t("adm.deficiency_reports.home.quick_links.closed"), path: adm_deficiency_reports_deficiency_reports_list_path(filter: "closed") }
+      { label: t("adm.deficiency_reports.home.quick_links.all"), path: adm_deficiency_reports_deficiency_reports_list_path, primary: true }
     ]
 
     @breadcrumbs = [

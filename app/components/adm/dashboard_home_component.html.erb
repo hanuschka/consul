@@ -184,12 +184,6 @@
           </tbody>
         </table>
       </div>
-      <div class="mt-3">
-        <%= link_to recent_items_url, class: "kern-link" do %>
-          <%= t(".recent_show_all") %>
-          <span class="material-symbols-outlined adm-dashboard__link-icon" aria-hidden="true">arrow_forward</span>
-        <% end %>
-      </div>
     <% else %>
       <%= empty_state(title: t(".no_recent"), icon: "history") %>
     <% end %>
@@ -227,15 +221,6 @@
     </div>
   <% end %>
 
-  <%# ── Settings link (for admins) ───────────────────────────────────── %>
-  <% if section_settings_path.present? %>
-    <div class="adm-dashboard__settings-link mt-4 mb-4">
-      <%= link_to section_settings_path, class: "kern-link" do %>
-        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
-        <%= t(".settings_link") %>
-      <% end %>
-    </div>
-  <% end %>
 </div>
 
 <script>

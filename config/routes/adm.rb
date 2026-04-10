@@ -38,7 +38,7 @@ namespace :adm do
   # application
 
   # modules
-  resource :modules, controller: "modules", only: [:show]
+  resource :modules, controller: "modules", only: [:show, :update]
 
   # profiles
   resource :role_assignment, only: [] do
@@ -49,15 +49,6 @@ namespace :adm do
   end
 
   resources :administrators, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
-  resources :deficiency_report_managers, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
-  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy] do
-    post :search, on: :collection
-  end
-  resources :idea_managers, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
   resources :moderators, only: [:index, :new, :destroy] do
@@ -73,6 +64,9 @@ namespace :adm do
     patch :verify, on: :member
     patch :unverify, on: :member
     get :csv_download, on: :collection
+  end
+  resources :section_contact_people do
+    post :search, on: :collection
   end
   # profiles
 

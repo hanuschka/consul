@@ -13,7 +13,7 @@ class Adm::Moderation::BudgetInvestmentsController < Adm::Moderation::BaseContro
 
     @breadcrumbs = [
       { name: I18n.t("adm.moderation.menu.title"), icon: "payments" },
-      { name: I18n.t("adm.moderation.menu.budget_investments") }
+      { name: I18n.t("adm.moderation.menu.items.budget_investments") }
     ]
   end
 

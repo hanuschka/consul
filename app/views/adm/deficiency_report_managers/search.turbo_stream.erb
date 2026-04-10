@@ -1,3 +1,0 @@
-<%= turbo_stream.update "search_results" do %>
-  <%= render partial: "adm/role_assignments/users", locals: { users: @users, role: :deficiency_report_manager, pending_role_email: @pending_role_email, pending_already_exists: @pending_role_already_exists } %>
-<% end %>

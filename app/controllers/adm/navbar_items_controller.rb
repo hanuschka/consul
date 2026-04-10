@@ -67,9 +67,9 @@ module Adm
 
         @available_presets =
           if @landing_page.present?
-            NavbarItem::PRESETS.select { |k, _| k.in?(NavbarItem::LANDING_PAGE_ALLOWED_PRESETS) }
+            NavbarItem.enabled_presets.select { |k, _| k.in?(NavbarItem::LANDING_PAGE_ALLOWED_PRESETS) }
           else
-            NavbarItem::PRESETS
+            NavbarItem.enabled_presets
           end
 
         @available_projekts =

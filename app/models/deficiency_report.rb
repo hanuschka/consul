@@ -8,6 +8,7 @@ class DeficiencyReport < ApplicationRecord
   include Notifiable
   include Milestoneable
   include Memoable
+  include SectionTrackable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true
@@ -206,6 +207,14 @@ class DeficiencyReport < ApplicationRecord
 
   def archived?
     self.class.archived.exists?(id: id)
+  end
+
+  def section_tracking_section
+    "deficiency_reports"
+  end
+
+  def section_tracking_user
+    author
   end
 
   def assign_default_responsible

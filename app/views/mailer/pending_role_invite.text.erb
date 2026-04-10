@@ -1,8 +1,8 @@
-<%= t("mailers.pending_role_invite.title", org: Setting["org_name"]) %>
+<%= t("mailers.pending_role_invite.title", role: @role_name) %>
 
 <%= t("mailers.pending_role_invite.text", org: Setting["org_name"], role: @role_name) %>
 
-<%= t("mailers.pending_role_invite.button") %>: <%= new_user_registration_url %>
+<%= t("mailers.pending_role_invite.button") %>: <%= new_user_registration_url(invitation_token: @pending_role_assignment.invitation_token) %>
 
 <%= t("mailers.pending_role_invite.ignore") %>
 

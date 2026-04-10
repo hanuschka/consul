@@ -1,3 +1,4 @@
+<% if Setting["advanced_newsletter"].present? %>
 <div data-controller="clipboard">
 <div class="d-none" data-clipboard-target="source">
   <figure class="table">
@@ -177,3 +178,4 @@
     class: "kern-btn kern-btn--secondary",
     data: { action: "clipboard#copy" } %>
 </div>
+<% end %>

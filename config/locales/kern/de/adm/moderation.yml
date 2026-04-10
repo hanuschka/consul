@@ -3,7 +3,7 @@ de:
     moderation:
       title: Moderation
       home:
-        title: Home
+        title: Willkommen in der Moderation
         stats:
           pending: Ausstehend
           blocked_users: Blockierte Nutzer

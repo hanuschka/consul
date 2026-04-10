@@ -6,6 +6,7 @@ class SiteCustomization::Page < ApplicationRecord
   self.inheritance_column = nil
 
   include Imageable
+  include SectionTrackable
   attr_reader :origin
 
   belongs_to :projekt, touch: true
@@ -84,6 +85,14 @@ class SiteCustomization::Page < ApplicationRecord
     if status_changed? && status == 'published'
       self.published_at = Time.current
     end
+  end
+
+  def section_tracking_section
+    "landing_pages"
+  end
+
+  def section_tracking_user
+    nil
   end
 
   def sync_projekt_for_global_overview

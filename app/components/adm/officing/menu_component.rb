@@ -4,9 +4,13 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    items = [
-      { label: t("adm.officing.menu.items.dashboard"), icon: "dashboard", path: adm_officing_root_path }
-    ]
+    items = []
+
+    if current_user&.administrator?
+      items << { label: t("adm.officing.menu.items.officing_managers"), icon: "badge", path: adm_officing_managers_path, active_prefix: "/adm/officing_managers" }
+    end
+
+    items << { label: t("adm.officing.menu.items.dashboard"), icon: "dashboard", path: adm_officing_root_path }
 
     officing_manager = helpers.current_user.officing_manager
     return items unless officing_manager

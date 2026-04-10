@@ -1,6 +1,6 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
-    root to: "projekts#index"
+    root to: "home#show"
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
@@ -39,6 +39,7 @@ namespace :adm do
         get :poll_questions
         get :formular
         get :formular_answers
+        get :formular_follow_up_emails
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -170,6 +171,8 @@ namespace :adm do
         post :send_notification
       end
     end
+
+    get "list", to: "projekts#index", as: :projekts_list
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member

@@ -46,6 +46,6 @@
       </tbody>
     </table>
   <% else %>
-    <%= kern_alert(title: t('.no_layers'), style: :info) %>
+    <%= empty_state(title: t('.no_layers'), icon: "layers", link_url: new_adm_map_layer_path, link_text: t('.add_layer')) %>
   <% end %>
 </div>

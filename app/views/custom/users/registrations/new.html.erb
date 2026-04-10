@@ -30,13 +30,23 @@
 
         <%= f.hidden_field :use_redeemable_code %>
         <%= f.hidden_field :locale, value: I18n.locale %>
+        <% if params[:invitation_token].present? %>
+          <%= hidden_field_tag :invitation_token, params[:invitation_token] %>
+        <% end %>
+
+        <% invitation_pending = PendingRoleAssignment.find_by_invitation_token(params[:invitation_token]) if params[:invitation_token].present? %>
 
         <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
                                      autocomplete: "username",
                                      placeholder: t("devise_views.users.registrations.new.username_label"),
                                      "aria-label": t("devise_views.users.registrations.new.username_label"),
                                      hint: username_hint %>
-        <%= f.email_field :email, autocomplete: "email", placeholder: t("devise_views.users.registrations.new.email_label"), "aria-label": t("devise_views.users.registrations.new.email_label") %>
+        <%= f.email_field :email,
+                          autocomplete: "email",
+                          placeholder: t("devise_views.users.registrations.new.email_label"),
+                          "aria-label": t("devise_views.users.registrations.new.email_label"),
+                          value: invitation_pending&.email || resource.email,
+                          readonly: invitation_pending&.email.present? %>
 
         <%= f.invisible_captcha :address %>
 

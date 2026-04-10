@@ -4,15 +4,17 @@
       <%= f.hidden_field :user_id, data: { adm_user_select_target: "hiddenField" } %>
 
       <div data-adm-user-select-target="searchArea" class="<%= 'd-none' if @section_contact_person.user_id.present? %>">
-        <div class="d-flex gap-2">
-          <div class="kern-form-input" style="flex: 1;">
-            <input type="text" class="kern-form-input__input"
-              placeholder="<%= t('.search_user_placeholder') %>"
-              data-adm-user-select-target="input"
-              data-action="input->adm-user-select#search">
+        <div class="attribute-form string">
+          <div class="d-flex gap-2">
+            <div class="kern-form-input" style="flex: 1;">
+              <%= text_field_tag :search, nil, class: "kern-form-input__input",
+                  placeholder: t('.search_user_placeholder'),
+                  autocomplete: "off",
+                  data: { adm_user_select_target: "input", action: "input->adm-user-select#search" } %>
+            </div>
           </div>
         </div>
-        <div id="search_results" data-adm-user-select-target="results" class="mt-2"></div>
+        <div id="search_results" data-adm-user-select-target="results"></div>
       </div>
 
       <div data-adm-user-select-target="selectedDisplay" class="<%= 'd-none' unless @section_contact_person.user_id.present? %>">

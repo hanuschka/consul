@@ -1,7 +1,7 @@
 <tr class="kern-table__row" id="<%= dom_id(projekt) %>">
   <th scope="row" class="kern-table__header">
     <div class="d-flex align-items-center gap-3">
-      <%= projekt_thumbnail(projekt) %>
+      <%= link_to projekt_thumbnail(projekt), projekt_path(projekt), target: "_blank", data: { turbo: false }, title: t(".frontend_page") %>
       <div>
         <%= link_to projekt.title, details_adm_projekts_projekt_path(projekt), class: "link strong" %>
         <br>

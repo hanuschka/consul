@@ -1,10 +1,12 @@
 namespace :adm do
   scope :ideas, module: :ideas, as: :ideas do
-    root to: "ideas#index"
+    root to: "home#show"
+    get "list", to: "ideas#index", as: :ideas_list
 
     # Define specific resources first (matched before /:id)
     resources :officers, only: [:index, :create, :destroy] do
       post :search, on: :collection
+      patch :toggle_manage_all, on: :member
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do

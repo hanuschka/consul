@@ -15,6 +15,7 @@ class Projekt < ApplicationRecord
   include Taggable
   include Searchable
   include Notifiable
+  include SectionTrackable
 
   translates :description
   include Globalizable
@@ -583,6 +584,14 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(user = nil)
     true
+  end
+
+  def section_tracking_section
+    "projekts"
+  end
+
+  def section_tracking_user
+    author
   end
 
   def vc_map_enabled?

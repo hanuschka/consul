@@ -6,17 +6,25 @@ module Adm
     def show
       authorize [:adm, @proposal]
 
-      @breadcrumbs = [
-        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
-        { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
-        { name: @proposal.title }
-      ]
+      respond_to do |format|
+        format.html do
+          @breadcrumbs = [
+            { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+            { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+            { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
+            { name: @proposal.title }
+          ]
 
-      @image_url = @proposal.image&.attachment&.variant(
-        resize_to_limit: [500, 500],
-        format: "jpeg"
-      )
+          @image_url = @proposal.image&.attachment&.variant(
+            resize_to_limit: [500, 500],
+            format: "jpeg"
+          )
+        end
+        format.pdf do
+          pdf_content = PdfServices::ProposalExporter.call(@proposal, request.host)
+          send_data pdf_content.render, filename: "proposal_#{@proposal.id}.pdf", type: "application/pdf", disposition: "inline"
+        end
+      end
     end
 
     def hide

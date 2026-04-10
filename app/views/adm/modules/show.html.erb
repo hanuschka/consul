@@ -26,15 +26,18 @@
       <%= form_with model: @section_setting, url: adm_modules_path(tab: @current_tab), method: :patch do |f| %>
         <%= render Kern::FormFieldComponent.new(
           label: t("adm.section_settings.edit.intro_text"),
-          hint: t("adm.section_settings.edit.intro_text_hint")
+          hint: t("adm.section_settings.edit.intro_text_hint"),
+          stacked: true
         ) do %>
-          <%= f.text_field :intro_text, label: false, maxlength: 350, class: "kern-input",
-              placeholder: t("adm.section_settings.edit.intro_text_placeholder") %>
+          <%= f.text_area :intro_text, label: false, maxlength: 350, class: "kern-input", rows: 3,
+              placeholder: t("adm.section_settings.edit.intro_text_placeholder"),
+              value: @section_setting.intro_text %>
         <% end %>
 
         <%= render Kern::FormFieldComponent.new(
           label: t("adm.section_settings.edit.notice_message"),
-          hint: t("adm.section_settings.edit.notice_message_hint")
+          hint: t("adm.section_settings.edit.notice_message_hint"),
+          stacked: true
         ) do %>
           <%= f.text_area :notice_message, label: false, class: "kern-input", rows: 4,
               placeholder: t("adm.section_settings.edit.notice_message_placeholder") %>

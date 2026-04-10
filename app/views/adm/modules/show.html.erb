@@ -6,11 +6,9 @@
   <% end %>
 <% end %>
 
-<%= render Adm::TabsComponent.new(tabs: SectionSetting::SECTIONS.map { |section|
-  { label: section_label(section), url: adm_modules_path(tab: section), current: @current_tab == section }
-} + [
-  { label: t(".tabs.general"), url: adm_modules_path(tab: "general"), current: @current_tab == "general" }
-]) %>
+<%= render Adm::TabsComponent.new(tabs: Adm::ModulesController::TABS.map { |tab|
+  { label: t("adm.modules.show.tabs.#{tab}"), url: adm_modules_path(tab: tab), current: @current_tab == tab }
+}) %>
 
 <div class="kern-container mb-5">
   <% if @module_settings.any? %>

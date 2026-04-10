@@ -6,5 +6,14 @@ de:
         hint: >
           Hier aktivieren oder deaktivieren Sie die Module und Übersichtsseiten Ihrer Plattform. Ein Modul muss hier aktiviert sein, damit es unter „Applikation → Navigation" als Menüpunkt hinzugefügt werden kann. Deaktivierte Module sind im Frontend für Bürger nicht erreichbar — auch nicht über direkte Links. Aktivierte Module ohne Navigationseintrag bleiben über ihren Direktlink zugänglich, werden aber nicht im Menü beworben. Bestehende Inhalte bleiben bei Deaktivierung erhalten und werden bei erneuter Aktivierung wieder sichtbar. Zusätzlich können Sie pro Bereich einen Einleitungstext hinterlegen, der auf der jeweiligen Startseite als kurze Orientierung für Ihr Team angezeigt wird. Über die Hinweismeldung können Sie aktuelle Informationen oder Anweisungen an Ihr Team kommunizieren — zum Beispiel Fristen oder Bearbeitungshinweise. Aktivieren Sie „Hinweis aktiv", damit die Hinweismeldung als gelbe Infobox auf der Startseite des Bereichs eingeblendet wird.
         tabs:
-          general: Allgemein
+          ideas: Ideen
+          projekts: Projekte
+          deficiency_reports: "Mängelmelder"
+          moderation: Moderation
+          valuation: Valuation
+          landing_pages: Themenseiten
+          events: Veranstaltungen
+          investments: "Budgetübersicht"
+          polls: Umfragen
+          proposals: "Vorschläge"
         section_settings_title: Bereichseinstellungen

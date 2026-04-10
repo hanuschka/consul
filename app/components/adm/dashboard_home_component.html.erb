@@ -145,14 +145,24 @@
           <tbody class="kern-table__body">
             <% recent_items.each do |item| %>
               <tr class="kern-table__row">
-                <% recent_item_columns.each do |col| %>
-                  <td class="kern-table__cell">
-                    <% if col[:url] %>
-                      <%= link_to col[:value].call(item), col[:url].call(item), class: "kern-link" %>
-                    <% else %>
-                      <%= col[:value].call(item) %>
-                    <% end %>
-                  </td>
+                <% recent_item_columns.each_with_index do |col, i| %>
+                  <% if i == 0 %>
+                    <th scope="row" class="kern-table__header">
+                      <% if col[:url] %>
+                        <%= link_to col[:value].call(item), col[:url].call(item), class: "link strong" %>
+                      <% else %>
+                        <%= col[:value].call(item) %>
+                      <% end %>
+                    </th>
+                  <% else %>
+                    <td class="kern-table__cell">
+                      <% if col[:url] %>
+                        <%= link_to col[:value].call(item), col[:url].call(item), class: "kern-link" %>
+                      <% else %>
+                        <%= col[:value].call(item) %>
+                      <% end %>
+                    </td>
+                  <% end %>
                 <% end %>
                 <td class="kern-table__cell"><%= l(item.updated_at, format: :short) %></td>
               </tr>

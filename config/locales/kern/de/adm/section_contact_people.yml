@@ -37,9 +37,11 @@ de:
         success: Ansprechpartner erfolgreich gelöscht.
       search:
         select: Auswählen
+        no_results: Keine Nutzer gefunden.
       form:
         submit: Speichern
         select_user: Nutzer auswählen
+        search_user_placeholder: Nutzer suchen (Name oder E-Mail)...
         select_section: Sektion auswählen
         hints:
           user: >

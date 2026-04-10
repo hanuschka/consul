@@ -3,11 +3,15 @@
     <div class="kern-card kern-card--compact mb-2 p-3 d-flex justify-content-between align-items-center">
       <span><%= user.name %> (<%= user.email %>)</span>
       <button type="button" class="kern-btn kern-btn--small kern-btn--primary"
-        data-action="click->user-select#selectUser"
+        data-action="click->adm-user-select#selectUser"
         data-user-id="<%= user.id %>"
-        data-user-name="<%= user.name %>">
-        <%= t("adm.section_contact_people.search.select") %>
+        data-user-name="<%= user.name %>"
+        data-user-email="<%= user.email %>">
+        <%= t(".select") %>
       </button>
     </div>
+  <% end %>
+  <% if @users.empty? && params[:search].to_s.length >= 2 %>
+    <p class="kern-body"><%= t(".no_results") %></p>
   <% end %>
 <% end %>

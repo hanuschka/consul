@@ -1,9 +1,32 @@
 <%= form_with model: [:adm, @section_contact_person] do |f| %>
-  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user")) do %>
-    <%= f.select :user_id,
-      options_from_collection_for_select(User.where(id: @section_contact_person.user_id), :id, :name, @section_contact_person.user_id),
-      { include_blank: t(".select_user") },
-      { label: false, class: "kern-form-select__select", data: { controller: "user-select", user_select_url_value: search_adm_section_contact_people_path } } %>
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user"), stacked: true) do %>
+    <div data-controller="adm-user-select" data-adm-user-select-url-value="<%= search_adm_section_contact_people_path %>">
+      <%= f.hidden_field :user_id, data: { adm_user_select_target: "hiddenField" } %>
+
+      <div data-adm-user-select-target="searchArea" class="<%= 'd-none' if @section_contact_person.user_id.present? %>">
+        <div class="d-flex gap-2">
+          <div class="kern-form-input" style="flex: 1;">
+            <input type="text" class="kern-form-input__input"
+              placeholder="<%= t('.search_user_placeholder') %>"
+              data-adm-user-select-target="input"
+              data-action="input->adm-user-select#search">
+          </div>
+        </div>
+        <div id="search_results" data-adm-user-select-target="results" class="mt-2"></div>
+      </div>
+
+      <div data-adm-user-select-target="selectedDisplay" class="<%= 'd-none' unless @section_contact_person.user_id.present? %>">
+        <% if @section_contact_person.user.present? %>
+          <div class="kern-card kern-card--compact p-3 d-flex justify-content-between align-items-center">
+            <span><%= @section_contact_person.user.name %> (<%= @section_contact_person.user.email %>)</span>
+            <button type="button" class="kern-btn kern-btn--small kern-btn--secondary"
+              data-action="click->adm-user-select#clearSelection">
+              <span class="material-symbols-outlined kern-btn__icon" aria-hidden="true">close</span>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:section), hint: t(".hints.section")) do %>

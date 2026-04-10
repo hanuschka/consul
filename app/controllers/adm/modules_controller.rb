@@ -17,7 +17,8 @@ module Adm
     # Tabs that only have a module toggle
     EXTRA_TABS = %w[events investments polls proposals].freeze
 
-    TABS = (SECTION_TABS + EXTRA_TABS).freeze
+    # Ordered by importance
+    TABS = %w[projekts deficiency_reports ideas events landing_pages moderation valuation investments polls proposals].freeze
 
     helper_method :section_label
 

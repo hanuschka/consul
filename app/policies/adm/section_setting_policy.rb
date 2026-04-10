@@ -1,5 +1,5 @@
 class Adm::SectionSettingPolicy < ApplicationPolicy
-  def edit?
+  def index?
     @user&.administrator?
   end
 

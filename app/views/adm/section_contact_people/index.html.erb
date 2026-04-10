@@ -2,17 +2,15 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
-<div class="kern-container my-5">
+<%= render Adm::TabsComponent.new(tabs: [
+  { label: t(".filters.all"), url: adm_section_contact_people_path, current: @current_section_filter.blank? }
+] + SectionContactPerson::SECTIONS.map { |section|
+  { label: t(".sections.#{section}"), url: adm_section_contact_people_path(section: section), current: @current_section_filter == section }
+}) %>
+
+<div class="kern-container">
   <%= new_resource_link(new_adm_section_contact_person_path, t('.new_link')) %>
 
-  <%= render Adm::TabsComponent.new(tabs: [
-    { label: t(".filters.all"), url: adm_section_contact_people_path, current: @current_section_filter.blank? }
-  ] + SectionContactPerson::SECTIONS.map { |section|
-    { label: t(".sections.#{section}"), url: adm_section_contact_people_path(section: section), current: @current_section_filter == section }
-  }) %>
-</div>
-
-<div class="kern-container mb-5">
   <% if @section_contact_people.any? %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
@@ -59,7 +57,9 @@
     <%= empty_state(
       title: t(".empty_title"),
       description: t(".empty_description"),
-      icon: "contact_phone"
+      icon: "contact_phone",
+      link_url: new_adm_section_contact_person_path,
+      link_text: t('.new_link')
     ) %>
   <% end %>
 </div>

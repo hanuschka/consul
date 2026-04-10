@@ -10,7 +10,7 @@
   recent_item_columns: [
     { label: t("shared.table.title"), value: ->(item) { item.title } }
   ],
-  intro_text: @section_setting&.intro_text,
+  intro_text: @section_setting&.intro_text_with_fallback,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,

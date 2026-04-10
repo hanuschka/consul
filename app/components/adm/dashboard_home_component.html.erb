@@ -23,8 +23,9 @@
           <% if quick_links.any? %>
             <div class="adm-dashboard__quick-links">
               <% quick_links.each do |link| %>
-                <%= link_to link[:label], link[:path],
-                    class: "kern-button #{link[:primary] ? '' : 'kern-button--outline'}" %>
+                <%= kern_link_button link[:path],
+                    text: link[:label],
+                    style: link[:primary] ? :primary : :secondary %>
               <% end %>
             </div>
           <% end %>

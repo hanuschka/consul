@@ -24,7 +24,7 @@ module SectionTrackable
       full_metadata = { "trackable_name" => trackable_name }.merge(metadata)
 
       SectionActivity.log(
-        user: Current.user || section_tracking_user,
+        user: section_tracking_user,
         section: section_tracking_section,
         trackable: self,
         action: action,

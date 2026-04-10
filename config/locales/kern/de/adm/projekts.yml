@@ -2,11 +2,23 @@ de:
   adm:
     projekts:
       title: Projekte
+      home:
+        title: Willkommen im Projektbereich
+        stats:
+          total: Gesamt
+          current: Aktiv
+          expired: Abgelaufen
+          draft: Entwurf
+        quick_links:
+          new: Neues Projekt
+          all: Alle Projekte
+          current: Aktive Projekte
       menu:
         aria_label: Projekts Navigation
         items:
+          home: Home
           projekts: Projekte
-          managers: Projektmanager
+          managers: Team
           landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
       overview_page:
@@ -41,7 +53,8 @@ de:
             Hier verwalten Sie alle Beteiligungsprojekte der Plattform. Jedes Projekt kann mit
             Laufzeit, Beteiligungsphasen, Sichtbarkeit und Projektmanagern konfiguriert werden.
             Über den Status-Toggle können Projekte aktiviert oder deaktiviert werden – deaktivierte
-            Projekte sind im Frontend nicht sichtbar.
+            Projekte sind im Frontend nicht sichtbar. Ein Klick auf den Projekttitel öffnet die
+            Einstellungen, ein Klick auf das Vorschaubild führt zur öffentlichen Projektseite.
           new_projekt: Neues Projekt erstellen
           import_projekt: Projekt aus Datei importieren
           no_projekts_title: Keine Projekte vorhanden
@@ -75,6 +88,7 @@ de:
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:
+          frontend_page: Zur Projektseite
           details: Projektdetails
           visibility: Sichtbarkeit
           projekt_managers: Projektmanager

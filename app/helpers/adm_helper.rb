@@ -33,6 +33,7 @@ module AdmHelper
     "budget_investments" => "savings",
     "formular" => "assignment",
     "formular_answers" => "list_alt",
+    "formular_follow_up_emails" => "forward_to_inbox",
     "officing_managers" => "badge",
     "officing_manager_audits" => "history",
     "ai_settings" => "smart_toy",
@@ -87,7 +88,7 @@ module AdmHelper
   def deficiency_report_tabs(deficiency_report, current_action: nil)
     current_action ||= action_name
 
-    tabs = %w[show administer audits].map do |action|
+    tabs = %w[show audits].map do |action|
       {
         label: I18n.t("adm.deficiency_reports.deficiency_reports.tabs.#{action}"),
         url: send("#{action == 'show' ? '' : "#{action}_"}adm_deficiency_reports_deficiency_report_path", deficiency_report),
@@ -127,7 +128,7 @@ module AdmHelper
   def pages_tabs(current_slug: nil)
     current_slug ||= params[:slug]
 
-    %w[privacy conditions impressum].map do |slug|
+    %w[privacy conditions impressum contact_us].map do |slug|
       {
         label: I18n.t("adm.site_customization.pages.tabs.#{slug}"),
         url: adm_site_customization_edit_page_by_slug_path(slug: slug),
@@ -151,13 +152,25 @@ module AdmHelper
   def projekt_tabs(projekt, current_action: nil)
     current_action ||= action_name
 
-    %w[details visibility projekt_managers map phases].map do |action|
+    tabs = [
       {
+        label: I18n.t("adm.projekts.projekts.tabs.frontend_page"),
+        url: projekt_path(projekt),
+        icon: "open_in_new",
+        data: { turbo: false },
+        current: false
+      }
+    ]
+
+    %w[details visibility projekt_managers map phases].each do |action|
+      tabs << {
         label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
         url: send("#{action}_adm_projekts_projekt_path", projekt),
         current: current_action == action
       }
     end
+
+    tabs
   end
 
   def relative_time(datetime)

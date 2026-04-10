@@ -74,7 +74,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
 
-    const attributesToEmpty = ['data-orbit'];
+    const attributesToEmpty = ['data-orbit', 'data-accordion'];
     const attributesToRemove = ['data-resize', 'id'];
     const allElements = tempDiv.querySelectorAll('*');
 

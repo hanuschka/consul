@@ -1,0 +1,58 @@
+<%= form_with model: [:adm, @section_contact_person] do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user"), stacked: true) do %>
+    <div data-controller="adm-user-select" data-adm-user-select-url-value="<%= search_adm_section_contact_people_path %>">
+      <%= f.hidden_field :user_id, data: { adm_user_select_target: "hiddenField" } %>
+
+      <div data-adm-user-select-target="searchArea" class="<%= 'd-none' if @section_contact_person.user_id.present? %>">
+        <div class="attribute-form string">
+          <div class="d-flex gap-2">
+            <div class="kern-form-input" style="flex: 1;">
+              <%= text_field_tag :search, nil, class: "kern-form-input__input",
+                  placeholder: t('.search_user_placeholder'),
+                  autocomplete: "off",
+                  data: { adm_user_select_target: "input", action: "input->adm-user-select#search" } %>
+            </div>
+          </div>
+        </div>
+        <div id="search_results" data-adm-user-select-target="results"></div>
+      </div>
+
+      <div data-adm-user-select-target="selectedDisplay" class="<%= 'd-none' unless @section_contact_person.user_id.present? %>">
+        <% if @section_contact_person.user.present? %>
+          <div class="d-flex justify-content-between align-items-center p-3" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;">
+            <span><strong><%= @section_contact_person.user.name %></strong> (<%= @section_contact_person.user.email %>)</span>
+            <button type="button" style="background: none; border: none; cursor: pointer; color: #64748b; padding: 0;"
+              data-action="click->adm-user-select#clearSelection">
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:section), hint: t(".hints.section")) do %>
+    <%= f.select :section,
+      SectionContactPerson::SECTIONS.map { |s| [t("adm.section_contact_people.index.sections.#{s}"), s] },
+      { include_blank: t(".select_section") },
+      { label: false, class: "kern-form-select__select" } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:role), hint: t(".hints.role")) do %>
+    <%= f.text_field :role, label: false, placeholder: SectionContactPerson.human_attribute_name(:role) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:email), hint: t(".hints.email")) do %>
+    <%= f.email_field :email, label: false, placeholder: SectionContactPerson.human_attribute_name(:email) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:phone), hint: t(".hints.phone")) do %>
+    <%= f.text_field :phone, label: false, placeholder: SectionContactPerson.human_attribute_name(:phone) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:position), hint: t(".hints.position")) do %>
+    <%= f.number_field :position, label: false, placeholder: SectionContactPerson.human_attribute_name(:position) %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

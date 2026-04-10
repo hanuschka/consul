@@ -12,7 +12,7 @@ class Adm::HeaderComponent < ApplicationComponent
   end
 
   def before_render
-    @frontend_url ||= helpers.root_path
+    @frontend_url, @frontend_label = resolve_frontend_url_and_label
   end
 
   def breadcrumb_item(breadcrumb, is_last)
@@ -51,6 +51,32 @@ class Adm::HeaderComponent < ApplicationComponent
   end
 
   private
+
+    def resolve_frontend_url_and_label
+      t = ->(key) { I18n.t("components.adm.header_component.frontend_labels.#{key}") }
+
+      projekt_phase = controller.instance_variable_get(:@projekt_phase)
+      projekt = controller.instance_variable_get(:@projekt) || projekt_phase&.projekt
+
+      if projekt
+        base = "/#{projekt.page.slug}"
+        url = projekt_phase ? "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" : base
+        return [url, t.call(:projekt)]
+      end
+
+      landing_page = controller.instance_variable_get(:@landing_page)
+      return ["/#{landing_page.slug}", t.call(:landing_page)] if landing_page&.slug.present?
+
+      if controller.class.module_parent_name == "Adm::DeficiencyReports"
+        return [helpers.deficiency_reports_path, t.call(:deficiency_reports)]
+      end
+
+      if controller.class.module_parent_name == "Adm::Ideas"
+        return [helpers.ideas_path, t.call(:ideas)]
+      end
+
+      [helpers.root_path, t.call(:default)]
+    end
 
     def icon_tag(icon_name)
       content_tag(:span, icon_name, class: "material-symbols-outlined breadcrumb-icon", aria: { hidden: true })

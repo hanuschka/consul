@@ -7,6 +7,7 @@ module Adm
       authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       @breadcrumbs = breadcrumbs_for(@mappable, t(".title"))
+      @back_url = redirect_path_for_mappable(@mappable)
     end
 
     def create
@@ -25,6 +26,7 @@ module Adm
       authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       @breadcrumbs = breadcrumbs_for(@map_layer.mappable, t(".title"))
+      @back_url = redirect_path_for_mappable(@map_layer.mappable)
     end
 
     def update
@@ -90,14 +92,14 @@ module Adm
         case mappable
         when Projekt
           [
-            { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
+            { name: t("adm.projekts.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
             { name: mappable.name, url: details_adm_projekts_projekt_path(mappable) },
             { name: t("adm.projekts.projekts.tabs.map"), url: map_adm_projekts_projekt_path(mappable) },
             { name: title }
           ]
         when ProjektPhase
           [
-            { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
+            { name: t("adm.projekts.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
             { name: mappable.projekt.name, url: details_adm_projekts_projekt_path(mappable.projekt) },
             { name: mappable.title },
             { name: t("adm.projekts.phases.projekt_phase.map"), url: map_adm_projekts_phase_path(mappable) },
@@ -109,6 +111,14 @@ module Adm
             { name: t("adm.default_map_location.show.title"), url: adm_default_map_location_path },
             { name: title }
           ]
+        end
+      end
+
+      def redirect_path_for_mappable(mappable)
+        case mappable
+        when Projekt then map_adm_projekts_projekt_path(mappable)
+        when ProjektPhase then map_adm_projekts_phase_path(mappable)
+        else adm_default_map_location_path
         end
       end
   end

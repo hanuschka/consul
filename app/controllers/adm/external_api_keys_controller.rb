@@ -13,9 +13,11 @@ class Adm::ExternalApiKeysController < Adm::BaseController
     @external_api_key = ExternalApiKey.find(params[:id])
     authorize [:adm, @external_api_key], policy_class: Adm::ExternalApiKeyPolicy
 
+    service_name = t("admin.external_api_keys.services.#{@external_api_key.service}", default: @external_api_key.service)
     @breadcrumbs = [
       { name: t("adm.external_api_keys.index.title"), icon: "key", url: adm_external_api_keys_path },
-      { name: @external_api_key.service.titleize }
+      { name: service_name },
+      { name: "API Key" }
     ]
   end
 
@@ -23,9 +25,11 @@ class Adm::ExternalApiKeysController < Adm::BaseController
     @external_api_key = ExternalApiKey.find(params[:id])
     authorize [:adm, @external_api_key], policy_class: Adm::ExternalApiKeyPolicy
 
+    service_name = t("admin.external_api_keys.services.#{@external_api_key.service}", default: @external_api_key.service)
     @breadcrumbs = [
       { name: t("adm.external_api_keys.index.title"), icon: "key", url: adm_external_api_keys_path },
-      { name: t("adm.external_api_keys.edit.title") }
+      { name: service_name, url: adm_external_api_key_path(@external_api_key) },
+      { name: @external_api_key.value.present? ? t("adm.external_api_keys.edit.title") : t("adm.external_api_keys.show.add_key") }
     ]
   end
 

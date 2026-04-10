@@ -14,10 +14,10 @@ de:
       edit:
         title: "%{section} bearbeiten"
         intro_text: Einleitungstext
-        intro_text_hint: "Kurzer Einleitungstext, der auf der Startseite des Bereichs angezeigt wird (max. 350 Zeichen)."
+        intro_text_hint: "Dieser Text wird auf der Startseite des jeweiligen Bereichs angezeigt und dient als kurze Orientierung für Ihr Team. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist und welche Aufgaben hier erledigt werden. Der Text sollte neuen Teammitgliedern einen schnellen Überblick geben (max. 350 Zeichen)."
         intro_text_placeholder: Einleitungstext eingeben...
         notice_message: Hinweismeldung
-        notice_message_hint: Hinweismeldung, die den Nutzern im jeweiligen Bereich angezeigt wird.
+        notice_message_hint: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs eingeblendet. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise an Ihr Team. Die Meldung kann von jedem Nutzer per Klick auf das X für die aktuelle Sitzung ausgeblendet werden und erscheint beim nächsten Besuch erneut."
         notice_message_placeholder: Hinweismeldung eingeben...
         notice_active: Hinweis aktiv
-        notice_active_hint: Wenn aktiviert, wird die Hinweismeldung im jeweiligen Bereich angezeigt.
+        notice_active_hint: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite des Bereichs als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text löschen zu müssen. So können Sie wiederkehrende Hinweise einfach ein- und ausschalten, etwa für saisonale Fristen oder projektbezogene Anweisungen."

@@ -9,7 +9,7 @@ class Adm::LandingPages::MenuComponent < Adm::BaseMenuComponent
       (if Adm::LandingPages::LandingPageManagerPolicy.new(current_user, nil).index?
          { label: t("adm.landing_pages.menu.items.managers"), icon: "badge", path: adm_landing_pages_managers_path }
        end),
-      { label: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", path: adm_landing_pages_landing_pages_list_path }
+      { label: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", path: adm_landing_pages_landing_pages_list_path, active_pattern: %r{/adm/landing_pages/(list|new|\d+)} }
     ].compact
   end
 end

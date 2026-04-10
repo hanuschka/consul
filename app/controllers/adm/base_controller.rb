@@ -7,7 +7,6 @@ class Adm::BaseController < ActionController::Base
   layout "adm"
 
   before_action :authenticate_user!
-  before_action :set_current_user
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -15,10 +14,6 @@ class Adm::BaseController < ActionController::Base
   helper_method :adm_menu_component, :adm_header_title
 
   private
-
-    def set_current_user
-      Current.user = current_user
-    end
 
     def frame_partial_path
       turbo_frame_request_id&.gsub("__", "/")

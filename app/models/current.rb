@@ -5,5 +5,4 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :i18n_content_translations
 
   attribute :frame_current_user
-  attribute :user
 end

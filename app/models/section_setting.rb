@@ -7,4 +7,8 @@ class SectionSetting < ApplicationRecord
   validates :intro_text, length: { maximum: 350 }
 
   scope :for_section, ->(section) { find_or_initialize_by(section: section) }
+
+  def intro_text_with_fallback
+    intro_text.presence || I18n.t("adm.section_settings.intro_text_defaults.#{section}", default: nil)
+  end
 end

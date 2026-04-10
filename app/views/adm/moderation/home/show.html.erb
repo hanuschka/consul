@@ -11,7 +11,7 @@
     { label: t("shared.table.actions"), value: ->(item) { item.action } },
     { label: t("shared.table.user"), value: ->(item) { item.user&.name || "—" } }
   ],
-  intro_text: @section_setting&.intro_text,
+  intro_text: @section_setting&.intro_text_with_fallback,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,

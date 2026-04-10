@@ -42,6 +42,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
         pm_ids = ProjektManagerAssignment
           .where(projekt_id: shared_projekt_ids)
+          .reorder(nil)
           .select(:projekt_manager_id)
           .distinct
 

@@ -14,7 +14,7 @@
 
 <div class="kern-container mb-5">
   <% if @module_settings.any? %>
-    <div class="mb-5">
+    <div class="mb-3">
       <% @module_settings.each do |setting| %>
         <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
       <% end %>

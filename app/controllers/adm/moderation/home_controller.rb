@@ -24,7 +24,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.moderation.home.quick_links.all"), path: adm_moderation_proposals_path, primary: true }
+      { label: t("adm.moderation.home.quick_links.all"), path: adm_moderation_proposals_path }
     ]
 
     @breadcrumbs = [

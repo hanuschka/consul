@@ -45,7 +45,9 @@ class Adm::BaseMenuComponent < ApplicationComponent
     end
 
     def item_active?(item)
-      if item[:active_prefix]
+      if item[:active_pattern]
+        request.path.match?(item[:active_pattern])
+      elsif item[:active_prefix]
         request.path.start_with?(item[:active_prefix])
       else
         current_page?(item[:path])

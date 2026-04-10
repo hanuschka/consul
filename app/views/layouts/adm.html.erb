@@ -63,7 +63,9 @@
           </aside>
 
           <main class="flex-grow-1">
-            <%= render Kern::FlashComponent.new(flash: flash) %>
+            <div id="flash-messages">
+              <%= render Kern::FlashComponent.new(flash: flash) %>
+            </div>
             <%= yield %>
           </main>
         </div>

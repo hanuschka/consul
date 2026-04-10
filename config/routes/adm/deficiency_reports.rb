@@ -1,6 +1,7 @@
 namespace :adm do
   scope :deficiency_reports, module: :deficiency_reports, as: :deficiency_reports do
-    root to: "deficiency_reports#index"
+    root to: "home#show"
+    get "list", to: "deficiency_reports#index", as: :deficiency_reports_list
 
     resources :officers, only: [:index, :create, :destroy] do
       post :search, on: :collection

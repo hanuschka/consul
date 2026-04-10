@@ -4,20 +4,30 @@ class Adm::Projekts::ProjektManagerPolicy < ApplicationPolicy
   end
 
   def create?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    admin?
   end
 
   def destroy?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    admin?
   end
 
   def update?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    admin?
   end
 
   class Scope < Scope
     def resolve
-      scope.all
+      if @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+        scope.all
+      else
+        scope.none
+      end
     end
   end
+
+  private
+
+    def admin?
+      @user&.administrator?
+    end
 end

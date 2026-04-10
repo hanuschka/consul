@@ -1,6 +1,7 @@
 namespace :adm do
   scope :ideas, module: :ideas, as: :ideas do
-    root to: "ideas#index"
+    root to: "home#show"
+    get "list", to: "ideas#index", as: :ideas_list
 
     # Define specific resources first (matched before /:id)
     resources :officers, only: [:index, :create, :destroy] do

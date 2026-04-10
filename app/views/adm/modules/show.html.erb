@@ -48,7 +48,7 @@
           hint: t("adm.section_settings.edit.notice_active_hint"),
           divider: false
         ) do %>
-          <%= f.check_box :notice_active %>
+          <%= f.check_box :notice_active, label: t("adm.section_settings.edit.notice_active") %>
         <% end %>
 
         <%= form_submit_button %>

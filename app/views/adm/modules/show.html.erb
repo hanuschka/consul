@@ -6,13 +6,11 @@
   <% end %>
 <% end %>
 
-<div class="kern-container my-5">
-  <%= render Adm::TabsComponent.new(tabs: SectionSetting::SECTIONS.map { |section|
-    { label: section_label(section), url: adm_modules_path(tab: section), current: @current_tab == section }
-  } + [
-    { label: t(".tabs.general"), url: adm_modules_path(tab: "general"), current: @current_tab == "general" }
-  ]) %>
-</div>
+<%= render Adm::TabsComponent.new(tabs: SectionSetting::SECTIONS.map { |section|
+  { label: section_label(section), url: adm_modules_path(tab: section), current: @current_tab == section }
+} + [
+  { label: t(".tabs.general"), url: adm_modules_path(tab: "general"), current: @current_tab == "general" }
+]) %>
 
 <div class="kern-container mb-5">
   <% if @module_settings.any? %>
@@ -25,8 +23,6 @@
 
   <% if @section_setting.present? %>
     <div class="kern-container--form">
-      <h3 class="mb-4"><%= t(".section_settings_title") %></h3>
-
       <%= form_with model: @section_setting, url: adm_modules_path(tab: @current_tab), method: :patch do |f| %>
         <%= render Kern::FormFieldComponent.new(
           label: t("adm.section_settings.edit.intro_text"),

@@ -1,5 +1,5 @@
 class Adm::DashboardHomeComponent < ApplicationComponent
-  delegate :empty_state, :time_ago_in_words, to: :helpers
+  delegate :empty_state, :time_ago_in_words, :kern_link_button, to: :helpers
 
   attr_reader :team_members, :team_url, :recent_items, :recent_items_url, :recent_item_columns,
               :recent_item_partial, :recent_item_headers, :recent_item_as,

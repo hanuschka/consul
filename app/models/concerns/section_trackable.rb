@@ -9,25 +9,23 @@ module SectionTrackable
   private
 
     def log_section_activity_created
-      SectionActivity.log(
-        user: section_tracking_user,
-        section: section_tracking_section,
-        trackable: self,
-        action: "created"
-      )
-    rescue StandardError => e
-      Rails.logger.warn("SectionActivity tracking failed: #{e.message}")
+      log_section_activity("created")
     end
 
     def log_section_activity_updated
-      return if saved_changes.keys == ["updated_at"] || saved_changes.empty?
+      meaningful_changes = saved_changes.keys - ["updated_at"]
+      return if meaningful_changes.empty?
 
+      log_section_activity("updated", metadata: { changed_fields: meaningful_changes })
+    end
+
+    def log_section_activity(action, metadata: {})
       SectionActivity.log(
         user: section_tracking_user,
         section: section_tracking_section,
         trackable: self,
-        action: "updated",
-        metadata: { changed_fields: saved_changes.keys - ["updated_at"] }
+        action: action,
+        metadata: metadata
       )
     rescue StandardError => e
       Rails.logger.warn("SectionActivity tracking failed: #{e.message}")

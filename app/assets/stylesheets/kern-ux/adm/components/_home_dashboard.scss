@@ -539,13 +539,6 @@
   min-width: 280px;
 }
 
-.adm-dashboard__header-stats {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-
 // ── Quick links ──────────────────────────────────────────────────────────
 
 .adm-dashboard__quick-links {
@@ -553,27 +546,6 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-top: 1rem;
-}
-
-.adm-dashboard__quick-link {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-
-  &--primary {
-    background: var(--adm-color-primary, #2563eb);
-    color: #fff;
-  }
-
-  &--secondary {
-    background: #f1f5f9;
-    color: #334155;
-    border: 1px solid #e2e8f0;
-  }
 }
 
 // ── People row (team + contact persons side by side) ─────────────────────
@@ -636,11 +608,7 @@
   color: #1e293b;
 }
 
-.adm-dashboard__contact-role {
-  font-size: 12px;
-  color: #64748b;
-}
-
+.adm-dashboard__contact-role,
 .adm-dashboard__contact-details {
   font-size: 12px;
   color: #64748b;
@@ -705,10 +673,6 @@
 @media (max-width: 767px) {
   .adm-dashboard__header-row {
     flex-direction: column;
-  }
-
-  .adm-dashboard__header-stats {
-    width: 100%;
   }
 
   .adm-dashboard__people-row {
@@ -808,12 +772,6 @@
 
   .adm-dashboard__activity-time {
     color: rgba(255, 255, 255, 0.45);
-  }
-
-  .adm-dashboard__quick-link--secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.8);
-    border-color: rgba(255, 255, 255, 0.15);
   }
 
   .adm-metric-row {

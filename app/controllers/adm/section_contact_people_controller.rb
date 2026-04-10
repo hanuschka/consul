@@ -1,5 +1,7 @@
 module Adm
   class SectionContactPeopleController < Adm::BaseController
+    before_action :load_section_contact_person, only: [:edit, :update, :destroy]
+
     def index
       authorize [:adm, SectionContactPerson]
       scope = policy_scope([:adm, SectionContactPerson]).includes(:user).order(:section, :position)
@@ -18,11 +20,7 @@ module Adm
       @section_contact_person = SectionContactPerson.new
       authorize [:adm, @section_contact_person]
 
-      @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.section_contact_people.index.title"), url: adm_section_contact_people_path },
-        { name: t(".title") }
-      ]
+      @breadcrumbs = form_breadcrumbs
     end
 
     def create
@@ -37,20 +35,10 @@ module Adm
     end
 
     def edit
-      @section_contact_person = SectionContactPerson.find(params[:id])
-      authorize [:adm, @section_contact_person]
-
-      @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.section_contact_people.index.title"), url: adm_section_contact_people_path },
-        { name: t(".title") }
-      ]
+      @breadcrumbs = form_breadcrumbs
     end
 
     def update
-      @section_contact_person = SectionContactPerson.find(params[:id])
-      authorize [:adm, @section_contact_person]
-
       if @section_contact_person.update(section_contact_person_params)
         redirect_to adm_section_contact_people_path, notice: t(".success")
       else
@@ -59,9 +47,6 @@ module Adm
     end
 
     def destroy
-      @section_contact_person = SectionContactPerson.find(params[:id])
-      authorize [:adm, @section_contact_person]
-
       @section_contact_person.destroy!
       redirect_to adm_section_contact_people_path, notice: t(".success")
     end
@@ -72,6 +57,19 @@ module Adm
     end
 
     private
+
+      def load_section_contact_person
+        @section_contact_person = SectionContactPerson.find(params[:id])
+        authorize [:adm, @section_contact_person]
+      end
+
+      def form_breadcrumbs
+        [
+          { name: t("adm.menu.items.profiles"), icon: "3p" },
+          { name: t("adm.section_contact_people.index.title"), url: adm_section_contact_people_path },
+          { name: t(".title") }
+        ]
+      end
 
       def section_contact_person_params
         params.require(:section_contact_person).permit(:user_id, :section, :role, :email, :phone, :position)

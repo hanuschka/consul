@@ -1,5 +1,5 @@
 class SectionActivity < ApplicationRecord
-  VALID_SECTIONS = %w[ideas deficiency_reports projekts moderation valuation landing_pages].freeze
+  VALID_SECTIONS = SectionSetting::SECTIONS
 
   belongs_to :user, optional: true
   belongs_to :trackable, polymorphic: true, optional: true

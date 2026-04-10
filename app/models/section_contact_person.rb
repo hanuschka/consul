@@ -1,5 +1,5 @@
 class SectionContactPerson < ApplicationRecord
-  SECTIONS = %w[ideas deficiency_reports projekts moderation valuation landing_pages].freeze
+  SECTIONS = SectionSetting::SECTIONS
 
   belongs_to :user, touch: true
 

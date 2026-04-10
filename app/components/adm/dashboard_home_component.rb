@@ -6,16 +6,16 @@ class Adm::DashboardHomeComponent < ApplicationComponent
               :activities, :section_settings_path
 
   def initialize(team_members:, team_url:, recent_items:, recent_items_url:, recent_item_columns: [],
-                 intro_text: nil, quick_links: [], stats: [], contact_persons: nil,
-                 notice: nil, activities: nil, section_settings_path: nil)
+                 intro_text: nil, quick_links: [], stats: [], contact_persons: [],
+                 notice: nil, activities: [], section_settings_path: nil)
     @team_members = team_members
     @team_url = team_url
     @recent_items = recent_items
     @recent_items_url = recent_items_url
     @recent_item_columns = recent_item_columns
     @intro_text = intro_text
-    @quick_links = quick_links || []
-    @stats = stats || []
+    @quick_links = quick_links
+    @stats = stats
     @contact_persons = contact_persons
     @notice = notice
     @activities = activities
@@ -31,11 +31,11 @@ class Adm::DashboardHomeComponent < ApplicationComponent
   end
 
   def show_contact_persons?
-    contact_persons.present? && contact_persons.any?
+    contact_persons.any?
   end
 
   def show_activities?
-    activities.present? && activities.any?
+    activities.any?
   end
 
   def activity_description(activity)

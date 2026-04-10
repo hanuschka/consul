@@ -9,6 +9,7 @@ de:
           blocked_users: Blockierte Nutzer
           moderated_total: Moderiert (gesamt)
         quick_links:
+          all: Alle Moderationen
           pending: Ausstehende Moderationen
           comments: Kommentare
           users: Nutzer

@@ -5,7 +5,7 @@ module Adm
     def index
       authorize [:adm, SectionContactPerson]
       scope = policy_scope([:adm, SectionContactPerson]).includes(:user).order(:section, :position)
-      scope = scope.where(section: params[:section]) if params[:section].present?
+      scope = scope.where(section: params[:section]) if params[:section].in?(SectionContactPerson::SECTIONS)
       @pagy, @section_contact_people = pagy(scope)
 
       @current_section_filter = params[:section]
@@ -53,7 +53,7 @@ module Adm
 
     def search
       authorize [:adm, SectionContactPerson], :create?
-      @users = User.search(params[:search]).limit(4)
+      @users = params[:search].to_s.length >= 2 ? User.search(params[:search]).limit(4) : User.none
     end
 
     private

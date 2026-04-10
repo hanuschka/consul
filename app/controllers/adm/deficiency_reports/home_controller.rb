@@ -4,7 +4,7 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
 
     @team_members = DeficiencyReport::Officer.includes(user: :image).order(:id)
     @recent_items = scoped_deficiency_reports
-                      .includes(:status)
+                      .includes(:status, :translations)
                       .order(updated_at: :desc).limit(10)
 
     @section_setting = SectionSetting.for_section("deficiency_reports")

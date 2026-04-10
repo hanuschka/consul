@@ -1,4 +1,5 @@
 class Adm::SectionSettingsController < Adm::BaseController
+  before_action :validate_section_param!
   before_action :load_section_setting
   helper_method :section_label
 
@@ -34,6 +35,10 @@ class Adm::SectionSettingsController < Adm::BaseController
 
     def section_setting_params
       params.require(:section_setting).permit(:intro_text, :notice_message, :notice_active)
+    end
+
+    def validate_section_param!
+      raise ActiveRecord::RecordNotFound unless SectionSetting::SECTIONS.include?(params[:section])
     end
 
     def section_label(section)

@@ -4,7 +4,7 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
 
     @team_members = Valuator.includes(user: :image).order(:id)
     @recent_items = policy_scope(Budget::Investment, policy_scope_class: Adm::Valuation::BudgetInvestmentPolicy::Scope)
-                      .includes(:budget)
+                      .includes(:budget, :translations)
                       .order(updated_at: :desc).limit(10)
 
     @section_setting = SectionSetting.for_section("valuation")

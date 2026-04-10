@@ -3,7 +3,7 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
     authorize Idea, :index?, policy_class: Adm::Ideas::IdeaPolicy
 
     @team_members = Idea::Officer.includes(user: :image).order(:id)
-    @recent_items = scoped_ideas.order(updated_at: :desc).limit(10)
+    @recent_items = scoped_ideas.includes(:translations).order(updated_at: :desc).limit(10)
 
     @section_setting = SectionSetting.for_section("ideas")
     @contact_persons = SectionContactPerson.for_section("ideas")

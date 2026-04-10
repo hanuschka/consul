@@ -573,8 +573,8 @@
 .adm-dashboard__contact-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 10px;
+  padding: 16px 20px;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -582,11 +582,12 @@
 }
 
 .adm-dashboard__contact-avatar {
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   flex-shrink: 0;
   object-fit: cover;
+  font-size: 20px;
 
   &--placeholder {
     display: flex;
@@ -601,17 +602,41 @@
 
 .adm-dashboard__contact-info {
   font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .adm-dashboard__contact-name {
   font-weight: 600;
+  font-size: 14px;
   color: #1e293b;
 }
 
-.adm-dashboard__contact-role,
+.adm-dashboard__contact-role {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
 .adm-dashboard__contact-details {
   font-size: 12px;
   color: #64748b;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  a {
+    color: #475569;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+      color: var(--adm-color-primary, #2563eb);
+    }
+  }
 }
 
 // ── Activity feed ────────────────────────────────────────────────────────

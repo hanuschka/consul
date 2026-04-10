@@ -110,11 +110,16 @@
                 <% end %>
                 <div class="adm-dashboard__contact-details">
                   <% if person.email.present? %>
-                    <a href="mailto:<%= person.email %>" class="kern-link"><%= person.email %></a>
+                    <a href="mailto:<%= person.email %>">
+                      <span class="material-symbols-outlined" style="font-size: 14px;" aria-hidden="true">mail</span>
+                      <%= person.email %>
+                    </a>
                   <% end %>
                   <% if person.phone.present? %>
-                    <% if person.email.present? %> &middot; <% end %>
-                    <a href="tel:<%= person.phone %>" class="kern-link"><%= person.phone %></a>
+                    <a href="tel:<%= person.phone %>">
+                      <span class="material-symbols-outlined" style="font-size: 14px;" aria-hidden="true">phone</span>
+                      <%= person.phone %>
+                    </a>
                   <% end %>
                 </div>
               </div>

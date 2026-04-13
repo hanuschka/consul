@@ -25,7 +25,9 @@
 
 <div class="kern-container mb-5">
 
-  <%= new_resource_link(new_adm_projekts_projekt_phase_path(@projekt), t(".new_phase")) %>
+  <% if Adm::Projekts::ProjektPhasePolicy.new(current_user, @projekt).create? %>
+    <%= new_resource_link(new_adm_projekts_projekt_phase_path(@projekt), t(".new_phase")) %>
+  <% end %>
 
   <% if @projekt_phases.any? %>
     <div class="kern-table-responsive" tabindex="0">

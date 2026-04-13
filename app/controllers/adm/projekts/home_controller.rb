@@ -19,9 +19,11 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true },
+      (if policy([:adm, :projekts, Projekt]).create?
+         { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
+       end),
       { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path }
-    ]
+    ].compact
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), icon: "home" }
@@ -40,7 +42,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
           &.projekt_manager_assignments
           &.pluck(:projekt_id) || []
 
-        pm_ids = ProjektManagerAssignment
+        pm_ids = ProjektManagerAssignment.unscoped
           .where(projekt_id: shared_projekt_ids)
           .select(:projekt_manager_id)
           .distinct

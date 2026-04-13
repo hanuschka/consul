@@ -1,5 +1,6 @@
 de:
   adm:
+    not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
     title: Administration
     sidebar:
       toggle: Seitenleiste umschalten

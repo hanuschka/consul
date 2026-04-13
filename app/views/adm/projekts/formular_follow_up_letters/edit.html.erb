@@ -1,7 +1,60 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: formular_follow_up_emails_adm_projekts_phase_path(@projekt_phase)) %>
 
-<div class="kern-container kern-container--form my-5">
-  <%= render "form", url: adm_projekts_phase_formular_follow_up_letter_path(@projekt_phase, @letter) %>
+<div class="kern-container my-5">
+  <%= form_with model: @letter, url: adm_projekts_phase_formular_follow_up_letter_path(@projekt_phase, @letter) do |f| %>
+
+    <%= render Kern::FormFieldComponent.new(label: t(".recipients_label"), hint: t(".recipients_hint"), stacked: true) do %>
+      <% if @formular_answers.any? %>
+        <div class="kern-table-responsive" tabindex="0" data-controller="check-all">
+          <table class="kern-table">
+            <thead class="kern-table__head">
+              <tr class="kern-table__row">
+                <th scope="col" class="kern-table__header">
+                  <input type="checkbox" data-check-all-target="selectAll" data-action="check-all#toggle">
+                </th>
+                <% @formular_fields.each do |field| %>
+                  <% next if field.kind.in?(["image", "document"]) %>
+                  <th scope="col" class="kern-table__header"><%= field.name %></th>
+                <% end %>
+                <th scope="col" class="kern-table__header"><%= t(".email") %></th>
+              </tr>
+            </thead>
+
+            <tbody class="kern-table__body">
+              <% @formular_answers.each do |answer| %>
+                <tr class="kern-table__row">
+                  <td class="kern-table__cell">
+                    <%= check_box_tag "formular_follow_up_letter[formular_answer_ids][]", answer.id, @letter.formular_answer_ids.include?(answer.id), data: { check_all_target: "checkbox" } %>
+                  </td>
+                  <% @formular_fields.each do |field| %>
+                    <% next if field.kind.in?(["image", "document"]) %>
+                    <td class="kern-table__cell"><%= answer.answers[field.key] %></td>
+                  <% end %>
+                  <td class="kern-table__cell"><%= answer.original_submitter_email %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted"><%= t(".no_answers") %></p>
+      <% end %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.formular_follow_up_letters.form.subject_label"), hint: t("adm.projekts.formular_follow_up_letters.form.subject_hint")) do %>
+      <%= f.text_field :subject, label: false, placeholder: t("adm.projekts.formular_follow_up_letters.form.subject_label") %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.formular_follow_up_letters.form.body_label"), hint: t("adm.projekts.formular_follow_up_letters.form.body_hint"), stacked: true) do %>
+      <%= f.text_area :body, label: false, rows: 12, placeholder: t("adm.projekts.formular_follow_up_letters.form.body_placeholder") %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.formular_follow_up_letters.form.show_follow_up_button_label"), hint: t("adm.projekts.formular_follow_up_letters.form.show_follow_up_button_hint")) do %>
+      <%= f.check_box :show_follow_up_button %>
+    <% end %>
+
+    <%= form_submit_button %>
+  <% end %>
 </div>

@@ -40,7 +40,7 @@ class Ckeditor::PicturesController < ApplicationController
           url: picture.url_content(editor_id: params[:editor_id]),
           thumb_url: picture.url_thumb(editor_id: params[:editor_id]),
           gallery_thumb_url: picture.gallery_thumb_url,
-          custom_thumb_url: picture.custom_thumb_url(width: 870),
+          custom_thumb_url: picture.custom_thumb_url(width: 925),
           created_at: picture.created_at.strftime("%d.%m.%Y")
         )
     else

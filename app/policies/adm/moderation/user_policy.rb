@@ -3,6 +3,10 @@ class Adm::Moderation::UserPolicy < ApplicationPolicy
     can_moderate?
   end
 
+  def show?
+    can_moderate?
+  end
+
   def hide?
     can_moderate? && @record.id != @user.id
   end

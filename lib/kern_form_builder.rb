@@ -5,6 +5,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     number_field
     password_field
     email_field
+    url_field
   ].freeze
 
   INPUT_METHODS.each do |method|

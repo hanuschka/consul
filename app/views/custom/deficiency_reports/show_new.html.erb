@@ -108,7 +108,7 @@
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>
-              <%= link_to "Administrieren", deficiency_report_management_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
+              <%= link_to "Administrieren", adm_deficiency_reports_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
           <% end %>
         <% end %>
 

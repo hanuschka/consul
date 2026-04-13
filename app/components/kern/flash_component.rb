@@ -18,4 +18,13 @@ class Kern::FlashComponent < ApplicationComponent
       else "info"
       end
     end
+
+    def flash_icon(variant)
+      case variant.to_s
+      when "success" then "check_circle"
+      when "danger"  then "error"
+      when "info"    then "info"
+      else "info"
+      end
+    end
 end

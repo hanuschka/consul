@@ -2,8 +2,8 @@ de:
   adm:
     documents:
       index:
-        title: Eigene Dokumente
-        intro_title: Hinweis zu Eigenen Dokumenten
+        title: Dokumente
+        intro_title: Hinweis zu Dokumenten
         intro_text_p1: >
           In diesem Bereich verwalten Sie Dokumente, die zentral auf der Plattform gespeichert werden.
           Jede hochgeladene Datei erhält eine eindeutige URL, über die sie an beliebiger Stelle auf der
@@ -14,14 +14,26 @@ de:
           wird. Über den Button „Download-Link kopieren" können Sie die direkte Download-URL eines Dokuments
           in die Zwischenablage übernehmen und andernorts einsetzen.
         new_document: Neues Dokument hinzufügen
+        empty_title: Keine Dokumente vorhanden
+        empty_description: Laden Sie ein Dokument hoch, um es plattformweit verlinken zu können.
         table:
           title: Titel
           format: Format
           size: Größe
           url: URL
+          copy_link: Download-Link kopieren
           actions: Aktionen
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie dieses Dokument löschen möchten?
       new:
-        title: Neues Dokument erstellen
+        title: Neues Dokument hochladen
         form:
-          submit: Dokument erstellen
+          submit: Dokument hochladen
+          attachment_label: Datei
+          hints:
+            attachment: >
+              Wählen Sie eine Datei von Ihrem Computer aus. Unterstützte Formate sind PDF, Word (DOCX),
+              Excel (XLSX), JPEG und PNG. Der Dateiname wird automatisch als Titel des Dokuments übernommen.
+              Nach dem Hochladen erhalten Sie eine eindeutige URL, über die das Dokument plattformweit
+              verlinkt werden kann.
 

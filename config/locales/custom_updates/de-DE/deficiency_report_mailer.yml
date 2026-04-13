@@ -26,7 +26,9 @@ de:
           hi: "Hallo %{username},"
           p1: "vielen Dank für Ihre %{deficiency_report_link}. Ihr Beitrag wurde erfolgreich übermittelt."
           deficiency_report_link_text: Mängelmeldung
-          p2: "Bitte beachten Sie, dass Ihre Meldung derzeit <strong>noch nicht öffentlich sichtbar ist</strong>. Unser Anliegenmanagement prüft den Inhalt zunächst, bevor er freigegeben und veröffentlicht werden kann. Sie erhalten automatisch eine E‑Mail, sobald sich der Status Ihrer Meldung ändert."
-          p3: "In Ihrem %{account_link} können Sie jederzeit nachvollziehen, welche Beiträge Sie eingereicht haben."
+          p2_pending_review: "Bitte beachten Sie, dass Ihre Meldung derzeit <strong>noch nicht öffentlich sichtbar ist</strong>. Unser Anliegenmanagement prüft den Inhalt zunächst, bevor er freigegeben und veröffentlicht werden kann."
+          p2_published: "Ihre Meldung ist ab sofort öffentlich sichtbar."
+          p3: "Sie erhalten automatisch eine E‑Mail, sobald sich der Status Ihrer Meldung ändert."
+          p4: "In Ihrem %{account_link} können Sie jederzeit nachvollziehen, welche Beiträge Sie eingereicht haben."
           account_link_text: Benutzerkonto
 

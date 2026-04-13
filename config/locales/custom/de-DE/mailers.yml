@@ -6,6 +6,10 @@ de:
       info: "Wir haben eine Anfrage erhalten, Ihnen Anweisungen zur Bestätigung Ihres Kontos zu senden. Ihr Konto ist jedoch bereits bestätigt, sodass Sie dies nicht erneut tun müssen."
       new_password: "Wenn Sie Ihr Passwort vergessen haben, können Sie es unter dem folgenden Link zurücksetzen:"
       subject: Ihr Konto ist bereits bestätigt.
+    proposal_created:
+      subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
+    formular_answer_created:
+      subject: "Vielen Dank für Ihre Einsendung!"
     comment:
       hi: Hallo
       new_comment_by: Es gibt einen neuen Kommentar von <strong>%{commenter}</strong>
@@ -51,10 +55,10 @@ de:
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
     pending_role_invite:
-      subject: "Einladung an %{org_name}"
-      title: "Einladung zu %{org}"
-      text: "Sie wurden als %{role} bei %{org} vorgemerkt. Bitte registrieren Sie sich, um Ihre Rolle zu aktivieren."
-      button: "Jetzt registrieren"
+      subject: "Sie wurden als %{role} eingeladen"
+      title: "Sie wurden als %{role} eingeladen"
+      text: "Erstellen Sie jetzt Ihr Konto, um als %{role} auf der Beteiligungsplattform loszulegen."
+      button: "Konto erstellen"
       ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
       thanks: "Vielen Dank."
       roles:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_17_134931) do
+ActiveRecord::Schema.define(version: 2026_04_10_120002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -183,6 +183,21 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.string "access_token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "api_request_logs", force: :cascade do |t|
+    t.string "http_method", null: false
+    t.string "request_path", null: false
+    t.string "full_url"
+    t.jsonb "query_params", default: {}, null: false
+    t.jsonb "body_params", default: {}, null: false
+    t.integer "response_status"
+    t.integer "api_client_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["api_client_id"], name: "index_api_request_logs_on_api_client_id"
+    t.index ["created_at"], name: "index_api_request_logs_on_created_at"
+    t.index ["request_path"], name: "index_api_request_logs_on_request_path"
   end
 
   create_table "apps", force: :cascade do |t|
@@ -788,6 +803,7 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
   end
 
@@ -1129,6 +1145,7 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_idea_officers_on_user_id"
   end
 
@@ -1642,6 +1659,8 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
+    t.integer "landing_page_id"
+    t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
   end
@@ -1707,8 +1726,10 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.bigint "created_by_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "invitation_token"
     t.index ["email", "role_type"], name: "index_pending_role_assignments_on_email_and_role_type", unique: true
     t.index ["email"], name: "index_pending_role_assignments_on_email"
+    t.index ["invitation_token"], name: "index_pending_role_assignments_on_invitation_token", unique: true, where: "(invitation_token IS NOT NULL)"
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
@@ -2685,6 +2706,44 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.index ["goal_id"], name: "index_sdg_targets_on_goal_id"
   end
 
+  create_table "section_activities", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "section", null: false
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.string "action", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.index ["section", "created_at"], name: "index_section_activities_on_section_and_created_at"
+    t.index ["trackable_type", "trackable_id"], name: "index_section_activities_on_trackable_type_and_trackable_id"
+    t.index ["user_id"], name: "index_section_activities_on_user_id"
+  end
+
+  create_table "section_contact_people", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "section", null: false
+    t.string "role"
+    t.string "email"
+    t.string "phone"
+    t.integer "position", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["section", "position"], name: "index_section_contact_people_on_section_and_position"
+    t.index ["user_id"], name: "index_section_contact_people_on_user_id"
+  end
+
+  create_table "section_settings", force: :cascade do |t|
+    t.string "section", null: false
+    t.string "intro_text"
+    t.text "notice_message"
+    t.boolean "notice_active", default: false, null: false
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_section_settings_on_author_id"
+    t.index ["section"], name: "index_section_settings_on_section", unique: true
+  end
+
   create_table "sentiment_translations", force: :cascade do |t|
     t.bigint "sentiment_id", null: false
     t.string "locale", null: false
@@ -2765,6 +2824,19 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.index ["landing_page_id"], name: "index_site_customization_content_cards_on_landing_page_id"
   end
 
+  create_table "site_customization_email_templates", force: :cascade do |t|
+    t.bigint "projekt_phase_id"
+    t.string "mailer_class", null: false
+    t.string "mailer_action", null: false
+    t.string "locale", default: "de", null: false
+    t.string "subject"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "mailer_class", "mailer_action", "locale"], name: "idx_email_templates_on_phase_mailer_action_locale", unique: true
+    t.index ["projekt_phase_id"], name: "index_site_customization_email_templates_on_projekt_phase_id"
+  end
+
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "image_file_name"
@@ -2800,11 +2872,9 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
     t.string "locale"
     t.bigint "projekt_id"
     t.boolean "landing_show_in_top_nav", default: false
-    t.boolean "landing_hide_all_top_nav_links", default: false
     t.boolean "landing_hide_title_and_subtitle", default: false
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
-    t.boolean "landing_show_projekts_overview", default: true
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
@@ -3301,7 +3371,11 @@ ActiveRecord::Schema.define(version: 2026_03_17_134931) do
   add_foreign_key "resource_sentiments", "sentiments"
   add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
+  add_foreign_key "section_activities", "users"
+  add_foreign_key "section_contact_people", "users"
+  add_foreign_key "section_settings", "users", column: "author_id"
   add_foreign_key "sentiments", "projekt_phases"
+  add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"

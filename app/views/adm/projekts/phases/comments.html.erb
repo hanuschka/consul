@@ -29,8 +29,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_comments") %>
-    </div>
+    <%= empty_state(title: t(".no_comments_title"), description: t(".no_comments_description"), icon: "forum") %>
   <% end %>
 </div>

@@ -33,19 +33,19 @@ de:
       tag:
         name: Name des Tags
       poll/question:
-        intro: Einleitungssatz
-        title: Frage
+        intro: Einleitungstext
+        title: Fragestellung
         description: Beschreibung
-        answer_mandatory: Antwort obligatorisch
-        show_images: Antwortoptionen sollen als Bilder angezeigt werden
-        contextualize_by_poll_question_id: Kontext dieser Frage
+        answer_mandatory: Pflichtfrage
+        show_images: Bilder bei Antwortoptionen
+        contextualize_by_poll_question_id: Kontextualisierung
       votation_type:
-        vote_type: Antwortoptionen
+        vote_type: Abstimmungsmodus
         max_votes: Maximale Stimmanzahl
-        max_votes_per_answer: Maximale Stimmanzahl pro Antwort
-        show_hint_callout: Informationstext der blauen Box im Frontend anzeigen
-        min_rating_scale_label: Linkes Label
-        max_rating_scale_label: Rechtes Label
+        max_votes_per_answer: Maximale Stimmen pro Antwort
+        show_hint_callout: Hinweisbox im Frontend
+        min_rating_scale_label: Label links (Minimum)
+        max_rating_scale_label: Label rechts (Maximum)
       poll/question/answer:
         title: Titel
         description: Beschreibung

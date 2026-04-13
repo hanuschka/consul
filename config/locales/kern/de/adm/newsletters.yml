@@ -3,9 +3,19 @@ de:
     newsletters:
       index:
         title: Newsletter
-        new_newsletter: Erstellen
+        empty_title: "Keine Newsletter vorhanden"
+        empty_description: "Erstellen Sie einen neuen Newsletter, um Nutzer über aktuelle Projekte zu informieren."
+        intro_text_p1: >
+          Hier verwalten Sie alle Newsletter Ihrer Plattform. Newsletter werden an definierte Empfängergruppen
+          versendet und informieren Nutzer über neue Projekte, Beteiligungsmöglichkeiten oder andere Neuigkeiten.
+          Bevor Sie einen Newsletter erstellen, müssen zunächst unter „Empfängergruppen" die gewünschten
+          Zielgruppen definiert werden – diese stehen dann im Newsletter-Formular zur Auswahl.
+        intro_text_p2: >
+          Über die weiteren Tabs können Sie nicht registrierte Abonnenten verwalten
+          und die Newsletter-Einstellungen (z. B. Absenderadresse und Markenfarbe) anpassen.
+        new_newsletter: Neuer Newsletter
         tabs:
-          list: Newsletter
+          list: Alle Newsletter
           recipient_groups: Empfängergruppen
           unregistered_subscribers: Nicht registrierte Abonnenten
           settings: Einstellungen
@@ -14,6 +24,7 @@ de:
           recipient_group: Empfängergruppe
           sent: Gesendet
           actions: Aktionen
+          show: Vorschau
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diesen Newsletter löschen möchten?
@@ -25,18 +36,23 @@ de:
         from: Von
         subject: Betreff
         recipient_group: Empfängergruppe
-        affected_users: "(%{n} Empfänger*innen)"
+        affected_users: "(%{n} Empfänger)"
         sent_emails: "Gesendete Emails: %{count}"
         body: Inhalt
         body_help_text: So wird der Newsletter als Email dargestellt.
         send: Senden
-        send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger*innen senden möchten?"
+        send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger senden möchten?"
         send_test: Test-Email an mich senden
         deliver_success: Newsletter wird versendet.
         send_test_success: Test-Email wurde erfolgreich gesendet.
-        recipient_emails: "Empfänger*innen Emails"
+        recipient_emails: "Empfänger Emails"
       new:
         title: Newsletter erstellen
+        hints:
+          subject: "Der Betreff erscheint als Überschrift in der E-Mail und im Posteingang der Empfänger. Wählen Sie einen kurzen, aussagekräftigen Text, der das Thema des Newsletters klar benennt. Ein guter Betreff erhöht die Öffnungsrate und hilft Empfängern, den Newsletter thematisch einzuordnen. Empfohlene Länge: 40 bis 60 Zeichen."
+          recipient_group: "Wählen Sie die Empfängergruppe, an die dieser Newsletter gesendet werden soll. Empfängergruppen definieren, welche Nutzer den Newsletter erhalten – z. B. alle registrierten Nutzer, Abonnenten bestimmter Projekte oder manuell zusammengestellte Gruppen. Neue Empfängergruppen können Sie unter dem gleichnamigen Tab anlegen und verwalten."
+        placeholders:
+          subject: "z. B. Neue Beteiligungsprojekte im März 2026"
       edit:
         title: Newsletter bearbeiten
       create:
@@ -46,7 +62,7 @@ de:
       destroy:
         success: Newsletter wurde erfolgreich gelöscht.
       settings:
-        title: Newsletter Einstellungen
+        title: Einstellungen
         email_logo: Email Logo
         logo_hint: Die Bildgröße sollte 130 x 45 betragen
         brand_color: Markenfarbe

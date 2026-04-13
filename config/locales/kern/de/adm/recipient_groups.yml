@@ -3,40 +3,68 @@ de:
     recipient_groups:
       index:
         title: Empfängergruppen
-        new_recipient_group: Erstellen
+        new_recipient_group: Neue Empfängergruppe erstellen
+        intro_text_p1: >
+          Empfängergruppen legen fest, welche Nutzer einen Newsletter erhalten. Sie können Gruppen
+          anhand von Nutzerrollen oder projektbezogenen Kriterien zusammenstellen — etwa alle
+          Abonnenten eines bestimmten Projekts, Autoren ausgewählter Vorschläge oder alle Nutzer
+          mit Einverständniserklärung zum Newsletter-Empfang.
+        intro_text_p2: >
+          Jeder Newsletter wird beim Versand einer Empfängergruppe zugeordnet. Über die Zusammenstellung
+          der Gruppen steuern Sie, ob ein Newsletter breit gestreut oder gezielt an einen bestimmten
+          Personenkreis versendet wird. Empfängergruppen können jederzeit bearbeitet und wiederverwendet
+          werden. Falls eine gewünschte Empfängergruppe im Auswahlmenü nicht verfügbar ist, wenden Sie
+          sich bitte an demokratie.today, um die benötigte Option einrichten zu lassen.
         table:
           name: Name
           actions: Aktionen
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diese Empfängergruppe löschen möchten?
-        empty: Es sind keine Empfängergruppen vorhanden.
+        empty_title: Keine Empfängergruppen vorhanden
+        empty_description: Erstellen Sie eine Empfängergruppe, um Newsletter gezielt an bestimmte Nutzerkreise zu versenden.
       new:
         title: Empfängergruppe erstellen
-        label_for_general: Typ der Adressatengruppe
+        label_for_general: Typ der Empfängergruppe
         label_for_projekt: Projekt auswählen
         label_for_projekt_phase: Phase auswählen
+        hints:
+          label_for_general: >
+            Wählen Sie, wie die Empfängergruppe zusammengestellt werden soll. Bei „Nutzerrollen" können
+            Sie z. B. alle Nutzer mit Einverständniserklärung oder alle Administratoren auswählen. Bei
+            „Projektbezogen" wird die Gruppe anhand eines bestimmten Projekts und dessen Beteiligungsphasen
+            gebildet — etwa alle Abonnenten oder Autoren ausgewählter Vorschläge.
+          label_for_projekt: >
+            Wählen Sie das Projekt, auf dessen Grundlage die Empfängergruppe gebildet werden soll. Im
+            nächsten Schritt können Sie die Beteiligungsphase und das gewünschte Empfängerkriterium
+            festlegen — z. B. alle Abonnenten der Phase oder Autoren bestimmter Vorschläge.
+          label_for_projekt_phase: >
+            Wählen Sie die Beteiligungsphase innerhalb des Projekts aus. Die verfügbaren Empfängerkriterien
+            hängen vom Typ der Phase ab — bei Budgetphasen stehen z. B. Autoren machbarer oder ausgewählter
+            Vorschläge zur Verfügung, bei anderen Phasen die Abonnenten der jeweiligen Phase.
         base_options_for_kind:
           projekts: Projekte
           user_roles: Nutzerrollen
         select_options:
           projekt_related: Projektbezogen
         access_methods:
-          newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
-          all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
-          administrators_ids: Administrator*innen
-          any_phase_subscribers_ids: Abonnent*innen aller Phasen
-          authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
-          authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen
-          authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
-          authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
-          authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
+          newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung
+          all_newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
+          administrators_ids: Administratoren
+          any_phase_subscribers_ids: Abonnenten aller Phasen
+          authors_of_feasible_ids: Autoren, deren Vorschläge den Kriterien entsprechen
+          authors_of_unfeasible_ids: Autoren, deren Vorschläge den Kriterien nicht entsprechen
+          authors_of_selected_ids: Autoren, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
+          authors_of_not_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
+          authors_of_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung gewonnen haben
       edit:
         title: Empfängergruppe bearbeiten
-        submit: Empfängergruppe speichern
+        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
+        submit: Speichern
       create:
         success: Empfängergruppe wurde erfolgreich erstellt.
       update:
         success: Empfängergruppe wurde erfolgreich aktualisiert.
       destroy:
         success: Empfängergruppe wurde erfolgreich gelöscht.
+        restricted: Diese Empfängergruppe kann nicht gelöscht werden, da sie noch von Newslettern verwendet wird.

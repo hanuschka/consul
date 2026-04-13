@@ -42,7 +42,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
         name="body"
         id="${this.genTextEditorIdForTextarea(contentBlockWrapper.dataset.contentBlockId)}"
         rows="8"
-        class="html-area extended-a js-projekt-studio-hide-on-preview"
+        class="html-area extended-a js-studio-hide-on-preview"
         style="visibility: hidden; display: none;"
       >
          ${originalContent}

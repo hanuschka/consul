@@ -1,15 +1,15 @@
 module Adm
   module SiteCustomization
     class PagesController < Adm::BaseController
-      SLUGS = %w[privacy conditions impressum].freeze
+      SLUGS = %w[privacy conditions impressum contact_us].freeze
 
       def edit
         @page = find_or_create_page(params[:slug])
         authorize @page, :update?, policy_class: policy_class_for(@page)
 
         @breadcrumbs = [
-          { name: t("adm.menu.items.pages"), icon: "description" },
-          { name: @page.title }
+          { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+          { name: t("adm.menu.items.application_subitems.pages") }
         ]
       end
 

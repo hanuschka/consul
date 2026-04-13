@@ -1,7 +1,8 @@
 class Kern::Form::ImageableImageComponent < ApplicationComponent
-  def initialize(form:, auto_submit: false)
+  def initialize(form:, auto_submit: false, show_actions: true)
     @form = form
     @auto_submit = auto_submit
+    @show_actions = show_actions
   end
 
   private

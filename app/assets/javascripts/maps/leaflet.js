@@ -10,6 +10,7 @@
 
       this.createMap();
       this.setupExpandControl();
+      this.addResetViewControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
@@ -79,6 +80,8 @@
 
       this.map.addControl(zoomControl);
 
+      this.setupEscKeyHandler();
+
       this.map.pm.setGlobalOptions({
         markerStyle: {
           icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor),
@@ -97,6 +100,16 @@
       if (this.editableLayersLimit && this.editableLayersLimit > 1) {
         this.addHintAboutEditableLayersLimit();
       }
+    }
+
+    setupEscKeyHandler() {
+      const map = this.map;
+
+      $(this.element).on('keydown', function(event) {
+        if (event.which === 27) {
+          map.closePopup();
+        }
+      });
     }
 
     setupEventListenersForNewFeatures() {
@@ -183,6 +196,39 @@
       this.map.addControl(expandControl);
     }
 
+    addResetViewControl() {
+      const instance = this;
+
+      L.Control.ResetView = L.Control.extend({
+        onAdd: function() {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+
+          container.appendChild(button);
+
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            instance.map.setView(instance.mapCenterLatLng, instance.zoom, { animate: true });
+          });
+
+          return container;
+        },
+
+        onRemove() {}
+      });
+
+      const resetControl = new L.Control.ResetView({ position: 'topright' });
+      this.map.addControl(resetControl);
+    }
+
     setupLayers() {
       if (this.adminFeatures && Object.keys(this.adminFeatures).length > 0) {
         this.addAdminFeaturesAsLayer();
@@ -258,16 +304,16 @@
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML('#ff0000', null, 'Verwaltungseintrag')
+            icon: App.Utils.getLeafletMarkerHTML('#008000', null, 'Verwaltungseintrag')
           });
         },
         style: {
-          color: '#ff0000',
+          color: '#008000',
           weight: 2,
           fillOpacity: 0.2
         },
         onEachFeature: (feature, layer) => {
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
           layer.pm.disable();
           layer.pm.setOptions({
             draggable: false,
@@ -297,7 +343,7 @@
     }
 
     renderAdminFeaturesNote() {
-      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in grün sind vom System vorgegeben';
       const adminShapeExplainer = L.control({
         position: 'bottomleft'
       });
@@ -306,7 +352,7 @@
         const container = L.DomUtil.create('div', 'my-attribution');
         container.innerHTML = adminShapeExplainerText;
         container.className += ' leaflet-control-attribution';
-        container.style.color = '#ff0000';
+        container.style.color = '#008000';
         return container;
       };
 

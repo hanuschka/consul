@@ -3,15 +3,26 @@ module Adm
     def index
       authorize [:adm, User]
       base_scope = UsersQuery.call(policy_scope([:adm, User]), params)
+        .includes(:registered_address, :administrator, :moderator, :valuator, :manager, :poll_officer, :organization)
 
       respond_to do |format|
         format.html do
           @pagy, @users = pagy(base_scope)
 
           @username_header_options = { sort: true, search: true }
-          gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).index_by(&:itself)
+          @email_header_options = { search: true }
+          @first_name_header_options = { search: true }
+          @last_name_header_options = { search: true }
+          @city_name_header_options = { sort: true }
+          @created_at_header_options = { sort: true }
+          @verified_at_header_options = { sort: true }
+
+          gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).compact.index_by(&:itself)
           @gender_header_options = { filter_options: gender_options }
-          @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") }}
+          @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") } }
+
+          document_type_options = policy_scope([:adm, User]).distinct.pluck(:document_type).compact.index_by(&:itself)
+          @document_type_header_options = { filter_options: document_type_options }
 
           @breadcrumbs = [
             { name: t("adm.menu.items.profiles"), icon: "3p" },

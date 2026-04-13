@@ -1,9 +1,11 @@
 namespace :adm do
   scope :deficiency_reports, module: :deficiency_reports, as: :deficiency_reports do
-    root to: "deficiency_reports#index"
+    root to: "home#show"
+    get "list", to: "deficiency_reports#index", as: :deficiency_reports_list
 
     resources :officers, only: [:index, :create, :destroy] do
       post :search, on: :collection
+      patch :toggle_manage_all, on: :member
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
@@ -42,7 +44,7 @@ namespace :adm do
       end
     end
 
-    resources :memos, only: [:create] do
+    resources :memos, only: [:create, :destroy] do
       member do
         post :send_notification
       end

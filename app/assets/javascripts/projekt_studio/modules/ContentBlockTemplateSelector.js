@@ -35,9 +35,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
 
   detectSection(wrapper) {
     if (!wrapper) return "projekt_page"
-
-    if (wrapper.closest("aside, .sidebar")) return "sidebar"
-    if (wrapper.closest("footer")) return "footer"
+    if (wrapper.closest("aside, .sidebar, footer")) return "sidebar_and_footer"
 
     return "projekt_page"
   },
@@ -76,7 +74,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
 
-    const attributesToEmpty = ['data-orbit'];
+    const attributesToEmpty = ['data-orbit', 'data-accordion'];
     const attributesToRemove = ['data-resize', 'id'];
     const allElements = tempDiv.querySelectorAll('*');
 

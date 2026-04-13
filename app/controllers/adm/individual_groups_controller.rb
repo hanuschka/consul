@@ -10,6 +10,17 @@ module Adm
       ]
     end
 
+    def show
+      @individual_group = IndividualGroup.find(params[:id])
+      authorize [:adm, @individual_group]
+
+      @breadcrumbs = [
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+        { name: t("adm.menu.items.application_subitems.individual_groups"), url: adm_individual_groups_path },
+        { name: @individual_group.name }
+      ]
+    end
+
     def new
       @individual_group = IndividualGroup.new
       authorize [:adm, @individual_group]

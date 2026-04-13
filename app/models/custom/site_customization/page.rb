@@ -6,6 +6,7 @@ class SiteCustomization::Page < ApplicationRecord
   self.inheritance_column = nil
 
   include Imageable
+  include SectionTrackable
   attr_reader :origin
 
   belongs_to :projekt, touch: true
@@ -15,6 +16,7 @@ class SiteCustomization::Page < ApplicationRecord
   has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
   has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
   has_many :landing_page_managers, through: :landing_page_manager_assignments
+  has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
 
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
@@ -83,6 +85,14 @@ class SiteCustomization::Page < ApplicationRecord
     if status_changed? && status == 'published'
       self.published_at = Time.current
     end
+  end
+
+  def section_tracking_section
+    "landing_pages"
+  end
+
+  def section_tracking_user
+    nil
   end
 
   def sync_projekt_for_global_overview

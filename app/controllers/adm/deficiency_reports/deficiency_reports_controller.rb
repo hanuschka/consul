@@ -15,12 +15,12 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @status_header_options = { filter_options: status_filter_options }
     @responsible_header_options = { filter_options: responsible_filter_options }
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
   end
 
   def settings
     authorize :deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.settings") }]
+    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.settings"), icon: "settings" }]
   end
 
   def show
@@ -32,7 +32,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+          { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
           { name: @deficiency_report.title }
         ]
 
@@ -65,7 +65,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @deficiency_report.create_map_location unless @deficiency_report.map_location
 
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
       { name: @deficiency_report.title }
     ]
   end
@@ -85,7 +85,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
       @deficiency_report.create_map_location unless @deficiency_report.map_location
       @breadcrumbs = [
-        { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+        { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
         { name: @deficiency_report.title }
       ]
       render :edit, status: :unprocessable_entity
@@ -100,13 +100,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def administer
-    @deficiency_report = DeficiencyReport.find(params[:id])
-    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-
-    @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
-      { name: @deficiency_report.title }
-    ]
+    redirect_to adm_deficiency_reports_deficiency_report_path(params[:id])
   end
 
   def update_administer
@@ -123,7 +117,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     end
 
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
       { name: @deficiency_report.title }
     ]
     render :administer
@@ -134,7 +128,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
       { name: @deficiency_report.title }
     ]
   end
@@ -162,7 +156,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @feedback_form = @deficiency_report.feedback_form
 
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path },
+      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
       { name: @deficiency_report.title }
     ]
   end

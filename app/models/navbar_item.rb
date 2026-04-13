@@ -1,13 +1,32 @@
 class NavbarItem < ApplicationRecord
   PRESETS = {
-    projekts: :projekts_path,
-    events: :projekt_events_path,
-    investments: :investments_path,
-    proposals: :proposals_path,
-    polls: :polls_path,
     deficiency_reports: :deficiency_reports_path,
-    ideas: :ideas_path
+    events: :projekt_events_path,
+    ideas: :ideas_path,
+    projekts: :projekts_path,
+    investments: :investments_path,
+    polls: :polls_path,
+    proposals: :proposals_path
   }.freeze
+
+  LANDING_PAGE_ALLOWED_PRESETS = %i[projekts events investments proposals polls].freeze
+
+  PRESET_MODULE_SETTINGS = {
+    deficiency_reports: "process.deficiency_reports",
+    events: "extended_feature.general.enable_projekt_events_page",
+    ideas: "process.ideas",
+    projekts: "process.projekts",
+    investments: "extended_feature.general.enable_investments_overview",
+    polls: "extended_feature.general.enable_polls_overview",
+    proposals: "extended_feature.general.enable_proposals_overview"
+  }.freeze
+
+  def self.enabled_presets
+    PRESETS.reject do |key, _|
+      setting_key = PRESET_MODULE_SETTINGS[key]
+      setting_key.present? && !Setting[setting_key].present?
+    end
+  end
 
   has_many :children, class_name: "NavbarItem",
                       foreign_key: "parent_id",
@@ -17,12 +36,16 @@ class NavbarItem < ApplicationRecord
                       optional: true,
                       inverse_of: :children
   belongs_to :projekt, optional: true
+  belongs_to :landing_page, class_name: "SiteCustomization::Page",
+                            optional: true
 
   enum kind: { presets: 0, projekts: 1, external: 2 }
 
   validates :kind, presence: true
 
   scope :top_level, -> { where(parent_id: nil).order(:position) }
+  scope :global, -> { where(landing_page_id: nil) }
+  scope :for_landing_page, ->(landing_page_id) { where(landing_page_id: landing_page_id) }
 
   def self.presets
     PRESETS

@@ -2,6 +2,7 @@
   <%= hidden_field_tag :kind, "rich_text" %>
   <%= hidden_field_tag :attribute, @attribute %>
   <%= hidden_field_tag :wide, @options[:wide] if @options[:wide] %>
+  <%= hidden_field_tag :hide_label, @options[:hide_label] if @options[:hide_label] %>
 
   <div class="mb-3 <%= 'disabled' if disabled? %>">
     <%= form.text_area @attribute,
@@ -9,7 +10,7 @@
       label: false,
       disabled: disabled?,
       aria: aria_attributes,
-      data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+      data: { controller: "ckeditor", ckeditor_toolbar_value: @options[:toolbar] || ck_editor_class(current_user) } %>
   </div>
 
   <%= form_submit_button(autofocus: request.format.turbo_stream?, disabled: disabled?) %>

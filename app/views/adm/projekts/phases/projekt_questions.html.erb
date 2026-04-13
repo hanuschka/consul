@@ -36,8 +36,8 @@
               <td class="kern-table__cell"><%= question.comments.count %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_question_path(@projekt_phase, question)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_question_path(@projekt_phase, question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_question_path(@projekt_phase, question), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_question_path(@projekt_phase, question), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -50,8 +50,6 @@
       <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_questions") %>
-    </div>
+    <%= empty_state(title: t(".no_questions_title"), description: t(".no_questions_description"), icon: "quiz") %>
   <% end %>
 </div>

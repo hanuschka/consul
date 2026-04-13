@@ -6,7 +6,7 @@
 
   <%= form_with model: @district, url: adm_ideas_district_path(@district), method: :put do |f| %>
     <div class="mb-4">
-      <%= render Kern::FormFieldComponent.new(label: ::RegisteredAddress::District.human_attribute_name(:default_idea_officer), inline: true) do %>
+      <%= render Kern::FormFieldComponent.new(label: ::RegisteredAddress::District.human_attribute_name(:default_idea_officer), inline: true, hint: t(".default_idea_officer_hint")) do %>
         <%= f.select :idea_officer_id,
           options_from_collection_for_select(Idea::Officer.all, :id, :name, @district.idea_officer_id),
           { include_blank: t(".no_officer") },

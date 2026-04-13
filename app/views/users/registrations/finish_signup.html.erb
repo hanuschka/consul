@@ -2,19 +2,14 @@
   <h2><%= t("omniauth.finish_signup.title") %></h2>
 
   <%= form_for current_user, as: :user, url: do_finish_signup_path, html: { role: "form" } do |f| %>
-    <% if current_user.errors.include? :username %>
+    <% if current_user.errors.include?(:username) %>
       <%= f.label :username, nil, style: "display:block" %>
       <%= f.text_field :username, label: false %>
-    <% else %>
-      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: errors do not include username") %>
-      <%#= f.hidden_field :username %>
     <% end %>
 
-    <% if current_user.errors.include? :email %>
-      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: erroris include email") %>
-      <%#= f.email_field :email %>
-    <% else %>
-      <%#= f.hidden_field :email %>
+    <% if current_user.errors.include?(:email) %>
+      <%= f.label :email, nil, style: "display:block" %>
+      <%= f.email_field :email, label: false %>
     <% end %>
 
     <%= f.submit t("omniauth.finish_signup.submit"), class: "button expanded" %>

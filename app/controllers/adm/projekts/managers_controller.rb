@@ -11,7 +11,7 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.menu.items.managers") }
+      { name: t("adm.projekts.menu.items.managers"), icon: "badge" }
     ]
   end
 
@@ -20,7 +20,7 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.menu.items.managers"), url: adm_projekts_managers_path },
+      { name: t("adm.projekts.menu.items.managers"), url: adm_projekts_managers_path, icon: "badge" },
       { name: t(".title") }
     ]
   end
@@ -30,6 +30,10 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
     authorize @projekt_manager, policy_class: Adm::Projekts::ProjektManagerPolicy
 
     @projekt_manager.destroy!
+
+    if ProjektManager.none?
+      redirect_to adm_projekts_managers_path
+    end
   end
 
   def toggle_manage_all_projekts

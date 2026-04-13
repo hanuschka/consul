@@ -6,7 +6,7 @@
 
 <div class="kern-container mb-5">
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_projekt_argument_path(@projekt_phase), text: t(".create_button"), style: :primary %>
+    <%= kern_link_button new_adm_projekts_phase_projekt_argument_path(@projekt_phase), text: t(".create_button"), style: :secondary %>
     <%= kern_link_button send_notifications_adm_projekts_phase_projekt_arguments_path(@projekt_phase), text: t(".send_notifications_button"), style: :secondary, data: { turbo_method: :post, turbo_confirm: t(".send_notifications_confirm") } %>
   </div>
 
@@ -38,8 +38,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_argument_path(@projekt_phase, argument)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -48,7 +48,9 @@
       </table>
     </div>
   <% else %>
-    <p class="kern-body mb-5"><%= t(".no_arguments") %></p>
+    <div class="mb-5">
+      <%= empty_state(title: t(".no_pro_arguments_title"), description: t(".no_pro_arguments_description"), icon: "thumb_up") %>
+    </div>
   <% end %>
 
   <h3 class="kern-heading kern-heading--sm mb-3"><%= t(".contra") %></h3>
@@ -79,8 +81,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_argument_path(@projekt_phase, argument)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_argument_path(@projekt_phase, argument), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -89,6 +91,6 @@
       </table>
     </div>
   <% else %>
-    <p class="kern-body"><%= t(".no_arguments") %></p>
+    <%= empty_state(title: t(".no_contra_arguments_title"), description: t(".no_contra_arguments_description"), icon: "thumb_down") %>
   <% end %>
 </div>

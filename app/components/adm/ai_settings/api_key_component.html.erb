@@ -1,0 +1,14 @@
+<%= form_with url: update_api_key_adm_ai_settings_path, local: true, method: :patch do |form| %>
+  <div class="d-flex align-items-start gap-2">
+    <div class="flex-grow-1">
+      <%= form.hidden_field "external_api_key[name]", value: key_name %>
+      <%= form.hidden_field "external_api_key[service]", value: service %>
+      <%= form.password_field "external_api_key[value]",
+        class: "kern-input",
+        label: false,
+        placeholder: t("adm.ai_settings.index.enter_api_key"),
+        value: api_key&.value %>
+    </div>
+    <%= helpers.kern_button(icon: "save", type: "submit") %>
+  </div>
+<% end %>

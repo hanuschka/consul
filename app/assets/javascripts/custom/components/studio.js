@@ -51,7 +51,6 @@
     SiteContentBlockEditor: {
       initialize() {
         if (typeof ProjektStudio === "undefined") return
-        if (ProjektStudio.isProjektPage()) return
         if (!this.hasSiteContentBlocks()) return
 
         this.wrapContentBlocks();
@@ -69,6 +68,7 @@
           const contentBlockId = block.dataset.contentBlockId;
           const updateUrl = block.dataset.updateUrl;
           const aiUrl = block.dataset.aiUrl;
+          const defaultContent = block.dataset.defaultContent;
 
           const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
             block.innerHTML,
@@ -84,9 +84,19 @@
           tempContainer.innerHTML = wrappedHTML;
           const wrappedElement = tempContainer.firstElementChild;
 
+          if (defaultContent) {
+            wrappedElement.dataset.defaultContent = defaultContent;
+          }
+
           block.parentNode.replaceChild(wrappedElement, block);
 
-          $(wrappedElement).find("[data-tooltip]").foundation();
+          if (wrappedElement.closest("aside, .sidebar, footer")) {
+            wrappedElement.classList.add("-compact-mode");
+          }
+
+          $(wrappedElement).foundation();
+
+          App.ImageGallery.initialize();
         });
       }
     }

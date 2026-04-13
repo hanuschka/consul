@@ -1,6 +1,13 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="mb-3"></div>
 
 <%= render Adm::TabsComponent.new(tabs: [
   { label: t(".tabs.list"), url: adm_newsletters_path, current: true },
@@ -35,6 +42,6 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <%= kern_alert(title: t('.empty'), style: :info) %>
+    <%= empty_state(title: t(".empty_title"), description: t(".empty_description"), icon: "mail") %>
   <% end %>
 </div>

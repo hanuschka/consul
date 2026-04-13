@@ -4,7 +4,14 @@ module ContentBlocksHelper
   def render_custom_block(key, projekt: nil, custom_prefix: nil, default_content: nil, return_path: nil)
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
-    block_body = block&.body.presence || default_content || ""
+    block_body =
+      if content_block_body_blank?(block&.body)
+        default_content || ""
+      else
+        block&.body
+      end
+
+    block_body = convert_br_to_paragraphs(block_body)
 
     if custom_prefix
       block_body = "#{custom_prefix} #{block_body}"
@@ -19,7 +26,9 @@ module ContentBlocksHelper
         sanitized_body = process_iframe_embeds(sanitized_body)
       end
 
-      res = build_inline_editable_block(key, block, sanitized_body, inline_urls).html_safe
+      sanitized_default_content = prepare_default_content(default_content)
+
+      res = build_inline_editable_block(key, block, sanitized_body, inline_urls, default_content: sanitized_default_content).html_safe
     else
       res = build_standard_block(key, block, block_body, projekt, return_path)
 
@@ -49,11 +58,16 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls)
-    res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\""
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil)
+    res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
+
+    if default_content.present?
+      res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""
+    end
+
     res << ">#{block_body}</div>"
 
     res
@@ -74,10 +88,10 @@ module ContentBlocksHelper
       )
     end
 
-    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?}>#{block_body}</div>"
+    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end
@@ -114,7 +128,7 @@ module ContentBlocksHelper
   end
 
   def render_projekt_content_block(block)
-    block_body = block&.body
+    block_body = convert_br_to_paragraphs(block&.body)
     key = block.key
 
     if current_user&.administrator?
@@ -123,14 +137,37 @@ module ContentBlocksHelper
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
     end
 
-    res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
+    res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? } data-turbolinks=\"false\">#{block_body}</div>"
 
     if edit_link
-      res << "<div class='custom-content-block-controls js-projekt-studio-hide-on-preview'>"
+      res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
       res << edit_link
       res << "</div>"
     end
 
     AdminWYSIWYGSanitizer.new.sanitize(res)
+  end
+
+  def prepare_default_content(default_content)
+    return nil if default_content.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(default_content)
+  end
+
+  def content_block_body_blank?(body)
+    return true if body.blank?
+
+    without_empty_tags = body.gsub(/<br\s*\/?>/, "")
+    without_empty_tags = without_empty_tags.gsub(/<\/?(p|div|span)(\s[^>]*)?>/, "")
+    without_empty_tags = without_empty_tags.gsub(/[\s\u00A0]/, "")
+    without_empty_tags.blank?
+  end
+
+  def convert_br_to_paragraphs(html)
+    return html if html.blank?
+
+    result = html.gsub(/<br\s*\/?>/, "</p><p>")
+    result = result.gsub(/<p>\s*<\/p>/, "")
+    result
   end
 end

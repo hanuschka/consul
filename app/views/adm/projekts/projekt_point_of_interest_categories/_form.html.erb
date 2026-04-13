@@ -6,13 +6,13 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
-    <div data-controller="adm-color-picker">
+    <div data-controller="adm-color-picker" data-adm-color-picker-target="container">
       <div class="color-picker" data-adm-color-picker-target="picker"></div>
-      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+      <%= f.hidden_field :color, value: @category.color.presence || "#3366CC", data: { "adm-color-picker-target": "colorInput" } %>
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint"), stacked: true) do %>
     <div class="icon-selector">
       <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
         <% icon = icon_array.first %>

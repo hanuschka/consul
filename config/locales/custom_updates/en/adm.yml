@@ -1,5 +1,6 @@
 en:
   adm:
+    not_authorized: You are not authorized to perform this action.
     projekts:
       phases:
         ai_user_flow:

@@ -10,9 +10,9 @@ de:
       created_at: "Vorgemerkt am"
       remove: "Entfernen"
       confirm_remove: "Möchten Sie diese ausstehende Rollenzuweisung wirklich entfernen?"
-      created: "Rolle wurde für %{email} vorgemerkt. Sie wird automatisch zugewiesen, sobald sich der Nutzer registriert."
+      created: "Der Nutzer mit der E-Mail-Adresse %{email} wurde als Projektmanager eingeladen."
       removed: "Ausstehende Rollenzuweisung wurde entfernt."
       already_pending: "Für %{email} wurde diese Rolle bereits vorgemerkt."
-      offer_preassign: "Kein Nutzer mit der E-Mail \"%{email}\" gefunden. Möchten Sie die Rolle vormerken? Sie wird automatisch zugewiesen, sobald sich ein Nutzer mit dieser E-Mail registriert."
-      preassign_button: "Rolle vormerken"
+      offer_preassign: "Nutzer mit der E-Mail-Adresse \"%{email}\" wurde nicht gefunden."
+      preassign_button: "Als Projektmanager einladen"
 

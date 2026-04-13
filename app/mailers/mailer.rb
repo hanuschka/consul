@@ -105,6 +105,7 @@ class Mailer < ApplicationMailer
   end
 
   def pending_role_invite(pending_role_assignment)
+    @pending_role_assignment = pending_role_assignment
     @email_to = pending_role_assignment.email
     @role_name = I18n.t("mailers.pending_role_invite.roles.#{pending_role_assignment.role_type.underscore}",
                         default: pending_role_assignment.role_type.titleize)
@@ -113,8 +114,8 @@ class Mailer < ApplicationMailer
       mail_with_custom_template(nil, {
         "org_name" => Setting["org_name"],
         "role_name" => @role_name,
-        "registration_url" => new_user_registration_url
-      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", org_name: Setting["org_name"]))
+        "registration_url" => new_user_registration_url(invitation_token: pending_role_assignment.invitation_token)
+      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", role: @role_name))
     end
   end
 

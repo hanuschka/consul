@@ -2,13 +2,27 @@ de:
   adm:
     moderation:
       title: Moderation
+      home:
+        title: Willkommen in der Moderation
+        stats:
+          pending: Ausstehend
+          blocked_users: Blockierte Nutzer
+          moderated_total: Moderiert (gesamt)
+        quick_links:
+          all: Alle Moderationen
+          pending: Ausstehende Moderationen
+          comments: Kommentare
+          users: Nutzer
       menu:
         aria_label: Moderationsmenü
         title: Moderation
-        users: Nutzer blockieren
-        proposals: Vorschläge
-        budget_investments: Vorschläge (Budget)
-        comments: Kommentare
+        items:
+          home: Home
+          moderators: Team
+          users: Nutzer blockieren
+          proposals: Vorschläge
+          budget_investments: Vorschläge (Budget)
+          comments: Kommentare
       users:
         index:
           title: Nutzer blockieren

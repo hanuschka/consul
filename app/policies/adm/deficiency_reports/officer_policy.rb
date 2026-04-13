@@ -15,6 +15,10 @@ class Adm::DeficiencyReports::OfficerPolicy < ApplicationPolicy
     deficiency_report_manager?
   end
 
+  def update?
+    deficiency_report_manager?
+  end
+
   class Scope < Scope
     def resolve
       scope.all

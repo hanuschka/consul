@@ -13,7 +13,7 @@ class Adm::Moderation::ProposalsController < Adm::Moderation::BaseController
 
     @breadcrumbs = [
       { name: I18n.t("adm.moderation.menu.title"), icon: "article" },
-      { name: I18n.t("adm.moderation.menu.proposals") }
+      { name: I18n.t("adm.moderation.menu.items.proposals") }
     ]
   end
 

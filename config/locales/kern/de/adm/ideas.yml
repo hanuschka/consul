@@ -1,6 +1,26 @@
 de:
   adm:
     ideas:
+      home:
+        title: Willkommen im Ideenmanagement
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          active: Aktiv
+          archived: Archiviert
+        quick_links:
+          all: Alle Ideen
+          active: Aktive Ideen
+          pending: Ausstehende Ideen
+      menu:
+        aria_label: Ideen Navigation
+        items:
+          home: Home
+          officers: Team
+          ideas: Ideen
+          categories: Kategorien
+          settings: Funktionen
+          districts: Gebiete
       ideas:
         index:
           title: Ideen
@@ -150,7 +170,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter
+          title: Team
           page_hint: "Hier verwalten Sie die Sachbearbeiter für Ideen. Sachbearbeiter können eingereichte Ideen bearbeiten, deren Umsetzbarkeit bewerten und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Sachbearbeiter können Kategorien und Gebieten als Standardverantwortliche zugeordnet werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Ideen hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Ideen, bewerten deren Umsetzbarkeit und kommunizieren mit den Einreichern.
@@ -160,7 +180,8 @@ de:
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:

@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: ApiClient.human_attribute_name(:name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: ApiClient.human_attribute_name(:name), hint: t("adm.api_clients.form.name_description")) do %>
     <%= f.text_field :name, label: false, placeholder: ApiClient.human_attribute_name(:name) %>
   <% end %>
 

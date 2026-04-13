@@ -10,7 +10,7 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
   end
 
   def create?
-    permitted?
+    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
   end
 
   def update?
@@ -27,6 +27,7 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
     def resolve
       scope.where(id: managed_projekt_ids)
         .includes([:projekt_settings, :parent, [page: :translations]])
+        .order(updated_at: :desc)
     end
   end
 

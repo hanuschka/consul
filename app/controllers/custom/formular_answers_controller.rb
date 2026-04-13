@@ -24,6 +24,7 @@ class FormularAnswersController < ApplicationController
 
     if @formular_answer.answer_errors.none? && @formular_answer.save
       Mailer.formular_answer_confirmation(@formular_answer).deliver_later
+      Mailer.formular_answer_created(@formular_answer).deliver_later if current_user.present?
       @success_notification = t("custom.formular_answer.notifications.success")
 
       respond_to do |format|

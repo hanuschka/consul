@@ -24,6 +24,7 @@ de:
           recipient_group: Empfängergruppe
           sent: Gesendet
           actions: Aktionen
+          show: Vorschau
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diesen Newsletter löschen möchten?

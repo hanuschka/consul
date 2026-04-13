@@ -6,8 +6,51 @@
   <% end %>
 <% end %>
 
-<div class="kern-container my-5">
-  <% @module_settings.each do |setting| %>
-    <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+<%= render Adm::TabsComponent.new(tabs: Adm::ModulesController::TABS.map { |tab|
+  { label: t("adm.modules.show.tabs.#{tab}"), url: adm_modules_path(tab: tab), current: @current_tab == tab }
+}) %>
+
+<div class="kern-container mb-5">
+  <% if @module_settings.any? %>
+    <div class="mb-3">
+      <% @module_settings.each do |setting| %>
+        <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @section_setting.present? %>
+    <div class="kern-container--form">
+      <%= form_with model: @section_setting, url: adm_modules_path(tab: @current_tab), method: :patch do |f| %>
+        <%= render Kern::FormFieldComponent.new(
+          label: t("adm.section_settings.edit.intro_text"),
+          hint: t("adm.section_settings.edit.intro_text_hint"),
+          stacked: true
+        ) do %>
+          <%= f.text_area :intro_text, label: false, maxlength: 350, class: "kern-input", rows: 3,
+              placeholder: t("adm.section_settings.edit.intro_text_placeholder"),
+              value: @section_setting.intro_text %>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(
+          label: t("adm.section_settings.edit.notice_message"),
+          hint: t("adm.section_settings.edit.notice_message_hint"),
+          stacked: true
+        ) do %>
+          <%= f.text_area :notice_message, label: false, class: "kern-input", rows: 4,
+              placeholder: t("adm.section_settings.edit.notice_message_placeholder") %>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(
+          label: t("adm.section_settings.edit.notice_active"),
+          hint: t("adm.section_settings.edit.notice_active_hint"),
+          divider: false
+        ) do %>
+          <%= f.check_box :notice_active, label: t("adm.section_settings.edit.notice_active") %>
+        <% end %>
+
+        <%= form_submit_button %>
+      <% end %>
+    </div>
   <% end %>
 </div>

@@ -1,6 +1,4 @@
 class Adm::Moderation::BaseController < Adm::BaseController
-  before_action :authenticate_user!
-
   private
 
     def adm_menu_component

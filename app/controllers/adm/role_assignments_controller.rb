@@ -17,6 +17,8 @@ module Adm
 
       @user = User.find(params[:user_id])
       role_class.find_or_create_by!(user: @user)
+
+      redirect_to redirect_after_create(role_class)
     end
 
     def destroy
@@ -44,7 +46,7 @@ module Adm
         flash[:alert] = @pending.errors.full_messages.join(", ")
       end
 
-      redirect_back(fallback_location: adm_root_path)
+      redirect_to redirect_after_pending_create(role_class)
     end
 
     def destroy_pending
@@ -53,6 +55,7 @@ module Adm
 
       @pending = PendingRoleAssignment.find(params[:pending_id])
       @pending.destroy!
+      @no_remaining = PendingRoleAssignment.for_role_type(role_class.name).none?
     end
 
     private
@@ -71,6 +74,34 @@ module Adm
           Adm::LandingPages::LandingPageManagerPolicy
         else
           "Adm::#{role_class.name}Policy".constantize
+        end
+      end
+
+      def redirect_after_create(role_class)
+        case role_class.name
+        when "ProjektManager"
+          adm_projekts_managers_path
+        when "LandingPageManager"
+          adm_landing_pages_managers_path
+        when "Moderator"
+          adm_moderators_path
+        when "Valuator"
+          adm_valuators_path
+        when "OfficingManager"
+          adm_officing_managers_path
+        else
+          request.referer || adm_root_path
+        end
+      end
+
+      def redirect_after_pending_create(role_class)
+        case role_class.name
+        when "ProjektManager"
+          adm_projekts_managers_path
+        when "LandingPageManager"
+          adm_landing_pages_managers_path
+        else
+          request.referer || adm_root_path
         end
       end
   end

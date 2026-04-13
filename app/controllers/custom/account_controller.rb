@@ -77,7 +77,7 @@ class AccountController < ApplicationController
     end
 
     def process_individual_group_values_param
-      if params["account"]["individual_group_value_ids"].present?
+      if params.dig("account", "individual_group_value_ids").present?
         @account.individual_group_values.where(individual_group_id: IndividualGroup.hard).ids.each do |id|
           params["account"]["individual_group_value_ids"].push(id)
         end

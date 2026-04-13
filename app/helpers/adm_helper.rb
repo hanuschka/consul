@@ -162,7 +162,7 @@ module AdmHelper
       }
     ]
 
-    %w[details visibility projekt_managers map phases].each do |action|
+    %w[details visibility projekt_managers map phases evaluation].each do |action|
       tabs << {
         label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
         url: send("#{action}_adm_projekts_projekt_path", projekt),

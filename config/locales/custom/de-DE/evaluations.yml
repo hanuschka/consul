@@ -1,0 +1,30 @@
+de:
+  public:
+    evaluations:
+      generated_at: "Erstellt am %{time}"
+  adm:
+    projekts:
+      projekts:
+        projekt:
+          evaluation: Auswertung
+        tabs:
+          evaluation: Auswertung
+        evaluation:
+          title: Auswertung
+          not_generated_title: Auswertung noch nicht generiert
+          not_generated_description: >
+            Es wurde noch keine Auswertung für dieses Projekt erstellt.
+            Klicken Sie auf den Button, um die Auswertung zu generieren.
+          generate_button: Auswertung generieren
+          processing_title: Auswertung wird generiert
+          processing_description: >
+            Die Auswertung wird gerade erstellt. Dies kann einige Minuten dauern.
+          failed_title: Auswertung fehlgeschlagen
+          failed_description: >
+            Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
+            Bitte versuchen Sie es erneut.
+          regenerate_button: Neu generieren
+          generated_at: "Erstellt am %{time}"
+          report_placeholder: Auswertungsbericht wird hier angezeigt.
+        generate_evaluation:
+          started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.

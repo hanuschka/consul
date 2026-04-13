@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
 
   def index
     authorize [:adm, :projekts, Projekt]
@@ -92,6 +92,26 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
+  end
+
+  def evaluation
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+  end
+
+  def generate_evaluation
+    authorize [:adm, :projekts, @projekt], :update?
+    Evaluations::GenerateEvaluationJob.perform_later(@projekt.id)
+
+    flash[:notice] = I18n.t("adm.projekts.projekts.generate_evaluation.started")
+
+    redirect_to evaluation_adm_projekts_projekt_path(@projekt)
   end
 
   def update

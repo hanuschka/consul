@@ -1,0 +1,30 @@
+en:
+  public:
+    evaluations:
+      generated_at: "Generated at %{time}"
+  adm:
+    projekts:
+      projekts:
+        projekt:
+          evaluation: Evaluation
+        tabs:
+          evaluation: Evaluation
+        evaluation:
+          title: Evaluation
+          not_generated_title: Evaluation not yet generated
+          not_generated_description: >
+            No evaluation has been created for this project yet.
+            Click the button to generate the evaluation.
+          generate_button: Generate evaluation
+          processing_title: Generating evaluation
+          processing_description: >
+            The evaluation is being generated. This may take a few minutes.
+          failed_title: Evaluation failed
+          failed_description: >
+            An error occurred while generating the evaluation.
+            Please try again.
+          regenerate_button: Regenerate
+          generated_at: "Generated at %{time}"
+          report_placeholder: Evaluation report will be displayed here.
+        generate_evaluation:
+          started: Evaluation is being generated. Please reload the page in a few minutes.

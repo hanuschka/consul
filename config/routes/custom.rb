@@ -1,3 +1,5 @@
+get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
+
 post "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
 post "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
 

@@ -1,0 +1,60 @@
+<%= content_for :title, [@projekt.page.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: @projekt.page.title,
+  breadcrumbs: @breadcrumbs,
+  frontend_url: projekt_path(@projekt)
+) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+
+<div class="kern-container mb-5">
+  <% if @evaluation.blank? || @evaluation.pending? %>
+    <div class="adm-empty-state">
+      <h3><%= t(".not_generated_title") %></h3>
+      <p><%= t(".not_generated_description") %></p>
+
+      <%= link_to t(".generate_button"),
+        generate_evaluation_adm_projekts_projekt_path(@projekt),
+        class: "button",
+        data: { turbo_method: :post } %>
+    </div>
+
+  <% elsif @evaluation.processing? %>
+    <div class="adm-empty-state">
+      <h3><%= t(".processing_title") %></h3>
+      <p><%= t(".processing_description") %></p>
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+    </div>
+
+  <% elsif @evaluation.failed? %>
+    <div class="adm-empty-state">
+      <h3><%= t(".failed_title") %></h3>
+      <p><%= t(".failed_description") %></p>
+
+      <%= link_to t(".regenerate_button"),
+        generate_evaluation_adm_projekts_projekt_path(@projekt),
+        class: "button",
+        data: { turbo_method: :post } %>
+    </div>
+
+  <% elsif @evaluation.completed? %>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <span class="small text-muted">
+          <%= t(".generated_at", time: l(@evaluation.generated_at, format: :long)) %>
+        </span>
+      </div>
+      <div class="d-flex gap-2">
+        <%= link_to t(".regenerate_button"),
+          generate_evaluation_adm_projekts_projekt_path(@projekt),
+          class: "button hollow",
+          data: { turbo_method: :post } %>
+      </div>
+    </div>
+
+    <%= render "adm/projekts/projekts/evaluation/report",
+      evaluation: @evaluation,
+      projekt: @projekt %>
+  <% end %>
+</div>

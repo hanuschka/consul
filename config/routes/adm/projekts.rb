@@ -183,6 +183,8 @@ namespace :adm do
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :evaluation, on: :member
+      post :generate_evaluation, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member

@@ -2035,6 +2035,20 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
+  create_table "projekt_evaluations", force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.jsonb "data", default: {}
+    t.jsonb "selected_question_ids", default: []
+    t.datetime "generated_at"
+    t.string "share_token"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
+    t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
+    t.index ["status"], name: "index_projekt_evaluations_on_status"
+  end
+
   create_table "projekt_event_registrations", force: :cascade do |t|
     t.bigint "projekt_event_id", null: false
     t.bigint "user_id"
@@ -3329,6 +3343,7 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
   add_foreign_key "polls", "projekt_phases"
   add_foreign_key "polls", "projekts"
   add_foreign_key "projekt_arguments", "projekt_phases"
+  add_foreign_key "projekt_evaluations", "projekts"
   add_foreign_key "projekt_event_registrations", "projekt_events"
   add_foreign_key "projekt_event_registrations", "users"
   add_foreign_key "projekt_events", "projekt_phases"

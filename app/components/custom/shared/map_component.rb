@@ -99,7 +99,7 @@ class Shared::MapComponent < ApplicationComponent
 
       @mappable.try(:projekt_phase)&.map_layers ||
         @mappable.try(:projekt)&.map_layers ||
-        MapLayer.general
+        MapLayer.default
     end
 
     def admin_editor?

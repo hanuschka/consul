@@ -25,7 +25,9 @@ class SiteCustomization::Page < ApplicationRecord
   has_one_attached :landing_site_logo_for_white_background
 
   before_save :sanitize_title_and_subtitle
+  before_save :capture_old_title
   before_save :set_published_at
+  after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
 
   scope :regular, -> {
@@ -93,6 +95,27 @@ class SiteCustomization::Page < ApplicationRecord
 
   def section_tracking_user
     nil
+  end
+
+  def capture_old_title
+    @old_title = projekt&.name if title_changed?
+  end
+
+  def sync_projekt_name
+    return unless projekt.present? && @old_title
+
+    new_title = title
+
+    projekt.update_column(:name, new_title)
+
+    projekt.polls.each do |poll|
+      next unless poll.name.present?
+
+      suffix = poll.name.delete_prefix(@old_title).strip
+      poll.update(name: [new_title, suffix.presence].compact.join(" "))
+    end
+
+    @old_title = nil
   end
 
   def sync_projekt_for_global_overview

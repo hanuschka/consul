@@ -19,10 +19,6 @@
   </head>
 
   <body class="kern-light" data-controller="adm-sidebar">
-    <div class="adm-sidebar-toggle d-lg-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
-      <span class="material-symbols-outlined" aria-hidden="true">menu</span>
-    </div>
-
     <div class="d-flex">
       <%# Icon Rail: durchgehend von oben bis unten %>
       <div class="d-none d-lg-flex">
@@ -39,6 +35,9 @@
           </div>
 
           <div class="d-flex align-items-center">
+            <div class="adm-sidebar-toggle d-lg-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
+              <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+            </div>
             <div class="fs-5 mx-4 position-relative"><%= adm_header_title %></div>
           </div>
 
@@ -48,7 +47,7 @@
         </header>
 
         <div class="d-flex adm-layout">
-          <aside id="adm-sidebar" class="d-none d-lg-flex position-absolute top-0 position-lg-static" data-adm-sidebar-target="sidebar">
+          <aside id="adm-sidebar" class="d-none d-lg-flex position-lg-static" data-adm-sidebar-target="sidebar">
             <%= render adm_menu_component %>
 
             <div class="adm-sidebar-footer">

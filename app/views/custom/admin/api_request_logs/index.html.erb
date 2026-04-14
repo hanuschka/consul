@@ -1,0 +1,44 @@
+<h2><%= t("admin.api_request_logs.index.title") %></h2>
+
+<div id="api_request_logs">
+  <% if @api_request_logs.any? %>
+    <h3><%= page_entries_info @api_request_logs %></h3>
+
+    <table>
+      <thead>
+        <th scope="col" class="text-center"><%= t("admin.api_request_logs.index.id") %></th>
+        <th scope="col"><%= t("admin.api_request_logs.index.http_method") %></th>
+        <th scope="col"><%= t("admin.api_request_logs.index.request_path") %></th>
+        <th scope="col"><%= t("admin.api_request_logs.index.response_status") %></th>
+        <th scope="col"><%= t("admin.api_request_logs.index.api_client") %></th>
+        <th scope="col"><%= t("admin.shared.created") %></th>
+        <th scope="col" class="small-2"><%= t("admin.shared.actions") %></th>
+      </thead>
+      <% @api_request_logs.each do |log| %>
+        <tr id="<%= dom_id(log) %>">
+          <td class="text-center"><%= log.id %></td>
+          <td><span class="label"><%= log.http_method %></span></td>
+          <td><%= log.request_path %></td>
+          <td>
+            <% if log.response_status.present? %>
+              <span class="label <%= log.response_status < 400 ? 'success' : 'alert' %>">
+                <%= log.response_status %>
+              </span>
+            <% end %>
+          </td>
+          <td><%= log.api_client&.name %></td>
+          <td><%= l(log.created_at, format: :short) %></td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(log, actions: [:show]) %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= paginate @api_request_logs %>
+  <% else %>
+    <div class="callout primary margin">
+      <%= t("admin.api_request_logs.index.no_logs") %>
+    </div>
+  <% end %>
+</div>

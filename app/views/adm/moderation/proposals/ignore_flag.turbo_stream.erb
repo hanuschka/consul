@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@proposal, :moderation) do %>
+  <%= render "proposal", proposal: @proposal %>
+<% end %>

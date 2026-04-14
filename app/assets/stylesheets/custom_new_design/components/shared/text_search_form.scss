@@ -21,6 +21,7 @@
     background-color: transparent;
     color: $dark-gray;
     font-size: inherit !important;
+    cursor: pointer;
 
     i {
       display: block;
@@ -64,7 +65,7 @@
       }
 
       .text-search-form--search-button {
-        display: none;
+        right: 2.2em;
       }
     }
   }

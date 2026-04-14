@@ -99,6 +99,7 @@ module Consul
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom_updates", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "cli", "**", "*.{rb,yml}")]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "kern", "**", "*.{rb,yml}")]
 
     config.after_initialize do
       Globalize.set_fallbacks_to_all_available_locales
@@ -108,6 +109,8 @@ module Consul
     config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
     config.assets.paths << Rails.root.join("node_modules", "jquery-ui", "themes", "base")
     config.assets.paths << Rails.root.join("node_modules", "leaflet", "dist")
+    config.assets.paths << Rails.root.join("node_modules", "@kern-ux", "native", "dist", "fonts")
+    config.assets.paths << Rails.root.join("node_modules", "material-symbols")
     config.assets.paths << Rails.root.join("node_modules")
 
     # Add lib to the autoload path

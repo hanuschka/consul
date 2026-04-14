@@ -1,0 +1,31 @@
+de:
+  adm:
+    projekts:
+      formular_follow_up_letters:
+        create:
+          success: Follow-up E-Mail wurde erfolgreich erstellt.
+        edit:
+          title: Follow-up E-Mail bearbeiten
+          recipients_label: Empfänger auswählen
+          recipients_hint: >
+            Wählen Sie die Einsendungen aus, an deren Absender diese Follow-up E-Mail versendet werden soll. Bereits ausgewählte Empfänger sind markiert. Sie können die Auswahl jederzeit anpassen, solange die E-Mail noch nicht versendet wurde.
+          email: E-Mail
+          no_answers: Es liegen noch keine Formulareinsendungen vor.
+        update:
+          success: Follow-up E-Mail wurde erfolgreich aktualisiert.
+        destroy:
+          success: Follow-up E-Mail wurde erfolgreich gelöscht.
+        send_emails:
+          success: E-Mails werden versendet.
+        form:
+          subject_label: Betreff
+          subject_hint: >
+            Geben Sie den Betreff der Follow-up E-Mail ein. Dieser wird den Empfängern als E-Mail-Betreffzeile angezeigt. Wählen Sie einen aussagekräftigen Betreff, der den Inhalt der Nachricht kurz zusammenfasst — z.B. „Vielen Dank für Ihre Teilnahme" oder „Ergebnisse der Bürgerbefragung". Der Betreff ist für die Empfänger das Erste, was sie sehen.
+          body_placeholder: Ihre Nachricht an die Empfänger...
+          body_label: Nachricht
+          body_hint: >
+            Verfassen Sie hier den Inhalt der Follow-up E-Mail. Der Text wird an alle ausgewählten Empfänger versendet. Sie können die Nachricht nutzen, um sich für die Teilnahme zu bedanken, über Ergebnisse zu informieren oder weiterführende Informationen bereitzustellen. Die E-Mail wird als reiner Text ohne Formatierung versendet.
+          show_follow_up_button_label: Follow-up Button anzeigen
+          show_follow_up_button_hint: >
+            Wenn aktiviert, wird in der E-Mail ein Button angezeigt, über den die Empfänger ein Follow-up Formular mit zusätzlichen Feldern ausfüllen können. Das Follow-up Formular ergänzt die ursprüngliche Einsendung um weitere Angaben — z.B. für Rückfragen, vertiefende Informationen oder eine Nacherhebung zu einem späteren Zeitpunkt.
+          submit: Speichern

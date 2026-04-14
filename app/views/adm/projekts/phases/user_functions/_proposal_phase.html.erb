@@ -1,0 +1,14 @@
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.users_can_create_proposals"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.allow_voting"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.quorum_for_proposals"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.enable_up_and_down_voting"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_comments"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_community_button_in_proposal_sidebar"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.enable_proposal_notifications_tab"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.enable_proposal_milestones_tab"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_report_button_in_sidebar"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_follow_button_in_proposal_sidebar"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_related_content"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_video_as_link"), :value, :boolean) %>
+
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.resource.votes_for_proposal_success"), :value, :string) %>

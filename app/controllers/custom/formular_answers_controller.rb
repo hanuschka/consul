@@ -3,7 +3,7 @@ class FormularAnswersController < ApplicationController
   include DocumentAttributes
   include GuestUsers
 
-  respond_to :js
+  respond_to :js, :html
 
   skip_authorization_check only: :update, if: -> {
     skip_authorization_check_for_guesst_user_with_token?
@@ -24,10 +24,18 @@ class FormularAnswersController < ApplicationController
 
     if @formular_answer.answer_errors.none? && @formular_answer.save
       Mailer.formular_answer_confirmation(@formular_answer).deliver_later
+      Mailer.formular_answer_created(@formular_answer).deliver_later if current_user.present?
       @success_notification = t("custom.formular_answer.notifications.success")
-      render :create_success
+
+      respond_to do |format|
+        format.js { render :create_success }
+        format.html { redirect_back(fallback_location: root_path, notice: @success_notification) }
+      end
     else
-      render :create
+      respond_to do |format|
+        format.js { render :create }
+        format.html { redirect_back(fallback_location: root_path, alert: @formular_answer.answer_errors.values.join(", ")) }
+      end
     end
   end
 
@@ -85,6 +93,8 @@ class FormularAnswersController < ApplicationController
     def validate_for_presence(formular_answer, formular_field)
       if formular_field.kind == "image"
         return if formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key }.present?
+      elsif formular_field.kind == "document"
+        return if formular_answer.formular_answer_documents.find { |doc| doc.formular_field_key == formular_field.key }.present?
       else
         return if formular_answer.answers[formular_field.key].present?
       end

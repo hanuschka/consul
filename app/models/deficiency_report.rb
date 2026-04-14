@@ -8,6 +8,7 @@ class DeficiencyReport < ApplicationRecord
   include Notifiable
   include Milestoneable
   include Memoable
+  include SectionTrackable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true
@@ -42,7 +43,8 @@ class DeficiencyReport < ApplicationRecord
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
-  validates :deficiency_report_category_id, :author, presence: true
+  validates :deficiency_report_category_id, presence: true
+  validates :author, presence: true
   validates :map_location, presence: true, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
@@ -134,7 +136,7 @@ class DeficiencyReport < ApplicationRecord
   def searchable_values
     {
       id.to_s               => "A",
-      author.username       => "B",
+      author&.username      => "B",
       tag_list.join(" ")    => "B"
     }.merge!(searchable_globalized_values)
   end
@@ -192,11 +194,6 @@ class DeficiencyReport < ApplicationRecord
     true
   end
 
-  def get_default_responsible
-    map_location&.get_district&.default_deficiency_report_responsible ||
-      category&.default_responsible
-  end
-
   def responsible_officers
     case responsible
     when DeficiencyReport::Officer
@@ -210,5 +207,25 @@ class DeficiencyReport < ApplicationRecord
 
   def archived?
     self.class.archived.exists?(id: id)
+  end
+
+  def section_tracking_section
+    "deficiency_reports"
+  end
+
+  def section_tracking_user
+    author
+  end
+
+  def assign_default_responsible
+    default_responsible = district&.default_deficiency_report_responsible || category&.default_responsible
+
+    if default_responsible.present?
+      update_columns(
+        responsible_type: default_responsible.class.name,
+        responsible_id: default_responsible.id,
+        assigned_at: Time.zone.now
+      )
+    end
   end
 end

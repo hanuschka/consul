@@ -1,0 +1,66 @@
+class EventSerializer < BaseSerializer
+  attr_reader :projekt_event
+
+  def initialize(projekt_event)
+    @projekt_event = projekt_event
+  end
+
+  def serialize
+    event_data = projekt_event.as_json(
+      only: [
+        :id,
+        :title,
+        :description,
+        :summary,
+        :datetime,
+        :end_datetime,
+        :location,
+        :weblink,
+        :open_ended,
+        :language,
+        :projekt_phase_id,
+        :created_at,
+        :updated_at
+      ]
+    )
+
+    event_data[:accessibility] = {
+      wheelchair_accessible: projekt_event.wheelchair_accessible,
+      accessible_toilet: projekt_event.accessible_toilet,
+      disabled_parking_nearby: projekt_event.disabled_parking_nearby,
+      tactile_guidance_systems: projekt_event.tactile_guidance_systems,
+      induction_loop_available: projekt_event.induction_loop_available,
+      assistance_dogs_welcome: projekt_event.assistance_dogs_welcome,
+      sign_language_interpreter: projekt_event.sign_language_interpreter
+    }
+
+    if projekt_event.projekt_phase.present?
+      event_data[:projekt_phase] = {
+        id: projekt_event.projekt_phase.id,
+        title: projekt_event.projekt_phase.phase_tab_name,
+        type: projekt_event.projekt_phase.type,
+        projekt_id: projekt_event.projekt_phase.projekt_id
+      }
+
+      if projekt_event.projekt_phase.projekt.present?
+        projekt = projekt_event.projekt_phase.projekt
+        event_data[:projekt] = {
+          id: projekt.id,
+          title: projekt.page&.title || projekt.name
+        }
+      end
+    end
+
+    if projekt_event.respond_to?(:image) && projekt_event.image.present?
+      serialized_image = ImageSerializer.new(projekt_event.image, include_variants: false).serialize
+      event_data[:image] = serialized_image if serialized_image.present?
+    end
+
+    event_data
+  end
+
+  def self.serialize_collection(events)
+    events.map { |event| new(event).serialize }
+  end
+end
+

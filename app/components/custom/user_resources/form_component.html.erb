@@ -1,16 +1,19 @@
-<main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-  <% if helpers.projekt_phase_pro_feature?(projekt_phase, "form.voice_assistant") %>
+<main class="user-resources-form js-user-resources-form <%= base_class_name %><%= ' -embbeded-in-ai-flow' if @embbeded_in_ai_flow %>">
+  <% if !@embbeded_in_ai_flow && helpers.projekt_phase_pro_feature?(projekt_phase, "form.voice_assistant") %>
     <%= render Dt::VoiceAssistantComponent.new(
       assistant_codename: "proposal_voice_assistant",
       projekt_phase: projekt_phase
     ) %>
   <% end %>
 
-  <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
-    <%= back_link %>
+  <%= translatable_form_for(resource, url: @url, html: { class: "js-rich-text-form user-resource-form", id: dom_id(resource, :form) }) do |f| %>
+    <% if show_back_button? %>
+      <%= back_link %>
+    <% end %>
 
     <% sidebar_html = capture do %>
-      <aside class="sidebar">
+      <% if show_sidebar? %>
+        <aside class="sidebar">
         <fieldset class="required-fields">
           <%= hidden_field_tag :order, params[:order] %>
 
@@ -62,19 +65,23 @@
               <%= f.text_field :on_behalf_of, label: false, placeholder: "Namen eingeben...", class: "light-input" %>
             <% end %>
           <% end %>
-      </aside>
+        </fieldset>
+        </aside>
+      <% end %>
     <% end %>
 
     <div class="flex-layout">
       <div class="main-column">
-        <h1 class="user-resources-form--title">
-          <%= form_title %>
-        </h1>
+        <% unless @embbeded_in_ai_flow %>
+          <h1 class="user-resources-form--title">
+            <%= form_title %>
+          </h1>
 
-        <div class="user-resources-form--description js-user-resource-form-description">
-          <%= projekt_phase&.resource_form_intro&.html_safe.presence ||
-            helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
-        </div>
+          <div class="user-resources-form--description js-user-resource-form-description">
+            <%= projekt_phase&.resource_form_intro&.html_safe.presence ||
+              helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
+          </div>
+        <% end %>
 
         <%= render "shared/errors", resource: resource %>
 
@@ -161,10 +168,11 @@
           <%= sidebar_html %>
         </div>
 
+        <% unless @embbeded_in_ai_flow %>
         <div class="user-resources-form--submit-section">
           <% if resource.new_record? %>
             <h3 class="user-resources-form--submit-section--privacy-policy">
-              Datenschutzbestimmungen & Allgemeine Nutzerbedingungen
+              <%= t("custom.user_resources.form.privacy_policy_heading") %>
             </h3>
 
             <div>
@@ -188,6 +196,7 @@
           <% end %>
           <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>
         </div>
+        <% end %>
       </div>
 
       <div class="js-remove-on-mobile-section hide-on-mobile">

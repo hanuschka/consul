@@ -5,7 +5,7 @@ class Adm::UserPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.active
+      scope.active.not_guests
     end
   end
 end

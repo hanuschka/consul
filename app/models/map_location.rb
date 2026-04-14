@@ -69,7 +69,7 @@ class MapLocation < ApplicationRecord
     if mappable.respond_to?(:map_layers)
       mappable.map_layers
     else
-      MapLayer.general
+      MapLayer.default
     end
   end
 

@@ -1,6 +1,31 @@
 de:
   adm:
     deficiency_reports:
+      home:
+        title: Willkommen im Mängelmelder
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          open: Offen
+          closed: Geschlossen
+        quick_links:
+          all: Alle Meldungen
+          open: Offene Meldungen
+          closed: Geschlossene Meldungen
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          home: Home
+          officers: Team
+          deficiency_reports: Meldungen
+          categories: Kategorien
+          statuses: Status
+          settings: Funktionen
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI-Einstellungen
       deficiency_reports:
         index:
           title: Meldungen
@@ -184,7 +209,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter
+          title: Team
           page_hint: "Hier verwalten Sie die Sachbearbeiter für den Mängelmelder. Sachbearbeiter können eingereichte Meldungen bearbeiten, den Status aktualisieren und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Nur bereits registrierte Nutzer können als Sachbearbeiter hinzugefügt werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Mängelmelder hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Meldungen, kommunizieren mit den Bürgern und aktualisieren den Bearbeitungsstatus.
@@ -194,7 +219,8 @@ de:
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:

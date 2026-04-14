@@ -120,6 +120,9 @@ application.register("adm-column-selector", AdmColumnSelectorController)
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
 
+import AdmUserSelectController from "./adm/user_select_controller"
+application.register("adm-user-select", AdmUserSelectController)
+
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)
 

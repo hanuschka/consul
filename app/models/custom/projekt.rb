@@ -15,6 +15,7 @@ class Projekt < ApplicationRecord
   include Taggable
   include Searchable
   include Notifiable
+  include SectionTrackable
 
   translates :description
   include Globalizable
@@ -585,6 +586,14 @@ class Projekt < ApplicationRecord
     true
   end
 
+  def section_tracking_section
+    "projekts"
+  end
+
+  def section_tracking_user
+    author
+  end
+
   def vc_map_enabled?
     projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
   end
@@ -807,7 +816,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
     end

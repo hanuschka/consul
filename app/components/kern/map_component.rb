@@ -101,7 +101,7 @@ class Kern::MapComponent < ApplicationComponent
                else
                  mappable.try(:projekt_phase)&.map_layers ||
                    mappable.try(:projekt)&.map_layers ||
-                   MapLayer.general
+                   MapLayer.default
                end
       layers.to_json
     end

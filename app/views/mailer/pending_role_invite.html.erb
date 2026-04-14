@@ -1,7 +1,7 @@
 <td style="<%= css_for_mailer_content %>">
   <h1 style="<%= css_for_mailer_heading %>">
     <%= t("mailers.pending_role_invite.title",
-        org: Setting["org_name"]) %>
+        role: @role_name) %>
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
@@ -11,7 +11,7 @@
   </p>
 
   <p style="text-align: center;">
-    <%= link_to t("mailers.pending_role_invite.button"), new_user_registration_url, style: css_for_mailer_button %>
+    <%= link_to t("mailers.pending_role_invite.button"), new_user_registration_url(invitation_token: @pending_role_assignment.invitation_token), style: css_for_mailer_button %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

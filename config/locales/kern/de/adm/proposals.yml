@@ -1,16 +1,17 @@
 de:
   adm:
-    proposals:
-      show:
-        video_url: Video
-        view_on_site: Auf der Website anzeigen
-        on_behalf_of: im Namen von
-        admin_accepted_status: Freigabestatus
-        accepted: Freigegeben
-        not_accepted: Nicht freigegeben
-        official_answer: Offizielle Antwort
-        official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Vorschlag ein.
-      update_official_answer:
-        success: Offizielle Antwort wurde erfolgreich aktualisiert.
-        official_answer: Offizielle Antwort
-        official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Vorschlag ein.
+    projekts:
+      proposals:
+        show:
+          video_url: Video
+          view_on_site: Auf der Website anzeigen
+          on_behalf_of: im Namen von
+          admin_accepted_status: Freigabestatus
+          accepted: Freigegeben
+          not_accepted: Nicht freigegeben
+          official_answer: Offizielle Antwort
+          official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Vorschlag ein.
+        update_official_answer:
+          success: Offizielle Antwort wurde erfolgreich aktualisiert.
+          official_answer: Offizielle Antwort
+          official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Vorschlag ein.

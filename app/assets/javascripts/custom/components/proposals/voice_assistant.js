@@ -113,6 +113,8 @@
         await this.requestSession();
       } catch (error) {
         console.error("Failed to initialize connection:", error);
+        this.setStatus(this.statuses.initialized);
+        this.showError("Mikrofon-Zugriff nicht möglich. Bitte Browser-Berechtigungen prüfen.");
       }
     },
 
@@ -435,6 +437,14 @@
 
     getExpandButton: function() {
       return this.element.querySelector(".js-voice-assistant-expand-button");
+    },
+
+    showError: function(message) {
+      const messagebar = this.getMessagebar();
+      messagebar.innerHTML = message;
+      messagebar.title = message;
+      messagebar.classList.add("-error");
+      messagebar.classList.add("-visible");
     },
 
     getMessagebar: function() {

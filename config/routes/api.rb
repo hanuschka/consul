@@ -11,6 +11,7 @@
         patch :update_setting
         patch :update_settings
         patch :update_page
+        patch :update_page_image
         patch :update_body
       end
 

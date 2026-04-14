@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_body]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
 
   def index
     check_read_access!
@@ -132,6 +132,22 @@ class Api::ProjektsController < Api::BaseController
     else
       render json: { error: { messages: @projekt.page.errors.full_messages } }, status: 422
     end
+  end
+
+  def update_page_image
+    check_admin_access!
+
+    image_data = params[:projekt]&.dig(:image_attributes)
+
+    if image_data.blank? || image_data[:attachment].blank?
+      return render json: { error: { messages: ["No image provided"] } }, status: 422
+    end
+
+    process_image_with_base64(@projekt.page, image_data)
+
+    render json: { data: { projekt: ProjektSerializer.new(@projekt).serialize } }
+  rescue => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def destroy

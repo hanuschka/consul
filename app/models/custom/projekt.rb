@@ -817,7 +817,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
     end

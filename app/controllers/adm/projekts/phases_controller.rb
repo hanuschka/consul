@@ -1,10 +1,10 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:new, :create]
+  before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
   before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
 
   def new
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
 
     @breadcrumbs = [
@@ -16,7 +16,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def create
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
@@ -27,7 +27,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def reorder
-    authorize [:adm, :projekts, ProjektPhase], :update?
+    authorize @projekt, :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
     ordered_ids = params[:tree].map { |item| item[:id] }
     ProjektPhase.order_phases(ordered_ids)
     head :ok

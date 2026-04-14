@@ -16,6 +16,9 @@
       style: :secondary
     ) %>
   </div>
+  <% if policy([:adm, :projekts, Projekt]).create? %>
+    <%= new_resource_link(new_adm_projekts_projekt_path, t(".new_projekt")) %>
+  <% end %>
 
   <% if @projekts.any? %>
     <div class="kern-table-responsive" tabindex="0">

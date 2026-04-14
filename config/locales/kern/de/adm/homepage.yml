@@ -3,5 +3,18 @@ de:
     homepage:
       show:
         title: Startseite
+        intro_title: Hinweis zur Startseite
+        intro_text_p1: >
+          Hier konfigurieren Sie das Erscheinungsbild und die Inhalte der Startseite Ihrer Plattform.
+          Sie können ein Hintergrundbild für Desktop- und Mobilgeräte hochladen sowie einen Titel und Untertitel
+          festlegen, die im oberen Bildbereich erscheinen. Darunter steuern Sie, welche optionalen Bereiche
+          eingeblendet werden sollen – etwa die Anzeige von Nutzerzahlen, Plattformstatistiken,
+          eine Newsletter-Anmeldung oder eine Projektsuche.
+        intro_text_p2: >
+          Im unteren Abschnitt verwalten Sie die Inhaltskacheln: Diese ermöglichen es, thematische Bereiche
+          wie aktuelle Projekte, beliebte Vorschläge oder Veranstaltungen prominent auf der Startseite zu
+          platzieren. Die Reihenfolge der Kacheln kann per Drag & Drop angepasst werden. Über den
+          „Bearbeiten"-Button lassen sich Titel und Anzahl der angezeigten Inhalte je Kachel individuell
+          konfigurieren.
         content_cards_title: Inhaltskacheln
         content_cards_description: Aktivieren Sie optionale Inhaltskacheln für die Startseite, z. B. „Aktuelle Projekte“, „Beliebte Vorschläge“ oder „Veranstaltungen“. Die Kacheln erscheinen im Inhaltsbereich der Homepage und können per Drag & Drop sortiert werden. Über den „Bearbeiten“-Button lassen sich Titel und Anzahl der angezeigten Inhalte anpassen. Zwischen den Kacheln wird automatisch ein benutzerdefinierter Inhaltsblock eingefügt.

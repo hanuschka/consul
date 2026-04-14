@@ -22,12 +22,15 @@ de:
         send_notifications:
           success: Benachrichtigungen wurden erfolgreich gesendet.
         form:
-          url_label: URL
-          url_hint: YouTube- oder Vimeo-URL des Livestreams
+          url_label: Video-URL
+          url_hint: "Geben Sie die vollständige URL des Livestreams auf YouTube oder Vimeo ein. Die URL wird verwendet, um den Videoplayer im Frontend einzubetten. Unterstützt werden reguläre Video-URLs beider Plattformen. Stellen Sie sicher, dass das Video öffentlich zugänglich oder als 'nicht gelistet' freigegeben ist."
+          url_placeholder: "https://www.youtube.com/watch?v=..."
           title_label: Titel
-          title_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
-          starts_at_label: Startzeit
-          starts_at_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
+          title_hint: "Geben Sie einen aussagekräftigen Titel für den Livestream ein, der im Frontend als Überschrift angezeigt wird. Wenn Sie das Feld leer lassen, wird der Titel automatisch von YouTube oder Vimeo übernommen. Ein manuell eingetragener Titel hat Vorrang vor dem automatisch abgerufenen."
+          title_placeholder: "z. B. Bürgerversammlung zum Klimabudget"
+          starts_at_label: Beginn
+          starts_at_hint: "Legt den Startzeitpunkt des Livestreams fest. Datum und Uhrzeit werden im Frontend angezeigt, damit Teilnehmer den Termin einplanen können. Wenn Sie das Feld leer lassen, wird der Startzeitpunkt automatisch von der Videoplattform übernommen, sofern dieser dort hinterlegt ist."
           description_label: Beschreibung
-          description_hint: Wird automatisch von der Plattform abgerufen, wenn leer gelassen.
+          description_hint: "Optionale Beschreibung, die im Frontend unterhalb des Livestream-Titels angezeigt wird. Erläutern Sie Anlass, Ablauf und Themen der Übertragung. Wenn Sie das Feld leer lassen, wird die Beschreibung automatisch von der Videoplattform übernommen. Ein manuell eingetragener Text hat Vorrang."
+          description_placeholder: "z. B. Live-Übertragung der Bürgerversammlung zum Thema..."
           submit: Speichern

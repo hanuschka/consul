@@ -29,7 +29,7 @@ class Image < ApplicationRecord
   default_scope { with_attached_attachment }
 
   def self.max_file_size
-    Setting["uploads.images.max_size"].to_i
+    10
   end
 
   def self.accepted_content_types

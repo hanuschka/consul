@@ -1,4 +1,7 @@
-<tr class="kern-table__row" id="<%= dom_id(projekt_phase) %>">
+<tr class="kern-table__row" id="<%= dom_id(projekt_phase) %>" data-sortable-id="<%= projekt_phase.id %>">
+  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+    <span class="material-symbols-outlined">drag_indicator</span>
+  </td>
   <th scope="row" class="kern-table__header">
     <%= projekt_phase.title %>
   </th>
@@ -35,7 +38,17 @@
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% projekt_phase_table_actions(projekt_phase).each do |action| %>
-        <% actions.with_action(label: action[:label], url: action[:url]) %>
+        <% actions.with_action(label: action[:label], url: action[:url], icon: action[:icon]) %>
+      <% end %>
+      <% if Adm::Projekts::ProjektPhasePolicy.new(current_user, projekt_phase).destroy? %>
+        <% actions.with_action(
+          label: t("adm.projekts.phases.index.table.delete"),
+          url: adm_projekts_phase_path(projekt_phase),
+          icon: "delete",
+          style: :delete,
+          divider: true,
+          data: { turbo_method: :delete, turbo_confirm: t("adm.projekts.phases.index.table.confirm_delete", name: projekt_phase.title) }
+        ) %>
       <% end %>
     <% end %>
   </td>

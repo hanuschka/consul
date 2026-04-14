@@ -13,10 +13,14 @@ export default class extends Controller {
     event.preventDefault();
 
     this.filterMenuTarget.classList.toggle("d-none");
+
+    const wrapper = this.element.closest(".kern-table-responsive");
+    if (wrapper) {
+      wrapper.style.overflow = this.filterMenuTarget.classList.contains("d-none") ? "" : "visible";
+    }
   }
 
   selectFilterOption(event) {
-    const checkbox = event.target;
     const paramName = `${this.columnValue}[]`;
 
     const selectedOptions = Array.from(

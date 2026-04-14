@@ -2,25 +2,18 @@
 
 .projekt-page--admin-topbar {
   position: fixed;
-  top: var(--topbar-height);
+  top: 0;
   left: 0;
   right: 0;
-  // z-index: 15;
-  z-index: 500;
+  z-index: 1001;
   width: 100%;
-  border-top: 1px solid;
   border-bottom: 1px solid;
   border-color: color-mix(in srgb, var(--brand-color) 80%, $main-background-color 20%);
   padding: 0 10px;
-  // background-color: white;
-  background: color-mix(in srgb, var(--brand-color) 5%, $main-background-color 95%);
+  background: color-mix(in srgb, var(--brand-color) 20%, $main-background-color 95%);
   display: flex;
   align-items: center;
   height: var(--admin-topbar-height);
-
-  @media(max-width: $mobile-viewport-start) {
-    top: calc(var(--topbar-height-mobile) + var(--mobile-custom-fixed-tabs-height));
-  }
 
   .button {
     margin: 0;

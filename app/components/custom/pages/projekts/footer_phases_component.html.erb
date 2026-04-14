@@ -4,11 +4,11 @@
       <div style='display:flex;justify-content:end;align-items:end;'>
         <% if show_arrows? %>
           <div class='arrow-controls'>
-            <button type="button" id='left-arrow-control' class='js-left-arrow-control disabled'>
-              <i class="fas fa-chevron-circle-left"></i>
+            <button type="button" id='left-arrow-control' class='js-left-arrow-control disabled' aria-label="<%= t('custom.accessibility.phases.scroll_left') %>">
+              <i class="fas fa-chevron-circle-left" aria-hidden="true"></i>
             </button>
-            <button type="button" id='right-arrow-control' class='js-right-arrow-control'>
-              <i class="fas fa-chevron-circle-right"></i>
+            <button type="button" id='right-arrow-control' class='js-right-arrow-control' aria-label="<%= t('custom.accessibility.phases.scroll_right') %>">
+              <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
             </button>
           </div>
         <% end %>
@@ -22,7 +22,7 @@
               <i class="fas fa-plus"></i>
             </a>
           <% else %>
-            <%= link_to(edit_admin_projekt_path(@projekt, anchor: "tab-projekt-phases"), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-projekt-footer-phase-tab--add-new") do %>
+            <%= link_to(phases_adm_projekts_projekt_path(@projekt), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-projekt-footer-phase-tab--add-new", target: "_blank") do %>
               <i class="fas fa-plus"></i>
             <% end %>
           <% end %>

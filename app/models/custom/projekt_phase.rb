@@ -27,6 +27,12 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::NewsfeedPhase"
   ].freeze
 
+  DEPRECATED_PHASE_TYPES = [
+    "ProjektPhase::DebatePhase"
+  ].freeze
+
+  ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
@@ -95,6 +101,7 @@ class ProjektPhase < ApplicationRecord
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
+  has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -115,7 +122,7 @@ class ProjektPhase < ApplicationRecord
   validate :type_must_be_valid
 
   def self.find_sti_class(type_name)
-    if PROJEKT_PHASES_TYPES.include?(type_name)
+    if ALL_PHASE_TYPES.include?(type_name)
       super
     else
       self
@@ -316,6 +323,10 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def max_submissions_per_user
+    option("resource.max_submissions_per_user").to_i
+  end
+
   def option(key)
     option = settings.find { |s| s.key == "option.#{key}" }
 
@@ -328,6 +339,10 @@ class ProjektPhase < ApplicationRecord
 
   def setting(key)
     setting = settings.find { |s| s.key == key }
+  end
+
+  def customizable_email_templates
+    raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
   def admin_nav_bar_items
@@ -516,10 +531,10 @@ class ProjektPhase < ApplicationRecord
     def type_must_be_valid
       if type.blank?
         errors.add(:type,
-"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
-      elsif !PROJEKT_PHASES_TYPES.include?(type)
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
+      elsif !ALL_PHASE_TYPES.include?(type)
         errors.add(:type,
-"is not included in the list of valid project phase types: #{PROJEKT_PHASES_TYPES.join(", ")}")
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
       end
     end
 end

@@ -147,4 +147,4 @@ en:
           errors:
             overall_satisfaction: "Please select an option."
         create:
-          success: Danke für Ihr Feedback!
+          success: Thank you for your feedback!

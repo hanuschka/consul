@@ -212,7 +212,7 @@ td.answers-column  {
     right: 5px;
     position: absolute;
     cursor: pointer;
-    color: $brand;
+    color: var(--brand-color);
     background-color: white;
     border-radius: 5px;
     padding-right: 26px;

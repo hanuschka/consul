@@ -67,8 +67,20 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
-    toolbarBorder.after(popup);
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const isSidebar = !!contentBlockWrapper.closest("aside, .sidebar");
+    const isFooter = !!contentBlockWrapper.closest("footer");
+
+    if (isSidebar) {
+      popup.classList.add("-compact-position");
+      contentBlock.after(popup);
+    } else if (isFooter) {
+      popup.classList.add("-compact-position");
+      contentBlock.after(popup);
+    } else {
+      const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
+      toolbarBorder.after(popup);
+    }
 
     popup.style.display = 'block';
 
@@ -177,8 +189,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     this.setLoadingState(contentBlockWrapper, popup, true);
 
+    const aiUrl = contentBlockWrapper.dataset.aiUrl
+      || `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`;
+
     const ajaxRequest = window.App.Ajax.request({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`,
+      url: aiUrl,
       type: "PATCH",
       dataType: "json",
       data: {

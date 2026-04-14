@@ -1,0 +1,19 @@
+<nav class="adm-icon-rail" aria-label="<%= t('.aria_label', default: 'Global navigation') %>">
+  <div class="adm-icon-rail__decorations">
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--rounded-rect"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--top"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--middle"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--bottom"></div>
+  </div>
+  <div class="adm-icon-rail__logo">
+    <%= image_tag(helpers.image_path_for("adm_logo.png"), alt: Setting["org_name"], size: "36x36") %>
+  </div>
+
+  <div class="adm-icon-rail__items">
+    <% items.each do |item| %>
+      <%= link_to item[:path], class: ["adm-icon-rail__item", ("active" if active?(item))].compact.join(" "), title: t(".#{item[:key]}"), data: { turbo: false } do %>
+        <span class="material-symbols-outlined" aria-hidden="true"><%= item[:icon] %></span>
+      <% end %>
+    <% end %>
+  </div>
+</nav>

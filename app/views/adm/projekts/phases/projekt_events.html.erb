@@ -6,7 +6,7 @@
 
 <div class="kern-container mb-5">
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_projekt_event_path(@projekt_phase), text: t(".create_button") %>
+    <%= kern_link_button new_adm_projekts_phase_projekt_event_path(@projekt_phase), text: t(".create_button"), style: :secondary %>
   </div>
 
   <% if @projekt_events.any? %>
@@ -36,9 +36,9 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_event_path(@projekt_phase, event)) %>
-                  <% actions.with_action(label: t(".table.send_notifications"), url: send_notifications_adm_projekts_phase_projekt_event_path(@projekt_phase, event), data: { turbo_method: :post, turbo_confirm: t(".table.send_notifications_confirm") }) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_event_path(@projekt_phase, event), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t(".table.send_notifications"), url: send_notifications_adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "send", data: { turbo_method: :post, turbo_confirm: t(".table.send_notifications_confirm") }) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -47,6 +47,6 @@
       </table>
     </div>
   <% else %>
-    <p class="kern-body"><%= t(".no_events") %></p>
+    <%= empty_state(title: t(".no_events_title"), description: t(".no_events_description"), icon: "event") %>
   <% end %>
 </div>

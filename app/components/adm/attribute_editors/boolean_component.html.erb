@@ -14,7 +14,8 @@
 <% end %>
 
 <% if flash[:success].present? %>
-  <div class="input-success-message mt-2" data-controller="auto-remove">
+  <div class="input-success-message mt-3" data-controller="auto-remove">
+    <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
     <%= flash[:success] %>
   </div>
 <% end %>

@@ -19,7 +19,8 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
           text: t("budgets.results.link"),
           url: url_to_footer_tab(section: "results", remote: true),
           active: params[:section] == "results",
-          section: "results"
+          section: "results",
+          hide_on_preview: !budget.results_enabled?
         }
       end
 
@@ -28,7 +29,8 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
           text: t("custom.projekt_phases.subnav.key_metrics"),
           url: url_to_footer_tab(section: "key_metrics", remote: true),
           active: params[:section] == "key_metrics",
-          section: "key_metrics"
+          section: "key_metrics",
+          hide_on_preview: !projekt_phase.feature?("general.public_kpi_stats")
         }
       end
 
@@ -38,7 +40,8 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
           url: url_to_footer_tab(section: "analysis", remote: true),
           active: params[:section] == "analysis",
           disabled: !Ai::Settings.ai_available?,
-          section: "analysis"
+          section: "analysis",
+          hide_on_preview: !projekt_phase.feature?("general.public_ai_stats")
         }
       end
 

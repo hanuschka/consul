@@ -26,7 +26,7 @@ class Adm::BaseMenuComponent < ApplicationComponent
   private
 
     def item_class(item)
-      class_names("nav-item", "active": item_active?(item))
+      class_names("nav-item", "active": item_active?(item), "divider-before": item[:divider])
     end
 
     def link_attributes(item)
@@ -40,20 +40,24 @@ class Adm::BaseMenuComponent < ApplicationComponent
           current: ("page" if item_active?(item)),
           expanded: (subitems_expanded if has_subitems)
         },
-        data: { adm_menu_target: ("expandable" if has_subitems) }
+        data: { adm_menu_target: ("expandable" if has_subitems), adm_menu_id: (item[:icon] if has_subitems) }
       }.compact
     end
 
     def item_active?(item)
-      if item[:active_prefix]
-        request.path.start_with?(item[:active_prefix])
-      else
+      if item[:active_prefix] && request.path.start_with?(item[:active_prefix])
+        true
+      elsif item[:active_pattern] && request.path.match?(item[:active_pattern])
+        true
+      elsif !item[:active_prefix] && !item[:active_pattern]
         current_page?(item[:path])
+      else
+        false
       end
     end
 
     def subitem_active?(subitems)
-      subitems.any? { |subitem| current_page?(subitem[:path]) }
+      subitems.any? { |subitem| item_active?(subitem) }
     end
 
     def material_icon(name)

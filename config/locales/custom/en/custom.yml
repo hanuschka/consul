@@ -1,5 +1,12 @@
 en:
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code Editor"
+        title_sidebar: "Code Editor for Sidebar Section"
+        title_footer: "Code Editor for Footer Section"
+        save: "Save"
+        cancel: "Cancel"
     projekt_content_blocks:
       create:
         success: Content block created
@@ -101,3 +108,6 @@ en:
       sidebar_section:
         show: 'Show section'
         hide: 'Hide section'
+    layouts:
+      footer:
+        navigation_heading: Footer navigation

@@ -35,6 +35,7 @@ class Kern::Table::ActionComponent < ApplicationComponent
     @divider = divider
     @icon = icon || STYLES.dig(@style, :icon) || icon_from_label(label)
     @options = options
+    convert_method_to_turbo!
   end
 
   def render?
@@ -66,5 +67,12 @@ class Kern::Table::ActionComponent < ApplicationComponent
         return icon if normalized.include?(keyword)
       end
       "arrow_forward"
+    end
+
+    def convert_method_to_turbo!
+      return unless (method = @options.delete(:method))
+
+      @options[:data] ||= {}
+      @options[:data][:turbo_method] = method
     end
 end

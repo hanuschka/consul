@@ -57,7 +57,7 @@ module Adm
         elsif params[:phase_id]
           @mappable = ProjektPhase.find(params[:phase_id])
         else
-          @mappable = MapLocation.default
+          @mappable = nil
         end
       end
 

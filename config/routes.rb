@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   draw :adm
   draw "adm/ideas"
   draw "adm/projekts"
+  draw "adm/landing_pages"
   draw "adm/deficiency_reports"
   draw "adm/moderation"
+  draw "adm/valuation"
+  draw "adm/officing"
   draw :account
   draw :admin
   draw :budget
@@ -130,4 +133,6 @@ Rails.application.routes.draw do
   resources :formular_answers, only: %i[create update]
 
   get "/registered_addresses/find", to: "registered_addresses#find"
+  get "/registered_addresses/streets", to: "registered_addresses#streets"
+  get "/registered_addresses/addresses", to: "registered_addresses#addresses"
 end

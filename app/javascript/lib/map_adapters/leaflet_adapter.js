@@ -28,6 +28,7 @@ export default class LeafletAdapter extends BaseAdapter {
     return this.loadScripts().then(() => {
       this.createMap(container, options)
       this.setupExpandControl()
+      this.addResetViewControl()
       this.setupPlugins()
       this.configureGeoman()
     })
@@ -120,6 +121,9 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
     const center = [options.latitude, options.longitude]
 
+    this.initialCenter = center
+    this.initialZoom = options.zoom
+
     this.map = L.map(container, {
       gestureHandling: true,
       maxZoom: 18,
@@ -167,6 +171,34 @@ export default class LeafletAdapter extends BaseAdapter {
     })
 
     new ExpandControl().addTo(this.map)
+  }
+
+  addResetViewControl() {
+    const L = window.L
+    const instance = this
+
+    const ResetViewControl = L.Control.extend({
+      options: { position: "topright" },
+
+      onAdd() {
+        const container = L.DomUtil.create("div", "leaflet-bar leaflet-control")
+        const button = L.DomUtil.create("a", "leaflet-control-reset-view", container)
+        button.innerHTML = '<span class="material-symbols-outlined">home</span>'
+        button.href = "#"
+        button.title = "Ansicht zurücksetzen"
+        button.role = "button"
+
+        L.DomEvent.disableClickPropagation(container)
+        L.DomEvent.on(button, "click", L.DomEvent.preventDefault)
+        L.DomEvent.on(button, "click", () => {
+          instance.map.setView(instance.initialCenter, instance.initialZoom, { animate: true })
+        })
+
+        return container
+      }
+    })
+
+    new ResetViewControl().addTo(this.map)
   }
 
   toggleControlVisibility() {
@@ -296,6 +328,12 @@ export default class LeafletAdapter extends BaseAdapter {
       clearSearchLabel: "Suche zurücksetzen"
     })
     this.map.addControl(searchControl)
+
+    const searchInput = this.container.querySelector('.leaflet-control-geosearch input[type="text"]')
+    if (searchInput) {
+      searchInput.setAttribute("title", "Nach Adresse suchen")
+      searchInput.setAttribute("aria-label", "Nach Adresse suchen")
+    }
   }
 
   setupClustering() {
@@ -337,8 +375,9 @@ export default class LeafletAdapter extends BaseAdapter {
                       feature.properties?.feature_color ||
                       feature.properties?.color ||
                       instance.defaultFeatureColor
+        var markerTitle = feature.properties?.feature_category_name || "Kartenmarkierung"
         return L.marker(latlng, {
-          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name)
+          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name, markerTitle)
         })
       },
 
@@ -426,16 +465,17 @@ export default class LeafletAdapter extends BaseAdapter {
     adminNote.addTo(this.map)
   }
 
-  createMarkerIcon(color, iconName) {
+  createMarkerIcon(color, iconName, title) {
     const L = window.L
     color = color || getBrandColor()
     iconName = iconName || "circle"
+    title = title || "Kartenmarkierung"
 
     return L.divIcon({
       className: "map-marker",
       iconSize: [30, 30],
       iconAnchor: [15, 40],
-      html: `<div class="map-icon icon-${iconName}" style="background-color: ${color}"></div>`
+      html: `<div class="map-icon icon-${iconName}" role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></div>`
     })
   }
 

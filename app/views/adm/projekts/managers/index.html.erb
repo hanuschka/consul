@@ -1,6 +1,10 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".hint_text") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container">
   <%= new_resource_link(new_adm_projekts_manager_path, t('.new_link')) %>
@@ -29,8 +33,8 @@
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_projekt_managers") %>
-    </div>
+    <%= empty_state(title: t(".no_projekt_managers_title"), description: t(".no_projekt_managers_description"), icon: "supervisor_account") %>
   <% end %>
+
+  <%= render partial: "adm/role_assignments/pending_role_assignments", locals: { pending_role_assignments: @pending_role_assignments } %>
 </div>

@@ -12,8 +12,8 @@ class Adm::Moderation::ProposalsController < Adm::Moderation::BaseController
     @flags_count_header_options = { sort: true }
 
     @breadcrumbs = [
-      { name: I18n.t("adm.moderation.menu.title") },
-      { name: I18n.t("adm.moderation.menu.proposals") }
+      { name: I18n.t("adm.moderation.menu.title"), icon: "article" },
+      { name: I18n.t("adm.moderation.menu.items.proposals") }
     ]
   end
 

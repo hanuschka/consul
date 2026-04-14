@@ -17,6 +17,12 @@
       <% end %>
       <p><%= AdminWYSIWYGSanitizer.new.sanitize(@question.description) %></p>
       <table>
+        <thead class="show-for-sr">
+          <tr>
+            <th scope="col"><%= t("custom.polls.results.table.votes") %></th>
+            <th scope="col"><%= t("custom.polls.results.table.answer") %></th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
             <td id="answer_<%= @question_answer.id %>_result" class='results-column <%= @question_answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >

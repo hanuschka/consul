@@ -13,6 +13,18 @@ de:
         destroy:
           success: Benachrichtigung wurde erfolgreich gelöscht.
         form:
-          title_label: Titel
+          title_label: Betreff
+          title_hint: >
+            Geben Sie einen aussagekräftigen Betreff für die Benachrichtigung ein, der den Nutzern als
+            Überschrift angezeigt wird. Der Betreff sollte den Inhalt der Nachricht kurz zusammenfassen
+            und Aufmerksamkeit erzeugen – z. B. „Neue Beteiligungsphase gestartet" oder „Ergebnisse der
+            Abstimmung veröffentlicht".
+          title_placeholder: "z. B. Neue Beteiligungsphase gestartet"
           body_label: Nachricht
-          submit: Nachticht senden
+          body_hint: >
+            Verfassen Sie den Inhalt der Benachrichtigung, die an alle Nutzer gesendet wird, die diesem
+            Projekt oder dieser Beteiligungsphase folgen. Informieren Sie über Neuigkeiten, Ergebnisse
+            oder nächste Schritte. Halten Sie den Text verständlich und handlungsorientiert, damit Nutzer
+            wissen, was als Nächstes passiert.
+          body_placeholder: "Verfassen Sie hier Ihre Nachricht an die Teilnehmer..."
+          submit: Nachricht senden

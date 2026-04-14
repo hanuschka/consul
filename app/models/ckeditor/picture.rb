@@ -1,20 +1,18 @@
 class Ckeditor::Picture < Ckeditor::Asset
   ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif image/webp].freeze
-  MAX_FILE_SIZE = Setting["uploads.images.max_size"].to_i.megabytes
+  MAX_FILE_SIZE = 10.megabytes
 
   validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
                            file_size: { less_than: MAX_FILE_SIZE }
 
   def url_content(editor_id: nil)
-    file_path = if data_content_type == "image/gif"
-                  rails_blob_url(storage_data, only_path: true)
-                else
-                  rails_representation_url(
-                    storage_data.variant(coalesce: true, resize: "1500>", loader: { page: nil }), only_path: true
-                  )
-                end
-
-    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
+    if data_content_type == "image/gif"
+      blob_asset_path(storage_data.blob.key)
+    elsif absolute_path?(editor_id)
+      blob_variant_url(storage_data.blob.key, host: Setting["url"], w: 1500, h: 2000)
+    else
+      blob_variant_path(storage_data.blob.key, w: 1500, h: 2000)
+    end
   end
 
   def url_thumb(editor_id: nil)
@@ -22,7 +20,7 @@ class Ckeditor::Picture < Ckeditor::Asset
       rails_blob_url(storage_data, only_path: true)
     else
       rails_representation_url(
-        storage_data.variant(coalesce: true, gravity: "center", resize: "190x190^", crop: "190x190+0+0", loader: { page: nil }), only_path: true
+        storage_data.variant(resize_to_fill: [190, 190]), only_path: true
       )
     end
   end
@@ -41,11 +39,8 @@ class Ckeditor::Picture < Ckeditor::Asset
 
       rails_representation_url(
         storage_data.variant(
-          coalesce: true,
-          gravity: "center",
           resize_to_fit: [width, height],
-          saver: { quality: 88 } ,
-          loader: { page: nil }
+          saver: { quality: 88 }
         ),
         only_path: true
       )
@@ -59,11 +54,8 @@ class Ckeditor::Picture < Ckeditor::Asset
     # )
     rails_representation_url(
       storage_data.variant(
-        coalesce: true,
-        gravity: "center",
         resize_to_fill: [210, nil],
-        saver: { quality: 90 } ,
-        loader: { page: nil }
+        saver: { quality: 90 }
       ),
       only_path: true
     )

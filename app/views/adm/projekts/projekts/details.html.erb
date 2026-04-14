@@ -1,11 +1,18 @@
-<%= content_for :title, [@projekt.name, t("adm.projekts.projekts.index.title")].join(" | ") %>
+<%= content_for :title, [@projekt.page.title, t("adm.projekts.projekts.index.title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: @projekt.name, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @projekt.page.title, breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.projekts.projekts.details.hint_text") %></p>
+  <% end %>
+<% end %>
 
 <%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
 
 <div class="kern-container mb-5">
-  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
+  <div data-controller="components-adm-page-title-sync"
+       data-action="turbo:submit-end->components-adm-page-title-sync#sync">
+    <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
+  </div>
 
   <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
     <%= render 'adm/projekts/projekts/details/duration', projekt: @projekt %>

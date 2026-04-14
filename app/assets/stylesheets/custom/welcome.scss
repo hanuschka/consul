@@ -29,6 +29,11 @@
     margin-top: -1.5rem;
   }
 
+  .card-homepage-list {
+    list-style: none;
+    padding: 0;
+  }
+
   .card-homepage {
     position: relative;
 
@@ -55,7 +60,7 @@
     }
   }
 
-  h3.title.card-title {
+  .title.card-title {
     border-bottom: none;
   }
 

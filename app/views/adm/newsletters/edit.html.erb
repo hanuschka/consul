@@ -1,0 +1,24 @@
+<%= content_for :title, @newsletter.subject %>
+
+<%= render Adm::HeaderComponent.new(title: @newsletter.subject, breadcrumbs: @breadcrumbs, back_button_url: adm_newsletters_path, narrow: true) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(@newsletter, :subject, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(@newsletter, :recipient_group_id, :select,
+    select_options: RecipientGroup.all.map { |rg| [rg.name, rg.id] }) %>
+  <%= render Adm::AttributeEditorComponent.new(@newsletter, :from, :string) %>
+  <% if Setting["advanced_newsletter"].present? %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter, :title, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter, :title_color, :color) %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter, :subtitle, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter, :subtitle_color, :color) %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter_image, :attachment, :image) %>
+    <%= render Adm::AttributeEditorComponent.new(@newsletter, :greeting, :string) %>
+  <% end %>
+
+  <div class="mb-4">
+    <%= render "template_block_2" %>
+  </div>
+
+  <%= render Adm::AttributeEditorComponent.new(@newsletter, :body, :rich_text, wide: true, toolbar: "email") %>
+</div>

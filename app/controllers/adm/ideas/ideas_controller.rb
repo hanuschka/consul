@@ -14,12 +14,12 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     @category_header_options = { filter_options: category_filter_options }
     @officer_header_options = { filter_options: officer_filter_options }
 
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas") }]
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas"), icon: "lightbulb" }]
   end
 
   def settings
     authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings") }]
+    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings"), icon: "settings" }]
   end
 
   def show
@@ -29,7 +29,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+          { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
           { name: @idea.title }
         ]
 
@@ -58,7 +58,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     @idea.create_map_location unless @idea.map_location
 
     @breadcrumbs = [
-      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
       { name: @idea.title }
     ]
   end
@@ -74,7 +74,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
       @idea.build_image(user: current_user) unless @idea.image
       @idea.create_map_location unless @idea.map_location
       @breadcrumbs = [
-        { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+        { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
         { name: @idea.title }
       ]
       render :edit, status: :unprocessable_entity
@@ -93,7 +93,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
     authorize @idea, :update?, policy_class: Adm::Ideas::IdeaPolicy
 
     @breadcrumbs = [
-      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path },
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
       { name: @idea.title }
     ]
   end

@@ -9,9 +9,13 @@
                                          value="<%= params[:search] %>" id="search_text">
       </label>
       <div class="input-group-button">
-        <button type="submit" class="button" title="<%= t("#{i18n_namespace}.button") %>">
-          <span class="show-for-sr"><%= t("#{i18n_namespace}.button") %></span>
-          <span class="icon-search"></span>
+        <button
+          type="submit"
+          class="button"
+          title="<%= t("#{i18n_namespace}.button") %>"
+          aria-label="<%= t("#{i18n_namespace}.button") %>"
+        >
+          <span class="icon-search" aria-hidden="true"></span>
         </button>
       </div>
     </div>

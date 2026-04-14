@@ -5,6 +5,7 @@ class Idea < ApplicationRecord
   include Searchable
   include OnBehalfOfSubmittable
   include Memoable
+  include SectionTrackable
 
   belongs_to :author, class_name: "User", inverse_of: :ideas
 
@@ -103,5 +104,13 @@ class Idea < ApplicationRecord
 
   def tags
     []
+  end
+
+  def section_tracking_section
+    "ideas"
+  end
+
+  def section_tracking_user
+    author
   end
 end

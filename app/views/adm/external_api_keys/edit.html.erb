@@ -1,0 +1,34 @@
+<% edit_title = @external_api_key.value.present? ? t(".title") : t("adm.external_api_keys.show.add_key") %>
+<%= content_for :title, edit_title %>
+
+<% service_name = t("admin.external_api_keys.services.#{@external_api_key.service}", default: @external_api_key.service) %>
+
+<%= render Adm::HeaderComponent.new(
+  title: edit_title,
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_external_api_keys_path
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text">
+      <%= t("admin.external_api_keys.services_description.#{@external_api_key.service}", default: "") %>
+    </p>
+    <% if @external_api_key.service_link %>
+      <p class="adm-hint__text adm-hint__text--spaced">
+        <%= link_to @external_api_key.service_link, @external_api_key.service_link, target: "_blank", rel: "noopener noreferrer" %>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <%= form_with model: [:adm, @external_api_key] do |f| %>
+    <%= render Kern::FormFieldComponent.new(
+      label: t("adm.external_api_keys.edit.value"),
+      hint: t("adm.external_api_keys.edit.value_hint")
+    ) do %>
+      <%= f.password_field :value, label: false, class: "kern-input", placeholder: t("adm.external_api_keys.edit.value_placeholder"), value: @external_api_key.value %>
+    <% end %>
+
+    <%= form_submit_button %>
+  <% end %>
+</div>

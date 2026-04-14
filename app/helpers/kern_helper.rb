@@ -34,6 +34,15 @@ module KernHelper
     end
   end
 
+  def empty_state(title:, description: nil, icon: "folder_open", link_url: nil, link_text: nil)
+    content_tag(:div, class: "adm-empty-state") do
+      concat(content_tag(:div, content_tag(:span, icon, class: "adm-empty-state__icon material-symbols-outlined", "aria-hidden": "true"), class: "adm-empty-state__icon-wrap"))
+      concat(content_tag(:p, title, class: "adm-empty-state__title"))
+      concat(content_tag(:p, description, class: "adm-empty-state__description")) if description.present?
+      concat(link_to(link_text, link_url, class: "adm-empty-state__link kern-button kern-button--outline mt-3")) if link_url.present? && link_text.present?
+    end
+  end
+
   def kern_alert(title:, style: :info, &block)
     content_tag(:div, class: "kern-alert kern-alert--#{style}", role: "alert") do
       header = content_tag(:div, class: "kern-alert__header") do
@@ -45,27 +54,6 @@ module KernHelper
         safe_join([header, body])
       else
         header
-      end
-    end
-  end
-
-  def localized_fields_for(form, attribute, type, **options)
-    fields = I18n.available_locales.map do |locale|
-      content_tag(:div, class: "kern-row mb-5") do
-        content_tag(:div, class: "kern-col") do
-          send("localized_#{type}_input_for", form, attribute, locale, **options)
-        end
-      end
-    end
-
-    safe_join(fields)
-  end
-
-  def localized_text_field_input_for(form, attribute, locale, **options)
-    form.fields_for :translations, form.object.translation_for(locale) do |tf|
-      content_tag(:div, class: "kern-form-input") do
-        concat(tf.label(attribute, options.delete(:label) || tf.object.class.human_attribute_name(attribute), class: "kern-label"))
-        concat(tf.send(:text_field, attribute, { class: "kern-form-input__input", label: false }.merge(options)))
       end
     end
   end

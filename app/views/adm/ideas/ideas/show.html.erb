@@ -58,7 +58,7 @@
 
     <div class="d-flex gap-2 mb-4 justify-content-end">
       <%= kern_link_button(edit_adm_ideas_idea_path(@idea),
-            text: t(".edit"), icon: "edit", data: { turbo_frame: "idea_content" }) %>
+            text: t(".edit"), icon: "edit", style: :primary, data: { turbo_frame: "idea_content" }) %>
       <%= kern_link_button(adm_ideas_idea_path(@idea, format: :pdf),
             text: t(".download_pdf"), icon: "download", style: :secondary,
             data: @idea.map_location.present? ? {
@@ -182,4 +182,6 @@
     label: t(".official_answer"),
     description: t(".official_answer_hint")
   ) %>
+
+  <%= render "adm/memos/memos", memoable: @idea %>
 </article>

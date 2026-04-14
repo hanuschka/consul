@@ -1,0 +1,5 @@
+<% if @no_remaining %>
+  <%= turbo_stream.update "pending_role_assignments_section", "" %>
+<% else %>
+  <%= turbo_stream.remove @pending %>
+<% end %>

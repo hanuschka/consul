@@ -8,6 +8,8 @@ class Api::BaseController < ActionController::API
   COMMENTS_PER_PAGE = 5000
 
   before_action :authenticate_api_client!
+  after_action :log_api_request
+
   # rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
@@ -64,6 +66,19 @@ class Api::BaseController < ActionController::API
       render json: {
         error: { type: "not_found", messages: ["Not found"] }
       }, status: :not_found
+    end
+
+    def log_api_request
+      ApiRequestLogs::CreateAndPushJob.perform_later(
+        request.method,
+        request.path,
+        request.url,
+        request.query_parameters.to_h,
+        request.request_parameters.to_h,
+        response.status,
+        @current_client&.id
+      )
+    rescue StandardError
     end
 
     def render_internal_server_error(exception)

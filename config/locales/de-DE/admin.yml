@@ -1344,11 +1344,11 @@ de:
         openai: OpenAI
         brevo: Brevo
       services_description:
-        matomo: "Open-Source-Webanalytics-Plattform zur Verfolgung von Website-Statistiken, Benutzerverhalten und Konversionsoptimierung. Fokus auf DSGVO/CCPA-Compliance und Datenschutz."
-        mapbox: "Karten- und Standort-API zum Erstellen interaktiver Karten, Geocodierung, Adressensuche und Geoanwendungen."
-        vcs: "3D-Stadtmodellierungs- und Simulationsplattform für Stadtplanung, Analyse und Smart-City-Anwendungen einschließlich Verkehrssimulation und Solarpotenzialanalyse."
-        openai: "KI-API mit Zugriff auf GPT-Sprachmodelle für Konversations-KI, Textgenerierung, Inhaltsanalyse und Aufgabenautomatisierung."
-        brevo: "All-in-One-E-Mail-Marketing- und CRM-Plattform mit E-Mail-Kampagnen, SMS, WhatsApp, Automatisierung, KI-gestützter Inhaltsgenerierung und Transaktions-E-Mail-Funktionen."
+        matomo: "Datenschutzkonforme Webanalyse-Plattform zur Auswertung von Besucherzahlen, Nutzerverhalten und Seitenaufrufen auf Ihrer Plattform. Matomo speichert alle Daten auf Ihrem eigenen Server und erfüllt die Anforderungen der DSGVO. Der Schlüssel ermöglicht die Verbindung zwischen Ihrer Plattform und Ihrer Matomo-Instanz."
+        mapbox: "Kartendienst für die Darstellung interaktiver Karten auf Ihrer Plattform — etwa bei Vorschlägen mit Standortbezug, Mängelmeldungen oder Projektübersichten. Mapbox stellt Kartenmaterial, Geocodierung und Adresssuche bereit. Der Schlüssel wird benötigt, um Karteninhalte laden und anzeigen zu können."
+        vcs: "3D-Stadtmodellierung von Virtual City Systems für die visuelle Darstellung von Stadtplanungsprojekten. Ermöglicht dreidimensionale Ansichten von Gebäuden, Infrastruktur und Planungsszenarien direkt auf der Plattform. Wird vor allem für Beteiligungsverfahren mit räumlichem Bezug eingesetzt, etwa bei Bauleitplanungen."
+        openai: "Schnittstelle zu OpenAI für KI-gestützte Funktionen auf Ihrer Plattform. Wird unter anderem für die automatische Erstellung von Vorschlägen, die Analyse von Abstimmungsergebnissen, semantische Auswertungen und die Inhaltsgenerierung genutzt. Der Schlüssel verbindet Ihre Plattform mit den OpenAI-Sprachmodellen."
+        brevo: "E-Mail-Versandplattform für den Versand von Transaktions-E-Mails wie Registrierungsbestätigungen, Benachrichtigungen und Passwort-Zurücksetzungen. Brevo übernimmt die zuverlässige Zustellung aller automatisierten E-Mails Ihrer Plattform. Der Schlüssel wird benötigt, damit das System E-Mails über Brevo versenden kann."
     api_clients:
       show:
         show_token: Anzeigen

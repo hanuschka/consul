@@ -1,6 +1,10 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
   <% if @districts.any? %>
@@ -20,7 +24,7 @@
               <td class="kern-table__cell"><%= district.default_idea_officer&.name %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_ideas_district_path(district)) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_ideas_district_path(district), icon: "edit", style: :edit) %>
                 <% end %>
               </td>
             </tr>
@@ -29,8 +33,6 @@
       </table>
     </div>
   <% else %>
-    <div class="callout primary margin">
-      <%= t(".no_districts") %>
-    </div>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "location_city") %>
   <% end %>
 </div>

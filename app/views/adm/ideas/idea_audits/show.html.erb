@@ -6,7 +6,7 @@
   <%= link_to t(".back"), audits_adm_ideas_idea_path(@audit.auditable), class: "kern-link mb-4 inline-block" %>
 
   <div class="kern-card p-5">
-    <h3 class="text-xl font-bold mb-4"><%= t(".audit_details") %></h3>
+    <h3 class="fs-4 strong mb-4"><%= t(".audit_details") %></h3>
 
     <p class="mb-2">
       <strong><%= t(".edited_at") %>:</strong>
@@ -18,10 +18,10 @@
       <%= @audit.user&.name %>
     </p>
 
-    <h4 class="text-lg font-bold mb-3"><%= t(".changes") %></h4>
+    <h4 class="fs-3 strong mb-3"><%= t(".changes") %></h4>
 
     <% @audit.audited_changes.each do |field, (old_value, new_value)| %>
-      <div class="mb-4 p-3 bg-gray-50 rounded">
+      <div class="mb-4 p-3">
         <p class="mb-1">
           <strong><%= t(".field") %>:</strong>
           <%= @audit.auditable.class.human_attribute_name(field) %>

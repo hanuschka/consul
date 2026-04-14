@@ -3,9 +3,10 @@ de:
     projekts:
       milestone_statuses:
         index:
-          title: Statuses
+          title: Meilenstein-Status
           create_button: Neuen Status erstellen
-          no_statuses: Es wurde noch kein Status definiert
+          no_statuses_title: Keine Status vorhanden
+          no_statuses_description: Erstellen Sie Status-Bezeichnungen, die Meilensteinen zugeordnet werden können – z. B. 'In Planung', 'In Umsetzung' oder 'Abgeschlossen'. Status werden im Frontend neben den Meilensteinen angezeigt und signalisieren den aktuellen Bearbeitungsstand.
           table:
             name: Name
             description: Beschreibung
@@ -21,6 +22,18 @@ de:
         destroy:
           success: Status erfolgreich gelöscht
         form:
-          name_label: Name
-          description_label: Beschreibung (optional)
+          name_label: Statusbezeichnung
+          name_hint: >
+            Geben Sie eine kurze, aussagekräftige Bezeichnung für den Meilenstein-Status ein, z. B.
+            „In Planung", „In Umsetzung" oder „Abgeschlossen". Der Name wird im Frontend neben den
+            Meilensteinen angezeigt und signalisiert den Nutzern den aktuellen Bearbeitungsstand des
+            jeweiligen Meilensteins.
+          name_placeholder: "z. B. In Umsetzung"
+          description_label: Beschreibung
+          description_hint: >
+            Optionale Beschreibung, die den Status näher erläutert. Die Beschreibung wird im Frontend
+            als Tooltip oder Zusatztext beim Meilenstein angezeigt und hilft Nutzern, den genauen
+            Bedeutungsumfang des Status zu verstehen – z. B. „Maßnahme befindet sich in der konkreten
+            Umsetzungsphase durch die Verwaltung".
+          description_placeholder: "z. B. Maßnahme wird derzeit von der Verwaltung umgesetzt"
           submit: Speichern

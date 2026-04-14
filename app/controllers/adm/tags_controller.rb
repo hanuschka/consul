@@ -5,7 +5,7 @@ module Adm
       @pagy, @tags = pagy(policy_scope([:adm, Tag]).order(:id))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.tags") }
       ]
     end
@@ -15,7 +15,7 @@ module Adm
       authorize [:adm, @tag]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.tags"), url: adm_tags_path },
         { name: t(".title") }
       ]
@@ -38,7 +38,7 @@ module Adm
       authorize [:adm, @tag]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t("adm.menu.items.application_subitems.tags"), url: adm_tags_path },
         { name: t(".title") }
       ]

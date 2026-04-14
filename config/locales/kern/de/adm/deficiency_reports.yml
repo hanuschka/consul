@@ -1,10 +1,38 @@
 de:
   adm:
     deficiency_reports:
+      home:
+        title: Willkommen im Mängelmelder
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          open: Offen
+          closed: Geschlossen
+        quick_links:
+          all: Alle Meldungen
+          open: Offene Meldungen
+          closed: Geschlossene Meldungen
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          home: Home
+          officers: Team
+          deficiency_reports: Meldungen
+          categories: Kategorien
+          statuses: Status
+          settings: Funktionen
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI-Einstellungen
       deficiency_reports:
         index:
-          title: Mängelmelder
+          title: Meldungen
+          page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
           no_deficiency_reports: Keine Mängelmelder vorhanden
+          no_items_title: Keine Meldungen vorhanden
+          no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
           table:
             id: ID
             admin_accepted: Sichtbarkeit
@@ -15,19 +43,21 @@ de:
             location: Standort
             district: Bezirk
             category: Kategorie
-            responsible: Sachbearbeiter*in
+            responsible: Sachbearbeiter
         tabs:
-          show: Anzeigen
+          show: Verwalten
           administer: Administrieren
           edit: Bearbeiten
           audits: Änderungslog
           feedback_form: Feedback
         show:
           title: Mängelmelder
+          section_admin: Verwaltung
+          section_content: Meldung
           edit: Bearbeiten
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
-          admin_accepted_status: Status der Freigabe
+          admin_accepted_status: Freigabe
           accepted: Freigegeben
           not_accepted: Nicht freigegeben
           status: Status
@@ -43,8 +73,14 @@ de:
           on_behalf_of_label: Im Auftrag von
           video_url: Video-URL
           address: Adresse
-          responsible_label: Sachbearbeiter*in
+          responsible_label: Sachbearbeiter
           author: Autor
+          votes: Bewertungen
+          comments: Kommentare
+          answer_template_label: Antwortvorlage
+          answer_template_hint: >
+            Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
+          answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
           official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
         update_official_answer:
@@ -61,14 +97,28 @@ de:
             category: Kategorie
             map_location: Kartenstandort
             on_behalf_of: Im Auftrag von
+          hints:
+            title: Der Titel der Meldung wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte den gemeldeten Mangel kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können. Änderungen am Titel werden sofort auf der öffentlichen Seite sichtbar.
+            description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Mangel, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird öffentlich auf der Detailseite der Meldung angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
+            image: Das Bild dokumentiert den gemeldeten Mangel visuell und wird auf der öffentlichen Detailseite der Meldung angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, den Mangel schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
+            documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zur Meldung hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
+            video_url: Geben Sie die URL eines Videos ein, das den gemeldeten Mangel dokumentiert. Das Video wird auf der öffentlichen Detailseite der Meldung eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
+            on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag die Meldung erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator eine Meldung stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung der Meldung.
+            category: Die Kategorie ordnet die Meldung einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
         administer:
           title: Administrieren
           status: Status
-          responsible: Sachbearbeiter*in
+          status_hint: Der Status zeigt den aktuellen Bearbeitungsstand der Meldung an und wird auf der öffentlichen Detailseite sichtbar dargestellt. Eine Statusänderung kann automatisch eine E-Mail-Benachrichtigung an den Ersteller auslösen. Bestimmte Status können die Meldung auch automatisch archivieren, je nach Konfiguration der Statuswerte.
+          responsible: Sachbearbeiter
+          responsible_hint: Weisen Sie dieser Meldung einen zuständigen Sachbearbeiter oder eine Sachbearbeitergruppe zu. Der zugewiesene Sachbearbeiter erhält E-Mail-Benachrichtigungen bei Änderungen und kann die Meldung direkt bearbeiten. Bei Gruppeneinträgen wird die Standard-E-Mail der Gruppe für Benachrichtigungen verwendet.
           no_status: Kein Status
-          officers: Sachbearbeiter*inen
+          no_statuses_title: Keine Statuswerte vorhanden
+          no_statuses_description: Erstellen Sie zunächst Statuswerte unter „Status", um Meldungen einen Bearbeitungsstand zuweisen zu können.
+          officers: Sachbearbeiter
           officer_groups: Sachbearbeitergruppen
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          no_responsible: "-- Kein Sachbearbeiter --"
+          no_officers_title: Keine Sachbearbeiter vorhanden
+          no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", um Meldungen zuweisen zu können.
         audits:
           title: Änderungslog
         feedback_form:
@@ -80,13 +130,16 @@ de:
       categories:
         index:
           title: Kategorien
+          page_hint: "Hier verwalten Sie die Kategorien für den Mängelmelder. Kategorien ordnen Meldungen thematischen Bereichen zu, z. B. Straßenschäden oder Beleuchtung. Jede Kategorie kann eine eigene Farbe, ein Symbol und einen Standard-Sachbearbeiter haben. Per Drag & Drop passen Sie die Reihenfolge an. Kategorien mit zugewiesenen Meldungen können nicht gelöscht werden."
           new_category: Neue Kategorie
           no_categories: Keine Kategorien vorhanden
+          no_items_title: Keine Kategorien vorhanden
+          no_items_description: Erstellen Sie eine neue Kategorie, um Meldungen zu klassifizieren.
           table:
             name: Name
             color: Farbe
             icon: Symbol
-            default_responsible: Standard-Sachbearbeiter*in
+            default_responsible: Standard-Sachbearbeiter
             warning_text: Popup
             actions: Aktionen
         new:
@@ -102,23 +155,27 @@ de:
           cannot_destroy: Kategorie kann nicht gelöscht werden, da sie noch Mängelmelder enthält.
         form:
           name_label: Name
-          name_hint: Geben Sie den Namen der Kategorie ein.
+          name_hint: Der Name der Kategorie wird im Frontend bei der Meldungserstellung als Auswahlmöglichkeit angezeigt und dient der thematischen Zuordnung. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie Straßenschäden, Beleuchtung oder Grünflächen. Der Name erscheint auch in der Verwaltungsübersicht und in Statistiken als Filtermerkmal.
           color_label: Farbe
-          color_hint: Wählen Sie eine Farbe für die Kategorie.
+          color_hint: Die Farbe wird als visuelle Kennzeichnung der Kategorie in der Listenansicht und auf der Karte verwendet. Sie hilft Bürgern und Sachbearbeitern, Meldungen verschiedener Kategorien auf einen Blick zu unterscheiden. Wählen Sie kontrastreiche Farben, die sich gut voneinander abheben, um die Übersichtlichkeit zu gewährleisten.
           icon_label: Symbol
-          icon_hint: Wählen Sie ein Symbol für die Kategorie aus.
-          default_responsible_label: Standard-Sachbearbeiter*in
-          default_responsible_hint: Wählen Sie einen Standard-Sachbearbeiter für diese Kategorie.
+          icon_hint: Das Symbol wird neben dem Kategorienamen in der Meldungsübersicht und auf der Karte angezeigt. Es dient als visuelle Unterstützung, um die Kategorie schnell erkennbar zu machen. Wählen Sie ein Symbol, das den Themenbereich inhaltlich widerspiegelt, z. B. eine Glühbirne für Beleuchtung oder einen Baum für Grünflächen.
+          default_responsible_label: Standard-Sachbearbeiter
+          default_responsible_hint: Der Standard-Sachbearbeiter wird automatisch als Zuständiger zugewiesen, wenn eine neue Meldung in dieser Kategorie eingeht. Dies beschleunigt die Bearbeitung, da keine manuelle Zuweisung nötig ist. Wenn kein Standard-Sachbearbeiter festgelegt ist, wird der Standard-Sachbearbeiter des jeweiligen Gebiets verwendet.
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter*in
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          officers: Sachbearbeiter
+          no_responsible: "-- Kein Sachbearbeiter --"
           warning_text_label: Popup
+          warning_text_hint: Der Popup-Text wird Bürgern als Hinweismeldung angezeigt, wenn sie diese Kategorie bei der Erstellung einer neuen Meldung auswählen. Nutzen Sie dieses Feld, um wichtige Informationen oder Warnungen zu übermitteln, z. B. Hinweise auf alternative Meldewege oder spezielle Zuständigkeiten. Das Popup erscheint direkt nach der Kategorieauswahl.
           submit: Speichern
       statuses:
         index:
           title: Status
+          page_hint: "Hier verwalten Sie die Statuswerte für den Mängelmelder. Jeder Status hat einen Titel, eine Farbe und ein optionales Symbol. Sie können festlegen, ob ein Status Meldungen automatisch archiviert und nach wie vielen Tagen eine Erinnerung an den Sachbearbeiter gesendet wird. Per Drag & Drop bestimmen Sie die Reihenfolge der Statuswerte."
           new_status: Neuer Status
           no_statuses: Keine Status vorhanden
+          no_items_title: Keine Status vorhanden
+          no_items_description: Erstellen Sie einen neuen Status, um den Bearbeitungsfortschritt von Meldungen abzubilden.
           table:
             title: Titel
             icon: Symbol
@@ -138,49 +195,66 @@ de:
           cannot_destroy: Status kann nicht gelöscht werden, da er noch Mängelmelder enthält.
         form:
           title_label: Titel
+          title_hint: Der Titel des Status wird in der Meldungsübersicht und auf der Detailseite als Statusanzeige verwendet. Er sollte den Bearbeitungsstand klar beschreiben, z. B. „In Bearbeitung", „Erledigt" oder „Abgelehnt". Bürger sehen diesen Titel auf der öffentlichen Seite, daher sollte er allgemein verständlich formuliert sein.
           color_label: Farbe
+          color_hint: Die Farbe wird als visuelle Kennzeichnung des Status in Listen und auf der Detailseite der Meldung verwendet. Sie hilft dabei, verschiedene Bearbeitungsstände auf einen Blick zu unterscheiden. Wählen Sie kontrastreiche Farben, die sich gut voneinander abheben, um die Übersichtlichkeit in der Listenansicht zu gewährleisten.
           icon_label: Symbol
+          icon_hint: Das Symbol wird neben dem Statusnamen in der Meldungsübersicht und auf der Detailseite angezeigt. Es dient als visuelle Unterstützung, um den Bearbeitungsstand schnell erkennbar zu machen. Wählen Sie ein Symbol, das den Status inhaltlich widerspiegelt, z. B. ein Häkchen für erledigte oder eine Uhr für laufende Vorgänge.
           reminder_delay_label: Erinnerung (Tage)
+          reminder_delay_hint: Geben Sie die Anzahl der Tage ein, nach denen eine automatische Erinnerung an den zuständigen Sachbearbeiter gesendet wird, wenn die Meldung in diesem Status verbleibt. Der Wert 0 deaktiviert die Erinnerungsfunktion. Diese Einstellung hilft, vergessene oder liegengebliebene Meldungen rechtzeitig nachzuverfolgen.
           archive_reports_label: Archivieren
+          archive_reports_hint: Wenn diese Option aktiviert ist, werden Meldungen automatisch archiviert, sobald sie in diesen Status versetzt werden. Archivierte Meldungen erscheinen nicht mehr in der aktiven Listenansicht, bleiben aber im System gespeichert und können über die Archivansicht eingesehen werden. Typisch für Endstatus wie „Erledigt" oder „Abgelehnt".
           notice_text_label: E-Mail-Benachrichtigungstext
+          notice_text_hint: Dieser Text wird als Inhalt der E-Mail-Benachrichtigung an den Ersteller der Meldung gesendet, wenn die Meldung in diesen Status wechselt. Formulieren Sie den Text bürgerfreundlich und informativ, damit der Melder den aktuellen Stand seiner Meldung nachvollziehen kann. Lassen Sie das Feld leer, um keine Benachrichtigung zu senden.
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter*inen
-          search_label: Benutzer suchen
-          search_description: Geben Sie die E-Mail-Adresse des Benutzers ein
-          no_officers: Keine Sachbearbeiter*inen vorhanden
+          title: Team
+          page_hint: "Hier verwalten Sie die Sachbearbeiter für den Mängelmelder. Sachbearbeiter können eingereichte Meldungen bearbeiten, den Status aktualisieren und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Nur bereits registrierte Nutzer können als Sachbearbeiter hinzugefügt werden."
+          search_label: Nutzer suchen
+          search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Mängelmelder hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Meldungen, kommunizieren mit den Bürgern und aktualisieren den Bearbeitungsstatus.
+          no_officers: Keine Sachbearbeiter vorhanden
+          no_items_title: Keine Sachbearbeiter vorhanden
+          no_items_description: Suchen Sie nach einem Nutzer und weisen Sie die Sachbearbeiter-Rolle zu.
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:
             name: Name
             email: E-Mail
         user_not_found:
-          user_not_found: Benutzer nicht gefunden
+          user_not_found: Nutzer nicht gefunden
       districts:
         index:
           title: Gebiete
+          page_hint: "Hier sehen Sie die Gebiete, die aus den registrierten Adressen übernommen werden. Jedem Gebiet kann ein Standard-Sachbearbeiter oder eine Sachbearbeitergruppe zugewiesen werden. Wenn eine neue Meldung ohne kategoriespezifischen Sachbearbeiter eingeht, wird automatisch der Standard-Sachbearbeiter des jeweiligen Gebiets zuständig."
           no_districts: Keine Gebiete vorhanden
+          no_items_title: Keine Gebiete vorhanden
+          no_items_description: Gebiete werden aus den registrierten Adressen übernommen und hier angezeigt.
           table:
-            default_responsible: Standard-Sachbearbeiter*in
+            default_responsible: Standard-Sachbearbeiter
         edit:
           title: Bezirk bearbeiten
-          default_responsible_label: Standard-Sachbearbeiter*in
+          default_responsible_label: Standard-Sachbearbeiter
+          default_responsible_hint: Legen Sie den Standard-Sachbearbeiter oder die Sachbearbeitergruppe fest, die automatisch für neue Meldungen in diesem Gebiet zuständig ist. Wenn eine Meldung ohne Kategorie oder mit einer Kategorie ohne eigenen Sachbearbeiter erstellt wird, wird dieser Standardwert verwendet. So wird sichergestellt, dass jede Meldung eine Zuordnung hat.
           officer_groups: Sachbearbeitergruppen
-          officers: Sachbearbeiter*in
-          no_responsible: "-- Kein Sachbearbeiter*in --"
+          officers: Sachbearbeiter
+          no_responsible: "-- Kein Sachbearbeiter --"
           submit: Speichern
         update:
           success: Bezirk wurde erfolgreich aktualisiert.
       official_answer_templates:
         index:
           title: Antwortvorlagen
+          page_hint: "Hier verwalten Sie Antwortvorlagen für offizielle Antworten auf Mängelmelder-Meldungen. Vorlagen beschleunigen die Beantwortung wiederkehrender Anfragen, indem Sachbearbeiter beim Verfassen einer Antwort aus vordefinierten Textbausteinen wählen können. Der Text kann vor dem Absenden individuell angepasst werden."
           new_template: Neue Antwortvorlage
           no_templates: Keine Antwortvorlagen vorhanden
+          no_items_title: Keine Antwortvorlagen vorhanden
+          no_items_description: Erstellen Sie eine neue Antwortvorlage, um häufig verwendete Antworten schneller verfassen zu können.
           table:
             title: Titel
             text: Text
@@ -194,16 +268,23 @@ de:
           success: Antwortvorlage wurde erfolgreich aktualisiert.
         form:
           title_label: Titel
+          title_hint: Der Titel der Antwortvorlage dient als interne Bezeichnung und wird in der Auswahlliste angezeigt, wenn ein Sachbearbeiter eine offizielle Antwort auf eine Meldung verfasst. Wählen Sie einen aussagekräftigen Titel, der den Inhalt der Vorlage kurz beschreibt, z. B. „Standardantwort Straßenschaden" oder „Rückmeldung Grünfläche".
+          title_placeholder: z.B. Standardantwort Straßenschaden
           text_label: Text
+          text_hint: Der Text der Antwortvorlage wird als Standardinhalt in das Antwortfeld eingefügt, wenn ein Sachbearbeiter diese Vorlage auswählt. Der Text kann vor dem Absenden noch individuell angepasst werden. Formulieren Sie den Text bürgerfreundlich und sachlich, da er als offizielle Antwort der Verwaltung öffentlich auf der Meldung erscheint.
+          text_placeholder: Ihre Antwortvorlage...
           submit: Speichern
       officer_groups:
         index:
           title: Sachbearbeitergruppen
+          page_hint: "Hier verwalten Sie Sachbearbeitergruppen für den Mängelmelder. Gruppen fassen mehrere Sachbearbeiter zusammen und können Kategorien oder Gebieten als Verantwortliche zugewiesen werden. Jede Gruppe hat eine Standard-E-Mail-Adresse für Benachrichtigungen. So werden Meldungen automatisch dem richtigen Team zugeordnet."
           new_officer_group: Neue Sachbearbeitergruppe
           no_officer_groups: Keine Sachbearbeitergruppen vorhanden
+          no_items_title: Keine Sachbearbeitergruppen vorhanden
+          no_items_description: Erstellen Sie eine neue Sachbearbeitergruppe, um Sachbearbeiter zu organisieren.
           table:
             name: Name
-            officers: Sachbearbeiter*inen
+            officers: Sachbearbeiter
             default_email: Standard-E-Mail
         new:
           title: Neue Sachbearbeitergruppe
@@ -217,16 +298,46 @@ de:
           success: Sachbearbeitergruppe wurde erfolgreich gelöscht.
         form:
           name_label: Name
+          name_hint: Der Name der Sachbearbeitergruppe wird in Auswahllisten angezeigt, wenn Meldungen einem zuständigen Bearbeiter zugewiesen werden. Wählen Sie einen eindeutigen und beschreibenden Namen, z. B. „Tiefbauamt" oder „Grünflächenpflege". Der Name ist nur intern sichtbar und wird nicht auf der öffentlichen Seite der Meldung angezeigt.
+          name_placeholder: z.B. Tiefbauamt
           default_email_label: Standard-E-Mail
-          officers_label: Sachbearbeiter*inen
+          default_email_hint: Die Standard-E-Mail-Adresse wird für alle Benachrichtigungen verwendet, die an diese Sachbearbeitergruppe gesendet werden, z. B. bei neuen Meldungen oder Statusänderungen. Verwenden Sie idealerweise eine Funktionsadresse wie tiefbau@stadt.de, damit die Benachrichtigungen unabhängig von einzelnen Personen zugestellt werden.
+          default_email_placeholder: z.B. tiefbau@stadt.de
+          officers_label: Sachbearbeiter
+          officers_hint: Wählen Sie die Sachbearbeiter aus, die Mitglieder dieser Gruppe sein sollen. Alle ausgewählten Personen können Meldungen bearbeiten, die dieser Gruppe zugewiesen sind. Die Mitgliedschaft in einer Gruppe beeinflusst, welche Meldungen in der persönlichen Übersicht des Sachbearbeiters angezeigt werden und welche Benachrichtigungen erfolgen.
+          no_officers_title: Keine Sachbearbeiter vorhanden
+          no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
           submit: Speichern
       stats:
         show:
           title: Statistiken
+          sections:
+            overview: Übersicht
+            satisfaction: Zufriedenheit
+            charts: Verlauf & Verteilung
+            details: Detailtabellen
+          cards:
+            total: Meldungen gesamt
+            open: Offen
+            new_this_week: Neu diese Woche
+            new_this_month: Neu diesen Monat
+            unassigned: Nicht zugewiesen
+            feedback_count: Bewertungen
+            satisfaction_avg: Ø Zufriedenheit
+            response_time_avg: Ø Reaktionszeit
+            communication_avg: Ø Kommunikation
+          charts:
+            reports_per_month: Meldungen pro Monat
+            by_status: Verteilung nach Status
+            by_category: Verteilung nach Kategorie (Top 10)
+          periods:
+            week: Woche
+            month: Monat
+            year: Jahr
           type:
             status: Status
             category: Kategorie
-            responsible: Sachbearbeiter*in
+            responsible: Sachbearbeiter
           total: Gesamtzeit
           this_week: Diese Woche
           last_week: Letzte Woche
@@ -241,12 +352,17 @@ de:
           total_row: Gesamt
       ai_settings:
         show:
-          title: KI-prompt
+          title: KI Sprachassistent
+          page_hint: "Hier konfigurieren Sie den KI-Assistenten für den Mängelmelder. Die KI analysiert eingehende Meldungen automatisch anhand der definierten Fragen und Kriterien. Passen Sie die Fragen, Bewertungskriterien und Abschlussworte an, um die automatische Analyse auf Ihre Anforderungen zuzuschneiden. Leere Felder verwenden die Standardvorgaben."
           questions: Fragen
+          questions_hint: Definieren Sie hier die Fragen, die der KI-Assistent bei der automatischen Analyse eingehender Meldungen berücksichtigen soll. Diese Fragen steuern, welche Informationen aus der Meldung extrahiert und ausgewertet werden. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardfragen zu verwenden. Mehrere Fragen können zeilenweise aufgelistet werden.
           criteria: Kriterien
+          criteria_hint: Legen Sie die Bewertungskriterien fest, nach denen der KI-Assistent die Meldungen einordnen und priorisieren soll. Die Kriterien bestimmen, wie die KI die Dringlichkeit und Relevanz einer Meldung einschätzt. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardkriterien zu verwenden. Klare und präzise Kriterien verbessern die Analysequalität.
           parting_words: Abschlussworte
+          parting_words_hint: Die Abschlussworte werden vom KI-Assistenten am Ende jeder automatischen Analyse angefügt. Nutzen Sie dieses Feld, um zusätzliche Hinweise oder Kontextinformationen bereitzustellen, die der KI als Orientierung bei der Zusammenfassung dienen. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardformulierungen zu verwenden.
           update_button: Speichern
-          not_connected: Die KI-App ist nicht verbunden
+          not_connected: KI-App ist nicht verbunden
+          not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
       deficiency_report_audits:
         show:
           title: Änderungsdetails

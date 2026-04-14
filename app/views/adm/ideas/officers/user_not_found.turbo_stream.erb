@@ -1,5 +1,8 @@
 <%= turbo_stream.update "search-result" do %>
-  <div class="callout alert">
-    <%= t(".user_not_found") %>
+  <div class="kern-alert kern-alert--danger" role="alert">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+      <span class="kern-title"><%= t(".user_not_found") %></span>
+    </div>
   </div>
 <% end %>

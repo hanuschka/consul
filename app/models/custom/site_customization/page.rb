@@ -109,6 +109,8 @@ class SiteCustomization::Page < ApplicationRecord
     projekt.update_column(:name, new_title)
 
     projekt.polls.each do |poll|
+      next unless poll.name.present?
+
       suffix = poll.name.delete_prefix(@old_title).strip
       poll.update(name: [new_title, suffix.presence].compact.join(" "))
     end

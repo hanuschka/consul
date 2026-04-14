@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - new-connection
+  workflow_dispatch:
 
 jobs:
   notify:
@@ -14,7 +15,8 @@ jobs:
           TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          CHAT_ID: ${{ secrets.TEAMS_CHAT_ID_CONSUL_JF }}
+          REFRESH_TOKEN: ${{ secrets.AZURE_REFRESH_TOKEN }}
+          CHAT_ID: ${{ secrets.TEAMS_CHAT_ID_GROUP }}
           COMMIT_SHA: ${{ github.sha }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMIT_AUTHOR: ${{ github.actor }}
@@ -23,7 +25,7 @@ jobs:
           TOKEN=$(curl -s -X POST \
             "https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token" \
             -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&scope=https://graph.microsoft.com/.default&grant_type=client_credentials" \
+            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&scope=Chat.ReadWrite+offline_access" \
             | jq -r '.access_token')
 
           MESSAGE="✅ <b>Merge in new-connection</b><br><br><b>Repo:</b> ${REPO}<br><b>Autor:</b> ${COMMIT_AUTHOR}<br><b>Commit:</b> ${COMMIT_SHA:0:7}<br><b>Message:</b> ${COMMIT_MSG}<br><br>🔗 https://github.com/${REPO}/commit/${COMMIT_SHA}"
@@ -32,9 +34,4 @@ jobs:
             "https://graph.microsoft.com/v1.0/chats/${CHAT_ID}/messages" \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{
-              \"body\": {
-                \"contentType\": \"html\",
-                \"content\": \"${MESSAGE}\"
-              }
-            }"
+            -d "{\"body\":{\"contentType\":\"html\",\"content\":\"${MESSAGE}\"}}"

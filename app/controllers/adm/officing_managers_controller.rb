@@ -1,14 +1,14 @@
 module Adm
-  class OfficingManagersController < Adm::BaseController
+  class OfficingManagersController < Adm::Officing::BaseController
     include Admin::PendingRoleAssignable
+    skip_before_action :set_officing_manager
 
     def index
       authorize [:adm, OfficingManager]
       @pagy, @officing_managers = pagy(policy_scope([:adm, OfficingManager]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.officing_managers") }
+        { name: t("adm.officing_managers.index.title"), icon: "badge" }
       ]
     end
 
@@ -16,8 +16,7 @@ module Adm
       authorize [:adm, OfficingManager], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.officing_managers"), url: adm_officing_managers_path },
+        { name: t("adm.officing_managers.index.title"), url: adm_officing_managers_path, icon: "badge" },
         { name: t(".title") }
       ]
     end

@@ -55,10 +55,10 @@ de:
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
     pending_role_invite:
-      subject: "Einladung an %{org_name}"
-      title: "Einladung zu %{org}"
-      text: "Sie wurden als %{role} bei %{org} vorgemerkt. Bitte registrieren Sie sich, um Ihre Rolle zu aktivieren."
-      button: "Jetzt registrieren"
+      subject: "Sie wurden als %{role} eingeladen"
+      title: "Sie wurden als %{role} eingeladen"
+      text: "Erstellen Sie jetzt Ihr Konto, um als %{role} auf der Beteiligungsplattform loszulegen."
+      button: "Konto erstellen"
       ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
       thanks: "Vielen Dank."
       roles:

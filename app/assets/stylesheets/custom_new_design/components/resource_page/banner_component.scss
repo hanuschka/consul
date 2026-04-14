@@ -2,7 +2,7 @@
   .resource-page-banner {
     display: flex;
     justify-content: space-between;
-    background: $brand-lighter;
+    background: var(--brand-color-lighter);
     color: $dark;
     // padding: 40px 40px;
     padding: 30px 30px;

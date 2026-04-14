@@ -1,4 +1,4 @@
-<% MapLayer.general.each do |layer| %>
+<% MapLayer.default.each do |layer| %>
   <%= render partial: "custom/admin/shared/map/map_layer", locals: { layer: layer, return_path: "/admin/projekts#tab-projekt-map" } %>
 <% end %>
 

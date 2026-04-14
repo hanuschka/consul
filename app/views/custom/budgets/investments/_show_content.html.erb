@@ -23,7 +23,8 @@
     <div class="flex-layout">
       <div class="main-column" id="investment-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: url_to_footer_tab) %>
+          <% fallback_path = @investment.projekt_phase.present? ? page_path(@investment.projekt_phase.projekt.page.slug, projekt_phase_id: @investment.projekt_phase.id, anchor: "filter-subnav") : budgets_path %>
+          <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>
 
         <div class="common-page-description">
@@ -182,7 +183,18 @@
                 <div id="sticky_stop"></div>
               <% end %>
             <% end %>
+          <% end %>
+        <% end %>
 
+        <% if @investment.should_show_ballots_count? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("budgets.investments.show.votes"), icon_name: "vote-yea")) do |c| %>
+            <div class="text-center">
+              <span class="total-supports">
+                <strong>
+                  <%= t("custom.budgets.investments.investment.qualified_supports", count: @investment.total_ballot_votes) %>
+                </strong>
+              </span>
+            </div>
           <% end %>
         <% end %>
 
@@ -268,9 +280,11 @@
         <% end %>
 
         <% if current_user&.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <%= render "budgets/investments/actions", investment: @investment %>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <%= render "budgets/investments/actions", investment: @investment %>
+            <% end %>
+          </div>
         <% end %>
 
         <% if can?(:edit, @investment) %>

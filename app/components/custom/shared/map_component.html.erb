@@ -1,1 +1,14 @@
-<%= map_div %>
+<% if collapsible? %>
+  <details class="map-collapsible-wrapper js-map-collapsible">
+    <summary class="map-collapsible-wrapper--toggle">
+      <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+      <%= t("custom.accessibility.map.toggle_label") %>
+    </summary>
+    <p class="map-collapsible-wrapper--note">
+      <%= t("custom.map.aria-label") %>
+    </p>
+    <%= map_div %>
+  </details>
+<% else %>
+  <%= map_div %>
+<% end %>

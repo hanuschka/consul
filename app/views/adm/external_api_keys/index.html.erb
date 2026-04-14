@@ -1,0 +1,76 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <% if @external_api_keys.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".service") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".name") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".value") %></th>
+            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @external_api_keys.each do |api_key| %>
+            <tr id="<%= dom_id(api_key) %>" class="kern-table__row">
+              <td class="kern-table__cell" style="white-space: normal; max-width: 420px;">
+                <strong><%= t("admin.external_api_keys.services.#{api_key.service}", default: api_key.name) %></strong>
+                <br>
+                <span class="fs-2 text-muted">
+                  <%= t("admin.external_api_keys.services_description.#{api_key.service}", default: "") %>
+                </span>
+                <% if api_key.service_link %>
+                  <br>
+                  <%= link_to api_key.service_link, api_key.service_link, target: "_blank", rel: "noopener noreferrer", class: "fs-2" %>
+                <% end %>
+              </td>
+              <td class="kern-table__cell">
+                <strong><%= api_key.name %></strong>
+              </td>
+              <td class="kern-table__cell">
+                <% if api_key.value.present? %>
+                  <span class="kern-badge kern-badge--success"><%= t(".value_set") %></span>
+                <% else %>
+                  <span class="kern-badge kern-badge--info"><%= t(".value_empty") %></span>
+                <% end %>
+              </td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% if api_key.value.present? %>
+                    <% actions.with_action(
+                      label: t("shared.table.show", default: t("adm.shared.show")),
+                      url: adm_external_api_key_path(api_key),
+                      icon: "visibility"
+                    ) %>
+                    <% actions.with_action(
+                      label: t("shared.table.edit", default: t("adm.shared.edit")),
+                      url: edit_adm_external_api_key_path(api_key),
+                      style: :edit
+                    ) %>
+                  <% else %>
+                    <% actions.with_action(
+                      label: t("adm.external_api_keys.show.add_key"),
+                      url: edit_adm_external_api_key_path(api_key),
+                      icon: "add"
+                    ) %>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= empty_state(title: t(".empty_api_keys"), icon: "key") %>
+  <% end %>
+</div>

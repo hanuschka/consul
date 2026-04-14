@@ -1,0 +1,32 @@
+.custom-new-design {
+  .account-page-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "loader sidebar"
+      "banner sidebar"
+      "notifications sidebar"
+      "activity sidebar";
+    gap: 20px;
+
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "loader"
+        "banner"
+        "sidebar"
+        "notifications"
+        "activity";
+    }
+
+    .sidebar {
+      grid-area: sidebar;
+    }
+  }
+
+  .account-settings-actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}

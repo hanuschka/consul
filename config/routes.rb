@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  # mount Rswag::Ui::Engine => '/api-docs'
+  # mount Rswag::Api::Engine => '/api-docs'
 
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  draw :adm
+  draw "adm/ideas"
+  draw "adm/projekts"
+  draw "adm/landing_pages"
+  draw "adm/deficiency_reports"
+  draw "adm/moderation"
+  draw "adm/valuation"
+  draw "adm/officing"
   draw :account
   draw :admin
   draw :budget
@@ -30,6 +40,8 @@ Rails.application.routes.draw do
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management
+  draw :internal_api
+  draw :api
   draw :custom
 
   root "welcome#index"
@@ -122,4 +134,6 @@ Rails.application.routes.draw do
   resources :formular_answers, only: %i[create update]
 
   get "/registered_addresses/find", to: "registered_addresses#find"
+  get "/registered_addresses/streets", to: "registered_addresses#streets"
+  get "/registered_addresses/addresses", to: "registered_addresses#addresses"
 end

@@ -26,12 +26,23 @@
 
         <%= f.hidden_field :use_redeemable_code %>
         <%= f.hidden_field :locale, value: I18n.locale %>
+        <% if params[:invitation_token].present? %>
+          <%= hidden_field_tag :invitation_token, params[:invitation_token] %>
+        <% end %>
+
+        <% invitation_pending = PendingRoleAssignment.find_by_invitation_token(params[:invitation_token]) if params[:invitation_token].present? %>
 
         <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
+                                     autocomplete: "username",
                                      placeholder: t("devise_views.users.registrations.new.username_label"),
                                      "aria-label": t("devise_views.users.registrations.new.username_label"),
                                      hint: username_hint %>
-        <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label"), "aria-label": t("devise_views.users.registrations.new.email_label") %>
+        <%= f.email_field :email,
+                          autocomplete: "email",
+                          placeholder: t("devise_views.users.registrations.new.email_label"),
+                          "aria-label": t("devise_views.users.registrations.new.email_label"),
+                          value: invitation_pending&.email || resource.email,
+                          readonly: invitation_pending&.email.present? %>
 
         <%= f.invisible_captcha :address %>
 
@@ -39,8 +50,8 @@
           <%= f.select :gender, options_for_gender_select,
             { prompt: t("custom.helpers.select.gender_prompt") },
             { class: "show-arrow", "aria-label": t("custom.helpers.select.gender_prompt") } %>
-          <%= f.text_field :first_name, placeholder: t("custom.devise_views.users.registrations.new.first_name_label") %>
-          <%= f.text_field :last_name, placeholder: t("custom.devise_views.users.registrations.new.last_name_label") %>
+          <%= f.text_field :first_name, autocomplete: "given-name", placeholder: t("custom.devise_views.users.registrations.new.first_name_label") %>
+          <%= f.text_field :last_name, autocomplete: "family-name", placeholder: t("custom.devise_views.users.registrations.new.last_name_label") %>
 
           <%= render Users::RegisteredAddressFieldsComponent.new(
             resource: resource,
@@ -50,11 +61,13 @@
           ) %>
           <%= render Users::RegularAddressFieldsComponent.new(f: f, user: resource) %>
 
-          <div class="user-date-of-birth sign-up">
+          <fieldset class="user-date-of-birth sign-up">
+            <legend><%= User.human_attribute_name(:date_of_birth) %></legend>
             <%= f.date_select :date_of_birth,
-              prompt: { year: t("custom.helpers.select.birth_year"), month: t("custom.helpers.select.birth_month"), day: t("custom.helpers.select.birth_day") },
-              start_year: 1900, end_year: minimum_required_age.years.ago.year %>
-          </div>
+              { prompt: { year: t("custom.helpers.select.birth_year"), month: t("custom.helpers.select.birth_month"), day: t("custom.helpers.select.birth_day") },
+                start_year: 1900, end_year: minimum_required_age.years.ago.year },
+              { autocomplete: "bday" } %>
+          </fieldset>
         <% end %>
 
         <% if resource.document_required? %>
@@ -93,12 +106,12 @@
           <% end %>
         <% end %>
 
-        <%= f.password_field :password, autocomplete: "off",
+        <%= f.password_field :password, autocomplete: "new-password",
                              hint: t("devise_views.users.registrations.new.password_hint"),
                              placeholder: t("devise_views.users.registrations.new.password_label"),
                              "aria-label": t("devise_views.users.registrations.new.password_label") %>
 
-        <%= f.password_field :password_confirmation, autocomplete: "off",
+        <%= f.password_field :password_confirmation, autocomplete: "new-password",
                              label: t("devise_views.users.registrations.new.password_confirmation_label"),
                              placeholder: t("devise_views.users.registrations.new.password_confirmation_label"),
                              "aria-label": t("devise_views.users.registrations.new.password_confirmation_label") %>
@@ -142,8 +155,11 @@
     </div>
   <% end %>
 
-  <div class="auth-page-template--divider"></div>
   <%= render "devise/shared/links" %>
+
+  <div class="auth-page-template--oauth no-column-padding">
+    <%= render "devise/omniauth_form", action: "sign_up" %>
+  </div>
 <% end %>
 
 <% if Setting.new_design_enabled? %>

@@ -1,0 +1,109 @@
+// Mapbox styles
+
+// Horizontal layout for top-left controls (zoom, search, locator)
+.mapboxgl-ctrl-top-left {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+
+  > .mapboxgl-ctrl {
+    margin: 10px 0 0 10px !important;
+  }
+}
+
+.mapboxgl-ctrl-group button {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+// Expand, layers, select mode, and set center control buttons
+.mapboxgl-ctrl-group button.mapbox-expand-control-button,
+.mapboxgl-ctrl-group button.mapbox-layer-control-button,
+.mapboxgl-ctrl-group button.mapbox-switch-to-simple-select-control-button,
+.mapboxgl-ctrl-group button.mapbox-set-center-control-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 35px !important;
+  height: 35px !important;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  .material-symbols-outlined {
+    font-weight: 700;
+    font-size: 20px;
+  }
+}
+
+// Layer control — needs position context so dropdown floats above other controls
+.mapbox-layer-control {
+  position: relative;
+  z-index: 1;
+}
+
+// Layer control dropdown
+.mapbox-layer-control-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  padding: 5px 0 7px;
+  background-color: var(--kern-color-white, #fff);
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.mapbox-layer-select-section {
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.mapbox-layer-select-section-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--kern-color-gray-700, #333);
+  padding: 4px 0;
+  margin: 0 15px;
+  border-bottom: 1px solid var(--kern-color-gray-200, #ddd);
+}
+
+.mapbox-layer-checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 4px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--kern-color-gray-700, #333);
+
+  input {
+    margin: 0 8px 0 0;
+  }
+
+  span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background-color: var(--kern-color-gray-100, #f4f4f4);
+  }
+}
+
+// Search control styling
+.mapboxgl-ctrl-geocoder {
+  min-width: 200px;
+  max-width: 300px;
+
+  input {
+    font-family: inherit;
+  }
+}

@@ -6,19 +6,14 @@
       Vielen Dank! Nun folgt der letzte Schritt. Auf diesem Portal benötigen Sie einen Benutzernamen. Dieser wird allen anderen Nutzerinnen und Nutzern angezeigt. Bitte geben Sie einen Benutzernamen in das Eingabefeld ein
     </div>
 
-    <% if current_user.errors.include? :username %>
+    <% if current_user.errors.include?(:username) %>
       <%= f.label :username, nil, style: "display:block" %>
       <%= f.text_field :username, label: false %>
-    <% else %>
-      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: errors do not include username") %>
-      <%#= f.hidden_field :username %>
     <% end %>
 
-    <% if current_user.errors.include? :email %>
-      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: erroris include email") %>
-      <%#= f.email_field :email %>
-    <% else %>
-      <%#= f.hidden_field :email %>
+    <% if current_user.errors.include?(:email) %>
+      <%= f.label :email, nil, style: "display:block" %>
+      <%= f.email_field :email, label: false %>
     <% end %>
 
     <%= f.submit t("omniauth.finish_signup.submit"), class: "button expanded" %>

@@ -1,0 +1,26 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_projekts_list_path) do |header| %>
+  <% header.with_hint do %>
+    <h3 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h3>
+    <p class="kern-body"><%= t(".intro_text") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container mb-5">
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= form_with(
+      model: Projekt.new,
+      url: adm_projekts_root_path,
+      method: :post
+    ) do |f| %>
+      <%= f.text_field :name,
+        class: "kern-form-input mb-3",
+        label: false,
+        placeholder: t(".name_placeholder") %>
+
+      <%= form_submit_button(text: t(".create_projekt")) %>
+    <% end %>
+  <% end %>
+</div>

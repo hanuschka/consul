@@ -1,0 +1,66 @@
+@use "../abstracts/mappings" as mappings;
+@use "../abstracts/breakpoints" as breakpoints;
+
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+@each $size, $value in mappings.$spacing-sizes {
+  .m-#{$size} { margin: $value !important; }
+  .mt-#{$size} { margin-top: $value !important; }
+  .mr-#{$size} { margin-right: $value !important; }
+  .mb-#{$size} { margin-bottom: $value !important;}
+  .ml-#{$size} { margin-left: $value !important; }
+  .mx-#{$size} {
+    margin-left: $value !important;
+    margin-right: $value !important;
+  }
+  .my-#{$size} {
+    margin-top: $value !important;
+    margin-bottom: $value !important;
+  }
+  .p-#{$size} { padding: $value !important; }
+  .pt-#{$size} { padding-top: $value !important; }
+  .pr-#{$size} { padding-right: $value !important; }
+  .pb-#{$size} { padding-bottom: $value !important; }
+  .pl-#{$size} { padding-left: $value !important; }
+  .px-#{$size} {
+    padding-left: $value !important;
+    padding-right: $value !important;
+  }
+  .py-#{$size} {
+    padding-top: $value !important;
+    padding-bottom: $value !important;
+  }
+
+  @each $bp, $bp-width in breakpoints.$grid-breakpoints {
+    @media (min-width: $bp-width) {
+      .m-#{$bp}-#{$size} { margin: $value !important; }
+      .mt-#{$bp}-#{$size} { margin-top: $value !important; }
+      .mr-#{$bp}-#{$size} { margin-right: $value !important; }
+      .mb-#{$bp}-#{$size} { margin-bottom: $value !important; }
+      .ml-#{$bp}-#{$size} { margin-left: $value !important; }
+      .mx-#{$bp}-#{$size} {
+        margin-left: $value !important;
+        margin-right: $value !important;
+      }
+      .my-#{$bp}-#{$size} {
+        margin-top: $value !important;
+        margin-bottom: $value !important;
+      }
+      .p-#{$bp}-#{$size} { padding: $value !important; }
+      .pt-#{$bp}-#{$size} { padding-top: $value !important; }
+      .pr-#{$bp}-#{$size} { padding-right: $value !important; }
+      .pb-#{$bp}-#{$size} { padding-bottom: $value !important; }
+      .pl-#{$bp}-#{$size} { padding-left: $value !important; }
+      .px-#{$bp}-#{$size} {
+        padding-left: $value !important;
+        padding-right: $value !important;
+      }
+      .py-#{$bp}-#{$size} {
+        padding-top: $value !important;
+        padding-bottom: $value !important;
+      }
+    }
+  }
+}

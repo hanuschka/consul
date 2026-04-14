@@ -146,7 +146,7 @@
 
         .resource-item--wide-head-title {
           // height: 45px;
-          background: $brand;
+          background: var(--brand-color);
           color: white;
           padding: 5px 27px;
           display: flex;

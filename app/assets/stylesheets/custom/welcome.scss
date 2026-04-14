@@ -13,8 +13,9 @@
     margin-top: -1.5rem;
   }
 
-  .card {
-    background-color: #f4f4f4 !important;
+  .card-homepage-list {
+    list-style: none;
+    padding: 0;
   }
 
   .card-homepage {
@@ -43,7 +44,7 @@
     }
   }
 
-  h3.title.card-title {
+  .title.card-title {
     border-bottom: none;
   }
 

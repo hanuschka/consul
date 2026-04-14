@@ -35,6 +35,7 @@ module CsvServices
           "Anzahl Kommentare",
           "Anzahl Votes bei Vorauswahl",
           "Anzahl Votes bei Auswahl",
+          "Gebiet",
           "URL"
         ]
       end
@@ -55,6 +56,7 @@ module CsvServices
           investment.comments_count,
           investment.total_votes.to_s,
           investment.total_ballot_votes.to_s,
+          investment.district&.name,
           Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host)
         ]
       end

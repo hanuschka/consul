@@ -1,5 +1,5 @@
-<div id="<%= dom_id(projekt) %>"
-     class="card small-12 medium-4 column margin-bottom end">
+<li id="<%= dom_id(projekt) %>"
+    class="card-homepage small-12 medium-4 column margin-bottom end">
   <%= link_to projekt.page.url do %>
     <figure class="figure-card" style="margin-bottom: 0;">
       <div class="gradient"></div>
@@ -16,4 +16,4 @@
       <p class="description" style='margin-top:1rem;'><%= projekt.description %></p>
     <% end %>
   <% end %>
-</div>
+</li>

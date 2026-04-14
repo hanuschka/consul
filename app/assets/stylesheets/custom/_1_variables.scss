@@ -1,0 +1,22 @@
+// $small-tablet-viewport-start: 970px;
+/* $small-tablet-viewport-start: 850px; */
+$big-tablet-viewport-start: 1245px;
+$medium-tablet-viewport-start: 850px;
+$small-tablet-viewport-start: 750px;
+$mobile-viewport-start: 640px;
+$mobile-side-padding: 20px;
+
+$main-column-max-width: 925px;
+$topbar-max-width: 1245px;
+$topbar-height: 90px;
+$admin-topbar-height: 40px;
+$topbar-height-mobile: 60px;
+$mobile-custom-fixed-tabs-height: 50px;
+
+:root {
+  --topbar-height: #{$topbar-height};
+  --topbar-height-mobile: #{$topbar-height-mobile};
+  --admin-topbar-height: #{$admin-topbar-height};
+  --tobar-max-width: #{$topbar-max-width};
+  --mobile-custom-fixed-tabs-height: #{$mobile-custom-fixed-tabs-height};
+}

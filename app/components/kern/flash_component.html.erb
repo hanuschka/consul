@@ -1,0 +1,8 @@
+<% messages.each do |msg| %>
+  <div class="kern-flash kern-flash--<%= msg[:variant] %>" role="alert">
+    <span><%= msg[:message] %></span>
+    <button type="button" class="kern-flash__close" aria-label="Close" onclick="this.parentElement.remove()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+<% end %>

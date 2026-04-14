@@ -22,8 +22,14 @@ class ProjektPhase::QuestionPhase < ProjektPhase
     settings.find_by(key: "feature.general.show_questions_list").value.present?
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "projekt_questions"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions settings].push(resources_name)
+    %w[duration naming restrictions general_settings projekt_questions email_templates]
   end
 
   def safe_to_destroy?

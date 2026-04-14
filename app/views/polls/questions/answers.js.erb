@@ -1,5 +1,6 @@
 $("#poll-participation-confirmed-callout").remove();
 $("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::AnswersComponent.new(@question, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>");
+App.PollsCustom.showOpenAnswers();
 
 
 <% if @question_answer.present? && @question_answer.terminates_poll? %>
@@ -13,6 +14,7 @@ $("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::Answ
 
     var nextAnserTimeoutFunction = function() {
       App.QuestionWizard.navigateToNextQuestion();
+      App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
     }
 
     setTimeout(nextAnserTimeoutFunction, 550);

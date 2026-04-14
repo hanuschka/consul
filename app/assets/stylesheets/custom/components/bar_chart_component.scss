@@ -1,0 +1,22 @@
+.proposal-phase-stats-charts {
+  display: flex;
+  gap: 15px;
+  // margin: 2rem 0;
+  flex-wrap: wrap;
+
+  .ai-stats-card {
+    flex: 1;
+    min-width: 300px;
+  }
+}
+
+.bar-chart-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+
+  canvas {
+    max-width: 100%;
+  }
+}
+

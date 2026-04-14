@@ -28,9 +28,9 @@
         <div class="direct-image-upload--progress-bar-wrapper"><div class="direct-image-upload--loading-bar"></div></div>
 
         <% if custom_edit_button.present? %>
-          <div class="direct-image-upload-custom-edit-button js-direct-image-upload-custom-edit-button <%= destroy_link_class %>" role="button">
+          <button type="button" class="direct-image-upload-custom-edit-button js-direct-image-upload-custom-edit-button <%= destroy_link_class %>">
             <%= custom_edit_button %>
-          </div>
+          </button>
         <% end %>
         <div class="<%= preview_area_class %> direct-image-upload--preview-area js-direct-image-upload--preview-area">
           <div class="image-preview">
@@ -41,12 +41,7 @@
           </div>
 
           <% if attachable.attachment.attached? && attachable.attachment.image? %>
-            <div class="image-preview">
-              <%= image_tag attachable.variant(:large),
-                class: helpers.image_class(attachable),
-                alt: attachable.title.unicode_normalize,
-                title: attachable.title.unicode_normalize %>
-            </div>
+            <%= render_image(attachable, preview_variant, false) %>
           <% end %>
 
           <div class="js-direct-image-upload--attachment-actions">

@@ -1,8 +1,12 @@
 class ProjektPointOfInterestPin < ApplicationRecord
   include Mappable
 
+  translates :description, touch: true
+  include Globalizable
+
   belongs_to :projekt_phase
   belongs_to :author, class_name: "User"
+  belongs_to :projekt_point_of_interest_category, optional: true
 
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_categories, -> (category_ids) {
@@ -11,6 +15,7 @@ class ProjektPointOfInterestPin < ApplicationRecord
     where(projekt_point_of_interest_category_id: category_ids)
   }
 
+  validates :author, presence: true
   validate :validate_max_point_of_interest_pins_per_user
 
   private

@@ -1,0 +1,78 @@
+// ── Statistics page ────────────────────────────────────────────────────────
+
+// Demographics grid
+.adm-stats-demographics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--kern-typography-color-muted, #666);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.75rem;
+  }
+}
+
+.adm-stats-demographics__group {
+  background: var(--kern-color-layout-background-light, #f2f4f8);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+// Charts grid
+.adm-stats-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+// Chart card (area charts in adm)
+.adm-chart-card {
+  background: var(--kern-color-layout-background-light, #f2f4f8);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem 1.5rem;
+
+  &__title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--kern-typography-color-muted, #666);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.25rem;
+  }
+
+  &__total {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--kern-typography-color-default, #111);
+    margin-bottom: 1rem;
+  }
+
+  &__canvas-wrapper {
+    position: relative;
+    height: 180px;
+    width: 100%;
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}
+
+// Dark mode
+.kern-dark {
+  .adm-stats-demographics__group,
+  .adm-chart-card {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .adm-chart-card__total {
+    color: #fff;
+  }
+}

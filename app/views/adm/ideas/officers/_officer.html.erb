@@ -18,12 +18,12 @@
           url: adm_ideas_officer_path(officer),
           icon: "delete",
           style: :delete,
-          data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+          data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
         ) %>
       <% end %>
     <% else %>
       <%= button_to adm_ideas_officers_path(user_id: officer.user_id),
-        class: "kern-btn kern-btn--primary" do %>
+        class: "kern-btn kern-btn--primary", data: { turbo_frame: "_top" } do %>
         <span class="kern-label"><%= t(".add") %></span>
       <% end %>
     <% end %>

@@ -62,36 +62,39 @@
 
 
 <div class="evaluation-report">
-  <div class="er-header">
-    <div>
-      <div class="er-header-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <%= t("adm.projekts.projekts.evaluation.header_badge") %>
+  <%# Hidden in admin view — kept for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
+  <% if false %>
+    <div class="er-header">
+      <div>
+        <div class="er-header-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <%= t("adm.projekts.projekts.evaluation.header_badge") %>
+        </div>
+        <h1><%= projekt.name %></h1>
+        <p class="er-header-sub">
+          <%= t("adm.projekts.projekts.evaluation.header_sub",
+            phases: totals["phases_count"].to_i,
+            date: l(evaluation.generated_at.to_date, format: :long)) %>
+        </p>
       </div>
-      <h1><%= projekt.name %></h1>
-      <p class="er-header-sub">
-        <%= t("adm.projekts.projekts.evaluation.header_sub",
-          phases: totals["phases_count"].to_i,
-          date: l(evaluation.generated_at.to_date, format: :long)) %>
-      </p>
+      <div class="er-header-meta">
+        <div class="meta-item">
+          <div class="meta-value"><%= totals["total_participants"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value"><%= totals["total_contributions"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.contributions") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value"><%= totals["total_supports"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+        </div>
+      </div>
     </div>
-    <div class="er-header-meta">
-      <div class="meta-item">
-        <div class="meta-value"><%= totals["total_participants"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value"><%= totals["total_contributions"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.contributions") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value"><%= totals["total_supports"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
-      </div>
-    </div>
-  </div>
+  <% end %>
 
   <% if ai_project_summary.present? %>
     <div class="er-project-summary">

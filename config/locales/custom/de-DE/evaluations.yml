@@ -26,5 +26,39 @@ de:
           regenerate_button: Neu generieren
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
+          header_badge: Beteiligungsergebnis
+          header_sub: "Auswertung — %{phases} Projektphasen, %{date}"
+          project_summary: Projekt-Zusammenfassung
+          participants: Teilnehmende
+          contributions: Beiträge
+          supports: Unterstützungen
+          proposals: Vorschläge
+          investments: Investitionen
+          comments: Kommentare
+          commenters: Kommentierende
+          questions: Fragen
+          polls: Abstimmungen
+          poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
+          scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
+          multiple_subtitle: "Mehrfachantworten · %{mentions} Nennungen"
+          open_contributions: Offene Beiträge
+          avg_per_proposal: "Ø pro Vorschlag"
+          ranking_by_supports: Ranking nach Unterstützungen
+          ranking_subtitle: "%{proposals} Vorschläge · %{supports} Unterstützungen gesamt"
+          rank_first: Platz 1
+          ai_summary: KI-Bewertung
+          key_findings: Zentrale Erkenntnisse
+          votes_label: Stimmen
+          open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
+          verdict:
+            clear_yes: Klar dafür
+            majority_yes: Mehrheit dafür
+            slight_no: Knapp dagegen
+            majority_no: Abgelehnt
+            clear_no: Klar abgelehnt
+          proposal_phase: Projektphase Vorschläge
+          voting_phase: Abstimmungsphase
+          budget_phase: Bürgerhaushaltsphase
+          comment_phase: Kommentarphase
         generate_evaluation:
           started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.

@@ -73,6 +73,8 @@ class Evaluations::AggregateStatistics < ApplicationService
         }
       end
 
+    top_proposals = assign_ranks(top_proposals)
+
     {
       proposals_count: proposals.count,
       supports_count: supports.count + proposals.sum(:officing_bulk_votes),
@@ -100,7 +102,8 @@ class Evaluations::AggregateStatistics < ApplicationService
       investments_count: investments.count,
       supports_count: supports.count,
       unique_participants: supports.select(:voter_id).distinct.count,
-      total_budget: phase.budget.total_budget
+      heading_price: phase.budget.heading&.price,
+      currency_symbol: phase.budget.currency_symbol
     }
   end
 
@@ -108,36 +111,130 @@ class Evaluations::AggregateStatistics < ApplicationService
     polls = phase.polls
     return {} if polls.empty?
 
-    poll = polls.first
+    polls_data = polls.map { |poll| collect_single_poll(poll) }
+
+    {
+      polls_count: polls.count,
+      participants_count: polls_data.sum { |p| p[:voters_count] },
+      questions_count: polls_data.sum { |p| p[:questions_count] },
+      open_text_count: polls_data.sum { |p| p[:open_text_count] },
+      polls: polls_data
+    }
+  end
+
+  def collect_single_poll(poll)
     voters_count = poll.voters.count
+    visible_comments = poll.comments.where(hidden_at: nil)
 
-    questions_data = poll.questions.order(:title).map do |question|
-      answers_data = question.question_answers.order(:given_order).map do |answer|
-        answer_count = answer.total_count
+    questions_data = poll.questions.order(:given_order).map do |question|
+      build_question_data(question, voters_count)
+    end
 
-        {
-          title: answer.title,
-          count: answer_count,
-          percentage: safe_percentage(answer_count, voters_count)
-        }
-      end
+    {
+      id: poll.id,
+      name: poll.name,
+      voters_count: voters_count,
+      questions_count: poll.questions.count,
+      open_text_count: visible_comments.count,
+      open_text_entries: visible_comments.order(created_at: :asc).pluck(:body),
+      questions: questions_data
+    }
+  end
+
+  def build_question_data(question, voters_count)
+    answers_data = question.question_answers.order(:given_order).map do |answer|
+      answer_count = answer.total_votes
 
       {
-        id: question.id,
-        title: question.title,
-        answers: answers_data,
-        total_responses: voters_count
+        title: answer.title,
+        count: answer_count,
+        percentage: safe_percentage(answer_count, voters_count)
       }
     end
 
-    open_text_count = poll.comments.where(hidden_at: nil).count
+    total_mentions = answers_data.sum { |a| a[:count] }
+    vote_type = question.votation_type&.vote_type
 
     {
-      participants_count: voters_count,
-      questions_count: poll.questions.count,
-      open_text_count: open_text_count,
-      questions: questions_data
+      id: question.id,
+      title: question.title,
+      vote_type: vote_type,
+      max_votes: question.votation_type&.max_votes,
+      answers: answers_data,
+      total_responses: voters_count,
+      total_mentions: total_mentions,
+      average: rating_average(vote_type, answers_data),
+      chart_type: detect_chart_type(vote_type, answers_data),
+      verdict: detect_verdict(vote_type, answers_data)
     }
+  end
+
+  def rating_average(vote_type, answers)
+    return nil if vote_type != "rating_scale"
+
+    total = answers.sum { |a| a[:count].to_i }
+    return nil if total.zero?
+
+    weighted_sum = answers.each_with_index.sum do |answer, idx|
+      (idx + 1) * answer[:count].to_i
+    end
+
+    (weighted_sum.to_f / total).round(2)
+  end
+
+  def detect_chart_type(vote_type, answers)
+    return "scale" if vote_type == "rating_scale"
+    return "multi" if vote_type == "multiple"
+    return "bars" if answers.size < 2
+    return "stacked" if answers.size == 2
+
+    titles = answers.map { |a| a[:title].to_s.downcase }
+
+    if answers.size == 3 && abstain_option?(titles)
+      return "measure"
+    end
+
+    if answers.size == 3 && sentiment_like?(titles)
+      return "donut"
+    end
+
+    "preference"
+  end
+
+  def abstain_option?(titles)
+    titles.any? { |t| t.match?(/keine\s+angabe|k\.a\.|weiß\s+nicht|enthaltung|no\s+opinion/i) }
+  end
+
+  def sentiment_like?(titles)
+    positive = titles.any? { |t| t.match?(/\bpositiv|\bpositive\b/i) }
+    negative = titles.any? { |t| t.match?(/\bnegativ|\bnegative\b/i) }
+    neutral = titles.any? { |t| t.match?(/\bneutral\b/i) }
+
+    positive && negative && neutral
+  end
+
+  def detect_verdict(vote_type, answers)
+    return nil if vote_type != "unique"
+    return nil if answers.size < 2 || answers.size > 3
+
+    ja = answers.find { |a| a[:title].to_s.match?(/\b(ja|yes|dafür|gut)\b/i) }
+    nein = answers.find { |a| a[:title].to_s.match?(/\b(nein|no|dagegen|nicht)/i) }
+    return nil if ja.nil? || nein.nil?
+
+    ja_pct = ja[:percentage].to_f
+    nein_pct = nein[:percentage].to_f
+
+    if ja_pct >= 70
+      { key: "clear_yes", color: "positive" }
+    elsif ja_pct >= 55
+      { key: "majority_yes", color: "positive" }
+    elsif ja_pct >= 45
+      { key: "slight_no", color: "neutral" }
+    elsif nein_pct >= 70
+      { key: "clear_no", color: "negative" }
+    else
+      { key: "majority_no", color: "negative" }
+    end
   end
 
   def collect_comment_stats(phase)
@@ -170,6 +267,26 @@ class Evaluations::AggregateStatistics < ApplicationService
       total_supports: total_supports,
       phases_count: phases_data.size
     }
+  end
+
+  def assign_ranks(items)
+    sorted = items.sort_by { |item| -item[:supports].to_i }
+
+    prev_supports = nil
+    current_rank = 0
+
+    sorted.each_with_index do |item, idx|
+      supports = item[:supports].to_i
+
+      if supports != prev_supports
+        current_rank = idx + 1
+        prev_supports = supports
+      end
+
+      item[:rank] = current_rank
+    end
+
+    sorted
   end
 
   def count_proposal_participants(proposals, supports, comments)

@@ -14,10 +14,13 @@
       <h3><%= t(".not_generated_title") %></h3>
       <p><%= t(".not_generated_description") %></p>
 
-      <%= link_to t(".generate_button"),
+      <%= kern_link_button(
         generate_evaluation_adm_projekts_projekt_path(@projekt),
-        class: "button",
-        data: { turbo_method: :post } %>
+        text: t(".generate_button"),
+        icon: "autorenew",
+        style: :primary,
+        data: { turbo_method: :post }
+      ) %>
     </div>
 
   <% elsif @evaluation.processing? %>
@@ -32,10 +35,13 @@
       <h3><%= t(".failed_title") %></h3>
       <p><%= t(".failed_description") %></p>
 
-      <%= link_to t(".regenerate_button"),
+      <%= kern_link_button(
         generate_evaluation_adm_projekts_projekt_path(@projekt),
-        class: "button",
-        data: { turbo_method: :post } %>
+        text: t(".regenerate_button"),
+        icon: "refresh",
+        style: :primary,
+        data: { turbo_method: :post }
+      ) %>
     </div>
 
   <% elsif @evaluation.completed? %>
@@ -46,10 +52,13 @@
         </span>
       </div>
       <div class="d-flex gap-2">
-        <%= link_to t(".regenerate_button"),
+        <%= kern_link_button(
           generate_evaluation_adm_projekts_projekt_path(@projekt),
-          class: "button hollow",
-          data: { turbo_method: :post } %>
+          text: t(".regenerate_button"),
+          icon: "refresh",
+          style: :secondary,
+          data: { turbo_method: :post }
+        ) %>
       </div>
     </div>
 

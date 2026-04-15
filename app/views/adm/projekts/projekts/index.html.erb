@@ -8,17 +8,20 @@
 
 <div class="kern-container">
   <div class="d-flex justify-content-start mb-4 gap-3">
-    <%= kern_link_button(new_adm_projekts_projekt_path, text: t(".new_projekt")) %>
-    <%= kern_link_button(
-      import_projekt_adm_projekts_projekts_path,
-      text: t(".import_projekt"),
-      icon: "upload_file",
-      style: :secondary
-    ) %>
+    <% if policy([:adm, :projekts, Projekt]).create? %>
+      <%= new_resource_link(new_adm_projekts_projekt_path, t(".new_projekt")) %>
+    <% end %>
+
+    <% if Ai::Settings.ai_available? %>
+      <%= kern_link_button(
+        import_projekt_adm_projekts_projekts_path,
+        text: t(".import_projekt"),
+        icon: "upload_file",
+        class: "mb-4",
+        style: :secondary
+      ) %>
+    <% end %>
   </div>
-  <% if policy([:adm, :projekts, Projekt]).create? %>
-    <%= new_resource_link(new_adm_projekts_projekt_path, t(".new_projekt")) %>
-  <% end %>
 
   <% if @projekts.any? %>
     <div class="kern-table-responsive" tabindex="0">

@@ -26,5 +26,39 @@ en:
           regenerate_button: Regenerate
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.
+          header_badge: Participation result
+          header_sub: "Evaluation — %{phases} project phases, %{date}"
+          project_summary: Project summary
+          participants: Participants
+          contributions: Contributions
+          supports: Supports
+          proposals: Proposals
+          investments: Investments
+          comments: Comments
+          commenters: Commenters
+          questions: Questions
+          polls: Polls
+          poll_meta: "%{voters} voters · %{questions} questions"
+          scale_subtitle: "Scale %{min} to %{max} · n = %{n}"
+          multiple_subtitle: "Multiple answers · %{mentions} mentions"
+          open_contributions: Open contributions
+          avg_per_proposal: "Avg per proposal"
+          ranking_by_supports: Ranking by supports
+          ranking_subtitle: "%{proposals} proposals · %{supports} supports total"
+          rank_first: Rank 1
+          ai_summary: AI evaluation
+          key_findings: Key findings
+          votes_label: Votes
+          open_responses_title: "Open contributions from citizens — %{count} text entries"
+          verdict:
+            clear_yes: Clearly in favor
+            majority_yes: Majority in favor
+            slight_no: Slightly against
+            majority_no: Rejected
+            clear_no: Clearly rejected
+          proposal_phase: Proposal phase
+          voting_phase: Voting phase
+          budget_phase: Budget phase
+          comment_phase: Comment phase
         generate_evaluation:
           started: Evaluation is being generated. Please reload the page in a few minutes.

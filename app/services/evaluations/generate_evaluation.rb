@@ -84,9 +84,42 @@ class Evaluations::GenerateEvaluation < ApplicationService
       phase_ai = ai_data[phase[:phase_id]] || {}
 
       phase.merge(
+        stats: enrich_phase_stats(phase),
         ai_stats: phase_ai[:ai_stats],
-        ai_stats_refreshed_at: phase_ai[:ai_stats_refreshed_at]
+        ai_stats_refreshed_at: phase_ai[:ai_stats_refreshed_at],
+        evaluation_summary: generate_phase_evaluation_summary(phase),
+        key_findings: generate_phase_key_findings(phase)
       )
     end
+  end
+
+  def enrich_phase_stats(phase)
+    stats = phase[:stats] || {}
+    return stats if phase[:phase_type] != "ProjektPhase::VotingPhase"
+
+    stats.merge(
+      polls: (stats[:polls] || []).map { |poll| enrich_poll_with_groupings(poll) }
+    )
+  end
+
+  def enrich_poll_with_groupings(poll)
+    questions = poll[:questions] || []
+    return poll if questions.empty?
+
+    groupings = Evaluations::GroupPollQuestions.call(questions)
+    poll.merge(groupings: groupings)
+  end
+
+  def generate_phase_evaluation_summary(phase)
+    case phase[:phase_type]
+    when "ProjektPhase::ProposalPhase"
+      Evaluations::GenerateProposalPhaseSummary.call(phase[:stats])
+    when "ProjektPhase::VotingPhase"
+      Evaluations::GenerateVotingPhaseSummary.call(phase[:stats])
+    end
+  end
+
+  def generate_phase_key_findings(phase)
+    Evaluations::GeneratePhaseKeyFindings.call(phase)
   end
 end

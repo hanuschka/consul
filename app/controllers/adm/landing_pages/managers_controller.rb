@@ -13,7 +13,7 @@ module Adm
 
         @breadcrumbs = [
           { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path, icon: "web" },
-          { name: t("adm.landing_pages.menu.items.managers") }
+          { name: t("adm.landing_pages.menu.items.managers"), icon: "badge" }
         ]
       end
 
@@ -22,7 +22,7 @@ module Adm
 
         @breadcrumbs = [
           { name: t("adm.landing_pages.menu.items.landing_pages"), url: adm_landing_pages_root_path, icon: "web" },
-          { name: t("adm.landing_pages.menu.items.managers"), url: adm_landing_pages_managers_path },
+          { name: t("adm.landing_pages.menu.items.managers"), url: adm_landing_pages_managers_path, icon: "badge" },
           { name: t(".title") }
         ]
       end

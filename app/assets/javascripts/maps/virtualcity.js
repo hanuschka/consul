@@ -86,6 +86,23 @@
           zoomControlContainer.appendChild(zoomOutButton);
         }
 
+        function addResetViewControl() {
+          const container = document.createElement('div');
+          container.className = 'controls reset-view-control';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            setDefaultView(instance.map);
+          });
+
+          container.appendChild(button);
+          instance.element.appendChild(container);
+        }
+
         function zoom(zoomIn) {
           event.preventDefault();
 
@@ -163,6 +180,7 @@
             instance.map = map;
             setDefaultView(map);
             addZoomControls();
+            addResetViewControl();
             instance.toggleControlVisibility();
             instance.setupExpandControl();
             instance.setupEditingControls();

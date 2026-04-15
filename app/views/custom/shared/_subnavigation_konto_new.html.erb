@@ -33,10 +33,5 @@
 <% if placement == 'mobile' %>
   <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") %>
 
-  <li class='nav-element flyout-item js-access-flyout-menu-item focusable'>
-    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete do %>
-      <i class="fas fa-sign-out-alt main-navigation--link-icon"> </i>
-      <%= t("devise_views.menu.login_items.logout") %>
-    <% end %>
-  </li>
+  <%= render "devise/menu/login_items_user_facing" %>
 <% end %>

@@ -101,7 +101,7 @@ class Kern::MapComponent < ApplicationComponent
                else
                  mappable.try(:projekt_phase)&.map_layers ||
                    mappable.try(:projekt)&.map_layers ||
-                   MapLayer.general
+                   MapLayer.default
                end
       layers.to_json
     end
@@ -111,7 +111,7 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def mapbox_style_id
-      Rails.application.secrets.dig(:mapbox, :style_id)
+      map_location.mapbox_style_id.presence || Rails.application.secrets.dig(:mapbox, :style_id)
     end
 
     def vc_map_module_url

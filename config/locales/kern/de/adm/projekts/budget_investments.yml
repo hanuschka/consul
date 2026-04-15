@@ -3,7 +3,7 @@ de:
     projekts:
       budget_investments:
         tabs:
-          show: Anzeigen
+          show: Verwalten
           administer: Administrieren
           people: Gutachter & Administratoren
           edit: Bearbeiten
@@ -28,7 +28,7 @@ de:
         show:
           title: Vorschlag
           status_title: Übersicht
-          content_title: Inhalt
+          content_title: Vorschlag
           content_info: >-
             Dieser Bereich zeigt die vom Nutzer eingereichten Inhalte – Titel, Beschreibung, Bild und weitere Angaben.
             Diese können über den Bearbeiten-Button angepasst werden. Bei Urheberrechtsverletzungen kann das Bild
@@ -70,9 +70,9 @@ de:
           labels: Labels
           sentiment: Stimmungsbild
           documents: Dokumente
-          admin_section_title: Verwaltung
+          admin_section_title: Bewertung
           current_phase: "Aktuelle Phase: %{phase}"
-          admin_info_banner: "Die Verwaltung eines Vorschlags folgt dem Phasensystem des Budgets. Aktionen werden freigeschaltet, sobald die jeweilige Phase erreicht ist."
+          admin_info_banner: "Die Bewertung eines Vorschlags folgt dem Phasensystem des Budgets. Aktionen werden freigeschaltet, sobald die jeweilige Phase erreicht ist."
           early_pricing_hint: "Dieser Vorschlag entspricht den Kriterien. Die Preisgestaltung (Phase 5) ist daher bereits jetzt freigeschaltet — auch wenn das Budget diese Phase noch nicht erreicht hat."
           phase_not_available: Noch nicht verfügbar
           show_details: Erläuterung anzeigen
@@ -99,7 +99,9 @@ de:
           documents: Dokumente
           hide_image: Bild ausblenden
           show_image: Bild einblenden
+          on_behalf_of: Im Namen von
           on_behalf_of_placeholder: Vorschlag im Namen von jemanden einreichen
+          select_placeholder: Bitte auswählen
         update:
           success: Vorschlag wurde erfolgreich aktualisiert.
         destroy:

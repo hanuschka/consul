@@ -4,13 +4,18 @@
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
     <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p3") %></p>
   <% end %>
 <% end %>
 
 <div class="kern-container my-5">
   <%= new_resource_link(new_adm_navbar_item_path, t('.new_item')) %>
 
-  <div class="navbar-items" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_navbar_items_path %>">
-    <%= render @navbar_items %>
-  </div>
+  <% if @navbar_items.empty? %>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "menu") %>
+  <% else %>
+    <div class="navbar-items" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_navbar_items_path %>">
+      <%= render @navbar_items %>
+    </div>
+  <% end %>
 </div>

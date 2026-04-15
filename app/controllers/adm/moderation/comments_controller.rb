@@ -13,7 +13,7 @@ class Adm::Moderation::CommentsController < Adm::Moderation::BaseController
 
     @breadcrumbs = [
       { name: I18n.t("adm.moderation.menu.title"), icon: "comment" },
-      { name: I18n.t("adm.moderation.menu.comments") }
+      { name: I18n.t("adm.moderation.menu.items.comments") }
     ]
   end
 

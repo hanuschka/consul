@@ -34,7 +34,8 @@ export default class extends Controller {
       const field = header.dataset.field || header.closest("[data-field]")?.dataset.field
       if (!field) return
 
-      const text = header.textContent.trim()
+      const labelEl = header.querySelector(`#${field}-label`)
+      const text = labelEl ? labelEl.textContent.trim() : header.firstElementChild?.textContent.trim() || header.textContent.trim()
       this.fields.push(field)
 
       const label = document.createElement("label")
@@ -97,7 +98,7 @@ export default class extends Controller {
 
   setCookie(name, value) {
     const date = new Date()
-    date.setTime(date.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year
     document.cookie = `${name}=${encodeURIComponent(value)};expires=${date.toUTCString()};path=/`
   }
 }

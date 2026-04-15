@@ -459,7 +459,9 @@ de:
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
             geo_affiliation_geozones_label: Gebiete
+            geo_affiliation_geozones_empty: Es sind noch keine Gebiete angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
             geo_affiliation_districts_label: Stadtteile
+            geo_affiliation_districts_empty: Es sind noch keine Stadtteile angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
             landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
@@ -715,8 +717,8 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
-          ai_settings: Sprachassistent
-          ai_user_flow: AI Flow Assistent
+          ai_settings: KI Sprachassistent
+          ai_user_flow: KI Textassistent
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert

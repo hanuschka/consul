@@ -3,22 +3,23 @@ de:
     projekts:
       phases:
         ai_user_flow:
-          title: AI Flow Assistent
+          title: KI Textassistent
           criteria_title: Bewertungskriterien
           add_criterion: Kriterium hinzufügen
           text_placeholder: "Kriterium beschreiben …"
         ai_settings:
-          title: Sprachassistent
-          empty_title: Sprachassistent nicht verfügbar
-          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um den Sprachassistenten zu aktivieren.
+          title: KI Sprachassistent
+          empty_title: KI Sprachassistent nicht verfügbar
+          empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um den KI Sprachassistenten zu aktivieren.
           questions: Welche Fragen sollen den Bürgern gestellt werden?
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
           update_button: Aktualisieren
-          not_connected: Die KI-App ist nicht verbunden
+          not_connected: KI-App ist nicht verbunden
+          not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
         projekt_phase:
-          ai_user_flow: AI Flow Assistent
-          ai_settings: Sprachassistent
+          ai_user_flow: KI Textassistent
+          ai_settings: KI Sprachassistent
   projekt_phase_setting:
     proposal_phase:
       feature:

@@ -6,21 +6,11 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint"), stacked: true) do %>
-    <div data-controller="icon-filter">
-      <div class="d-flex align-items-center gap-2 mb-3">
-        <input type="text"
-               class="kern-form-input__input"
-               placeholder="<%= t(".icon_search_placeholder") %>"
-               data-action="input->icon-filter#filter keydown->icon-filter#preventSubmit"
-               data-icon-filter-target="search">
-        <button type="button" class="kern-button kern-button--outline" data-action="click->icon-filter#filter">
-          <span class="material-symbols-outlined" aria-hidden="true">search</span>
-        </button>
-      </div>
-      <div class="icon-selector" data-icon-filter-target="list">
+    <div>
+      <div class="icon-selector">
         <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
           <% icon = icon_array.first %>
-          <label class="icon-option" data-icon-name="<%= icon %>">
+          <label class="icon-option">
             <%= f.radio_button :icon, icon, checked: @projekt_label.icon == icon %>
             <i class="fas fa-<%= icon %>"></i>
           </label>

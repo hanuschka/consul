@@ -28,7 +28,8 @@ header {
 
 aside {
   position: fixed;
-  min-height: calc(100vh - var(--kern-adm-header-height));
+  top: 0;
+  height: 100vh;
   z-index: 1000;
   min-width: 290px;
   border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
@@ -60,6 +61,10 @@ main {
     > * {
       max-width: 680px;
     }
+  }
+
+  &--full {
+    max-width: 100%;
   }
 }
 

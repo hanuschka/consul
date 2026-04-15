@@ -68,6 +68,10 @@ Disallow: /
 User-agent: PetalBot
 Disallow: /
 
+User-agent: SiteimproveBot
+Disallow: /users/
+Disallow: /comments/
+
 # Block everything else
 User-agent: *
 Disallow: /

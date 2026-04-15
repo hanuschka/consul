@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_10_120002) do
+ActiveRecord::Schema.define(version: 2026_04_15_072003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1565,6 +1565,7 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
+    t.string "mapbox_style_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"

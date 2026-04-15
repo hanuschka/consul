@@ -23,18 +23,27 @@
 
         <% if can?(:refresh_ai_stats, @poll) %>
           <div class="margin-bottom">
-            <%= render Shared::StatsRefreshComponent.new(
+            <%= render Shared::StatsRefreshButtonComponent.new(
               refresh_path: refresh_ai_stats_poll_path(@poll),
               status_path: ai_stats_status_poll_path(@poll),
               section: local_assigns[:section],
               last_updated_at: @poll.ai_stats_refreshed_at,
-              processing: @poll.ai_stats_refresh_processing? || @poll.ai_stats_refresh_pending?
+              processing: @poll.ai_stats_refresh_processing? || @poll.ai_stats_refresh_pending?,
+              disabled: !Ai::Settings.ai_available?
             ) %>
           </div>
         <% end %>
 
         <div class="participation-stats js-participation-stats">
-          <%= render "ai_stats_sections", content: content, title: title, poll: @poll %>
+          <% if content.present? %>
+            <% if local_assigns[:section] == "evaluation" %>
+              <%= render "polls/ai_stats_evaluation_section", content: content, poll: @poll %>
+            <% else %>
+              <%= render "polls/ai_stats_report_sections", content: content, poll: @poll %>
+            <% end %>
+          <% else %>
+            <%= render "polls/ai_stats_empty_state", title: title %>
+          <% end %>
         </div>
 
       </div>

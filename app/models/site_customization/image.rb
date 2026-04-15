@@ -1,6 +1,11 @@
 class SiteCustomization::Image < ApplicationRecord
   VALID_IMAGES = {
-    "logo_header" => [80, 80],
+    ##################################
+    "header_image" => [1920, 760],
+    "mobile_header_image" => [470, 246],
+    ##################################
+    "logo_header" => [nil, 80],
+    "logo_header_for_transparent" => [nil, 80],
     "social_media_icon" => [470, 246],
     "social_media_icon_twitter" => [246, 246],
     "apple-touch-icon-200" => [200, 200],
@@ -9,6 +14,10 @@ class SiteCustomization::Image < ApplicationRecord
     "logo_email" => [400, 80],
     "logo_newsletter_email" => [130, 45]
   }.freeze
+
+  VALID_FORMATS = ["image/jpeg", "image/png"].freeze
+
+  alias_attribute :key, :name
 
   has_one_attached :image
 
@@ -57,12 +66,21 @@ class SiteCustomization::Image < ApplicationRecord
       width = image.metadata[:width]
       height = image.metadata[:height]
 
-      if name == "logo_header"
-        errors.add(:image, :image_width, required_width: required_width) unless width <= required_width
+      if name.in?(%w[header_image mobile_header_image])
+        return
+      elsif name.in?(%w[logo_header logo_header_for_transparent])
+        errors.add(:image, :max_image_height, max_height: required_height) unless height <= required_height
       else
-        errors.add(:image, :image_width, required_width: required_width) unless width == required_width
-      end
+        wrong_width = width != required_width
+        wrong_height = height != required_height
 
-      errors.add(:image, :image_height, required_height: required_height) unless height == required_height
+        if wrong_width && wrong_height
+          errors.add(:image, :image_dimensions, required_width: required_width, required_height: required_height)
+        elsif wrong_width
+          errors.add(:image, :image_width, required_width: required_width)
+        elsif wrong_height
+          errors.add(:image, :image_height, required_height: required_height)
+        end
+      end
     end
 end

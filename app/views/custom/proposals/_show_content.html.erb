@@ -22,7 +22,9 @@
     <div class="flex-layout">
       <div class="main-column" id="proposal-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: proposals_path) %>
+          <% fallback_path = proposal.projekt_phase.present? ? page_path(proposal.projekt_phase.projekt.page.slug, projekt_phase_id: proposal.projekt_phase.id, anchor: "filter-subnav") : proposals_path %>
+
+          <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>
 
         <% if proposal.retired? %>
@@ -132,37 +134,39 @@
         <%= render Sidebar::ResourceAuthorComponent.new(resource: proposal) %>
         <% if can?(:dashboard, proposal) || proposal.editable_by?(current_user) %>
           <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.author"), icon_name: "user-edit")) do |c| %>
-            <% if can?(:dashboard, proposal) %>
-              <%= link_to proposal_dashboard_path(proposal),
-                class: "button hollow u-full-width",
-                id: "proposal-dashboard-#{proposal.id}" do %>
-                <span class="icon icon-edit"></span>
-                <%= t("proposals.show.dashboard_proposal_link") %>
+            <div class="u-flex u-flex-column">
+              <% if can?(:dashboard, proposal) %>
+                <%= link_to proposal_dashboard_path(proposal),
+                  class: "button hollow u-full-width",
+                  id: "proposal-dashboard-#{proposal.id}" do %>
+                  <span class="icon icon-edit"></span>
+                  <%= t("proposals.show.dashboard_proposal_link") %>
+                <% end %>
               <% end %>
-            <% end %>
 
-            <% if current_editable?(proposal) %>
-              <%= link_to edit_proposal_path(proposal),
-                target: "_blank",
-                class: "button hollow u-full-width" do %>
-                <i class="fas fa-edit"></i>
-                <%= t("dashboard.index.edit_proposal_link") %>
+              <% if current_editable?(proposal) %>
+                <%= link_to edit_proposal_path(proposal),
+                  target: "_blank",
+                  class: "button hollow u-full-width" do %>
+                  <i class="fas fa-edit"></i>
+                  <%= t("dashboard.index.edit_proposal_link") %>
+                <% end %>
               <% end %>
-            <% end %>
 
-            <% if !proposal.retired? && can?(:retire, proposal) %>
-              <%= link_to t("dashboard.index.retire"),
-                retire_form_proposal_path(proposal),
-                class: "button hollow u-full-width alert",
-                target: "_blank" %>
-            <% end %>
+              <% if !proposal.retired? && can?(:retire, proposal) %>
+                <%= link_to t("dashboard.index.retire"),
+                  retire_form_proposal_path(proposal),
+                  class: "button hollow u-full-width alert",
+                  target: "_blank" %>
+              <% end %>
 
-            <% if can?(:publish, proposal) %>
-              <%= link_to t("dashboard.index.publish"),
-                publish_proposal_path(proposal),
-                class: "button hollow u-full-width",
-                method: :patch %>
-            <% end %>
+              <% if can?(:publish, proposal) %>
+                <%= link_to t("dashboard.index.publish"),
+                  publish_proposal_path(proposal),
+                  class: "button hollow u-full-width",
+                  method: :patch %>
+              <% end %>
+            </div>
           <% end %>
         <% end %>
         <%# <% if can?(:dashboard, proposal) || current_editable?(proposal) %>
@@ -191,7 +195,11 @@
 
         <% if projekt_phase_feature?(proposal.projekt_phase, "resource.allow_voting") %>
           <%= render(Mobile::FixedBottomActionComponent.new) do %>
-            <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <%= render(Shared::SidebarCardComponent.new(
+              title: proposal.projekt_phase.projekt.page.slug == "themenwahl-2025" ? "Einwand" : "Unterstützung",
+              icon_name: "vote-yea",
+              opened_on_mobile: true
+            )) do |c| %>
               <div class="proposal-page--votes">
                 <%= render "proposals/support_status", proposal: proposal %>
               </div>
@@ -275,11 +283,13 @@
         <% end %>
 
         <% if current_user.present? && current_user.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <div class="js-moderator-proposal-actions">
-              <%= render "proposals/actions", proposal: proposal %>
-            </div>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <div class="js-moderator-proposal-actions">
+                <%= render "proposals/actions", proposal: proposal %>
+              </div>
+            <% end %>
+          </div>
         <% end %>
       </aside>
     </div>

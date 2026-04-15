@@ -17,7 +17,8 @@
       var parentElement = e.currentTarget.parentElement;
       parentElement.classList.toggle("-opened");
 
-      // $(parentElement).find(".js-collapse-body").slideToggle();
+      var isExpanded = parentElement.classList.contains("-opened");
+      e.currentTarget.setAttribute("aria-expanded", isExpanded);
     }
   };
 }).call(this);

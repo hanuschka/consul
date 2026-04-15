@@ -72,21 +72,19 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
         end
       end.join("\n")
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         Create a concise, neutral and fluent prose summary of the provided list of #{resource_type} in 2–3 sentences.
         Focus on identifying the main recurring themes and cluster similar #{resource_type} into meaningful categories
         (such as support services, physical activity, community life, culture or education).
         Describe the central trends and dominant topics without listing individual #{resource_type}.
         Avoid bullet points and write a coherent, well-structured text.
         Ensure that the summary gives project managers a quick and accurate overview of the overall situation.
-
         Write the summary in #{target_language}.
-
-        #{resource_type.capitalize}:
-        #{items_text}
       TEXT
 
-      get_ai_response(prompt)
+      user_prompt = "#{resource_type.capitalize}:\n#{items_text}"
+
+      get_ai_response(system_instructions, user_prompt)
     end
 
     def generate_tone_of_participation(resources)
@@ -99,16 +97,15 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
         end
       end.join("\n")
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         Identify the overall tone of the following #{resource_type} and express it in exactly two words in #{target_language}.
         Use broad, descriptive terms (for intance: "positive supportive", "critical concerned", "neutral informative"), but you can create your own terms.
         Do not explain your choice and do not add additional text. Output only the two words.
-
-        #{resource_type.capitalize}:
-        #{items_text}
       TEXT
 
-      get_ai_response(prompt)
+      user_prompt = "#{resource_type.capitalize}:\n#{items_text}"
+
+      get_ai_response(system_instructions, user_prompt)
     end
 
     def generate_tone_of_comments(resources)
@@ -132,21 +129,20 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
 
       resource_type = resource_type_name(resources)
 
-      prompt = <<~TEXT
+      system_instructions = <<~TEXT
         Identify the overall tone of the following comments in #{resource_type} and express it in exactly two words in #{target_language}.
         Use broad, descriptive terms (for instance: "positive supportive", "critical concerned", "neutral informative"), but you can make your own terms.
         Do not explain your choice and do not add additional text.
         Output only the two words.
-
-        Comments:
-        #{comments_text}
       TEXT
 
-      get_ai_response(prompt)
+      user_prompt = "Comments:\n#{comments_text}"
+
+      get_ai_response(system_instructions, user_prompt)
     end
 
-    def get_ai_response(prompt)
-      response = Ai::RubyLlmFactory.chat.ask(prompt)
+    def get_ai_response(system_instructions, user_prompt)
+      response = Ai::RubyLlmFactory.chat.with_instructions(system_instructions).ask(user_prompt)
       response.content.strip
     end
 end

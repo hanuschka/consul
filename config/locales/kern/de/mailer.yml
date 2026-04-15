@@ -1,0 +1,132 @@
+de:
+  mailer:
+    budget_investment_created:
+      title: Bestätigung nach Einreichung
+      description: Wird an den Autor gesendet, wenn ein Bürgervorschlag erfolgreich eingereicht wurde.
+      recipient: Der Nutzer, der den Bürgervorschlag eingereicht hat.
+    budget_investment_feasible:
+      title: Vorschlag als umsetzbar bewertet
+      description: Wird an den Autor gesendet, wenn sein Vorschlag als umsetzbar bewertet wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_unfeasible:
+      title: Vorschlag als nicht umsetzbar bewertet
+      description: Wird an den Autor gesendet, wenn sein Vorschlag als nicht umsetzbar bewertet wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_selected:
+      title: Vorschlag ausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag in die engere Auswahl aufgenommen wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_unselected:
+      title: Vorschlag nicht ausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht in die engere Auswahl aufgenommen wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_preselected:
+      title: Vorschlag vorausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag vorausgewählt wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_not_preselected:
+      title: Vorschlag nicht vorausgewählt
+      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht vorausgewählt wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    proposal_created:
+      title: Bestätigung nach Einreichung
+      description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    formular_answer_created:
+      title: Bestätigung nach Formulareinsendung
+      description: Wird an eingeloggte Nutzer gesendet, wenn sie ein Formular erfolgreich ausgefüllt und abgesendet haben.
+      recipient: Der eingeloggte Nutzer, der das Formular abgesendet hat (an die im Konto hinterlegte E-Mail-Adresse).
+    comment:
+      title: Neuer Kommentar
+      description: Wird an den Autor gesendet, wenn jemand einen Kommentar zu seinem Beitrag geschrieben hat.
+    reply:
+      title: Neue Antwort auf Kommentar
+      description: Wird an den Kommentarautor gesendet, wenn jemand auf seinen Kommentar geantwortet hat.
+    direct_message_for_receiver:
+      title: Neue Direktnachricht
+      description: Wird an den Empfänger gesendet, wenn eine persönliche Nachricht eingegangen ist.
+    resource_hidden:
+      title: Beitrag herausmoderiert
+      description: Wird an den Autor gesendet, wenn sein Beitrag von einem Moderator herausmoderiert wurde.
+    already_confirmed:
+      title: E-Mail bereits bestätigt
+      description: Wird an den Nutzer gesendet, wenn eine bereits bestätigte E-Mail-Adresse erneut bestätigt werden soll.
+    manual_verification_confirmation:
+      title: Manuelle Verifizierung bestätigt
+      description: Wird an den Nutzer gesendet, wenn seine manuelle Verifizierung erfolgreich abgeschlossen wurde.
+    newsletter_subscription_for_existing_user:
+      title: Newsletter-Anmeldung
+      description: Wird an registrierte Nutzer gesendet, wenn sie sich für den Newsletter anmelden.
+    user_invite:
+      title: Einladung zur Plattform
+      description: Wird an eingeladene Personen gesendet, um sie zur Registrierung auf der Plattform einzuladen.
+    pending_role_invite:
+      title: Rolleneinladung
+      description: Wird an eingeladene Personen gesendet, wenn ihnen eine Rolle auf der Plattform zugewiesen wurde.
+    csv_download_ready:
+      title: CSV-Download bereit
+      description: Wird an den Nutzer gesendet, wenn der angeforderte CSV-Download bereitsteht.
+    file_ready:
+      title: Datei bereit
+      description: Wird an den Nutzer gesendet, wenn eine angeforderte Datei zum Download bereitsteht.
+    individual_group_value_users_added:
+      title: Gruppenzuordnung
+      description: Wird an den Nutzer gesendet, wenn er einer Gruppe zugeordnet wurde.
+    existing_stamp_notify_existing_user:
+      title: Hinweis auf doppelte Registrierung
+      description: Wird an den bereits registrierten Nutzer gesendet, wenn jemand versucht, sich mit denselben Identitätsdaten zu registrieren.
+    existing_stamp_notify_new_user:
+      title: Registrierung nicht möglich
+      description: Wird an die Person gesendet, wenn eine Registrierung aufgrund bereits vorhandener Identitätsdaten abgelehnt wurde.
+    user_verification_failed:
+      title: Verifizierung fehlgeschlagen
+      description: Wird an den Nutzer gesendet, wenn die Identitätsprüfung fehlgeschlagen ist.
+  notification_service_mailer:
+    new_proposal:
+      title: Benachrichtigung über neuen Vorschlag
+      description: Wird an Abonnenten gesendet, wenn ein neuer Vorschlag eingereicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_poll:
+      title: Benachrichtigung über neue Abstimmung
+      description: Wird an Abonnenten gesendet, wenn eine neue Abstimmung erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_comment:
+      title: Benachrichtigung über neuen Kommentar
+      description: Wird an Abonnenten gesendet, wenn ein neuer Kommentar geschrieben wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    projekt_questions:
+      title: Benachrichtigung über neue Kurzumfrage
+      description: Wird an Abonnenten gesendet, wenn eine neue Kurzumfrage erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    projekt_arguments:
+      title: Benachrichtigung über neue Stimme
+      description: Wird an Abonnenten gesendet, wenn eine neue Stimme erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_projekt_notification:
+      title: Benachrichtigung über neue Projektmitteilung
+      description: Wird an Abonnenten gesendet, wenn eine neue Projektmitteilung veröffentlicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_projekt_event:
+      title: Benachrichtigung über neue Veranstaltung
+      description: Wird an Abonnenten gesendet, wenn eine neue Veranstaltung erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_projekt_milestone:
+      title: Benachrichtigung über neuen Meilenstein
+      description: Wird an Abonnenten gesendet, wenn ein neuer Meilenstein veröffentlicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_projekt_livestream:
+      title: Benachrichtigung über neuen Livestream
+      description: Wird an Abonnenten gesendet, wenn ein neuer Livestream erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_budget_investment:
+      title: Benachrichtigung über neuen Bürgervorschlag
+      description: Wird an Abonnenten gesendet, wenn ein neuer Bürgervorschlag eingereicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
+    user_reverification_failed:
+      title: Re-Verifizierung fehlgeschlagen
+      description: Wird an den Nutzer gesendet, wenn die erneute Identitätsprüfung fehlgeschlagen ist.
+      recipient: Der betroffene Nutzer.
+    user_reverification_succeeded:
+      title: Re-Verifizierung erfolgreich
+      description: Wird an den Nutzer gesendet, wenn die erneute Identitätsprüfung erfolgreich war.
+      recipient: Der betroffene Nutzer.

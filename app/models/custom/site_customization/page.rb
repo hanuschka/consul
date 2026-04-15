@@ -6,25 +6,28 @@ class SiteCustomization::Page < ApplicationRecord
   self.inheritance_column = nil
 
   include Imageable
+  include SectionTrackable
   attr_reader :origin
 
   belongs_to :projekt, touch: true
 
   has_many :comments, through: :projekt
 
-  has_and_belongs_to_many :landing_projekts,
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'site_customization_page_id',
-    association_foreign_key: 'projekt_id',
-    class_name: "Projekt"
+  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
+  has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
+  has_many :landing_page_managers, through: :landing_page_manager_assignments
+  has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
 
+  has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
   has_one_attached :landing_site_logo_for_transparent_background
   has_one_attached :landing_site_logo_for_white_background
 
   before_save :sanitize_title_and_subtitle
+  before_save :capture_old_title
   before_save :set_published_at
+  after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
 
   scope :regular, -> {
@@ -84,6 +87,35 @@ class SiteCustomization::Page < ApplicationRecord
     if status_changed? && status == 'published'
       self.published_at = Time.current
     end
+  end
+
+  def section_tracking_section
+    "landing_pages"
+  end
+
+  def section_tracking_user
+    nil
+  end
+
+  def capture_old_title
+    @old_title = projekt&.name if title_changed?
+  end
+
+  def sync_projekt_name
+    return unless projekt.present? && @old_title
+
+    new_title = title
+
+    projekt.update_column(:name, new_title)
+
+    projekt.polls.each do |poll|
+      next unless poll.name.present?
+
+      suffix = poll.name.delete_prefix(@old_title).strip
+      poll.update(name: [new_title, suffix.presence].compact.join(" "))
+    end
+
+    @old_title = nil
   end
 
   def sync_projekt_for_global_overview

@@ -1,0 +1,31 @@
+<tr class="kern-table__row" id="<%= dom_id(officer) %>">
+  <th scope="row" class="kern-table__header"><%= officer.name %></th>
+  <td class="kern-table__cell"><%= officer.email %></td>
+  <td class="kern-table__cell">
+    <% if officer.persisted? %>
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        officer,
+        :manage_all?,
+        path: toggle_manage_all_adm_deficiency_reports_officer_path(officer)
+      ) %>
+    <% end %>
+  </td>
+  <td class="kern-table__cell">
+    <% if officer.persisted? %>
+      <%= render Kern::Table::ActionsComponent.new do |actions| %>
+        <% actions.with_action(
+          label: t("shared.delete"),
+          url: adm_deficiency_reports_officer_path(officer),
+          icon: "delete",
+          style: :delete,
+          data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
+        ) %>
+      <% end %>
+    <% else %>
+      <%= button_to adm_deficiency_reports_officers_path(user_id: officer.user_id),
+        class: "kern-btn kern-btn--primary", data: { turbo_frame: "_top" } do %>
+        <span class="kern-label"><%= t(".add") %></span>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

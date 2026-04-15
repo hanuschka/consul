@@ -1,5 +1,5 @@
 class AiAnalytics::Polls::Base < ApplicationService
-  def initialize(poll, prompt:, stat_key:, output_schema: nil)
+  def initialize(poll, prompt:, stat_key:, output_schema:)
     @poll = poll
     @prompt = prompt
     @stat_key = stat_key
@@ -22,17 +22,29 @@ class AiAnalytics::Polls::Base < ApplicationService
 
   def generate_analysis
     chat = Ai::RubyLlmFactory.chat
+      .with_schema(@output_schema)
+      .with_instructions(system_instructions)
 
-    if @output_schema.present?
-      chat = chat.with_schema(@output_schema)
-    end
-
-    response = chat.ask(full_prompt)
-    @output_schema.present? ? response.content : response.content.strip
+    response = chat.ask(user_prompt)
+    response.content
   end
 
-  def full_prompt
-    context = <<~TEXT
+  def system_instructions
+    <<~TEXT
+      #{@prompt}
+
+      Formating guideline:
+      - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful.
+      - Dont add spaces before <li> items.
+      - Structure your answer clearly with paragraphs
+      - Dont use br html tags
+
+      Output response in #{target_language} language.
+    TEXT
+  end
+
+  def user_prompt
+    <<~TEXT
       Poll: #{@poll.name}
       Summary: #{@poll.summary}
       Total Voters: #{@poll.voters.count}
@@ -43,20 +55,12 @@ class AiAnalytics::Polls::Base < ApplicationService
 
       Citizen Comments:
       #{formatted_comments}
-
-      Formating guideline:
-      - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful.
-      - Dont add spaces before <li> items.
-      - Structure your answer clearly with paragraphs
-      - Dont use br html tags
     TEXT
-
-    context + @prompt.gsub("{{target_language}}", target_language)
   end
 
   def store_result(result)
     current_stats = @poll.ai_stats || {}
-    current_stats[@stat_key] = result
+    current_stats[@stat_key] = result[@stat_key]
     @poll.update_column(:ai_stats, current_stats)
   end
 

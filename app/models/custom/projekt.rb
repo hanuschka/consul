@@ -15,6 +15,7 @@ class Projekt < ApplicationRecord
   include Taggable
   include Searchable
   include Notifiable
+  include SectionTrackable
 
   translates :description
   include Globalizable
@@ -53,6 +54,12 @@ class Projekt < ApplicationRecord
 
   has_and_belongs_to_many :geozone_affiliations, class_name: "Geozone",
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :registered_address_district_affiliations,
+    class_name: "RegisteredAddress::District",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "projekt_id",
+    association_foreign_key: "registered_address_district_id",
+    after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
@@ -88,11 +95,7 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
-  has_and_belongs_to_many :landing_pages,
-    class_name: 'SiteCustomization::Page',
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'projekt_id',
-    association_foreign_key: 'site_customization_page_id'
+  belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
@@ -100,7 +103,7 @@ class Projekt < ApplicationRecord
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity
-  around_update :update_page
+
   after_save do
     if parent_id_previously_changed?
       Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
@@ -128,8 +131,9 @@ class Projekt < ApplicationRecord
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+  attribute :show_content_background, :boolean, default: false
 
-  enum build_file_import_status: {
+  enum import_file_status: {
     never_run: "never_run",
     pending: "pending",
     processing: "processing",
@@ -291,13 +295,6 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
-  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
-    if landing_page_id.blank?
-      joins(:landing_pages).distinct
-    else
-      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
-    end
-  }
 
   ##################
 
@@ -380,11 +377,6 @@ class Projekt < ApplicationRecord
 
   def published?
     page&.status == "published"
-  end
-
-  def update_page
-    update_corresponding_page if name_changed?
-    yield
   end
 
   def can_assign_resources?(controller_name, user, resource = nil)
@@ -533,7 +525,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process
@@ -587,6 +579,14 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(user = nil)
     true
+  end
+
+  def section_tracking_section
+    "projekts"
+  end
+
+  def section_tracking_user
+    author
   end
 
   def vc_map_enabled?
@@ -732,20 +732,17 @@ class Projekt < ApplicationRecord
     def create_corresponding_page
       create_page(
         title: name,
-        slug: form_page_slug,
+        slug: generate_page_slug(name),
         status: "published",
         content: ""
       )
     end
 
-    def update_corresponding_page
-      page.update(title: name, slug: form_page_slug)
-    end
-
-    def form_page_slug
-      clean_slug = name.downcase.gsub("ä", "ae").gsub("ö", "oe").gsub("ü", "ue").gsub("ß", "ss")
+    def generate_page_slug(title)
+      clean_slug = title.downcase.gsub("ä", "ae").gsub("ö", "oe").gsub("ü", "ue").gsub("ß", "ss")
         .gsub(/[^a-z0-9\s]/, "").gsub(/\s+/, "-")
       pages_with_similar_slugs = SiteCustomization::Page.where("slug ~ ?", "^#{clean_slug}(-[0-9]+$|$)")
+        .where.not(id: page&.id)
         .order(id: :asc)
 
       if pages_with_similar_slugs.any? && pages_with_similar_slugs.last.slug.match?(/-\d+$/)
@@ -811,7 +808,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
     end

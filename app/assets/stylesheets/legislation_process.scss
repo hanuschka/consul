@@ -74,7 +74,7 @@
       margin-top: 0;
 
       &:hover:not(.is-active) {
-        background: $brand-lighter;
+        background: var(--brand-color-lighter);
       }
 
       &::after {
@@ -269,7 +269,7 @@
     }
 
     .control input:checked ~ .control-indicator {
-      background-color: $brand;
+      background-color: var(--brand-color);
       border: 0;
     }
 

@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@landing_page_manager) do %>
+  <%= render "landing_page_manager", landing_page_manager: @landing_page_manager.reload %>
+<% end %>

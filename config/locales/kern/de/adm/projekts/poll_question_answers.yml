@@ -1,0 +1,80 @@
+de:
+  adm:
+    projekts:
+      poll_question_answers:
+        new:
+          title: Neue Antwortoption erstellen
+        edit:
+          title: Antwortoption bearbeiten
+        create:
+          success: Antwort wurde erfolgreich erstellt.
+        destroy:
+          success: Antwort wurde erfolgreich gelöscht.
+          error: Antworten können nicht gelöscht werden, da bereits Stimmen abgegeben wurden.
+        form:
+          image_label: Bilder
+          documents_label: Dokumente
+          video_label: Videos
+          video_title_label: Videotitel
+          video_url_label: Video-URL
+          hints:
+            open_answer: >
+              Markiert diese Antwort als offenes Textfeld, in das Nutzer eine eigene Antwort eingeben können.
+              Im Frontend erscheint statt einer auswählbaren Option ein Freitextfeld. Nutzen Sie diese Option,
+              wenn Sie neben den vordefinierten Antworten auch individuelle Rückmeldungen zulassen möchten.
+            title: >
+              Der Titel wird im Frontend als auswählbare Antwortoption angezeigt. Formulieren Sie den Text
+              kurz und eindeutig, damit Nutzer die Option auf Anhieb verstehen. Bei Abstimmungen mit mehreren
+              Optionen sollten die Titel untereinander klar unterscheidbar sein, um Verwechslungen zu vermeiden.
+            title_placeholder: "z. B. Variante A – Neubau am Marktplatz"
+            more_info_link_placeholder: "https://www.beispiel.de/weitere-infos"
+            more_info_iframe_placeholder: "https://www.beispiel.de/karte-einbetten"
+            video_title_placeholder: "z. B. Entwurf Variante A – Visualisierung"
+            video_url_placeholder: "https://www.youtube.com/watch?v=..."
+            description: >
+              Ergänzt die Antwort um eine ausführlichere Erläuterung, die im Frontend unterhalb des Titels
+              angezeigt wird. Nutzen Sie dieses Feld, um Hintergrundinformationen, Details oder Argumente zur
+              Antwortoption bereitzustellen. Der Text unterstützt Rich-Text-Formatierung und kann Links oder
+              Hervorhebungen enthalten.
+            more_info_link: >
+              Verlinkt auf eine externe Webseite mit weiterführenden Informationen zur Antwortoption. Im Frontend
+              erscheint ein klickbarer Link unterhalb der Antwort. Geben Sie die vollständige URL inkl. https://
+              ein. Lassen Sie das Feld leer, wenn kein externer Verweis gewünscht ist.
+            more_info_iframe: >
+              Bettet eine externe Webseite als iFrame unterhalb der Antwort ein. Geben Sie die vollständige URL
+              inkl. https:// ein. Im Frontend wird der Inhalt direkt innerhalb der Antwort dargestellt. Nutzen
+              Sie diese Option z. B. für interaktive Karten, Visualisierungen oder externe Dokumente.
+            image: >
+              Laden Sie Bilder hoch, die im Frontend neben oder oberhalb der Antwortoption angezeigt werden.
+              Bilder helfen Nutzern, die Optionen visuell zu erfassen – z. B. bei Gestaltungsentwürfen,
+              Standortfotos oder Plandarstellungen. Mehrere Bilder pro Antwort sind möglich und werden als
+              Galerie dargestellt.
+            documents: >
+              Hängen Sie Dokumente wie PDFs oder Präsentationen an die Antwortoption an. Im Frontend werden
+              die Dateien als Download-Links angezeigt und ermöglichen Nutzern, sich vor der Stimmabgabe
+              detaillierter zu informieren. Geeignet für Gutachten, Pläne oder Hintergrunddokumente zu einer
+              Antwortoption.
+            video: >
+              Binden Sie ein externes Video von YouTube oder Vimeo ein, das die Antwortoption visuell ergänzt.
+              Im Frontend wird das Video als eingebetteter Player dargestellt. Geben Sie einen aussagekräftigen
+              Titel und die vollständige Video-URL an. Besonders geeignet, um komplexe Sachverhalte anschaulich
+              zu erklären.
+            video_title: >
+              Geben Sie einen aussagekräftigen Titel für das Video ein, der im Frontend als Überschrift oberhalb
+              des Video-Players angezeigt wird. Der Titel sollte den Inhalt des Videos kurz zusammenfassen und
+              Nutzern Orientierung geben, z. B. „Entwurf Variante A" oder „Erläuterung der Maßnahme".
+            video_url: >
+              Geben Sie die vollständige URL des Videos ein, z. B. von YouTube oder Vimeo. Im Frontend wird das
+              Video als eingebetteter Player dargestellt. Achten Sie darauf, die komplette URL inkl. https://
+              einzugeben. Nur öffentlich zugängliche Videos können eingebettet werden – privat eingestellte Videos
+              werden nicht korrekt angezeigt.
+            next_question: >
+              Legt fest, zu welcher Frage der Nutzer nach Auswahl dieser Antwort weitergeleitet wird. Diese
+              Option ist nur im sequentiellen Abstimmungsmodus (Wizard) verfügbar und ermöglicht eine verzweigte
+              Fragenlogik. Lassen Sie das Feld leer, wenn der Nutzer zur nächsten Frage in der Standardreihenfolge
+              weitergeleitet werden soll.
+            terminates_poll: >
+              Beendet die Abstimmung sofort, wenn der Nutzer diese Antwort auswählt – der Nutzer wird direkt zur
+              Abschlussseite weitergeleitet, ohne weitere Fragen beantworten zu müssen. Nutzen Sie diese Option
+              z. B. für Filterfragen wie „Betrifft Sie dieses Thema?" mit der Antwort „Nein", um irrelevante
+              Teilnehmer höflich auszuschließen.

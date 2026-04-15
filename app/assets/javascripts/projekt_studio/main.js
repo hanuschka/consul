@@ -9,37 +9,30 @@ window.ProjektStudio = {
 
   initialize() {
     if (this.initialized) return
+    if (!this.isProjektPage()) return
 
-    if (window.parent) {
-      this.loadConfig();
-      ProjektStudio.Sidebar.initialize()
-      ProjektStudio.PhasesTabs.initialize()
-      ProjektStudio.Banner.initialize()
+    this.loadConfig();
 
-      // Initialize ContentBlock submodules
-      ProjektStudio.ContentBlockTemplateSelector.initialize()
-      ProjektStudio.ContentBlock.Render.initialize()
-      ProjektStudio.ContentBlock.DragDrop.initialize()
-      ProjektStudio.ContentBlock.Crud.initialize()
-      ProjektStudio.ContentBlock.ChangeHistory.initialize()
-      ProjektStudio.ContentBlock.CKEditorMode.initialize()
-      ProjektStudio.ContentBlock.DtAiEditMode.initialize()
+    ProjektStudio.Sidebar.initialize()
+    ProjektStudio.PhasesTabs.initialize()
+    ProjektStudio.Banner.initialize()
 
-      ProjektStudio.ContentBlock.SimpleEditMode.initialize()
-      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()
-      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize()
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
-      ProjektStudio.ContentBlock.AiEditMode.initialize()
-      ProjektStudio.ContentBlock.CodeEditMode.initialize()
-      ProjektStudio.ContentBlock.Copy.initialize()
-      ProjektStudio.PreviewMode.initialize()
-      ProjektStudio.SavedContentBlocks.initialize()
-      ProjektStudio.FileImport.initialize()
-      // ExplainWithAi.initialize()
+    ProjektStudio.ProjektStart.initialize()
+    ProjektStudio.BuildWithPrompt.initialize()
 
-      this.initialized = true;
-    }
+    // Initialize ContentBlock submodules
+    ProjektStudio.ContentBlock.Render.initialize()
+    ProjektStudio.ContentBlock.DragDrop.initialize()
+    ProjektStudio.ContentBlock.DtAiEditMode.initialize()
+
+    App.Studio.initContentBlockModules()
+
+    ProjektStudio.SavedContentBlocks.initialize()
+    ProjektStudio.FileImport.initialize()
+    ProjektStudio.ToggleBackground.initialize()
+    // ExplainWithAi.initialize()
+
+    this.initialized = true;
   },
 
   get isEmbedded() {
@@ -56,7 +49,10 @@ window.ProjektStudio = {
   },
 
   reinitializeUI() {
-    // console.log("reinitialize ProjektStudio")
+    if (!this.isProjektPage()) return
+
+    this.initialized = false;
+    this.initialize();
   },
 
   isProjektPage() {
@@ -83,9 +79,13 @@ else {
   })
 }
 
-// Add event listener to reinit ProjektStudio UI on turbolinks page load
+// Reinit ProjektStudio UI on turbolinks navigation (not initial page load)
 // Use capture option to ensure this event will fire before any other
 // "turbolinks:load" events
 document.addEventListener("turbolinks:load", () => {
-  ProjektStudio.reinitializeUI()
+  if (ProjektStudio.initialLoadComplete) {
+    ProjektStudio.reinitializeUI()
+  }
+
+  ProjektStudio.initialLoadComplete = true
 }, { capture: true })

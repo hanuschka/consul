@@ -1,0 +1,23 @@
+<tr id="<%= dom_id(newsletter) %>" class="kern-table__row">
+  <td scope="row" class="kern-table__header"><%= newsletter.subject %></td>
+  <td class="kern-table__cell"><%= newsletter.recipient_group&.name %></td>
+  <td class="kern-table__cell">
+    <% if newsletter.draft? %>
+      <%= t('adm.newsletters.index.table.draft') %>
+    <% else %>
+      <%= l newsletter.sent_at.to_date %>
+    <% end %>
+  </td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t('adm.newsletters.index.table.show'), url: adm_newsletter_path(newsletter), icon: "visibility", style: :edit) %>
+      <% actions.with_action(label: t('adm.newsletters.index.table.edit'), url: edit_adm_newsletter_path(newsletter), icon: "edit", style: :edit) %>
+      <% actions.with_action(
+        label: t('adm.newsletters.index.table.delete'),
+        url: adm_newsletter_path(newsletter),
+        icon: "delete", style: :delete,
+        data: { turbo_method: :delete, turbo_confirm: t('adm.newsletters.index.table.delete_confirm') }
+      ) %>
+    <% end %>
+  </td>
+</tr>

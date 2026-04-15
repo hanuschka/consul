@@ -1,0 +1,90 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container my-5">
+  <% ai_flow_setting_key =
+    if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+      "feature.resource.create_proposal_with_ai"
+    elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      "feature.resource.create_investment_with_ai"
+    end %>
+  <% if ai_flow_setting_key %>
+    <% setting = @projekt_phase.settings.find_by(key: ai_flow_setting_key) %>
+    <% if setting %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  <% end %>
+
+  <div
+    data-controller="adm-criteria-list"
+    data-adm-criteria-list-create-url-value="<%= create_user_resource_criterion_adm_projekts_phase_path(@projekt_phase) %>"
+    data-adm-criteria-list-reorder-url-value="<%= reorder_user_resource_criteria_adm_projekts_phase_path(@projekt_phase) %>"
+    data-adm-criteria-list-update-url-template-value="<%= update_user_resource_criterion_adm_projekts_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
+    data-adm-criteria-list-delete-url-template-value="<%= destroy_user_resource_criterion_adm_projekts_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
+  >
+    <h3 class="mt-4 mb-3"><%= t(".criteria_title") %></h3>
+
+    <div data-adm-criteria-list-target="list" class="kern-criteria-list mb-4">
+      <% @criteria.each do |criterion| %>
+        <div
+          class="kern-criteria-list__item"
+          data-criterion-id="<%= criterion.id %>"
+        >
+          <span
+            class="material-symbols-outlined kern-criteria-list__handle"
+            data-criteria-handle
+          >drag_indicator</span>
+          <span
+            class="kern-criteria-list__text"
+            data-criteria-text
+          ><%= criterion.text %></span>
+          <button
+            type="button"
+            class="kern-criteria-list__delete-btn"
+            data-action="adm-criteria-list#deleteCriterion"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <script type="text/template" data-adm-criteria-list-target="template">
+      <div
+        class="kern-criteria-list__item"
+        data-criterion-id="{{ id }}"
+      >
+        <span
+          class="material-symbols-outlined kern-criteria-list__handle"
+          data-criteria-handle
+        >drag_indicator</span>
+        <span
+          class="kern-criteria-list__text"
+          data-criteria-text
+        >{{ text }}</span>
+        <button
+          type="button"
+          class="kern-criteria-list__delete-btn"
+          data-action="adm-criteria-list#deleteCriterion"
+        >
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    </script>
+
+    <form data-action="submit->adm-criteria-list#addCriterion" class="kern-criteria-list__form">
+      <div class="kern-form-input">
+        <input
+          type="text"
+          data-adm-criteria-list-target="input"
+          class="kern-form-input__input"
+          placeholder="<%= t(".text_placeholder") %>"
+        />
+      </div>
+      <%= form_submit_button(text: t(".add_criterion")) %>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<%= content_for :title, t("adm.projekts.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.home.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::DashboardHomeComponent.new(
+  team_members: @team_members,
+  team_url: new_adm_projekts_manager_path,
+  recent_items: @recent_items,
+  recent_items_url: adm_projekts_projekts_list_path,
+  recent_item_partial: "adm/projekts/projekts/projekt",
+  recent_item_headers: [
+    Projekt.model_name.human,
+    Projekt.human_attribute_name("total_duration_start"),
+    Projekt.human_attribute_name("total_duration_end"),
+    t("adm.projekts.projekts.index.table.status"),
+    t("adm.projekts.projekts.index.table.actions")
+  ],
+  intro_text: @section_setting&.intro_text_with_fallback,
+  quick_links: @quick_links,
+  stats: @stats,
+  contact_persons: @contact_persons,
+  notice: @section_setting,
+  activities: @activities,
+  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "projekts") : nil
+) %>

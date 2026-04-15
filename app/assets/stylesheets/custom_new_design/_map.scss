@@ -2,6 +2,10 @@
   .map_location {
     border-radius: 10px;
     overflow: hidden;
+
+    @media (max-width: $mobile-viewport-start) {
+      height: 400px;
+    }
   }
 
   #extended-sidebar-map {

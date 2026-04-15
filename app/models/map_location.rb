@@ -65,6 +65,14 @@ class MapLocation < ApplicationRecord
     latitude.present? && longitude.present? && zoom.present?
   end
 
+  def map_layers
+    if mappable.respond_to?(:map_layers)
+      mappable.map_layers
+    else
+      MapLayer.default
+    end
+  end
+
   def to_geo_json
     @geo_json ||= begin
       if features.present? && features["type"] == "FeatureCollection"
@@ -132,6 +140,8 @@ class MapLocation < ApplicationRecord
     geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
 
     geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
+  rescue RGeo::Error::InvalidGeometry
+    false
   end
 
   private

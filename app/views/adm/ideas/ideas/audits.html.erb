@@ -1,0 +1,11 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
+
+<div class="kern-container my-5">
+  <%= render "adm/shared/audits",
+    auditable: @idea,
+    audit_show_path: ->(audit) { adm_ideas_idea_audit_path(@idea, audit) } %>
+</div>

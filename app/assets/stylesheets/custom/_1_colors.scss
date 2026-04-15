@@ -1,8 +1,10 @@
 $border-color: #d9d9d9;
 $input-border-color: #828282;
-$input-focus-outline-color: #005fcc;
+$focus-outline-color: #005fcc;
+$input-focus-outline-color: $focus-outline-color;
 // $input-focus-outline-color:  #ffbf47;
 $input-focus-outline: 2px solid $input-focus-outline-color;
+$outline-focus: 3px solid $focus-outline-color;
 $border: $border-color;
 $medium-gray-1: #535252;
 $medium-gray-2: #d3d3d3;
@@ -11,18 +13,30 @@ $light-gray-1: #e5e5e5;
 $light-gray-2: #ededed;
 
 $gray-1: #e2e2e2;
+$blue-gray-1: #919dab;
 
+$green-success-color: #00AA0B;
+
+$orange-button-color: #FFA42D;
+$grey-button-color: #cfd9e2;
+$green-button-color: $green-success-color;
+$red-button-color: #cc4b37;
 
 $main-text-color: #222;
 $main-text-color-hover: #c7d5e2;
 
-$dropdown-hover-color: #ededed;
+$dropdown-hover-color: $light-gray-2;
 $dropdown-active-color: darken($dropdown-hover-color, 4%);
 
 $dt-base: #004a83;
 $dt-base-hover: lighten($dt-base, 10%);
 $dt-base-secondary: lighten($dt-base, 70%);
+$dt-base-transparent-background-hover: #dfebf5;
 
 :root {
   --medium-gray-3: #{$medium-gray-3};
+  --dt-base: #{$dt-base};
+  --dt-base-transparent-background-hover: #dfebf5;
+  --dt-base-transparent-background-active: #d1e2f0;
+  --focus-outline-color: #{$focus-outline-color};
 }

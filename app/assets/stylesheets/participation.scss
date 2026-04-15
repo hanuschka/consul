@@ -259,7 +259,7 @@
   aside {
 
     h2 {
-      border-top: 2px solid $brand;
+      border-top: 2px solid var(--brand-color);
       display: inline-block;
       font-size: rem-calc(16);
       margin: -1px 0 rem-calc(12);
@@ -1113,7 +1113,7 @@
   }
 
   .progress-meter {
-    background: $brand;
+    background: var(--brand-color);
     border-radius: rem-calc(12);
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
@@ -1149,7 +1149,7 @@
     white-space: nowrap;
 
     &::before {
-      color: $brand;
+      color: var(--brand-color);
       content: "\57";
       font-family: "icons";
       font-size: $small-font-size;
@@ -1196,7 +1196,7 @@
   }
 
   .subtitle {
-    border-left: 2px solid $brand;
+    border-left: 2px solid var(--brand-color);
     margin: $line-height / 2 0;
     padding-left: $line-height / 2;
   }
@@ -1458,7 +1458,7 @@
   width: $line-height / 2;
 
   &.is-active {
-    background-color: $brand;
+    background-color: var(--brand-color);
   }
 }
 
@@ -1477,7 +1477,7 @@
 
 .orbit-next,
 .orbit-previous {
-  background: rgba(34, 34, 34, 0.25);
+  background: rgba(34, 34, 34, 0.6);
 }
 
 .zoom-link {

@@ -149,29 +149,33 @@ module ProjektPhaseAdminActions
 
     set_setting_page_variables(@projekt_phase)
 
-    @projekt_phase_features = @projekt_phase_features&.slice("general")
-    @projekt_phase_options = @projekt_phase_options&.slice("general")
+    if @projekt_phase.name.in? ["voting_phase", "formular_phase"]
+      render "custom/admin/projekt_phases/settings"
+    else
+      @projekt_phase_features = @projekt_phase_features&.slice("general")
+      @projekt_phase_options = @projekt_phase_options&.slice("general")
 
-    options =
-      if @projekt_phase.resources_name == "proposals"
-        Proposal.proposals_orders
-      elsif @projekt_phase.resources_name == "budget"
-        Budget::Investment::DEFAULT_ORDERS
+      options =
+        if @projekt_phase.resources_name == "proposals"
+          Proposal.proposals_orders
+        elsif @projekt_phase.resources_name == "budget"
+          Budget::Investment::DEFAULT_ORDERS
+        end
+
+      selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
+
+      if selectable_setting.present?
+        @projekt_phase_selectable_settings =
+          [
+            ProjektPhaseSetting::SelectableSettingSet.new(
+              setting: selectable_setting,
+              options: options
+            )
+          ]
       end
 
-    selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
-
-    if selectable_setting.present?
-      @projekt_phase_selectable_settings =
-        [
-          ProjektPhaseSetting::SelectableSettingSet.new(
-            setting: selectable_setting,
-            options: options
-          )
-        ]
+      render "custom/admin/projekt_phases/user_functions"
     end
-
-    render "custom/admin/projekt_phases/user_functions"
   end
 
   def map_resources_overview
@@ -240,6 +244,12 @@ module ProjektPhaseAdminActions
     @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
 
     @apps = App.all
+  end
+
+  def comments
+    authorize!(:comments, @projekt_phase)
+
+    render "custom/admin/projekt_phases/comments"
   end
 
   def proposals

@@ -40,6 +40,7 @@ ProjektStudio.ContentBlock.Render = {
     const projektPageContent =  document.querySelector(".js-custom-page-content--inner");
 
     if (!projektPageContent) return
+    if (projektPageContent.querySelector('.js-projekt-content-block-wrapper')) return
 
     const html = projektPageContent.outerHTML;
     let parser = new DOMParser();
@@ -66,7 +67,7 @@ ProjektStudio.ContentBlock.Render = {
         }
 
         return wrappedHtml;
-      }).join("")
+      })
     }
 
     const newHtml =
@@ -75,5 +76,7 @@ ProjektStudio.ContentBlock.Render = {
       )
 
     ProjektStudio.ContentBlock.DomHelpers.morphElementHTML(".js-custom-page-content--inner", newHtml);
+
+    ProjektStudio.ContentBlock.Crud.rerenderContentBlockListControls()
   }
 };

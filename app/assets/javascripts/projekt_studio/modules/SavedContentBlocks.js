@@ -254,15 +254,9 @@ ProjektStudio.SavedContentBlocks = {
 
   getEditorName(container) {
     const editorName = container.dataset.editorName
+    const surroundingContentBlockId = ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId
 
-    const surroundingContentBlockId =
-        ProjektStudio.ContentBlock.Crud.addContentBlockAfter
-        .dataset
-        .contentBlockId
-
-    const scopedToContentBlockEditorName = `${editorName}-content-block-${surroundingContentBlockId}`
-
-    return scopedToContentBlockEditorName
+    return `${editorName}-content-block-${surroundingContentBlockId}`
   },
 
   getFormContainer(element) {

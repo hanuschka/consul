@@ -1,6 +1,8 @@
 class AiStats::CategoriesClusteringComponent < ApplicationComponent
   TOPIC_COLORS = %w[#D4A017 #4A7C2F #2E6B8A #7B4B94 #C75B39 #3D7A6B #8B5A2B #5C6BC0].freeze
 
+  renders_one :bottom_content
+
   def initialize(clustering_data:, title_key:, resource_class: Proposal)
     @clustering_data = clustering_data || {}
     @title_key = title_key

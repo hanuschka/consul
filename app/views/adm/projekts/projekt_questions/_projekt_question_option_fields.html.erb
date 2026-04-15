@@ -1,0 +1,9 @@
+<div data-nested-field class="d-flex d-flex-align-center gap-2 mb-2">
+  <div class="flex-grow-1">
+    <%= f.text_field :value, placeholder: t(".value_placeholder"), label: false %>
+  </div>
+  <%= f.hidden_field :_destroy %>
+  <div>
+    <%= kern_button icon: "close", style: :tertiary, data: { action: "adm-nested-fields#remove" } %>
+  </div>
+</div>

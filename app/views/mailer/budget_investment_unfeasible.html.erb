@@ -32,7 +32,7 @@
   </p>
 
   <p style="<%= css_for_mailer_text + css_for_mailer_quote %>">
-    <%= @investment.valuator_explanation.sub(/\A<[^>]+>(.*)<\/[^>]+>\z/m, '\1') %>
+    <%= @investment.valuator_explanation&.sub(/\A<[^>]+>(.*)<\/[^>]+>\z/m, '\1') %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

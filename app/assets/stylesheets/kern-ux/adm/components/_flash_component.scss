@@ -1,0 +1,52 @@
+.kern-flash {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.kern-flash--success {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.kern-flash--danger {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.kern-flash--info {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.kern-flash__close {
+  background: none;
+  border: none;
+  color: currentColor;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.125rem;
+  }
+}

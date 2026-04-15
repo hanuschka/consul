@@ -1,6 +1,10 @@
 module Ai::RubyLlmFactory
   def self.chat
-    init.chat(model: Ai::Settings.current_llm_model)
+    init.chat(
+      model: Ai::Settings.current_llm_model,
+      provider: Ai::Settings.current_llm_provider.to_sym,
+      assume_model_exists: true
+    )
   end
 
   def self.chat_with_json_output(output_schema)
@@ -40,6 +44,10 @@ module Ai::RubyLlmFactory
     RubyLLM.context do |config|
       config.openai_api_key = Ai::Settings.openai_api_key
 
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
+
       if Setting["ai.llm_api_endpoint"].present?
         config.openai_api_base = Setting["ai.llm_api_endpoint"]
       end
@@ -49,12 +57,20 @@ module Ai::RubyLlmFactory
   def self.anthropic_context
     RubyLLM.context do |config|
       config.anthropic_api_key = Ai::Settings.anthropic_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.gemini_context
     RubyLLM.context do |config|
       config.gemini_api_key = Ai::Settings.gemini_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
 
       if Setting["ai.llm_api_endpoint"].present?
         config.gemini_api_base = Setting["ai.llm_api_endpoint"]
@@ -65,30 +81,50 @@ module Ai::RubyLlmFactory
   def self.deepseek_context
     RubyLLM.context do |config|
       config.deepseek_api_key = Ai::Settings.deepseek_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.mistral_context
     RubyLLM.context do |config|
       config.mistral_api_key = Ai::Settings.mistral_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.openrouter_context
     RubyLLM.context do |config|
       config.openrouter_api_key = Ai::Settings.openrouter_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.perplexity_context
     RubyLLM.context do |config|
       config.perplexity_api_key = Ai::Settings.perplexity_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.gpustack_context
     RubyLLM.context do |config|
       config.gpustack_api_key = Ai::Settings.gpustack_api_key
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
 
       if Setting["ai.llm_api_endpoint"].present?
         config.gpustack_api_base = Setting["ai.llm_api_endpoint"]
@@ -100,13 +136,24 @@ module Ai::RubyLlmFactory
     RubyLLM.context do |config|
       config.aws_access_key_id = Ai::Settings.bedrock_access_key_id
       config.aws_secret_access_key = Ai::Settings.bedrock_secret_access_key
-      config.aws_region = Ai::Settings.bedrock_region if Ai::Settings.bedrock_region.present?
+
+      if Ai::Settings.bedrock_region.present?
+        config.aws_region = Ai::Settings.bedrock_region
+      end
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
     end
   end
 
   def self.vertex_ai_context
     RubyLLM.context do |config|
       config.vertex_project = Ai::Settings.vertex_ai_project
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
 
       if Ai::Settings.vertex_ai_credentials.present?
         config.vertex_credentials = JSON.parse(Ai::Settings.vertex_ai_credentials)
@@ -117,6 +164,35 @@ module Ai::RubyLlmFactory
   def self.ollama_context
     RubyLLM.context do |config|
       config.ollama_api_base = Setting["ai.llm_api_endpoint"].presence || "http://127.0.0.1:11434/v1"
+
+      if proxy_uri.present?
+        config.http_proxy = proxy_uri
+      end
+    end
+  end
+
+  def self.proxy_uri
+    @proxy_uri ||= begin
+      proxy_config = Rails.application.secrets.web_server_proxy
+
+      return nil if proxy_config.blank?
+      return nil if proxy_config[:address].blank?
+
+      address = proxy_config[:address]
+      port = proxy_config[:port]
+      username = proxy_config[:username]
+      password = proxy_config[:password]
+
+      uri =
+        if username.present?
+          "http://#{username}:#{password}@#{address}:#{port}"
+        else
+          "http://#{address}:#{port}"
+        end
+
+      Rails.logger.debug "[Ai::RubyLlmFactory] Using proxy: #{uri}"
+
+      uri
     end
   end
 end

@@ -44,6 +44,10 @@ de:
         question_street_details_csv_link: Straßenauswertung herunterladen
         question_answer_details_tooltip: Einzelauswertung
         question_answer_details_csv_link: Kreuztabellen-Auswertung herunterladen
+        table:
+          votes: Stimmen
+          answer: Antwort
+          details: Details
       show:
         confirm_participation_button: Meine Abstimmung bestätigen
         confirm_participation_notice: Sie haben erfolgreich an der Abstimmung teilgenommen.
@@ -65,6 +69,7 @@ de:
       report:
         title: AI Report
         download_all_txt: Alle Abschnitte herunterladen (TXT)
+        download_all_docx: Alle Abschnitte herunterladen (DOCX)
         download_all_pdf: Alle Abschnitte herunterladen (PDF)
       evaluation:
         title: AI Bewertung

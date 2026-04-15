@@ -26,36 +26,36 @@ class AiAnalytics::TopicClustering < ApplicationService
       resource_type = AiAnalytics::ClusteringCore.resource_type_name(resources)
       resources_text = AiAnalytics::ClusteringCore.prepare_resources_data(resources)
 
-      prompt = <<~TEXT
-        You are an AI specialized in semantic clustering and topic modeling.
-        Your task is to create a clean and logical categorization system for a list of #{resource_type}.
+      fetched_prompt = fetch_prompt
 
-        What you must do:
-
-        1. Read the full list of #{resource_type} (see below).
-        2. Identify patterns, themes and semantic clusters in the #{resource_type}.
-        3. Generate 5–7 meaningful TOPICS (your choice — choose what fits the data best).
-        4. For each topic, generate 2–4 SUBTOPICS that further structure the content.
-        5. Assign every item to exactly one subtopic using its ID.
-        Ignore subtopics which dosent have at least one assigned resource.
-
-        Make sure topics and subtopics:
-        - Dont include resource name in topics and subtopics.
-        - are non-overlapping,
-        - are easy to understand for non-experts,
-        - cover all #{resource_type} without forcing them unnaturally.
-
+      system_instructions = <<~TEXT
+        #{fetched_prompt}
         Write all topic and subtopic names in #{AiAnalytics::ClusteringCore.target_language}.
+      TEXT
 
+      user_prompt = <<~TEXT
         #{resource_type.capitalize}:
         #{resources_text}
       TEXT
 
-      response = Ai::RubyLlmFactory.chat_with_json_output(AiAnalytics::ClusteringCore.output_schema).ask(prompt)
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema)
+          .with_instructions(system_instructions)
+          .ask(user_prompt)
 
       response.content["topics"]
     rescue StandardError => e
       Rails.logger.error("TopicClustering error: #{e.message}")
       []
+    end
+
+    def fetch_prompt
+      parsed_response =
+        DtApi::Client.new(use_cache: true).consul_ai_prompts.get(
+          :ai_analytics_topic_clustering,
+          resource_type: "projekt_phase"
+        ).parsed_response
+      parsed_response.dig("consul_ai_prompt", "prompt")
     end
 end

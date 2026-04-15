@@ -109,6 +109,11 @@
           $menuItem.prev().focus()
         }
 
+        if ( event.which === 27 ) { // escape
+          $menuItem.attr('aria-expanded', false)
+          $menuItem.children('ul.nav-flyout-block').hide()
+        }
+
         if ( event.which === 13 && $(document.activeElement).hasClass('js-access-top-level-menu') ) {
 
           if ( $(document.activeElement).find('.flyout-item-name > a').length ) {
@@ -124,6 +129,114 @@
         }
 
       })
+
+      // Keyboard navigation for [data-navbar] items
+      $('body').on('keydown', '[data-navbar] li.nav-element.top-level-item', function(event) {
+        var $li = $(this);
+        var expanded = $li.attr('aria-expanded') === 'true';
+
+        if (event.which === 40) { // down arrow
+          event.preventDefault();
+          if (!expanded && $li.children('ul.nav-flyout-block').length) {
+            $li.attr('aria-expanded', 'true');
+            $li.children('button[data-navbar-toggle]').attr('aria-expanded', 'true');
+            $li.find('> ul.nav-flyout-block > li:first-child > a').focus();
+          } else if (expanded) {
+            $li.find('> ul.nav-flyout-block > li:first-child > a').focus();
+          }
+        }
+
+        if (event.which === 38) { // up arrow
+          event.preventDefault();
+          if (expanded) {
+            $li.attr('aria-expanded', 'false');
+            $li.children('button[data-navbar-toggle]').attr('aria-expanded', 'false');
+          }
+        }
+
+        if (event.which === 39) { // right arrow
+          event.preventDefault();
+          var $nextLi = $li.next('li.nav-element.top-level-item');
+          if ($nextLi.length) $nextLi.children('a').first().focus();
+        }
+
+        if (event.which === 37) { // left arrow
+          event.preventDefault();
+          var $prevLi = $li.prev('li.nav-element.top-level-item');
+          if ($prevLi.length) $prevLi.children('a').first().focus();
+        }
+
+        if (event.which === 27) { // escape
+          event.preventDefault();
+          $li.attr('aria-expanded', 'false');
+          $li.children('button[data-navbar-toggle]').attr('aria-expanded', 'false');
+        }
+      });
+
+      $('body').on('keydown', '[data-navbar] li.nav-element.flyout-item', function(event) {
+        event.stopPropagation(); // don't bubble to top-level handler
+        var $li = $(this);
+        var expanded = $li.attr('aria-expanded') === 'true';
+
+        if (event.which === 40) { // down arrow
+          event.preventDefault();
+          var $nextLi = $li.next('li.flyout-item');
+          if ($nextLi.length) $nextLi.children('a').first().focus();
+        }
+
+        if (event.which === 38) { // up arrow
+          event.preventDefault();
+          var $prevLi = $li.prev('li.flyout-item');
+          if ($prevLi.length) {
+            $prevLi.children('a').first().focus();
+          } else {
+            var $parentLi = $li.closest('ul.nav-flyout-block').closest('li.nav-element');
+            $parentLi.attr('aria-expanded', 'false');
+            $parentLi.children('button[data-navbar-toggle]').attr('aria-expanded', 'false');
+            $parentLi.children('a').first().focus();
+          }
+        }
+
+        if (event.which === 39) { // right arrow — open nested flyout
+          if ($li.children('ul.nav-flyout-block').length) {
+            event.preventDefault();
+            $li.attr('aria-expanded', 'true');
+            $li.children('button[data-navbar-toggle]').attr('aria-expanded', 'true');
+            $li.find('> ul.nav-flyout-block > li:first-child > a').focus();
+          }
+        }
+
+        if (event.which === 37) { // left arrow — close flyout, return to parent
+          event.preventDefault();
+          var $parentLi = $li.closest('ul.nav-flyout-block').closest('li.nav-element');
+          $parentLi.attr('aria-expanded', 'false');
+          $parentLi.children('button[data-navbar-toggle]').attr('aria-expanded', 'false');
+          $parentLi.children('a').first().focus();
+        }
+
+        if (event.which === 27) { // escape — close all flyouts
+          event.preventDefault();
+          $('[data-navbar] li.nav-element[aria-expanded="true"]').attr('aria-expanded', 'false');
+          $('[data-navbar] button[aria-expanded="true"]').attr('aria-expanded', 'false');
+          $li.closest('[data-navbar]').find('li.top-level-item > a').first().focus();
+        }
+      });
+
+      // ESC key dismisses hovered menu submenus (WCAG 1.4.13)
+      $(document).on('keydown', function(event) {
+        if (event.which !== 27) return;
+
+        var $hoveredItems = $('.main-menu li.nav-element:hover');
+
+        if ($hoveredItems.length) {
+          event.preventDefault();
+          $hoveredItems.addClass('-esc-dismissed');
+        }
+      });
+
+      $('body').on('mouseleave', '.main-menu li.nav-element.-esc-dismissed', function() {
+        $(this).removeClass('-esc-dismissed');
+      });
 
       $('body').on('keyup', '.js-access-flyout-menu-item', function(event) {
         event.preventDefault();

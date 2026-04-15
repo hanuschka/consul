@@ -1,0 +1,15 @@
+de:
+  adm:
+    apps:
+      show:
+        title: Apps
+        intro: >
+          Erweitern Sie Ihre Beteiligungsplattform mit zusätzlichen Modulen.
+          Aktivierte Apps stehen sofort für alle Projekte zur Verfügung.
+        status:
+          active: Aktiv
+          inactive: Nicht aktiv
+          waiting_for_activation: Aktivierung ausstehend
+        request: Anfragen
+        pending: Anfrage eingegangen
+        active_label: Aktiviert

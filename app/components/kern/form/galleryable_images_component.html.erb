@@ -1,0 +1,51 @@
+<div data-controller="kern--form--nested-entries">
+  <p class="kern-body kern-body--small mb-3">
+    <%= t(".hint",
+          accepted_types: Image.humanized_accepted_content_types,
+          max_size: Image.max_file_size) %>
+  </p>
+
+  <div data-kern--form--nested-entries-target="entries">
+    <% images.each do |image| %>
+      <% @form.fields_for :images, image do |image_builder| %>
+        <%= tag.div class: "mb-3", data: { kern__form__nested_entries_target: "entry" } do %>
+          <%= render Kern::Form::ImageComponent.new(form: image_builder, attribute: :attachment, show_actions: false) %>
+
+          <%= image_builder.hidden_field :cached_attachment %>
+          <%= image_builder.hidden_field :_destroy, value: false, data: { kern__form__nested_entries_target: "destroy" } %>
+          <%= image_builder.hidden_field :user_id, value: helpers.current_user&.id %>
+
+          <button type="button"
+                  class="kern-btn kern-btn--secondary kern-btn--small mt-2"
+                  data-action="kern--form--nested-entries#remove">
+            <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
+            <span class="kern-label"><%= t(".remove") %></span>
+          </button>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <template data-kern--form--nested-entries-target="template">
+    <% @form.fields_for :images, Image.new, child_index: "NEW_RECORD" do |image_builder| %>
+      <%= tag.div class: "mb-3", data: { kern__form__nested_entries_target: "entry" } do %>
+        <%= render Kern::Form::ImageComponent.new(form: image_builder, attribute: :attachment, show_actions: false) %>
+
+        <%= image_builder.hidden_field :cached_attachment %>
+        <%= image_builder.hidden_field :_destroy, value: false, data: { kern__form__nested_entries_target: "destroy" } %>
+        <%= image_builder.hidden_field :user_id, value: helpers.current_user&.id %>
+
+        <button type="button"
+                class="kern-btn kern-btn--secondary kern-btn--small mt-2"
+                data-action="kern--form--nested-entries#remove">
+          <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
+          <span class="kern-label"><%= t(".remove") %></span>
+        </button>
+      <% end %>
+    <% end %>
+  </template>
+
+  <%= kern_button(text: t(".add"), style: :secondary, class: "mt-2",
+        data: { kern__form__nested_entries_target: "addButton",
+                action: "kern--form--nested-entries#add" }) %>
+</div>

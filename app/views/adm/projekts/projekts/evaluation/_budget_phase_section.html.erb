@@ -1,0 +1,38 @@
+<%
+  stats = phase["stats"] || {}
+  accent = accent_color
+  accent_light = accent_light_color
+%>
+
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-icon-title">
+      <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div>
+        <div class="phase-title"><%= phase["phase_title"] %></div>
+        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.budget_phase") %></div>
+      </div>
+    </div>
+    <div class="phase-meta">
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["investments_count"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.investments") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["supports_count"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_participants"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
+      </div>
+    </div>
+  </div>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
+    locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+</div>

@@ -1,6 +1,10 @@
 module Ai::RubyLlmFactory
   def self.chat
-    init.chat(model: Ai::Settings.current_llm_model)
+    init.chat(
+      model: Ai::Settings.current_llm_model,
+      provider: Ai::Settings.current_llm_provider.to_sym,
+      assume_model_exists: true
+    )
   end
 
   def self.chat_with_json_output(output_schema)
@@ -171,7 +175,8 @@ module Ai::RubyLlmFactory
     @proxy_uri ||= begin
       proxy_config = Rails.application.secrets.web_server_proxy
 
-      return nil if proxy_config.blank? && proxy_config[:address].blank?
+      return nil if proxy_config.blank?
+      return nil if proxy_config[:address].blank?
 
       address = proxy_config[:address]
       port = proxy_config[:port]

@@ -1,0 +1,30 @@
+de:
+  adm:
+    external_api_keys:
+      flash:
+        updated: API-Schlüssel erfolgreich aktualisiert
+      index:
+        title: Externe API-Schlüssel
+        intro: >
+          Hier verwalten Sie die API-Schlüssel für externe Dienste, die in Ihre Plattform integriert sind — etwa für Webanalyse, Kartendarstellung, E-Mail-Versand oder KI-Funktionen. Jeder Dienst benötigt einen eigenen Schlüssel, den Sie beim jeweiligen Anbieter erhalten. Solange kein benutzerdefinierter Schlüssel hinterlegt ist, verwendet das System einen Standardschlüssel von demokratie.today. Achtung: Änderungen an API-Schlüsseln erfordern technisches Verständnis. Fehlerhafte Einträge können dazu führen, dass Dienste nicht mehr funktionieren. Wenden Sie sich im Zweifel an demokratie.today.
+        service: Dienst
+        name: Schlüsselname
+        value: Wert
+        value_set: Gesetzt
+        value_empty: Nicht hinterlegt
+        empty_api_keys: Es wurden noch keine API-Schlüssel erstellt
+      show:
+        key: Name
+        api_value: Schlüsselwert
+        add_key: API-Schlüssel hinterlegen
+        default_key_note_title: Standard-API-Schlüssel
+        default_key_note_description: >
+          Es ist kein eigener API-Schlüssel hinterlegt — der Standardschlüssel von demokratie.today wird verwendet. Tragen Sie einen eigenen Schlüssel ein, um diesen zu ersetzen.
+      edit:
+        title: API-Schlüssel bearbeiten
+        value: API-Schlüssel
+        value_hint: >
+          Tragen Sie hier den API-Schlüssel ein, den Sie vom jeweiligen Dienstanbieter erhalten haben. Der Schlüssel wird verschlüsselt in der Datenbank gespeichert und ist nur für Administratoren sichtbar. Solange kein eigener Schlüssel hinterlegt ist, verwendet das System automatisch einen Standardschlüssel von demokratie.today. Durch das Hinterlegen eines eigenen Schlüssels wird der Standardschlüssel ersetzt.
+        value_placeholder: API-Schlüssel hier einfügen
+        name_hint: >
+          Der Schlüsselname wird vom System automatisch vergeben und kann nicht geändert werden. Er dient als technischer Bezeichner, um den Schlüssel dem jeweiligen Dienst eindeutig zuzuordnen. Falls Sie unsicher sind, welchen Schlüssel Sie hier benötigen, finden Sie die entsprechende Dokumentation auf der Webseite des Dienstanbieters oder wenden Sie sich an demokratie.today.

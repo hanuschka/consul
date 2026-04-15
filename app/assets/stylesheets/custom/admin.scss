@@ -3,6 +3,46 @@
   padding: 1.5rem;
 }
 
+.user-resource-criteria--list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.user-resource-criteria--item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background: white;
+  justify-content: space-between;
+}
+
+.user-resource-criteria--drag-handle {
+  cursor: grab;
+  color: #aaa;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.user-resource-criteria--text {
+  flex: 1;
+  cursor: text;
+}
+
+.user-resource-criteria--delete-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  flex-shrink: 0;
+}
+
 .admin {
   .images {
     background: #e7f2fc;

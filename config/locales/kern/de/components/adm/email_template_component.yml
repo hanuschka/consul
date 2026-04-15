@@ -1,0 +1,18 @@
+de:
+  components:
+    adm:
+      email_template_component:
+        trigger: Auslöser
+        trigger_description: Beschreibt das Ereignis, das den automatischen Versand dieser E-Mail auslöst.
+        recipient: Empfänger
+        recipient_description: An wen wird diese E-Mail versendet?
+        subject: Betreff
+        subject_description: Die Betreffzeile der E-Mail. Wird dem Empfänger im Posteingang angezeigt.
+        subject_placeholder: Betreff eingeben...
+        body: Inhalt
+        body_description: Der E-Mail-Text im HTML-Format. Nutzen Sie die verfügbaren Variablen, um dynamische Inhalte wie Namen oder Links einzufügen.
+        available_variables: "Verfügbare Variablen"
+        send_test: Test-E-Mail an mich senden
+        customized: Angepasst
+        default_template: Standard-Vorlage
+        default_template_description: Die voreingestellte Vorlage, die verwendet wird, solange keine individuelle Anpassung vorgenommen wurde.

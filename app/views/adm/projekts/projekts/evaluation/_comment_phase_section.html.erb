@@ -1,0 +1,33 @@
+<%
+  stats = phase["stats"] || {}
+  accent = accent_color
+  accent_light = accent_light_color
+%>
+
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-icon-title">
+      <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div>
+        <div class="phase-title"><%= phase["phase_title"] %></div>
+        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.comment_phase") %></div>
+      </div>
+    </div>
+    <div class="phase-meta">
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["comments_count"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.comments") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_commenters"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.commenters") %></div>
+      </div>
+    </div>
+  </div>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
+    locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+</div>

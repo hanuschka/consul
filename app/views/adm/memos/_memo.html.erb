@@ -1,0 +1,55 @@
+<div class="adm-memo" id="<%= dom_id(memo) %>">
+  <div class="adm-memo__avatar" title="<%= memo.user.name %>">
+    <%= memo.user.name.first.upcase %>
+  </div>
+  <div class="adm-memo__content">
+    <div class="adm-memo__header">
+      <strong><%= link_to memo.user.name, user_path(memo.user) %></strong>
+      <% if memo.user.display_official_position_badge? %>
+        <span class="adm-memo__separator">&bull;</span>
+        <%= render Shared::OfficialPositionBadgeComponent.new(user: memo.user) %>
+      <% end %>
+      <span class="adm-memo__separator">&bull;</span>
+      <span class="adm-memo__timestamp" title="<%= l memo.created_at.to_datetime, format: :datetime %>"><%= relative_time(memo.created_at) %></span>
+    </div>
+
+    <div class="adm-memo__text">
+      <%= simple_format sanitize_and_auto_link(memo.text), {}, sanitize: false %>
+    </div>
+
+    <div class="adm-memo__actions">
+      <% if policy([:adm, memo]).send_notification? %>
+        <% if memo.last_notification_sent_at.present? %>
+          <span class="adm-memo__action adm-memo__action--sent" title="<%= t("adm.memos.memo.last_notification", datetime: l(memo.last_notification_sent_at.to_datetime, format: :datetime)) %>">
+            <span class="material-symbols-outlined">check_circle</span>
+          </span>
+        <% else %>
+          <%= link_to adm_memo_send_notification_path(memo), class: "adm-memo__action", title: t("adm.memos.memo.send_notification"), data: { turbo_method: :post } do %>
+            <span class="material-symbols-outlined">notifications</span>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if policy([:adm, Memo.new(memoable: memo.root_memoable)]).create? %>
+        <button type="button" class="adm-memo__action" title="<%= t("adm.memos.memo.reply") %>"
+                onclick="var form = this.closest('.adm-memo__content').querySelector('.adm-memo__reply-form'); form.hidden = !form.hidden; if (!form.hidden) form.querySelector('textarea').focus();">
+          <span class="material-symbols-outlined">reply</span>
+        </button>
+      <% end %>
+
+      <% if policy([:adm, memo]).destroy? %>
+        <%= link_to adm_memo_path(memo), class: "adm-memo__action adm-memo__action--danger", title: t("adm.memos.memo.delete"), data: { turbo_method: :delete, turbo_confirm: t("adm.memos.memo.delete_confirm") } do %>
+          <span class="material-symbols-outlined">delete</span>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if policy([:adm, Memo.new(memoable: memo.root_memoable)]).create? %>
+      <div class="adm-memo__reply-form" hidden>
+        <%= render "adm/memos/form", memoable: memo %>
+      </div>
+    <% end %>
+
+    <%= render "adm/memos/memos_tree", memos: memo.children.order(created_at: :desc), memoable: memo %>
+  </div>
+</div>

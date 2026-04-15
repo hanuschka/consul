@@ -4,13 +4,13 @@
       <%= form_for @user, as: :account, remote: true, authenticity_token: true, url: account_path do |f| %>
         <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true) do |c|%>
           <% c.with_custom_edit_button do %>
-            <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
+            <button type="button" class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
               <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-            </div>
+            </button>
           <% end %>
           <% c.with_placeholder do %>
             <% if @user.background_image.attached? %>
-              <%= image_tag(@user.background_image.variant(resize: "2000X500")) %>
+              <%= image_tag(@user.background_image.variant(resize_to_fit: [2000, 500])) %>
             <% end %>
           <% end %>
         <% end %>
@@ -36,9 +36,9 @@
               <% end %>
 
               <% c.with_custom_edit_button do %>
-                <div class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_avatar.aria-label") %>">
+                <button type="button" class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_avatar.aria-label") %>">
                   <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-                </div>
+                </button>
               <% end %>
             <% end %>
         <% end %>
@@ -60,15 +60,18 @@
     <p class="users-profile-banner--info-line">
       <%= t("custom.users.banner.registered_at", date: l(@user.created_at, format: :date_only)) %>
     </p>
-    <p class="users-profile-banner--info-line">
-      <% if @user.data_complete? %>
-        <span class="icon-check"></span>
-        <%= t("custom.account.show.data_complete") %>
-      <% else %>
-        <span class="icon-x"></span>
-        <%= t("custom.account.show.data_missing") %>
-      <% end %>
-    </p>
+
+    <% if Setting["extra_fields.verification.show_data_completeness_status"].present? %>
+      <p class="users-profile-banner--info-line">
+        <% if @user.data_complete? %>
+          <span class="icon-check"></span>
+          <%= t("custom.account.show.data_complete") %>
+        <% else %>
+          <span class="icon-x"></span>
+          <%= t("custom.account.show.data_missing") %>
+        <% end %>
+      </p>
+    <% end %>
 
     <% if Setting["extra_fields.verification.show_verification_status"].present? %>
       <p class="users-profile-banner--info-line">

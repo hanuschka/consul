@@ -15,6 +15,7 @@ class Projekt < ApplicationRecord
   include Taggable
   include Searchable
   include Notifiable
+  include SectionTrackable
 
   translates :description
   include Globalizable
@@ -30,6 +31,7 @@ class Projekt < ApplicationRecord
   belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_one :projekt_evaluation, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -52,6 +54,12 @@ class Projekt < ApplicationRecord
   has_many :livestream_phases, class_name: "ProjektPhase::LivestreamPhase", dependent: :destroy
 
   has_and_belongs_to_many :geozone_affiliations, class_name: "Geozone",
+    after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :registered_address_district_affiliations,
+    class_name: "RegisteredAddress::District",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "projekt_id",
+    association_foreign_key: "registered_address_district_id",
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
@@ -88,11 +96,7 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
-  has_and_belongs_to_many :landing_pages,
-    class_name: 'SiteCustomization::Page',
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'projekt_id',
-    association_foreign_key: 'site_customization_page_id'
+  belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
@@ -292,13 +296,6 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
-  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
-    if landing_page_id.blank?
-      joins(:landing_pages).distinct
-    else
-      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
-    end
-  }
 
   ##################
 
@@ -534,7 +531,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process
@@ -588,6 +585,14 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(user = nil)
     true
+  end
+
+  def section_tracking_section
+    "projekts"
+  end
+
+  def section_tracking_user
+    author
   end
 
   def vc_map_enabled?
@@ -812,7 +817,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
     end

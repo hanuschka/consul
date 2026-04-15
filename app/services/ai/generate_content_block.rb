@@ -1,5 +1,8 @@
 class Ai::GenerateContentBlock < ApplicationService
-  def initialize(instructions, content_block_html, title = nil, subtitle = nil, projekt: nil, use_full_projekt_context: false, allow_text_modification: false)
+  def initialize(
+    instructions, content_block_html, title = nil, subtitle = nil, projekt: nil,
+    use_full_projekt_context: false, allow_text_modification: false
+)
     @instructions = instructions
     @content_block_html = content_block_html
     @title = title
@@ -10,6 +13,39 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def call
+    llm_response =
+      Ai::RubyLlmFactory
+        .chat_with_json_output(output_schema)
+        .with_instructions(system_instructions)
+        .ask(user_prompt)
+
+    llm_response.content["html"]
+  end
+
+  private
+
+  def system_instructions
+    text_modification_instruction =
+      if @allow_text_modification
+        "You CAN modify the text content of the content block if the instructions require it."
+      else
+        "IMPORTANT: You MUST NOT modify the text content. Only modify the HTML structure, styling, layout, and organization. Keep all existing text content exactly as it is."
+      end
+
+    <<~TEXT
+      #{fetch_prompt}
+
+      #{text_modification_instruction}
+
+      IMPORTANT: You MUST NOT include any JavaScript in the output. No <script>
+      tags, no inline event handlers (onclick, onload, etc.), no javascript:
+      URLs. Output only pure HTML and CSS.
+
+      Output response in #{target_language} language.
+    TEXT
+  end
+
+  def user_prompt
     projekt_context_text =
       if @use_full_projekt_context && @projekt.present?
         <<~TEXT
@@ -20,20 +56,7 @@ class Ai::GenerateContentBlock < ApplicationService
         ""
       end
 
-    text_modification_instruction =
-      if @allow_text_modification
-        "You CAN modify the text content of the content block if the instructions require it."
-      else
-        "IMPORTANT: You MUST NOT modify the text content. Only modify the HTML structure, styling, layout, and organization. Keep all existing text content exactly as it is."
-      end
-
-    prompt = <<~TEXT
-      #{fetch_prompt}
-
-      #{text_modification_instruction}
-
-      Output response in #{target_language} language.
-
+    <<~TEXT
       Additional context of content block:
       It's content block of projekt with title: "#{@title}" and subtitle: "#{@subtitle}"
 
@@ -44,18 +67,6 @@ class Ai::GenerateContentBlock < ApplicationService
       Current content block HTML:
       #{@content_block_html}
     TEXT
-
-    Rails.logger.debug "[Ai::GenerateContentBlock] Sending prompt to LLM (#{prompt.length} chars total)"
-
-    llm_response =
-      Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
-        .ask(prompt)
-
-    Rails.logger.debug "[Ai::GenerateContentBlock] LLM response — model: #{llm_response.model}, input_tokens: #{llm_response.input_tokens}, output_tokens: #{llm_response.output_tokens}"
-    Rails.logger.debug "[Ai::GenerateContentBlock] LLM response content: #{llm_response.content.inspect}"
-
-    llm_response.content["html"]
   end
 
   def target_language
@@ -63,27 +74,22 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_prompt
-    cache_key = "dt_api/consul_ai_prompts/content_block_ai_edit"
+    parsed_response =
+      DtApi::Client.new(use_cache: true)
+        .consul_ai_prompts
+        .get(:content_block_ai_edit)
+        .parsed_response
 
-    Rails.logger.debug "[Ai::GenerateContentBlock] Fetching prompt from DT API (cache_key: #{cache_key})"
-
-    parsed_response = DtApi::Caching.get_with_cache(cache_key) do
-      Rails.logger.debug "[Ai::GenerateContentBlock] Cache miss — calling DT API"
-      DtApi::Client.new.consul_ai_prompts.get(:content_block_ai_edit)
-    end
-
-    prompt_text = parsed_response.dig("consul_ai_prompt", "prompt")
-    Rails.logger.debug "[Ai::GenerateContentBlock] Fetched prompt (#{prompt_text&.length || 0} chars): #{prompt_text&.truncate(200)}"
-    prompt_text
+    parsed_response.dig("consul_ai_prompt", "prompt")
   end
 
   def output_schema
     {
-      type: 'object',
+      type: "object",
       properties: {
-        html: { type: 'string' },
+        html: { type: "string" }
       },
-      required: ['html'],
+      required: ["html"],
       additionalProperties: false
     }
   end

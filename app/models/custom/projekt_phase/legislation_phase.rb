@@ -24,6 +24,10 @@ class ProjektPhase::LegislationPhase < ProjektPhase
     legislation_process.blank?
   end
 
+  def after_hide
+    legislation_process&.hide
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

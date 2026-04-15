@@ -9,13 +9,16 @@
     resources :projekts, shallow: true do
       member do
         patch :update_setting
+        patch :update_settings
         patch :update_page
+        patch :update_page_image
         patch :update_body
       end
 
       resources :projekt_phases do
         member do
           patch :update_setting
+          patch :update_settings
         end
       end
     end
@@ -43,7 +46,8 @@
       resources :comments, only: [:index, :create, :show, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:index, :create, :show, :update, :destroy]
-      resources :milestones, only: [:index]
+      resources :milestones, only: [:index, :create]
+      resources :progress_bars, only: [:index, :create, :show, :update, :destroy]
 
       resource :iframe, only: [:show, :update]
     end
@@ -54,7 +58,14 @@
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
-    resources :polls, only: [:index, :show]
+    resources :polls, only: [:index, :show] do
+      resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
+    end
+    resources :poll_questions, only: [:show, :update, :destroy] do
+      resources :poll_question_answers, only: [:index, :create], path: "answers", as: :answers
+      patch :order_answers, to: "poll_question_answers#order_answers", path: "answers/order"
+    end
+    resources :poll_question_answers, only: [:show, :update, :destroy]
     resources :livestreams, only: [:index, :show]
     resources :proposals, only: [:index, :show]
     resources :events, only: [:index, :show]
@@ -66,6 +77,11 @@
     resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
     resources :budgets, only: [:index, :show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
+      resources :budget_phases, controller: "budgets/phases", only: [:index, :show, :update] do
+        collection do
+          patch :bulk_update
+        end
+      end
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
 

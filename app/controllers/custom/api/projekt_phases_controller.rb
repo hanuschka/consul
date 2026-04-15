@@ -2,7 +2,7 @@ class Api::ProjektPhasesController < Api::BaseController
   include Translatable
 
   before_action :find_projekt, only: %i[index new create]
-  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting]
+  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting, :update_settings]
 
   def index
     check_read_access!
@@ -44,7 +44,9 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def create
     check_admin_access!
-    projekt_phase = @projekt.projekt_phases.new(projekt_phase_params)
+    phase_class = resolve_phase_class(params.dig(:projekt_phase, :type))
+    projekt_phase = phase_class.new(projekt_phase_params.except(:type))
+    projekt_phase.projekt = @projekt
 
     if projekt_phase.save
       serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase).serialize
@@ -92,6 +94,30 @@ class Api::ProjektPhasesController < Api::BaseController
     end
   end
 
+  def update_settings
+    check_admin_access!
+    settings_hash = params[:settings]
+
+    if settings_hash.blank?
+      return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
+    end
+
+    updated = []
+    errors = {}
+
+    settings_hash.each do |key, value|
+      setting = @projekt_phase.settings.find_or_initialize_by(key: key)
+
+      if setting.update(value: value.to_s)
+        updated << key
+      else
+        errors[key] = setting.errors.full_messages
+      end
+    end
+
+    render json: { data: { updated: updated, errors: errors } }
+  end
+
   private
 
   def projekt_phase_params
@@ -113,6 +139,18 @@ class Api::ProjektPhasesController < Api::BaseController
       geozone_restriction_ids: [],
       settings_attributes: [:id, :key, :value, :_destroy],
     )
+  end
+
+  def resolve_phase_class(type_name)
+    return ProjektPhase if type_name.blank?
+
+    phase_class_map[type_name] || ProjektPhase
+  end
+
+  def phase_class_map
+    ProjektPhase::ALL_PHASE_TYPES.each_with_object({}) do |name, map|
+      map[name] = name.safe_constantize
+    end
   end
 
   def find_projekt

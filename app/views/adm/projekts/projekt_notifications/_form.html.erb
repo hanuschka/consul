@@ -1,0 +1,12 @@
+<%= form_with model: @projekt_notification, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint"), stacked: true) do %>
+    <%= f.text_field :title, label: false, required: true, placeholder: t(".title_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint"), stacked: true) do %>
+    <%= f.text_area :body, label: false, rows: 6, placeholder: t(".body_placeholder") %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -112,25 +112,43 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     !selectable_by_users?
   end
 
+  def customizable_email_templates
+    [
+      ["Mailer", "budget_investment_created"],
+      ["Mailer", "budget_investment_feasible"],
+      ["Mailer", "budget_investment_unfeasible"],
+      ["Mailer", "budget_investment_selected"],
+      ["Mailer", "budget_investment_unselected"],
+      ["Mailer", "budget_investment_preselected"],
+      ["Mailer", "budget_investment_not_preselected"],
+      ["NotificationServiceMailer", "new_budget_investment"]
+    ]
+  end
+
   def admin_nav_bar_items
     %w[
       budget_phases
       naming restrictions
-      budget_edit budget_investments
+      budget_edit budget_investments comments
       general_settings form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
       officing_managers
-      ai_settings
+      email_templates
+      ai_settings ai_user_flow
     ]
   end
 
   def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[ officing_managers])
+    admin_nav_bar_items.excluding(%w[officing_managers])
   end
 
   def safe_to_destroy?
     budget.nil?
+  end
+
+  def after_hide
+    budget&.investments&.each(&:hide)
   end
 
   def authors_of_feasible_ids
@@ -157,6 +175,14 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
+
+      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+    end
+
+    def submissions_limit_exceeded?(user)
+      return false if max_submissions_per_user.zero?
+
+      budget.investments.where(author: user).count >= max_submissions_per_user
     end
 
     def create_budget
@@ -173,7 +199,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       )
 
       group = Budget::Group.create!(
-        budget: budget,
+        budget:,
         name: "default_group",
         slug: "default_group"
       )
@@ -181,7 +207,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       Budget::Heading.create!(
         name: "default_heading",
         slug: "default_heading",
-        group: group,
+        group:,
         population: 1000,
         price: 1000
       )

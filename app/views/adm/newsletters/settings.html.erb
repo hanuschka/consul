@@ -1,0 +1,21 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  { label: t("adm.newsletters.index.tabs.list"), url: adm_newsletters_path },
+  { label: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path },
+  { label: t("adm.newsletters.index.tabs.unregistered_subscribers"), url: adm_unregistered_newsletter_subscribers_path },
+  { label: t("adm.newsletters.index.tabs.settings"), url: settings_adm_newsletters_path, current: true }
+]) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "advanced_newsletter"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_newsletter_email"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "newsletter_brand_color"), :value, :color) %>
+
+  <%= render Adm::AttributeEditorComponent.new(
+    SiteCustomization::ContentBlock.custom_block_for('newsletter_email_footer_block_1', current_user&.locale),
+    :body, :rich_text
+  ) %>
+</div>

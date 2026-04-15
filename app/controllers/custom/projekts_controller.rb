@@ -2,6 +2,7 @@ class ProjektsController < ApplicationController
   include CustomHelper
   include ProposalsHelper
   include Search
+  include LandingPageResolvable
 
   skip_authorization_check
   before_action :raise_flag_feature_disabled, except: [:map_html]
@@ -9,21 +10,19 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    if params[:landing_page_slug].present?
+    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
+    if landing_page_slug.present?
       @landing_page =
         SiteCustomization::Page
           .published
           .landing
-          .where(landing_show_projekts_overview: true)
-          .find_by(slug: params[:landing_page_slug])
+          .find_by(slug: landing_page_slug)
 
       if @landing_page.nil?
         raise ActionController::RoutingError.new('Not Found')
       end
 
-      if @landing_page.present?
-        set_landing_page_topbar_ui_variables(@landing_page)
-      end
+      set_landing_page_topbar_ui_variables(@landing_page)
     end
 
     base_projekts =
@@ -48,12 +47,12 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-    @geozones = Geozone.all.order(:name)
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
-    @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
+    @categories = @projekts.flat_map { |p| p.tags.category.to_a }.uniq.compact.sort
     @tag_cloud = tag_cloud
     take_only_by_tag_names unless @search_terms.present?
 
@@ -82,10 +81,14 @@ class ProjektsController < ApplicationController
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id))
     @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(24)
 
-    if Setting.new_design_enabled?
-      render :index_new
-    else
-      render :index
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
     end
   end
 
@@ -165,10 +168,10 @@ class ProjektsController < ApplicationController
       @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
       @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
-      if @affiliated_geozones.present?
-        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
+      if @affiliated_districts.present?
+        @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
       else
-        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
+        @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
       end
     end
   end

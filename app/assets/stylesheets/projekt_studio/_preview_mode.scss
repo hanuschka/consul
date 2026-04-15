@@ -1,8 +1,9 @@
 body.-preview-mode {
   .sdg-goal-tag-list input:not(:checked) + label,
   .js-add-tag-link:not(.selected),
-  .projekt-section-data-wrapper[data-other-conditions-are-met="false"],
-  .js-projekt-studio-hide-on-preview
+  .js-projekt-section-data-wrapper[data-other-conditions-are-met="false"],
+  .js-toggle-section-with-setting.-deactivated,
+  .js-studio-hide-on-preview
   {
     display: none !important;
   }

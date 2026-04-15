@@ -4,9 +4,7 @@
   <ul class="nav-flyout-block <%= 'nested-dropdown' if projekt_nesting_level > 1 %>">
 
     <% if local_assigns[:called_from] == "subnavigation_projekts_overview" && projekts.any? %>
-      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'
-        <%= "tabindex=0" if placement == "desktop" %>
-          aria-label="<%= t("custom.links.menu.all_projekts") %>">
+      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'>
 
         <div class='projekt-name-group'>
           <div class='flyout-item-name projekt-name'>
@@ -20,9 +18,7 @@
       <% projekt_nesting_level = 2 %>
       <% projekt_children_to_show_in_menu = projekt.children.for_navigation(current_user) %>
 
-      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'
-        <%= "tabindex=0" if placement == "desktop" %>
-          aria-label="<%= t("custom.links.menu.projekt_name_label", projekt_name: projekt.name) %>">
+      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'>
 
           <div class='projekt-name-group'>
             <div class='flyout-item-name projekt-name'>
@@ -30,10 +26,10 @@
             </div>
 
             <% if projekt_children_to_show_in_menu.any? && local_assigns[:skip_subprojekts] != true && placement == 'mobile' %>
-              <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
-                   tabindex="0"
-                   aria-expanded=false>
-              </div>
+              <button class='nav-toggle-arrow js-toggle-mobile-flyout-item'
+                   aria-expanded="false"
+                   aria-label="<%= t('custom.links.menu.mobile.arrow_projekts') %>">
+              </button>
             <% end %>
           </div>
 
@@ -44,9 +40,7 @@
     <% end %>
 
     <% if local_assigns[:called_from] == "subnavigation_projekts_overview" && @draft_projekts_for_navigation.any? %>
-      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'
-        <%= "tabindex=0" if placement == "desktop" %>
-        aria-label="<%= t("custom.links.menu.projekt_name_label", projekt_name: "Drafts") %>">
+      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'>
 
         <div class='projekt-name-group'>
           <div class='flyout-item-name projekt-name'>
@@ -54,10 +48,10 @@
           </div>
 
           <% if placement == 'mobile' %>
-            <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
-                 tabindex="0"
-                 aria-expanded=false>
-            </div>
+            <button class='nav-toggle-arrow js-toggle-mobile-flyout-item'
+                 aria-expanded="false"
+                 aria-label="<%= t('custom.links.menu.mobile.arrow_projekts') %>">
+            </button>
           <% end %>
         </div>
 

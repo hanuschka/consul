@@ -1,24 +1,35 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
-<% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= content_for :additional_styles do %>
-    <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <% content_for :admin_topbar_actions do %>
+    <% if @custom_page.landing? %>
+      <% if current_user&.administrator? %>
+        <%= link_to edit_adm_landing_pages_landing_page_path(@custom_page),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_landing") %></span>
+        <% end %>
+      <% end %>
+    <% elsif @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
+      <%= render "pages/topbar/admin_topbar_projekt_actions" %>
+    <% else %>
+      <% if current_user&.administrator? %>
+        <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_page") %></span>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
-  <%= content_for :additional_scripts do %>
-    <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
-  <% end %>
-<% end %>
-
-<% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
-  <%= render Projekts::ContentBlockEditPopupsComponent.new %>
-
 <% end %>
 
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
-  <% landing_page = @custom_page&.projekt&.landing_pages&.first %>
+  <% landing_page = @custom_page&.projekt&.landing_page %>
   <% if landing_page.present? %>
     <%= render "pages/brand_color_styles", page: landing_page %>
   <% end %>
@@ -76,16 +87,12 @@
       </div>
     <% end %>
 
-    <% if show_admin_controls_for_projekt?(@projekt) %>
-      <%= render "pages/topbar/admin_topbar" %>
-    <% end %>
-
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
     <% if @custom_page.projekt.present? %>
       <% if native_projekt_studio?(@projekt) %>
         <div
-          class="js-projekt-studio-hide-on-preview"
+          class="js-studio-hide-on-preview"
           style="position: relative; height: 1px;"
         >
           <div
@@ -98,7 +105,7 @@
               aria-pressed="<%= @custom_page.projekt.show_content_background %>"
               data-projekt-id="<%= @custom_page.projekt.id %>"
               data-show-background="<%= @custom_page.projekt.show_content_background %>"
-              data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+              data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
             ></button>
             <span
               class="projekt-studio--toggle-background-label"

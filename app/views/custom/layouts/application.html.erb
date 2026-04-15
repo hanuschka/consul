@@ -13,7 +13,13 @@
     <%= raw setting["html.per_page_code_head"] %>
   </head>
   <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
+    <% if Setting["brand_color"].present? && Setting["brand_color"].match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
+      <style>:root { --brand-color: <%= Setting["brand_color"] %>; }</style>
+    <% end %>
     <%= yield :styles %>
+
+    <a href="#main-content" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
+    <a href="#responsive-menu" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>
@@ -41,10 +47,14 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
+    <% if (current_user&.administrator? || current_user&.projekt_manager?) && !embedded? %>
+      <%= render "layouts/admin_topbar" %>
+    <% end %>
+
     <% if Setting.new_design_enabled? && !embedded? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
-    <div class="wrapper <%= yield(:wrapper_class) %>">
+    <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>">
       <% if Setting.old_design_enabled? %>
         <%= render "layouts/header", with_subnavigation: true %>
       <% end %>
@@ -62,6 +72,63 @@
           App.routeNamespace = "<%= @namespace %>"
         })
       </script>
+    <% end %>
+
+    <% if current_user&.administrator? || current_user&.projekt_manager? %>
+      <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+      <%= render Projekts::ContentBlockEditPopupsComponent.new %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new %>
+    <% end %>
+    <% if user_signed_in? %>
+      <%
+        timeout_minutes = (Devise.timeout_in / 60).to_i
+        warning_minutes = [5, timeout_minutes - 1].min
+      %>
+      <div
+        class="js-session-timeout-warning"
+        data-timeout-minutes="<%= timeout_minutes %>"
+        data-warning-minutes="<%= warning_minutes %>"
+        data-keepalive-url="<%= session_keepalive_ping_path %>"
+      >
+        <dialog
+          class="js-session-timeout-dialog session-timeout-warning--dialog"
+          role="alertdialog"
+          aria-labelledby="session-timeout-title"
+          aria-describedby="session-timeout-description"
+          aria-modal="true"
+        >
+          <h2
+            id="session-timeout-title"
+            class="session-timeout-warning--title"
+          ><%= t("custom.accessibility.session_timeout.title") %></h2>
+
+          <p
+            id="session-timeout-description"
+            class="session-timeout-warning--description"
+          ><%= t("custom.accessibility.session_timeout.description") %></p>
+
+          <p
+            class="session-timeout-warning--countdown-wrapper"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <%= t("custom.accessibility.session_timeout.remaining_time") %>
+            <span class="js-session-timeout-countdown session-timeout-warning--countdown"></span>
+          </p>
+
+          <div class="session-timeout-warning--actions">
+            <button
+              type="button"
+              class="js-session-timeout-extend session-timeout-warning--extend-button"
+            ><%= t("custom.accessibility.session_timeout.extend") %></button>
+
+            <button
+              type="button"
+              class="js-session-timeout-logout session-timeout-warning--logout-button"
+            ><%= t("custom.accessibility.session_timeout.logout") %></button>
+          </div>
+        </dialog>
+      </div>
     <% end %>
   </body>
 </html>

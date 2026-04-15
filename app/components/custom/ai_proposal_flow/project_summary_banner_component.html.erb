@@ -1,0 +1,18 @@
+<a
+  href="<%= projekt_page_url %>"
+  class="ai-proposal-flow--project-banner"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <div class="ai-proposal-flow--project-banner--initial">
+    <% if projekt_image&.attached? %>
+      <%= image_tag projekt_image.variant(:thumb), alt: projekt.page.title %>
+    <% else %>
+      <%= initial %>
+    <% end %>
+  </div>
+  <div class="ai-proposal-flow--project-banner--content">
+    <strong class="ai-proposal-flow--project-banner--name"><%= projekt.page.title %></strong>
+    <p class="ai-proposal-flow--project-banner--description"><%= description_snippet %></p>
+  </div>
+</a>

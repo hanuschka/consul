@@ -8,8 +8,10 @@ module CustomNewHelper
       back_path =
         if session[:back_path].present? && session[:back_path] != request.fullpath
           session[:back_path]
-        else
+        elsif fallback_path.present?
           fallback_path
+        else
+          :back
         end
 
       back_link_to(back_path)

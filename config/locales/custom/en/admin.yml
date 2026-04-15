@@ -9,7 +9,7 @@ en:
             label_ok: "DT API connected"
             label_fail: "DT API not connected"
             description_ok: "The DT API client is registered and has a valid service token."
-            description_fail: "No registered DT API client found or the service token is missing."
+            description_fail: "No DT API client registered or service token missing."
             hint: "Local config check only — no HTTP request is made."
           api_accessible:
             label_ok: "DT API accessible"
@@ -23,6 +23,9 @@ en:
             description_ok: "Authentication is valid and the connection is fully operational."
             description_fail: "The connection check returned an unexpected response or authentication failed."
             hint: "Requires HTTP 200 with authenticated: true in the JSON response body."
+  internal_api_clients:
+    connect:
+      success: "Successfully connected to DT."
   activerecord:
     attributes:
       api_client:
@@ -58,6 +61,7 @@ en:
     menu:
       proposals_topics: Predefined tags
       api_clients: API Clients
+      api_request_logs: API Request Logs
     tags:
       create: Create tag
       destroy: Delete tag
@@ -74,6 +78,25 @@ en:
         cloud_category: Tag cloud for category
         cloud_subcategory: Tag cloud for subcategory
         custom_tags: User tags
+
+    api_request_logs:
+      index:
+        title: API Request Logs
+        id: ID
+        http_method: Method
+        request_path: Path
+        response_status: Status
+        api_client: API Client
+        no_logs: No API request logs recorded.
+      show:
+        http_method: HTTP Method
+        request_path: Request Path
+        full_url: Full URL
+        response_status: Response Status
+        api_client: API Client
+        created_at: Created At
+        query_params: Query Params
+        body_params: Body Params
 
     api_clients:
       edit_button: "Edit"

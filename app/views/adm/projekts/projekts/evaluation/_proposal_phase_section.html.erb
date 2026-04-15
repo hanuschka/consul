@@ -1,0 +1,121 @@
+<%
+  stats = phase["stats"] || {}
+  top_proposals = stats["top_proposals"] || []
+  total_supports = stats["supports_count"].to_i
+  max_supports = top_proposals.map { |p| p["supports"].to_i }.max.to_i
+  max_supports = 1 if max_supports.zero?
+  total_count = top_proposals.size
+  accent = accent_color
+  accent_light = accent_light_color
+  shades = accent_shades || [accent] * 5
+
+  palette_size = shades.size
+  max_shade = palette_size - 1
+
+  shade_for = ->(rank) {
+    return 0 if total_count <= 1
+
+    ratio = (rank.to_i - 1).to_f / (total_count - 1)
+    (ratio * max_shade).round.clamp(0, max_shade)
+  }
+%>
+
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-icon-title">
+      <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>
+      </div>
+      <div>
+        <div class="phase-title"><%= phase["phase_title"] %></div>
+        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.proposal_phase") %></div>
+      </div>
+    </div>
+    <div class="phase-meta">
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
+      </div>
+    </div>
+  </div>
+
+  <% if top_proposals.any? %>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-title"><%= t("adm.projekts.projekts.evaluation.ranking_by_supports") %></div>
+      <div class="card-subtitle">
+        <%= t("adm.projekts.projekts.evaluation.ranking_subtitle",
+          proposals: stats["proposals_count"].to_i,
+          supports: total_supports) %>
+      </div>
+
+      <% top_proposals.each do |proposal| %>
+        <%
+          rank = proposal["rank"].to_i
+          width = (proposal["supports"].to_f / max_supports * 100).round(1)
+          bucket = shade_for.call(rank)
+          shade_bg = shades[bucket]
+          shade_next = shades[[bucket + 2, max_shade].min]
+          text_color = bucket >= 3 ? accent : "white"
+        %>
+        <div class="pref-row">
+          <div class="pref-rank" style="background:<%= shade_bg %>;color:<%= text_color %>"><%= rank %></div>
+          <span class="pref-label"><%= proposal["title"] %></span>
+          <div class="pref-bar-track">
+            <div class="pref-bar-fill" style="width:<%= width %>%;background:linear-gradient(90deg,<%= shade_bg %>,<%= shade_next %>)">
+              <%= proposal["supports"] %>
+            </div>
+          </div>
+          <span class="pref-count"><%= proposal["supports"] %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="proposal-grid">
+      <% top_proposals.each do |proposal| %>
+        <%
+          rank = proposal["rank"].to_i
+          bucket = shade_for.call(rank)
+          stripe_color = shades[bucket]
+        %>
+        <div class="proposal-card">
+          <div class="stripe" style="background:<%= stripe_color %>"></div>
+          <div class="proposal-header">
+            <span class="proposal-name"><%= proposal["title"] %></span>
+            <span class="proposal-votes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 9V5a3 3 0 00-6 0v4"/><path d="M18.8 10A2 2 0 0017 9H7a2 2 0 00-2 1.8L4 19.6A2 2 0 006 22h12a2 2 0 002-2.4L18.8 10z"/></svg>
+              <%= proposal["supports"] %>
+            </span>
+          </div>
+          <div class="proposal-desc"><%= sanitize(proposal["description"].to_s).truncate(300) %></div>
+          <% if rank == 1 %>
+            <span class="proposal-tag" style="background:<%= accent_light %>;color:<%= accent %>">
+              <%= t("adm.projekts.projekts.evaluation.rank_first") %>
+            </span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% eval_summary = phase["evaluation_summary"] || {} %>
+  <% if eval_summary["body"].present? %>
+    <div class="ai-summary" style="background:<%= accent_light %>;border:1px solid <%= shades[3] %>">
+      <div class="ai-summary-stripe" style="background:<%= accent %>"></div>
+      <div class="ai-summary-title"><%= eval_summary["title"] %></div>
+      <div class="ai-summary-body"><%= sanitize(eval_summary["body"], tags: %w[strong em b i]) %></div>
+    </div>
+  <% end %>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
+    locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+</div>

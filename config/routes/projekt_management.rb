@@ -15,6 +15,7 @@ namespace :projekt_management do
       get :map
       patch :update_map
       get :proposals
+      get :comments
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -180,6 +181,7 @@ namespace :projekt_management do
     member do
       post :send_notifications
     end
+    resources :projekt_event_registrations, only: [:index, :destroy]
   end
 
   resources :proposals, only: :index do
@@ -206,7 +208,12 @@ namespace :projekt_management do
 
   namespace :site_customization do
     resources :pages, only: [:update]
-    resources :content_blocks, only: [:edit, :update]
+    resources :content_blocks, only: [:edit, :update] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
   end
 
   scope module: :poll do

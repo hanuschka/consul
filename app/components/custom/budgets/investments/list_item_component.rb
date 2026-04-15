@@ -4,10 +4,9 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
   attr_reader :budget_investment, :budget_investment_ids, :ballot
   delegate :management_controller?, to: :helpers
 
-  def initialize(budget_investment:, budget_investment_ids:, additional_url_params: nil, ballot:)
+  def initialize(budget_investment:, budget_investment_ids:, ballot:)
     @budget_investment = budget_investment
     @budget_investment_ids = budget_investment_ids
-    @additional_url_params = additional_url_params
     @ballot = ballot
   end
 
@@ -24,15 +23,7 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
   end
 
   def budget_investment_path
-    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
-      helpers.landing_page_budget_investment_path(
-        landing_page_slug: @additional_url_params[:landing_page],
-        budget_id: budget_investment.budget_id,
-        id: budget_investment.id
-      )
-    else
-      helpers.url_for(budget_investment)
-    end
+    helpers.url_for(budget_investment)
   end
 
   def investment_status_callout

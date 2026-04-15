@@ -1,0 +1,169 @@
+<%
+  data = evaluation.data || {}
+  totals = data["totals"] || {}
+  phases = data["phases"] || []
+  ai_project_summary = data["ai_project_summary"]
+
+  phase_palette = [
+    {
+      accent: "#7C3AED",
+      accent_light: "#EDE9FE",
+      shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
+    },
+    {
+      accent: "#059669",
+      accent_light: "#D1FAE5",
+      shades: ["#059669", "#10B981", "#34D399", "#6EE7B7", "#A7F3D0", "#D1FAE5"]
+    },
+    {
+      accent: "#1E40AF",
+      accent_light: "#DBEAFE",
+      shades: ["#1E40AF", "#1E3A8A", "#3B82F6", "#60A5FA", "#93C5FD", "#DBEAFE"]
+    },
+    {
+      accent: "#D97706",
+      accent_light: "#FEF3C7",
+      shades: ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#FEF3C7"]
+    }
+  ]
+
+  phase_type_partial = {
+    "ProjektPhase::ProposalPhase" => "proposal_phase_section",
+    "ProjektPhase::VotingPhase" => "voting_phase_section",
+    "ProjektPhase::BudgetPhase" => "budget_phase_section",
+    "ProjektPhase::CommentPhase" => "comment_phase_section"
+  }
+
+  phase_tab_config = {
+    "ProjektPhase::ProposalPhase" => {
+      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>),
+      kpi_key: "proposals_count",
+      kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
+    },
+    "ProjektPhase::VotingPhase" => {
+      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>),
+      kpi_key: "participants_count",
+      kpi_label_key: "adm.projekts.projekts.evaluation.participants"
+    },
+    "ProjektPhase::BudgetPhase" => {
+      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>),
+      kpi_key: "investments_count",
+      kpi_label_key: "adm.projekts.projekts.evaluation.investments"
+    },
+    "ProjektPhase::CommentPhase" => {
+      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>),
+      kpi_key: "comments_count",
+      kpi_label_key: "adm.projekts.projekts.evaluation.comments"
+    }
+  }
+
+  renderable_phases = phases.select { |p| phase_type_partial.key?(p["phase_type"]) }
+%>
+
+
+<div class="evaluation-report">
+  <div class="er-header">
+    <div>
+      <div class="er-header-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <%= t("adm.projekts.projekts.evaluation.header_badge") %>
+      </div>
+      <h1><%= projekt.name %></h1>
+      <p class="er-header-sub">
+        <%= t("adm.projekts.projekts.evaluation.header_sub",
+          phases: totals["phases_count"].to_i,
+          date: l(evaluation.generated_at.to_date, format: :long)) %>
+      </p>
+    </div>
+    <div class="er-header-meta">
+      <div class="meta-item">
+        <div class="meta-value"><%= totals["total_participants"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value"><%= totals["total_contributions"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.contributions") %></div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-item">
+        <div class="meta-value"><%= totals["total_supports"].to_i %></div>
+        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+      </div>
+    </div>
+  </div>
+
+  <% if ai_project_summary.present? %>
+    <div class="er-project-summary">
+      <div class="er-project-summary-title">
+        <%= t("adm.projekts.projekts.evaluation.project_summary") %>
+      </div>
+      <div class="er-project-summary-body"><%= sanitize(ai_project_summary) %></div>
+    </div>
+  <% end %>
+
+  <% if renderable_phases.any? %>
+    <% radio_group_name = "evaluation-phase-group-#{evaluation.id}" %>
+
+    <div class="evaluation-phase-tabs">
+      <% renderable_phases.each_with_index do |phase, idx| %>
+        <%
+          input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+        %>
+        <input
+          type="radio"
+          name="<%= radio_group_name %>"
+          id="<%= input_id %>"
+          class="evaluation-phase-tabs__radio"
+          <%= "checked" if idx.zero? %>
+        >
+      <% end %>
+
+      <div class="evaluation-phase-tabs__nav" role="tablist">
+        <% renderable_phases.each_with_index do |phase, idx| %>
+          <%
+            color = phase_palette[idx % phase_palette.size]
+            config = phase_tab_config[phase["phase_type"]]
+            kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
+            kpi_label = t(config[:kpi_label_key])
+            input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+          %>
+          <label
+            for="<%= input_id %>"
+            role="tab"
+            class="evaluation-phase-tab"
+            style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
+          >
+            <span class="evaluation-phase-tab__icon"><%= raw(config[:icon]) %></span>
+            <span class="evaluation-phase-tab__body">
+              <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
+              <span class="evaluation-phase-tab__meta">
+                <strong><%= kpi_value %></strong>
+                <span><%= kpi_label %></span>
+              </span>
+            </span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="evaluation-phase-tabs__panels">
+        <% renderable_phases.each_with_index do |phase, idx| %>
+          <%
+            color = phase_palette[idx % phase_palette.size]
+            partial = phase_type_partial[phase["phase_type"]]
+          %>
+          <div role="tabpanel" class="evaluation-phase-panel">
+            <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
+              locals: {
+                phase: phase,
+                accent_color: color[:accent],
+                accent_light_color: color[:accent_light],
+                accent_shades: color[:shades]
+              } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+</div>

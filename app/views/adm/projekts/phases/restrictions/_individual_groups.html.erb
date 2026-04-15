@@ -1,0 +1,28 @@
+<%= turbo_frame_tag "restrictions__individual_groups" do %>
+  <%= form_with model: projekt_phase, url: adm_projekts_phase_path(projekt_phase), method: :patch do |f| %>
+    <div class="mb-3">
+      <% disabled = projekt_phase.user_status == "guest" %>
+
+      <% IndividualGroup.visible.each do |individual_group| %>
+        <div class="mb-3">
+          <strong class="kern-label"><%= individual_group.name %></strong>
+
+          <div class="mt-2">
+            <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |cb| %>
+              <div class="kern-form-check kern-form-check--inline mb-2">
+                <%= cb.check_box(class: "kern-form-check__checkbox", disabled: disabled) %>
+                <%= cb.label(class: "kern-label") %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

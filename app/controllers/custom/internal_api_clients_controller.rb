@@ -36,8 +36,8 @@ class InternalApiClientsController < ApplicationController
         user_first_name: current_user.first_name,
         user_last_name: current_user.last_name,
         user_id: current_user.id,
-        user_role: user_role,
-        projekt_manager_projekt_ids: projekt_manager_projekt_ids
+        user_role:,
+        projekt_manager_projekt_ids:
       )
 
     if dt_response.present? && dt_response.code != 200
@@ -49,15 +49,16 @@ class InternalApiClientsController < ApplicationController
     redirect_url = dt_response["redirect_url"]
     redirect_type = dt_response["redirect_type"]
 
-    if redirect_url.present?
-      redirect_to UrlUtils.add_params_to_url(
-        redirect_url, { type: redirect_type }
-      )
+    if dt_response.code === 200
+      flash[:notice] = I18n.t("internal_api_clients.connect.success")
+      redirect_to admin_connection_path
     else
-      if dt_response.code != 200
-        flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, error: #{dt_response['error']}"
+      if dt_response.code == 200
+        flash[:error] =
+          "Error connecting to DT. HTTP code: #{dt_response.code}, http message: #{dt_response.message}"
       else
-        flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, http message: #{dt_response.message}"
+        flash[:error] =
+          "Error connecting to DT. HTTP code: #{dt_response.code}, error: #{dt_response["error"]}"
       end
       redirect_back(fallback_location: root_path)
     end

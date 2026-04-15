@@ -6,80 +6,78 @@
     <% end %>
   </li>
 
-  <% if show_admin_menu?(current_user) %>
-    <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
+  <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
 
-    <% if current_user.administrator? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">admin_panel_settings</span>
-          <%= t("layouts.header.administration") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if current_user.administrator? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">admin_panel_settings</span>
+        <%= t("layouts.header.administration") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if current_user.administrator? || current_user.projekt_manager? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">folder</span>
-          <%= t("custom.layouts.header.projekt_management") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if current_user.administrator? || current_user.projekt_manager? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">folder</span>
+        <%= t("custom.layouts.header.projekt_management") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if current_user.administrator? || current_user.landing_page_manager? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">web</span>
-          <%= t("adm.landing_pages.title") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if current_user.administrator? || current_user.landing_page_manager? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">web</span>
+        <%= t("adm.landing_pages.title") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if current_user.administrator? || current_user.moderator? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">shield</span>
-          <%= t("layouts.header.moderation") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if current_user.administrator? || current_user.moderator? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">shield</span>
+        <%= t("layouts.header.moderation") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">report_problem</span>
-          <%= t("custom.layouts.header.deficiency_report_management") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">report_problem</span>
+        <%= t("custom.layouts.header.deficiency_report_management") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if Adm::Ideas::IdeaPolicy.new(current_user, nil).index? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">lightbulb</span>
-          <%= t("custom.layouts.header.idea_management") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if Adm::Ideas::IdeaPolicy.new(current_user, nil).index? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">lightbulb</span>
+        <%= t("custom.layouts.header.idea_management") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if feature?(:budgets) && (current_user.administrator? || current_user.valuator?) %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">account_balance_wallet</span>
-          <%= t("layouts.header.valuation") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if feature?(:budgets) && (current_user.administrator? || current_user.valuator?) %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">account_balance_wallet</span>
+        <%= t("layouts.header.valuation") %>
+      <% end %>
+    </li>
+  <% end %>
 
-    <% if current_user.officing_manager? %>
-      <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-        <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-1" do %>
-          <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">how_to_vote</span>
-          <%= t("layouts.header.officing") %>
-        <% end %>
-      </li>
-    <% end %>
+  <% if current_user.officing_manager? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-1" do %>
+        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">how_to_vote</span>
+        <%= t("layouts.header.officing") %>
+      <% end %>
+    </li>
   <% end %>
 
   <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>

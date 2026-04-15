@@ -45,6 +45,9 @@ de:
           submit_button: Mangel melden
         edit:
           submit_button: Mangel aktualisieren
+        submit_button_new_design: Jetzt einreichen
+      create:
+        flash_success: Ihre Meldung wurde erfolgreich übermittelt.
       index:
         empty_list_text: "Keine Ergebnisse"
         title: Mängelmelder

@@ -1,0 +1,16 @@
+@use "../abstracts/breakpoints" as breakpoints;
+
+/* Display Utility Classes */
+.d-inline { display: inline !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-none { display: none !important; }
+
+@each $bp, $bp-width in breakpoints.$grid-breakpoints {
+  @media (min-width: $bp-width) {
+    .d-#{$bp}-inline { display: inline !important; }
+    .d-#{$bp}-block { display: block !important; }
+    .d-#{$bp}-flex { display: flex !important; }
+    .d-#{$bp}-none { display: none !important; }
+  }
+}

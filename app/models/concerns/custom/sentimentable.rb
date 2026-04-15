@@ -7,8 +7,8 @@ module Sentimentable
   end
 
   def sentiments_available?
-    return false if projekt_phase&.nil?
+    return false if projekt_phase.nil?
 
-    projekt_phase.feature?("form.sentiments") && projekt_phase&.sentiments&.exists?
+    projekt_phase.feature?("form.sentiments") && projekt_phase.sentiments.exists?
   end
 end

@@ -1,128 +1,146 @@
 class Api::ProjektPhasesController < Api::BaseController
-  before_action :find_projekt, only: [:update]
-  before_action :find_phase, only: [:update]
+  include Translatable
 
-  skip_authorization_check
+  before_action :find_projekt, only: %i[index new create]
+  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting]
 
-  # Do not comment
-  # In use
-  def update
-    if params[:geozone_restricted_street]
-      street = RegisteredAddress::Street.by_user_input(
-        name: params[:geozone_restricted_street][:street_name],
-        plz: params[:geozone_restricted_street][:plz]
+  def index
+    check_read_access!
+    projekt_phases = @projekt.projekt_phases
+      .includes(
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
       )
 
-      if street.present?
-        @projekt_phase.registered_address_streets << street
+    if current_client.public_data?
+      projekt_phases = projekt_phases.frontend_visible.active
+    end
+
+    serialized_projekt_phases = ProjektPhaseSerializer.serialize_collection(
+      projekt_phases,
+      current_api_client: current_client
+    )
+
+    render json: { data: { projekt_phases: serialized_projekt_phases } }
+  end
+
+  def show
+    check_read_access!
+
+    if current_client.public_data?
+      unless @projekt_phase.frontend_visibility && @projekt_phase.active?
+        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
       end
     end
 
-    if @projekt_phase.update!(projekt_phase_params)
-      response_json = {}
-      if @projekt.present?
-        response_json[:projekt] = @projekt.serialize
-      end
+    serialized_projekt_phase = ProjektPhaseSerializer.new(
+      @projekt_phase,
+      current_api_client: current_client
+    ).serialize
 
-      render json: { **response_json, status: { message: "Projekt phase updated" }}
+    render json: { data: { projekt_phase: serialized_projekt_phase } }
+  end
+
+  def create
+    check_admin_access!
+    phase_class = resolve_phase_class(params.dig(:projekt_phase, :type))
+    projekt_phase = phase_class.new(projekt_phase_params.except(:type))
+    projekt_phase.projekt = @projekt
+
+    if projekt_phase.save
+      serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase).serialize
+
+      render json: { data: { projekt_phase: serialized_projekt_phase } }, status: 201
     else
-      render json: { message: "Error updating projekt phase" }
+      render json: { error: { messages: projekt_phase.errors.full_messages } }, status: 422
     end
   end
 
-  def set_as_default
-    projekt = ProjektPhase.find(params[:id]).projekt
+  def update
+    check_admin_access!
+    if @projekt_phase.update(projekt_phase_params)
+      serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase).serialize
 
-    @default_footer_tab_setting = ProjektSetting.find_by(
-      projekt: projekt,
-      key: "projekt_custom_feature.default_footer_tab"
-    ).reload
-
-    # authorize!(:update_standard_phase, @default_footer_tab_setting)
-
-    if @default_footer_tab_setting.present?
-      value_to_set =
-        if params[:is_default] == "true"
-          params[:id]
-        else
-          nil
-        end
-
-      @default_footer_tab_setting.update!(value: value_to_set)
-    end
-
-    respond_to do |format|
-      format.js
+      render json: { data: { projekt_phase: serialized_projekt_phase } }
+    else
+      render json: { error: { messages: @projekt_phase.errors.full_messages } }, status: 422
     end
   end
 
   def destroy
-    @projekt_phase = ProjektPhase.find(params[:id])
-
-    @projekt_phase.destroy!
+    check_admin_access!
+    if @projekt_phase.destroy
+      render json: { message: "Projekt phase destroyed" }
+    else
+      render json: { error: { messages: @projekt_phase.errors.messages } }, status: 422
+    end
   end
 
-  def reorder
-    @projekt = Projekt.find(params[:projekt_id])
-    # authorize!(:order_phases, @projekt)
+  def update_setting
+    check_admin_access!
+    name = params.dig(:projekt_phase_setting, :key)
+    value = params.dig(:projekt_phase_setting, :value)
 
-    @projekt.projekt_phases.order_phases(params[:ordered_list])
-    head :ok
-  end
+    unless name.present?
+      return render json: { error: { messages: ["name is required"] } }, status: 422
+    end
 
-  def send_notifications
-    projekt_phase = ProjektPhase.find(params[:id])
-    # authorize!(:send_notifications, projekt_phase)
-
-    case params[:resource_type]
-    when "projekt_arguments"
-      NotificationServices::ProjektArgumentsNotifier.call(projekt_phase.id)
-    when "projekt_questions"
-      NotificationServices::ProjektQuestionsNotifier.call(projekt_phase.id)
+    setting = @projekt_phase.settings.find_or_initialize_by(key: name)
+    if setting.update(value: value)
+      render json: { data: { projekt_phase_setting: setting.as_json(only: [:id, :key, :value]).merge(key: setting.key) } }
+    else
+      render json: { error: { messages: setting.errors.full_messages } }, status: 422
     end
   end
 
   private
 
-  def find_projekt
-    if params[:projekt_id].present?
-      @projekt = Projekt.find(params[:projekt_id])
-    end
-  end
-
-  def create_phase(projekt, phase_class_name)
-    find_phase(projekt, phase_class_name).update!(active: true)
-  end
-
-  def find_phase
-    if params[:phase_id].present?
-      @projekt_phase = ProjektPhase.find(params[:phase_id])
-    elsif params[:phase_codename].present?
-      phase_class_name = get_phase_class_name(params[:phase_codename])
-
-      if ProjektPhase::PROJEKT_PHASES_TYPES.include?(phase_class_name)
-        @projekt_phase = ProjektPhase.find_or_initialize_by(
-          projekt_id: @projekt.id,
-          type: phase_class_name,
-        )
-      end
-    end
-  end
-
-  def get_phase_class_name(phase_codename)
-    base_name = phase_codename.camelcase
-
-    "ProjektPhase::#{base_name}"
-  end
-
   def projekt_phase_params
     params.require(:projekt_phase).permit(
-      :active,
+      :type,
       :start_date,
       :end_date,
-      :phase_tab_name,
+      :active,
+      :frontend_visibility,
+      :given_order,
       :geozone_restricted,
+      :age_range_id,
       :user_status,
+      :lock_on,
+      :registered_address_grouping_restriction,
+      *translation_params(ProjektPhase),
+      registered_address_grouping_restrictions: {},
+      individual_group_value_ids: [],
+      geozone_restriction_ids: [],
+      settings_attributes: [:id, :key, :value, :_destroy],
     )
   end
+
+  def resolve_phase_class(type_name)
+    return ProjektPhase if type_name.blank?
+
+    phase_class_map[type_name] || ProjektPhase
+  end
+
+  def phase_class_map
+    ProjektPhase::ALL_PHASE_TYPES.each_with_object({}) do |name, map|
+      map[name] = name.safe_constantize
+    end
+  end
+
+  def find_projekt
+    @projekt = Projekt.find(params[:projekt_id])
+  end
+
+  def find_projekt_phase
+    @projekt_phase = ProjektPhase
+      .includes(
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
+      )
+      .find(params[:id])
+  end
 end
+

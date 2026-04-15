@@ -7,9 +7,9 @@
 
   <div class="small-card">
     <div class="flex items-center">
-      <h5 class="no-margin">
+      <span class="font-bold">
         <%= t("custom.deficiency_reports.form.category.title") %>:
-      </h5>
+      </span>
       <div class="margin-left">
         <%= render ProjektPointOfInterestPins::CategoryFilterComponent.new(projekt_phase_id: @projekt_phase.id) %>
       </div>

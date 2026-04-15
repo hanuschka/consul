@@ -1,0 +1,21 @@
+<%= form_with model: @record, url: path, class: "d-flex gap-3 align-items-center" do |form| %>
+  <%= hidden_field_tag :kind, "boolean" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+
+  <%= form.hidden_field @attribute, value: alternate_value %>
+  <%= form.button "", class: "toggle-button small #{'disabled' if disabled?}",
+    role: 'switch',
+    disabled: disabled?,
+    aria: aria_attributes,
+    autofocus: request.format.turbo_stream? %>
+  <% if @options[:labelledby].present? %>
+    <span aria-hidden=true><%= label %></span>
+  <% end %>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-3" data-controller="auto-remove">
+    <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+    <%= flash[:success] %>
+  </div>
+<% end %>

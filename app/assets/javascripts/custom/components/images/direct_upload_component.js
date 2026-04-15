@@ -66,6 +66,7 @@
           $(data.addAttachmentLabel).addClass("error");
         },
         done: function(e, data) {
+          console.log("done", data)
           var $dataWrapper = data.wrapper;
           var shouldSubmitForm = $dataWrapper.data("submit-form") === true;
 
@@ -108,6 +109,8 @@
       data.wrapper = wrapper;
       data.progressBar = $wrapper.find(".direct-image-upload--progress-bar-wrapper");
       data.preview = $wrapper.find(".image-preview");
+      data.imagePreview = $wrapper.find(".js-direct-image-upload-image-preview");
+      data.previewArea = $wrapper.find(".js-direct-image-upload--preview-area");
       data.errorContainer = $wrapper.find(".js-attachment-errors");
       data.fileNameContainer = $wrapper.find(".js-file-name");
       data.destroyAttachmentLinkContainer = $wrapper.find(".action-remove");
@@ -162,14 +165,8 @@
     },
 
     setPreview: function(data) {
-      var $imagePreview = data.wrapper.find(".js-direct-image-upload-image-preview")
-
-      $imagePreview.attr("src", data.result.attachment_url)
-
-      data
-        .wrapper
-        .find(".js-direct-image-upload--preview-area")
-        .addClass("-preview-set")
+      data.imagePreview.attr("src", data.result.attachment_url);
+      data.previewArea.addClass("-preview-set");
     },
 
     toggleGeneratingPlaceholderAnimation: function(visible) {

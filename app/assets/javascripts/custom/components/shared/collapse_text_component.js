@@ -37,9 +37,12 @@
 
       collapseTextElement.classList.toggle("-expanded");
 
+      var isExpanded = collapseTextElement.classList.contains("-expanded");
+      showMoreButton.setAttribute("aria-expanded", isExpanded);
+
       var newButtonText;
 
-      if (collapseTextElement.classList.contains("-expanded")) {
+      if (isExpanded) {
         newButtonText = showMoreButton.dataset.showLessText;
       } else {
         newButtonText = showMoreButton.dataset.showMoreText;

@@ -1,7 +1,24 @@
 <%= new_button_html %>
 
+<% if show_ai_flow_link? %>
+  <% if ai_flow_disabled? %>
+    <button
+      class="button expanded new-resource-button ai-flow-button ai-feature-disabled"
+      disabled
+      data-tooltip
+      title="<%= t('ai.disabled_tooltip') %>"
+    >
+      <%= t("ai_proposal_flow.entry_button") %>
+    </button>
+  <% else %>
+    <%= link_to t("ai_proposal_flow.entry_button"), ai_flow_link_path,
+          class: "button expanded new-resource-button ai-flow-button",
+          data: { turbolinks: false } %>
+  <% end %>
+<% end %>
+
 <% if permission_problem_key.present? %>
-  <div class="callout warning new-resource-not-allowed-message" style='display:none'>
+  <div class="callout alert new-resource-not-allowed-message" style='display:none'>
     <%= permission_problem_message(permission_problem_key) %>
   </div>
 <% end %>

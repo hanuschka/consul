@@ -1,0 +1,16 @@
+<li class="admin-connection-checks--badge -<%= status %>">
+  <i class="admin-connection-checks--badge-icon fa fa-solid <%= icon %>"></i>
+  <div class="admin-connection-checks--badge--body">
+    <div class="admin-connection-checks--badge-header">
+      <div class="admin-connection-checks--badge-label"><%= label %></div>
+    </div>
+    <p class="admin-connection-checks--badge-description"><%= description %></p>
+    <p class="admin-connection-checks--badge-hint"><%= hint %></p>
+    <% if error.present? %>
+      <div class="admin-connection-status--error-detail">
+        <div class="admin-connection-status--error-detail-label"><%= t("admin.connection.index.connection_error_label") %></div>
+        <pre class="admin-connection-status--error-detail-message"><%= error %></pre>
+      </div>
+    <% end %>
+  </div>
+</li>

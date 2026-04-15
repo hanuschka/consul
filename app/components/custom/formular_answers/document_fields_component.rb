@@ -38,6 +38,7 @@ class FormularAnswers::DocumentFieldsComponent < ApplicationComponent
     end
 
     def accepted_content_types_extensions
-			Setting.accepted_content_types_for("documents")
+      # Setting.accepted_content_types_for("documents")
+      [".pdf"]
     end
 end

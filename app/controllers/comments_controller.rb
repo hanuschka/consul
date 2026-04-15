@@ -34,7 +34,8 @@ class CommentsController < ApplicationController
   end
 
   def flag
-    Flag.flag(current_user, @comment)
+    flag = Flag.flag(current_user, @comment)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     set_comment_flags(@comment)
     @comment.subtree.update_all(ignored_flag_at: nil)
 

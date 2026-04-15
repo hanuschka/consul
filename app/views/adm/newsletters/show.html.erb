@@ -1,0 +1,80 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+
+  <div class="kern-card p-4 mb-4">
+    <div class="row">
+      <div class="col-md-3">
+        <strong><%= t('.sent_at') %></strong><br>
+        <% if @newsletter.draft? %>
+          <%= t('adm.newsletters.index.table.draft') %>
+        <% else %>
+          <%= l @newsletter.sent_at.to_date %>
+        <% end %>
+      </div>
+      <div class="col-md-4">
+        <strong><%= t('.from') %></strong><br>
+        <%= @newsletter.from %>
+      </div>
+      <div class="col-md-5">
+        <strong><%= t('.subject') %></strong><br>
+        <%= @newsletter.subject %>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <strong><%= t('.recipient_group') %></strong><br>
+        <%= @newsletter.recipient_group&.name %>
+        <%= t('.affected_users', n: @recipients_count) %>
+      </div>
+      <div class="col-md-6">
+        <strong><%= t('.sent_emails', count: @newsletter.activities.count) %></strong>
+      </div>
+    </div>
+  </div>
+
+  <h3><%= t('.body') %></h3>
+  <p class="text-muted"><%= t('.body_help_text') %></p>
+
+  <div class="kern-card p-4 mb-4">
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render template: "mailer/newsletter" %>
+    <% else %>
+      <%= render "layouts/mailer_header" %>
+      <table cellpadding="0" cellspacing="0" border="0" style="background: #fff; margin: 0 auto; max-width: 700px; width:100%;">
+        <tbody><tr><td style="padding: 20px 0;">
+          <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 660)) %>
+        </td></tr></tbody>
+      </table>
+      <%= render "layouts/mailer_footer" %>
+    <% end %>
+  </div>
+
+  <div class="d-flex gap-3 mb-4">
+    <% if @newsletter.valid_segment_recipient? || @newsletter.recipient_group.present? %>
+      <%= kern_link_button(
+        deliver_adm_newsletter_path(@newsletter),
+        text: t('.send'),
+        style: :primary,
+        data: {
+          turbo_method: :post,
+          turbo_confirm: t('.send_alert', n: @recipients_count)
+        }
+      ) %>
+    <% end %>
+
+    <%= kern_link_button(
+      send_test_adm_newsletter_path(@newsletter),
+      text: t('.send_test'),
+      style: :secondary,
+      data: { turbo_method: :post }
+    ) %>
+  </div>
+
+  <h4><%= t('.recipient_emails') %></h4>
+  <div class="kern-card p-4 mb-4" style="max-height: 300px; overflow-y: auto;">
+    <%= @newsletter.list_of_recipient_emails&.join(", ") %>
+  </div>
+</div>

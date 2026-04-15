@@ -86,6 +86,23 @@
           zoomControlContainer.appendChild(zoomOutButton);
         }
 
+        function addResetViewControl() {
+          const container = document.createElement('div');
+          container.className = 'controls reset-view-control';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            setDefaultView(instance.map);
+          });
+
+          container.appendChild(button);
+          instance.element.appendChild(container);
+        }
+
         function zoom(zoomIn) {
           event.preventDefault();
 
@@ -163,6 +180,7 @@
             instance.map = map;
             setDefaultView(map);
             addZoomControls();
+            addResetViewControl();
             instance.toggleControlVisibility();
             instance.setupExpandControl();
             instance.setupEditingControls();
@@ -221,15 +239,15 @@
       if (Array.isArray(instance.adminFeatures)) {
         instance.adminFeatures.forEach(function(featuresCollection) {
           featuresCollection.features.forEach(function(feature) {
-            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
           });
         });
       } else if (instance.adminFeatures.type === 'FeatureCollection') {
         instance.adminFeatures.features.forEach(function(feature) {
-          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
         });
       } else if (instance.adminFeatures.type === 'Feature') {
-        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#ff0000');
+        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#008000');
       }
     }
 
@@ -290,6 +308,13 @@
 
         vcfeature.setStyle(pinStyle.style);
         vcfeature.set('olcs_altitudeMode', 'absolute');
+
+        vcfeature.data = {
+          resource_type: feature.properties.resource_type,
+          resource_id: feature.properties.id,
+          id: feature.properties.id
+        }
+
         layer.addFeatures([vcfeature]);
 
       } else if (feature.geometry.type === 'Polygon') {

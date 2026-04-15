@@ -2,22 +2,32 @@
   <% if @show_form %>
     <%= form_for @user, url: update_username_account_path, remote: true, authenticity_token: true do |f| %>
       <div>
-        <%= f.text_field :username, label: false, style: "display:inline-block;",
-                                    "aria-label": t("custom.account.show.username_label"),
-                                    "aria-required": true %>
+        <%= f.text_field :username,
+                         label: t("custom.account.show.username_label"),
+                         label_options: { class: "show-for-sr" },
+                         style: "display:inline-block;",
+                         "aria-required": true %>
       </div>
       <%= f.hidden_field :cancel_changes, value: false %>
       <%= f.submit "Save", class: "d-none" %>
 
-      <div class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
-        onclick="$('#user_cancel_changes').val('true');$(this.closest('form')).trigger('submit.rails')">
+      <button
+        type="button"
+        class="account-username-form-control"
+        aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
+        onclick="$('#user_cancel_changes').val('true');$(this.closest('form')).trigger('submit.rails')"
+      >
         <i class="fas fa-times" aria-hidden="true"></i>
-      </div>
+      </button>
 
-      <div class="account-username-form-control" role="button" aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
-        onclick="$(this.closest('form')).trigger('submit.rails')">
+      <button
+        type="button"
+        class="account-username-form-control"
+        aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
+        onclick="$(this.closest('form')).trigger('submit.rails')"
+      >
         <i class="fas fa-check" aria-hidden="true"></i>
-      </div>
+      </button>
 
     <% end %>
   <% else %>

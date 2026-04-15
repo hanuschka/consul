@@ -1,0 +1,30 @@
+de:
+  adm:
+    section_settings:
+      title: Sektions-Einstellungen
+      flash:
+        updated: Einstellungen wurden erfolgreich gespeichert.
+      sections:
+        ideas: Ideen
+        deficiency_reports: "M\u00E4ngelmelder"
+        projekts: Projekte
+        moderation: Moderation
+        valuation: Valuation
+        landing_pages: Themenseiten
+      edit:
+        title: "%{section} bearbeiten"
+        intro_text: Einleitungstext
+        intro_text_hint: "Dieser Text wird auf der Startseite des jeweiligen Bereichs angezeigt und dient als kurze Orientierung für Ihr Team. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist und welche Aufgaben hier erledigt werden. Der Text sollte neuen Teammitgliedern einen schnellen Überblick geben (max. 350 Zeichen)."
+        intro_text_placeholder: Einleitungstext eingeben...
+        notice_message: Hinweismeldung
+        notice_message_hint: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs eingeblendet. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise an Ihr Team. Die Meldung kann von jedem Nutzer per Klick auf das X für die aktuelle Sitzung ausgeblendet werden und erscheint beim nächsten Besuch erneut."
+        notice_message_placeholder: Hinweismeldung eingeben...
+        notice_active: Hinweis aktiv
+        notice_active_hint: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite des Bereichs als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text löschen zu müssen. So können Sie wiederkehrende Hinweise einfach ein- und ausschalten, etwa für saisonale Fristen oder projektbezogene Anweisungen."
+      intro_text_defaults:
+        projekts: "Hier verwalten Sie Ihre Beteiligungsprojekte. Erstellen Sie neue Projekte, konfigurieren Sie Phasen und Einstellungen, und behalten Sie den Überblick über laufende und abgeschlossene Beteiligungsverfahren."
+        deficiency_reports: "Hier verwalten Sie eingehende Mängelmeldungen der Bürgerinnen und Bürger. Weisen Sie Meldungen zu, verfolgen Sie den Bearbeitungsstatus und koordinieren Sie die Behebung gemeldeter Probleme."
+        ideas: "Hier verwalten Sie die eingereichten Bürgerideen. Prüfen Sie neue Einreichungen, weisen Sie Ideen Bearbeitern zu und verfolgen Sie den Status von der Einreichung bis zur Umsetzung."
+        moderation: "Hier moderieren Sie nutzergenerierte Inhalte der Plattform. Prüfen Sie gemeldete Beiträge, Kommentare und Nutzerkonten, und sorgen Sie für einen respektvollen und konstruktiven Austausch."
+        valuation: "Hier bewerten Sie eingereichte Bürgerbudget-Vorschläge. Prüfen Sie die Machbarkeit, schätzen Sie Kosten ein und dokumentieren Sie Ihre Bewertungsergebnisse für die weitere Bearbeitung."
+        landing_pages: "Hier verwalten Sie die Themenseiten Ihrer Plattform. Erstellen und bearbeiten Sie Seiten zu bestimmten Themen, veröffentlichen oder verbergen Sie Inhalte und gestalten Sie die Informationsarchitektur."

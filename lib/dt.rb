@@ -1,7 +1,5 @@
 module Dt
   def self.url
-    domain = Rails.application.secrets.dt[:domain]
-
     return if domain.blank?
 
     if Rails.env.development?
@@ -11,6 +9,18 @@ module Dt
     else
       "https://#{domain}"
     end
+  end
+
+  def self.domain
+    Rails.application.secrets.dt[:domain]
+  end
+
+  def self.enabled?
+    Rails.application.secrets.dt[:enabled]
+  end
+
+  def self.connected?
+    InternalApiClient.dt_connected?
   end
 
   def self.platforms_overview_url

@@ -7,7 +7,9 @@
     <%= t("custom.projekts.page.projekt_events_tab.no_events") %>
   </h4>
 <% else %>
-  <% projekt_events.each do |event| %>
-    <%= render event_component_class.new(projekt_event: event, show_projekt_link: @show_projekt_link) %>
-  <% end %>
+  <ul class="no-ul-style">
+    <% projekt_events.each do |event| %>
+      <%= render event_component_class.new(projekt_event: event, show_projekt_link: @show_projekt_link) %>
+    <% end %>
+  </ul>
 <% end %>

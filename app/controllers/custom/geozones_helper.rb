@@ -23,7 +23,7 @@ module GeozonesHelper
     when 'entire_city'
       tag_name = t("custom.geozones.sidebar_filter.affiliations.entire_city_short")
     when 'only_geozones'
-      taggable.projekt.geozone_affiliations.pluck(:name).join(', ')
+      taggable.projekt.registered_address_district_affiliations.pluck(:name).join(', ')
     end
   end
 

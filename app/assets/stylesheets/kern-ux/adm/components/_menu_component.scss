@@ -1,0 +1,112 @@
+.adm-menu {
+  .nav-item {
+    color: var(--kern-color-layout-text-default);
+
+    &.active {
+      background-color: var(--kern-darkblue-750);
+      color: var(--kern-custom-white);
+      border-radius: var(--kern-8);
+
+      .nav-item-link:hover {
+        background-color: var(--kern-darkblue-750);
+      }
+    }
+
+    .nav-item-link:hover {
+      background-color: var(--kern-color-feedback-info-background);
+    }
+
+    .nav-item-list {
+      margin-left: var(--kern-metric-space-x-large);
+      display: none;
+      border-left: 2px solid var(--kern-color-layout-border);
+
+      // Reserve space for active accent via ::before — absolutely positioned, zero layout impact
+      .nav-item {
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background-color: transparent;
+          transition: background-color 0.15s ease;
+          z-index: 1;
+        }
+      }
+    }
+
+    // Subitem active: reset inherited white text, show accent + background
+    .nav-item-list .nav-item.active {
+      background-color: var(--kern-color-feedback-info-background);
+      color: var(--kern-color-layout-text-default); // reset white from parent .nav-item.active rule
+      border-radius: 0;
+
+      &::before {
+        background-color: var(--adm-color-primary);
+      }
+
+      .nav-item-link:hover {
+        background-color: var(--kern-color-feedback-info-background);
+      }
+    }
+
+    // Visual separator before utility nav groups
+    &.divider-before {
+      margin-top: var(--kern-16);
+      padding-top: var(--kern-16);
+      border-top: 1px solid var(--kern-color-layout-border);
+    }
+  }
+
+  span.material-symbols-outlined {
+    font-size: var(--kern-font-size-24) !important;
+  }
+
+  .nav-item-link {
+    padding: var(--kern-metric-space-default);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: var(--kern-metric-space-small);
+    position: relative;
+    border-radius: var(--kern-8);
+    transition: background-color 0.15s ease;
+    font-weight: 500; // Stronger weight for top-level parent items
+
+    &.with-subitems {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: var(--kern-metric-space-default);
+        width: var(--kern-metric-space-small);
+        height: var(--kern-metric-space-small);
+        border-right: 2px solid var(--kern-color-layout-text-default);
+        border-bottom: 2px solid var(--kern-color-layout-text-default);
+        transform: translateY(-50%) rotate(-45deg);
+        transition: transform 0.3s ease;
+      }
+
+      &.expanded::after {
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      &.expanded + .nav-item-list {
+        display: block;
+      }
+    }
+  }
+
+  // Subitem links: tighter padding and smaller font to establish hierarchy
+  .nav-item-list .nav-item-link {
+    padding-top: var(--kern-8);
+    padding-bottom: var(--kern-8);
+    font-size: var(--kern-font-size-14);
+    font-weight: 400;
+  }
+}

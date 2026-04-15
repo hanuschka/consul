@@ -1,6 +1,7 @@
 class Budget
   class Investment < ApplicationRecord
     SORTING_OPTIONS = { id: "id", supports: "cached_votes_up", balloters: "ballot_lines_count" }.freeze
+    FEASIBILITIES = %w[undecided feasible unfeasible].freeze
 
     include Measurable
     include Sanitizable
@@ -209,7 +210,7 @@ class Budget
     end
 
     def searchable_values
-      { author.username    => "B",
+      { author&.username   => "B",
         heading.name       => "B",
         tag_list.join(" ") => "B"
       }.merge(searchable_globalized_values)
@@ -343,6 +344,11 @@ class Budget
 
     def should_show_vote_count?
       budget.valuating?
+    end
+
+    def should_show_ballots_count?
+      projekt_phase.present? && !projekt_phase.feature?("resource.hide_ballots_count") &&
+        (budget.reviewing_ballots? || budget.finished?)
     end
 
     def should_show_ballots?(**args)

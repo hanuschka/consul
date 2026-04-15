@@ -11,8 +11,8 @@
       <% @budget_investments.each do |investment| %>
         <tr id="investment_<%= investment.id %>">
           <td>
-            <%= link_to investment.title, admin_budget_budget_investment_path(
-                                            budget_id: investment.budget_id,
+            <%= link_to investment.title, edit_adm_projekts_phase_budget_investment_path(
+                                            phase_id: investment.projekt_phase.id,
                                             id: investment.id
                                           ), target: "_blank" %>
             <br>

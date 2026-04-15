@@ -1,6 +1,6 @@
 <div class="new-card proposal-notification" id="<%= dom_id(@notification) %>">
   <div class="proposal-notification--heading">
-    <div class="proposal-notification--title"><%= @notification.title %></div>
+    <h3 class="proposal-notification--title"><%= @notification.title %></h3>
     <p class="more-info proposal-notification-date">
     <%= l(@notification.created_at, format: :date_only) %>
     </p>

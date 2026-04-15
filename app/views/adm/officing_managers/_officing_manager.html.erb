@@ -1,0 +1,10 @@
+<tr class="kern-table__row" id="<%= dom_id(officing_manager) %>">
+  <th scope="row" class="kern-table__header"><%= officing_manager.id %></th>
+  <td class="kern-table__cell"><%= officing_manager.name %></td>
+  <td class="kern-table__cell"><%= officing_manager.email %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("shared.delete"), url: adm_officing_manager_path(officing_manager), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+    <% end %>
+  </td>
+</tr>

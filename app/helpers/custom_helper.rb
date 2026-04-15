@@ -24,8 +24,8 @@ module CustomHelper
 
   def legislation_process_tabs(process)
     {
-      "info"           => edit_admin_legislation_process_path(process),
-      "draft_versions" => admin_legislation_process_draft_versions_path(process),
+      "info"           => general_settings_adm_projekts_phase_path(process.projekt_phase),
+      "draft_versions" => legislation_process_draft_versions_adm_projekts_phase_path(process.projekt_phase),
     }
   end
 
@@ -73,6 +73,21 @@ module CustomHelper
     end
   end
 
+  def process_custom_content_if_needed(content)
+    return content if content.blank?
+
+    new_content = content
+
+    if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
+        content&.include?("</iframe>")
+      new_content = process_iframe_embeds(content)
+    end
+
+    new_content = process_oembeds(new_content)
+
+    new_content
+  end
+
   def process_iframe_embeds(content)
     doc = Nokogiri::HTML::DocumentFragment.parse(content)
 
@@ -85,6 +100,10 @@ module CustomHelper
   end
 
   def process_oembeds(content)
+    if content&.exclude?("<oembed")
+      return content
+    end
+
     doc = Nokogiri::HTML::DocumentFragment.parse(content)
 
     doc.css("oembed").each do |oembed|

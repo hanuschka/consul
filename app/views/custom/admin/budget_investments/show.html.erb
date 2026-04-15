@@ -19,11 +19,7 @@
 
     <div id="investment-details" class="margin-bottom">
       <%= render "custom/admin/budget_investments/investment_details", investment: @investment %>
-      <%= link_to "Vorschlag bearbeiten", "#", class: "button hollow", onclick: "$('#investment-details-form').toggle(); $('#investment-details').toggle();" %>
-    </div>
-
-    <div id="investment-details-form" class="margin-bottom" style="display: none;">
-      <%= render "custom/admin/budget_investments/investment_details_form", investment: @investment %>
+      <%= link_to "Vorschlag bearbeiten", polymorphic_path([@namespace, @budget, @investment], action: :edit), class: "button hollow" %>
     </div>
   </div>
 </div>

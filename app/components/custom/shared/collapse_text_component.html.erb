@@ -3,11 +3,12 @@
     <%= inner_content %>
   </div>
 
-  <div
+  <button
      class="collapse-text-widget--expand-button js-collapse-show-more-button"
+     aria-expanded="false"
      data-show-more-text="<%= t("custom.shared_components.collapse_text.show_more") %>"
      data-show-less-text="<%= t("custom.shared_components.collapse_text.show_less") %>"
    >
     <%= t("custom.shared_components.collapse_text.show_more") %>
-  </div>
+  </button>
 </div>

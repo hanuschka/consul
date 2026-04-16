@@ -1,7 +1,19 @@
 en:
-  settings:
-    mailer_from_deficiency_report_address: Sender email address for deficiency reports
-    mailer_from_deficiency_report_address_description: This email address will appear in emails related to deficiency reports
-    features:
-      elasticsearch: "Elasticsearch"
-      elasticsearch_description: "Elasticsearch is the leading distributed, RESTful, open source search and analytics engine designed for speed, horizontal scalability, reliability, and easy management."
+  custom:
+    settings:
+      mailer_from_deficiency_report_address: Sender email address for deficiency reports
+      mailer_from_deficiency_report_address_description: This email address will appear in emails related to deficiency reports
+      ai:
+        llm_provider: AI Provider
+        llm_provider_description: Configure which AI service provider to use for AI features
+        llm_model: AI Model
+        llm_model_description: Select the AI model to use for processing requests
+        llm_custom_model: Custom Model
+        llm_custom_model_description: Enter a custom model name (used with Ollama or when a custom API endpoint is set)
+        llm_api_endpoint: API Endpoint
+        llm_api_endpoint_description: Custom API endpoint URL for OpenAI-compatible services (e.g., Azure OpenAI, proxy services)
+        llm_api_key: API Key
+        llm_api_key_description: API key for authenticating with the OpenAI service
+      features:
+        elasticsearch: "Elasticsearch"
+        elasticsearch_description: "Elasticsearch is the leading distributed, RESTful, open source search and analytics engine designed for speed, horizontal scalability, reliability, and easy management."

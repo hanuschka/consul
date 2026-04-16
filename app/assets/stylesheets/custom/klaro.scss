@@ -1,5 +1,5 @@
 .klaro .cookie-modal .cm-list-input:checked+.cm-list-label .slider {
-  background-color: #0085eb !important;
+  background-color: #096ebd !important;
 }
 
 .klaro {
@@ -9,7 +9,7 @@
     .cn-ok {
       .cm-btn.cm-btn-info {
         padding: 10px;
-        background-color: #0085eb;
+        background-color: #0c70bd;
         flex-grow: 1;
         min-height: 3rem;
       }
@@ -23,7 +23,7 @@
 
     .cm-footer-buttons {
       .cm-btn.cm-btn-info {
-        background-color: #0085eb;
+        background-color: #076ebd;
       }
 
       .cm-btn.cm-btn-accept-all {
@@ -35,4 +35,16 @@
       color: #005a9f !important;
     }
   }
+}
+
+.klaro .cookie-modal .cm-list-label .slider::before,
+.klaro .context-notice .cm-list-label .slider::before,
+.klaro .cookie-notice .cm-list-label .slider::before {
+  background-color: #fff !important;
+}
+
+.klaro .cookie-modal .cm-list-label .slider,
+.klaro .context-notice .cm-list-label .slider,
+.klaro .cookie-notice .cm-list-label .slider {
+  background-color: #767676 !important;
 }

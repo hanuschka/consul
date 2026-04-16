@@ -1,0 +1,60 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1_lead") %></p>
+    <ul class="adm-hint__list">
+      <li><%= t(".table.city") %></li>
+      <li><%= t(".table.plz") %></li>
+      <li><%= t(".table.street_name") %></li>
+      <li><%= t(".table.street_number") %></li>
+      <li><%= t(".intro_list.street_number_extension") %></li>
+      <li><%= t(".intro_list.district") %></li>
+    </ul>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p1_extra") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+
+  <% if @registered_addresses.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <%= render Kern::Table::HeaderComponent.new(:registered_address_city_id, t(".table.city"), **@city_header_options) %>
+            <th scope="col" class="kern-table__header"><%= t(".table.plz") %></th>
+            <%= render Kern::Table::HeaderComponent.new(:street_name, t(".table.street_name"), **@street_name_header_options) %>
+            <%= render Kern::Table::HeaderComponent.new(:street_number, t(".table.street_number"), **@street_number_header_options) %>
+            <%= render Kern::Table::HeaderComponent.new(:registered_address_district_id, t(".table.district"), **@district_header_options) %>
+            <th scope="col" class="kern-table__header"><%= t(".table.groupings") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @registered_addresses.each do |registered_address| %>
+            <tr class="kern-table__row">
+              <th scope="row" class="kern-table__header"><%= registered_address.registered_address_city&.name %></th>
+              <td class="kern-table__cell"><%= registered_address.registered_address_street&.plz %></td>
+              <td class="kern-table__cell"><%= registered_address.registered_address_street&.name %></td>
+              <td class="kern-table__cell"><%= "#{registered_address.street_number}#{registered_address.street_number_extension}" %></td>
+              <td class="kern-table__cell"><%= registered_address.district&.name %></td>
+              <td class="kern-table__cell"><%= registered_address.groupings&.map { |k, v| "#{k}: #{v}" }&.join(", ") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="my-5">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  <% else %>
+    <%= empty_state(
+      title: t(".empty_title"),
+      description: t(".empty_description"),
+      icon: "location_on"
+    ) %>
+  <% end %>
+</div>

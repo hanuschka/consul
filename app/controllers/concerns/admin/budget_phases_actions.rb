@@ -29,11 +29,18 @@ module Admin::BudgetPhasesActions
   def toggle_enabled
     authorize!(:create, @budget) if @namespace.to_s.start_with?("projekt_management")
 
-    @phase.update!(enabled: !@phase.enabled)
+    if @phase.update(enabled: !@phase.enabled)
+      respond_to do |format|
+        format.html { redirect_to phases_index, notice: t("flash.actions.save_changes.notice") }
+        format.js { render "admin/budgets_wizard/phases/toggle_enabled" }
+      end
+    else
+      error_message = @phase.errors.full_messages.join(", ")
 
-    respond_to do |format|
-      format.html { redirect_to phases_index, notice: t("flash.actions.save_changes.notice") }
-      format.js { render "admin/budgets_wizard/phases/toggle_enabled" }
+      respond_to do |format|
+        format.html { redirect_to phases_index, alert: error_message }
+        format.js { render js: "alert('#{j error_message}');" }
+      end
     end
   end
 

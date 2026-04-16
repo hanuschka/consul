@@ -1,0 +1,10 @@
+de:
+  components:
+    kern:
+      form:
+        documents_component:
+          hint: "Maximal %{max_documents} Dokumente erlaubt. Akzeptierte Formate: %{accepted_types}. Maximale Dateigröße: %{max_size} MB."
+          title_label: Titel
+          file_label: Datei
+          add: Neues Dokument hinzufügen
+          remove: Entfernen

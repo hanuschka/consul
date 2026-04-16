@@ -22,6 +22,7 @@ class Proposals::VotesComponent < ApplicationComponent
               verify: link_to_verify_account,
               city: Setting["org_name"],
               geozones: @proposal_phase&.geozone_restrictions_formatted,
+              registered_address_groupings: @proposal_phase&.registered_address_grouping_restriction_formatted,
               age_restriction: @proposal_phase&.age_restriction_formatted,
               restricted_streets: @proposal_phase&.street_restrictions_formatted,
               individual_group_values: @proposal_phase&.individual_group_value_restriction_formatted

@@ -1,6 +1,8 @@
 class RelatedContentsController < ApplicationController
   # skip_authorization_check
 
+  before_action :authenticate_user!
+
   respond_to :html, :js
 
   def create

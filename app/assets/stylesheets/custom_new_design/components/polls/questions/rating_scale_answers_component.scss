@@ -24,10 +24,6 @@
 
     .rating-scale-answer-container {
       display: flex;
-
-      @media(max-width: $mobile-viewport-start) {
-        flex-direction: column;
-      }
     }
 
     .poll-answer-group {

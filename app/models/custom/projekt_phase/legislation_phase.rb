@@ -1,6 +1,6 @@
 class ProjektPhase::LegislationPhase < ProjektPhase
   has_one :legislation_process, foreign_key: :projekt_phase_id, class_name: "Legislation::Process",
-    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+    dependent: :destroy, inverse_of: :projekt_phase
 
   after_create :create_legislation_process
 
@@ -22,6 +22,10 @@ class ProjektPhase::LegislationPhase < ProjektPhase
 
   def safe_to_destroy?
     legislation_process.blank?
+  end
+
+  def after_hide
+    legislation_process&.hide
   end
 
   private

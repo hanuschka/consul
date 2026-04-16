@@ -11,6 +11,7 @@
     margin-right: 10px;
     font-size: 1.6rem;
     cursor: pointer;
+    min-width: 140px;
 
     .translate-widget-toggler {
       color: #222;
@@ -21,9 +22,9 @@
       margin-right: 30px;
 
       select.goog-te-combo {
-        width: 170px;
+        width: 135px;
 
-        @media (min-width: 640px) {
+        @media (max-width: 640px) {
           width: 82px;
         }
       }
@@ -52,6 +53,33 @@
 
     .sticky-ballot-progress-bar {
       top: 148px !important;
+    }
+  }
+
+  .hr-with-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #e5e5e5;
+    margin: 1.5rem 0;
+
+    span {
+      color: $main-text-color;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ccc;
+    }
+
+    &:not(:empty)::before {
+      margin-right: .75em;
+    }
+
+    &:not(:empty)::after {
+      margin-left: .75em;
     }
   }
 }

@@ -7,7 +7,7 @@
       <div class="draft-panels projekt-draft-panels small-12 column row">
           <div class="row draft-chooser">
             <div class="small-12 medium-5 column projekt-text-title-block">
-              <h3><%= t("legislation.draft_versions.show.seeing_version") %></h3>
+              <h2><%= t("legislation.draft_versions.show.seeing_version") %></h2>
 
               <div class="select-box">
                 <%= form_tag @projekt.page.url + "#footer-content", method: :get, id: "draft_version_go_to_version" do %>
@@ -67,7 +67,7 @@
         <div class="draft-panels projekt-draft-panels small-12 column row">
           <div class="row draft-chooser">
             <div class="small-12 medium-5 column projekt-text-title-block">
-              <h3><%= t("legislation.draft_versions.show.seeing_version") %></h3>
+              <h2><%= t("legislation.draft_versions.show.seeing_version") %></h2>
               <div class="select-box">
                 <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
                   <%= select_tag "text_draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
@@ -149,7 +149,7 @@
       <div class="draft-panels projekt-draft-panels small-12 column row">
         <div class="row draft-chooser">
           <div class="small-12 column projekt-text-title-block">
-            <h3><%= t("legislation.draft_versions.changes.seeing_changelog_version") %></h3>
+            <h2><%= t("legislation.draft_versions.changes.seeing_changelog_version") %></h2>
             <div class="select-box">
               <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
                 <%= select_tag "text_draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
@@ -181,7 +181,7 @@
     <div class="draft-panels projekt-draft-panels small-12 column row">
       <div class="row draft-chooser">
         <div class="small-12 medium-5 column projekt-text-title-block">
-          <h3><%= t("legislation.annotations.version_chooser.seeing_version") %></h3>
+          <h2><%= t("legislation.annotations.version_chooser.seeing_version") %></h2>
           <div class="select-box">
             <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
               <%= select_tag "draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>

@@ -21,6 +21,7 @@ class Budgets::Investments::CommentsFormComponent < ApplicationComponent
         verify_account: link_to_verify_account,
         city: Setting["org_name"],
         geozones: @investment.budget.projekt_phase.geozone_restrictions_formatted,
+        registered_address_groupings: @investment.budget.projekt_phase.registered_address_grouping_restriction_formatted,
         age_restriction: @investment.budget.projekt_phase.age_restriction_formatted,
         restricted_streets: @investment.budget.projekt_phase.street_restrictions_formatted,
         individual_group_values: @investment.budget.projekt_phase.individual_group_value_restriction_formatted

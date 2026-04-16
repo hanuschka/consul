@@ -39,6 +39,13 @@ module Attachable
     self.cached_attachment = attachment.signed_id
   end
 
+  def cache_attachment_for_rerender
+    return unless attachment.attached?
+
+    attachment.blob.save! unless attachment.blob.persisted?
+    set_cached_attachment_from_attachment
+  end
+
   def set_attachment_from_cached_attachment
     self.attachment = cached_attachment
   end

@@ -100,10 +100,10 @@ module Takeable
     when "only_geozones"
       @resources = @resources.joins(projekt_phase: :projekt).where(projekts: { geozone_affiliated: "only_geozones" })
 
-      if @affiliated_geozones.present?
-        @resources = @resources.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
+      if @affiliated_districts.present?
+        @resources = @resources.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
       else
-        @resources = @resources.joins(:geozone_affiliations).where.not(geozones: { id: nil })
+        @resources = @resources.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
       end
     end
     @all_resources = @resources

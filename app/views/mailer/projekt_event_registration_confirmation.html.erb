@@ -1,0 +1,23 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= @event.title %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.projekt_event_registration_confirmation.body",
+          name: @registration.display_name,
+          event: @event.title) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <a href="<%= @confirmation_url %>">
+      <%= t("mailers.projekt_event_registration_confirmation.confirm_link") %>
+    </a>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_created.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

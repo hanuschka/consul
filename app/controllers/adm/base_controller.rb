@@ -72,6 +72,8 @@ class Adm::BaseController < ActionController::Base
         Adm::NewsletterPolicy
       when "Image"
         Adm::ImagePolicy
+      when "Poll"
+        Adm::PollPolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

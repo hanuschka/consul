@@ -1,0 +1,6 @@
+<%= turbo_stream.replace dom_id(@default_map_location, :editor) do %>
+  <%= render Adm::MapSettingComponent.new(
+    map_location: @default_map_location,
+    path: adm_default_map_location_path
+  ) %>
+<% end %>

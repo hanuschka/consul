@@ -99,7 +99,8 @@ class DeficiencyReportsController < ApplicationController
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
-      redirect_to deficiency_report_path(@deficiency_report)
+      DeficiencyReportMailer.notify_author_about_submission(@deficiency_report).deliver_later
+      redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.create.flash_success")
     else
       render :new
     end

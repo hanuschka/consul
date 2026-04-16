@@ -71,7 +71,7 @@
       <%= header_button_html %>
     <% end %>
 
-    <% if Setting["welcomepage.projekt_search"].present? %>
+    <% if Setting["welcomepage.projekt_search"].present? && !@custom_page&.landing? %>
       <div class="homepage-search-form">
         <%= render(
           Shared::TextSearchFormComponent.new(

@@ -3,6 +3,17 @@ en:
     errors:
       model_not_configured: "Error: AI model not configured"
       generation_failed: "Error: Failed to generate content block with AI"
+    disabled_tooltip: "AI features unavailable. Contact administrator."
+    instructions_placeholder: "Enter your instructions for editing this content block. By default, the project title, subtitle, and the content of this content block are provided as context."
+    submit: Submit
+    cancel: Cancel
+    instructions_hint: "Enter to submit, Shift+Enter for new line"
+    allow_text_modification: "Allow text content modification"
+    allow_text_modification_hint: "When unchecked (default), the AI will only modify HTML structure, styling, and layout while preserving all existing text content. When checked, the AI can also modify the text content based on your instructions."
+    allow_text_modification_hint_short: "By default, AI modifies only HTML structure and styling, not text content"
+    use_full_projekt_context: "Use full projekt context"
+    use_full_projekt_context_hint: "Includes all content blocks, projekt dates, SDGs, categories, and phases in the AI prompt (may be slower)"
+    use_full_projekt_context_hint_short: "Additional context for more comprehensive AI responses"
   shared:
     suggest:
       deficiency_report:

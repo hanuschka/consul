@@ -1,0 +1,8 @@
+de:
+  components:
+    kern:
+      form:
+        galleryable_images_component:
+          hint: "Akzeptierte Formate: %{accepted_types}. Maximale Dateigröße: %{max_size} MB."
+          add: Neues Bild hinzufügen
+          remove: Entfernen

@@ -17,11 +17,36 @@ ProjektStudio.ContentBlock.Copy = {
   },
 
   copyContentBlockToClipboard(contentBlock, button) {
-    const contentBlockHTML = contentBlock.innerHTML.trim();
+    const clone = contentBlock.cloneNode(true);
+    this.stripSimpleEditModeControls(clone);
+    ProjektStudio.utils.removeFoundationIds(clone);
+    const contentBlockHTML = clone.innerHTML.trim();
 
     navigator.clipboard.writeText(contentBlockHTML).then(() => {
       this.showCopySuccessFeedback(button);
-    })
+    });
+  },
+
+  stripSimpleEditModeControls(clone) {
+    clone.querySelectorAll(".js-content-block--list-control").forEach((el) => el.remove());
+
+    clone.querySelectorAll(".js-content-block-link-wrapper").forEach((wrapper) => {
+      const link = wrapper.querySelector("a");
+      if (link) wrapper.parentNode.insertBefore(link, wrapper);
+      wrapper.remove();
+    });
+
+    clone.querySelectorAll("a.js-content-block-disable-link-click").forEach((a) => {
+      a.classList.remove("js-content-block-disable-link-click");
+    });
+
+    clone.querySelectorAll("a.glightbox-disabled").forEach((a) => {
+      a.classList.remove("glightbox-disabled", "glightbox-link");
+      a.classList.add("glightbox");
+    });
+
+    clone.removeAttribute("contenteditable");
+    clone.querySelectorAll("[contenteditable]").forEach((el) => el.removeAttribute("contenteditable"));
   },
 
   showCopySuccessFeedback(button) {

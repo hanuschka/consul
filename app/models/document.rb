@@ -16,7 +16,7 @@ class Document < ApplicationRecord
   end
 
   def humanized_content_type
-    attachment_content_type.split("/").last.upcase
+    attachment_content_type&.split("/")&.last&.upcase
   end
 
   def max_file_size

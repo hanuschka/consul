@@ -1,21 +1,25 @@
-<div class="custom-page--banner-wrapper">
+<div class="<%= banner_wrapper_class %>">
   <div class="custom-page--banner">
     <div class="custom-page--banner-text-section-wrapper">
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
-          <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+          <% if show_embedded_controlls? %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
               <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
           <% else %>
             <h1 class="custom-page--banner-title">
-              <%= @custom_page.title %>
+              <% if @compact %>
+                <%= link_to @custom_page.title, page_path(@custom_page.slug) %>
+              <% else %>
+                <%= @custom_page.title %>
+              <% end %>
             </h1>
           <% end %>
         </div>
 
-        <% if @custom_page.subtitle.present? || show_admin_controls_for_projekt?(@custom_page.projekt) %>
-          <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+        <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
+          <% if show_embedded_controlls? %>
             <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
               <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
@@ -34,7 +38,7 @@
       <% end %>
     </div>
 
-    <% if @custom_page.image.present? || show_admin_controls_for_projekt?(@custom_page.projekt) %>
+    <% if (@custom_page.image.present? || show_embedded_controlls?) %>
       <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
 
       <% if @custom_page.image.present? %>
@@ -49,13 +53,22 @@
       <% end %>
 
       <% banner_image = capture do %>
-        <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox", role: "button", aria_label: t("custom.accessibility.banner-image.glightbox-aria-label") do %>
+        <%= link_to big_projekt_image_url,
+          target: "_blank",
+          class: "glightbox",
+          data: {
+            gallery: "banner-#{@custom_page.id}",
+            alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: @custom_page.class.model_name.human, title: @custom_page.title)
+          },
+          role: "button",
+          title: t("custom.accessibility.banner-image.glightbox-aria-label"),
+          aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(coalesce: true, gravity: "center", resize_to_fill: [930, 585]),
+              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [930, 585]),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page
             )
@@ -64,11 +77,11 @@
       <% end %>
 
       <div class="custom-page--banner-image">
-        <% if show_admin_controls_for_projekt?(@custom_page.projekt) %>
+        <% if show_embedded_controlls? %>
           <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
-            <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="">
-            <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button">
+            <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
+            <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
               <i class="fas fa-pencil-alt"></i>
             </label>
             <input

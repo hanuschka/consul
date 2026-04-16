@@ -51,10 +51,14 @@
     },
 
     updateButtonVisibility: function(rootElement) {
-
       var hasValue = this.searchInput(rootElement).value.trim().length > 0;
+      var resetBtn = rootElement.querySelector(".js-text-search-form-reset-button");
 
-      rootElement.classList.toggle("-active", hasValue)
+      rootElement.classList.toggle("-active", hasValue);
+
+      if (resetBtn) {
+        resetBtn.disabled = !hasValue;
+      }
     },
 
     handleReset: function(rootElement) {

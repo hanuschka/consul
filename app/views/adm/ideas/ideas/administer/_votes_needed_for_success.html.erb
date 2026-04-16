@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "administer__votes_needed_for_success" do %>
+  <%= form_with model: idea, url: adm_ideas_idea_path(idea), method: :patch do |f| %>
+    <div class="kern-fieldset__body mb-4">
+      <%= f.number_field :votes_needed_for_success, class: "kern-input", step: 1, min: 1 %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

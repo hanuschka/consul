@@ -1,10 +1,7 @@
 <% if extended_feature?("general.enable_investments_overview") %>
-  <li class="nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll"
-      <%= "aria-label='#{t('custom.links.menu.investments_overview')}'" if placement == 'desktop' %>
-      <%= "tabindex=0" if placement == 'desktop' %>
-  >
+  <li class="nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll">
     <div class="flyout-item-name projekt-name">
-      <%= link_to t('custom.links.menu.investments_overview'), investments_path, class: '', tabindex: '-1', data: { turbolinks: false } %>
+      <%= link_to t('custom.links.menu.investments_overview'), investments_path, data: { turbolinks: false } %>
     </div>
   </li>
 <% end %>

@@ -1,0 +1,4 @@
+<div class="selected-street" id="selected-street-<%= street.id %>" data-street-id="<%= street.id %>">
+  <%= street.name_with_plz %>
+  <span class="material-symbols-outlined cursor-pointer" data-street-id="<%= street.id %>" data-action="click->street-selector#removeStreet">close</span>
+</div>

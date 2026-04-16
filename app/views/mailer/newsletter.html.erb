@@ -84,7 +84,7 @@
             <tbody>
               <tr>
                 <td style="text-align:center" colspan="100%" width="100%">
-                  <%= image_tag(@newsletter.image.attachment) %>
+                  <%= image_tag(blob_variant_url(@newsletter.image.attachment.blob.key, host: Setting["url"], w: 1500, h: 2000), style: "width:100%;height:auto;") %>
                 </td>
               </tr>
             </tbody>
@@ -101,7 +101,7 @@
             </tbody>
           </table>
         <% else %>
-          <% header_background_style = @newsletter.image&.attachment&.attached? ? "background-image:url(#{url_for(@newsletter.image.attachment)});background-position:top center;background-repeat:no-repeat;background-size:cover;height:420px;" : "background: #{email_brand_color};height:420px;" %>
+          <% header_background_style = @newsletter.image&.attachment&.attached? ? "background-image:url(#{blob_variant_url(@newsletter.image.attachment.blob.key, host: Setting["url"], w: 1500, h: 2000)});background-position:top center;background-repeat:no-repeat;background-size:cover;height:420px;" : "background: #{email_brand_color};height:420px;" %>
           <table style="<%= header_background_style %>" width="100%" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
@@ -156,7 +156,7 @@
             <tr>
               <td style="padding:25px 40px 0 40px;">
                 <div style="<%= css_for_mailer_text %>;font-size: 15px;">
-                    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
+                    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 590)) %>
                 </div>
               </td>
             </tr>

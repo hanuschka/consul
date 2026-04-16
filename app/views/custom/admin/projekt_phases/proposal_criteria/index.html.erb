@@ -1,0 +1,70 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<div class="row">
+  <div class="column">
+    <h2><%= t("admin.projekt_phases.proposal_criteria.title") %></h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <ul
+      class="projekt-phase-criteria--list js-criteria-sortable"
+      data-reorder-url="<%= reorder_proposal_criteria_admin_projekt_phase_path(@projekt_phase) %>"
+    >
+      <% @criteria.each do |criterion| %>
+        <li
+          class="projekt-phase-criteria--item js-criteria-item"
+          data-criterion-id="<%= criterion.id %>"
+          data-update-url="<%= update_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: criterion.id) %>"
+        >
+          <span class="projekt-phase-criteria--drag-handle js-criteria-drag-handle">&#9776;</span>
+          <span class="projekt-phase-criteria--text js-criteria-text"><%= criterion.text %></span>
+          <button
+            type="button"
+            class="projekt-phase-criteria--delete-btn js-criteria-delete-btn"
+            data-url="<%= destroy_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: criterion.id) %>"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </li>
+      <% end %>
+    </ul>
+
+    <script type="text/template" class="js-criteria-item-template">
+      <li
+        class="projekt-phase-criteria--item js-criteria-item"
+        data-criterion-id="{{ id }}"
+        data-update-url="<%= update_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID").gsub("CRITERION_ID", "{{ id }}") %>"
+      >
+        <span class="projekt-phase-criteria--drag-handle js-criteria-drag-handle">&#9776;</span>
+        <span class="projekt-phase-criteria--text js-criteria-text">{{ text }}</span>
+        <button
+          type="button"
+          class="projekt-phase-criteria--delete-btn js-criteria-delete-btn"
+          data-url="<%= destroy_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID").gsub("CRITERION_ID", "{{ id }}") %>"
+        >
+          <%= t("admin.projekt_phases.proposal_criteria.delete") %>
+        </button>
+      </li>
+    </script>
+
+    <form
+      class="js-criteria-add-form"
+      action="<%= create_proposal_criterion_admin_projekt_phase_path(@projekt_phase) %>"
+      data-update-url-template="<%= update_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
+      data-delete-url-template="<%= destroy_proposal_criterion_admin_projekt_phase_path(@projekt_phase, criterion_id: "CRITERION_ID") %>"
+    >
+      <input
+        type="text"
+        name="projekt_phase_proposal_criterion[text]"
+        class="js-criteria-text-input"
+        placeholder="<%= t("admin.projekt_phases.proposal_criteria.text_placeholder") %>"
+      />
+      <button type="submit" class="button -teal">
+        <%= t("admin.projekt_phases.proposal_criteria.add_criterion") %>
+      </button>
+    </form>
+  </div>
+</div>

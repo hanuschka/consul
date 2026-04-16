@@ -1,0 +1,19 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".hint") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <%= new_resource_link(new_adm_administrator_path, t('.new_link')) %>
+
+  <% if @administrators.any? %>
+    <%= render 'adm/role_assignments/roles', roles: @administrators, pagy: @pagy %>
+  <% else %>
+    <%= empty_state(title: t(".empty_title"), description: t(".empty_description"), icon: "admin_panel_settings") %>
+  <% end %>
+
+  <%= render partial: "adm/role_assignments/pending_role_assignments", locals: { pending_role_assignments: @pending_role_assignments } %>
+</div>

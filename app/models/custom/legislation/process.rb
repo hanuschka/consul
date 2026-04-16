@@ -11,6 +11,7 @@ class Legislation::Process < ApplicationRecord
 
   has_many :geozone_restrictions, through: :legislation_phase
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
 
   delegate :votable_by?, to: :legislation_phase
   delegate :comments_allowed?, to: :legislation_phase

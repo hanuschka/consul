@@ -14,6 +14,7 @@ class Debate
   belongs_to :projekt_phase, touch: true
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt_phase
+  has_many :registered_address_district_affiliations, through: :projekt_phase
 
   delegate :votable_by?, to: :projekt_phase
   delegate :comments_allowed?, to: :projekt_phase

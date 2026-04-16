@@ -3,9 +3,8 @@ class MapLayer < ApplicationRecord
 
   enum protocol: { regular: 0, wms: 1 }
 
-  def self.general
-    special_projekt = Projekt.find_by(special: true)
-    where(mappable: special_projekt).or(where(mappable: nil))
+  def self.default
+    where(mappable_id: nil, mappable_type: nil)
   end
 
   def self.protocol_attributes_for_select

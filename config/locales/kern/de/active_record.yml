@@ -1,0 +1,66 @@
+de:
+  activerecord:
+    models:
+      projekt: Projekt
+    attributes:
+      site_customization/content_card/translation:
+        title: Titel
+      navbar_item:
+        external_title: Eigentitel
+        external_url: Eigene URL
+      map_location:
+        rendering_library: Rendering-Bibliothek
+        show_admin_shape: Mittelpunkt der Karte als Pin auf Projektübersicht anzeigen
+        rendering_libraries:
+          leaflet: Leaflet
+          mapbox: Mapbox
+          virtualcity: Virtual City Map
+      map_layer:
+        provider: URL des Kartenanbieters
+        attribution: Quellenhinweis der Karte
+        layer_names: Layername (WMS)
+        base: Als Basiskarte verwenden
+        show_by_default: Beim Laden der Karte standardmäßig anzeigen
+        transparent: Ebene ist transparent
+        opacity: Transparenz
+      projekt:
+        show_start_date_in_frontend: Startdatum in der Seitenleiste des Projektes anzeigen
+        show_end_date_in_frontend: Enddatum in der Seitenleiste des Projektes anzeigen
+      budget/investment:
+        feasibility_undecided: Nicht bewertet
+        feasibility_feasible: Entspricht den Kriterien
+        feasibility_unfeasible: Entspricht nicht den Kriterien
+      tag:
+        name: Name des Tags
+      poll/question:
+        intro: Einleitungstext
+        title: Fragestellung
+        description: Beschreibung
+        answer_mandatory: Pflichtfrage
+        show_images: Bilder bei Antwortoptionen
+        contextualize_by_poll_question_id: Kontextualisierung
+      votation_type:
+        vote_type: Abstimmungsmodus
+        max_votes: Maximale Stimmanzahl
+        max_votes_per_answer: Maximale Stimmen pro Antwort
+        show_hint_callout: Hinweisbox im Frontend
+        min_rating_scale_label: Label links (Minimum)
+        max_rating_scale_label: Label rechts (Maximum)
+      poll/question/answer:
+        title: Titel
+        description: Beschreibung
+        open_answer: Offene Antwort
+        more_info_link: Weitere Informationen (Link)
+        more_info_iframe: Weitere Informationen (Iframe)
+        next_question_id: Nächste Frage
+        terminates_poll: Beendet die Abstimmung
+      poll/question/answer/video:
+        title: Titel
+        url: Externes Video
+      votation_type/vote_type:
+        unique: Einzelne Stimme
+        multiple: Mehrere Stimmen
+        multiple_with_weight: Mehrere gewichtete Stimmen
+        rating_scale: Bewertungsskala
+      individual_group:
+        visible: Sichtbar

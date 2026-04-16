@@ -1,0 +1,21 @@
+<%= content_for :title, t("adm.moderation.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.moderation.home.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::DashboardHomeComponent.new(
+  team_members: @team_members,
+  team_url: new_adm_moderator_path,
+  recent_items: @recent_items,
+  recent_items_url: adm_moderation_users_path,
+  recent_item_columns: [
+    { label: t("shared.table.actions"), value: ->(item) { item.action } },
+    { label: t("shared.table.user"), value: ->(item) { item.user&.name || "—" } }
+  ],
+  intro_text: @section_setting&.intro_text_with_fallback,
+  quick_links: @quick_links,
+  stats: @stats,
+  contact_persons: @contact_persons,
+  notice: @section_setting,
+  activities: @activities,
+  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "moderation") : nil
+) %>

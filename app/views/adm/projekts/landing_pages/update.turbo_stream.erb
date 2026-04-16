@@ -1,4 +1,0 @@
-<%= turbo_stream.replace dom_id(@landing_page, params[:attribute]) do %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, params[:attribute], params[:kind],
-                                               path: adm_projekts_landing_page_path(@landing_page)) %>
-<% end %>

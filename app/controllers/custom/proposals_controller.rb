@@ -14,14 +14,17 @@ class ProposalsController
   before_action :set_random_seed, only: :index
 
   def index_customization
+    resolve_landing_page_from_slug
+
     if params[:order].nil?
       @current_order = Setting["selectable_setting.proposals.default_order"]
     end
     @resource_name = "proposal"
 
     @geozones = Geozone.all
+    @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -33,10 +36,14 @@ class ProposalsController
     remove_archived_from_order_links
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
+
+    if @landing_page.present?
+      @scoped_projekt_ids = @scoped_projekt_ids & landing_page_scoped_projekt_ids
+    end
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekt_ids = @resources.joins(:projekt_phase).pluck("projekt_phases.projekt_id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
     @categories = Tag.category.joins(:taggings)
       .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
@@ -98,6 +105,10 @@ class ProposalsController
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
+
+    if @projekt_phase.present?
+      resolve_landing_page_for_projekt(@projekt_phase.projekt)
+    end
   end
 
   def edit
@@ -105,6 +116,10 @@ class ProposalsController
 
     params[:projekt_phase_id] = @proposal&.projekt_phase&.id
     params[:projekt_id] = @selected_projekt&.id
+
+    if @selected_projekt.present?
+      resolve_landing_page_for_projekt(@selected_projekt)
+    end
   end
 
   def update
@@ -134,6 +149,11 @@ class ProposalsController
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
       render :new
     end
   end
@@ -154,7 +174,13 @@ class ProposalsController
 
   def show
     super
-    @projekt = @proposal.projekt_phase.projekt
+    @projekt = @proposal.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to proposals_path
+
+      return
+    end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
       head :not_found, content_type: "text/html" and return
@@ -167,7 +193,7 @@ class ProposalsController
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
                                 .page(params[:page]).per(5)
 
-    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
     resolve_landing_page_for_projekt(@projekt)
@@ -209,7 +235,7 @@ class ProposalsController
 
   def created
     @resource_name = "proposal"
-    @affiliated_geozones = []
+    @affiliated_districts = []
     @restricted_geozones = []
   end
 

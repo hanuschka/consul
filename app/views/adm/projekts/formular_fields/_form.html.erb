@@ -5,8 +5,8 @@
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint")) do %>
-    <%= f.text_area :description, label: false, rows: 4 %>
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
+    <%= f.text_area :description, label: false, rows: 4, placeholder: t(".description_placeholder") %>
   <% end %>
 
   <div data-controller="formular-fields--kind">
@@ -35,12 +35,12 @@
 
       <div data-formular-fields--kind-target="confirmationFields"
            style="<%= "display: none;" unless @formular_field.email_for_confirmation.present? %>">
-        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_subject_label"), hint: t(".email_for_confirmation_subject_hint")) do %>
-          <%= f.text_field :email_for_confirmation_subject, label: false %>
+        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_subject_label"), hint: t(".email_for_confirmation_subject_hint"), stacked: true) do %>
+          <%= f.text_field :email_for_confirmation_subject, label: false, placeholder: t(".email_for_confirmation_subject_placeholder") %>
         <% end %>
 
-        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_text_label"), hint: t(".email_for_confirmation_text_hint")) do %>
-          <%= f.text_area :email_for_confirmation_text, label: false, rows: 6 %>
+        <%= render Kern::FormFieldComponent.new(label: t(".email_for_confirmation_text_label"), hint: t(".email_for_confirmation_text_hint"), stacked: true) do %>
+          <%= f.text_area :email_for_confirmation_text, label: false, rows: 6, placeholder: t(".email_for_confirmation_text_placeholder") %>
         <% end %>
       </div>
     </div>
@@ -54,5 +54,5 @@
     <%= f.check_box :follow_up %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

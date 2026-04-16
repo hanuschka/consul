@@ -11,7 +11,19 @@
         </div>
       <% end %>
       <div class="options-group mt-3 pl-3" data-related-content-target="content">
-        <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) %>
+        <strong class="mb-2 d-block"><%= t(".geozones_label") %></strong>
+        <% if Geozone.any? %>
+          <%= f.collection_check_boxes(:geozone_affiliation_ids, Geozone.all, :id, :name) %>
+        <% else %>
+          <p class="text-muted"><%= t(".geozones_empty") %></p>
+        <% end %>
+
+        <strong class="mt-3 mb-2 d-block"><%= t(".districts_label") %></strong>
+        <% if RegisteredAddress::District.any? %>
+          <%= f.collection_check_boxes(:registered_address_district_affiliation_ids, RegisteredAddress::District.all, :id, :name) %>
+        <% else %>
+          <p class="text-muted"><%= t(".districts_empty") %></p>
+        <% end %>
       </div>
     </div>
     <%= form_submit_button %>

@@ -15,14 +15,26 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+          resource:
+            create_proposal_with_ai: Create proposal with AI
+            create_proposal_with_ai_description: Shows the "Create proposal with AI" button
         option:
           resource:
             minimum_supports_to_show: "Minimum supports to show"
             minimum_supports_to_show_description: "Proposals are only shown once they reach this number of supports (0 = always visible)"
+            max_submissions_per_user: "Maximum submissions per user"
+            max_submissions_per_user_description: "Limits the number of proposals a user can submit in this phase (empty or 0 = no limit)"
       budget:
+        option:
+          resource:
+            max_submissions_per_user: "Maximum submissions per user"
+            max_submissions_per_user_description: "Limits the number of investment proposals a user can submit in this phase (empty or 0 = no limit)"
         feature:
           general:
             public_kpi_stats: Show KPIs for public
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+          resource:
+            create_investment_with_ai: Create investment proposal with AI
+            create_investment_with_ai_description: Shows the "Create investment proposal with AI" button

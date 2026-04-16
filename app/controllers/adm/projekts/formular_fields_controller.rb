@@ -47,6 +47,17 @@ class Adm::Projekts::FormularFieldsController < Adm::Projekts::BaseController
     redirect_to formular_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
   end
 
+  def reorder
+    authorize [:adm, :projekts, @projekt_phase], :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
+
+    ordered_ids = params[:tree].map { |item| item[:id] }
+    ordered_ids.each_with_index do |id, index|
+      @formular.formular_fields.where(id: id).update_all(given_order: index + 1)
+    end
+
+    head :ok
+  end
+
   private
 
     def set_projekt_phase
@@ -70,8 +81,8 @@ class Adm::Projekts::FormularFieldsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+        { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.formular.title"), url: formular_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }

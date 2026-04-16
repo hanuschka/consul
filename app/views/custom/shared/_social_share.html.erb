@@ -8,24 +8,82 @@
   <p class="sidebar-title"><%= share_title %></p>
 <% end %>
 
-<div class="social-share-full">
-  <div class='social-share-button'>
-    <%= link_to('', "whatsapp://send?text=#{ title }#{ url }",
-      class: 'ssb-icon ssb-whatsapp_app',
-      data: {site: "whatsapp"},
-      title: t('social_share_button.share_to_whatsup_title'))
-     %>
-  </div>
-  <%= social_share_button_tag("#{title} #{setting["twitter_hashtag"]} #{setting["twitter_handle"]}",
-                              url: local_assigns[:url],
-                              image: local_assigns.fetch(:image_url, ""),
-                              desc: local_assigns[:description],
-                              "data-twitter-title": local_assigns[:mobile],
-                              "data-telegram-title": local_assigns[:mobile]) %>
+<% share_title_text = "#{title} #{setting["twitter_hashtag"]} #{setting["twitter_handle"]}" %>
+<% twitter_title = local_assigns[:mobile].presence || share_title_text %>
+<% telegram_title = local_assigns[:mobile].presence || share_title_text %>
 
-  <div class='social-share-button'>
-    <%= link_to "#", class: 'ssb-icon ssb-copy-link js-copy-data-url', data: { url: local_assigns[:url], site: "kopieren"}, title: t('social_share_button.copy_link_title')  do %>
-      <span class="show-for-sr">kopieren</span>
+<div class="social-share-full">
+  <div class='social-share-button'
+    data-title="<%= share_title_text %>"
+    data-url="<%= local_assigns[:url] %>"
+    data-desc="<%= description %>"
+  >
+    <%= link_to "whatsapp://send?text=#{ title } #{ url }",
+      class: 'ssb-icon ssb-whatsapp_app',
+      data: { site: "whatsapp" },
+      role: "button",
+      title: t('custom.accessibility.share-links.whatsapp'),
+      aria: { label: t('custom.accessibility.share-links.whatsapp') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.whatsapp') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-facebook',
+      data: { site: "facebook" },
+      onclick: "return SocialShareButton.share(this);",
+      role: "button",
+      title: t('custom.accessibility.share-links.facebook'),
+      aria: { label: t('custom.accessibility.share-links.facebook') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.facebook') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-twitter',
+      data: { site: "twitter", "twitter-title": twitter_title },
+      onclick: "return SocialShareButton.share(this);",
+      role: "button",
+      title: t('custom.accessibility.share-links.twitter'),
+      aria: { label: t('custom.accessibility.share-links.twitter') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.twitter') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-telegram',
+      data: { site: "telegram", "telegram-title": telegram_title },
+      onclick: "return SocialShareButton.share(this);",
+      role: "button",
+      title: t('custom.accessibility.share-links.telegram'),
+      aria: { label: t('custom.accessibility.share-links.telegram') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.telegram') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-linkedin',
+      data: { site: "linkedin" },
+      onclick: "return SocialShareButton.share(this);",
+      role: "button",
+      title: t('custom.accessibility.share-links.linkedin'),
+      aria: { label: t('custom.accessibility.share-links.linkedin') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.linkedin') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-email',
+      data: { site: "email" },
+      onclick: "return SocialShareButton.share(this);",
+      role: "button",
+      title: t('custom.accessibility.share-links.email'),
+      aria: { label: t('custom.accessibility.share-links.email') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.email') %></span>
+    <% end %>
+
+    <%= link_to "#",
+      class: 'ssb-icon ssb-copy-link js-copy-data-url',
+      data: { url: local_assigns[:url], site: "kopieren" },
+      role: "button",
+      title: t('custom.accessibility.share-links.copy-link'),
+      aria: { label: t('custom.accessibility.share-links.copy-link') } do %>
+      <span class="show-for-sr"><%= t('custom.accessibility.share-links.copy-link') %></span>
     <% end %>
   </div>
 </div>

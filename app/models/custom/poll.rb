@@ -11,6 +11,7 @@ class Poll < ApplicationRecord
 
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
 
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
@@ -63,7 +64,7 @@ class Poll < ApplicationRecord
   end
 
   def find_or_create_stats_version
-    ends_at = projekt_phase.end_date
+    ends_at = projekt_phase&.end_date
 
     if ends_at.present? &&
         ((Time.zone.today - ends_at.to_date).to_i <= 3) &&
@@ -80,6 +81,8 @@ class Poll < ApplicationRecord
   end
 
   def stats_age_groups
+    return [] if projekt_phase.blank?
+
     projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
   end
 
@@ -88,7 +91,7 @@ class Poll < ApplicationRecord
   end
 
   def advanced_stats_enabled?
-    projekt_phase.feature?("resource.advanced_stats_enabled")
+    true
   end
 
   def report_visible_for_citizens?

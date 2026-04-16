@@ -1,7 +1,8 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @draft_version.title, breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::TabsComponent.new(tabs: legislation_draft_version_tabs(@draft_version)) %>
 
-<div class="kern-container my-5">
+<div class="kern-container kern-container--form my-5">
   <%= render "form", url: adm_projekts_phase_legislation_draft_version_path(@projekt_phase, @draft_version) %>
 </div>

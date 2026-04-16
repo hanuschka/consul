@@ -1,0 +1,57 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <% if @ai_settings.any? %>
+    <% @ai_settings.each do |setting| %>
+      <% next if setting.key == "ai.llm_api_endpoint" && !show_api_endpoint? %>
+      <% next if setting.key == "ai.llm_model" && !show_model_field? %>
+      <% next if setting.key == "ai.llm_custom_model" && !show_custom_model_field? %>
+
+      <div class="mb-5">
+        <div class="kern-title kern-title--small mb-3">
+          <%= t("custom.settings.#{setting.key}") %>
+        </div>
+        <div class="kern-row">
+          <div class="kern-col-12 kern-col-md-5">
+            <p class="kern-body mb-3 mb-md-0">
+              <%= t("custom.settings.#{setting.key}_description", default: t("admin.settings.no_description")) %>
+            </p>
+          </div>
+          <div class="kern-col-12 kern-col-md-5">
+            <%= render Adm::AiSettings::FormComponent.new(setting, setting.key) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-10">
+          <hr class="kern-divider mb-5" aria-hidden="true">
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mb-5">
+      <div class="kern-title kern-title--small mb-3">
+        <%= t("custom.settings.ai.llm_api_key") %>
+      </div>
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-5">
+          <p class="kern-body mb-3 mb-md-0">
+            <%= t("custom.settings.ai.llm_api_key_description") %>
+          </p>
+        </div>
+        <div class="kern-col-12 kern-col-md-5">
+          <%= render Adm::AiSettings::ApiKeyComponent.new("api_key", Ai::Settings.current_llm_provider) %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <%= empty_state(title: t(".no_settings"), icon: "smart_toy") %>
+  <% end %>
+</div>

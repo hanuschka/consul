@@ -77,8 +77,8 @@ class Adm::Projekts::ProjektEventsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+        { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.projekt_events.title"), url: projekt_events_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }

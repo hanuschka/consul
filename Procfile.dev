@@ -1,3 +1,3 @@
 web: bin/rails server
-js: yarn build --watch
-css: yarn build:css --watch
+js: npx esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch
+css: npx sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed --watch --poll

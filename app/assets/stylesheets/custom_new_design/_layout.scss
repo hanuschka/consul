@@ -17,7 +17,7 @@
 
   .main-column {
     width: 100%;
-    max-width: 925px;
+    max-width: $main-column-max-width;
     margin-right: 20px;
   }
 
@@ -75,7 +75,13 @@
     }
 
     .notification:hover::before {
-      color: $brand;
+      color: var(--brand-color);
+    }
+
+    .notification--title {
+      font-size: inherit;
+      font-weight: bold;
+      margin: 0;
     }
   }
 }

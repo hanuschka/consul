@@ -442,7 +442,7 @@
   text-align: center;
 
   .clipboard {
-    border: 1px solid $brand;
+    border: 1px solid var(--brand-color);
     border-radius: rem-calc(20);
     cursor: pointer;
     display: inline-block;
@@ -453,7 +453,7 @@
     text-decoration: none;
 
     &::before {
-      color: $brand;
+      color: var(--brand-color);
       content: "\6d";
       font-family: "icons";
       left: 6px;

@@ -4,4 +4,15 @@ de:
       user:
         add: "Hinzufügen"
         remove: "Entfernen"
+    pending_role_assignments:
+      title: "Ausstehende Rollenzuweisungen"
+      email: "E-Mail"
+      created_at: "Vorgemerkt am"
+      remove: "Entfernen"
+      confirm_remove: "Möchten Sie diese ausstehende Rollenzuweisung wirklich entfernen?"
+      created: "Der Nutzer mit der E-Mail-Adresse %{email} wurde als Projektmanager eingeladen."
+      removed: "Ausstehende Rollenzuweisung wurde entfernt."
+      already_pending: "Für %{email} wurde diese Rolle bereits vorgemerkt."
+      offer_preassign: "Nutzer mit der E-Mail-Adresse \"%{email}\" wurde nicht gefunden."
+      preassign_button: "Als Projektmanager einladen"
 

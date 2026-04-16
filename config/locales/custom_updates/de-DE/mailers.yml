@@ -51,7 +51,6 @@ de:
       netiquette_link_text: hier
       text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Zulassungsbedingungen einhält.
       sincerely: Mit freundlichen Grüßen
-      signature: Ihr Team von ABSTIMMUNG21
     comment:
       subject: Ihr Vorschlag wurde kommentiert.
       title: Ihr Vorschlag wurde kommentiert.
@@ -85,6 +84,10 @@ de:
     proposal_created:
       hi: "Hallo %{username},"
       text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+    formular_answer_created:
+      subject: "Vielen Dank für Ihre Einsendung!"
+      hi: "Hallo %{username},"
+      text1: "Ihre Einsendung zum Formular \"%{phase_title}\" im Projekt \"%{projekt_title}\" ist erfolgreich eingegangen."
     new_valuator_assignment:
       subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
       hi: "Hallo %{username},"
@@ -99,6 +102,9 @@ de:
       hi: "Hallo,"
       p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
       p2: Wenn Sie Ihre ursprünglich hinterlegte E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor. Sollten Sie den Verifizierungsversuch nicht initiiert haben, dann wenden Sie sich bitte an die Administratoren der Beteiligungssoftware.
+    projekt_event_registration_confirmation:
+      body: "Hallo %{name}, bitte bestätigen Sie Ihre Anmeldung zur Veranstaltung \"%{event}\", indem Sie auf den folgenden Link klicken."
+      confirm_link: "Anmeldung bestätigen"
     user_verification_failed:
       subject: Verifizierungsversuch fehlgeschlagen
       hi: "Hallo %{username},"

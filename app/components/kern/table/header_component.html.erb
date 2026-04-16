@@ -1,6 +1,6 @@
 <%= content_tag :th, scope: "col",
                      class: "kern-table__header",
-                     data: { controller: 'table-header', 'table-header-column-value': @column },
+                     data: { controller: 'table-header', 'table-header-column-value': @column, field: @data_field }.compact,
                      aria: { sort: aria_sort } do %>
   <div class="d-flex">
     <span class="mr-3" id="<%= @column %>-label"><%= @label %></span>
@@ -25,18 +25,22 @@
         <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
       <% end %>
 
-      <fieldset class="kern-fieldset kern-table__header-filter-menu p-4 d-none" data-table-header-target="filterMenu">
-        <div class='d-flex justify-content-end w-100'>
-          <button type="button" class="kern-btn kern-btn--tertiary" data-action="table-header#toggleFilterMenu">
+      <fieldset class="kern-fieldset kern-table__header-filter-menu d-none" data-table-header-target="filterMenu">
+        <legend class="kern-fieldset__legend kern-table__header-filter-legend">
+          <%= @label %>
+          <button type="button" class="kern-btn kern-btn--tertiary kern-table__header-filter-close" data-action="table-header#toggleFilterMenu">
             <span class="material-symbols-outlined">close</span>
-            <span class="sr-only">Schließen</span>
+            <span class="sr-only"><%= t("shared.table.filter.close") %></span>
           </button>
-        </div>
+        </legend>
 
         <div class="kern-fieldset__body">
           <% if @search.present? %>
-            <div class="kern-form-input my-3">
-              <%= text_field_tag "#{@column}__search", params["#{@column}__search"], class: "kern-form-input__input", data: { "table-header-target": "searchInput" } %>
+            <div class="kern-form-input">
+              <%= text_field_tag "#{@column}__search", params["#{@column}__search"],
+                    class: "kern-form-input__input",
+                    placeholder: t("shared.table.filter.search_placeholder", column_label: @label),
+                    data: { "table-header-target": "searchInput" } %>
             </div>
           <% end %>
 
@@ -48,8 +52,8 @@
           <% end %>
         </div>
 
-        <button type="button" class="kern-btn kern-btn--primary my-3" data-action="table-header#applyFilter">
-          <span class="kern-label">Filter anwenden</span>
+        <button type="button" class="kern-btn kern-btn--primary kern-btn--small mt-3" data-action="table-header#applyFilter">
+          <span class="kern-label"><%= t("shared.table.filter.apply") %></span>
         </button>
       </fieldset>
     <% end %>

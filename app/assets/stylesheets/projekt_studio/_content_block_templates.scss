@@ -14,6 +14,7 @@
   user-select: none;
   justify-content: flex-end;
   gap: 5px;
+  order: 99;
 }
 
 .ai-button-wrapper:first-child {
@@ -182,6 +183,17 @@
   .tabs .tabs-title > a[aria-selected="true"], .tabs .tabs-title > a.is-active,
   .tabs .tabs-title > a:hover {
     color: $dt-base;
+  }
+}
+
+.content-block-templates-selector--spinner {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+
+  .shared-loading-spinner-container {
+    flex-direction: column;
+    align-items: center;
   }
 }
 

@@ -3,25 +3,23 @@
           class="adm-hint__toggle"
           data-action="click->components-adm-hint#toggle"
           aria-expanded="false"
-          aria-controls="adm-hint-sidebar">
+          aria-controls="adm-hint-panel">
+    <span class="material-symbols-outlined" aria-hidden="true">info</span>
     <%= t(".link_text") %>
   </button>
 
-  <div id="adm-hint-sidebar"
-       class="adm-hint__sidebar"
-       data-components-adm-hint-target="sidebar"
-       role="complementary"
+  <div id="adm-hint-panel"
+       class="adm-hint__panel"
+       data-components-adm-hint-target="panel"
+       role="note"
        aria-hidden="true">
-    <div class="adm-hint__sidebar-header">
-      <span class="adm-hint__sidebar-title"><%= t(".link_text") %></span>
+    <div class="adm-hint__panel-content">
       <button type="button"
               class="adm-hint__close"
               data-action="click->components-adm-hint#close"
               aria-label="<%= t(".close") %>">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
-    </div>
-    <div class="adm-hint__sidebar-content">
       <%= content %>
     </div>
   </div>

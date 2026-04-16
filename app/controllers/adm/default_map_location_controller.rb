@@ -5,7 +5,7 @@ module Adm
 
       @default_map_location = MapLocation.default
       @breadcrumbs = [
-        { name: t("adm.menu.items.application") },
+        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
         { name: t(".title") }
       ]
     end
@@ -23,7 +23,7 @@ module Adm
 
       def map_location_params
         params.require(:map_location).permit(
-          :latitude, :longitude, :altitude, :zoom, :features, :rendering_library
+          :latitude, :longitude, :altitude, :zoom, :features, :rendering_library, :mapbox_style_id
         )
       end
   end

@@ -1,0 +1,71 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <div class="kern-card p-5">
+    <p class="kern-body kern-body--small mb-1">
+      <strong><%= t(".created_at") %>:</strong> <%= l(@feedback_form.created_at, format: "%d.%m.%Y") %>
+    </p>
+    <p class="kern-body kern-body--small mb-3">
+      <strong><%= t(".for_report") %>:</strong>
+      <%= link_to @deficiency_report.title, adm_deficiency_reports_deficiency_report_path(@deficiency_report), class: "kern-link" %>
+    </p>
+
+    <hr class="kern-divider mb-3">
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.overall_satisfaction') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= "#{@feedback_form.overall_satisfaction} / 5" %></p>
+      </div>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.response_time_satisfaction') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= "#{@feedback_form.response_time_satisfaction} / 5" %></p>
+      </div>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.communication_satisfaction') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= "#{@feedback_form.communication_satisfaction} / 5" %></p>
+      </div>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.resolved') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= t("shared.#{@feedback_form.resolved ? 'yes' : 'no'}") %></p>
+      </div>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.what_liked_note') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @feedback_form.what_liked_note %></p>
+      </div>
+    </div>
+
+    <div class="kern-row mb-3">
+      <div class="kern-col-12 kern-col-md-4">
+        <strong class="kern-body"><%= t('custom.deficiency_reports.feedback_form.new.what_improve_note') %></strong>
+      </div>
+      <div class="kern-col-12 kern-col-md-6">
+        <p class="kern-body"><%= @feedback_form.what_improve_note %></p>
+      </div>
+    </div>
+  </div>
+</div>

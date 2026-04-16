@@ -1,6 +1,7 @@
 ProjektStudio.ContentBlock.CodeEditMode = {
   initialized: false,
   aceInstances: {},
+  modalContentBlockWrapper: null,
 
   initialize() {
     this.initEventListeners();
@@ -9,6 +10,13 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   initEventListeners() {
+    const $document = $(document);
+    $document.on("click", ".js-site-code-editor-save", this.handleModalSave.bind(this));
+    $document.on("click", ".js-site-code-editor-cancel", this.handleModalCancel.bind(this));
+  },
+
+  isCompactContext(contentBlockWrapper) {
+    return !!contentBlockWrapper.closest("aside, .sidebar, footer");
   },
 
   enterCodeEditMode(e) {
@@ -51,8 +59,13 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
     const currentHTML = contentBlock.innerHTML.trim();
 
+    if (this.isCompactContext(contentBlockWrapper)) {
+      this.createAndShowEditorInModal(contentBlockWrapper, currentHTML);
+      return
+    }
+
     const editorContainer = document.createElement('div');
-    editorContainer.className = 'code-editor-container js-code-editor-container js-projekt-studio-hide-on-preview';
+    editorContainer.className = 'code-editor-container js-code-editor-container js-studio-hide-on-preview';
 
     const textarea = document.createElement('textarea');
     textarea.className = 'code-editor-textarea';
@@ -71,6 +84,38 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML);
 
     setTimeout(() => { editor.focus(); }, 100);
+  },
+
+  getSectionLabel(contentBlockWrapper) {
+    if (contentBlockWrapper.closest("aside, .sidebar")) return "Sidebar";
+    if (contentBlockWrapper.closest("footer")) return "Footer";
+    return null;
+  },
+
+  createAndShowEditorInModal(contentBlockWrapper, currentHTML) {
+    this.modalContentBlockWrapper = contentBlockWrapper;
+
+    const sectionLabel = this.getSectionLabel(contentBlockWrapper);
+    const titleEl = document.querySelector(".js-site-code-editor-modal-title");
+    if (titleEl && sectionLabel) {
+      titleEl.textContent = "Code-Editor für " + sectionLabel + "-Bereich";
+    }
+
+    const modalContainer = document.querySelector(".js-site-code-editor-container");
+    modalContainer.innerHTML = "";
+
+    const textarea = document.createElement("textarea");
+    textarea.className = "code-editor-textarea";
+    modalContainer.appendChild(textarea);
+
+    const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML);
+
+    App.SharedModal.open("siteCodeEditorModal");
+
+    setTimeout(() => {
+      editor.resize();
+      editor.focus();
+    }, 100);
   },
 
   setupAceEditor(contentBlockWrapper, textarea, currentHTML = '') {
@@ -118,6 +163,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       editorContainer.remove();
     }
 
+    const modalContainer = document.querySelector(".js-site-code-editor-container");
+    if (modalContainer) {
+      modalContainer.innerHTML = "";
+    }
+
     // Clean up ace instance
     const editorName = this.getEditorName(contentBlockWrapper);
     const editor = this.aceInstances[editorName];
@@ -153,11 +203,47 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     this.hideCodeEditModeControls(contentBlockWrapper);
     contentBlockWrapper.dataset.editMode = '';
 
+    if (this.modalContentBlockWrapper === contentBlockWrapper) {
+      App.SharedModal.closeById("siteCodeEditorModal");
+      this.modalContentBlockWrapper = null;
+    }
+
     ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelCodeEditMode(e) {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    this.exitCodeEditMode(contentBlockWrapper, true);
+  },
+
+  handleModalSave() {
+    const contentBlockWrapper = this.modalContentBlockWrapper;
+    if (!contentBlockWrapper) return
+
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const editor = this.getEditor(contentBlockWrapper);
+    if (!editor) return
+
+    const content = editor.getValue().trim();
+    const htmlValidation = ProjektStudio.utils.validateHTML(content);
+
+    if (!htmlValidation.isValid) {
+      const errorMessage = htmlValidation.issues ? htmlValidation.issues.join('\n') : htmlValidation.message;
+      alert(`HTML Validierung fehlgeschlagen:\n${errorMessage}`);
+      return
+    }
+
+    contentBlock.innerHTML = content;
+
+    ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, content);
+
+    this.exitCodeEditMode(contentBlockWrapper);
+  },
+
+  handleModalCancel() {
+    const contentBlockWrapper = this.modalContentBlockWrapper;
+    if (!contentBlockWrapper) return
+
     this.exitCodeEditMode(contentBlockWrapper, true);
   },
 

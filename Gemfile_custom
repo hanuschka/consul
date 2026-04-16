@@ -45,7 +45,9 @@ gem 'pundit', '~> 2.5', '>= 2.5.1'
 gem 'pagy', '~> 9.4'
 # /Adm
 
-gem 'ruby_llm', '1.9.1'
+gem 'liquid'
+
+gem 'ruby_llm', '1.13.2'
 
 gem 'pdf-reader', '2.15.1'
 

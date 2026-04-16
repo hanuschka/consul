@@ -84,7 +84,7 @@
 //= require banners
 //= require social_share
 //= require checkbox_toggle
-//= require markdown-it
+//= require markdown-it/dist/markdown-it
 //= require markdown_editor
 //= require html_editor
 //= require cocoon
@@ -244,3 +244,5 @@ var destroy_non_idempotent_modules = function() {
 App.Loader.initialize();
 $(document).on("turbolinks:load", initialize_modules);
 $(document).on("turbolinks:before-cache", destroy_non_idempotent_modules);
+
+window.history.scrollRestoration = 'manual';

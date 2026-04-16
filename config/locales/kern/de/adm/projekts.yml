@@ -1,14 +1,33 @@
 de:
   adm:
     projekts:
-      title: Projekt Management
+      title: Projekte
+      home:
+        title: Willkommen im Projektbereich
+        stats:
+          total: Gesamt
+          current: Aktiv
+          expired: Abgelaufen
+          draft: Entwurf
+        quick_links:
+          new: Neues Projekt
+          all: Alle Projekte
+          current: Aktive Projekte
       menu:
         aria_label: Projekts Navigation
         items:
+          home: Home
           projekts: Projekte
-          managers: Projektmanager*innen
+          managers: Team
           landing_pages: Themenseiten
           overview_page: Projektübersichtsseite
+      overview_page:
+        title: Projektübersichtsseite
+        hint_text: >
+          Konfigurieren Sie hier die öffentliche Projektübersichtsseite, auf der alle Beteiligungsprojekte
+          gelistet werden. Über die Navigation steuern Sie, welche Projektlisten in der oberen Filterleiste
+          angezeigt werden. Im Footer-Tab legen Sie fest, welche Projektlisten im unteren Bereich der Seite
+          erscheinen.
       landing_pages:
         index:
           title: Themenseiten
@@ -29,55 +48,89 @@ de:
           success: Der Wert wurde erfolgreich aktualisiert.
       projekts:
         index:
-          title: Projekte
+          title: Projektübersicht
+          hint_text: >
+            Hier verwalten Sie alle Beteiligungsprojekte der Plattform. Jedes Projekt kann mit
+            Laufzeit, Beteiligungsphasen, Sichtbarkeit und Projektmanagern konfiguriert werden.
+            Über den Status-Toggle können Projekte aktiviert oder deaktiviert werden – deaktivierte
+            Projekte sind im Frontend nicht sichtbar. Ein Klick auf den Projekttitel öffnet die
+            Einstellungen, ein Klick auf das Vorschaubild führt zur öffentlichen Projektseite.
           new_projekt: Neues Projekt erstellen
+          no_projekts_title: Keine Projekte vorhanden
+          no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
           table:
             status: Status
             actions: Aktionen
         new:
           title: Neues Projekt erstellen
-          intro_title: Projektname eingeben
-          intro_text: Geben Sie einen Namen für das neue Projekt ein. Nach der Erstellung können Sie weitere Details wie Laufzeit, Sichtbarkeit und Beteiligungsphasen konfigurieren.
+          intro_title: Neues Beteiligungsprojekt anlegen
+          intro_text: Projekte sind der zentrale Baustein Ihrer Beteiligungsplattform. Jedes Projekt kann mehrere Beteiligungsphasen enthalten – z. B. Umfragen, Vorschläge, Abstimmungen oder Veranstaltungen. Nach der Erstellung konfigurieren Sie Laufzeit, Sichtbarkeit, Beschränkungen und die einzelnen Phasen. Projekte können einer Themenseite zugeordnet oder eigenständig auf der Startseite angezeigt werden.
           name_label: Projektname
-          name_hint: Der Name wird im Frontend und in der Übersicht angezeigt.
+          name_hint: Der Projektname wird als Titel auf der Projektseite, in der Projektübersicht und in der Navigation angezeigt. Er sollte das Thema der Beteiligung klar und verständlich benennen, damit Bürger auf einen Blick erkennen, worum es geht. Der Name kann nach der Erstellung jederzeit in den Projekteinstellungen geändert werden.
           name_placeholder: z.B. Bürgerbeteiligung Stadtentwicklung 2026
           create_projekt: Projekt erstellen
         create:
           success: Das Projekt wurde erfolgreich erstellt.
         projekt:
           top_level_projekt: Top-Level-Projekt
+          frontend_page: Projektseite
           details: Projektdetails
           visibility: Sichtbarkeit & Darstellung
-          projekt_managers: Projektmanager*innen
+          projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:
+          frontend_page: Zur Projektseite
           details: Projektdetails
           visibility: Sichtbarkeit
-          projekt_managers: Projektmanager*innen
+          projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
         details:
           title: Projektdetails
+          hint_title: Hinweis zu den Projektdetails
+          hint_text: >
+            Auf dieser Seite konfigurieren Sie die grundlegenden Einstellungen des Projekts:
+            den Titel der Startseite, die Projektlaufzeit, die Zuordnung zu Themenseiten sowie
+            die geografische Einordnung. Diese Angaben bestimmen, wie das Projekt auf der Plattform
+            dargestellt und gefunden wird.
           duration_label: Projektlaufzeit
-          duration_description: Definiert den Zeitraum, in dem das Projekt online ist – auch außerhalb aktiver Beteiligungsphasen.
+          duration_description: Legt den Zeitraum fest, in dem das Projekt auf der Plattform sichtbar und zugänglich ist – unabhängig davon, ob gerade eine aktive Beteiligungsphase läuft. Das Start- und Enddatum bestimmt, wann das Projekt in der öffentlichen Projektübersicht erscheint und von Nutzern aufgerufen werden kann.
           landing_pages_label: Zuordnung zu Themenseiten
-          landing_pages_description: Ordnet das Projekt optional einer oder mehreren Gebiets- oder Themenseiten zu.
+          landing_pages_description: Ordnet das Projekt optional einer oder mehreren Themenseiten zu. Themenseiten bündeln thematisch verwandte Projekte auf einer eigenen Einstiegsseite – z. B. für Jugendbeteiligung oder Stadtentwicklung. Ein Projekt kann mehreren Themenseiten gleichzeitig zugeordnet werden.
           geo_restriction_label: Gebietszuordnung
-          geo_restriction_description: Legt fest, ob das Projekt einem bestimmten Gebiet zugeordnet ist.
+          geo_restriction_description: Ordnet das Projekt einem geografischen Gebiet zu. Diese Zuordnung wird auf der Projektübersichtsseite als Filteroption angezeigt, sodass Nutzer gezielt nach Projekten in bestimmten Stadtteilen oder dem gesamten Stadtgebiet suchen können. Die Zuordnung hat keinen Einfluss auf die Sichtbarkeit des Projekts.
           geo_restriction:
             geozone_affiliated_no_affiliation: Keine Gebietszuordnung
             geozone_affiliated_entire_city: Stadtweit
             geozone_affiliated_only_geozones: Zuordnung zu Stadtteil
+            geozones_label: Gebiete
+            geozones_empty: Es sind noch keine Gebiete angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
+            districts_label: Stadtteile
+            districts_empty: Es sind noch keine Stadtteile angelegt. Diese können in den allgemeinen Einstellungen verwaltet werden.
         visibility:
           title: Sichtbarkeit & Darstellung
+          hint_title: Hinweis zur Sichtbarkeit
+          hint_text: >
+            Hier legen Sie fest, wo und für wen das Projekt sichtbar ist. Sie können steuern,
+            ob es auf der Projektübersichtsseite, der Startseite oder in individuellen Listen
+            erscheint. Zusätzlich lässt sich die Sichtbarkeit auf bestimmte Nutzergruppen
+            einschränken und die Indexierung durch Suchmaschinen aktivieren oder deaktivieren.
           individual_groups_label: Sichtbarkeit auf starke Gruppen beschränken
-          individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf bestimmte Nutzergruppen, die unter "Starke Gruppen" angelegt wurden.
+          individual_groups_description: Beschränkt die Sichtbarkeit des Projekts auf ausgewählte Nutzergruppen, die zuvor unter „Starke Gruppen" angelegt wurden. Nur Mitglieder der hier zugewiesenen Gruppen können das Projekt sehen und daran teilnehmen. Ohne Auswahl bleibt das Projekt für alle registrierten Nutzer sichtbar.
         projekt_managers:
-          title: Projektmanager*innen
-          no_managers: Es sind noch keine Projektmanager*innen im System registriert.
+          title: Projektmanager
+          hint_title: Hinweis zu Projektmanagern
+          hint_text: >
+            Projektmanager erhalten spezifische Berechtigungen für dieses Projekt, z. B.
+            Administration, Moderation oder das Erstellen von Beiträgen im Namen anderer.
+            Weisen Sie hier registrierten Projektmanagern individuelle Rechte zu. Neue
+            Projektmanager können über den Menüpunkt „Projektmanager" in der Seitenleiste angelegt werden.
+          no_managers_title: Keine Projektmanager vorhanden
+          no_managers_description: Erstellen Sie einen neuen Projektmanager unter „Projektmanager" in der Seitenleiste, um diesen anschließend dem Projekt zuzuweisen.
+          no_managers_link: Projektmanager anlegen
           assignment:
             hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
             permissions:
@@ -89,6 +142,13 @@ de:
               review: Offline Stimmen hinzufügen
         map:
           title: Karte
+          hint_title: Hinweis zur Kartenansicht
+          hint_text: >
+            Konfigurieren Sie hier die Kartenansicht für dieses Projekt. Beim Erstellen eines neuen Projekts
+            werden die Grundeinstellungen der Standardkarte auf Applikationsebene automatisch übernommen.
+            Sobald Sie die Karte hier im Projekt anpassen, werden nachträgliche Änderungen an der Standardkarte
+            nicht mehr in dieses Projekt übernommen. Zusätzlich lassen sich Kartenebenen hinzufügen, um z. B.
+            Geodaten oder Projektstandorte visuell hervorzuheben.
         phases:
           title: Beteiligungsphasen
           intro_title: Hinweis zu den Beteiligungsphasen
@@ -101,7 +161,8 @@ de:
           intro_text_visible_description: Steuert, ob die Phase im Projekt-Footer (Tab-Leiste) angezeigt wird. Wenn deaktiviert, bleibt die Phase zwar technisch aktiv und kann direkt über eine URL aufgerufen werden, wird aber nicht über einen sichtbaren Tab beworben. Dies ist z. B. nützlich bei Sonderformaten wie Gewinnspielen nach einer Abstimmung.
           intro_text_p2: Die Kombination dieser drei Einstellungen erlaubt eine flexible Steuerung von Ablauf, Sichtbarkeit und Nutzerführung innerhalb eines Beteiligungsprojekts.
           new_phase: Neue Phase erstellen
-          no_phases: Diesem Projekt sind noch keine Beteiligungsphasen zugeordnet.
+          no_phases_title: Keine Beteiligungsphasen vorhanden
+          no_phases_description: Erstellen Sie eine neue Beteiligungsphase, um Bürgern die Teilnahme an diesem Projekt zu ermöglichen.
           table:
             phase_tab_name: Beteiligungsphasen
             start_date: Start
@@ -113,5 +174,7 @@ de:
             actions: Aktionen
         update:
           success: Projekt erfolgreich aktualisiert.
+        notify_reviewers:
+          success: Benachrichtigung erfolgreich gesendet.
         destroy:
           success: Projekt erfolgreich gelöscht.

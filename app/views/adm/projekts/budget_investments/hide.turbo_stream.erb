@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@investment) do %>
+  <%= render "adm/projekts/phases/budget_investments/budget_investment", investment: @investment, projekt_phase: @projekt_phase, budget: @projekt_phase.budget %>
+<% end %>

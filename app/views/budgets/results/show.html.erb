@@ -34,7 +34,7 @@
                         "toggle-text" => t("budgets.results.hide_discarded_link") } %>
 
     <% if can?(:recalculate_winners, @budget) %>
-      <%= link_to t("custom.budgets.results.recalculate_winners"), recalculate_winners_admin_budget_path(@budget),
+      <%= link_to t("custom.budgets.results.recalculate_winners"), recalculate_winners_adm_projekts_phase_budget_path(@budget.projekt_phase, @budget),
                   method: :put,
                   class: "button hollow margin-bottom float-right-medium margin-right" %>
     <% end %>

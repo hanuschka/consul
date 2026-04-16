@@ -1,5 +1,16 @@
 <% content_for :body_class, "home-page" %>
 
+<% if current_user&.administrator? %>
+  <% content_for :admin_topbar_actions do %>
+    <%= link_to adm_homepage_path,
+          class: "button hollow projekt-page--admin-topbar-button",
+          target: "_blank" do %>
+      <i class="fas fa-edit"></i>
+      <span><%= t("custom.projekts.page.topbar.edit_homepage") %></span>
+    <% end %>
+  <% end %>
+<% end %>
+
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: root_url %>
 <% end %>
@@ -75,7 +86,7 @@
   <% if @latest_polls.any? %>
     <div class="row">
       <div class="column medium-9 small-centered margin-bottom">
-        <h4 class='title-accent'><%= t('custom.welcome.current_polls') %></h4>
+        <h2 class='title card-title'><%= t('custom.welcome.current_polls') %></h2>
         <%= render partial: "polls/poll_group", locals: { poll_group: @latest_polls } %>
       </div>
     </div>
@@ -90,7 +101,7 @@
   <% if @latest_items.any? %>
     <div class="row">
       <div class="column medium-9 small-centered margin-bottom">
-        <h4 class='title-accent'><%= t('custom.welcome.user_entries') %></h4>
+        <h2 class='title card-title'><%= t('custom.welcome.user_entries') %></h2>
         <%= render "latest_items" %>
       </div>
     </div>

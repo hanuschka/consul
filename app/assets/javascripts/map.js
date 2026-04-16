@@ -9,6 +9,35 @@
       });
     },
 
+    destroy: function() {
+      App.Map.maps.forEach(function(mapInstance) {
+        if (mapInstance.map) {
+          mapInstance.map.off();
+          mapInstance.map.remove();
+        }
+      });
+      App.Map.maps = [];
+    },
+
+    refreshMapsIn: function(container) {
+      var $container = $(container);
+
+      $container.find('[data-map]').each(function() {
+        App.Map.destroyMapForElementId(this.id);
+        App.Map.initializeMapForElementId(this.id);
+      });
+
+      var containerEl = $container[0];
+
+      setTimeout(function() {
+        App.Map.maps.forEach(function(mapInstance) {
+          if (containerEl.contains(mapInstance.element) && mapInstance.map && mapInstance.map.invalidateSize) {
+            mapInstance.map.invalidateSize();
+          }
+        });
+      }, 150);
+    },
+
     destroyMapForElementId: function(elementId) {
       var mapInstance = null;
 
@@ -74,7 +103,7 @@
     // Public Interface method for assistant map update and external use
     // DO NOT DELETE
     setMarkerTo(lat, lng, shouldScroll) {
-      if (App.Map.anyMapInitialized()) {
+      if (App.Map.maps.length > 0) {
         App.Map.maps[0].setMarkerTo(lat, lng, shouldScroll);
       }
     },

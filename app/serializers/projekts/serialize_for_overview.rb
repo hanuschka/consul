@@ -14,7 +14,7 @@ class Projekts::SerializeForOverview < ApplicationService
         :order_number
       ],
       include: {
-        page: { only: [:title, :subtitle, :slug] },
+        page: { only: [:title, :subtitle, :slug, :status, :published_at, :created_at, :updated_at] },
         map_location: { only: [:latitude, :longitude] }
       }
     )
@@ -73,7 +73,7 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_phases
     {
-      phases: @projekt.projekt_phases.map do |phase|
+      phases: @projekt.active_and_visible_projekt_phases.map do |phase|
         {
           id: phase.id,
           title: phase.title,
@@ -82,7 +82,8 @@ class Projekts::SerializeForOverview < ApplicationService
           end_date: phase.end_date,
           active: phase.active,
           regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
-          given_order: phase.given_order
+          given_order: phase.given_order,
+          frontend_visibility: phase.frontend_visibility
         }
       end
     }
@@ -97,36 +98,36 @@ class Projekts::SerializeForOverview < ApplicationService
     }
   end
 
-  def projekt_current?
-    (
-      @projekt.total_duration_start.nil? ||
-      @projekt.total_duration_start <= time_now
-    ) &&
-    (
-      @projekt.total_duration_end.nil? ||
-     @projekt.total_duration_end >= time_now
-    )
-  end
+  # def projekt_current?
+  #   (
+  #     @projekt.total_duration_start.nil? ||
+  #     @projekt.total_duration_start <= time_now
+  #   ) &&
+  #   (
+  #     @projekt.total_duration_end.nil? ||
+  #    @projekt.total_duration_end >= time_now
+  #   )
+  # end
 
-  def projekt_underway?
-    projekt_current? && @projekt.projekt_phases.regular_phases.any?(&:current?)
-  end
+  # def projekt_underway?
+  #   projekt_current? && @projekt.projekt_phases.regular_phases.any?(&:current?)
+  # end
 
-  def projekt_ongoing?
-    projekt_current? && @projekt.projekt_phases.regular_phases.all? { |phase| !phase.current? }
-  end
+  # def projekt_ongoing?
+  #   projekt_current? && @projekt.projekt_phases.regular_phases.all? { |phase| !phase.current? }
+  # end
 
-  def projekt_upcoming?
-    return false if @projekt.total_duration_start.nil?
+  # def projekt_upcoming?
+  #   return false if @projekt.total_duration_start.nil?
 
-    @projekt.total_duration_start > time_now
-  end
+  #   @projekt.total_duration_start > time_now
+  # end
 
-  def projekt_expired?
-    return false if @projekt.total_duration_end.nil?
+  # def projekt_expired?
+  #   return false if @projekt.total_duration_end.nil?
 
-    @projekt.total_duration_end < time_now
-  end
+  #   @projekt.total_duration_end < time_now
+  # end
 
   def time_now
     @time_now ||= Time.zone.today

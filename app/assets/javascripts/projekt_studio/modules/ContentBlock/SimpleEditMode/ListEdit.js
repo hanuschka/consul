@@ -15,7 +15,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   toggleListControls(contentBlock, enabled) {
     if (enabled) {
       contentBlock
-        .querySelectorAll("ul")
+        .querySelectorAll("ul, ol")
         .forEach((ul) => {
           const foundationSlider = ul.closest(".orbit")
 
@@ -55,10 +55,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       baseClass += " -small"
     }
 
-    console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
+    // console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
     if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
       const dragHandleHTML = `
-        <button class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
+        <button
+          class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle js-content-block-element-not-editable js-studio-hide-on-preview -drag"
+          title="Element verschieben"
+          contenteditable="false"
+        >
         <i class="fas fa-up-down-left-right"></i>
        </button>
      `
@@ -67,7 +71,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     }
 
     const deleteButtonHtml = `
-        <button class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item -delete">
+        <button
+          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item js-content-block-element-not-editable js-studio-hide-on-preview -delete"
+          contenteditable="false"
+        >
         <i class="fa fas fa-trash"></i>
        </button>
      `
@@ -84,11 +91,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     if (wrapper.dataset.outsideList === "true") {
       ulParent = wrapper.previousElementSibling;
-      ul = ulParent.querySelector("ul");
+      ul = ulParent.querySelector("ul, ol");
       lastLi = ul.querySelector("li:last-child")
     }
     else {
-      ul = e.currentTarget.closest("ul")
+      ul = e.currentTarget.closest("ul, ol")
       lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
     }
 
@@ -146,7 +153,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     const newSlideNumber = previousSlideNumber + 1;
     clonedLi.dataset.slide = newSlideNumber;
 
-    this.addBulletToSlider(clonedLi.closest("ul"), newSlideNumber)
+    this.addBulletToSlider(clonedLi.closest("ul, ol"), newSlideNumber)
 
     const previousImg = lastLi.querySelector('img')
     const clonedImg = clonedLi.querySelector('img')
@@ -160,17 +167,23 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     if (!deleteConfirmed) return;
 
+    console.log("e.currentTarget", e.currentTarget)
     const li = e.currentTarget.closest("li")
-    const ul = li.closest("ul")
+    if (!li) return;
+
+    const ul = li.closest("ul, ol")
+    if (!ul) return;
 
     const isSlider = ul.classList.contains("orbit-container")
 
     if (isSlider) {
       const lastBullet = ul.closest(".orbit").querySelector(".orbit-bullets > button:last-child")
-      if (lastBullet.classList.contains("is-active")) {
+      if (lastBullet && lastBullet.classList.contains("is-active")) {
         lastBullet.previousElementSibling.click()
       }
-      lastBullet.remove()
+      if (lastBullet) {
+        lastBullet.remove()
+      }
     }
 
     li.remove()
@@ -207,7 +220,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass}`;
+    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass} js-content-block-element-not-editable`;
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -222,13 +235,13 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     }
 
     buttonWrapper.innerHTML = `
-         <div class="content-block--item-action-wrapper--inner">
-            <button class="content-block--item-action js-projekt-content-block--add-item">
-              <i class="fa fas fa-plus"></i>
-              Weiteres Element hinzufügen
-            </button>
-          </div>
-        `
+      <div class="content-block--item-action-wrapper--inner js-studio-hide-on-preview">
+          <button class="content-block--item-action js-projekt-content-block--add-item js-content-block-element-not-editable">
+          <i class="fa fas fa-plus"></i>
+          Weiteres Element hinzufügen
+        </button>
+      </div>
+    `
 
     if (copyStyles) {
       if (lastLi) {
@@ -250,7 +263,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   initSortableForContentBlock(contentBlock) {
     setTimeout(() => {
       contentBlock
-        .querySelectorAll("ul")
+        .querySelectorAll("ul, ol")
         .forEach((ul) => {
           if (this.sortableInstances.has(ul)) return;
           if (ul.classList.contains("orbit-container")) return;
@@ -271,7 +284,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   },
 
   cleanupSortableForContentBlock(contentBlock) {
-    const ulElements = contentBlock.querySelectorAll("ul")
+    const ulElements = contentBlock.querySelectorAll("ul, ol")
 
     ulElements.forEach((ul) => {
       const sortableInstance = this.sortableInstances.get(ul)

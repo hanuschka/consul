@@ -1376,7 +1376,7 @@ en:
         name: Key name
         value: Value
         value_set: Custom set
-        value_empty: Default
+        value_empty: Not set
         empty_api_keys: There are no API keys created
       show:
         key: Name
@@ -1384,8 +1384,9 @@ en:
         description: Description
         website: Website
         api_value: Key value
+        add_key: Set API key
         default_key_note_title: Default API Key
-        default_key_note_description: No custom API key is set, system uses a default API key provided by DemokratieToday. Setting a custom key will override the default.
+        default_key_note_description: No custom API key is set — the default key from DemokratieToday is being used. Set a custom key to override it.
       form:
         edit_title: Edit API Key
         value: Value

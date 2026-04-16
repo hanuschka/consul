@@ -1,0 +1,73 @@
+<%= turbo_frame_tag "restrictions__geozone" do %>
+  <%= form_with model: projekt_phase, url: adm_projekts_phase_path(projekt_phase), method: :patch do |f| %>
+    <% disabled = projekt_phase.user_status == "guest" %>
+    <% geozone_options = [["no_restriction", t("adm.projekts.phases.restrictions.geozone.no_restriction")],
+                          ["only_citizens", t("adm.projekts.phases.restrictions.geozone.only_citizens")],
+                          ["only_geozones", t("adm.projekts.phases.restrictions.geozone.only_geozones")],
+                          ["only_streets", t("adm.projekts.phases.restrictions.geozone.only_streets")]] %>
+    <div class="kern-fieldset__body mb-4" data-controller="related-content" data-action="input->related-content#toggle">
+      <% geozone_options.each do |value, label| %>
+        <div class="kern-form-check">
+          <%= f.radio_button :geozone_restricted, value,
+              class: "kern-form-check__radio",
+              disabled: disabled,
+              data: value.in?(["only_geozones", "only_streets"]) ? { related_content_target: "trigger" } : {} %>
+          <%= f.label :geozone_restricted, label, value: value, class: "kern-label" %>
+        </div>
+
+        <% if value == "only_geozones" %>
+          <div class="options-group my-2 pl-3" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_geozones' %>" data-related-content-target="content">
+            <%= f.collection_check_boxes(:registered_address_district_ids, RegisteredAddress::District.all.sort_by(&:name_for_display), :id, :name_for_display) do |b| %>
+              <div class="kern-form-check mb-2">
+                <%= b.check_box(class: "kern-form-check__checkbox", disabled: disabled) %>
+                <%= b.label(class: "kern-label") %>
+              </div>
+            <% end %>
+          </div>
+        <% elsif value == "only_streets" %>
+          <div class="options-group mt-2 pl-3 mb-2" style="<%= 'display: none;' unless projekt_phase.geozone_restricted == 'only_streets' %>" data-related-content-target="content">
+            <div data-controller="street-selector"
+                 data-street-selector-search-url-value="<%= search_adm_registered_address_streets_path %>"
+                 data-street-selector-field-name-value="<%= f.object_name %>[registered_address_street_ids][]">
+
+              <div id="street-selector-selected-streets"
+                   data-street-selector-target="selectedStreets"
+                   class="street-selector__selected">
+                <% projekt_phase.registered_address_streets.each do |street| %>
+                  <%= render "adm/registered_address_streets/selected_street", street: street %>
+                <% end %>
+              </div>
+
+              <div class="street-selector__search">
+                <input type="text"
+                       class="kern-form-input__input"
+                       placeholder="<%= t("adm.projekts.phases.restrictions.geozone.search_street") %>"
+                       data-street-selector-target="searchInput"
+                       data-action="input->street-selector#search keydown->street-selector#search"
+                       <%= "disabled" if disabled %>>
+                <div id="street-selector-results"
+                     class="street-selector__results d-none"
+                     data-street-selector-target="results">
+                </div>
+              </div>
+
+              <div id="street-selector-checkboxes"
+                   data-street-selector-target="checkboxes"
+                   hidden>
+                <%= f.collection_check_boxes(:registered_address_street_ids, projekt_phase.registered_address_streets, :id, :id) do |b| %>
+                  <%= b.check_box(checked: true, id: "street_checkbox_#{b.value}") %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+      <% end %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

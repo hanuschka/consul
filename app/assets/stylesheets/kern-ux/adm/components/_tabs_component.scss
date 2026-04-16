@@ -1,0 +1,73 @@
+@use "sass:map";
+@use "../../abstracts/breakpoints" as bp;
+
+.adm-tabs-wrapper {
+  position: relative;
+}
+
+.adm-tabs-arrow {
+  all: unset;
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--kern-darkblue-750);
+  border-radius: 50%;
+  padding: 4px;
+  top: -35px;
+
+  span {
+    color: var(--kern-darkblue-750);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--left {
+    @media (min-width: map.get(bp.$grid-breakpoints, xl)) {
+      top: 6px;
+      left: -34px;
+    }
+  }
+
+  &--right {
+    right: 0;
+
+    @media (min-width: map.get(bp.$grid-breakpoints, xl)) {
+      top: 6px;
+      right: -34px;
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.adm-tabs {
+  border-bottom: 1px solid var(--kern-grey-350);
+
+  display: flex;
+  gap: 7px;
+  flex-wrap: nowrap;
+
+  .adm-tab {
+    border: 1px solid var(--kern-grey-350);
+    border-bottom-color: var(--kern-grey-350);
+    border-radius: 4px 4px 0 0;
+    margin-bottom: -1px;
+    cursor: pointer;
+    background-color: var(--kern-grey-050);
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+
+    &.active {
+      background-color: var(--kern-custom-white);
+      border-top: 2px solid var(--kern-darkblue-750);
+      border-bottom-color: var(--kern-custom-white);
+    }
+  }
+}

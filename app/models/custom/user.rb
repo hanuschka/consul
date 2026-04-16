@@ -18,6 +18,7 @@ User.class_eval do
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
+  delegate :district, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -31,6 +32,7 @@ User.class_eval do
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :fulfill_pending_role_assignments
 
   has_secure_token :frame_sign_in_token
 
@@ -42,6 +44,7 @@ User.class_eval do
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :landing_page_manager
   has_one :deficiency_report_manager
   has_many :ideas, inverse_of: :author, foreign_key: :author_id
   has_one :idea_officer, class_name: "Idea::Officer"
@@ -229,6 +232,14 @@ User.class_eval do
     projekt_manager.allowed_to?(permission, projekt)
   end
 
+  def landing_page_manager?(page = nil)
+    if page.present?
+      landing_page_manager.present? && landing_page_manager.allowed_to?(page)
+    else
+      landing_page_manager.present?
+    end
+  end
+
   def officing_manager?
     officing_manager.present?
   end
@@ -241,16 +252,9 @@ User.class_eval do
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
-  def current_city_citizen?
-    return false if geozone.nil?
-
-    @geozone_ids ||= Geozone.ids
-
-    @geozone_ids.include?(geozone.id)
-  end
-
-  def not_current_city_citizen?
-    !current_city_citizen?
+  def citizen?
+    (RegisteredAddress::District.any? && district.present?) ||
+      (Geozone.any? && geozone.present?)
   end
 
   def verified?
@@ -437,6 +441,14 @@ User.class_eval do
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def fulfill_pending_role_assignments
+      return unless email.present?
+
+      PendingRoleAssignment.for_email(email).find_each do |pending|
+        pending.fulfill!(self)
       end
     end
 end

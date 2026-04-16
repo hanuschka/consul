@@ -1,0 +1,16 @@
+<div id="memos-container">
+  <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="adm-detail-section-title m-0"><%= t("adm.memos.title") %></h2>
+    <%= render Adm::HintComponent.new do %>
+      <%= t("adm.memos.hint") %>
+    <% end %>
+  </div>
+
+  <% if policy([:adm, Memo.new(memoable: memoable)]).create? %>
+    <%= render "adm/memos/form", memoable: memoable %>
+  <% end %>
+
+  <div class="adm-memos-timeline">
+    <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
+  </div>
+</div>

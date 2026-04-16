@@ -1,9 +1,9 @@
 <footer class="not-print">
   <div class="row clikus">
     <div class="small-12 large-4 column">
-      <p style="font-size:35px;font-weight:500;margin-top:20px;margin-bottom:30px;line-height:1.2;">
+      <h2 style="font-size:35px;font-weight:500;margin-top:20px;margin-bottom:30px;line-height:1.2;">
         <%= t("layouts.header.open_gov") %>
-      </p>
+      </h2>
 
       <p class="info">
         <%= sanitize(t("custom.layouts.footer.description",
@@ -24,7 +24,8 @@
 
   <div class="subfooter row clikus">
     <div class="small-12 medium-8 column">
-      <span><%= t("layouts.footer.copyright", year: Time.current.year) %></span>&nbsp;|
+      <h2 class="show-for-sr"><%= t("custom.layouts.footer.navigation_heading") %></h2>
+      <p class="inline-block"><%= t("layouts.footer.copyright", year: Time.current.year) %>&nbsp;|</p>
       <ul class="no-bullet inline-block">
         <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>

@@ -47,4 +47,9 @@ tmp/
 /spec/examples.txt
 /coverage/
 .tool-versions
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
 tags
+consul_local_scripts/

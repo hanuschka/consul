@@ -1,0 +1,49 @@
+<% up_and_down = proposal_phase.feature?("resource.enable_up_and_down_voting") %>
+<% vote = local_assigns[:vote] %>
+<% voted = vote.present? %>
+<% vote_value = vote&.vote_flag %>
+<% create_url = adm_officing_proposal_phase_proposal_votes_path(proposal_phase, proposal_id: proposal.id, offline_user_id: offline_user.id) %>
+<% destroy_url = adm_officing_proposal_phase_proposal_vote_path(proposal_phase, proposal, offline_user_id: offline_user.id) %>
+
+<%= render Kern::FormFieldComponent.new(
+  inline: true,
+  label: "#{proposal.title} ##{proposal.id}",
+  divider: true) do %>
+
+  <% if up_and_down %>
+    <div class="d-flex align-items-center gap-2">
+      <% if vote_value == true %>
+        <%= form_with(url: destroy_url, method: :delete) do %>
+          <%= kern_button(icon: "thumb_up", text: t(".agreed"), type: :submit, style: :primary) %>
+        <% end %>
+      <% else %>
+        <%= form_with(url: create_url, method: :post) do |f| %>
+          <%= f.hidden_field :value, value: "yes" %>
+          <%= kern_button(icon: "thumb_up", text: t(".agree"), type: :submit, style: :secondary) %>
+        <% end %>
+      <% end %>
+
+      <% if vote_value == false %>
+        <%= form_with(url: destroy_url, method: :delete) do %>
+          <%= kern_button(icon: "thumb_down", text: t(".disagreed"), type: :submit, style: :primary) %>
+        <% end %>
+      <% else %>
+        <%= form_with(url: create_url, method: :post) do |f| %>
+          <%= f.hidden_field :value, value: "no" %>
+          <%= kern_button(icon: "thumb_down", text: t(".disagree"), type: :submit, style: :secondary) %>
+        <% end %>
+      <% end %>
+    </div>
+
+  <% else %>
+    <% if voted %>
+      <%= form_with(url: destroy_url, method: :delete) do %>
+        <%= kern_button(text: t(".revoke"), type: :submit, style: :secondary) %>
+      <% end %>
+    <% else %>
+      <%= form_with(url: create_url, method: :post) do %>
+        <%= kern_button(icon: "how_to_vote", text: t(".support"), type: :submit) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

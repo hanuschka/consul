@@ -1,0 +1,18 @@
+de:
+  components:
+    adm:
+      map_layers_component:
+        title: WMS-Kartenlayer hinzufügen
+        description: Hier können zusätzliche Kartenlayer über einen WMS-Dienst eingebunden werden. Die Layer müssen als öffentliche WMS-URLs verfügbar sein.
+        table:
+          name: Name der Kartenebene
+          type: Typ
+          layer_names: Layername
+          base: Base
+          layer: Layer
+        actions:
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diese Kartenebene löschen möchten?
+        no_layers: Keine Kartenebenen vorhanden.
+        add_layer: Kartenebene hinzufügen

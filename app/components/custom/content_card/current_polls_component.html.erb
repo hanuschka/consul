@@ -2,5 +2,4 @@
   resources: current_polls,
   resource_type: Poll,
   title: @content_card.title || t("custom.content_cards.current_polls.title"),
-  resource_link_additional_url_params: (@custom_page.present? ? { page_ref: @custom_page&.slug } : nil),
 ) %>

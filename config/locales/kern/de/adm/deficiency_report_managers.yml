@@ -1,0 +1,15 @@
+de:
+  adm:
+    deficiency_report_managers:
+      index:
+        title: Mängel-Administratoren
+        empty_title: "Keine Mängel-Administratoren vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Mängel-Administrator hinzu."
+        new_link: Neuen Mängel-Administrator hinzufügen
+        no_deficiency_report_managers: Keine Mängel-Administratoren vorhanden.
+      new:
+        title: Neuen Mängel-Administrator hinzufügen
+        search_label: Nutzer durchsuchen
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Mängel-Administrator hinzugefügt werden. Mängel-Administratoren verwalten eingereichte Meldungen und weisen diese an Sachbearbeiter zu.
+      search:
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.

@@ -137,6 +137,13 @@
     @media(max-width: $small-tablet-viewport-start) {
       font-size: 20px;
     }
+
+    .custom-content-block-body p {
+      line-height: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      margin-bottom: inherit;
+    }
   }
 
   .auth-page-template--form-section {

@@ -58,7 +58,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
   end
 
   def update_order
-    # authorize!(:udpate, ::SiteCustomization::Page)
+    authorize!(:udpate, ::SiteCustomization::Page)
 
     ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])
     head :ok
@@ -90,11 +90,11 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :slug, :landing, :more_info_flag,
         :print_content_flag, :status,
         :landing_show_in_top_nav,
-        :landing_hide_all_top_nav_links,
+
         :landing_hide_title_and_subtitle,
-        :landing_show_projekts_overview,
         :landing_navigation_link_color,
         :landing_site_logo_follow_to_landing_page,
+        :landing_desktop_header_image,
         :landing_mobile_header_image,
         :landing_site_logo_for_transparent_background,
         :landing_site_logo_for_white_background,

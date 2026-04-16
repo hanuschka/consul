@@ -4,10 +4,9 @@ class Polls::ListItemComponent < ApplicationComponent
   delegate :link_to_poll, to: :helpers
   attr_reader :poll, :projekt_phase
 
-  def initialize(poll:, additional_url_params: nil)
+  def initialize(poll:)
     @poll = poll
     @projekt_phase = poll.projekt_phase
-    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -25,13 +24,7 @@ class Polls::ListItemComponent < ApplicationComponent
   private
 
     def poll_path
-      base_url = helpers.poll_path(poll.id)
-
-      if @additional_url_params.present?
-        base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
-      end
-
-      base_url
+      helpers.poll_path(poll.id)
     end
 
     def button_text

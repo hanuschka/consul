@@ -1,6 +1,6 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
-    root to: "projekts#index"
+    root to: "home#show"
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
@@ -14,7 +14,7 @@ namespace :adm do
 
     resources :milestone_statuses, except: %i[show]
 
-    resources :phases, only: [:update] do
+    resources :phases, only: [:update, :destroy] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
 
@@ -39,6 +39,7 @@ namespace :adm do
         get :poll_questions
         get :formular
         get :formular_answers
+        get :formular_follow_up_emails
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -171,6 +172,8 @@ namespace :adm do
       end
     end
 
+    get "list", to: "projekts#index", as: :projekts_list
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member
       get :visibility, on: :member
@@ -183,7 +186,9 @@ namespace :adm do
       patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
-      resources :phases, only: [:new, :create]
+      resources :phases, only: [:new, :create] do
+        patch :reorder, on: :collection
+      end
       resources :manager_assignments, only: [:update]
       patch :update_default_phase, on: :member
     end

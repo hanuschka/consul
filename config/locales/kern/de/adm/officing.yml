@@ -4,6 +4,7 @@ de:
       menu:
         aria_label: Officing Navigation
         items:
+          officing_managers: Team
           dashboard: Übersicht
       dashboard:
         title: Officing

@@ -3,11 +3,11 @@
   <td class="kern-table__cell"><%= user.email %></td>
   <td class="kern-table__cell">
     <% if user.send(params[:role]).present? %>
-      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--secondary", method: :delete do %>
+      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--secondary", method: :delete, data: { turbo_frame: "_top" } do %>
         <span class="kern-label"><%= t('.remove') %></span>
       <% end %>
     <% else %>
-      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--primary" do %>
+      <%= button_to adm_role_assignment_path(user_id: user.id, role: params[:role]), class: "kern-btn kern-btn--primary", data: { turbo_frame: "_top" } do %>
         <span class="kern-label"><%= t('.add') %></span>
       <% end %>
     <% end %>

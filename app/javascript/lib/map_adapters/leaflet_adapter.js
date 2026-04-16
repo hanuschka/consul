@@ -28,6 +28,7 @@ export default class LeafletAdapter extends BaseAdapter {
     return this.loadScripts().then(() => {
       this.createMap(container, options)
       this.setupExpandControl()
+      this.addResetViewControl()
       this.setupPlugins()
       this.configureGeoman()
     })
@@ -120,6 +121,9 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
     const center = [options.latitude, options.longitude]
 
+    this.initialCenter = center
+    this.initialZoom = options.zoom
+
     this.map = L.map(container, {
       gestureHandling: true,
       maxZoom: 18,
@@ -167,6 +171,34 @@ export default class LeafletAdapter extends BaseAdapter {
     })
 
     new ExpandControl().addTo(this.map)
+  }
+
+  addResetViewControl() {
+    const L = window.L
+    const instance = this
+
+    const ResetViewControl = L.Control.extend({
+      options: { position: "topright" },
+
+      onAdd() {
+        const container = L.DomUtil.create("div", "leaflet-bar leaflet-control")
+        const button = L.DomUtil.create("a", "leaflet-control-reset-view", container)
+        button.innerHTML = '<span class="material-symbols-outlined">home</span>'
+        button.href = "#"
+        button.title = "Ansicht zurücksetzen"
+        button.role = "button"
+
+        L.DomEvent.disableClickPropagation(container)
+        L.DomEvent.on(button, "click", L.DomEvent.preventDefault)
+        L.DomEvent.on(button, "click", () => {
+          instance.map.setView(instance.initialCenter, instance.initialZoom, { animate: true })
+        })
+
+        return container
+      }
+    })
+
+    new ResetViewControl().addTo(this.map)
   }
 
   toggleControlVisibility() {

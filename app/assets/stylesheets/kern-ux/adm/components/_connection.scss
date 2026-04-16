@@ -1,0 +1,145 @@
+$adm-connection-badge-success-color: #007a2f;
+$adm-connection-badge-warning-color: #d7a518;
+$adm-connection-badge-error-color: #a33a29;
+$adm-connection-badge-blue-color: #1a6fa8;
+$adm-connection-badge-gray-color: #6b7280;
+
+.adm-connection-status {
+  max-width: 720px;
+}
+
+.adm-connection-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 650px;
+}
+
+.adm-connection-checks--badge {
+  display: flex;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  padding-bottom: 20px;
+
+  &.-success {
+    color: $adm-connection-badge-success-color;
+    background-color: mix($adm-connection-badge-success-color, white, 25%);
+  }
+
+  &.-warning {
+    color: $adm-connection-badge-warning-color;
+    background-color: mix($adm-connection-badge-warning-color, white, 30%);
+  }
+
+  &.-error {
+    color: $adm-connection-badge-error-color;
+    background-color: mix($adm-connection-badge-error-color, white, 22%);
+  }
+
+  &.-blue {
+    color: $adm-connection-badge-blue-color;
+    background-color: mix($adm-connection-badge-blue-color, white, 18%);
+  }
+
+  &.-gray {
+    color: $adm-connection-badge-gray-color;
+    background-color: mix($adm-connection-badge-gray-color, white, 15%);
+  }
+}
+
+.adm-connection-checks--badge-icon {
+  font-size: 3.5em !important;
+  margin-right: 15px;
+}
+
+.adm-connection-checks--badge-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.adm-connection-checks--badge-label {
+  font-weight: bold;
+}
+
+.adm-connection-checks--badge-description {
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+
+  .adm-connection-checks--badge.-success & {
+    color: mix($adm-connection-badge-success-color, black, 50%);
+  }
+
+  .adm-connection-checks--badge.-warning & {
+    color: mix($adm-connection-badge-warning-color, black, 50%);
+  }
+
+  .adm-connection-checks--badge.-error & {
+    color: mix($adm-connection-badge-error-color, black, 50%);
+  }
+
+  .adm-connection-checks--badge.-blue & {
+    color: mix($adm-connection-badge-blue-color, black, 50%);
+  }
+
+  .adm-connection-checks--badge.-gray & {
+    color: mix($adm-connection-badge-gray-color, black, 50%);
+  }
+}
+
+.adm-connection-checks--badge-hint {
+  font-size: 0.875rem;
+  font-style: italic;
+  margin: 0.25rem 0 0;
+  line-height: 1.4;
+
+  .adm-connection-checks--badge.-success & {
+    color: mix($adm-connection-badge-success-color, gray, 40%);
+  }
+
+  .adm-connection-checks--badge.-warning & {
+    color: mix($adm-connection-badge-warning-color, gray, 40%);
+  }
+
+  .adm-connection-checks--badge.-error & {
+    color: mix($adm-connection-badge-error-color, gray, 40%);
+  }
+
+  .adm-connection-checks--badge.-blue & {
+    color: mix($adm-connection-badge-blue-color, gray, 40%);
+  }
+
+  .adm-connection-checks--badge.-gray & {
+    color: mix($adm-connection-badge-gray-color, gray, 40%);
+  }
+}
+
+.adm-connection-status--error-detail {
+  margin-top: 0.5rem;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.adm-connection-status--error-detail-label {
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #cc4b37;
+  white-space: nowrap;
+}
+
+.adm-connection-status--error-detail-message {
+  font-family: monospace;
+  font-size: 0.875rem;
+  background: #f8f8f8;
+  border: 1px solid #dee2e6;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  text-wrap: auto;
+}

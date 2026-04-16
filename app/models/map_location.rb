@@ -69,7 +69,7 @@ class MapLocation < ApplicationRecord
     if mappable.respond_to?(:map_layers)
       mappable.map_layers
     else
-      MapLayer.general
+      MapLayer.default
     end
   end
 
@@ -140,6 +140,8 @@ class MapLocation < ApplicationRecord
     geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
 
     geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
+  rescue RGeo::Error::InvalidGeometry
+    false
   end
 
   private

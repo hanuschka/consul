@@ -3,7 +3,7 @@ class Adm::Projekts::ManagerAssignmentsController < Adm::Projekts::BaseControlle
   before_action :find_assignment
 
   def update
-    authorize [:adm, :projekts, @projekt], :update?
+    authorize @assignment, policy_class: Adm::Projekts::ProjektManagerAssignmentPolicy
 
     if @assignment.update(assignment_params)
       flash.now[:success] = t("adm.attribute.update.success")

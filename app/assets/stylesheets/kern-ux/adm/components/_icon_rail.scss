@@ -1,0 +1,114 @@
+.adm-icon-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  min-width: 56px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  background-image: linear-gradient(
+    180deg,
+    #0d2d9c 0%,
+    #123aa8 50%,
+    #1b5fd6 100%
+  );
+
+  &__decorations {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  &__decoration {
+    position: absolute;
+    border-radius: 999px;
+
+    &--rounded-rect {
+      bottom: 40%;
+      left: -10px;
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+    }
+
+    &--top {
+      bottom: 30%;
+      right: -20px;
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    &--middle {
+      bottom: 18%;
+      left: -15px;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(27, 95, 214, 0.25);
+    }
+
+    &--bottom {
+      bottom: 5%;
+      right: -10px;
+      width: 35px;
+      height: 35px;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--kern-adm-header-height);
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+
+    img {
+      border-radius: 8px;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 16px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .material-symbols-outlined {
+      font-size: 20px !important;
+    }
+  }
+}

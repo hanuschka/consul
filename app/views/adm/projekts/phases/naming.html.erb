@@ -28,6 +28,9 @@
   <% if @projekt_phase.name == "voting_phase" %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :description, :rich_text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase.poll, :closing_note, :rich_text) %>
+    <% if @poll_image %>
+      <%= render Adm::AttributeEditorComponent.new(@poll_image, :attachment, :image) %>
+    <% end %>
   <% end %>
 
   <% if @projekt_phase.name == "comment_phase" %>

@@ -83,7 +83,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
   end
 
   def order_questions
-    authorize [:adm, :projekts, @poll], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
+    authorize [:adm, :projekts, @poll], :update?
     ordered_ids = params[:tree].map { |item| item[:id] }
     ::Poll::Question.order_questions(ordered_ids)
     head :ok

@@ -48,6 +48,14 @@ de:
           rank_first: Platz 1
           ai_summary: KI-Bewertung
           key_findings: Zentrale Erkenntnisse
+          sources_label:
+            one: "1 Quelle"
+            other: "%{count} Quellen"
+          ref_type:
+            comment: Kommentar
+            question: Frage
+            proposal: Vorschlag
+            investment: Investition
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           verdict:

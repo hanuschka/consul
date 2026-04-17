@@ -130,13 +130,18 @@ class Evaluations::AggregateStatistics < ApplicationService
       build_question_data(question, voters_count)
     end
 
+    comment_entries = visible_comments
+      .order(created_at: :asc)
+      .pluck(:id, :body)
+      .map { |id, body| { id: id, body: body.to_s } }
+
     {
       id: poll.id,
       name: poll.name,
       voters_count: voters_count,
       questions_count: poll.questions.count,
       open_text_count: visible_comments.count,
-      open_text_entries: visible_comments.order(created_at: :asc).pluck(:body),
+      open_text_entries: comment_entries,
       questions: questions_data
     }
   end

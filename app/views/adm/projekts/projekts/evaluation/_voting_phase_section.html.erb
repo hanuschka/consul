@@ -92,7 +92,7 @@
           </div>
           <div class="response-grid">
             <% entries.each do |entry| %>
-              <% text = entry.to_s.strip %>
+              <% text = (entry.is_a?(Hash) ? entry["body"] : entry).to_s.strip %>
               <% next if text.blank? %>
               <div class="response-item"><%= text %></div>
             <% end %>

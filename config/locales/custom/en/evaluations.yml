@@ -48,6 +48,14 @@ en:
           rank_first: Rank 1
           ai_summary: AI evaluation
           key_findings: Key findings
+          sources_label:
+            one: "1 source"
+            other: "%{count} sources"
+          ref_type:
+            comment: Comment
+            question: Question
+            proposal: Proposal
+            investment: Investment
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           verdict:

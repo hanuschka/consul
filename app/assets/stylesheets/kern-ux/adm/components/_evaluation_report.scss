@@ -1,5 +1,67 @@
 $er-max-tabs: 8;
 
+.evaluation-report--pdf {
+  zoom: 0.82;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+
+  .phase-block {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: none;
+  }
+
+  .er-header {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .er-project-summary {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .phase-findings,
+  .poll-block {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .poll-question-flow-grid,
+  .grid-2 {
+    gap: 0.5rem;
+  }
+
+  .measure-grid {
+    gap: 0.5rem;
+  }
+
+  .phase-header {
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .evaluation-report .card,
+  .card,
+  .proposal-card,
+  .insight-card,
+  .measure-card {
+    padding: 0.75rem 1rem;
+  }
+
+  .response-grid {
+    columns: 2;
+    column-gap: 0.5rem;
+  }
+
+  .response-item {
+    padding: 0.5rem 0.75rem;
+    padding-left: 1rem;
+    margin-bottom: 0.4rem;
+  }
+}
+
 .pdf-options-form {
   max-width: 720px;
 }

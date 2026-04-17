@@ -69,7 +69,7 @@
 %>
 
 
-<div class="evaluation-report">
+<div class="evaluation-report <%= 'evaluation-report--pdf' if pdf_mode %>">
   <%# Hidden in admin (tabs) view; rendered for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
   <% if pdf_mode %>
     <div class="er-header">

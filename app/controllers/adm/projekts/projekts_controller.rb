@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
 
   def index
     authorize [:adm, :projekts, Projekt]
@@ -112,6 +112,51 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     flash[:notice] = I18n.t("adm.projekts.projekts.generate_evaluation.started")
 
     redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+  end
+
+  def evaluation_pdf_options
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank? || !@evaluation.completed?
+      redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+      return
+    end
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+  end
+
+  def evaluation_pdf
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank? || !@evaluation.completed?
+      redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+      return
+    end
+
+    selection = PdfServices::EvaluationPdfSelection.from_params(@evaluation, params[:pdf_options])
+
+    html = render_to_string(
+      template: "adm/projekts/projekts/evaluation/pdf",
+      layout: "pdf_evaluation",
+      locals: {
+        projekt: @projekt,
+        evaluation: @evaluation,
+        selection: selection
+      }
+    )
+
+    pdf = Grover.new(html, display_url: request.base_url).to_pdf
+
+    send_data pdf,
+      filename: "evaluation_#{@projekt.id}_#{Time.current.strftime('%Y%m%d')}.pdf",
+      type: "application/pdf",
+      disposition: "attachment"
   end
 
   def update

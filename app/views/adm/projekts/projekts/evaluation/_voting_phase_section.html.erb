@@ -3,9 +3,15 @@
   polls = stats["polls"] || []
   accent = accent_color
   accent_light = accent_light_color
+
+  section_selection = local_assigns.fetch(:selection, nil)
+  show_section = ->(key) {
+    section_selection.nil? || section_selection.include_section?(phase["phase_id"], key)
+  }
 %>
 
 <div class="phase-block">
+  <% if show_section.call("kpis") %>
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
@@ -40,7 +46,9 @@
       <% end %>
     </div>
   </div>
+  <% end %>
 
+  <% if show_section.call("questions") %>
   <% polls.each do |poll| %>
     <% questions = poll["questions"] || [] %>
     <% next if questions.empty? && (poll["open_text_entries"] || []).empty? %>
@@ -80,7 +88,7 @@
       <% end %>
 
       <% entries = poll["open_text_entries"] || [] %>
-      <% if entries.any? %>
+      <% if entries.any? && show_section.call("open_responses") %>
         <div class="open-responses">
           <div class="er-section-header">
             <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
@@ -101,6 +109,7 @@
       <% end %>
     </div>
   <% end %>
+  <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
   <% if eval_summary["body"].present? %>
@@ -111,6 +120,13 @@
     </div>
   <% end %>
 
-  <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
-    locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+  <% if show_section.call("key_findings") %>
+    <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
+      locals: {
+        phase: phase,
+        accent: accent,
+        accent_light: accent_light,
+        pdf_mode: local_assigns.fetch(:pdf_mode, false)
+      } %>
+  <% end %>
 </div>

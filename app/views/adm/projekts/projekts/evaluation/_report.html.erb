@@ -57,13 +57,21 @@
     }
   }
 
-  renderable_phases = phases.select { |p| phase_type_partial.key?(p["phase_type"]) }
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
+  selection = local_assigns.fetch(:selection, nil)
+
+  renderable_phases = phases.select do |p|
+    next false unless phase_type_partial.key?(p["phase_type"])
+    next true if selection.nil?
+
+    selection.include_phase?(p["phase_id"])
+  end
 %>
 
 
 <div class="evaluation-report">
-  <%# Hidden in admin view — kept for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
-  <% if false %>
+  <%# Hidden in admin (tabs) view; rendered for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
+  <% if pdf_mode %>
     <div class="er-header">
       <div>
         <div class="er-header-badge">
@@ -106,67 +114,85 @@
   <% end %>
 
   <% if renderable_phases.any? %>
-    <% radio_group_name = "evaluation-phase-group-#{evaluation.id}" %>
-
-    <div class="evaluation-phase-tabs">
+    <% if pdf_mode %>
       <% renderable_phases.each_with_index do |phase, idx| %>
         <%
-          input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+          color = phase_palette[idx % phase_palette.size]
+          partial = phase_type_partial[phase["phase_type"]]
         %>
-        <input
-          type="radio"
-          name="<%= radio_group_name %>"
-          id="<%= input_id %>"
-          class="evaluation-phase-tabs__radio"
-          <%= "checked" if idx.zero? %>
-        >
+        <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
+          locals: {
+            phase: phase,
+            accent_color: color[:accent],
+            accent_light_color: color[:accent_light],
+            accent_shades: color[:shades],
+            selection: selection,
+            pdf_mode: true
+          } %>
       <% end %>
+    <% else %>
+      <% radio_group_name = "evaluation-phase-group-#{evaluation.id}" %>
 
-      <div class="evaluation-phase-tabs__nav" role="tablist">
+      <div class="evaluation-phase-tabs">
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
-            color = phase_palette[idx % phase_palette.size]
-            config = phase_tab_config[phase["phase_type"]]
-            kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
-            kpi_label = t(config[:kpi_label_key])
             input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
           %>
-          <label
-            for="<%= input_id %>"
-            role="tab"
-            class="evaluation-phase-tab"
-            style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
+          <input
+            type="radio"
+            name="<%= radio_group_name %>"
+            id="<%= input_id %>"
+            class="evaluation-phase-tabs__radio"
+            <%= "checked" if idx.zero? %>
           >
-            <span class="evaluation-phase-tab__icon"><%= raw(config[:icon]) %></span>
-            <span class="evaluation-phase-tab__body">
-              <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
-              <span class="evaluation-phase-tab__meta">
-                <strong><%= kpi_value %></strong>
-                <span><%= kpi_label %></span>
-              </span>
-            </span>
-          </label>
         <% end %>
-      </div>
 
-      <div class="evaluation-phase-tabs__panels">
-        <% renderable_phases.each_with_index do |phase, idx| %>
-          <%
-            color = phase_palette[idx % phase_palette.size]
-            partial = phase_type_partial[phase["phase_type"]]
-          %>
-          <div role="tabpanel" class="evaluation-phase-panel">
-            <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
-              locals: {
-                phase: phase,
-                accent_color: color[:accent],
-                accent_light_color: color[:accent_light],
-                accent_shades: color[:shades]
-              } %>
-          </div>
-        <% end %>
+        <div class="evaluation-phase-tabs__nav" role="tablist">
+          <% renderable_phases.each_with_index do |phase, idx| %>
+            <%
+              color = phase_palette[idx % phase_palette.size]
+              config = phase_tab_config[phase["phase_type"]]
+              kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
+              kpi_label = t(config[:kpi_label_key])
+              input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+            %>
+            <label
+              for="<%= input_id %>"
+              role="tab"
+              class="evaluation-phase-tab"
+              style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
+            >
+              <span class="evaluation-phase-tab__icon"><%= raw(config[:icon]) %></span>
+              <span class="evaluation-phase-tab__body">
+                <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
+                <span class="evaluation-phase-tab__meta">
+                  <strong><%= kpi_value %></strong>
+                  <span><%= kpi_label %></span>
+                </span>
+              </span>
+            </label>
+          <% end %>
+        </div>
+
+        <div class="evaluation-phase-tabs__panels">
+          <% renderable_phases.each_with_index do |phase, idx| %>
+            <%
+              color = phase_palette[idx % phase_palette.size]
+              partial = phase_type_partial[phase["phase_type"]]
+            %>
+            <div role="tabpanel" class="evaluation-phase-panel">
+              <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
+                locals: {
+                  phase: phase,
+                  accent_color: color[:accent],
+                  accent_light_color: color[:accent_light],
+                  accent_shades: color[:shades]
+                } %>
+            </div>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
   <% end %>
 
 </div>

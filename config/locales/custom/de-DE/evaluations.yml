@@ -24,6 +24,7 @@ de:
             Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
           regenerate_button: Neu generieren
+          download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
           header_badge: Beteiligungsergebnis
@@ -56,6 +57,15 @@ de:
             question: Frage
             proposal: Vorschlag
             investment: Investition
+          pdf_options:
+            sections:
+              kpis: Kennzahlen
+              ranking: Ranking-Diagramm
+              proposals: Vorschlagskarten
+              questions: Fragen und Diagramme
+              open_responses: Offene Beiträge
+              ai_summary: KI-Zusammenfassung
+              key_findings: Zentrale Erkenntnisse
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           verdict:
@@ -70,3 +80,9 @@ de:
           comment_phase: Kommentarphase
         generate_evaluation:
           started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.
+        evaluation_pdf_options:
+          title: PDF-Export
+          heading: PDF-Export konfigurieren
+          description: Wählen Sie, welche Phasen und Abschnitte im PDF enthalten sein sollen.
+          cancel: Abbrechen
+          download: PDF herunterladen

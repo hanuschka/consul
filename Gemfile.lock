@@ -274,6 +274,8 @@ GEM
     graphql (1.12.24)
     groupdate (6.4.0)
       activesupport (>= 6.1)
+    grover (1.2.10)
+      nokogiri (~> 1)
     gyoku (1.4.0)
       builder (>= 2.1.2)
       rexml (~> 3.0)
@@ -849,6 +851,7 @@ DEPENDENCIES
   graphiql-rails (~> 1.8.0)
   graphql (~> 1.12.14)
   groupdate (~> 6.4.0)
+  grover (= 1.2.10)
   httparty
   i18n-tasks (~> 0.9.37)
   image_processing (~> 1.12.2)

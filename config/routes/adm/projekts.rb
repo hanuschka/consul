@@ -185,6 +185,8 @@ namespace :adm do
       get :phases, on: :member
       get :evaluation, on: :member
       post :generate_evaluation, on: :member
+      get :evaluation_pdf_options, on: :member
+      get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member

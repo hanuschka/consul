@@ -18,38 +18,45 @@
     ratio = (rank.to_i - 1).to_f / (total_count - 1)
     (ratio * max_shade).round.clamp(0, max_shade)
   }
+
+  section_selection = local_assigns.fetch(:selection, nil)
+  show_section = ->(key) {
+    section_selection.nil? || section_selection.include_section?(phase["phase_id"], key)
+  }
 %>
 
 <div class="phase-block">
-  <div class="phase-header">
-    <div class="phase-icon-title">
-      <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>
+  <% if show_section.call("kpis") %>
+    <div class="phase-header">
+      <div class="phase-icon-title">
+        <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>
+        </div>
+        <div>
+          <div class="phase-title"><%= phase["phase_title"] %></div>
+          <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.proposal_phase") %></div>
+        </div>
       </div>
-      <div>
-        <div class="phase-title"><%= phase["phase_title"] %></div>
-        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.proposal_phase") %></div>
+      <div class="phase-meta">
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
+        </div>
       </div>
     </div>
-    <div class="phase-meta">
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
-      </div>
-    </div>
-  </div>
+  <% end %>
 
-  <% if top_proposals.any? %>
+  <% if top_proposals.any? && show_section.call("ranking") %>
     <div class="card" style="margin-bottom:1rem">
       <div class="card-title"><%= t("adm.projekts.projekts.evaluation.ranking_by_supports") %></div>
       <div class="card-subtitle">
@@ -79,7 +86,9 @@
         </div>
       <% end %>
     </div>
+  <% end %>
 
+  <% if top_proposals.any? && show_section.call("proposals") %>
     <div class="proposal-grid">
       <% top_proposals.each do |proposal| %>
         <%
@@ -108,7 +117,7 @@
   <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
-  <% if eval_summary["body"].present? %>
+  <% if eval_summary["body"].present? && show_section.call("ai_summary") %>
     <div class="ai-summary" style="background:<%= accent_light %>;border:1px solid <%= shades[3] %>">
       <div class="ai-summary-stripe" style="background:<%= accent %>"></div>
       <div class="ai-summary-title"><%= eval_summary["title"] %></div>
@@ -116,6 +125,13 @@
     </div>
   <% end %>
 
-  <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
-    locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+  <% if show_section.call("key_findings") %>
+    <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
+      locals: {
+        phase: phase,
+        accent: accent,
+        accent_light: accent_light,
+        pdf_mode: local_assigns.fetch(:pdf_mode, false)
+      } %>
+  <% end %>
 </div>

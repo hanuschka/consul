@@ -53,6 +53,12 @@
       </div>
       <div class="d-flex gap-2">
         <%= kern_link_button(
+          evaluation_pdf_options_adm_projekts_projekt_path(@projekt),
+          text: t(".download_pdf"),
+          icon: "picture_as_pdf",
+          style: :primary
+        ) %>
+        <%= kern_link_button(
           generate_evaluation_adm_projekts_projekt_path(@projekt),
           text: t(".regenerate_button"),
           icon: "refresh",

@@ -24,6 +24,7 @@ en:
             An error occurred while generating the evaluation.
             Please try again.
           regenerate_button: Regenerate
+          download_pdf: Download PDF
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.
           header_badge: Participation result
@@ -56,6 +57,15 @@ en:
             question: Question
             proposal: Proposal
             investment: Investment
+          pdf_options:
+            sections:
+              kpis: KPIs
+              ranking: Ranking chart
+              proposals: Proposal cards
+              questions: Questions and charts
+              open_responses: Open contributions
+              ai_summary: AI summary
+              key_findings: Key findings
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           verdict:
@@ -70,3 +80,9 @@ en:
           comment_phase: Comment phase
         generate_evaluation:
           started: Evaluation is being generated. Please reload the page in a few minutes.
+        evaluation_pdf_options:
+          title: PDF export
+          heading: Configure PDF export
+          description: Choose which phases and sections to include in the PDF.
+          cancel: Cancel
+          download: Download PDF

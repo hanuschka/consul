@@ -49,6 +49,7 @@ en:
           rank_first: Rank 1
           ai_summary: AI evaluation
           key_findings: Key findings
+          ai_questions_heading: Ask AI about this phase
           sources_label:
             one: "1 source"
             other: "%{count} sources"
@@ -66,6 +67,7 @@ en:
               open_responses: Open contributions
               ai_summary: AI summary
               key_findings: Key findings
+              ai_questions: AI questions
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           verdict:

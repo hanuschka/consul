@@ -60,6 +60,88 @@ $er-max-tabs: 8;
     padding-left: 1rem;
     margin-bottom: 0.4rem;
   }
+
+  .evaluation-report .card,
+  .card,
+  .proposal-card,
+  .insight-card,
+  .measure-card,
+  .ai-summary,
+  .pdf-ai-question,
+  .response-item,
+  .pref-row,
+  .hbar {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .er-section-header,
+  .phase-header,
+  .poll-header {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}
+
+.phase-ai-questions {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--er-border);
+}
+
+.pdf-ai-questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pdf-ai-question {
+  background: var(--er-surface, #ffffff);
+  border: 1px solid var(--er-border, #e2e8f0);
+  border-radius: var(--er-radius, 8px);
+  padding: 0.75rem 1rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-ai-question__q {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--er-text, #0f172a);
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+
+  &::before {
+    content: "Q: ";
+    color: var(--er-text-muted, #94a3b8);
+    font-weight: 800;
+  }
+}
+
+.pdf-ai-question__a {
+  font-size: 0.875rem;
+  color: var(--er-text-secondary, #475569);
+  line-height: 1.6;
+
+  h3, h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0.5rem 0 0.25rem;
+    color: var(--er-text);
+  }
+
+  p {
+    margin: 0 0 0.4rem;
+  }
+
+  ul, ol {
+    margin: 0.25rem 0 0.5rem 1.25rem;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.2rem;
+  }
 }
 
 .pdf-options-form {

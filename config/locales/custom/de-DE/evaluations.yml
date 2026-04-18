@@ -49,6 +49,7 @@ de:
           rank_first: Platz 1
           ai_summary: KI-Bewertung
           key_findings: Zentrale Erkenntnisse
+          ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
             one: "1 Quelle"
             other: "%{count} Quellen"
@@ -66,6 +67,7 @@ de:
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
               key_findings: Zentrale Erkenntnisse
+              ai_questions: KI-Fragen
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           verdict:

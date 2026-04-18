@@ -49,4 +49,15 @@
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
   <% end %>
+
+  <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
+  <% if !pdf_mode_local || show_section.call("ai_questions") %>
+    <%= render partial: "adm/projekts/projekts/evaluation/phase_ai_questions",
+      locals: {
+        phase: phase,
+        accent: accent,
+        accent_light: accent_light,
+        pdf_mode: pdf_mode_local
+      } %>
+  <% end %>
 </div>

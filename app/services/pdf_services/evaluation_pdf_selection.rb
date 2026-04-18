@@ -1,9 +1,9 @@
 class PdfServices::EvaluationPdfSelection
   PHASE_SECTIONS = {
-    "ProjektPhase::ProposalPhase" => %w[kpis ranking proposals ai_summary key_findings],
-    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses key_findings],
-    "ProjektPhase::BudgetPhase" => %w[kpis key_findings],
-    "ProjektPhase::CommentPhase" => %w[kpis key_findings]
+    "ProjektPhase::ProposalPhase" => %w[kpis ranking proposals ai_summary key_findings ai_questions],
+    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses key_findings ai_questions],
+    "ProjektPhase::BudgetPhase" => %w[kpis key_findings ai_questions],
+    "ProjektPhase::CommentPhase" => %w[kpis key_findings ai_questions]
   }.freeze
 
   ALL_SECTIONS = PHASE_SECTIONS.values.flatten.uniq.freeze

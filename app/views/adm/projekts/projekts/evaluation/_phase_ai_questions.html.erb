@@ -1,0 +1,46 @@
+<%
+  projekt_phase_record = ProjektPhase.find_by(id: phase["phase_id"])
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
+%>
+
+<% if projekt_phase_record.present? %>
+  <% if pdf_mode %>
+    <% answered = projekt_phase_record.stat_questions.answered.by_newest %>
+    <% if answered.any? %>
+      <div class="phase-ai-questions phase-ai-questions--pdf">
+        <div class="er-section-header">
+          <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="er-section-title">
+            <%= t("adm.projekts.projekts.evaluation.ai_questions_heading") %>
+          </span>
+        </div>
+
+        <div class="pdf-ai-questions-list">
+          <% answered.each do |q| %>
+            <div class="pdf-ai-question">
+              <div class="pdf-ai-question__q"><%= q.question %></div>
+              <div class="pdf-ai-question__a">
+                <%= sanitize(q.answer, tags: %w[h3 h4 p ul ol li strong em b i]) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="phase-ai-questions">
+      <div class="er-section-header">
+        <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="er-section-title">
+          <%= t("adm.projekts.projekts.evaluation.ai_questions_heading") %>
+        </span>
+      </div>
+
+      <%= render(ParticapationStats::AiQuestionSectionComponent.new(projekt_phase: projekt_phase_record)) %>
+    </div>
+  <% end %>
+<% end %>

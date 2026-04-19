@@ -94,7 +94,7 @@ namespace :adm do
       end
       resources :formular_fields, except: %i[index show] do
         collection do
-          post :reorder
+          patch :reorder
         end
       end
       resources :projekt_events, except: %i[index show] do

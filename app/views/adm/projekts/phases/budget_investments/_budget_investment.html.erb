@@ -1,7 +1,9 @@
 <tr id="<%= dom_id(investment) %>" class="kern-table__row">
   <td class="kern-table__cell" data-field="id"><%= investment.id %></td>
   <td class="kern-table__cell" data-field="created_at"><%= l(investment.created_at, format: "%d.%m.%Y") %></td>
-  <th scope="row" class="kern-table__header" data-field="title" <%= 'style="color: var(--kern-color-feedback-danger);"'.html_safe if investment.hidden? %>><%= investment.title %></th>
+  <th scope="row" class="kern-table__header" data-field="title" <%= 'style="color: var(--kern-color-feedback-danger);"'.html_safe if investment.hidden? %>>
+    <%= investment.title %><% if investment.hidden? %> (<%= t("shared.moderation_statuses.hidden") %>)<% end %>
+  </th>
   <td class="kern-table__cell" data-field="moderation_status"><%= moderation_status(investment) %></td>
   <td class="kern-table__cell" data-field="feasibility"><%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %></td>
   <td class="kern-table__cell" data-field="valuation_finished"><%= human_boolean(investment.valuation_finished?) %></td>

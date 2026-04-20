@@ -188,7 +188,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_investment
-      @investment = @projekt_phase.budget.investments.find(params[:id])
+      @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
     end
 
     def investment_params

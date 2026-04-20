@@ -75,10 +75,27 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
+  ADMIN_FORM_EDITORS = %w[feasibility pricing selection winner].freeze
+
   def update
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
-    if @investment.update(investment_params)
+    success = @investment.update(investment_params)
+
+    if ADMIN_FORM_EDITORS.include?(params[:editor])
+      render turbo_stream: turbo_stream.replace(
+        helpers.dom_id(@investment, :admin_forms),
+        partial: "adm/projekts/budget_investments/admin_forms",
+        locals: {
+          investment: @investment,
+          projekt_phase: @projekt_phase,
+          saved_editor: success ? params[:editor] : nil
+        }
+      )
+      return
+    end
+
+    if success
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.append("flash-messages", html:

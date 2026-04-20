@@ -827,6 +827,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       color: inherit;
       font-size: 0;
 
+      // WCAG 2.5.5: extend hit area to 44x44 without changing visual size
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -12px;
+      }
+
       &::after {
         content: "\f078";
         font-family: "Font Awesome 5 Free";

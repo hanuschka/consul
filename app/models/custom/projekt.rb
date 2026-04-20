@@ -111,6 +111,7 @@ class Projekt < ApplicationRecord
   end
 
   before_save :assign_top_level_projekt_from_parent
+  before_save :sync_published_at
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -123,7 +124,9 @@ class Projekt < ApplicationRecord
       return false
     end
 
-    InternalApiClient.active_dt? && (on_global_overview? || acceptable_to_be_exported_for_global_overview?)
+    InternalApiClient.active_dt? && (
+      on_global_overview? || acceptable_to_be_exported_for_global_overview?
+    )
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -430,6 +433,25 @@ class Projekt < ApplicationRecord
     projekt_settings_hash["projekt_feature.main.activate"].present?
   end
 
+  # Re-evaluates publish criteria on every save and sets/clears `published_at`
+  # accordingly. Always updates if criteria change — no "first visibility wins".
+  def sync_published_at
+    if meets_publish_criteria?
+      self.published_at ||= Time.current
+    else
+      self.published_at = nil
+    end
+  end
+
+  # TODO(review): confirm these are the right conditions for a projekt to be
+  # considered "published". Adjust the criteria as needed.
+  def meets_publish_criteria?
+    !special? &&
+      activated? &&
+      hard_individual_group_values.none? &&
+      page&.published?
+  end
+
   def activated_children
     children.activated
   end
@@ -725,6 +747,13 @@ class Projekt < ApplicationRecord
         )
       end
     end
+  end
+
+  def sync_for_global_overview_from_page_changes(page_saved_changes)
+    changed_set = page_saved_changes.except("created_at", "updated_at")
+    return if changed_set.empty?
+
+    perform_sync_update_for_global_overview
   end
 
   private

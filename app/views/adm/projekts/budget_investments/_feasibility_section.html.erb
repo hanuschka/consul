@@ -1,0 +1,58 @@
+<% phase_enabled = budget.accepting_or_later? %>
+<% phase_completed = investment.valuation_finished? %>
+<% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>
+
+<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if saved_editor == "feasibility" %>>
+  <summary class="adm-admin-phase__header">
+    <div class="adm-admin-phase__title">
+      <span class="adm-admin-phase__icon material-symbols-outlined" aria-hidden="true">
+        <%= phase_completed ? "check_circle" : (phase_enabled ? "edit" : "lock") %>
+      </span>
+      <%= t("adm.projekts.budget_investments.administer.phase_2_3_title") %>
+    </div>
+    <% if phase_enabled %>
+      <div class="adm-admin-phase__chips">
+        <% if investment.feasibility == "feasible" %>
+          <span class="adm-admin-chip adm-admin-chip--success">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+          </span>
+        <% elsif investment.feasibility == "unfeasible" %>
+          <span class="adm-admin-chip adm-admin-chip--danger">
+            <span class="material-symbols-outlined" aria-hidden="true">cancel</span>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+          </span>
+        <% else %>
+          <span class="adm-admin-chip">
+            <span class="material-symbols-outlined" aria-hidden="true">pending</span>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+          </span>
+        <% end %>
+        <% if investment.valuation_finished? %>
+          <span class="adm-admin-chip adm-admin-chip--success">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            <%= t("adm.projekts.budget_investments.show.valuation_finished") %>
+          </span>
+        <% end %>
+      </div>
+    <% else %>
+      <span class="adm-admin-phase__summary"><%= t("adm.projekts.budget_investments.show.phase_not_available") %></span>
+    <% end %>
+  </summary>
+
+  <div class="adm-admin-phase__body">
+    <details class="adm-admin-hint mb-3">
+      <summary class="adm-admin-hint__toggle">
+        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 16px;">help</span>
+        <%= t("adm.projekts.budget_investments.show.show_details") %>
+      </summary>
+      <p class="adm-admin-hint__text"><%= t("adm.projekts.budget_investments.administer.phase_2_3_hint") %></p>
+    </details>
+
+    <%= render "adm/projekts/budget_investments/feasibility_form",
+          investment: investment,
+          projekt_phase: projekt_phase,
+          budget: budget,
+          show_success: saved_editor == "feasibility" %>
+  </div>
+</details>

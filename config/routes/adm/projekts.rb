@@ -172,8 +172,6 @@ namespace :adm do
       end
     end
 
-    get "list", to: "projekts#index", as: :projekts_list
-
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member
       get :visibility, on: :member

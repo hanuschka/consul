@@ -1,20 +1,6 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
 
-  def index
-    authorize [:adm, :projekts, Projekt]
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
-    @pagy, @projekts = pagy(base_scope, limit: 10)
-
-    @name_header_options = { sort: true, search: true }
-    @start_date_header_options = { sort: true }
-    @end_date_header_options = { sort: true }
-
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder" }
-    ]
-  end
-
   def new
     authorize [:adm, :projekts, Projekt], :create?
 

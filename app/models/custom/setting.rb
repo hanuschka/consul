@@ -80,7 +80,7 @@ class Setting < ApplicationRecord
         "advanced_newsletter": false,
         # newsletter
 
-        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+        "extended_option.general.city_name": "Consul",
 
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,

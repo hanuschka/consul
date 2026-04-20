@@ -94,7 +94,7 @@ namespace :adm do
       end
       resources :formular_fields, except: %i[index show] do
         collection do
-          post :reorder
+          patch :reorder
         end
       end
       resources :projekt_events, except: %i[index show] do
@@ -171,8 +171,6 @@ namespace :adm do
         post :send_notification
       end
     end
-
-    get "list", to: "projekts#index", as: :projekts_list
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member

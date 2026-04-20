@@ -19,7 +19,7 @@
               <% else %>
                 <%= link_to t("adm.individual_group_values.search_user.add_user"),
                   add_user_adm_individual_group_value_path(@individual_group, @individual_group_value, user_id: @user.id),
-                  data: { turbo_method: :post },
+                  data: { turbo_method: :post, turbo_frame: "_top" },
                   class: "kern-link" %>
               <% end %>
             </td>

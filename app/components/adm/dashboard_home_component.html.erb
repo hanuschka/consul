@@ -131,6 +131,7 @@
   </div>
 
   <%# ── 4. Recently Edited (full width) ──────────────────────────────── %>
+  <% if show_recent? %>
   <div class="adm-dashboard__section">
     <div class="adm-dashboard__section-header">
       <span class="material-symbols-outlined" aria-hidden="true">history</span>
@@ -193,38 +194,10 @@
       <%= empty_state(title: t(".no_recent"), icon: "history") %>
     <% end %>
   </div>
+  <% end %>
 
   <%# ── 5. Activity Feed ─────────────────────────────────────────────── %>
-  <% if show_activities? %>
-    <div class="adm-dashboard__section">
-      <div class="adm-dashboard__section-header">
-        <span class="material-symbols-outlined" aria-hidden="true">timeline</span>
-        <h3><%= t(".activity_title") %></h3>
-      </div>
-
-      <div class="adm-dashboard__activity-feed">
-        <% activities.each do |activity| %>
-          <div class="adm-dashboard__activity-item">
-            <% if activity.user&.image.present? %>
-              <%= image_tag(activity.user.image.variant(:thumb2), class: "adm-dashboard__activity-avatar", alt: activity.user.name) %>
-            <% elsif activity.user.present? %>
-              <div class="adm-dashboard__activity-avatar adm-dashboard__contact-avatar--placeholder">
-                <%= activity.user.first_letter_of_name %>
-              </div>
-            <% else %>
-              <div class="adm-dashboard__activity-avatar adm-dashboard__contact-avatar--placeholder">
-                <span class="material-symbols-outlined" aria-hidden="true">person</span>
-              </div>
-            <% end %>
-            <div class="adm-dashboard__activity-content">
-              <span class="adm-dashboard__activity-text"><%= activity_description(activity) %></span>
-              <span class="adm-dashboard__activity-time"><%= t(".activity_time_ago", time: activity_time(activity)) %></span>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
+  <%= render Adm::ActivityFeedComponent.new(activities: activities) %>
 
 </div>
 

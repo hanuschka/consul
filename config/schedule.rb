@@ -88,3 +88,4 @@ end
 every 1.day, at: "4:30 am", roles: [:cron] do
   rake "api_request_logs:cleanup"
 end
+

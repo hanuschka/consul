@@ -13,6 +13,15 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
+application.register("adm--ai-question-form", AdmAiQuestionFormController)
+
+import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
+application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
+
+import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
+application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
@@ -95,6 +104,9 @@ application.register("kern--form--image", KernFormImageController)
 
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
+
+import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
+application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
 
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)

@@ -94,7 +94,7 @@ namespace :adm do
       end
       resources :formular_fields, except: %i[index show] do
         collection do
-          post :reorder
+          patch :reorder
         end
       end
       resources :projekt_events, except: %i[index show] do
@@ -109,6 +109,11 @@ namespace :adm do
       resources :projekt_livestreams, except: %i[index] do
         member do
           post :send_notifications
+        end
+      end
+      resources :stat_questions, only: [] do
+        member do
+          get :poll
         end
       end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
@@ -183,6 +188,10 @@ namespace :adm do
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :evaluation, on: :member
+      post :generate_evaluation, on: :member
+      get :evaluation_pdf_options, on: :member
+      get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member

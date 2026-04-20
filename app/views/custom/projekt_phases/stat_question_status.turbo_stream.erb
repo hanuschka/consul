@@ -1,0 +1,10 @@
+<% if @stat_question.completed? %>
+  <%= turbo_stream.remove dom_id(@stat_question) %>
+
+  <%= turbo_stream.prepend "adm-ai-questions-history-list-#{@projekt_phase.id}" do %>
+    <%= render partial: "adm/projekts/projekts/evaluation/ai_question_completed_item",
+      locals: { stat_question: @stat_question, projekt_phase: @projekt_phase } %>
+  <% end %>
+<% elsif @stat_question.failed? %>
+  <%= turbo_stream.remove dom_id(@stat_question) %>
+<% end %>

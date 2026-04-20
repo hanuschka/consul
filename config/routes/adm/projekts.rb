@@ -111,6 +111,11 @@ namespace :adm do
           post :send_notifications
         end
       end
+      resources :stat_questions, only: [] do
+        member do
+          get :poll
+        end
+      end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
         member do
           post :send_emails

@@ -10,7 +10,10 @@ $er-max-tabs: 8;
     padding: 1rem 1.25rem;
     margin-bottom: 1rem;
     box-shadow: none;
+    break-before: page;
+    page-break-before: always;
   }
+
 
   .er-header {
     padding: 1rem 1.5rem;

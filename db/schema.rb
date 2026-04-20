@@ -1533,11 +1533,8 @@ ActiveRecord::Schema.define(version: 2026_04_19_181638) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
-<<<<<<< Updated upstream
-    t.string "mapbox_style_id"
-=======
     t.string "polygon_color", default: "#008000"
->>>>>>> Stashed changes
+    t.string "mapbox_style_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"

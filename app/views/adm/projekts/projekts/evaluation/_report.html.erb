@@ -133,7 +133,10 @@
     <% else %>
       <% radio_group_name = "evaluation-phase-group-#{evaluation.id}" %>
 
-      <div class="evaluation-phase-tabs">
+      <div
+        class="evaluation-phase-tabs"
+        data-controller="adm--evaluation-phase-tabs"
+      >
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
             input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
@@ -143,6 +146,8 @@
             name="<%= radio_group_name %>"
             id="<%= input_id %>"
             class="evaluation-phase-tabs__radio"
+            data-adm--evaluation-phase-tabs-target="radio"
+            data-phase-id="<%= phase["phase_id"] %>"
             <%= "checked" if idx.zero? %>
           >
         <% end %>

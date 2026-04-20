@@ -40,7 +40,8 @@
         </span>
       </div>
 
-      <%= render(ParticapationStats::AiQuestionSectionComponent.new(projekt_phase: projekt_phase_record)) %>
+      <%= render partial: "adm/projekts/projekts/evaluation/ai_question_adm_section",
+        locals: { projekt_phase: projekt_phase_record } %>
     </div>
   <% end %>
 <% end %>

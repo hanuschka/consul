@@ -13,6 +13,15 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
+application.register("adm--ai-question-form", AdmAiQuestionFormController)
+
+import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
+application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
+
+import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
+application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 

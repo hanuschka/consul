@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_15_072003) do
+ActiveRecord::Schema.define(version: 2026_04_19_181638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2397,9 +2397,11 @@ ActiveRecord::Schema.define(version: 2026_04_15_072003) do
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
     t.bigint "landing_page_id"
+    t.datetime "published_at"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["published_at"], name: "index_projekts_on_published_at"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 

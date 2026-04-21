@@ -13,6 +13,8 @@ $("#<%= dom_id(@proposal) %>_votes .js-copy-data-url").on("click", function(even
   $("div[data-voted-badge=<%= @proposal.id %>]").removeClass('hide');
 <% end %>
 
+<% if @follow %>
 App.Followable.update("<%= dom_id(@follow.followable) %>",
                       "<%= j render("follows/follow_button", follow: @follow) %>",
                       "<%= j render("layouts/flash") %>")
+<% end %>

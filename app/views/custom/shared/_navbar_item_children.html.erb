@@ -1,15 +1,19 @@
-<ul class="nav-flyout-block <%= 'nested-dropdown' if depth > 1 %>">
+<% submenu_id = local_assigns.fetch(:submenu_id, nil) %>
+<ul<%= " id=\"#{submenu_id}\"".html_safe if submenu_id.present? %> class="nav-flyout-block <%= 'nested-dropdown' if depth > 1 %>">
   <% children.each do |child| %>
     <% has_children = depth < 3 && child.children.any? %>
-    <li class="nav-element flyout-item"
-        <%= "aria-haspopup=true aria-expanded=false" if has_children %>>
+    <% child_submenu_id = "navbar-submenu-#{child.id}" if has_children %>
+    <li class="nav-element flyout-item"<%= ' aria-expanded="false"'.html_safe if has_children %>>
       <a href="<%= navbar_item_url(child) %>"<%= navbar_item_link_attrs(child).html_safe %>><%= child.title %></a>
       <% if has_children %>
-        <button aria-expanded="false"
-                aria-label="<%= t('shared.toggle_submenu', title: child.title) %>"
+        <button type="button"
                 class="nav-toggle-arrow"
-                data-navbar-toggle>&#9654;</button>
-        <%= render partial: "shared/navbar_item_children", locals: { children: child.children.order(:position), depth: depth + 1 } %>
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-controls="<%= child_submenu_id %>"
+                aria-label="<%= t('shared.toggle_submenu', title: child.title) %>"
+                data-navbar-toggle><span aria-hidden="true">&#9654;</span></button>
+        <%= render partial: "shared/navbar_item_children", locals: { children: child.children.order(:position), depth: depth + 1, submenu_id: child_submenu_id } %>
       <% end %>
     </li>
   <% end %>

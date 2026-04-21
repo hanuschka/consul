@@ -27,6 +27,9 @@ en:
       total_score: "Total Score"
       passed: "Your proposal meets the criteria!"
       failed: "Your proposal needs improvement."
+      hard_failed_title: "Your proposal needs a change before it can be submitted."
+      error_title: "Evaluation could not be completed."
+      error_description: "Something went wrong during evaluation. Please try submitting again in a moment."
     step4:
       heading: "Thank you for your proposal!"
       subheading: "Your contribution has been successfully submitted and will be reviewed."

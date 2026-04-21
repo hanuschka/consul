@@ -1,6 +1,9 @@
 en:
   adm:
     projekts:
+      home:
+        quick_links:
+          import_projekt: Import project from file
       projekts:
         index:
           import_projekt: Import project from file

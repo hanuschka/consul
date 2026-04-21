@@ -72,7 +72,7 @@ de:
           submissions_limit: Maximale Anzahl an Einsendungen pro Nutzer
           submissions_limit_description: "Begrenzt die Anzahl der Formulareinsendungen, die ein einzelner Nutzer abgeben darf. Im Frontend wird nach Erreichen des Limits der Absende-Button deaktiviert und ein Hinweis angezeigt. Nutzen Sie diesen Wert, um Mehrfacheinsendungen zu verhindern und die Datenqualität zu sichern. Ein Wert von eins stellt sicher, dass jeder Nutzer nur einmal."
           primary_formular_cutoff_date: Ende der 1. Phase
-          primary_formular_cutoff_date_description: "Legt das Enddatum der ersten Formularphase fest, ab dem keine neuen Einsendungen mehr möglich sind. Das Formular besteht aus zwei Phasen: In der 1. Phase füllen Nutzer die primären Felder aus. Nach Ablauf dieses Datums beginnt die Follow-up-Phase, in der Nutzer nur noch die ergänzenden Follow-up-Felder zu bestehenden Einsendungen ausfüllen können."
+          primary_formular_cutoff_date_description: "Legt das Enddatum der ersten Formularphase fest, ab dem keine neuen Einsendungen mehr möglich sind. Das Formular besteht aus zwei Phasen: In der 1. Phase füllen Nutzer die primären Felder aus. Nach Ablauf dieses Datums beginnt die Follow-up-Phase, in der Nutzer nur noch die ergänzenden Follow-up-Felder zu bestehenden Einsendungen ausfüllen können. Wenn Sie keine Follow-up-Felder planen, lassen Sie dieses Feld einfach leer."
     iframe_phase:
       option:
         general:

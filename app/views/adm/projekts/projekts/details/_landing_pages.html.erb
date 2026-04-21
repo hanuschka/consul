@@ -4,7 +4,8 @@
       <%= f.select(
         :landing_page_id,
         SiteCustomization::Page.landing.map { |p| [p.title, p.id] },
-        { include_blank: t("custom.admin.projekts.edit.no_landing_page"), label: false }
+        { include_blank: t("custom.admin.projekts.edit.no_landing_page") },
+        { label: false }
       ) %>
     </div>
     <%= form_submit_button %>

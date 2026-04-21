@@ -2,12 +2,12 @@ de:
   adm:
     officing_managers:
       index:
-        title: Abstimmungshelfer
+        title: Team
         empty_title: "Keine Abstimmungshelfer vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Abstimmungshelfer hinzu."
         new_link: Neuen Abstimmungshelfer hinzufügen
       new:
-        title: Neuen Abstimmungshelfer hinzufügen
+        title: Neues Teammitglied hinzufügen
         search_label: Nutzer durchsuchen
         search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Abstimmungshelfer hinzugefügt werden. Abstimmungshelfer können Abstimmungen vor Ort durchführen und Stimmen für Bürger erfassen.
       search:

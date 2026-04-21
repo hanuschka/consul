@@ -59,7 +59,7 @@ module ContentBlocksHelper
   end
 
   def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil)
-    res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\""
+    res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
@@ -88,7 +88,7 @@ module ContentBlocksHelper
       )
     end
 
-    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?}>#{block_body}</div>"
+    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</div>"
 
     if edit_link
       res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
@@ -137,7 +137,7 @@ module ContentBlocksHelper
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
     end
 
-    res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
+    res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? } data-turbolinks=\"false\">#{block_body}</div>"
 
     if edit_link
       res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"

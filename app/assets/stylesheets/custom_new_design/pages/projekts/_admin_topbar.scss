@@ -10,7 +10,7 @@
   border-bottom: 1px solid;
   border-color: color-mix(in srgb, var(--brand-color) 80%, $main-background-color 20%);
   padding: 0 10px;
-  background: color-mix(in srgb, var(--brand-color) 10%, $main-background-color 95%);
+  background: color-mix(in srgb, var(--brand-color) 20%, $main-background-color 95%);
   display: flex;
   align-items: center;
   height: var(--admin-topbar-height);

@@ -105,6 +105,7 @@ class Mailer < ApplicationMailer
   end
 
   def pending_role_invite(pending_role_assignment)
+    @pending_role_assignment = pending_role_assignment
     @email_to = pending_role_assignment.email
     @role_name = I18n.t("mailers.pending_role_invite.roles.#{pending_role_assignment.role_type.underscore}",
                         default: pending_role_assignment.role_type.titleize)
@@ -113,8 +114,8 @@ class Mailer < ApplicationMailer
       mail_with_custom_template(nil, {
         "org_name" => Setting["org_name"],
         "role_name" => @role_name,
-        "registration_url" => new_user_registration_url
-      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", org_name: Setting["org_name"]))
+        "registration_url" => new_user_registration_url(invitation_token: pending_role_assignment.invitation_token)
+      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", role: @role_name))
     end
   end
 
@@ -218,8 +219,14 @@ class Mailer < ApplicationMailer
       manage_subscriptions_token(user)
     end
 
-    mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
-      f.html { render(layout: "newsletter_mail")}
+    if Setting["advanced_newsletter"].present?
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render(layout: "newsletter_mail") }
+      end
+    else
+      mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+        f.html { render("mailer/newsletter_simple", layout: "mailer") }
+      end
     end
   end
 
@@ -262,6 +269,23 @@ class Mailer < ApplicationMailer
       mail_with_custom_template(nil, {
         "username" => @user.username
       }, to: @email_to, default_subject: t("mailers.manual_verification_confirmation.subject"))
+    end
+  end
+
+  def formular_answer_created(formular_answer)
+    @formular_answer = formular_answer
+    @author = User.find_by(id: formular_answer.submitter_id)
+    return if @author.blank?
+
+    @email_to = @author.email
+    @projekt_phase = formular_answer.formular.projekt_phase
+
+    with_user(@author) do
+      mail_with_custom_template(@projekt_phase, {
+        "username" => @author.username,
+        "projekt_title" => @projekt_phase.projekt.page.title,
+        "phase_title" => @projekt_phase.title
+      }, to: @email_to, default_subject: t("mailers.formular_answer_created.subject"))
     end
   end
 

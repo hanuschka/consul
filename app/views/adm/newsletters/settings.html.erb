@@ -10,6 +10,7 @@
 ]) %>
 
 <div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "advanced_newsletter"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_newsletter_email"), :image, :image) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "newsletter_brand_color"), :value, :color) %>
 

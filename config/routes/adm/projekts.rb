@@ -1,6 +1,6 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
-    root to: "projekts#index"
+    root to: "home#show"
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
@@ -39,6 +39,7 @@ namespace :adm do
         get :poll_questions
         get :formular
         get :formular_answers
+        get :formular_follow_up_emails
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -93,7 +94,7 @@ namespace :adm do
       end
       resources :formular_fields, except: %i[index show] do
         collection do
-          post :reorder
+          patch :reorder
         end
       end
       resources :projekt_events, except: %i[index show] do

@@ -1,19 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
-
-  def index
-    authorize [:adm, :projekts, Projekt]
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
-    @pagy, @projekts = pagy(base_scope, limit: 10)
-
-    @name_header_options = { sort: true, search: true }
-    @start_date_header_options = { sort: true }
-    @end_date_header_options = { sort: true }
-
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder" }
-    ]
-  end
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
@@ -134,6 +120,20 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.update!(show_content_background: !@projekt.show_content_background)
 
     render json: { show_content_background: @projekt.show_content_background }
+  end
+
+  def convert_to_new_content_block_mode
+    authorize [:adm, :projekts, @projekt], :update?
+
+    result = Projekts::ConvertToNewContentBlockMode.call(projekt: @projekt)
+
+    if result.success?
+      flash[:notice] = t("custom.projekts.page.convert_to_content_blocks.success")
+    else
+      flash[:error] = t("custom.projekts.page.convert_to_content_blocks.error")
+    end
+
+    redirect_to page_path(@projekt.page.slug)
   end
 
   def toggle_activated

@@ -1,6 +1,10 @@
 <% launch_page ||= false %>
 
 <header class="topbar-header">
+  <% if current_user&.administrator? || current_user&.projekt_manager? %>
+    <%= render "layouts/admin_topbar" %>
+  <% end %>
+
   <div class="js-sticky-header top-bar-wrapper">
     <div class="top-bar-background-wrapper">
       <div class="top-bar" data-white-text="<%= extended_feature?('general.use_white_top_navigation_text') %>">

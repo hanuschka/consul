@@ -172,8 +172,6 @@ namespace :adm do
       end
     end
 
-    get "list", to: "projekts#index", as: :projekts_list
-
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       get :details, on: :member
       get :visibility, on: :member
@@ -183,6 +181,7 @@ namespace :adm do
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]

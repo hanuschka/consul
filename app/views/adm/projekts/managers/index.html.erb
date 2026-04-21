@@ -7,7 +7,9 @@
 <% end %>
 
 <div class="kern-container">
-  <%= new_resource_link(new_adm_projekts_manager_path, t('.new_link')) %>
+  <% if Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).create? %>
+    <%= new_resource_link(new_adm_projekts_manager_path, t('.new_link')) %>
+  <% end %>
 
   <% if @projekt_managers.any? %>
     <div class="kern-table-responsive" tabindex="0">

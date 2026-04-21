@@ -95,7 +95,7 @@ class Api::BaseController < ActionController::API
     rescue StandardError
     end
 
-    SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404].freeze
+    SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze
 
     def skip_api_request_log?
       SKIP_LOG_RESPONSE_STATUSES.include?(response.status)

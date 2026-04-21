@@ -1,0 +1,62 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  { label: t("adm.newsletters.index.tabs.list"), url: adm_newsletters_path },
+  { label: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path, current: true },
+  { label: t("adm.newsletters.index.tabs.unregistered_subscribers"), url: adm_unregistered_newsletter_subscribers_path },
+  { label: t("adm.newsletters.index.tabs.settings"), url: settings_adm_newsletters_path }
+]) %>
+
+<div class="kern-container my-5">
+
+  <%= new_resource_link(new_adm_recipient_group_path, t('.new_recipient_group')) %>
+
+  <% if @recipient_groups.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header" style="width:80%;"><%= t('.table.name') %></th>
+            <th scope="col" class="kern-table__header"><%= t('.table.actions') %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @recipient_groups.each do |recipient_group| %>
+            <tr id="<%= dom_id(recipient_group) %>" class="kern-table__row">
+              <td scope="row" class="kern-table__header"><%= recipient_group.name %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(label: t('.table.edit'), url: edit_adm_recipient_group_path(recipient_group), icon: "edit", style: :edit) %>
+                  <% actions.with_action(
+                    label: t('.table.delete'),
+                    url: adm_recipient_group_path(recipient_group),
+                    icon: "delete", style: :delete,
+                    data: { turbo_method: :delete, turbo_confirm: t('.table.delete_confirm') }
+                  ) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="my-5">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  <% else %>
+    <%= empty_state(
+      title: t(".empty_title"),
+      description: t(".empty_description"),
+      icon: "send"
+    ) %>
+  <% end %>
+</div>

@@ -9,10 +9,11 @@ module Budgets
     include MapLocationAttributes
     include Translatable
     include CustomHelper
+    include LandingPageResolvable
 
     PER_PAGE = 10
 
-    before_action :authenticate_user!, except: [:index, :show, :json_data], unless: -> { current_user&.guest? }
+    before_action :authenticate_user!, except: [:index, :show, :json_data, :read_stats], unless: -> { current_user&.guest? }
     before_action :load_budget, except: :json_data
 
     authorize_resource :budget, except: :json_data
@@ -73,17 +74,7 @@ module Budgets
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)
 
-      if params[:page_ref].present?
-        @landing_page =
-          @investment
-          .projekt
-          .landing_pages
-          .find_by(slug: params[:page_ref])
-
-        if @landing_page.present?
-          set_landing_page_topbar_ui_variables(@landing_page)
-        end
-      end
+      resolve_landing_page_for_projekt(@investment.projekt)
 
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)

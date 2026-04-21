@@ -1,0 +1,56 @@
+<li
+  id="<%= dom_id(notification) %>"
+  class="notification <%= "unread" if notification&.unread? %>"
+>
+  <% if notification.notifiable.try(:notifiable_available?) %>
+    <div class="notification--content">
+      <% if notification.notifiable_action %>
+        <em><%= t("notifications.notification.action.#{notification.notifiable_action}", count: notification.counter) %></em>
+      <% elsif notification.notifiable.class.name == "DeficiencyReport" %>
+        <%= "Neue #{notification.notifiable.class.model_name.human}: " %>
+      <% elsif notification.notifiable.is_a?(Comment) && notification.notifiable.parent.present? %>
+        <%= "Kommentarantwort: " %>
+      <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment", "Projekt"]) %>
+        <%= "#{notification.notifiable.class.model_name.human}: " %>
+      <% elsif notification.notifiable.class.name.in?(["ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"]) %>
+        <%= "#{notification.notifiable.title}: " %>
+      <% end %>
+
+      <h3 class="notification--title" id="<%= dom_id(notification) %>_title">
+        <% if notification.link.present? %>
+          <%= link_to notification.notifiable_title, notification.link %>
+        <% else %>
+          <%= notification.notifiable_title %>
+        <% end %>
+      </h3>
+
+      <% if notification.notifiable_body.present? %>
+        <div class="notification--body">
+          <%= sanitize(notification.notifiable_body.to_s.gsub(/<p>\s*<\/p>/, "")) %>
+        </div>
+      <% end %>
+
+      <p class="time">
+        <%= l(notification.timestamp, format: :datetime) %>
+      </p>
+    </div>
+  <% else %>
+    <p>
+      <strong>
+        <%= t("notifications.notification.notifiable_hidden") %>
+      </strong>
+    </p>
+  <% end %>
+
+  <% if notification.unread? %>
+    <%= link_to t("notifications.notification.mark_as_read"),
+              mark_as_read_notification_path(notification),
+              method: :put, remote: true,
+              class: "mark-notification small" %>
+  <% else %>
+    <%= link_to t("notifications.notification.mark_as_unread"),
+              mark_as_unread_notification_path(notification),
+              method: :put, remote: true,
+              class: "mark-notification small" %>
+  <% end %>
+</li>

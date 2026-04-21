@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "administer__status" do %>
+  <% if DeficiencyReport::Status.any? %>
+    <%= form_with model: deficiency_report, url: update_administer_adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :patch do |form| %>
+      <div class="kern-form-input mb-4">
+        <%= form.select :deficiency_report_status_id,
+          options_from_collection_for_select(DeficiencyReport::Status.all, :id, :title, deficiency_report.deficiency_report_status_id),
+          { include_blank: "-- #{t('adm.deficiency_reports.deficiency_reports.administer.no_status')} --" },
+          { label: false } %>
+      </div>
+      <%= form_submit_button %>
+    <% end %>
+
+    <% if flash[:success].present? %>
+      <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+    <% end %>
+  <% else %>
+    <%= empty_state(title: t("adm.deficiency_reports.deficiency_reports.administer.no_statuses_title"), description: t("adm.deficiency_reports.deficiency_reports.administer.no_statuses_description"), icon: "checklist") %>
+  <% end %>
+<% end %>

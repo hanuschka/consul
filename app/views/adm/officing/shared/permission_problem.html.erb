@@ -1,0 +1,17 @@
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.officing.shared.permission_problem.title"),
+  back_button_url: adm_officing_root_path
+) %>
+
+<div class="kern-container my-5">
+  <div class="kern-alert kern-alert--warning" role="alert">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
+      <span class="kern-title"><%= t("adm.officing.shared.permission_problem.message", problem: @permission_problem) %></span>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <%= kern_link_button(adm_officing_root_path, text: t("adm.officing.shared.permission_problem.back"), style: :secondary) %>
+  </div>
+</div>

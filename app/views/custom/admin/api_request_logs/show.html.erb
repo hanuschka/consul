@@ -1,0 +1,61 @@
+<%= back_link_to admin_api_request_logs_path %>
+
+<div class="medium-8">
+  <h2><%= @api_request_log.http_method %> <%= @api_request_log.request_path %></h2>
+
+  <div class="callout">
+    <p>
+      <strong><%= t("admin.api_request_logs.show.http_method") %></strong><br>
+      <%= @api_request_log.http_method %>
+    </p>
+
+    <p>
+      <strong><%= t("admin.api_request_logs.show.request_path") %></strong><br>
+      <%= @api_request_log.request_path %>
+    </p>
+
+    <p>
+      <strong><%= t("admin.api_request_logs.show.full_url") %></strong><br>
+      <code><%= @api_request_log.full_url %></code>
+    </p>
+
+    <p>
+      <strong><%= t("admin.api_request_logs.show.response_status") %></strong><br>
+      <% if @api_request_log.response_status.present? %>
+        <span class="label <%= @api_request_log.response_status < 400 ? 'success' : 'alert' %>">
+          <%= @api_request_log.response_status %>
+        </span>
+      <% else %>
+        —
+      <% end %>
+    </p>
+
+    <p>
+      <strong><%= t("admin.api_request_logs.show.api_client") %></strong><br>
+      <% if @api_request_log.api_client.present? %>
+        <%= link_to @api_request_log.api_client.name, admin_api_client_path(@api_request_log.api_client) %>
+      <% else %>
+        —
+      <% end %>
+    </p>
+
+    <p>
+      <strong><%= t("admin.api_request_logs.show.created_at") %></strong><br>
+      <%= l(@api_request_log.created_at, format: :long) %>
+    </p>
+
+    <% if @api_request_log.query_params.present? %>
+      <p>
+        <strong><%= t("admin.api_request_logs.show.query_params") %></strong><br>
+        <code><%= @api_request_log.query_params.to_json %></code>
+      </p>
+    <% end %>
+
+    <% if @api_request_log.body_params.present? %>
+      <p>
+        <strong><%= t("admin.api_request_logs.show.body_params") %></strong><br>
+        <code><%= @api_request_log.body_params.to_json %></code>
+      </p>
+    <% end %>
+  </div>
+</div>

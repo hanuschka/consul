@@ -1,6 +1,6 @@
 <table>
   <tbody>
-    <% settings.each do |setting| %>
+    <% settings&.each do |setting| %>
       <tr>
         <td class="small-6">
           <strong><%= t("custom.settings.#{setting.key}") %></strong>

@@ -1,0 +1,26 @@
+de:
+  adm:
+    api_request_logs:
+      index:
+        title: API-Anfragen-Logs
+        intro: >
+          Hier sehen Sie alle eingehenden API-Anfragen externer Clients an Ihre Plattform. Jeder Eintrag zeigt die verwendete HTTP-Methode, den angefragten Pfad, den Antwortstatus und den zugehörigen API-Client. So können Sie nachvollziehen, welche Anwendungen auf Ihre Daten zugreifen, fehlerhafte Anfragen erkennen und die API-Nutzung im Blick behalten.
+        id: ID
+        http_method: Methode
+        request_path: Pfad
+        response_status: Status
+        api_client: API-Client
+        no_logs: Keine API-Anfragen-Logs vorhanden.
+        destroy_all: Alle Logs löschen
+        destroy_all_confirm: Alle API-Anfragen-Logs wirklich löschen?
+      destroy_all:
+        success: Alle API-Anfragen-Logs wurden gelöscht.
+      show:
+        http_method: HTTP-Methode
+        request_path: Anfrage-Pfad
+        full_url: Vollständige URL
+        response_status: Antwort-Status
+        api_client: API-Client
+        created_at: Erstellt am
+        query_params: Query-Parameter
+        body_params: Body-Parameter

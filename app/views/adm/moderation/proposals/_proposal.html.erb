@@ -1,0 +1,26 @@
+<tr id="<%= dom_id(proposal, :moderation) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header"><%= proposal.title %></th>
+  <td class="kern-table__cell"><%= proposal.projekt&.name %></td>
+  <td class="kern-table__cell"><%= proposal.author.username %></td>
+  <td class="kern-table__cell"><%= proposal.flags_count %></td>
+  <td class="kern-table__cell">
+    <% if proposal.hidden? %>
+      <%= t("adm.moderation.proposals.index.statuses.hide") %>
+    <% elsif proposal.ignored_flag? %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.proposals.index.actions.hide"),
+                          url: hide_adm_moderation_proposal_path(proposal),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.proposals.index.confirm_hide", name: proposal.title) } %>
+      <% end %>
+    <% else %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.proposals.index.actions.ignore_flag"),
+                          url: ignore_flag_adm_moderation_proposal_path(proposal),
+                          data: { turbo_method: :put } %>
+        <%= c.with_action label: t("adm.moderation.proposals.index.actions.hide"),
+                          url: hide_adm_moderation_proposal_path(proposal),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.proposals.index.confirm_hide", name: proposal.title) } %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

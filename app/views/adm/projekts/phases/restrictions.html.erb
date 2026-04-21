@@ -1,0 +1,29 @@
+<%= content_for :title, [@projekt_phase.title, t("adm.projekts.phases.index.title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <%= render Kern::FormFieldComponent.new(label: t('.user_status_label'), hint: t('.user_status_hint')) do %>
+    <%= render "adm/projekts/phases/restrictions/user_status", projekt_phase: @projekt_phase %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.geozone_label'), hint: t('.geozone_hint')) do %>
+    <%= render "adm/projekts/phases/restrictions/geozone", projekt_phase: @projekt_phase %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.extended_geozone_label'), hint: t('.extended_geozone_hint')) do %>
+    <%= render "adm/projekts/phases/restrictions/extended_geozone", projekt_phase: @projekt_phase %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t('.age_label'), hint: t('.age_hint')) do %>
+    <%= render "adm/projekts/phases/restrictions/age", projekt_phase: @projekt_phase %>
+  <% end %>
+
+  <% if IndividualGroup.visible.any? %>
+    <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_hint')) do %>
+      <%= render "adm/projekts/phases/restrictions/individual_groups", projekt_phase: @projekt_phase %>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,36 @@
+// Admin table enhancements on top of KERN kern-table base styles
+// Scoped to kern-table-responsive to avoid breaking non-scrollable tables
+
+.kern-table-responsive {
+
+  // More column spacing
+  .kern-table__header,
+  .kern-table__cell {
+    padding-left: var(--kern-metric-space-small, 12px) !important;
+    padding-right: var(--kern-metric-space-small, 12px) !important;
+    white-space: nowrap;
+  }
+
+  // Add left padding to first column and right padding to last for breathing room
+  .kern-table__head .kern-table__row > :first-child,
+  .kern-table__body .kern-table__row > :first-child {
+    padding-left: var(--kern-metric-space-default, 16px);
+  }
+
+  .kern-table__head .kern-table__row > :last-child,
+  .kern-table__body .kern-table__row > :last-child {
+    padding-right: var(--kern-metric-space-default, 16px);
+  }
+
+  // Stronger header separation
+  .kern-table__head .kern-table__row .kern-table__header {
+    background-color: var(--kern-color-layout-background-hued, #f7f7f9);
+    border-bottom: 2px solid var(--kern-color-layout-border, #a5aac3);
+  }
+
+  // Row hover for better readability
+  .kern-table__body .kern-table__row:hover .kern-table__cell,
+  .kern-table__body .kern-table__row:hover .kern-table__header {
+    background-color: color-mix(in srgb, var(--kern-color-action-default) 4%, transparent);
+  }
+}

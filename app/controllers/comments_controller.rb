@@ -34,7 +34,8 @@ class CommentsController < ApplicationController
   end
 
   def flag
-    Flag.flag(current_user, @comment)
+    flag = Flag.flag(current_user, @comment)
+    Flags::NotifyModerationJob.perform_later(flag.id) if flag
     set_comment_flags(@comment)
     @comment.subtree.update_all(ignored_flag_at: nil)
 
@@ -119,7 +120,7 @@ class CommentsController < ApplicationController
     end
 
     def verify_comments_open!
-      return if current_user.administrator? || current_user.moderator?
+      return if current_user&.administrator? || current_user&.moderator?
 
       if @commentable.respond_to?(:comments_closed?) && @commentable.comments_closed?
         redirect_to polymorphic_path(@commentable), alert: t("comments.comments_closed")

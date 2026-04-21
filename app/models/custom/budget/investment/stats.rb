@@ -35,6 +35,6 @@ class Budget::Investment::Stats < Budget::Stats
     end
 
     def vote_phase_enabled? # changed
-      investment.budget.phases.find_by(kind: "balloting").enabled?
+      investment.budget.phases.find_by(kind: "balloting")&.enabled? || false
     end
 end

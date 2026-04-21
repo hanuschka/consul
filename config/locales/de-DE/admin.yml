@@ -684,6 +684,7 @@ de:
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
+      api_clients: API-Clients
       managers: Manager*innen
       sdg_managers: SDG Managers
       moderators: Moderator*innen
@@ -737,6 +738,8 @@ de:
       debates: "Debatten"
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
+      llm_settings: KI-Einstellungen
+      external_api_keys: Externe API-Schlüssel
     administrators:
       index:
         title: Administrator*innen
@@ -1296,6 +1299,63 @@ de:
       setting_name: Einstellung
       setting_value: Wert
       no_description: "Ohne Beschreibung"
+    ai_settings:
+      flash:
+        updated: KI-Einstellung erfolgreich aktualisiert
+      index:
+        title: LLM-Einstellungen
+        setting_name: Einstellung
+        value: Wert
+        actions: Aktionen
+        update: Aktualisieren
+        no_settings: Keine KI-Einstellungen verfügbar
+        enter_api_key: API-Schlüssel eingeben
+      setting:
+        llm.provider: LLM-Anbieter
+        llm.model: Modell
+        llm.use_llm_for_translations: Inhaltsübersetzung
+      setting_help:
+        llm_provider: Anbieter werden deaktiviert, bis Anmeldedaten in der secrets.yml konfiguriert sind
+    external_api_keys:
+      flash:
+        updated: API-Schlüssel erfolgreich aktualisiert
+      index:
+        title: Drittanbieter-API-Schlüssel
+        service: Dienst
+        name: Schlüsselname
+        value: Wert
+        value_set: Gesetzt
+        value_empty: Standard
+        empty_api_keys: Es wurden noch keine API-Schlüssel erstellt
+      show:
+        key: Name
+        value: Wert
+        website: Website
+        api_value: Schlüsselwert
+        default_key_note_title: Standard-API-Schlüssel
+        default_key_note_description: Kein benutzerdefinierter API-Schlüssel gesetzt, System verwendet einen Standard-API-Schlüssel von DemokratieToday. Das Setzen eines benutzerdefinierten Schlüssels setzt den Standard außer Kraft.
+      form:
+        edit_title: API-Schlüssel bearbeiten
+        value: Wert
+      services:
+        matomo: Matomo Analytics
+        mapbox: Mapbox
+        vcs: Virtual City Systems (VCS)
+        openai: OpenAI
+        brevo: Brevo
+      services_description:
+        matomo: "Datenschutzkonforme Webanalyse-Plattform zur Auswertung von Besucherzahlen, Nutzerverhalten und Seitenaufrufen auf Ihrer Plattform. Matomo speichert alle Daten auf Ihrem eigenen Server und erfüllt die Anforderungen der DSGVO. Der Schlüssel ermöglicht die Verbindung zwischen Ihrer Plattform und Ihrer Matomo-Instanz."
+        mapbox: "Kartendienst für die Darstellung interaktiver Karten auf Ihrer Plattform — etwa bei Vorschlägen mit Standortbezug, Mängelmeldungen oder Projektübersichten. Mapbox stellt Kartenmaterial, Geocodierung und Adresssuche bereit. Der Schlüssel wird benötigt, um Karteninhalte laden und anzeigen zu können."
+        vcs: "3D-Stadtmodellierung von Virtual City Systems für die visuelle Darstellung von Stadtplanungsprojekten. Ermöglicht dreidimensionale Ansichten von Gebäuden, Infrastruktur und Planungsszenarien direkt auf der Plattform. Wird vor allem für Beteiligungsverfahren mit räumlichem Bezug eingesetzt, etwa bei Bauleitplanungen."
+        openai: "Schnittstelle zu OpenAI für KI-gestützte Funktionen auf Ihrer Plattform. Wird unter anderem für die automatische Erstellung von Vorschlägen, die Analyse von Abstimmungsergebnissen, semantische Auswertungen und die Inhaltsgenerierung genutzt. Der Schlüssel verbindet Ihre Plattform mit den OpenAI-Sprachmodellen."
+        brevo: "E-Mail-Versandplattform für den Versand von Transaktions-E-Mails wie Registrierungsbestätigungen, Benachrichtigungen und Passwort-Zurücksetzungen. Brevo übernimmt die zuverlässige Zustellung aller automatisierten E-Mails Ihrer Plattform. Der Schlüssel wird benötigt, damit das System E-Mails über Brevo versenden kann."
+    api_clients:
+      show:
+        show_token: Anzeigen
+        hide_token: Ausblenden
+        copy_token: Kopieren
+        copied: Kopiert!
+        token_hidden_message: Token ist verborgen
     shared:
       search:
         advanced_filters:
@@ -1326,6 +1386,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
+      details: Details
       moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag

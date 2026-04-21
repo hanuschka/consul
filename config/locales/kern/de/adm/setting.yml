@@ -130,12 +130,6 @@ de:
         enable_investments_overview: Budgetübersicht
         enable_investments_overview_description: >
           Aktiviert eine zentrale Übersichtsseite, die alle Bürgervorschläge aus laufenden und abgeschlossenen Bürgerhaushalten zusammenfasst. Bürger können dort den Stand der Vorschläge, Machbarkeitsbewertungen und Abstimmungsergebnisse projektübergreifend einsehen.
-        enable_polls_overview: Abstimmungsübersicht
-        enable_polls_overview_description: >
-          Aktiviert eine zentrale Übersichtsseite, die alle laufenden und abgeschlossenen Abstimmungen aus den Beteiligungsprojekten zusammenfasst. Bürger können dort auf einen Blick sehen, wo sie aktuell abstimmen können und welche Ergebnisse bereits vorliegen.
-        enable_proposals_overview: Vorschlagsübersicht
-        enable_proposals_overview_description: >
-          Aktiviert eine zentrale Übersichtsseite, die alle eingereichten Bürgervorschläge aus den Beteiligungsprojekten projektübergreifend zusammenfasst. Bürger können dort Vorschläge durchsuchen, unterstützen und kommentieren, ohne zuerst ein konkretes Projekt aufrufen zu müssen.
     extended_option:
       general:
         city_name: Name der Stadt/Gemeinde

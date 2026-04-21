@@ -4,7 +4,7 @@
 
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
-  team_url: new_adm_projekts_manager_path,
+  team_url: (Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).create? ? new_adm_projekts_manager_path : nil),
   recent_items: nil,
   recent_items_url: nil,
   intro_text: @section_setting&.intro_text_with_fallback,

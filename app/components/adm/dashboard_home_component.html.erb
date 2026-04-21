@@ -74,14 +74,18 @@
             </div>
           <% end %>
 
-          <%= link_to team_url, class: "adm-team-member adm-team-add", title: t(".team_add") do %>
-            <div class="adm-team-member__avatar adm-team-member__avatar--add">
-              <span class="material-symbols-outlined" aria-hidden="true">add</span>
-            </div>
+          <% if team_url.present? %>
+            <%= link_to team_url, class: "adm-team-member adm-team-add", title: t(".team_add") do %>
+              <div class="adm-team-member__avatar adm-team-member__avatar--add">
+                <span class="material-symbols-outlined" aria-hidden="true">add</span>
+              </div>
+            <% end %>
           <% end %>
         </div>
-      <% else %>
+      <% elsif team_url.present? %>
         <%= empty_state(title: t(".no_team"), icon: "group", link_url: team_url, link_text: t(".team_manage")) %>
+      <% else %>
+        <%= empty_state(title: t(".no_team"), icon: "group") %>
       <% end %>
     </div>
 

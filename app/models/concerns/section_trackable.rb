@@ -24,7 +24,7 @@ module SectionTrackable
       full_metadata = { "trackable_name" => trackable_name }.merge(metadata)
 
       SectionActivity.log(
-        user: section_tracking_user,
+        user: current_acting_user || section_tracking_user,
         section: section_tracking_section,
         trackable: self,
         action: action,
@@ -32,5 +32,9 @@ module SectionTrackable
       )
     rescue StandardError => e
       Rails.logger.warn("SectionActivity tracking failed: #{e.message}")
+    end
+
+    def current_acting_user
+      Audited.store[:current_user]&.call
     end
 end

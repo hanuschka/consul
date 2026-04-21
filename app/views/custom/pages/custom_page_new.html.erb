@@ -116,6 +116,24 @@
               <%= t('custom.projekts.page.toggle_background_label') %>
             </span>
           </div>
+
+          <% if @custom_page.projekt.new_content_block_mode? == false %>
+            <%= button_to convert_to_new_content_block_mode_adm_projekts_projekt_path(@custom_page.projekt),
+                  method: :patch,
+                  form: { class: "projekt-studio--convert-to-blocks-form" },
+                  class: "projekt-studio--convert-to-blocks-button",
+                  title: t("custom.projekts.page.convert_to_content_blocks.tooltip"),
+                  data: {
+                    tooltip: true,
+                    "hover-delay": 300,
+                    confirm: t("custom.projekts.page.convert_to_content_blocks.confirm")
+                  } do %>
+              <i class="fas fa-cubes projekt-studio--convert-to-blocks-button--icon"></i>
+              <span class="projekt-studio--convert-to-blocks-button--label">
+                <%= t("custom.projekts.page.convert_to_content_blocks.button") %>
+              </span>
+            <% end %>
+          <% end %>
         </div>
       <% end %>
       <div class="flex-layout">

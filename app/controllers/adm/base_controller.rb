@@ -12,7 +12,7 @@ class Adm::BaseController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError do |exception|
     Sentry.capture_exception(exception, level: :warning)
-    redirect_to adm_root_path, alert: t("adm.not_authorized")
+    redirect_to root_path, alert: t("adm.not_authorized")
   end
 
   helper KernHelper
@@ -72,6 +72,8 @@ class Adm::BaseController < ActionController::Base
         Adm::NewsletterPolicy
       when "Image"
         Adm::ImagePolicy
+      when "Poll"
+        Adm::Projekts::PollPolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

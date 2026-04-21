@@ -188,7 +188,7 @@ class ProjektsController < ApplicationController
   end
 
   def raise_flag_feature_disabled
-    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting["extended_feature.projekts_overview_page_navigation.show_in_navigation"]
+    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting["process.projekts"].present?
   end
 
   def set_variables_for_footer_comments

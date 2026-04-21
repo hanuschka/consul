@@ -163,7 +163,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def ai_user_flow
     authorize_phase(:update?)
-    @criteria = @projekt_phase.user_resource_criteria
+    @hard_criteria = @projekt_phase.user_resource_criteria.hard_kind
+    @soft_criteria = @projekt_phase.user_resource_criteria.soft_kind
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
@@ -175,11 +176,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def create_user_resource_criterion
     authorize_phase(:update?)
-    criterion = @projekt_phase.user_resource_criteria.build(criterion_params)
-    criterion.position = @projekt_phase.user_resource_criteria.maximum(:position).to_i + 1
+    kind = sanitized_kind_param
+    return render json: { errors: ["invalid kind"] }, status: :unprocessable_entity if kind.nil?
+
+    criterion = @projekt_phase.user_resource_criteria.build(criterion_create_params.merge(kind: kind))
 
     if criterion.save
-      render json: { id: criterion.id, text: criterion.text }, status: :created
+      render json: serialize_criterion(criterion), status: :created
     else
       render json: { errors: criterion.errors.full_messages }, status: :unprocessable_entity
     end
@@ -189,8 +192,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     criterion = @projekt_phase.user_resource_criteria.find(params[:criterion_id])
 
-    if criterion.update(criterion_params)
-      head :ok
+    if criterion.update(criterion_update_params)
+      render json: serialize_criterion(criterion), status: :ok
     else
       render json: { errors: criterion.errors.full_messages }, status: :unprocessable_entity
     end
@@ -205,8 +208,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def reorder_user_resource_criteria
     authorize_phase(:update?)
+    kind = sanitized_kind_param
+    return render json: { errors: ["invalid kind"] }, status: :unprocessable_entity if kind.nil?
+
+    scope = @projekt_phase.user_resource_criteria.where(kind: kind)
     params[:order].each_with_index do |id, index|
-      @projekt_phase.user_resource_criteria.where(id: id).update_all(position: index)
+      scope.where(id: id).update_all(position: index)
     end
 
     head :ok
@@ -712,7 +719,29 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       params.require(:projekt_phase).permit(:projekt_id, :type)
     end
 
-    def criterion_params
-      params.require(:user_resource_criterion).permit(:text)
+    def criterion_create_params
+      params.require(:user_resource_criterion).permit(:name, :description, :ai_instruction)
+    end
+
+    def criterion_update_params
+      params.require(:user_resource_criterion).permit(:name, :description, :ai_instruction)
+    end
+
+    def sanitized_kind_param
+      kind = params[:kind].to_s
+      return kind if UserResourceCriteria::KINDS.include?(kind)
+
+      nil
+    end
+
+    def serialize_criterion(criterion)
+      {
+        id: criterion.id,
+        kind: criterion.kind,
+        name: criterion.name,
+        description: criterion.description,
+        ai_instruction: criterion.ai_instruction,
+        position: criterion.position
+      }
     end
 end

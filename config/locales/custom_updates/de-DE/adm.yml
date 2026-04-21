@@ -7,6 +7,18 @@ de:
           criteria_title: Bewertungskriterien
           add_criterion: Kriterium hinzufügen
           text_placeholder: "Kriterium beschreiben …"
+          hard_criteria_title: Harte Kriterien (Bestanden / Nicht bestanden)
+          hard_criteria_hint: "Ein Vorschlag muss alle harten Kriterien erfüllen. Schlägt eines fehl, sieht der Bürger nur dieses blockierende Problem."
+          soft_criteria_title: Weiche Kriterien (0–25 Punkte)
+          soft_criteria_hint: "Qualitative Bewertung. Wird nur ausgewertet, wenn alle harten Kriterien bestanden sind."
+          add_hard_criterion: Hartes Kriterium hinzufügen
+          add_soft_criterion: Weiches Kriterium hinzufügen
+          delete_criterion: Kriterium löschen
+          field_name: Name
+          field_description: Beschreibung (wird Bürgern angezeigt)
+          field_ai_instruction: KI-Anweisung (Prompt für das Modell)
+          name_placeholder: "Kurzer Name des Kriteriums"
+          ai_instruction_placeholder: "Anweisung, die die KI bei der Bewertung dieses Kriteriums verwenden soll"
         ai_settings:
           title: KI Sprachassistent
           empty_title: KI Sprachassistent nicht verfügbar

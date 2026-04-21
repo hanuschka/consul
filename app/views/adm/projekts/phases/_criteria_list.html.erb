@@ -1,0 +1,139 @@
+<div
+  class="kern-criteria-list-wrapper"
+  data-controller="adm-criteria-list"
+  data-adm-criteria-list-kind-value="<%= kind %>"
+  data-adm-criteria-list-create-url-value="<%= create_user_resource_criterion_adm_projekts_phase_path(projekt_phase) %>"
+  data-adm-criteria-list-reorder-url-value="<%= reorder_user_resource_criteria_adm_projekts_phase_path(projekt_phase) %>"
+  data-adm-criteria-list-update-url-template-value="<%= update_user_resource_criterion_adm_projekts_phase_path(projekt_phase, criterion_id: "CRITERION_ID") %>"
+  data-adm-criteria-list-delete-url-template-value="<%= destroy_user_resource_criterion_adm_projekts_phase_path(projekt_phase, criterion_id: "CRITERION_ID") %>"
+>
+  <h3 class="mt-4 mb-3"><%= t("adm.projekts.phases.ai_user_flow.#{kind}_criteria_title") %></h3>
+  <p class="kern-criteria-list__hint"><%= t("adm.projekts.phases.ai_user_flow.#{kind}_criteria_hint") %></p>
+
+  <div data-adm-criteria-list-target="list" class="kern-criteria-list mb-4">
+    <% criteria.each do |criterion| %>
+      <div
+        class="kern-criteria-list__item"
+        data-criterion-id="<%= criterion.id %>"
+      >
+        <span
+          class="material-symbols-outlined kern-criteria-list__handle"
+          data-criteria-handle
+        >drag_indicator</span>
+
+        <div class="kern-criteria-list__fields">
+          <div class="kern-criteria-list__field">
+            <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_name") %></label>
+            <input
+              type="text"
+              class="kern-form-input__input"
+              data-criteria-field="name"
+              value="<%= criterion.name %>"
+            />
+          </div>
+
+          <div class="kern-criteria-list__field">
+            <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_description") %></label>
+            <textarea
+              class="kern-form-input__input"
+              data-criteria-field="description"
+              rows="2"
+            ><%= criterion.description %></textarea>
+          </div>
+
+          <div class="kern-criteria-list__field">
+            <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %></label>
+            <textarea
+              class="kern-form-input__input"
+              data-criteria-field="ai_instruction"
+              rows="3"
+            ><%= criterion.ai_instruction %></textarea>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="kern-criteria-list__delete-btn"
+          data-action="adm-criteria-list#deleteCriterion"
+          aria-label="<%= t("adm.projekts.phases.ai_user_flow.delete_criterion") %>"
+        >
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <script type="text/template" data-adm-criteria-list-target="template">
+    <div
+      class="kern-criteria-list__item"
+      data-criterion-id="{{ id }}"
+    >
+      <span
+        class="material-symbols-outlined kern-criteria-list__handle"
+        data-criteria-handle
+      >drag_indicator</span>
+
+      <div class="kern-criteria-list__fields">
+        <div class="kern-criteria-list__field">
+          <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_name") %></label>
+          <input
+            type="text"
+            class="kern-form-input__input"
+            data-criteria-field="name"
+            value="{{ name }}"
+          />
+        </div>
+
+        <div class="kern-criteria-list__field">
+          <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_description") %></label>
+          <textarea
+            class="kern-form-input__input"
+            data-criteria-field="description"
+            rows="2"
+          >{{ description }}</textarea>
+        </div>
+
+        <div class="kern-criteria-list__field">
+          <label class="kern-criteria-list__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %></label>
+          <textarea
+            class="kern-form-input__input"
+            data-criteria-field="ai_instruction"
+            rows="3"
+          >{{ ai_instruction }}</textarea>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="kern-criteria-list__delete-btn"
+        data-action="adm-criteria-list#deleteCriterion"
+        aria-label="<%= t("adm.projekts.phases.ai_user_flow.delete_criterion") %>"
+      >
+        <span class="material-symbols-outlined">delete</span>
+      </button>
+    </div>
+  </script>
+
+  <form
+    data-action="submit->adm-criteria-list#addCriterion"
+    class="kern-criteria-list__form"
+  >
+    <div class="kern-form-input">
+      <input
+        type="text"
+        data-adm-criteria-list-target="inputName"
+        class="kern-form-input__input"
+        placeholder="<%= t("adm.projekts.phases.ai_user_flow.name_placeholder") %>"
+      />
+    </div>
+    <div class="kern-form-input">
+      <textarea
+        data-adm-criteria-list-target="inputAiInstruction"
+        class="kern-form-input__input"
+        rows="2"
+        placeholder="<%= t("adm.projekts.phases.ai_user_flow.ai_instruction_placeholder") %>"
+      ></textarea>
+    </div>
+    <%= form_submit_button(text: t("adm.projekts.phases.ai_user_flow.add_#{kind}_criterion")) %>
+  </form>
+</div>

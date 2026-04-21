@@ -27,6 +27,9 @@ de:
       total_score: "Gesamtpunktzahl"
       passed: "Ihr Vorschlag erfüllt die Kriterien!"
       failed: "Ihr Vorschlag bedarf noch Verbesserungen."
+      hard_failed_title: "Ihr Vorschlag muss angepasst werden, bevor er eingereicht werden kann."
+      error_title: "Bewertung konnte nicht abgeschlossen werden."
+      error_description: "Bei der Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es in einem Moment erneut."
     step4:
       heading: "Herzlichen Dank für Ihren Vorschlag!"
       subheading: "Ihr Beitrag wurde erfolgreich eingereicht und wird nun von der Stadtverwaltung geprüft."

@@ -8,6 +8,18 @@ en:
           criteria_title: Evaluation criteria
           add_criterion: Add criterion
           text_placeholder: "Describe the criterion …"
+          hard_criteria_title: Hard criteria (pass / fail)
+          hard_criteria_hint: "A proposal must pass every hard criterion. If any fails, the citizen sees only that blocking issue."
+          soft_criteria_title: Soft criteria (0–25 points)
+          soft_criteria_hint: "Scored qualitatively. Only evaluated when all hard criteria pass."
+          add_hard_criterion: Add hard criterion
+          add_soft_criterion: Add soft criterion
+          delete_criterion: Delete criterion
+          field_name: Name
+          field_description: Description (shown to citizens)
+          field_ai_instruction: AI instruction (prompt for the model)
+          name_placeholder: "Short name of the criterion"
+          ai_instruction_placeholder: "Instruction the AI should use when evaluating this criterion"
         ai_settings:
           title: Voice assistant
           empty_title: Voice assistant not available

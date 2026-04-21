@@ -1,29 +1,65 @@
 <div class="ai-proposal-flow--evaluation">
-  <div class="ai-proposal-flow--evaluation-total">
-    <span class="ai-proposal-flow--evaluation-total--label"><%= t("ai_proposal_flow.evaluation.total_score") %></span>
-    <span class="ai-proposal-flow--evaluation-total--score"><%= total_score %></span>
-  </div>
+  <% if hard_failed? %>
+    <div class="ai-proposal-flow--hard-fail">
+      <div class="ai-proposal-flow--hard-fail--header">
+        <span class="material-symbols-outlined ai-proposal-flow--hard-fail--icon">error</span>
+        <strong class="ai-proposal-flow--hard-fail--title">
+          <%= t("ai_proposal_flow.evaluation.hard_failed_title") %>
+        </strong>
+      </div>
 
-  <% criteria.each do |criterion| %>
-    <div class="ai-proposal-flow--evaluation-criterion">
-      <div class="ai-proposal-flow--evaluation-criterion--header">
-        <span class="ai-proposal-flow--evaluation-criterion--text"><%= criterion["text"] %></span>
-        <span class="ai-proposal-flow--evaluation-criterion--score">
-          <%= criterion["score"] %> / <%= MAX_SCORE_PER_CRITERION %>
-        </span>
-      </div>
-      <div class="ai-proposal-flow--evaluation-bar-track">
-        <div
-          class="ai-proposal-flow--evaluation-bar <%= bar_modifier(criterion["score"]) %>"
-          style="width: <%= (criterion["score"].to_f / MAX_SCORE_PER_CRITERION * 100).round %>%"
-        ></div>
-      </div>
-      <p class="ai-proposal-flow--evaluation-criterion--feedback"><em><%= criterion["feedback"] %></em></p>
+      <% if failed_criterion["name"].present? %>
+        <h3 class="ai-proposal-flow--hard-fail--criterion-name">
+          <%= failed_criterion["name"] %>
+        </h3>
+      <% end %>
+
+      <% if failed_criterion["description"].present? %>
+        <p class="ai-proposal-flow--hard-fail--criterion-description">
+          <%= failed_criterion["description"] %>
+        </p>
+      <% end %>
+
+      <p class="ai-proposal-flow--hard-fail--feedback">
+        <%= failed_criterion["feedback"] %>
+      </p>
     </div>
-  <% end %>
+  <% elsif error? %>
+    <div class="ai-proposal-flow--evaluation-error">
+      <strong><%= t("ai_proposal_flow.evaluation.error_title") %></strong>
+      <p><%= t("ai_proposal_flow.evaluation.error_description") %></p>
+    </div>
+  <% else %>
+    <div class="ai-proposal-flow--evaluation-total">
+      <span class="ai-proposal-flow--evaluation-total--label"><%= t("ai_proposal_flow.evaluation.total_score") %></span>
+      <span class="ai-proposal-flow--evaluation-total--score"><%= total_score %></span>
+    </div>
 
-  <div class="ai-proposal-flow--overall-box -<%= overall_passed ? 'passed' : 'failed' %>">
-    <strong><%= overall_passed ? t("ai_proposal_flow.evaluation.passed") : t("ai_proposal_flow.evaluation.failed") %></strong>
-    <p><%= overall_feedback %></p>
-  </div>
+    <% soft_criteria.each do |criterion| %>
+      <div class="ai-proposal-flow--evaluation-criterion">
+        <div class="ai-proposal-flow--evaluation-criterion--header">
+          <span class="ai-proposal-flow--evaluation-criterion--text">
+            <%= criterion["name"].presence || criterion["text"] %>
+          </span>
+          <span class="ai-proposal-flow--evaluation-criterion--score">
+            <%= criterion["score"] %> / <%= MAX_SCORE_PER_CRITERION %>
+          </span>
+        </div>
+        <div class="ai-proposal-flow--evaluation-bar-track">
+          <div
+            class="ai-proposal-flow--evaluation-bar <%= bar_modifier(criterion["score"].to_i) %>"
+            style="width: <%= (criterion["score"].to_f / MAX_SCORE_PER_CRITERION * 100).round %>%"
+          ></div>
+        </div>
+        <p class="ai-proposal-flow--evaluation-criterion--feedback"><em><%= criterion["feedback"] %></em></p>
+      </div>
+    <% end %>
+
+    <% if overall_feedback.present? %>
+      <div class="ai-proposal-flow--overall-box -passed">
+        <strong><%= t("ai_proposal_flow.evaluation.passed") %></strong>
+        <p><%= overall_feedback %></p>
+      </div>
+    <% end %>
+  <% end %>
 </div>

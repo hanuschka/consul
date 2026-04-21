@@ -37,8 +37,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
     @draft_resource.update!(params_with_image_user)
 
     if @draft_resource.projekt_phase.user_resource_criteria.exists?
-      evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
-      @draft_resource.update!(ai_evaluation_result: evaluation)
+      ProposalAiDraft::EvaluateTwoTierService.call(resource: @draft_resource)
 
       redirect_to generate_budget_investment_evaluation_path(@draft_resource)
     else

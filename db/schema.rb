@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_19_181638) do
+ActiveRecord::Schema.define(version: 2026_04_20_165854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2955,6 +2955,11 @@ ActiveRecord::Schema.define(version: 2026_04_19_181638) do
     t.integer "position", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "kind", default: "hard", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.text "ai_instruction", null: false
+    t.index ["projekt_phase_id", "kind", "position"], name: "idx_urc_phase_kind_position"
     t.index ["projekt_phase_id", "position"], name: "idx_pf_proposal_criteria_phase_position"
     t.index ["projekt_phase_id"], name: "index_user_resource_criteria_on_projekt_phase_id"
   end

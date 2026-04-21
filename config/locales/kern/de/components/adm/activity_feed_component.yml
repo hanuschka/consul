@@ -1,0 +1,13 @@
+de:
+  components:
+    adm:
+      activity_feed_component:
+        activity_title: "Aktivitäten"
+        activity_unknown_user: "Unbekannt"
+        activity_has: "hat"
+        activity_action_created: "erstellt"
+        activity_action_updated: "aktualisiert"
+        activity_action_deleted: "gelöscht"
+        activity_action_published: "veröffentlicht"
+        activity_action_archived: "archiviert"
+        activity_time_ago: "vor %{time}"

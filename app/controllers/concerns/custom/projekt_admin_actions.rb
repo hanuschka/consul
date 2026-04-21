@@ -165,20 +165,6 @@ module ProjektAdminActions
     render json: { show_content_background: @projekt.show_content_background }
   end
 
-  def convert_to_new_content_block_mode
-    authorize!(:edit, @projekt)
-
-    result = Projekts::ConvertToNewContentBlockMode.call(projekt: @projekt)
-
-    if result.success?
-      flash[:notice] = I18n.t("custom.projekts.page.convert_to_content_blocks.success")
-    else
-      flash[:error] = I18n.t("custom.projekts.page.convert_to_content_blocks.error")
-    end
-
-    redirect_to page_path(@projekt.page.slug)
-  end
-
   private
 
     def projekt_params

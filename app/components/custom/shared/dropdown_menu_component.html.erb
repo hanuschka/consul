@@ -4,7 +4,11 @@
   </div>
   <div class="dropdown-menu-list">
     <% options.each do |option| %>
-      <div class="js-dropdown-menu-item dropdown-menu-item <%= @item_css_class %>" >
+      <div
+        class="js-dropdown-menu-item dropdown-menu-item <%= @item_css_class %>"
+        title="<%= @title %>"
+        aria-label="<%= @title %>"
+       >
         <%= option %>
       </div>
     <% end %>

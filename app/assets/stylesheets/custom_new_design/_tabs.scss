@@ -81,6 +81,8 @@
 
     &.-selected {
       background-color: #BFCDDB;
+      font-weight: bold;
+      border-bottom: 3px solid var(--brand-color);
     }
 
     &:last-child {

@@ -1,0 +1,110 @@
+.projekt-content-block--toolbar-border {
+  width: 98.5%;
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 0 auto;
+  margin-bottom: 12px;
+}
+
+.projekt-content-block--toolbar {
+  // margin-top: 15px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 3px 10px;
+  padding-right: 5px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.projekt-content-block-wrapper.-in-edit-mode {
+  .relative {
+    overflow: visible;
+  }
+
+  .projekt-content-block--toolbar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: $topbar-height + 10px;
+    outline: 2px solid #c9dced;
+    // box-shadow: 2px 2px 10px #c9dcedba;
+    // box-shadow: 1px 1px 8px #c9dced99;
+    z-index: 10;
+  }
+}
+
+body:has(.projekt-page--admin-topbar) {
+  .projekt-content-block-wrapper.-in-edit-mode {
+    .projekt-content-block--toolbar {
+      top: $topbar-height + $admin-topbar-height + 10px;
+    }
+  }
+}
+.projekt-content-block--default-notification {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  padding: 2px 0px;
+  color: #2e7d32;
+}
+
+.projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {
+  display: none;
+}
+
+.content-block--item-action-wrapper {
+  list-style: none;
+  margin-bottom: 10px;
+  max-height: 55px;
+
+  &.column {
+    height: 55px;
+
+    .content-block--item-action-wrapper--inner {
+      gap: 10px;
+    }
+  }
+}
+
+.content-block--item-action-wrapper--inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  // min-height: 80px;
+  gap: 5px;
+  flex-wrap: wrap;;
+}
+
+.content-block--item-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+  font-size: 15px;
+  border-radius: 10px;
+  color: $dt-base;
+  padding: 10px 15px;
+  background-color: #cce2f6 !important;
+
+  i {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: #b5d0e9 !important;
+  }
+
+  &.-delete {
+    color: #a41717;
+
+    &:hover {
+      background-color: #ffdede !important;
+    }
+  }
+}
+

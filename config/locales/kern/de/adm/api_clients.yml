@@ -1,0 +1,64 @@
+de:
+  adm:
+    api_clients:
+      flash:
+        created: API-Client erfolgreich erstellt
+        updated: API-Client erfolgreich aktualisiert
+        deleted: API-Client erfolgreich gelöscht
+        token_regenerated: API-Token erfolgreich erneuert
+      access_level:
+        public_data: Öffentliche Daten
+        admin: Admin
+      index:
+        title: API-Clients
+        intro: >
+          API-Clients ermöglichen externen Anwendungen den Zugriff auf Ihre Plattform über eine REST-Schnittstelle. Jeder Client erhält einen eindeutigen Token zur Authentifizierung sowie einen Service-Benutzer, der als Autor für erstellte Inhalte fungiert. Sie können festlegen, ob ein Client nur lesend oder mit vollständigen Schreibrechten auf die Plattform zugreift.
+        create_new: Neuen API-Client erstellen
+        api_docs_link: API-Dokumentation
+        id: API-Client ID
+        no_api_clients: Keine API-Clients vorhanden.
+        delete_confirm: >
+          Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
+      new:
+        title: Neuen API-Client erstellen
+      edit:
+        title: API-Client bearbeiten
+      show:
+        auth_token_explanation_text: >
+          Fügen Sie diesen Token im Authorization-Header Ihrer
+          API-Anfragen ein. Verwenden Sie ihn als Bearer-Token
+          im Format: Authorization: Bearer IHR_AUTH_TOKEN_HIER
+        auth_token_example_title: "HTTP-Beispiel:"
+        auth_token_example: "Authorization: Bearer IHR_AUTH_TOKEN_HIER"
+        service_user_title: Service-Benutzer
+        service_user_name: Name
+        service_user_login_warning: >
+          Hinweis: Sie sollten sich nicht direkt mit diesem
+          Service-Benutzer anmelden. Verwenden Sie stattdessen
+          die API-Authentifizierungsmethoden.
+        service_user_warning_title: Hinweis
+      form:
+        name_description: >
+          Vergeben Sie einen eindeutigen Namen für diesen API-Client. Der Name dient zur Identifikation in der Übersicht und wird außerdem zur automatischen Erstellung eines Service-Benutzernamens verwendet. Wählen Sie einen aussagekräftigen Namen, der den Verwendungszweck des Clients beschreibt — z.B. „Website-Frontend" oder „Mobile-App".
+        access_level_description: >
+          Legt fest, welche Berechtigungen der API-Client erhält. „Öffentliche Daten" erlaubt ausschließlich lesenden Zugriff auf öffentlich verfügbare Inhalte (nur GET-Anfragen). „Admin" gewährt vollständigen Zugriff zum Abrufen, Erstellen, Aktualisieren und Löschen aller Ressourcen. Verwenden Sie die Admin-Stufe nur, wenn der Client tatsächlich schreibenden Zugriff benötigt.
+        service_user_explanation: >
+          Dieser Service-Benutzer ist mit diesem API-Client verknüpft
+          und wird für die API-Authentifizierung verwendet.
+        service_user_email_description: >
+          Geben Sie eine gültige E-Mail-Adresse für das automatisch erstellte Service-Benutzerkonto an. Der Service-Benutzer wird als Autor für alle Inhalte verwendet, die über diesen API-Client erstellt werden — z.B. Vorschläge, Kommentare oder Abstimmungen. Die Adresse muss eindeutig sein und darf nicht bereits von einem anderen Konto verwendet werden.
+        service_user_form_title: Service-Benutzerinformationen aktualisieren
+        service_user_avatar_title: Avatar
+        service_user_background_image_title: Hintergrundbild
+        service_user_errors_message: "%{count} Fehler"
+        service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
+        update_service_user: Service-Benutzer aktualisieren
+        regenerate_token: Token erneuern
+        regenerate_token_explanation: >
+          Erstellt einen neuen Token und macht den aktuellen ungültig.
+          Verwenden Sie dies, wenn der Token kompromittiert wurde oder
+          um die Anmeldedaten regelmäßig zu aktualisieren.
+        regenerate_token_confirmation: >
+          Sind Sie sicher, dass Sie diesen Token erneuern möchten?
+          Alle bestehenden Integrationen, die den alten Token verwenden,
+          funktionieren nicht mehr.

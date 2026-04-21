@@ -3,6 +3,7 @@ class TopicsController < ApplicationController
 
   before_action :load_community
   before_action :load_topic, only: [:show, :edit, :update, :destroy, :hide, :restore]
+  before_action :ensure_communitable_exists
 
   has_orders %w[most_voted newest oldest], only: :show
 
@@ -79,6 +80,18 @@ class TopicsController < ApplicationController
 
     def load_community
       @community = Community.find(params[:community_id])
+    end
+
+    def ensure_communitable_exists
+      @communitable_resource =
+        if current_user&.administrator?
+          Proposal.with_hidden.find_by(community_id: @community.id) ||
+            Budget::Investment.with_hidden.find_by(community_id: @community.id)
+        else
+          @community.communitable
+        end
+
+      raise ActiveRecord::RecordNotFound if @communitable_resource.blank?
     end
 
     def load_topic

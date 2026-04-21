@@ -2,7 +2,15 @@ namespace :stats do
   desc "Generates stats which are not cached yet"
   task generate: :environment do
     ApplicationLogger.new.info "Updating budget and poll stats"
-    admin_ability = Ability.new(Administrator.first.user)
+
+    admin_user = Administrator.first&.user
+
+    if admin_user.blank?
+      ApplicationLogger.new.info "No administrator found, skipping stats generation"
+      next
+    end
+
+    admin_ability = Ability.new(admin_user)
 
     Budget.accessible_by(admin_ability, :read_stats).find_each do |budget|
       Budget::Stats.new(budget).generate

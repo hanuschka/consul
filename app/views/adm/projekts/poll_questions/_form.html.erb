@@ -1,0 +1,132 @@
+<%= form_with model: question, url: url do |f| %>
+  <%= render "shared/errors", resource: question %>
+
+  <%= f.hidden_field :poll_id, value: question.poll.id %>
+
+  <% if params[:parent_question_id].present? || question.parent_question_id.present? %>
+    <%= f.hidden_field :parent_question_id, value: (params[:parent_question_id].presence || question.parent_question_id) %>
+  <% end %>
+
+  <% if params[:bundle_question] == "true" || question.bundle_question? %>
+    <%= f.hidden_field :bundle_question, value: true %>
+  <% end %>
+
+  <% is_bundle = params[:bundle_question] == "true" || question.bundle_question? %>
+
+  <%= render Kern::FormFieldComponent.new(
+    label: Poll::Question.human_attribute_name(:intro),
+    hint: is_bundle ? t(".bundle_intro_hint") : t(".intro_hint"),
+    stacked: true) do %>
+    <%= f.rich_text_area :intro, label: false %>
+  <% end %>
+
+  <% title_label = is_bundle ? t(".bundle_title") : Poll::Question.human_attribute_name(:title) %>
+  <% title_hint = is_bundle ? t(".bundle_title_hint") : t(".title_hint") %>
+  <%= render Kern::FormFieldComponent.new(
+    label: title_label,
+    hint: title_hint,
+    stacked: true) do %>
+    <%= f.text_field :title, label: false, placeholder: is_bundle ? t(".bundle_title_placeholder") : t(".title_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(
+    label: Poll::Question.human_attribute_name(:description),
+    hint: is_bundle ? t(".bundle_description_hint") : t(".description_hint"),
+    stacked: true) do %>
+    <%= f.rich_text_area :description, label: false %>
+  <% end %>
+
+  <% unless is_bundle %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question.human_attribute_name(:answer_mandatory),
+      hint: t(".answer_mandatory_hint")) do %>
+      <%= f.check_box :answer_mandatory %>
+    <% end %>
+  <% end %>
+
+  <% unless is_bundle %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question.human_attribute_name(:show_images),
+      hint: t(".show_images_hint")) do %>
+      <%= f.check_box :show_images %>
+    <% end %>
+  <% end %>
+
+  <% if @context_sources.any? && question.parent_question.blank? %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question.human_attribute_name(:contextualize_by_poll_question_id)) do %>
+      <%= f.collection_radio_buttons :contextualize_by_poll_question_id,
+            [["", t(".no_contextualization")]] + @context_sources.map { |q| [q.id, q.title] },
+            :first, :last %>
+    <% end %>
+  <% end %>
+
+  <% unless params[:bundle_question] == "true" || question.bundle_question? %>
+    <% votation_type = question.votation_type || question.build_votation_type %>
+    <%= f.fields_for :votation_type, votation_type do |vf| %>
+      <div data-controller="adm-poll-questions--votation-type">
+        <%= render Kern::FormFieldComponent.new(label: VotationType.human_attribute_name(:vote_type), hint: t(".vote_type_hint")) do %>
+          <%= vf.select :vote_type,
+                VotationType.vote_types.keys.map { |vt| [I18n.t("activerecord.attributes.votation_type/vote_type.#{vt}"), vt] },
+                {}, { label: false, data: { action: "adm-poll-questions--votation-type#toggle" } } %>
+        <% end %>
+
+        <div data-adm-poll-questions--votation-type-target="maxVotes" style="<%= 'display:none' unless VotationType.allowing_multiple_answers.include?(votation_type.vote_type) %>">
+          <%= render Kern::FormFieldComponent.new(
+            label: VotationType.human_attribute_name(:max_votes),
+            hint: t(".max_votes_hint")) do %>
+            <%= vf.number_field :max_votes, min: 2, max: 999, value: (votation_type.max_votes.presence || 3), label: false %>
+          <% end %>
+        </div>
+
+        <div data-adm-poll-questions--votation-type-target="maxVotesPerAnswer" style="<%= 'display:none' unless votation_type.vote_type == 'multiple_with_weight' %>">
+          <%= render Kern::FormFieldComponent.new(
+            label: VotationType.human_attribute_name(:max_votes_per_answer),
+            hint: t(".max_votes_per_answer_hint")) do %>
+            <%= vf.number_field :max_votes_per_answer, class: "kern-input", value: (votation_type.max_votes_per_answer.presence || 3), label: false %>
+          <% end %>
+        </div>
+
+        <div data-adm-poll-questions--votation-type-target="ratingScaleLabels" style="<%= 'display:none' unless votation_type.vote_type == 'rating_scale' %>">
+          <%= render Kern::FormFieldComponent.new(
+            label: VotationType.human_attribute_name(:min_rating_scale_label),
+            hint: t(".min_rating_scale_label_hint")) do %>
+            <%= vf.text_field :min_rating_scale_label, class: "kern-input", label: false, placeholder: t(".min_rating_scale_placeholder") %>
+          <% end %>
+
+          <%= render Kern::FormFieldComponent.new(
+            label: VotationType.human_attribute_name(:max_rating_scale_label),
+            hint: t(".max_rating_scale_label_hint")) do %>
+            <%= vf.text_field :max_rating_scale_label, class: "kern-input", label: false, placeholder: t(".max_rating_scale_placeholder") %>
+          <% end %>
+        </div>
+
+        <% unless question.parent_question_id.present? %>
+          <%= render Kern::FormFieldComponent.new(
+            label: VotationType.human_attribute_name(:show_hint_callout),
+            hint: t(".show_hint_callout_hint"),
+            stacked: true) do %>
+            <div class="mb-4">
+              <%= kern_alert(title: t(".votation_type_hint_title"), style: :info) do %>
+                <% VotationType.vote_types.keys.each do |vt| %>
+                  <div data-adm-poll-questions--votation-type-target="hint"
+                       data-vote-type="<%= vt %>"
+                       style="<%= 'display:none' unless votation_type.vote_type == vt %>">
+                    <p class="kern-body"><%= t(".votation_type_hints.#{vt}") %></p>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+            <%= vf.check_box :show_hint_callout %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="d-flex gap-2 mb-4">
+    <%= kern_button(text: t("shared.submit"), icon: "save", type: "submit") %>
+    <%= kern_link_button(poll_questions_adm_projekts_phase_path(@projekt_phase),
+          text: t("shared.cancel"), style: :secondary) %>
+  </div>
+<% end %>

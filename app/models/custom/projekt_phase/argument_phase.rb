@@ -1,6 +1,6 @@
 class ProjektPhase::ArgumentPhase < ProjektPhase
   has_many :projekt_arguments, foreign_key: :projekt_phase_id,
-    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+    dependent: :destroy, inverse_of: :projekt_phase
 
   def title
     phase_tab_name.presence || I18n.t("custom.admin.projekt_phases.projekt_arguments.projekt_phase_default_title")
@@ -22,8 +22,14 @@ class ProjektPhase::ArgumentPhase < ProjektPhase
     projekt_arguments.count
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "projekt_arguments"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[naming].push(resources_name)
+    %w[naming].push(resources_name, "email_templates")
   end
 
   def safe_to_destroy?

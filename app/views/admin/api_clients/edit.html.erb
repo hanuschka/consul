@@ -1,0 +1,81 @@
+<%= back_link_to admin_api_clients_path %>
+
+<h2><%= t("admin.api_clients.form.edit_title") %></h2>
+
+<div class="medium-5">
+  <%= render "form" %>
+
+  <% if @api_client.user.present? %>
+    <hr style="margin-top: 32px; margin-bottom: 32px;">
+
+    <h3><%= t("admin.api_clients.form.service_user_form_title") %></h3>
+
+    <div style="margin-bottom: 20px; padding: 12px; background-color: #f0f4f8; border-left: 4px solid #003A71; border-radius: 4px;">
+      <p style="margin: 0; font-size: 14px; color: #333;">
+        <%= t("admin.api_clients.form.service_user_explanation") %>
+      </p>
+    </div>
+
+    <div style="margin-top: 32px;margin-bottom:20px">
+      <h4><%= t("admin.api_clients.form.service_user_avatar_title") %></h4>
+    </div>
+    <%= form_for [:admin, @api_client.user], local: true do |f| %>
+      <% if @api_client.user.errors.any? %>
+        <div id="error_explanation" class="callout alert">
+          <h4><%= t("admin.api_clients.form.service_user_errors_message", count: @api_client.user.errors.count) %> <%= t("admin.api_clients.form.service_user_errors_title") %></h4>
+          <ul>
+            <% @api_client.user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @api_client.user.image.blank? %>
+        <% @api_client.user.build_image %>
+      <% end %>
+
+      <% if @api_client.user.image.present? && @api_client.user.image.attachment.present? %>
+        <div style="margin-bottom: 16px;">
+          <img
+            src="<%= url_for(@api_client.user.image.attachment) %>"
+            alt="<%= @api_client.user.name %>"
+            style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;"
+          />
+        </div>
+      <% end %>
+
+      <%= f.fields_for :image do |image_builder| %>
+        <div style="margin-bottom: 16px;">
+          <%= image_builder.file_field :attachment, accept: "image/*", style: "padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+        </div>
+      <% end %>
+
+      <div style="margin-top: 32px;margin-bottom:20px">
+        <h4><%= t("admin.api_clients.form.service_user_background_image_title", default: "Background Image") %></h4>
+      </div>
+
+      <% if @api_client.user.background_image.attached? %>
+        <div style="margin-bottom: 16px;">
+          <img
+            src="<%= url_for(@api_client.user.background_image) %>"
+            alt="<%= @api_client.user.name %> background"
+            style="width: 100%; max-width: 300px; height: auto; border-radius: 4px; border: 2px solid #ddd;"
+          >
+        </div>
+      <% end %>
+
+      <div style="margin-bottom: 16px;">
+        <%= f.file_field :background_image, accept: "image/*", style: "padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+      </div>
+
+      <%= f.text_field :username, placeholder: User.human_attribute_name(:username) %>
+      <%= f.text_field :first_name, placeholder: User.human_attribute_name(:first_name) %>
+      <%= f.text_field :last_name, placeholder: User.human_attribute_name(:last_name) %>
+
+      <div style="clear: both; margin-top: 16px;">
+        <%= f.submit t("admin.api_clients.form.update_service_user"), class: "button success" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -20,22 +20,3 @@
 <% end %>
 
 <%= render "custom/admin/site_customization/content_blocks/form_content_block" %>
-
-<% if embedded? %>
-  <% back_url = params[:return_to] %>
-
-  <% content_for :admin_frame_top_navigation do %>
-    <%= render Admin::Frame::NavigationComponent.new(title: t("admin.site_customization.content_blocks.edit.title")) do |c| %>
-      <% c.with_navigation_content do %>
-        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
-      <% end %>
-    <% end %>
-  <% end %>
-  <%= content_for :admin_frame_bottom_navigation do %>
-    <%= render Admin::Frame::NavigationComponent.new do |c| %>
-      <% c.with_navigation_content do %>
-        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>

@@ -46,7 +46,7 @@
 //     border-bottom: 1px solid $border-color;
 //
 //     i {
-//       color: $brand;
+//       color: var(--brand-color);
 //       font-size: inherit;
 //       padding-right: 7px;
 //     }
@@ -71,7 +71,7 @@
 //   }
 //
 //   .mobile-filter--section-title-icon {
-//     color: $brand;
+//     color: var(--brand-color);
 //     padding-right: 10px;
 //   }
 // }

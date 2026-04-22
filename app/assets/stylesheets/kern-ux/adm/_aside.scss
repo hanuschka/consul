@@ -6,6 +6,12 @@ aside {
   padding: var(--kern-metric-space-default) var(--kern-metric-space-x-small) 0;
   background-color: var(--kern-custom-white);
 
+  @media (min-width: 992px) {
+    height: auto;
+    min-height: 100%;
+    overflow-y: visible;
+  }
+
   .adm-menu {
     flex: 1;
     overflow-y: auto;

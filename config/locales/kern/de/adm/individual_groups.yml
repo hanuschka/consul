@@ -26,7 +26,7 @@ de:
           actions: Aktionen
           edit: Bearbeiten
           delete: Löschen
-          yes: Ja
+          "yes": Ja
           "no": Nein
           delete_confirm: Sind Sie sicher, dass Sie diese Gruppe löschen möchten?
           kinds:

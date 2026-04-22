@@ -1,0 +1,19 @@
+en:
+  adm:
+    projekt_labels:
+      new:
+        title: Create new label
+      edit:
+        title: Edit label
+      create:
+        success: Label created successfully.
+      update:
+        success: Label updated successfully.
+      destroy:
+        success: Label deleted successfully.
+      form:
+        name_label: Name
+        name_hint: Enter the name of the label.
+        icon_label: Icon
+        icon_hint: Choose an icon for the label.
+        submit: Save

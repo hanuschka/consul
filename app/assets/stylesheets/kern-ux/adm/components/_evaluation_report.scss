@@ -10,6 +10,9 @@ $er-max-tabs: 8;
     padding: 1rem 1.25rem;
     margin-bottom: 1rem;
     box-shadow: none;
+  }
+
+  .phase-block ~ .phase-block {
     break-before: page;
     page-break-before: always;
   }

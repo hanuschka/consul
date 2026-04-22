@@ -19,6 +19,9 @@
       App.NewSortable.initialize();
       App.DropdownMenuComponent.initialize();
       App.SidebarFilterComponent.initialize();
+      App.SliderThumbsSync.initialize();
+      App.SliderPeek.initialize();
+      App.SliderFullwidth.initialize();
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();

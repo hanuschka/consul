@@ -138,6 +138,44 @@
 }
 
 
+.custom-content-template--visibility-badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.custom-content-template--badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+
+  i {
+    font-size: 10px;
+  }
+
+  &.-hidden {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.-hidden-until {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}
+
 .custom-content-template--item-actions {
   display: flex;
   flex-direction: column;

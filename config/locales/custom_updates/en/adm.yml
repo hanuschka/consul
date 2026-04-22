@@ -1,6 +1,7 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    ai_required_note: This feature is only available when AI is enabled.
     projekts:
       phases:
         ai_user_flow:

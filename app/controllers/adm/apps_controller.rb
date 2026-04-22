@@ -27,13 +27,18 @@ module Adm
         category: "Künstliche Intelligenz",
         icon: "smart_toy",
         apps: [
-          { codename: App::VOICE_ASSISTANT_CODENAME,
+          { codename: "voice_assistant",
             icon: "record_voice_over",                                             name: "Voice Assistant",        description: "Beiträge und Mängelanzeigen per Spracheingabe einreichen. Senkt die Einstiegshürde und macht digitale Beteiligung für alle zugänglich." },
-          { logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome",    name: "AI-Projektassistent",    description: "Unterstützt Verwaltungsmitarbeitende beim Anlegen neuer Beteiligungsprojekte – von Beschreibung bis Zeitplan." },
-          { logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent",   name: "AI-Nutzerhelfer",        description: "Beantwortet Bürgerfragen zur Plattform und zu laufenden Projekten direkt im Chatfenster." },
-          { logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb",       name: "AI-Vorschlagsgenerator", description: "Hilft Bürgerinnen und Bürgern, ihre Ideen als strukturierte Vorschläge zu formulieren." },
-          { logo: "adm/apps/logo_ai_evaluation_phases.png", icon: "analytics",       name: "AI-Auswertung",          description: "Fasst eingegangene Beiträge thematisch zusammen und erstellt automatische Auswertungsberichte." },
-          { logo: "adm/apps/logo_ai_project_chat.png",      icon: "forum",           name: "AI-Diskussionsbegleiter", description: "Moderiert Kommentarbereiche, erkennt thematische Cluster und gibt Zusammenfassungen der Debatte." }
+          { codename: "ai_project_assistant",
+            logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome",    name: "AI-Projektassistent",    description: "Unterstützt Verwaltungsmitarbeitende beim Anlegen neuer Beteiligungsprojekte – von Beschreibung bis Zeitplan." },
+          { codename: "ai_user_help",
+            logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent",   name: "AI-Nutzerhelfer",        description: "Beantwortet Bürgerfragen zur Plattform und zu laufenden Projekten direkt im Chatfenster." },
+          { codename: "ai_proposal_generator",
+            logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb",       name: "AI-Vorschlagsgenerator", description: "Hilft Bürgerinnen und Bürgern, ihre Ideen als strukturierte Vorschläge zu formulieren." },
+          { codename: "ai_evaluation",
+            logo: "adm/apps/logo_ai_evaluation_phases.png", icon: "analytics",       name: "AI-Auswertung",          description: "Fasst eingegangene Beiträge thematisch zusammen und erstellt automatische Auswertungsberichte." },
+          { codename: "ai_discussion_companion",
+            logo: "adm/apps/logo_ai_project_chat.png",      icon: "forum",           name: "AI-Diskussionsbegleiter", description: "Moderiert Kommentarbereiche, erkennt thematische Cluster und gibt Zusammenfassungen der Debatte." }
         ]
       },
       {
@@ -90,19 +95,32 @@ module Adm
       authorize [:adm, :apps]
       @breadcrumbs = [{ name: t("adm.apps.show.title"), icon: "dashboard" }]
 
-      db_apps = App.all.index_by(&:codename)
-
       @categories = APP_CATALOG.map do |cat|
         apps = cat[:apps].map do |app_def|
-          codename = app_def[:codename]
-          record   = codename ? db_apps[codename] : nil
-          status   = record ? record.status : "inactive"
-
-          app_def.merge(status: status)
+          app_def.merge(status: app_status(app_def[:codename]))
         end
 
         cat.merge(apps: apps)
       end
     end
+
+    private
+
+      AI_DEPENDENT_CODENAMES = %w[
+        voice_assistant
+        ai_project_assistant
+        ai_user_help
+        ai_proposal_generator
+        ai_evaluation
+        ai_discussion_companion
+      ].freeze
+
+      def app_status(codename)
+        if AI_DEPENDENT_CODENAMES.include?(codename)
+          return Ai::Settings.ai_available? ? "active" : "inactive"
+        end
+
+        "inactive"
+      end
   end
 end

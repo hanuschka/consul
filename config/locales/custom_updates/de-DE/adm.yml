@@ -1,5 +1,6 @@
 de:
   adm:
+    ai_required_note: Diese Funktion ist nur verfügbar, wenn die KI aktiviert ist.
     projekts:
       phases:
         ai_user_flow:

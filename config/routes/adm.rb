@@ -98,6 +98,7 @@ namespace :adm do
   resources :global_email_templates, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
+  resource :matomo, controller: "matomo", only: [:show]
   resource :apps, controller: "apps", only: [:show]
   resource :connection, controller: "connection", only: [:show]
   get "connect", to: "connection#show"

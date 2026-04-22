@@ -2,6 +2,8 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
   include Pagy::Backend
 
   def index
+    authorize Idea::Officer, policy_class: Adm::Ideas::OfficerPolicy
+
     @pagy, @officers = pagy(
       policy_scope(Idea::Officer, policy_scope_class: Adm::Ideas::OfficerPolicy::Scope)
         .joins(:user)

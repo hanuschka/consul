@@ -51,6 +51,12 @@ en:
           remove_link: Remove link
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
+        convert_to_content_blocks:
+          button: Convert to new content block mode
+          tooltip: Convert the legacy page content into an editable content block and switch to the new mode
+          confirm: Convert the page content into a content block and switch to the new mode?
+          success: Successfully converted to content block mode
+          error: Conversion failed
         topbar:
           admin_view: Admin view
           user_view: User view

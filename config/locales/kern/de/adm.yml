@@ -25,6 +25,7 @@ de:
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
           email_templates: System-E-Mails
+          matomo: Matomo
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen

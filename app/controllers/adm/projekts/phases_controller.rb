@@ -58,6 +58,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def naming
     authorize_phase(:update?)
+
+    if @projekt_phase.name == "voting_phase"
+      poll = @projekt_phase.poll
+      image = poll.image || poll.build_image(user: current_user)
+      @poll_image = image if Adm::ImagePolicy.new(current_user, image).update?
+      @poll_image&.save!(validate: false) if @poll_image&.new_record?
+    end
+
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },

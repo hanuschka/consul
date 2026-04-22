@@ -1,0 +1,69 @@
+en:
+  adm:
+    recipient_groups:
+      index:
+        title: Recipient groups
+        new_recipient_group: Create new recipient group
+        intro_text_p1: >
+          Recipient groups determine which users receive a newsletter. You can compose groups based on
+          user roles or project-related criteria — for example, all subscribers of a specific project,
+          authors of selected proposals, or all users who have consented to receive the newsletter.
+        intro_text_p2: >
+          Each newsletter is assigned to a recipient group when sent. The composition of the groups
+          controls whether a newsletter is sent broadly or specifically to a particular audience.
+          Recipient groups can be edited and reused at any time. If a desired recipient group is not
+          available in the selection menu, please contact demokratie.today to have the needed option
+          set up.
+        table:
+          name: Name
+          actions: Actions
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this recipient group?
+        empty_title: No recipient groups available
+        empty_description: Create a recipient group to send newsletters to specific audiences.
+      new:
+        title: Create recipient group
+        label_for_general: Recipient group type
+        label_for_projekt: Select project
+        label_for_projekt_phase: Select phase
+        hints:
+          label_for_general: >
+            Choose how the recipient group should be composed. Under "User roles" you can select e.g.
+            all users with consent or all administrators. Under "Project-related", the group is built
+            from a specific project and its participation phases — for example all subscribers or
+            authors of selected proposals.
+          label_for_projekt: >
+            Choose the project the recipient group should be built from. In the next step you can
+            select the participation phase and the desired recipient criterion — e.g. all subscribers
+            of the phase or authors of specific proposals.
+          label_for_projekt_phase: >
+            Choose the participation phase within the project. The available recipient criteria depend
+            on the phase type — for budget phases, for example, authors of feasible or selected
+            proposals are available; for other phases, the subscribers of the respective phase.
+        base_options_for_kind:
+          projekts: Projects
+          user_roles: User roles
+        select_options:
+          projekt_related: Project-related
+        access_methods:
+          newsletter_subscriber_ids: All users with consent
+          all_newsletter_subscriber_ids: All users with consent plus newsletter subscribers without an account
+          administrators_ids: Administrators
+          any_phase_subscribers_ids: Subscribers of all phases
+          authors_of_feasible_ids: Authors whose proposals meet the criteria
+          authors_of_unfeasible_ids: Authors whose proposals do not meet the criteria
+          authors_of_selected_ids: Authors whose proposals were selected for the voting phase
+          authors_of_not_winners_ids: Authors whose proposals did not win the final vote
+          authors_of_winners_ids: Authors whose proposals won the final vote
+      edit:
+        title: Edit recipient group
+        name_hint: The name of the recipient group is shown in the selection list when creating a newsletter. Choose a clear, descriptive name that makes the composition of the group easy to recognize, e.g. All subscribers, Registered users old town, or Participants climate protection project.
+        submit: Save
+      create:
+        success: Recipient group created successfully.
+      update:
+        success: Recipient group updated successfully.
+      destroy:
+        success: Recipient group deleted successfully.
+        restricted: This recipient group cannot be deleted because it's still used by newsletters.

@@ -1,0 +1,6 @@
+en:
+  components:
+    adm:
+      hint_component:
+        link_text: Hint
+        close: Close

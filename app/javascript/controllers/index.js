@@ -96,8 +96,14 @@ application.register("kern--form--image", KernFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
+import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
+application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
+
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
+
+import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
+application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
@@ -113,6 +119,9 @@ application.register("adm-column-selector", AdmColumnSelectorController)
 
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
+
+import AdmUserSelectController from "./adm/user_select_controller"
+application.register("adm-user-select", AdmUserSelectController)
 
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)

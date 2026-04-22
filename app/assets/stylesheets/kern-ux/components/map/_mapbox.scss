@@ -37,6 +37,67 @@
   }
 }
 
+// Layer control — needs position context so dropdown floats above other controls
+.mapbox-layer-control {
+  position: relative;
+  z-index: 1;
+}
+
+// Layer control dropdown
+.mapbox-layer-control-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  padding: 5px 0 7px;
+  background-color: var(--kern-color-white, #fff);
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.mapbox-layer-select-section {
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.mapbox-layer-select-section-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--kern-color-gray-700, #333);
+  padding: 4px 0;
+  margin: 0 15px;
+  border-bottom: 1px solid var(--kern-color-gray-200, #ddd);
+}
+
+.mapbox-layer-checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 4px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--kern-color-gray-700, #333);
+
+  input {
+    margin: 0 8px 0 0;
+  }
+
+  span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background-color: var(--kern-color-gray-100, #f4f4f4);
+  }
+}
+
 // Search control styling
 .mapboxgl-ctrl-geocoder {
   min-width: 200px;

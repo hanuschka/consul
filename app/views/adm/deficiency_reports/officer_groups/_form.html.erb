@@ -2,15 +2,19 @@
 <%= form_with model: @officer_group, url: url do |f| %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
-    <%= f.text_field :name, label: false %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_placeholder") %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".default_email_label"), hint: t(".default_email_hint")) do %>
-    <%= f.email_field :default_email, label: false %>
+    <%= f.email_field :default_email, label: false, placeholder: t(".default_email_placeholder") %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".officers_label"), hint: t(".officers_hint")) do %>
-    <%= f.collection_check_boxes :officer_ids, DeficiencyReport::Officer.all, :id, :name %>
+    <% if DeficiencyReport::Officer.any? %>
+      <%= f.collection_check_boxes :officer_ids, DeficiencyReport::Officer.all, :id, :name %>
+    <% else %>
+      <%= empty_state(title: t(".no_officers_title"), description: t(".no_officers_description"), icon: "person_off") %>
+    <% end %>
   <% end %>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>

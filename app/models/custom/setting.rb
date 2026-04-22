@@ -76,8 +76,11 @@ class Setting < ApplicationRecord
         "extended_option.gdpr.devise_verification_token_validity_days": 3,
         # gdpr
 
+        # newsletter
+        "advanced_newsletter": false,
+        # newsletter
 
-        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+        "extended_option.general.city_name": "Consul",
 
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,

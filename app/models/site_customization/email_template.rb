@@ -26,6 +26,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "Mailer#proposal_created" => {
       variables: %w[username proposal_title proposal_url]
     },
+    "Mailer#formular_answer_created" => {
+      variables: %w[username projekt_title phase_title]
+    },
     "NotificationServiceMailer#new_proposal" => {
       variables: %w[username proposal_title proposal_url]
     },

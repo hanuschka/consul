@@ -1,0 +1,376 @@
+en:
+  adm:
+    deficiency_reports:
+      home:
+        title: Welcome to the deficiency reporter
+        stats:
+          total: Total
+          new_this_week: New this week
+          open: Open
+          closed: Closed
+        quick_links:
+          all: All reports
+          open: Open reports
+          closed: Closed reports
+      menu:
+        aria_label: Deficiency reporter navigation
+        items:
+          home: Home
+          officers: Team
+          deficiency_reports: Reports
+          categories: Categories
+          statuses: Statuses
+          settings: Features
+          official_answer_templates: Response templates
+          districts: Areas
+          officer_groups: Officer groups
+          stats: Statistics
+          ai_settings: AI settings
+      deficiency_reports:
+        index:
+          title: Reports
+          page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
+          no_deficiency_reports: No deficiency reports available
+          no_items_title: No reports available
+          no_items_description: Reports will be shown here as soon as they are submitted.
+          table:
+            id: ID
+            admin_accepted: Visibility
+            created_at: Created on
+            title: Title
+            author: Author
+            status: Status
+            location: Location
+            district: District
+            category: Category
+            responsible: Officer
+        tabs:
+          show: Manage
+          administer: Administer
+          edit: Edit
+          audits: Change log
+          feedback_form: Feedback
+        show:
+          title: Deficiency report
+          section_admin: Administration
+          section_content: Report
+          edit: Edit
+          download_pdf: Download PDF
+          view_on_site: View on the website
+          admin_accepted_status: Approval
+          accepted: Approved
+          not_accepted: Not approved
+          status: Status
+          hidden_at: Hidden on
+          created_at: Created on
+          updated_at: Last updated
+          title_label: Title
+          description_label: Description
+          image_label: Image
+          documents_label: Documents
+          category: Category
+          map_label: Map
+          on_behalf_of_label: On behalf of
+          video_url: Video URL
+          address: Address
+          responsible_label: Officer
+          author: Author
+          votes: Ratings
+          comments: Comments
+          answer_template_label: Response template
+          answer_template_hint: >
+            Choose a pre-built response template to automatically insert the text into the response field. The template can then be customized individually. Response templates are managed under "Response templates" in the sidebar.
+          answer_template_prompt: "— Select template —"
+          official_answer: Official response
+          official_answer_hint: Please enter the official response for this deficiency report.
+        update_official_answer:
+          success: Official response updated successfully.
+        edit:
+          title: Edit deficiency report
+          no_category: "-- No category --"
+          labels:
+            title: Title
+            description: Description
+            image: Image
+            documents: Documents
+            video_url: Video URL
+            category: Category
+            map_location: Map location
+            on_behalf_of: On behalf of
+          hints:
+            title: The title of the report is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
+            description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the report. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
+            image: The image visually documents the reported deficiency and is shown on the public detail page of the report. A meaningful photo helps officers assess the deficiency faster and prioritize processing. Common image formats like JPG and PNG are supported.
+            documents: Here you can add supplementary documents like expert reports, plans, or reports to the report. The files are made available for download on the detail page and are visible to all users. Multiple documents can be uploaded at once to document the matter comprehensively.
+            video_url: Enter the URL of a video documenting the reported deficiency. The video is embedded on the public detail page of the report. Links from common video platforms like YouTube or Vimeo are supported. A video can illustrate the matter better than photos alone.
+            on_behalf_of: Enter the name of the person on whose behalf the report was created. This field is used when an officer or administrator records a report on behalf of a citizen. The name is shown on the detail page and helps with attribution of the report.
+            category: The category assigns the report to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
+        administer:
+          title: Administer
+          status: Status
+          status_hint: The status shows the current processing state of the report and is visibly displayed on the public detail page. A status change can automatically trigger an email notification to the creator. Certain statuses can also automatically archive the report, depending on the configuration of the status values.
+          responsible: Officer
+          responsible_hint: Assign a responsible officer or officer group to this report. The assigned officer receives email notifications on changes and can edit the report directly. For group entries, the group's default email is used for notifications.
+          no_status: No status
+          no_statuses_title: No status values available
+          no_statuses_description: First create status values under "Statuses" to be able to assign a processing state to reports.
+          officers: Officers
+          officer_groups: Officer groups
+          no_responsible: "-- No officer --"
+          no_officers_title: No officers available
+          no_officers_description: First create officers under "Officers" to be able to assign reports.
+        audits:
+          title: Change log
+        feedback_form:
+          title: Feedback form
+          created_at: Created on
+          for_report: For
+        settings:
+          title: Features
+      categories:
+        index:
+          title: Categories
+          page_hint: "Here you manage the categories for the deficiency reporter. Categories assign reports to thematic areas, e.g. road damage or lighting. Each category can have its own color, icon, and default officer. Use drag & drop to adjust the order. Categories with assigned reports cannot be deleted."
+          new_category: New category
+          no_categories: No categories available
+          no_items_title: No categories available
+          no_items_description: Create a new category to classify reports.
+          table:
+            name: Name
+            color: Color
+            icon: Icon
+            default_responsible: Default officer
+            warning_text: Popup
+            actions: Actions
+        new:
+          title: New category
+        create:
+          success: Category created successfully.
+        edit:
+          title: Edit category
+        update:
+          success: Category updated successfully.
+        destroy:
+          success: Category deleted successfully.
+          cannot_destroy: Category cannot be deleted because it still contains deficiency reports.
+        form:
+          name_label: Name
+          name_hint: The category name is shown on the frontend as a selectable option when creating a report and serves as thematic assignment. Choose a short, commonly understood term like road damage, lighting, or green spaces. The name also appears in the administration overview and in statistics as a filter.
+          color_label: Color
+          color_hint: The color is used as a visual marker of the category in the list view and on the map. It helps citizens and officers distinguish reports of different categories at a glance. Choose high-contrast colors that stand out clearly from one another to keep the list view readable.
+          icon_label: Icon
+          icon_hint: The icon is shown next to the category name in the report overview and on the map. It provides visual support to make the category quickly recognizable. Choose an icon that reflects the theme, e.g. a lightbulb for lighting or a tree for green spaces.
+          default_responsible_label: Default officer
+          default_responsible_hint: The default officer is automatically assigned as the responsible party when a new report is submitted in this category. This speeds up processing since no manual assignment is needed. If no default officer is set, the default officer of the respective area is used.
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: "-- No officer --"
+          warning_text_label: Popup
+          warning_text_hint: The popup text is shown to citizens as a notice when they select this category while creating a new report. Use this field to convey important information or warnings, e.g. notes about alternative reporting channels or special responsibilities. The popup appears directly after category selection.
+          submit: Save
+      statuses:
+        index:
+          title: Statuses
+          page_hint: "Here you manage the status values for the deficiency reporter. Each status has a title, a color, and an optional icon. You can define whether a status automatically archives reports and after how many days a reminder is sent to the officer. Use drag & drop to set the order of the status values."
+          new_status: New status
+          no_statuses: No statuses available
+          no_items_title: No statuses available
+          no_items_description: Create a new status to represent the processing progress of reports.
+          table:
+            title: Title
+            icon: Icon
+            color: Color
+            reminder_delay: Reminder (days)
+            archive_reports: Archive
+        new:
+          title: New status
+        create:
+          success: Status created successfully.
+        edit:
+          title: Edit status
+        update:
+          success: Status updated successfully.
+        destroy:
+          success: Status deleted successfully.
+          cannot_destroy: Status cannot be deleted because it still contains deficiency reports.
+        form:
+          title_label: Title
+          title_hint: The status title is used in the report overview and on the detail page as the status indicator. It should clearly describe the processing state, e.g. "In progress", "Done", or "Rejected". Citizens see this title on the public page, so it should be commonly understandable.
+          color_label: Color
+          color_hint: The color is used as a visual marker of the status in lists and on the detail page of the report. It helps distinguish different processing states at a glance. Choose high-contrast colors that stand out clearly from one another to keep the list view readable.
+          icon_label: Icon
+          icon_hint: The icon is shown next to the status name in the report overview and on the detail page. It provides visual support to make the processing state quickly recognizable. Choose an icon that reflects the status, e.g. a checkmark for completed or a clock for ongoing items.
+          reminder_delay_label: Reminder (days)
+          reminder_delay_hint: Enter the number of days after which an automatic reminder is sent to the responsible officer if the report remains in this status. A value of 0 disables the reminder. This setting helps track forgotten or stalled reports in time.
+          archive_reports_label: Archive
+          archive_reports_hint: When this option is enabled, reports are automatically archived as soon as they're moved to this status. Archived reports no longer appear in the active list view but remain stored in the system and can be viewed via the archive view. Typical for end statuses like "Done" or "Rejected".
+          notice_text_label: Email notification text
+          notice_text_hint: This text is sent as the content of the email notification to the report creator when the report transitions to this status. Phrase the text in a citizen-friendly and informative way so the reporter can understand the current state of their report. Leave the field empty to send no notification.
+          submit: Save
+      officers:
+        index:
+          title: Team
+          page_hint: "Here you manage the officers for the deficiency reporter. Officers can edit submitted reports, update the status, and write official responses. Use the search field to find registered users and assign them the officer role. Only already-registered users can be added as officers."
+          search_label: Search users
+          search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for the deficiency reporter. Officers process submitted reports, communicate with citizens, and update the processing status.
+          no_officers: No officers available
+          no_items_title: No officers available
+          no_items_description: Search for a user and assign the officer role.
+          table:
+            name: Name
+            email: Email
+            admin: Admin
+        officer:
+          add: Add
+        search:
+          table:
+            name: Name
+            email: Email
+        user_not_found:
+          user_not_found: User not found
+      districts:
+        index:
+          title: Areas
+          page_hint: "Here you see the areas taken over from registered addresses. A default officer or officer group can be assigned to each area. When a new report is submitted without a category-specific officer, the default officer of the respective area automatically takes responsibility."
+          no_districts: No areas available
+          no_items_title: No areas available
+          no_items_description: Areas are taken over from registered addresses and shown here.
+          table:
+            default_responsible: Default officer
+        edit:
+          title: Edit district
+          default_responsible_label: Default officer
+          default_responsible_hint: Set the default officer or officer group automatically responsible for new reports in this area. When a report is created without a category, or with a category that has no own officer, this default value is used. This ensures every report has an assignment.
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: "-- No officer --"
+          submit: Save
+        update:
+          success: District updated successfully.
+      official_answer_templates:
+        index:
+          title: Response templates
+          page_hint: "Here you manage response templates for official responses to deficiency reports. Templates speed up answering recurring inquiries by letting officers choose from predefined text blocks when writing a response. The text can be customized before sending."
+          new_template: New response template
+          no_templates: No response templates available
+          no_items_title: No response templates available
+          no_items_description: Create a new response template to write frequently used responses faster.
+          table:
+            title: Title
+            text: Text
+        new:
+          title: New response template
+        create:
+          success: Response template created successfully.
+        edit:
+          title: Edit response template
+        update:
+          success: Response template updated successfully.
+        form:
+          title_label: Title
+          title_hint: The title of the response template serves as an internal label and is shown in the selection list when an officer writes an official response to a report. Choose a meaningful title that briefly describes the content of the template, e.g. "Standard response road damage" or "Feedback green space".
+          title_placeholder: e.g. Standard response road damage
+          text_label: Text
+          text_hint: The text of the response template is inserted as default content into the response field when an officer selects this template. The text can be customized before sending. Phrase the text in a citizen-friendly and factual way, since it appears publicly on the report as the administration's official response.
+          text_placeholder: Your response template...
+          submit: Save
+      officer_groups:
+        index:
+          title: Officer groups
+          page_hint: "Here you manage officer groups for the deficiency reporter. Groups bundle multiple officers and can be assigned to categories or areas as responsible parties. Each group has a default email address for notifications. Reports are then automatically routed to the right team."
+          new_officer_group: New officer group
+          no_officer_groups: No officer groups available
+          no_items_title: No officer groups available
+          no_items_description: Create a new officer group to organize officers.
+          table:
+            name: Name
+            officers: Officers
+            default_email: Default email
+        new:
+          title: New officer group
+        create:
+          success: Officer group created successfully.
+        edit:
+          title: Edit officer group
+        update:
+          success: Officer group updated successfully.
+        destroy:
+          success: Officer group deleted successfully.
+        form:
+          name_label: Name
+          name_hint: The name of the officer group is shown in selection lists when reports are assigned to a responsible processor. Choose a unique and descriptive name, e.g. "Public works office" or "Green space maintenance". The name is visible only internally and is not shown on the public side of the report.
+          name_placeholder: e.g. Public works office
+          default_email_label: Default email
+          default_email_hint: The default email address is used for all notifications sent to this officer group, e.g. for new reports or status changes. Ideally use a functional address like roads@city.com so notifications are delivered independently of individual people.
+          default_email_placeholder: e.g. roads@city.com
+          officers_label: Officers
+          officers_hint: Select the officers who should be members of this group. All selected people can process reports assigned to this group. Group membership influences which reports appear in the officer's personal overview and which notifications they receive.
+          no_officers_title: No officers available
+          no_officers_description: First create officers under "Officers" before you can assign them to a group.
+          submit: Save
+      stats:
+        show:
+          title: Statistics
+          sections:
+            overview: Overview
+            satisfaction: Satisfaction
+            charts: Trend & distribution
+            details: Detail tables
+          cards:
+            total: Reports total
+            open: Open
+            new_this_week: New this week
+            new_this_month: New this month
+            unassigned: Unassigned
+            feedback_count: Ratings
+            satisfaction_avg: Avg. satisfaction
+            response_time_avg: Avg. response time
+            communication_avg: Avg. communication
+          charts:
+            reports_per_month: Reports per month
+            by_status: Distribution by status
+            by_category: Distribution by category (Top 10)
+          periods:
+            week: Week
+            month: Month
+            year: Year
+          type:
+            status: Status
+            category: Category
+            responsible: Officer
+          total: Total time
+          this_week: This week
+          last_week: Last week
+          this_month: This month
+          last_month: Last month
+          this_year: This year
+          last_year: Last year
+          satisfaction: Satisfaction
+          response_time: Response time
+          communication: Courtesy
+          without_status: Without status
+          total_row: Total
+      ai_settings:
+        show:
+          title: AI voice assistant
+          page_hint: "Here you configure the AI assistant for the deficiency reporter. The AI automatically analyzes incoming reports based on the defined questions and criteria. Adjust the questions, evaluation criteria, and closing remarks to tailor the automatic analysis to your needs. Empty fields use the default values."
+          questions: Questions
+          questions_hint: Define the questions here that the AI assistant should take into account when analyzing incoming reports. These questions control what information is extracted from the report and evaluated. Leave the field empty to use the default questions shown in the placeholder. Multiple questions can be listed one per line.
+          criteria: Criteria
+          criteria_hint: Set the evaluation criteria the AI assistant uses to categorize and prioritize reports. The criteria determine how the AI assesses the urgency and relevance of a report. Leave the field empty to use the default criteria shown in the placeholder. Clear and precise criteria improve the quality of the analysis.
+          parting_words: Closing remarks
+          parting_words_hint: The closing remarks are appended by the AI assistant at the end of each automatic analysis. Use this field to provide additional notes or context information that guides the AI when summarizing. Leave the field empty to use the default phrasings shown in the placeholder.
+          update_button: Save
+          not_connected: AI app is not connected
+          not_connected_description: To use this feature, the AI app must first be enabled by demokratie.today. Please contact your demokratie.today representative.
+      deficiency_report_audits:
+        show:
+          title: Change details
+          back: Back
+          audit_details: Change details
+          edited_at: Edited on
+          edited_by: Edited by
+          changes: Changes
+          field: Field
+          old_value: Old value
+          new_value: New value

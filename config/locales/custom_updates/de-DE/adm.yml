@@ -15,7 +15,8 @@ de:
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
           update_button: Aktualisieren
-          not_connected: Die KI-App ist nicht verbunden
+          not_connected: KI-App ist nicht verbunden
+          not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent

@@ -11,7 +11,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def path
     return @options[:path] if @options[:path].present?
 
-    adm_attribute_path(record_type: record_type_key, id: @record.id)
+    adm_attribute_path(record_type: record_type_key.tr("/", "-"), id: @record.id)
   end
 
   def label

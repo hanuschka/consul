@@ -19,7 +19,9 @@ de:
       hidden: Herausmoderiert
     table:
       id: "ID"
+      title: "Titel"
       username: "Benutzername"
+      user: "Nutzer"
       email: "E-Mail"
       actions: "Aktionen"
       filter:

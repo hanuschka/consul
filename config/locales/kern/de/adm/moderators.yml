@@ -2,13 +2,13 @@ de:
   adm:
     moderators:
       index:
-        title: Moderatoren
+        title: Team
         empty_title: "Keine Moderatoren vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Moderator hinzu."
         new_link: Neuen Moderator hinzufügen
         no_moderators: Keine Moderatoren vorhanden.
       new:
-        title: Neuer Moderator
+        title: Neues Teammitglied hinzufügen
         search_label: Nutzer durchsuchen
         search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Moderator hinzugefügt werden. Moderatoren können Inhalte prüfen, ausblenden und Nutzer bei Regelverstößen sperren.
       search:

@@ -1,0 +1,108 @@
+en:
+  adm:
+    moderation:
+      title: Moderation
+      home:
+        title: Welcome to moderation
+        stats:
+          pending: Pending
+          blocked_users: Blocked users
+          moderated_total: Moderated (total)
+        quick_links:
+          all: All moderations
+          pending: Pending moderations
+          comments: Comments
+          users: Users
+      menu:
+        aria_label: Moderation menu
+        title: Moderation
+        items:
+          home: Home
+          moderators: Team
+          users: Block users
+          proposals: Proposals
+          budget_investments: Proposals (budget)
+          comments: Comments
+      users:
+        index:
+          title: Block users
+          page_hint: "On this page you can search for users and restrict their visibility on the platform. Hiding removes the user from view but keeps their content available. Blocking hides the user together with all their content. Use search to filter by email or username."
+          search_placeholder: Email or username
+          search_button: Search
+          no_items_title: No users found
+          no_items_description: Use search to find users by email or username.
+          statuses:
+            hide: Hidden
+            block: Blocked
+          actions:
+            hide: Hide
+            block: Block
+          confirm_hide: "Are you sure? This hides the user \"%{name}\" without hiding their content."
+          confirm_block: "Are you sure? This hides the user \"%{name}\" and all of their content."
+        notice_hide: The user has been hidden. Content created by this user remains available.
+        notice_block: The user has been blocked. All content from this user has been hidden.
+      proposals:
+        index:
+          title: Moderate proposals
+          page_hint: Here you see all proposals that have been flagged by users. Under the Flagged tab you'll find new reports for review. You can hide a proposal or mark the flag as read if no action is needed. Hidden proposals become invisible to citizens but are kept in the system.
+          projekt: Project
+          author: Author
+          flags_count: Flags
+          no_items_title: No proposals available
+          no_items_description: Proposals will be shown here as soon as they are flagged.
+          tabs:
+            pending_flag_review: Flagged
+            with_ignored_flag: Ignored flags
+            hidden: Hidden
+            all: All
+          statuses:
+            hide: Hidden
+            ignored: Marked as read
+          actions:
+            hide: Hide
+            ignore_flag: Mark as read
+          confirm_hide: "Are you sure? This hides the proposal \"%{name}\"."
+        notice_hide: The proposal has been hidden.
+      budget_investments:
+        index:
+          title: Moderate proposals
+          page_hint: Here you see all participatory-budget proposals that have been flagged by users. Under the Flagged tab you'll find new reports for review. You can hide a proposal or mark the flag as read. Hidden proposals are no longer shown on the platform but are kept in the system for traceability.
+          projekt: Project
+          author: Author
+          flags_count: Flags
+          no_items_title: No proposals available
+          no_items_description: Proposals will be shown here as soon as they are flagged.
+          tabs:
+            pending_flag_review: Flagged
+            with_ignored_flag: Ignored flags
+            hidden: Hidden
+            all: All
+          statuses:
+            hide: Hidden
+            ignored: Marked as read
+          actions:
+            hide: Hide
+            unhide: Restore
+            ignore_flag: Mark as read
+          confirm_hide: "Are you sure? This hides the participatory-budget proposal \"%{name}\"."
+        notice_hide: The participatory-budget proposal has been hidden.
+      comments:
+        index:
+          title: Moderate comments
+          page_hint: Here you manage flagged comments. Under the Flagged tab you see comments users have marked as inappropriate. You can hide them to remove them from the public side, or mark the flag as read if the comment complies with the rules. All actions are logged.
+          projekt: Project
+          author: Author
+          flags_count: Flags
+          no_items_title: No comments available
+          no_items_description: Comments will be shown here as soon as they are flagged.
+          tabs:
+            pending_flag_review: Flagged
+            with_ignored_flag: Ignored flags
+            hidden: Hidden
+            all: All
+          actions:
+            hide: Hide
+            unhide: Restore
+            ignore_flag: Mark as read
+          confirm_hide: "Are you sure? This hides the comment."
+        notice_hide: The comment has been hidden.

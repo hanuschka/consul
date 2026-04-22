@@ -1,5 +1,6 @@
 de:
   adm:
+    not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
     title: Administration
     sidebar:
       toggle: Seitenleiste umschalten
@@ -9,10 +10,11 @@ de:
         home: Home
         projekts: Projekte
         application: Applikation
+        modules: Module
         application_subitems:
           homepage: Startseite
           documents: Dokumente
-          pages: Seiten
+          pages: Systemseiten
           navbar: Navigation
           metadata_settings: Metadaten
           gdpr_settings: DSGVO
@@ -23,6 +25,7 @@ de:
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
           email_templates: System-E-Mails
+          matomo: Matomo
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
@@ -31,13 +34,9 @@ de:
         profiles: Profile
         profiles_subitems:
           administrators: Administratoren
-          projekt_managers: Projektmanager
           deficiency_report_managers: Mängel-Administratoren
-          deficiency_report_officers: Mängelmelder (Sachbearbeiter)
           idea_managers: Ideen-Administratoren
-          moderators: Moderatoren
-          valuators: Budget-Administratoren
-          officing_managers: Abstimmungshelfer
+          section_contact_people: Ansprechpartner
           users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
@@ -50,6 +49,7 @@ de:
         apps: Apps
         developer: Bereich für Entwickler
         developer_subitems:
+          connection: DT-Verbindung
           ai_settings: KI-Einstellungen
           external_api_keys: API-Schlüssel
           api_clients: API-Clients
@@ -62,26 +62,5 @@ de:
         title: System-E-Mails
     deficiency_reports:
       title: Mängelmelder
-      menu:
-        aria_label: Mängelmelder Navigation
-        items:
-          deficiency_reports: Meldungen
-          officers: Sachbearbeiter
-          categories: Kategorien
-          statuses: Status
-          settings: Funktionen
-          official_answer_templates: Antwortvorlagen
-          districts: Gebiete
-          officer_groups: Sachbearbeitergruppen
-          stats: Statistiken
-          ai_settings: KI Sprachassistent
     ideas:
       title: Ideen
-      menu:
-        aria_label: Ideen Navigation
-        items:
-          ideas: Ideen
-          officers: Sachbearbeiter
-          categories: Kategorien
-          settings: Funktionen
-          districts: Gebiete

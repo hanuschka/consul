@@ -1,6 +1,6 @@
 namespace :adm do
   namespace :moderation do
-    root to: redirect("/adm/moderation/users")
+    root to: "home#show"
 
     resources :users, only: :index do
       member do

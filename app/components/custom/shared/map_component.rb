@@ -54,7 +54,7 @@ class Shared::MapComponent < ApplicationComponent
 
       if rendering_library == "mapbox"
         options[:mapbox_public_token] = ExternalApiKey.mapbox_public_token
-        options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
+        options[:mapbox_style_id] = map_location.mapbox_style_id.presence || Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
         options[:map_center_altitude] = map_location&.altitude
         options[:vc_map_module_url] = Rails.application.secrets.vc_map_module
@@ -99,7 +99,7 @@ class Shared::MapComponent < ApplicationComponent
 
       @mappable.try(:projekt_phase)&.map_layers ||
         @mappable.try(:projekt)&.map_layers ||
-        MapLayer.general
+        MapLayer.default
     end
 
     def admin_editor?

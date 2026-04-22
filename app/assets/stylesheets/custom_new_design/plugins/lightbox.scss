@@ -78,3 +78,9 @@ a.glightbox, a.glightbox-disabled {
   border-radius: 4px;
   pointer-events: none;
 }
+
+.glightbox-clean .gslide-description {
+  background: #000000;
+  color: white;
+  font-size: 20px;
+}

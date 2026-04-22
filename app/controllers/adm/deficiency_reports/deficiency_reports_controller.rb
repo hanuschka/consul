@@ -5,15 +5,22 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include DocumentAttributes
 
   def index
+    params[:archived_state] = ["active"] if params[:archived_state].blank?
+    params[:hidden_state] = ["visible"] if params[:hidden_state].blank?
+
     base_scope = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
     base_scope = filter_assigned_reports_only(base_scope)
     @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(base_scope, params))
 
+    @id_header_options = { search: true, sort: true }
     @title_header_options = { search: true }
-    @created_at_header_options = { sort: true }
-    @category_header_options = { filter_options: category_filter_options }
+    @created_at_header_options = { sort: true, date_range: true }
     @status_header_options = { filter_options: status_filter_options }
+    @address_header_options = { search: true }
+    @category_header_options = { filter_options: category_filter_options }
     @responsible_header_options = { filter_options: responsible_filter_options }
+    @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
+    @hidden_state_header_options = { filter_options: hidden_state_filter_options, default: ["visible"] }
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
   end
@@ -218,9 +225,21 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     end
 
     def responsible_filter_options
-      officers = DeficiencyReport::Officer.all.map { |o| [o.id, o.name] }
-      groups = DeficiencyReport::OfficerGroup.all.map { |g| [g.id, g.name] }
-      officers + groups
+      deficiency_report_all_responsible_sorted.map do |r|
+        ["#{r.class.name.demodulize}_#{r.id}", r.name]
+      end
+    end
+
+    def archived_state_filter_options
+      %w[active archived].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{state}")]
+      end
+    end
+
+    def hidden_state_filter_options
+      %w[visible hidden].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{state}")]
+      end
     end
 
     def notify_new_officer(dr)

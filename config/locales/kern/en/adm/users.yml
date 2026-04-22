@@ -1,0 +1,32 @@
+en:
+  adm:
+    users:
+      index:
+        title: Manage users
+        columns: Columns
+        csv_export_button: CSV export
+        csv_export_notice: The export is being prepared. You will receive an email with a download link.
+        table:
+          email: Email
+          first_name: First name
+          last_name: Last name
+          city_name: City
+          street_address: Address
+          plz: Postal code
+          district: District
+          document_type: Document
+          document_last_digits: Last digits
+          date_of_birth: Date of birth
+          roles: Roles
+          unique_stamp: Unique stamp
+          created_at: Created on
+          last_sign_in: Last login
+          verified_at: Verified on
+      user:
+        table:
+          actions:
+            verify: Verify
+            unverify: Remove verification
+            edit: Edit
+      csv_download:
+        not_found: The requested file was not found or has expired.

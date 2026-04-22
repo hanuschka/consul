@@ -50,6 +50,21 @@
               <%= label_tag "#{@column}_#{option[0]}", option[1], class: "kern-label" %>
             </div>
           <% end %>
+
+          <% if @date_range %>
+            <div class="kern-form-input">
+              <%= label_tag "#{@column}__from", t("shared.table.filter.date_range.from_label"), class: "kern-label" %>
+              <%= date_field_tag "#{@column}__from", params["#{@column}__from"],
+                    class: "kern-form-input__input",
+                    data: { "table-header-target": "dateFromInput" } %>
+            </div>
+            <div class="kern-form-input mt-2">
+              <%= label_tag "#{@column}__to", t("shared.table.filter.date_range.to_label"), class: "kern-label" %>
+              <%= date_field_tag "#{@column}__to", params["#{@column}__to"],
+                    class: "kern-form-input__input",
+                    data: { "table-header-target": "dateToInput" } %>
+            </div>
+          <% end %>
         </div>
 
         <button type="button" class="kern-btn kern-btn--primary kern-btn--small mt-3" data-action="table-header#applyFilter">

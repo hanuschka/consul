@@ -1,9 +1,10 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header" style="min-width: 250px; width: 250px; max-width: 250px;">
+  <td class="kern-table__cell" data-field="id"><%= deficiency_report.id %></td>
+  <th scope="row" class="kern-table__header" data-field="title" style="min-width: 250px; width: 250px; max-width: 250px;">
     <%= link_to truncate(deficiency_report.title, length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title %>
   </th>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
-    <td class="kern-table__cell">
+    <td class="kern-table__cell" data-field="admin_accepted">
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         deficiency_report,
         :admin_accepted,
@@ -11,12 +12,19 @@
       ) %>
     </td>
   <% end %>
-  <td class="kern-table__cell"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
-  <td class="kern-table__cell"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
-  <td class="kern-table__cell"><%= deficiency_report.status&.title %></td>
-  <td class="kern-table__cell"><%= deficiency_report.district&.name %></td>
-  <td class="kern-table__cell"><%= deficiency_report.category&.name %></td>
-  <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>
+  <td class="kern-table__cell" data-field="created_at"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="author"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell" data-field="status"><%= deficiency_report.status&.title %></td>
+  <td class="kern-table__cell" data-field="address"><%= deficiency_report.approximated_address %></td>
+  <td class="kern-table__cell" data-field="district"><%= deficiency_report.district&.name %></td>
+  <td class="kern-table__cell" data-field="category"><%= deficiency_report.category&.name %></td>
+  <td class="kern-table__cell" data-field="responsible"><%= deficiency_report.responsible&.name %></td>
+  <td class="kern-table__cell" data-field="archived_state">
+    <%= t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{deficiency_report.archived_at.present? ? 'archived' : 'active'}") %>
+  </td>
+  <td class="kern-table__cell" data-field="hidden_state">
+    <%= t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{deficiency_report.hidden_at.present? ? 'hidden' : 'visible'}") %>
+  </td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.show.view_on_site"), url: deficiency_report_path(deficiency_report), icon: "open_in_new") %>

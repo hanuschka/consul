@@ -1,0 +1,21 @@
+en:
+  adm:
+    projekts:
+      labels:
+        new:
+          title: Create new label
+        edit:
+          title: Edit label
+        create:
+          success: Label created successfully.
+        update:
+          success: Label updated successfully.
+        destroy:
+          success: Label deleted successfully.
+        form:
+          name_label: Name
+          name_hint: Enter a meaningful name for the label, e.g. "Climate protection", "Transport", or "Social affairs". The name is displayed on the frontend as a filter option and as a label on proposals. Choose a short, unambiguous label that clearly conveys the thematic area.
+          icon_search_placeholder: "Search icon (e.g. car, tree, house)..."
+          icon_label: Icon
+          icon_hint: Choose a suitable icon for the label. The icon is shown on the frontend next to the label name on proposals and helps with visual categorization. Choose an icon that makes the thematic area of the label recognizable at a glance — e.g. a leaf for environment or a car for transport.
+          submit: Save

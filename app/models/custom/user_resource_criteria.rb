@@ -3,7 +3,7 @@ class UserResourceCriteria < ApplicationRecord
 
   belongs_to :projekt_phase
 
-  enum :kind, { hard: "hard", soft: "soft" }
+  enum kind: { hard: "hard", soft: "soft" }
 
   validates :kind, :name, :ai_instruction, presence: true
 

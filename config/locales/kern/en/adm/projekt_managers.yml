@@ -1,0 +1,13 @@
+en:
+  adm:
+    projekt_managers:
+      index:
+        title: Project managers
+        new_link: Add new project manager
+        no_projekt_managers: No project managers available.
+      new:
+        title: Add new project manager
+        search_label: Search users
+        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Profiles</a>. You can then add them as project managers.
+      search:
+        no_results: No users found matching these criteria.

@@ -1,0 +1,53 @@
+en:
+  adm:
+    valuation:
+      title: Valuation
+      home:
+        title: Welcome to valuation
+        stats:
+          total: Total investments
+          not_valued: Not yet evaluated
+          in_valuation: In valuation
+          valued: Completed
+        quick_links:
+          all: All investments
+          not_valued: Not evaluated
+      menu:
+        aria_label: Valuation navigation
+        items:
+          home: Home
+          valuators: Team
+          investments: Proposals
+      investments:
+        index:
+          title: Valuation
+          page_hint: Here you see all participatory-budget proposals assigned to you for evaluation. As a valuator you review feasibility and estimate the cost of proposals. Click Edit to open the valuation form. After you finish your valuation, the author can no longer edit the proposal.
+          table:
+            id: ID
+            title: Title
+            budget: Budget
+            valuator: Valuator
+            edit: Edit
+          no_investments: No proposals available yet.
+          no_items_title: No proposals assigned for valuation
+          no_items_description: Proposals will be shown here as soon as they are assigned to you for valuation.
+        details:
+          details: More info
+          author: Author
+          budget: Budget
+          current_phase: Current phase
+          created_at: Created on
+          frontend: Frontend
+          implementation_performer_label: Implementation
+          implementation_performer:
+            city: Author does not contribute to implementation
+            user: Author contributes to implementation
+          user_cost_estimate: "User's cost estimate (€)"
+          valuation_finished: Valuation finished
+          assigned_valuators: Assigned valuators
+          undefined: Not yet evaluated
+        form:
+          feasibility_title: Criteria review
+          feasibility_hint: Check whether the proposal meets the criteria. After the valuation is completed, the author can no longer edit the proposal.
+        notice:
+          updated: Dossier updated

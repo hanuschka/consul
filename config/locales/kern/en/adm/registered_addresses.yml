@@ -1,0 +1,26 @@
+en:
+  adm:
+    registered_addresses:
+      index:
+        title: Addresses
+        intro_text_p1_lead: >
+          Address data must be provided to demokratie.today in advance as a CSV file.
+          Each address contains the following standard fields:
+        intro_list:
+          street_number_extension: House number suffix
+          district: Area (e.g. neighborhood)
+        intro_text_p1_extra: >
+          Additional columns for further geographic units (e.g. electoral districts, polling districts, or quarters) can be added at any time.
+        intro_text_p2: >
+          These assignments are then available for selection in participation restrictions
+          and are used for automatic assignment of projects to areas.
+          Contact demokratie.today if you want to update or extend address data.
+        empty_title: "No addresses imported yet"
+        empty_description: "Please provide demokratie.today with a CSV file of the address data to set up the import."
+        table:
+          city: City
+          plz: Postal code
+          street_name: Street
+          street_number: House number
+          district: Area
+          groupings: Groupings

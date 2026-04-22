@@ -27,7 +27,7 @@ module Adm
         category: "Künstliche Intelligenz",
         icon: "smart_toy",
         apps: [
-          { codename: App::VOICE_ASSISTANT_CODENAME,
+          { codename: "voice_assistant",
             icon: "record_voice_over",                                             name: "Voice Assistant",        description: "Beiträge und Mängelanzeigen per Spracheingabe einreichen. Senkt die Einstiegshürde und macht digitale Beteiligung für alle zugänglich." },
           { logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome",    name: "AI-Projektassistent",    description: "Unterstützt Verwaltungsmitarbeitende beim Anlegen neuer Beteiligungsprojekte – von Beschreibung bis Zeitplan." },
           { logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent",   name: "AI-Nutzerhelfer",        description: "Beantwortet Bürgerfragen zur Plattform und zu laufenden Projekten direkt im Chatfenster." },
@@ -90,19 +90,24 @@ module Adm
       authorize [:adm, :apps]
       @breadcrumbs = [{ name: t("adm.apps.show.title"), icon: "dashboard" }]
 
-      db_apps = App.all.index_by(&:codename)
-
       @categories = APP_CATALOG.map do |cat|
         apps = cat[:apps].map do |app_def|
-          codename = app_def[:codename]
-          record   = codename ? db_apps[codename] : nil
-          status   = record ? record.status : "inactive"
-
-          app_def.merge(status: status)
+          app_def.merge(status: app_status(app_def[:codename]))
         end
 
         cat.merge(apps: apps)
       end
     end
+
+    private
+
+      def app_status(codename)
+        case codename
+        when "voice_assistant"
+          Ai::Settings.ai_available? ? "active" : "inactive"
+        else
+          "inactive"
+        end
+      end
   end
 end

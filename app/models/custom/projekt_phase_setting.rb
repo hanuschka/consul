@@ -1,10 +1,6 @@
 class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
-  PRO_SETTINGS = [
-    "feature.form.voice_assistant"
-  ]
-
   SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
 

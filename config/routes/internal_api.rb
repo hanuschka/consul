@@ -53,8 +53,6 @@ namespace :internal_api do
 
   resources :images, only: [:create, :destroy]
 
-  resources :apps, only: [:update]
-
   scope path: "settings" do
     patch "enable", to: "settings#enable"
     patch "disable", to: "settings#disable"

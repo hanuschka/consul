@@ -23,6 +23,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:description].presence || I18n.t(i18n_key(:description), default: nil)
   end
 
+  def note
+    @options[:note].presence
+  end
+
   def component_for_type
     case @kind
     when :boolean

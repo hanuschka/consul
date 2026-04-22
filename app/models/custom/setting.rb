@@ -1,10 +1,6 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
-
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type

@@ -9,6 +9,10 @@ class Dt::VoiceAssistantComponent < ApplicationComponent
     @custom_data = custom_data
   end
 
+  def render?
+    Ai::Settings.ai_available?
+  end
+
   def language
     if Rails.env.development?
       :en

@@ -7,7 +7,7 @@
     data-aspect-ratio="16:9"
     data-image-prompt="<%= @draft_resource.ai_image_prompt %>"
     data-has-image="<%= @draft_resource.image.present? %>"
-    data-codename="<%= @draft_resource.projekt_phase.try(:voice_assistant_codename) %>"
+    data-codename="<%= Ai::Settings.ai_available? ? @draft_resource.projekt_phase.try(:voice_assistant_codename) : nil %>"
     data-projekt-phase-id="<%= @draft_resource.projekt_phase_id %>"
     data-resource-type="<%= @draft_resource.class.name %>"
     data-resource-id="<%= @draft_resource.id %>"

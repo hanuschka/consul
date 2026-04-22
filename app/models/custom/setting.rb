@@ -1,7 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix

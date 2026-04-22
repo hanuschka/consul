@@ -67,9 +67,6 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  # Raises error for missing translations
-  config.i18n.raise_on_missing_translations = true
-
   config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
   config.after_initialize do

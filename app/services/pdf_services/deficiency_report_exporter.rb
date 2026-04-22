@@ -26,6 +26,7 @@ module PdfServices
         updated_label = I18n.t("custom.admin.deficiency_reports.show.updated_at")
 
         rows = [
+          ["ID", @deficiency_report.id.to_s],
           [created_label, I18n.l(@deficiency_report.created_at, format: :long)],
           [updated_label, I18n.l(@deficiency_report.updated_at, format: :long)]
         ]

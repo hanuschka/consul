@@ -7,8 +7,8 @@ module Adm
       "deficiency_reports" => "process.deficiency_reports",
       "events" => "extended_feature.general.enable_projekt_events_page",
       "investments" => "extended_feature.general.enable_investments_overview",
-      "polls" => "extended_feature.general.enable_polls_overview",
-      "proposals" => "extended_feature.general.enable_proposals_overview"
+      "polls" => "process.polls",
+      "proposals" => "process.proposals"
     }.freeze
 
     # Tabs with section settings (intro text, notice)

@@ -1,0 +1,123 @@
+en:
+  adm:
+    projekt_phases:
+      index:
+        intro_title: About participation phases
+        intro_text_p1: "In the table below you manage the individual participation phases of a project. Each phase is assigned to its own tab in the project footer and can be individually shown or hidden. Three central toggles help control the behavior and visibility of phases:"
+        intro_text_standard_title: Default
+        intro_text_standard_description: Only one phase can be marked as the default at a time. This phase is automatically opened for incoming users and shown in the foreground when the project page is opened.
+        intro_text_active_title: Active
+        intro_text_active_description: When this toggle is enabled, the respective participation phase is technically active and directly accessible to users on the frontend.
+        intro_text_visible_title: Visibility in the project
+        intro_text_visible_description: Controls whether the phase is shown in the project footer (tab bar). When disabled, the phase remains technically active and can be accessed directly via a URL but is not advertised via a visible tab. This is useful for special formats like contests after a vote.
+        intro_text_p2: The combination of these three settings enables flexible control of flow, visibility, and user guidance within a participation project.
+        title: Participation phases
+        new_phase: Create new phase
+        table:
+          phase_tab_name: Participation phases
+          start_date: Start
+          end_date: End
+          restriction: Restriction
+          default: Default
+          active: Active
+          visible: Visible
+          actions: Actions
+      new:
+        title: Create new participation phase
+        intro_title: Choose participation module
+        intro_text: Choose a participation module to create a new phase for this project. Each module offers different functions for citizen participation.
+        phase_type_label: Participation module
+        phase_type_hint: Choose the desired module for the new participation phase.
+        select_phase_type: Please choose...
+        create_phase: Create phase
+      create:
+        success: The participation phase was created successfully.
+      update:
+        success: The participation phase was updated successfully.
+      duration:
+        title: Duration
+        dates_label: Phase duration
+        dates_description: Defines the period during which this participation phase is active. Within this period, users can participate in the phase. Outside the period, the phase is shown as completed or not yet started. The duration is configurable independently of the overall project duration.
+      naming:
+        title: Naming
+      restrictions:
+        title: Participation restriction
+        intro_title: About participation restrictions
+        intro_text: |
+          <p>Extended participation restrictions, such as restriction by geographic area or age group, are available only for registered and verified users. Guest user status does not allow such restrictions.</p>
+          <p>To apply these extended restrictions, the corresponding data, such as place of residence or date of birth, must be available. This data can either be collected during registration or queried later during participation in the respective phase. Users who haven't yet provided the required data will be asked to provide it before participating. Only when the stored information matches the restriction criteria will participation be unlocked.</p>
+        user_status_label: Participation by user status
+        user_status_hint: "Defines the minimum verification status users must have to participate in this phase. There are three levels: guest users (without registration), registered users (with a platform account), and verified users (e.g. via registration-office comparison). Higher levels require corresponding proofs at registration."
+        geozone_label: Area restriction for participation
+        geozone_hint: "Restricts participation to users whose registered address lies in a specific geographic area. To use this, an administrator must provide demokratie.today with a CSV file of the relevant addresses in advance. After import, the desired areas can be enabled here and the restriction assigned to this phase."
+        age_label: Age restriction for participation
+        age_hint: "Restricts participation to users whose age lies within a defined age group. Age groups are managed centrally by an administrator under Settings > Age groups and must be created there beforehand. Users without a stored date of birth will be asked to provide it before participating."
+        individual_groups_label: Restriction to strong groups
+        individual_groups_hint: "Restricts participation to members of specific user groups previously created under Settings > Strong groups — e.g. youth councils, administration staff, or project teams. Only users assigned to one of the selected groups can participate in this participation phase."
+        user_status:
+          guest: Guests (no registration required)
+          registered: Registered users
+          verified: Verified users
+        geozone:
+          no_restriction: No restriction
+          only_citizens: Citizens only
+          only_geozones: Specific areas only
+          only_streets: Specific streets only
+          search_street: Search street...
+        extended_geozone:
+          no_restriction: No restriction
+        age:
+          no_restriction: No restriction
+
+      general_settings:
+        title: Features
+      form_author:
+        title: Form author
+      user_functions:
+        title: User functions
+      proposals:
+        title: Proposals
+        no_proposals: No proposals available.
+        table:
+          id: ID
+          admin_accepted: Approved
+          title: Title
+          author: Author
+          actions: Actions
+          view: View
+      projekt_labels:
+        title: Labels
+        create_button: Create new label
+        no_labels: No labels available.
+        table:
+          icon: Icon
+          name: Name
+          actions: Actions
+      sentiments:
+        title: Sentiments
+        create_button: Create new sentiment
+        no_sentiments: No sentiments available.
+        table:
+          color: Color
+          name: Name
+          actions: Actions
+      map:
+        title: Map
+      officing_managers:
+        title: Polling officers
+        lock_on: Lock date
+        lock_on_hint: From this date, no more offline votes can be cast.
+        select_managers: Assign polling officers
+        select_managers_hint: Select the polling officers authorized for this phase.
+      projekt_phase:
+        duration: Duration
+        naming: Naming
+        restrictions: Participation restriction
+        general_settings: Features
+        form_author: Form author
+        user_functions: User functions
+        proposals: Proposals
+        projekt_labels: Labels
+        sentiments: Sentiments
+        map: Map
+        officing_managers: Polling officers

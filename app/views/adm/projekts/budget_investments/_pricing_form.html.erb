@@ -1,0 +1,25 @@
+<% show_success = local_assigns.fetch(:show_success, false) %>
+<% phase_early_access = !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+<% phase_enabled = budget.valuating_or_later? || phase_early_access %>
+
+<%= form_with model: investment,
+      url: adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+      method: :patch do |f| %>
+  <%= hidden_field_tag :editor, "pricing" %>
+
+  <div class="mb-3">
+    <%= f.number_field :price, class: "kern-input", max: 1000000000000000, disabled: !phase_enabled %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.number_field :price_first_year, class: "kern-input", max: 1000000000000000, disabled: !phase_enabled %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.text_field :duration, class: "kern-input", disabled: !phase_enabled %>
+  </div>
+
+  <%= form_submit_button(disabled: !phase_enabled) %>
+<% end %>
+
+<%= render "adm/projekts/budget_investments/form_success_message", show_success: show_success %>

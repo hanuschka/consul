@@ -36,6 +36,7 @@
       App.ContentBlockTemplatesSelector.initialize();
       App.AdminTopbarViewMode.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();
       App.Studio.SiteContentBlockEditor.initialize();

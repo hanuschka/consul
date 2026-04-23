@@ -1,0 +1,12 @@
+<div class="adm-filter-pills">
+  <% pills.each do |pill| %>
+    <span class="adm-filter-pill">
+      <span class="adm-filter-pill__label"><%= pill[:label] %></span>
+      <%= link_to href_for(pill),
+            class: "adm-filter-pill__close",
+            aria: { label: t("shared.table.filter.remove_filter", filter: pill[:label]) } do %>
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      <% end %>
+    </span>
+  <% end %>
+</div>

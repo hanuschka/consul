@@ -56,31 +56,6 @@ form.button_to {
 }
 
 
-// Skip links
-
-.skip-link {
-  position: absolute;
-  top: -100%;
-  left: 0;
-  z-index: 10000;
-  display: block;
-  padding: 12px 24px;
-  background: var(--brand-color, #004a83);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-
-  &:focus {
-    top: 0;
-    outline: $outline-focus;
-    outline-offset: 0;
-    color: #fff;
-  }
-}
-
-
 // Menu styling fixes
 
 #responsive-menu .subnavigation a {

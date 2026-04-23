@@ -1,0 +1,111 @@
+en:
+  adm:
+    apps:
+      show:
+        title: Apps
+        intro: >
+          Extend your participation platform with additional modules.
+          Activated apps are immediately available for all projects.
+        status:
+          active: Active
+          inactive: Inactive
+          waiting_for_activation: Activation pending
+        request: Request
+        pending: Request received
+        active_label: Activated
+        request_subject: "App request: %{app_name}"
+        categories:
+          registration: Registration
+          verification: Verification
+          ai: Artificial intelligence
+          web_tracking: Web tracking
+          maps_3d: 3D maps
+          search: Search
+          translation: Translation
+          user_management: User management & conferencing
+          participation: Participation phases
+        apps:
+          facebook_login:
+            name: Facebook Login
+            description: Registration and sign-in via an existing Facebook account.
+          google_login:
+            name: Google Login
+            description: Registration and sign-in via an existing Google account.
+          x_login:
+            name: X Login
+            description: Registration and sign-in via an existing X (Twitter) account.
+          wordpress_login:
+            name: WordPress Login
+            description: Single sign-on for portals with an existing WordPress user base.
+          bundid:
+            name: BundID
+            description: Identity verification via the federal online citizen account BundID — compatible with eID and Nutzerkonto Bund.
+          bayernid:
+            name: BayernID
+            description: Identity verification via the Bavarian citizen account for municipalities in Bavaria.
+          servicekonto_nrw:
+            name: servicekonto.NRW
+            description: Identity verification via the central service account for North Rhine-Westphalia.
+          openrathaus:
+            name: OpenRathaus
+            description: Identity verification via the OpenRathaus platform for municipal services.
+          letter_verification:
+            name: Letter verification
+            description: Verification by postal letter to the registered address — suitable for participation processes with residency requirements.
+          sms_verification:
+            name: SMS verification
+            description: Confirmation of a phone number via one-time code (OTP) as a low-threshold verification step.
+          voice_assistant:
+            name: Voice Assistant
+            description: Submit contributions and deficiency reports by voice input. Lowers the entry barrier and makes digital participation accessible to everyone.
+          ai_project_creation:
+            name: AI project assistant
+            description: Supports administration staff in creating new participation projects — from description to timeline.
+          ai_user_help:
+            name: AI user helper
+            description: Answers citizens' questions about the platform and ongoing projects directly in the chat window.
+          ai_proposal_creation:
+            name: AI proposal generator
+            description: Helps citizens formulate their ideas as structured proposals.
+          ai_evaluation_phases:
+            name: AI evaluation
+            description: Thematically summarizes received contributions and generates automatic analysis reports.
+          ai_project_chat:
+            name: AI discussion companion
+            description: Moderates comment sections, identifies thematic clusters, and provides summaries of the debate.
+          matomo_cookie:
+            name: Matomo (Cookie)
+            description: GDPR-compliant usage analytics with session cookies. Full data control on your own server.
+          matomo_cookieless:
+            name: Matomo (Cookieless)
+            description: GDPR-friendly tracking without cookies — no consent required, full data sovereignty.
+          masterportal:
+            name: Masterportal
+            description: Integration of the open-source Masterportal geoportal for interactive geodata visualizations in the participation process.
+          virtual_city_systems:
+            name: Virtual City Systems
+            description: 3D city models from Virtual City Systems as spatial context for planning and participation procedures.
+          elasticsearch:
+            name: Elasticsearch
+            description: Powerful full-text search across all participation content — fast, relevant, and scalable.
+          microsoft_translator:
+            name: Microsoft Translator
+            description: Automatic translation of platform content and citizen contributions via Azure Cognitive Services.
+          google_translator:
+            name: Google Translator
+            description: Automatic translation via the Google Cloud Translation API for multilingual participation.
+          brevo:
+            name: Brevo
+            description: Email marketing and user management via Brevo — newsletters, segmentation, and automated campaigns.
+          jitsi:
+            name: Jitsi
+            description: Open-source video conferencing directly on the platform — no external sign-in or proprietary software required.
+          bigbluebutton:
+            name: BigBlueButton
+            description: Web conferencing solution for digital town hall meetings with presentation mode, polls, and breakout rooms.
+          youtube_livestream:
+            name: YouTube Livestream
+            description: Embed YouTube livestreams in participation projects for public sessions and information events.
+          rss_newsfeed:
+            name: RSS newsfeed
+            description: Automatic ingestion of external news sources via RSS as an information basis for participation processes.

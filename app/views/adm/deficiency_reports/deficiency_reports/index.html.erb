@@ -38,6 +38,12 @@
         <div class="flex-grow-1">
           <%= render pills_component %>
         </div>
+        <%= link_to url_for(request.query_parameters.merge(format: :csv)),
+              class: "adm-column-selector__toggle",
+              data: { turbo: false } do %>
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          <%= t(".export") %>
+        <% end %>
         <div class="adm-column-selector">
           <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
             <span class="material-symbols-outlined" aria-hidden="true">view_column</span>

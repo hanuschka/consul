@@ -34,6 +34,8 @@ de:
           no_deficiency_reports: Keine Mängelmelder vorhanden
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Meldungen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Meldungen zu sehen.
           table:
             id: ID
             admin_accepted: Sichtbarkeit

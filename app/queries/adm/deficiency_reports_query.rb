@@ -8,6 +8,7 @@ module Adm
       responsible
       archived_state
       hidden_state
+      district
     ].freeze
     DATE_RANGE_FIELDS = %i[created_at].freeze
 
@@ -44,7 +45,8 @@ module Adm
       def apply_search(scope)
         scope = apply_id_search(scope)
         scope = apply_title_search(scope)
-        apply_address_search(scope)
+        scope = apply_address_search(scope)
+        apply_author_search(scope)
       end
 
       def apply_id_search(scope)
@@ -75,6 +77,13 @@ module Adm
         )
       end
 
+      def apply_author_search(scope)
+        value = params[:author__search]
+        return scope if value.blank?
+
+        scope.joins(:author).where("users.username ILIKE ?", "%#{escape_like(value)}%")
+      end
+
       def apply_filters(scope)
         permitted = filterable_params
         permitted[:archived_state] ||= []
@@ -85,11 +94,19 @@ module Adm
                   when :archived_state then filter_by_archived_state(scope, values)
                   when :hidden_state   then filter_by_hidden_state(scope, values)
                   when :responsible    then filter_by_responsible(scope, values)
+                  when :district       then filter_by_district(scope, values)
                   else
                     values.blank? ? scope : scope.where(field => values)
                   end
         end
         scope
+      end
+
+      def filter_by_district(scope, values)
+        values = Array(values).compact_blank.map(&:to_i).reject(&:zero?)
+        return scope if values.empty?
+
+        scope.joins(:map_location).where(map_locations: { registered_address_district_id: values })
       end
 
       def filter_by_archived_state(scope, values)

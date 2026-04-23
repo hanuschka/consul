@@ -34,6 +34,8 @@ en:
           no_deficiency_reports: No deficiency reports available
           no_items_title: No reports available
           no_items_description: Reports will be shown here as soon as they are submitted.
+          no_results_filtered_title: No reports match the current filters
+          no_results_filtered_description: Adjust or remove filters to see more reports.
           table:
             id: ID
             admin_accepted: Visibility

@@ -10,13 +10,16 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     base_scope = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
     base_scope = filter_assigned_reports_only(base_scope)
+    base_scope = base_scope.preload(:status, :translations, :author, :category, :responsible, :feedback_form, map_location: :district)
     @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(base_scope, params))
 
     @id_header_options = { search: true, sort: true }
     @title_header_options = { search: true }
+    @author_header_options = { search: true }
     @created_at_header_options = { sort: true, date_range: true }
     @status_header_options = { filter_options: status_filter_options }
     @address_header_options = { search: true }
+    @district_header_options = { filter_options: district_filter_options }
     @category_header_options = { filter_options: category_filter_options }
     @responsible_header_options = { filter_options: responsible_filter_options }
     @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
@@ -218,6 +221,11 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     def category_filter_options
       DeficiencyReport::Category.all.map { |c| [c.id, c.name] }
+    end
+
+    def district_filter_options
+      scope = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::DeficiencyReports::DistrictPolicy::Scope)
+      scope.pluck(:id, :name)
     end
 
     def status_filter_options

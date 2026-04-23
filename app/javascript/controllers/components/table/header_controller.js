@@ -5,7 +5,8 @@ export default class extends Controller {
   static targets = [ "filterMenu", "searchInput", "dateFromInput", "dateToInput" ]
 
   connect() {
-    this.url = new URL(window.location);
+    this.frame = this.element.closest("turbo-frame");
+    this.url = new URL(this.frame?.src || window.location, window.location.origin);
   }
 
   toggleFilterMenu(event) {
@@ -46,7 +47,11 @@ export default class extends Controller {
       this.setOrDeleteParam(this.dateToInputTarget.name, this.dateToInputTarget.value);
     }
 
-    window.location.href = this.url.toString();
+    if (this.frame) {
+      this.frame.src = this.url.toString();
+    } else {
+      window.location.href = this.url.toString();
+    }
   }
 
   setOrDeleteParam(name, value) {

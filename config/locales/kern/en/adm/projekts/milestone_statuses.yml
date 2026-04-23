@@ -1,0 +1,39 @@
+en:
+  adm:
+    projekts:
+      milestone_statuses:
+        index:
+          title: Milestone statuses
+          create_button: Create new status
+          no_statuses_title: No statuses available
+          no_statuses_description: Create status labels that can be assigned to milestones — e.g. 'In planning', 'In implementation', or 'Completed'. Statuses are shown next to milestones on the frontend and signal the current processing state.
+          table:
+            name: Name
+            description: Description
+            actions: Actions
+        new:
+          title: Create status
+        create:
+          success: Status created successfully
+        edit:
+          title: Edit status
+        update:
+          success: Status updated successfully
+        destroy:
+          success: Status deleted successfully
+        form:
+          name_label: Status label
+          name_hint: >
+            Enter a short, meaningful label for the milestone status, e.g.
+            "In planning", "In implementation", or "Completed". The name is shown
+            next to milestones on the frontend and signals to users the current
+            processing state of the respective milestone.
+          name_placeholder: "e.g. In implementation"
+          description_label: Description
+          description_hint: >
+            Optional description that explains the status in more detail. The description
+            is shown on the frontend as a tooltip or additional text next to the milestone
+            and helps users understand the exact meaning of the status — e.g. "Measure
+            is in the concrete implementation phase by the administration".
+          description_placeholder: "e.g. Measure is currently being implemented by the administration"
+          submit: Save

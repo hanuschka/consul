@@ -17,8 +17,8 @@ class NavbarItem < ApplicationRecord
     ideas: "process.ideas",
     projekts: "process.projekts",
     investments: "extended_feature.general.enable_investments_overview",
-    polls: "extended_feature.general.enable_polls_overview",
-    proposals: "extended_feature.general.enable_proposals_overview"
+    polls: "process.polls",
+    proposals: "process.proposals"
   }.freeze
 
   def self.enabled_presets

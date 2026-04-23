@@ -48,9 +48,10 @@ class Adm::Projekts::FormularFieldsController < Adm::Projekts::BaseController
   end
 
   def reorder
-    authorize [:adm, :projekts, @formular.formular_fields.first], policy_class: Adm::Projekts::FormularFieldPolicy
+    authorize [:adm, :projekts, @projekt_phase], :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
 
-    params[:order]&.each_with_index do |id, index|
+    ordered_ids = params[:tree].map { |item| item[:id] }
+    ordered_ids.each_with_index do |id, index|
       @formular.formular_fields.where(id: id).update_all(given_order: index + 1)
     end
 

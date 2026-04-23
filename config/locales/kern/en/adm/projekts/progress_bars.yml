@@ -1,0 +1,26 @@
+en:
+  adm:
+    projekts:
+      progress_bars:
+        new:
+          title: Create progress bar
+        create:
+          success: Progress bar created successfully.
+        edit:
+          title: Edit progress bar
+        update:
+          success: Progress bar updated successfully.
+        destroy:
+          success: Progress bar deleted successfully.
+        form:
+          kind_label: Type
+          kind_hint: "Defines whether this is the main progress bar (primary) or a supplementary bar (secondary). The primary bar is prominently displayed on the frontend and shows the overall progress. Secondary bars appear below it and can represent partial aspects of implementation."
+          title_label: Title
+          title_hint: "Enter a short label for the progress bar that is shown as a caption on the frontend — e.g. 'Overall progress', 'Planning phase', or 'Construction progress'. No title is required for the primary bar; for secondary bars the title is required."
+          title_placeholder: "e.g. Construction progress"
+          percentage_label: Progress (%)
+          percentage_hint: "Percentage between 0 and 100 representing the current implementation status. The value is shown on the frontend as a visual progress bar and as a number. Update the value regularly to give participants a transparent overview of the implementation status."
+          submit: Save
+          kinds:
+            primary: Primary
+            secondary: Secondary

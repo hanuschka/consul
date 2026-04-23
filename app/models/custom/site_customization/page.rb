@@ -119,15 +119,6 @@ class SiteCustomization::Page < ApplicationRecord
   end
 
   def sync_projekt_for_global_overview
-    return unless projekt.present?
-
-    changed_set = saved_changes.except('created_at', 'updated_at')
-    return if changed_set.empty?
-
-    if projekt.should_be_exported_for_global_overview?
-      if projekt.hidden_at.blank?
-        Projekts::OverviewProjektUpdatedJob.perform_later(projekt)
-      end
-    end
+    projekt&.sync_for_global_overview_from_page_changes(saved_changes)
   end
 end

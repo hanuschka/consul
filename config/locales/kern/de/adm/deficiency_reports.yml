@@ -40,6 +40,8 @@ de:
             id: ID
             admin_accepted: Sichtbarkeit
             created_at: Erstellungsdatum
+            updated_at: Änderungsdatum
+            status_changed_at: Statusänderung
             title: Titel
             author: Autor
             status: Status

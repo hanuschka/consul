@@ -40,6 +40,8 @@ en:
             id: ID
             admin_accepted: Visibility
             created_at: Created on
+            updated_at: Updated on
+            status_changed_at: Status changed on
             title: Title
             author: Author
             status: Status

@@ -1,7 +1,7 @@
 module Adm
   class DeficiencyReportsQuery < ApplicationQuery
     SEARCHABLE_FIELDS = %i[id title approximated_address].freeze
-    SORTABLE_FIELDS = %i[id created_at status_changed_at].freeze
+    SORTABLE_FIELDS = %i[id created_at updated_at status_changed_at].freeze
     FILTERABLE_FIELDS = %i[
       deficiency_report_category_id
       deficiency_report_status_id
@@ -10,7 +10,7 @@ module Adm
       hidden_state
       district
     ].freeze
-    DATE_RANGE_FIELDS = %i[created_at].freeze
+    DATE_RANGE_FIELDS = %i[created_at updated_at status_changed_at].freeze
 
     def initialize(base_scope, params = {})
       @base_scope = base_scope

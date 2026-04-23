@@ -17,6 +17,8 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @title_header_options = { search: true }
     @author_header_options = { search: true }
     @created_at_header_options = { sort: true, date_range: true }
+    @updated_at_header_options = { sort: true, date_range: true }
+    @status_changed_at_header_options = { sort: true, date_range: true }
     @status_header_options = { filter_options: status_filter_options }
     @address_header_options = { search: true }
     @district_header_options = { filter_options: district_filter_options }

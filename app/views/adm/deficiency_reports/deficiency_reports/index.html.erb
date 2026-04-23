@@ -12,6 +12,8 @@
     title:          Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options.merge(data_field: "title")),
     author:         Kern::Table::HeaderComponent.new(:author, t(".table.author"), **@author_header_options.merge(data_field: "author")),
     created_at:     Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
+    updated_at:     Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"), **@updated_at_header_options.merge(data_field: "updated_at")),
+    status_changed_at: Kern::Table::HeaderComponent.new(:status_changed_at, t(".table.status_changed_at"), **@status_changed_at_header_options.merge(data_field: "status_changed_at")),
     status:         Kern::Table::HeaderComponent.new(:deficiency_report_status_id, t(".table.status"), **@status_header_options.merge(data_field: "status")),
     address:        Kern::Table::HeaderComponent.new(:approximated_address, t(".table.address"), **@address_header_options.merge(data_field: "address")),
     district:       Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options.merge(data_field: "district")),
@@ -26,7 +28,7 @@
   <%= turbo_frame_tag "deficiency_reports_table" do %>
     <% pills_component = Adm::FilterPillsComponent.new(headers: headers.values, params: params) %>
     <% filters_active = pills_component.pills.any? %>
-    <% column_count = 12 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
+    <% column_count = 14 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
 
     <div data-controller="adm-column-selector"
          data-adm-column-selector-cookie-value="adm-deficiency-reports-columns"
@@ -57,6 +59,8 @@
                 <th scope="col" class="kern-table__header" data-field="admin_accepted"><%= t(".table.admin_accepted") %></th>
               <% end %>
               <%= render headers[:created_at] %>
+              <%= render headers[:updated_at] %>
+              <%= render headers[:status_changed_at] %>
               <%= render headers[:author] %>
               <%= render headers[:status] %>
               <%= render headers[:address] %>

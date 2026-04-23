@@ -13,6 +13,8 @@
     </td>
   <% end %>
   <td class="kern-table__cell" data-field="created_at"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="updated_at"><%= l(deficiency_report.updated_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="status_changed_at"><%= l(deficiency_report.status_changed_at, format: "%d.%m.%Y") if deficiency_report.status_changed_at %></td>
   <td class="kern-table__cell" data-field="author"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
   <td class="kern-table__cell" data-field="status"><%= deficiency_report.status&.title %></td>
   <td class="kern-table__cell" data-field="address"><%= deficiency_report.approximated_address %></td>

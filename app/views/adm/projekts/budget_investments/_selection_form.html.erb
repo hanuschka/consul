@@ -1,0 +1,18 @@
+<% show_success = local_assigns.fetch(:show_success, false) %>
+<% phase_enabled = budget.publishing_prices_or_later? %>
+
+<%= form_with model: investment,
+      url: adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+      method: :patch do |f| %>
+  <%= hidden_field_tag :editor, "selection" %>
+
+  <div class="mb-3">
+    <%= f.collection_radio_buttons :selected,
+      [[true, t("adm.projekts.budget_investments.administer.selected_true")], [false, t("adm.projekts.budget_investments.administer.selected_false")]],
+      :first, :last, disabled: !phase_enabled %>
+  </div>
+
+  <%= form_submit_button(disabled: !phase_enabled) %>
+<% end %>
+
+<%= render "adm/projekts/budget_investments/form_success_message", show_success: show_success %>

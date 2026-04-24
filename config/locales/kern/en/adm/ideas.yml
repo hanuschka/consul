@@ -1,0 +1,218 @@
+en:
+  adm:
+    ideas:
+      home:
+        title: Welcome to ideas management
+        stats:
+          total: Total
+          new_this_week: New this week
+          active: Active
+          archived: Archived
+        quick_links:
+          all: All ideas
+          active: Active ideas
+          pending: Pending ideas
+      menu:
+        aria_label: Ideas navigation
+        items:
+          home: Home
+          officers: Team
+          ideas: Ideas
+          categories: Categories
+          settings: Features
+          districts: Areas
+      ideas:
+        index:
+          title: Ideas
+          page_hint: "Here you see all submitted ideas. The table shows title, visibility, category, officer, and status of each idea. Use the column headers to sort the list. Click on an idea to view details, assign an officer, write an official response, or edit the idea."
+          no_ideas: No ideas available
+          no_items_title: No ideas available
+          no_items_description: Ideas will be shown here as soon as they are submitted.
+          table:
+            id: ID
+            admin_accepted: Visibility
+            admin_accepted_at: Publication
+            created_at: Created on
+            title: Title
+            author: Author
+            status: Status
+            location: Location
+            category: Category
+            officer: Officer
+        idea_row:
+          frontend_link: Frontend
+        edit:
+          title: Edit idea
+          submit: Save
+          show_image: Show image
+          hide_image: Hide image
+          no_category: "-- No category --"
+          district_placeholder: "-- Select district --"
+          labels:
+            title: Title
+            title_hint: The title of the idea is shown on the overview page and in the detail view. It should be concise and meaningful so citizens can grasp the content at a glance. Changes to the title become visible on the platform immediately and are reflected in search results.
+            description: Description
+            description_hint: The description contains all details about the idea and is shown in the detail view. Use text formatting to structure the content clearly. A well-structured description helps citizens better understand the proposal and make an informed decision when voting.
+            image: Image
+            image_hint: The cover image is shown in the overview and in the detail view of the idea. It serves as a visual hook and draws attention to the submission. Landscape images with a minimum width of 800 pixels are recommended. Supported formats are JPG, PNG, and WebP. Oversized files are compressed automatically.
+            documents: Documents
+            documents_hint: You can upload supplementary documents for the idea here, such as expert reports, plans, or statements. The files are offered for download in the detail view of the idea. Supported formats are PDF, DOC, DOCX, XLS, XLSX, CSV, and other common file types. Multiple documents can be added at once.
+            video_url: Video URL
+            video_url_hint: Add a video URL from YouTube or Vimeo to embed an explanatory video in the detail view of the idea. The video is automatically rendered as a player and gives citizens an additional way to understand the proposal visually. Other video platforms are not supported.
+            category: Category
+            category_hint: The category assigns the idea to a thematic area and enables filtering in the overview. Each category has its own color and an optional icon for visual differentiation. If no category fits, the selection can be left empty. The assignment can be changed later at any time.
+            map_location: Map location
+            on_behalf_of: On behalf of
+            on_behalf_of_hint: This field indicates whether the idea was submitted on behalf of another person or organization. The entered name is displayed publicly in the detail view of the idea. Leave the field empty if the idea was submitted directly by the logged-in user without representation.
+        tabs:
+          show: Show
+          administer: Administer
+          edit: Edit
+          audits: Change log
+        show:
+          title: Idea
+          edit: Edit
+          download_pdf: Download PDF
+          view_on_site: View on the website
+          admin_accepted_status: Approval status
+          accepted: Approved
+          not_accepted: Not approved
+          admin_accepted_at: Approved on
+          status: Status
+          status_active: Active
+          status_archived: Archived
+          status_pending: Pending
+          votes_needed_for_success: Votes required
+          timeframe: Timeframe
+          timeframe_days:
+            one: "%{count} day"
+            other: "%{count} days"
+          remaining_days: Remaining days
+          remaining_days_count:
+            one: "%{count} day"
+            other: "%{count} days"
+          hidden_at: Hidden on
+          created_at: Created on
+          updated_at: Last updated
+          title_label: Title
+          description_label: Description
+          image_label: Image
+          documents_label: Documents
+          category: Category
+          map_label: Map
+          on_behalf_of_label: On behalf of
+          video_url: Video URL
+          address: Address
+          officer: Officer
+          author: Author
+          official_answer: Official response
+          official_answer_hint: Please enter the official response for this idea.
+        update_official_answer:
+          success: Official response updated successfully.
+        administer:
+          title: Administer
+          votes_needed_for_success: Votes required
+          votes_needed_for_success_hint: Define how many votes an idea must reach to be considered successful. Once the specified vote count is reached, the idea is marked as successful and can be forwarded for further processing. A value of zero means no minimum vote count is required.
+          timeframe: Timeframe (days)
+          timeframe_hint: The timeframe determines how many days the idea stays open for voting from the date of publication. After the period ends, no further votes are accepted and the idea's status is updated automatically. A value of zero means no time limit is set for voting.
+          officer: Officer
+          officer_hint: The officer is the person responsible for processing and responding to this idea. They receive notifications about new comments and status changes and can write an official response. If no officer is assigned, the default officer of the respective category or area applies.
+          no_officer: "-- No officer --"
+          submit: Save
+        settings:
+          title: Features
+        audits:
+          title: Change log
+          audits_title: Changes
+          empty: No changes available
+          table:
+            id: ID
+            field: Field
+            old_value: Old value
+            new_value: New value
+            edited_at: Edited on
+            edited_by: Edited by
+      categories:
+        index:
+          title: Categories
+          page_hint: "Here you manage categories for ideas. Categories assign ideas to thematic areas and enable filtering in the overview. Each category can have its own color, an icon, and a default officer. Use drag & drop to adjust the order. Categories with assigned ideas cannot be deleted."
+          new_category: New category
+          no_categories: No categories available
+          no_items_title: No categories available
+          no_items_description: Create a new category to classify ideas.
+          table:
+            name: Name
+            color: Color
+            icon: Icon
+            officer: Default officer
+            actions: Actions
+        new:
+          title: New category
+        create:
+          success: Category created successfully.
+        edit:
+          title: Edit category
+        update:
+          success: Category updated successfully.
+        destroy:
+          success: Category deleted successfully.
+          cannot_destroy: Category cannot be deleted because it still contains ideas.
+        form:
+          name_label: Name
+          name_hint: Enter the name of the category.
+          color_label: Color
+          color_hint: Choose a color for the category.
+          icon_label: Icon
+          icon_hint: Choose an icon for the category.
+          officer_label: Default officer
+          officer_hint: Choose a default officer for this category.
+          no_officer: "-- No officer --"
+          submit: Save
+      officers:
+        index:
+          title: Team
+          page_hint: "Here you manage the officers for ideas. Officers can edit submitted ideas, assess their feasibility, and write official responses. Use the search field to find registered users and assign them the officer role. Officers can be assigned to categories and areas as default responsible users."
+          search_label: Search users
+          search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for ideas. Officers administer submitted ideas, assess their feasibility, and communicate with submitters.
+          no_officers: No officers available
+          no_items_title: No officers available
+          no_items_description: Search for a user and assign the officer role.
+          table:
+            name: Name
+            email: Email
+            admin: Admin
+        officer:
+          add: Add
+        search:
+          table:
+            name: Name
+            email: Email
+        user_not_found:
+          user_not_found: User not found
+      districts:
+        index:
+          title: Areas
+          page_hint: "Here you see the areas taken over from registered addresses. A default officer can be assigned to each area, who is automatically responsible for new ideas from this area. The assignment can be overridden later for individual ideas."
+          no_districts: No areas available
+          no_items_title: No areas available
+          no_items_description: Areas are taken over from registered addresses and shown here.
+          table:
+            default_officer: Default officer
+        edit:
+          title: Edit district
+          no_officer: "-- No officer --"
+          default_idea_officer_hint: The default officer is automatically assigned to all new ideas submitted from this area. They receive notifications and are responsible for processing the ideas. This assignment can be overridden later for individual ideas. Without assignment, the field remains empty.
+          submit: Save
+        update:
+          success: District updated successfully.
+      idea_audits:
+        show:
+          title: Change details
+          back: Back
+          audit_details: Change details
+          edited_at: Edited on
+          edited_by: Edited by
+          changes: Changes
+          field: Field
+          old_value: Old value
+          new_value: New value

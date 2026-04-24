@@ -51,6 +51,12 @@ de:
           remove_link: Link entfernen
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
+        convert_to_content_blocks:
+          button: In Inhaltsblock-Modus umwandeln
+          tooltip: Seiteninhalt in einen bearbeitbaren Inhaltsblock konvertieren und den neuen Modus aktivieren
+          confirm: Seiteninhalt in einen Inhaltsblock umwandeln und den neuen Modus aktivieren?
+          success: Erfolgreich in den Inhaltsblock-Modus umgewandelt
+          error: Umwandlung fehlgeschlagen
         topbar:
           admin_view: Adminansicht
           user_view: Nutzeransicht

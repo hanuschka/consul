@@ -1,6 +1,6 @@
 class Adm::DeficiencyReports::StatsController < Adm::DeficiencyReports::BaseController
   def show
-    authorize :deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+    authorize :deficiency_report, :stats?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     all = DeficiencyReport.all
     @all_deficiency_reports = all

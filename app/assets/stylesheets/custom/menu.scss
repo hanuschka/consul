@@ -267,8 +267,7 @@ span.icon-account {
     transform: rotate(180deg);
   }
 
-  .main-menu li.nav-element.flyout-item:has(> ul.nav-flyout-block) > .projekt-name-group > .flyout-item-name a::after,
-  .main-menu li.nav-element.flyout-item[aria-expanded] > a::after {
+  .main-menu li.nav-element.flyout-item:has(> ul.nav-flyout-block) > .projekt-name-group > .flyout-item-name a::after {
     content: "\f054";
     font-family: "Font Awesome 5 Free";
     font-weight: bold;
@@ -278,6 +277,16 @@ span.icon-account {
     display: inline-block;
     float: right;
     margin-top: 0.5em;
+  }
+
+  .main-menu li.nav-element.flyout-item[aria-expanded] > a::after {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    font-size: 0.55em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+    display: inline-block;
   }
 
   .main-menu .nav-toggle-arrow {

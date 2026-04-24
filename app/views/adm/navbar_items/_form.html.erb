@@ -82,8 +82,23 @@
       </div>
     <% end %>
 
+    <div
+      class="mb-4"
+      style="display: <%= f.object.kind == "external" ? "none" : "block;" %>"
+      data-components-adm-new-navbar-item-target="customTitle"
+    >
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".custom_title_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.text_field :custom_title, class: "mb-3", label: false, placeholder: t(".custom_title_placeholder") %>
+        <div>
+      </fieldset>
+    </div>
+
     <div>
-      <%= kern_button(text: t(".create"), autofocus: false, type: "submit") %>
+      <%= kern_button(text: f.object.persisted? ? t(".update") : t(".create"), autofocus: false, type: "submit") %>
     </div>
   <% end %>
 </div>

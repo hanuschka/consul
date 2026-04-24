@@ -56,6 +56,8 @@ class NavbarItem < ApplicationRecord
   end
 
   def title
+    return custom_title if custom_title.present?
+
     case kind
     when "presets"
       I18n.t("navbar.presets.#{preset}")

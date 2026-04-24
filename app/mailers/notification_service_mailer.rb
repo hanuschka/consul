@@ -224,6 +224,8 @@ class NotificationServiceMailer < ApplicationMailer
 
   def user_reverification_failed(user_id)
     @user = User.find(user_id)
+    return if @user.email.blank?
+
     @base_url = Setting["url"]
 
     with_user(@user) do

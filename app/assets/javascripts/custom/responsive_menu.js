@@ -4,8 +4,9 @@
 
     toggleMenu: function($arrow) {
       var $navElement = $arrow.closest('li.nav-element');
-      var $navElementValue = ( $navElement.attr('aria-expanded') == 'true' );
-      $navElement.attr('aria-expanded', !$navElementValue);
+      var wasOpen = ( $navElement.attr('aria-expanded') == 'true' );
+      $navElement.attr('aria-expanded', !wasOpen);
+      $arrow.attr('aria-expanded', !wasOpen);
     },
 
     isMobileMenuOpen: function() {
@@ -122,11 +123,14 @@
       if (!$navbar.length) return;
 
       var moreLabel = $navbar.attr('data-navbar-more-label') || 'More';
+      var moreSubmenuId = 'navbar-submenu-more';
       var $moreItem = $(
-        '<li class="nav-element top-level-item navbar-more-item" aria-haspopup="true" aria-expanded="false">' +
+        '<li class="nav-element top-level-item navbar-more-item" aria-expanded="false">' +
           '<a href="#">' + moreLabel + '</a>' +
-          '<button aria-expanded="false" class="nav-toggle-arrow" data-navbar-toggle>&#9660;</button>' +
-          '<ul class="nav-flyout-block"></ul>' +
+          '<button type="button" class="nav-toggle-arrow" aria-expanded="false" aria-haspopup="true"' +
+            ' aria-controls="' + moreSubmenuId + '" aria-label="' + moreLabel + '"' +
+            ' data-navbar-toggle><span aria-hidden="true">&#9660;</span></button>' +
+          '<ul id="' + moreSubmenuId + '" class="nav-flyout-block"></ul>' +
         '</li>'
       );
       var $moreFlyout = $moreItem.children('ul.nav-flyout-block');
@@ -247,11 +251,17 @@
       }, true);
 
       $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) $(this).attr("aria-expanded", "true");
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "true");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "true");
+        }
       });
 
       $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) $(this).attr("aria-expanded", "false");
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "false");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "false");
+        }
       });
 
       App.ResponsiveMenu.initPriorityPlus();

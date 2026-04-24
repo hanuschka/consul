@@ -18,7 +18,6 @@ class Admin::MenuComponent < ApplicationComponent
       moderated_content_links,
       profiles_links,
       registered_addresses_links,
-      matomo_link,
       stats_link,
       settings_links,
       dashboard_links,

@@ -1,0 +1,8 @@
+en:
+  adm:
+    projekts:
+      overview_page:
+        title: Projects overview page
+        tabs:
+          navigation: Projects overview page
+          footer: Footer

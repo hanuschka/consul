@@ -8,7 +8,7 @@ module NavbarItemsHelper
         global_preset_url(item)
       end
     when "projekts"
-      item.projekt.page.url
+      item.projekt&.url
     when "external"
       item.external_url
     end
@@ -21,7 +21,17 @@ module NavbarItemsHelper
   end
 
   def navbar_item_link_attrs(item)
-    item.external? ? ' target="_blank" rel="noopener noreferrer"' : ''
+    attrs = []
+    attrs << ' target="_blank" rel="noopener noreferrer"' if item.external?
+    attrs << ' aria-current="page"' if navbar_item_current?(item)
+    attrs.join
+  end
+
+  def navbar_item_current?(item)
+    return false if item.external?
+    return false unless respond_to?(:request) && request.present?
+
+    navbar_item_url(item) == request.path
   end
 
   private

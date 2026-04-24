@@ -213,9 +213,9 @@ class MapLocation < ApplicationRecord
       sentiment ||= mappable.sentiment if mappable.respond_to?(:sentiment)
       category ||= mappable.category if mappable.respond_to?(:category)
 
-      if (mappable_type == "DeficiencyReport" || mappable.is_a?(Budget::Investment)) && sentiment.present?
+      if sentiment.present? && (mappable.is_a?(Budget::Investment) || mappable.is_a?(Proposal))
         sentiment.color
-      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+      elsif category.present? && (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea))
         category.color
       end
     end

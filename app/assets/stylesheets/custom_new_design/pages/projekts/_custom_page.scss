@@ -295,6 +295,8 @@
   }
 
   .projekt-footer {
+    scroll-margin-top: 270px;
+
     .key-dates {
       margin: 0;
       width: 100%;
@@ -336,13 +338,6 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-    }
-
-    .projekt-footer-anchor {
-      display: block;
-      position: relative;
-      top: -270px;
-      visibility: hidden;
     }
 
     @media screen and (min-width: $small-tablet-viewport-start) {

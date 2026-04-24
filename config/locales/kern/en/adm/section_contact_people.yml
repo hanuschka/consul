@@ -1,0 +1,73 @@
+en:
+  adm:
+    section_contact_people:
+      index:
+        title: Contact persons
+        new_link: Create new contact person
+        empty_title: No contact persons available
+        empty_description: Create a new contact person to assign contacts to individual administrative areas.
+        filters:
+          all: All
+        sections:
+          ideas: Ideas
+          deficiency_reports: Deficiency reports
+          projekts: Projects
+          moderation: Moderation
+          valuation: Valuation
+          landing_pages: Topic pages
+        table:
+          name: Name
+          section: Section
+          role: Role
+          email: Email
+          phone: Phone
+          actions: Actions
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this contact person?
+      new:
+        title: Create new contact person
+      edit:
+        title: Edit contact person
+      create:
+        success: Contact person successfully created.
+      update:
+        success: Contact person successfully updated.
+      destroy:
+        success: Contact person successfully deleted.
+      search:
+        select: Select
+        no_results: No users found.
+      form:
+        submit: Save
+        select_user: Select user
+        search_user_placeholder: Search users (name or email)...
+        select_section: Select section
+        hints:
+          user: >
+            Select the user who should appear as the contact person for the
+            respective administrative area.
+          section: >
+            Select the administrative area this contact person should be
+            assigned to.
+          role: >
+            Specify the role or function of the contact person,
+            e.g. "Project lead" or "Department head".
+          email: >
+            Enter the contact person's email address,
+            under which they can be reached for follow-up questions.
+          phone: >
+            Enter the contact person's phone number,
+            under which they can be reached for follow-up questions.
+          position: >
+            Define the order in which contact persons are displayed
+            within a section. Lower values appear first.
+  activerecord:
+    attributes:
+      section_contact_person:
+        user: User
+        section: Section
+        role: Role
+        email: Email
+        phone: Phone
+        position: Position

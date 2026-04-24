@@ -1,4 +1,5 @@
 class Adm::DeficiencyReports::DistrictPolicy < ApplicationPolicy
+  include Adm::DeficiencyReports::Concerns::DeficiencyReportManageable
   def index?
     deficiency_report_manager?
   end
@@ -16,10 +17,4 @@ class Adm::DeficiencyReports::DistrictPolicy < ApplicationPolicy
       scope.all
     end
   end
-
-  private
-
-    def deficiency_report_manager?
-      @user&.administrator? || @user&.deficiency_report_manager?
-    end
 end

@@ -1,0 +1,19 @@
+en:
+  adm:
+    modules:
+      show:
+        title: Modules
+        hint: >
+          Here you enable or disable the modules and overview pages of your platform. A module must be enabled here before it can be added as a menu item under "Application → Navigation". Disabled modules cannot be reached by citizens on the frontend — not even via direct links. Enabled modules without a navigation entry remain accessible via their direct link but are not promoted in the menu. Existing content is preserved when a module is disabled and becomes visible again when it is re-enabled. You can also store an introductory text per section, shown as a short orientation for your team on the respective landing page. Use the notice message to communicate current information or instructions to your team — for example deadlines or processing notes. Enable "Notice active" to display the notice as a yellow info box on the section's landing page.
+        tabs:
+          ideas: Ideas
+          projekts: Projects
+          deficiency_reports: "Deficiency reports"
+          moderation: Moderation
+          valuation: Valuation
+          landing_pages: Topic pages
+          events: Events
+          investments: "Budget investments"
+          polls: "Polls"
+          proposals: "Proposals"
+        section_settings_title: Section settings

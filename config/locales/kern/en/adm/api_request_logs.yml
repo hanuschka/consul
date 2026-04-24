@@ -1,0 +1,26 @@
+en:
+  adm:
+    api_request_logs:
+      index:
+        title: API request logs
+        intro: >
+          Here you see all incoming API requests from external clients to your platform. Each entry shows the HTTP method used, the requested path, the response status, and the associated API client. This lets you trace which applications access your data, spot failing requests, and keep an eye on API usage.
+        id: ID
+        http_method: Method
+        request_path: Path
+        response_status: Status
+        api_client: API client
+        no_logs: No API request logs available.
+        destroy_all: Delete all logs
+        destroy_all_confirm: Really delete all API request logs?
+      destroy_all:
+        success: All API request logs have been deleted.
+      show:
+        http_method: HTTP method
+        request_path: Request path
+        full_url: Full URL
+        response_status: Response status
+        api_client: API client
+        created_at: Created on
+        query_params: Query parameters
+        body_params: Body parameters

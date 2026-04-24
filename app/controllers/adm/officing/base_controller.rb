@@ -31,7 +31,7 @@ class Adm::Officing::BaseController < Adm::BaseController
 
       if unique_stamp.blank?
         flash.now[:error] = t("adm.officing.verification.errors.missing_fields")
-        render "adm/officing/shared/verify_user"
+        render "adm/officing/shared/verify_user", status: :unprocessable_entity
       else
         existing_user = User.find_by(unique_stamp: unique_stamp)
         @offline_user = existing_user if existing_user.present?

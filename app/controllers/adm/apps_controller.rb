@@ -94,7 +94,7 @@ module Adm
           app_def.merge(
             name:        t("adm.apps.show.apps.#{app_def[:key]}.name"),
             description: t("adm.apps.show.apps.#{app_def[:key]}.description"),
-            status:      "inactive"
+            status:      app_status(cat[:category_key], app_def[:key])
           )
         end
 
@@ -103,6 +103,14 @@ module Adm
           apps: apps
         )
       end
+    end
+
+    private
+
+    def app_status(category_key, _app_key)
+      return "inactive" if category_key != "ai"
+
+      Rails.application.secrets.dig(:ai, :enabled) == true ? "active" : "inactive"
     end
   end
 end

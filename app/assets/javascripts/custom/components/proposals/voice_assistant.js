@@ -120,10 +120,13 @@
 
     requestSession: async function() {
       const dataset = this.element.dataset;
-      const response = await App.Ajax.post(dataset.createSessionUrl, {
-        codename: dataset.codename,
-        consul_projekt_phase_id: dataset.projektPhaseId
-      });
+      const payload = { codename: dataset.codename };
+
+      if (dataset.projektPhaseId) {
+        payload.consul_projekt_phase_id = dataset.projektPhaseId;
+      }
+
+      const response = await App.Ajax.post(dataset.createSessionUrl, payload);
 
       await this.handleSessionInitialized(response.ephemeral_key, response.model);
     },

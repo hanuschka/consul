@@ -1,0 +1,124 @@
+en:
+  adm:
+    projekts:
+      budget_investments:
+        tabs:
+          show: Manage
+          administer: Administer
+          people: Valuators & administrators
+          edit: Edit
+          milestones: Milestones
+          progress_bars: Progress bars
+          audits: Change log
+        people:
+          title: Valuators & administrators
+          administrator: Administrator
+          administrator_hint: Choose the administrator responsible for this proposal.
+          valuator_groups: Valuator groups
+          valuator_groups_hint: Choose the valuator groups responsible for evaluating this proposal.
+          no_administrators: No administrators available for this budget.
+          no_valuator_groups: No valuator groups available.
+          no_valuators: No valuators available for this budget.
+          valuators: Valuators
+          valuators_hint: Choose the valuators responsible for evaluating this proposal.
+        milestones:
+          title: Milestones
+        progress_bars:
+          title: Progress bars
+        show:
+          title: Proposal
+          status_title: Overview
+          content_title: Proposal
+          content_info: >-
+            This area shows the content submitted by the user — title, description, image, and other details.
+            These can be adjusted via the Edit button. In case of copyright infringement, the image
+            can be hidden from the frontend via "Hide image" in edit mode, without deleting it.
+          author: Author
+          heading: Heading
+          created_at: Submitted
+          feasibility: Criteria
+          valuation_finished: Valuation finished
+          valuation_short: Valuation
+          price: Cost
+          total_votes: Support
+          ballot_lines: Voter count
+          total_ballot_votes: Vote count
+          preselected: Shortlist
+          selected: For voting
+          winner: Winner
+          district: District
+          admin: Administrator
+          valuator: Valuator
+          description: Description
+          map: Map
+          edit: Edit
+          download_pdf: Download PDF
+          back: Back to list
+          view_on_website: View on website
+          title_section: Title
+          description_section: Description
+          image: Image
+          image_concealed: Hidden
+          hide_image: Hide image
+          show_image: Show image
+          additional_fields: Additional fields
+          on_behalf_of: On behalf of
+          video_url: Video URL
+          implementation_performer: Implementation by
+          implementation_contribution: Own contribution
+          user_cost_estimate: User cost estimate
+          labels: Labels
+          sentiment: Sentiment
+          documents: Documents
+          admin_section_title: Valuation
+          current_phase: "Current phase: %{phase}"
+          admin_info_banner: "Valuation of a proposal follows the budget's phase system. Actions are unlocked as soon as the respective phase is reached."
+          early_pricing_hint: "This proposal meets the criteria. Pricing (phase 5) is therefore already unlocked — even if the budget has not yet reached that phase."
+          phase_not_available: Not yet available
+          show_details: Show explanation
+          selected_yes: Admitted to voting
+          selected_no: Not admitted
+          winner_yes: Winner
+          incompatible_yes: Incompatible
+        administer:
+          title: Administer
+          phase_2_3_title: "Phase 2 & 3: Criteria review"
+          phase_2_3_hint: "Check whether the proposal meets the criteria. In phase 4 (support phase) and phase 7 (voting phase), only proposals that meet the criteria and have a completed valuation are put up for voting. Only after the valuation is completed are proposals released for voting and the explanation published on the frontend. In addition, a proposal can no longer be edited by the author after valuation is completed."
+          phase_5_title: "Phase 5: Pricing"
+          phase_5_hint: "Define the price that will be publicly displayed on the frontend from phase 6 onward. Additionally, ongoing costs and the timeframe can be defined, which are intended for internal information only. Note: pricing can also be done before phase 5 if the proposal has passed the criteria review."
+          phase_5_early_access: Available early (meets criteria)
+          phase_6_title: "Phase 6: Admission to voting"
+          phase_6_hint: "Define whether this proposal should be considered for phase 7 (voting phase)."
+          phase_8_title: "Phase 8: Winners list"
+          phase_8_hint: "Define whether this proposal should be excluded from the calculation of winning proposals (phase 9). In that case, the proposal may be excluded from the winners list."
+          selected_true: Proposal should be considered for voting
+          selected_false: Proposal should not be considered for voting
+        edit:
+          title: Edit proposal
+          user_submission_fields: User-submitted fields
+          documents: Documents
+          hide_image: Hide image
+          show_image: Show image
+          on_behalf_of: On behalf of
+          on_behalf_of_placeholder: Submit proposal on behalf of someone
+          select_placeholder: Please select
+        update:
+          success: Proposal updated successfully.
+        destroy:
+          success: Proposal deleted successfully.
+        form:
+          title_label: Title
+          description_label: Description
+          heading_label: Heading
+          price_label: Total cost
+          feasibility_label: Criteria
+          feasibility_hint: "Criteria status: undecided, feasible, unfeasible"
+          selected_label: Selected
+          winner_label: Winner
+          incompatible_label: Incompatible
+          visible_to_valuators_label: Visible to valuators
+          valuator_explanation_label: Valuator explanation
+          image_label: Image
+          submit: Save
+        audits:
+          title: Change log

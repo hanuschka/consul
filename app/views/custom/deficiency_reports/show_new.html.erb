@@ -68,6 +68,14 @@
       <aside class="sidebar">
         <%= render Sidebar::ResourceAuthorComponent.new(resource: @deficiency_report) %>
 
+        <% if deficiency_reports_feature?("allow_voting") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.show.sidebar.vote"), icon_name: "thumbs-up")) do %>
+            <div id="<%= dom_id(@deficiency_report) %>_votes">
+              <%= render "deficiency_reports/votes", deficiency_report: @deficiency_report %>
+            </div>
+          <% end %>
+        <% end %>
+
         <% if feature?(:allow_attached_documents) && @deficiency_report.documents.present? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
             <%= render(Sidebar::DocumentListComponent.new(documents: @deficiency_report.documents)) %>

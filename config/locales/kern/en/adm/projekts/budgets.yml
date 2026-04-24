@@ -1,0 +1,8 @@
+en:
+  adm:
+    projekts:
+      budgets:
+        calculate_winners:
+          notice: The top-rated proposals are being determined. This may take a moment.
+        recalculate_winners:
+          notice: Winners were recalculated successfully.

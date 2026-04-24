@@ -220,8 +220,11 @@ class ProjektPhase < ApplicationRecord
       return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
       return :phase_not_active if not_active?
-      return :phase_expired if expired?
-      return :phase_not_current if not_current?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
 
       return :guest_not_logged_in if user_status == "guest" && !user
       return if user_status == "guest"

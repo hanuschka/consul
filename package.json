@@ -32,12 +32,12 @@
     "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
-    "sortablejs": "^1.15.6"
+    "sortablejs": "^1.15.6",
+    "@redocly/cli": "^2.9.0"
   },
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css": "npm run build:css:adm --",
-    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed",
-    "@redocly/cli": "^2.9.0"
+    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed"
   }
 }

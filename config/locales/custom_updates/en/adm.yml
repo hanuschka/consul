@@ -1,6 +1,8 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    navbar_items:
+      deleted_projekt: "[Deleted project]"
     projekts:
       phases:
         ai_user_flow:

@@ -1,5 +1,7 @@
 de:
   adm:
+    navbar_items:
+      deleted_projekt: "[Gelöschtes Projekt]"
     projekts:
       phases:
         ai_user_flow:

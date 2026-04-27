@@ -1,0 +1,36 @@
+en:
+  adm:
+    projekts:
+      projekt_arguments:
+        new:
+          title: Create voice
+        create:
+          success: Voice created successfully.
+        edit:
+          title: Edit voice
+        update:
+          success: Voice updated successfully.
+        destroy:
+          success: Voice deleted successfully.
+        send_notifications:
+          success: Notifications sent successfully.
+        form:
+          type_label: Type
+          type_hint: "Defines whether this voice represents a supporting (Pro) or opposing (Contra) position. Pro and contra voices are shown in separate areas on the frontend and give participants a structured overview of the different positions on the topic."
+          pro: Pro
+          contra: Contra
+          name_label: Name
+          name_hint: "Name of the person holding this position. The name is shown together with the profile picture and party on the frontend. Use the full name as it should be publicly communicated — e.g. 'Dr. Maria Schmidt' or 'Thomas Müller, City Council'."
+          name_placeholder: "e.g. Dr. Maria Schmidt"
+          party_label: Party / organization
+          party_hint: "Optional information about the party, faction, or organization the person belongs to. The affiliation is shown below the name on the frontend and gives participants additional context for categorizing the position. Leave the field empty if no assignment is desired."
+          party_placeholder: "e.g. SPD, Alliance 90/The Greens"
+          position_label: Short position
+          position_hint: "Short, concise summary of the core position in one sentence. The short position is shown on the frontend as the heading of the voice and should capture the viewpoint succinctly — e.g. 'Investment in bike paths strengthens mobility' or 'Cost is out of proportion to benefit'."
+          position_placeholder: "e.g. Investment strengthens sustainable mobility"
+          note_label: Rationale
+          note_hint: "Detailed explanation of the position, shown on the frontend below the short position. Describe the arguments, background, and facts supporting the position. The text should be factual and understandable so participants can follow the reasoning."
+          note_placeholder: "Explain the arguments and background of this position..."
+          image_label: Profile picture
+          image_hint: "Optional photo of the person, shown next to the voice on the frontend. Use a portrait photo in vertical or square format. The image is shown as a small profile picture and should clearly show the person. Recommended minimum size: 200 × 200 pixels. Formats: JPG, PNG."
+          submit: Save

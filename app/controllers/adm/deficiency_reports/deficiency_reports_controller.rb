@@ -5,17 +5,41 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include DocumentAttributes
 
   def index
+    params[:archived_state] = ["active"] if params[:archived_state].blank?
+    params[:hidden_state] = ["visible"] if params[:hidden_state].blank?
+
     base_scope = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
     base_scope = filter_assigned_reports_only(base_scope)
-    @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(base_scope, params))
 
-    @title_header_options = { search: true }
-    @created_at_header_options = { sort: true }
-    @category_header_options = { filter_options: category_filter_options }
-    @status_header_options = { filter_options: status_filter_options }
-    @responsible_header_options = { filter_options: responsible_filter_options }
+    respond_to do |format|
+      format.html do
+        preloaded = base_scope.preload(:status, :translations, :author, :category, :responsible, :feedback_form, map_location: :district)
+        @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params))
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
+        @id_header_options = { search: true, sort: true }
+        @title_header_options = { search: true }
+        @author_header_options = { search: true }
+        @created_at_header_options = { sort: true, date_range: true }
+        @updated_at_header_options = { sort: true, date_range: true }
+        @status_changed_at_header_options = { sort: true, date_range: true }
+        @status_header_options = { filter_options: status_filter_options }
+        @address_header_options = { search: true }
+        @district_header_options = { filter_options: district_filter_options }
+        @category_header_options = { filter_options: category_filter_options }
+        @responsible_header_options = { filter_options: responsible_filter_options }
+        @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
+        @hidden_state_header_options = { filter_options: hidden_state_filter_options, default: ["visible"] }
+
+        @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
+      end
+
+      format.csv do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params)
+        send_data CsvServices::DeficiencyReportsExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.csv",
+          type: "text/csv"
+      end
+    end
   end
 
   def settings
@@ -213,14 +237,31 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       DeficiencyReport::Category.all.map { |c| [c.id, c.name] }
     end
 
+    def district_filter_options
+      scope = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::DeficiencyReports::DistrictPolicy::Scope)
+      scope.pluck(:id, :name)
+    end
+
     def status_filter_options
       DeficiencyReport::Status.all.map { |s| [s.id, s.title] }
     end
 
     def responsible_filter_options
-      officers = DeficiencyReport::Officer.all.map { |o| [o.id, o.name] }
-      groups = DeficiencyReport::OfficerGroup.all.map { |g| [g.id, g.name] }
-      officers + groups
+      deficiency_report_all_responsible_sorted.map do |r|
+        ["#{r.class.name.demodulize}_#{r.id}", r.name]
+      end
+    end
+
+    def archived_state_filter_options
+      %w[active archived].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{state}")]
+      end
+    end
+
+    def hidden_state_filter_options
+      %w[visible hidden].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{state}")]
+      end
     end
 
     def notify_new_officer(dr)

@@ -13,6 +13,19 @@ export default class extends Controller {
   connect() {
     this.buildCheckboxes()
     this.applyFromCookie()
+    this.observeRowChanges()
+  }
+
+  disconnect() {
+    this.rowObserver?.disconnect()
+  }
+
+  observeRowChanges() {
+    const tbody = this.tableTarget.querySelector("tbody")
+    if (!tbody) return
+
+    this.rowObserver = new MutationObserver(() => this.applyFromCookie())
+    this.rowObserver.observe(tbody, { childList: true })
   }
 
   toggle() {
@@ -34,8 +47,8 @@ export default class extends Controller {
       const field = header.dataset.field || header.closest("[data-field]")?.dataset.field
       if (!field) return
 
-      const labelEl = header.querySelector(`#${field}-label`)
-      const text = labelEl ? labelEl.textContent.trim() : header.firstElementChild?.textContent.trim() || header.textContent.trim()
+      const labelEl = header.querySelector("[id$='-label']")
+      const text = labelEl ? labelEl.textContent.trim() : header.textContent.trim()
       this.fields.push(field)
 
       const label = document.createElement("label")

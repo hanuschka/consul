@@ -1,0 +1,15 @@
+en:
+  adm:
+    idea_managers:
+      index:
+        title: Idea managers
+        empty_title: "No idea managers available"
+        empty_description: "Use the button above to add a new idea manager."
+        new_link: Add new idea manager
+        no_idea_managers: No idea managers available.
+      new:
+        title: Add new idea manager
+        search_label: Search users
+        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as idea managers. Idea managers administer submitted ideas and can edit and assign them.
+      search:
+        no_results: No users found matching these criteria.

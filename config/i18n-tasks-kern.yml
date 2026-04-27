@@ -1,0 +1,55 @@
+# i18n-tasks config for the `kern/` locale tree only.
+#
+# The upstream Consul config at config/i18n-tasks.yml assumes English is the
+# base locale and covers the stock Consul locale files. Our `kern/` tree is
+# authored in German and being translated into English — that's what this file
+# manages.
+#
+# i18n-tasks 0.9.37 (pinned by the Gemfile) does not accept a `-c` CLI flag, so
+# this config is loaded programmatically by the rake tasks in
+# lib/tasks/kern_i18n.rake. Run those instead of the bare `i18n-tasks` CLI:
+#
+#   bundle exec rake kern:i18n:missing   # list keys missing in kern/en
+#   bundle exec rake kern:i18n:stats     # summary counts
+#   bundle exec rake kern:i18n:eq_base   # EN values identical to DE (possibly untranslated)
+
+base_locale: de
+locales: [de, en]
+
+data:
+  read:
+    - config/locales/kern/%{locale}/**/*.yml
+
+  write:
+    - config/locales/kern/%{locale}.yml
+
+  yaml:
+    write:
+      line_width: -1
+
+# i18n-tasks `unused` scans app code for `t(...)` calls. Our kern keys are
+# also referenced from views outside the kern/ tree, so search the full app.
+search:
+  paths:
+    - app/
+    - lib/
+    - db/dev_seeds/
+  relative_roots:
+    - app/controllers
+    - app/helpers
+    - app/mailers
+    - app/presenters
+    - app/views
+    - app/components
+  exclude:
+    - app/assets/images
+    - app/assets/fonts
+    - "**/*.docx"
+    - "**/*.pdf"
+    - "**/*.xlsx"
+
+# Keys we intentionally leave unreferenced in code but still want present in
+# the locale files (e.g. computed/interpolated keys).
+ignore_unused: []
+
+ignore_missing: []

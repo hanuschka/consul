@@ -1,0 +1,19 @@
+en:
+  adm:
+    navbar:
+      show:
+        title: Navigation
+        intro_title: About the navigation
+        intro_text_p1: >
+          Here you manage the entries of your platform's main navigation. You can add new navigation items,
+          edit or delete existing ones. The order of entries can be adjusted by drag & drop. Navigation
+          items can be structured as direct links or as categories with submenus — creating clear,
+          multi-level menus.
+        intro_text_p2: >
+          When creating a new entry, three types are available: system pages (e.g. deficiency reports, projects overview, events calendar), projects, and custom links. System pages are only selectable if the respective module is enabled under "Modules".
+        intro_text_p3: >
+          Please note: changes to the navigation are immediately visible to all platform visitors after
+          saving. Carefully check new entries for correct links and labels before publishing.
+        new_item: "Create new entry"
+        no_items_title: "No navigation items available"
+        no_items_description: "Create a new entry to shape your platform's main navigation."

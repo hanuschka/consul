@@ -1,0 +1,40 @@
+en:
+  adm:
+    projekts:
+      projekt_event_registrations:
+        index:
+          title: Registrations
+          export_csv: Export CSV
+          no_items_title: No registrations yet
+          no_items_description: Once people register for this event, they'll appear here.
+          no_results_filtered_title: No registrations match the filter
+          no_results_filtered_description: Adjust the status filter to view other registrations.
+          counts:
+            confirmed: "Confirmed: %{confirmed} / %{max}"
+            total_active:
+              one: "1 active registration"
+              other: "%{count} active registrations"
+          columns:
+            name: Name
+            email: Email
+            status: Status
+            registered_at: Registered at
+            confirmed_at: Confirmed at
+            actions: Actions
+          statuses:
+            pending_confirmation: Pending confirmation
+            confirmed: Confirmed
+            waitlisted: Waitlisted
+            cancelled: Cancelled
+          actions:
+            resend_confirmation: Resend confirmation
+            destroy: Delete
+          destroy:
+            confirm: Really delete this registration?
+          resend_confirmation:
+            confirm: Resend confirmation email?
+        destroy:
+          success: Registration was deleted.
+        resend_confirmation:
+          success: Confirmation email was resent.
+          not_pending: This registration does not require confirmation.

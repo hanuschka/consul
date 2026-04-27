@@ -1,0 +1,31 @@
+en:
+  adm:
+    projekts:
+      formular_follow_up_letters:
+        create:
+          success: Follow-up email created successfully.
+        edit:
+          title: Edit follow-up email
+          recipients_label: Select recipients
+          recipients_hint: >
+            Choose the submissions whose submitters should receive this follow-up email. Already-selected recipients are marked. You can adjust the selection at any time as long as the email has not yet been sent.
+          email: Email
+          no_answers: No form submissions available yet.
+        update:
+          success: Follow-up email updated successfully.
+        destroy:
+          success: Follow-up email deleted successfully.
+        send_emails:
+          success: Emails are being sent.
+        form:
+          subject_label: Subject
+          subject_hint: >
+            Enter the subject of the follow-up email. It appears to recipients as the email subject line. Choose a meaningful subject that briefly summarizes the content of the message — e.g. "Thank you for participating" or "Results of the citizen survey". The subject is the first thing recipients see.
+          body_placeholder: Your message to recipients...
+          body_label: Message
+          body_hint: >
+            Write the content of the follow-up email here. The text is sent to all selected recipients. You can use the message to thank them for participating, inform them about results, or provide additional information. The email is sent as plain text without formatting.
+          show_follow_up_button_label: Show follow-up button
+          show_follow_up_button_hint: >
+            When enabled, a button is shown in the email through which recipients can fill in a follow-up form with additional fields. The follow-up form supplements the original submission with further information — e.g. for follow-up questions, in-depth information, or a later follow-up survey.
+          submit: Save

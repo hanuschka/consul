@@ -8,7 +8,7 @@ module NavbarItemsHelper
         global_preset_url(item)
       end
     when "projekts"
-      item.projekt.page.url
+      item.projekt&.url
     when "external"
       item.external_url
     end

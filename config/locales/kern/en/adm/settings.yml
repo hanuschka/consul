@@ -1,0 +1,42 @@
+en:
+  adm:
+    settings:
+      metadata:
+        title: Metadata
+        intro_title: About metadata
+        intro_text_p1: >
+          This page contains basic settings for your platform: the application's display name,
+          the main URL, and the email sender details for automatically sent notifications.
+          Please note: changes to the sender email address require coordination with
+          demokratie.today, since it must match the technical mail server configuration.
+        intro_text_p2: >
+          In the Search Engine Optimization area you configure the title, description, and keywords
+          used by search engines to index your platform. You can also link your social media profiles:
+          each filled-in field automatically produces a matching icon with a link in the platform footer.
+      gdpr:
+        title: GDPR
+        intro_title: About GDPR settings
+        intro_text_p1: >
+          On this page you configure the platform's privacy-related settings.
+          With GDPR-compliant defaults you enable "Privacy by Design" as a core principle.
+          The external-link warning informs users when they leave the platform. The two-click
+          solution for embedded content (e.g. maps or videos) ensures that no data is transmitted
+          to third-party providers before users have actively consented.
+        intro_text_p2: >
+          You also set the duration of user sessions in minutes: after this time, users are
+          automatically logged out. In addition, you define how many days the verification link
+          sent by email remains valid before it expires and a new link must be requested.
+      registration:
+        title: Account & access
+        intro_title: About account & access
+        intro_text_p1: >
+          Here you control what information users must provide when registering.
+          With extended registration enabled, additional fields are requested — including first name,
+          last name, address, and date of birth. These data are then available for project-specific
+          participation restrictions. Optionally, entry of the last four digits of an ID document
+          can be enabled as well.
+        intro_text_p2: >
+          In the Verification area you configure how users are verified: by automatic comparison
+          of the ID document against a reference list from the registration office (requires an
+          API connection). You can also control whether the profile-data completeness status and
+          current verification status are visibly shown in the user's account.

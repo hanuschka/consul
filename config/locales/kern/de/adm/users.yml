@@ -30,3 +30,13 @@ de:
             edit: Bearbeiten
       csv_download:
         not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.
+      edit:
+        title: Nutzer bearbeiten
+      form:
+        submit_with_reverify: Speichern & Einwohnermeldeamt-Abgleich durchführen
+        reverify_confirm: Sind Sie sicher?
+      flash:
+        updated: Nutzer aktualisiert
+        verified: Nutzer verifiziert
+        verify_failed: Nutzer konnte nicht verifiziert werden
+        unverified: Verifizierung aufgehoben

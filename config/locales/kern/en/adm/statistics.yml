@@ -1,0 +1,130 @@
+en:
+  adm:
+    statistics:
+      show:
+        title: Statistics
+        sections:
+          users: Users
+          projects: Projects
+          phases: Participation phases
+          deficiency_reports: Deficiency reports
+          demographics: User demographics
+          activity: Activity (last 12 months)
+        users:
+          total:
+            label: "Total (active)"
+            tip: "Registered, active user accounts. Deleted and deactivated accounts are not included."
+          new_week:
+            label: New this week
+            tip: "Users newly registered in the last 7 days. The trend compares this with the previous 7-day period."
+          new_month:
+            label: New this month
+            tip: "Users newly registered in the last 30 days. The trend compares this with the previous 30 days."
+          verified_l1:
+            label: Registered
+            tip: "Users with a confirmed email address. Eligible for basic participation."
+          verified_l2:
+            label: Verified
+            tip: "Users with full identity verification, e.g. via BundID or BayernID. Eligible for restricted participation."
+          guest:
+            label: Guest accounts
+            tip: "Temporary guest accounts without full registration. These users have limited permissions."
+          newsletter:
+            label: Newsletter subscribers
+            tip: "Active users who have consented to receive the newsletter."
+          deleted:
+            label: Deleted
+            tip: "User accounts that have been deleted (by the user themselves or by admins). Personal data has been anonymized."
+          ratio: "%{percent} % of all users"
+        projects:
+          total:
+            label: Total
+            tip: "All regular participation projects (excluding system projects and sub-projects)."
+          active:
+            label: Active
+            tip: "Projects with a currently running participation period (start date reached, end date not yet passed)."
+          expired:
+            label: Expired
+            tip: "Projects whose participation period has ended. They are no longer active."
+          subscriptions:
+            label: Subscriptions
+            tip: "Active project subscriptions: users who have enabled notifications for at least one project."
+          ratio: "%{percent} % of all projects"
+        phases:
+          comment:
+            label: Comment phase
+            tip: "How often the comment phase was used / comments received."
+            submission_label: Comments
+          proposal:
+            label: Proposal phase
+            tip: "How often the proposal phase was used / proposals and comments received."
+            submission_label: Proposals
+            submission_label2: Comments
+          question:
+            label: Quick polls
+            tip: "How often quick polls were used / answers received."
+            submission_label: Answers
+          voting:
+            label: Votes
+            tip: "How often voting phases were used / votes cast."
+            submission_label: Votes
+          budget:
+            label: Participatory budget
+            tip: "How often participatory-budget phases were used / project ideas and comments submitted."
+            submission_label: Project ideas
+            submission_label2: Comments
+          formular:
+            label: Forms
+            tip: "How often form phases were used / submissions received."
+            submission_label: Submissions
+          legislation:
+            label: Collaborative text editing
+            tip: "How often legislation phases were used / annotations received."
+            submission_label: Annotations
+          argument:
+            label: Voices of the city
+            tip: "How often argument phases were used / arguments contained."
+            submission_label: Arguments
+          point_of_interest:
+            label: Points of interest
+            tip: "How often map phases were used / places entered."
+            submission_label: Places
+          event:
+            label: Events
+            tip: "How often event phases were used / events contained."
+            submission_label: Events
+          newsfeed:
+            label: Newsfeed
+            tip: "How often newsfeed phases were used in projects."
+          milestone:
+            label: Milestones
+            tip: "How often milestone phases were used / milestones contained."
+            submission_label: Milestones
+          projekt_notification:
+            label: Notifications
+            tip: "How often notification phases were used in projects."
+          livestream:
+            label: Livestreams
+            tip: "How often livestream phases were used / livestreams contained."
+            submission_label: Livestreams
+          iframe:
+            label: Iframe integration
+            tip: "How often embed phases were used in projects."
+        deficiency_reports:
+          total:
+            label: Total
+            tip: "All submitted deficiency reports (non-archived), regardless of status."
+          open:
+            label: Open
+            tip: "Deficiency reports that have not yet been completed or archived."
+          unassigned:
+            label: Unassigned
+            tip: "Open deficiency reports that have not yet been assigned to an officer. Action needed!"
+          ratio: "%{percent} % of all reports"
+        demographics:
+          gender: Gender
+          areas: Areas (Top 10)
+        charts:
+          users_new: New registrations
+          comments: Comments
+          proposals: New proposals

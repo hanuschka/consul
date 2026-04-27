@@ -81,6 +81,8 @@ class Api::BaseController < ActionController::API
     end
 
     def log_api_request
+      return if skip_api_request_log?
+
       ApiRequestLogs::CreateAndPushJob.perform_later(
         request.method,
         request.path,
@@ -91,6 +93,12 @@ class Api::BaseController < ActionController::API
         @current_client&.id
       )
     rescue StandardError
+    end
+
+    SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze
+
+    def skip_api_request_log?
+      SKIP_LOG_RESPONSE_STATUSES.include?(response.status)
     end
 
     def render_internal_server_error(exception)

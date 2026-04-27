@@ -77,6 +77,7 @@ class Projekt < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   has_many :map_layers, as: :mappable, dependent: :destroy
+  has_many :navbar_items, dependent: :destroy
 
   # has_many :projekt_labels, dependent: :destroy #remove
 

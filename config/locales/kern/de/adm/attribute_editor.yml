@@ -62,8 +62,22 @@ de:
         body_label: Inhalt
         body_description: "Der Hauptinhalt des Newsletters. Hier können Sie Texte, Links, Bilder und Formatierungen einfügen, um die Empfänger über aktuelle Beteiligungsprojekte, Ergebnisse oder Veranstaltungen zu informieren. Strukturieren Sie den Inhalt mit Absätzen und Zwischenüberschriften, damit er auch beim Überfliegen gut erfassbar ist. Der Editor unterstützt Rich-Text-Formatierung."
       site_customization/content_block:
-        body_label: Newsletter-Fußbereich
-        body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
+        newsletter_email_footer_block_1:
+          body_label: Newsletter-Fußbereich
+          body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
+        auth_page_legend:
+          registrations:
+            body_label: "Registrierungsseite – linke Spalte"
+            body_description: "Wird auf der Registrierungsseite (/users/sign_up) in der linken Spalte neben dem Formular angezeigt. Nutzen Sie diesen Bereich, um Ihre Plattform vorzustellen, den Nutzen einer Registrierung zu erklären oder rechtliche Hinweise zu ergänzen. Bleibt das Feld leer, wird stattdessen ein Standardtext angezeigt."
+          sessions:
+            body_label: "Anmeldeseite – linke Spalte"
+            body_description: "Wird auf der Anmeldeseite (/users/sign_in) in der linken Spalte neben dem Formular angezeigt. Nutzen Sie diesen Bereich, um Nutzer willkommen zu heißen, auf laufende Beteiligungen hinzuweisen oder Hilfetexte einzublenden. Bleibt das Feld leer, wird stattdessen ein Standardtext angezeigt."
+        registration_form_hint:
+          body_label: "Hinweis über dem Registrierungsformular"
+          body_description: "Wird über den Eingabefeldern des Registrierungsformulars auf /users/sign_up angezeigt. Geeignet z. B. für Hinweise zur Datenverarbeitung, zu erforderlichen Angaben oder zu Sonderfällen wie Einladungen. Bleibt das Feld leer, wird kein zusätzlicher Hinweis angezeigt."
+        sign_in_hint:
+          body_label: "Hinweis über dem Anmeldeformular"
+          body_description: "Wird über den Eingabefeldern des Anmeldeformulars auf /users/sign_in angezeigt. Geeignet z. B. für aktuelle Hinweise, Wartungsmeldungen oder Anweisungen für externe Anmeldeverfahren. Bleibt das Feld leer, wird kein zusätzlicher Hinweis angezeigt."
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
         header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild mit klarem Motiv. Es sollte thematisch zur Beteiligungsplattform passen und auch bei unterschiedlichen Bildschirmgrößen gut wirken. Empfohlenes Format: 1920 × 760 Pixel."

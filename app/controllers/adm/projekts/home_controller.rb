@@ -3,9 +3,13 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
 
     @team_members = scoped_team_members
-    @recent_items = policy_scope([:adm, :projekts, Projekt])
-                      .includes(:parent, :landing_page, images_attachments: :blob, page: :translations)
-                      .order(updated_at: :desc).limit(10)
+
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
+    @pagy, @projekts = pagy(base_scope, limit: 10)
+
+    @name_header_options = { sort: true, search: true }
+    @start_date_header_options = { sort: true }
+    @end_date_header_options = { sort: true }
 
     @section_setting = SectionSetting.for_section("projekts")
     @contact_persons = SectionContactPerson.for_section("projekts")
@@ -21,8 +25,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @quick_links = [
       (if policy([:adm, :projekts, Projekt]).create?
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
-       end),
-      { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path }
+       end)
     ].compact
 
     @breadcrumbs = [

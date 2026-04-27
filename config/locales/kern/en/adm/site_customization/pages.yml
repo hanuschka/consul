@@ -1,0 +1,14 @@
+en:
+  adm:
+    site_customization:
+      pages:
+        default_titles:
+          privacy: Privacy policy
+          conditions: General terms of use
+          impressum: Legal notice
+          contact_us: Contact
+        tabs:
+          privacy: Privacy policy
+          conditions: Terms of use
+          impressum: Legal notice
+          contact_us: Contact

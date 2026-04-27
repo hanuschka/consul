@@ -59,7 +59,7 @@ User.class_eval do
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 

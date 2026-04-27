@@ -1,0 +1,15 @@
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.title_label"), hint: t("adm.projekts.projekt_events.form.title_hint")) do %>
+  <%= f.text_field :title, label: false, required: true, placeholder: t("adm.projekts.projekt_events.form.title_placeholder") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.description_label"), hint: t("adm.projekts.projekt_events.form.description_hint"), stacked: true) do %>
+  <%= f.rich_text_area :description, label: false, rows: 10 %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.image_label"), hint: t("adm.projekts.projekt_events.form.image_hint")) do %>
+  <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.language_label"), hint: t("adm.projekts.projekt_events.form.language_hint")) do %>
+  <%= f.text_field :language, label: false, placeholder: t("adm.projekts.projekt_events.form.language_placeholder") %>
+<% end %>

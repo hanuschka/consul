@@ -9,7 +9,7 @@ class Adm::Officing::BudgetsController < Adm::Officing::BaseController
 
     @offline_user = User.find(params[:offline_user_id])
 
-    @permission_problem = @budget.projekt_phase.permission_problem(@offline_user)
+    @permission_problem = @budget.projekt_phase.permission_problem(@offline_user, location: :officing)
 
     if @permission_problem.present?
       render "adm/officing/shared/permission_problem" and return

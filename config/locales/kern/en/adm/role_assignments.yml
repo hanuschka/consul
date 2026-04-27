@@ -1,0 +1,17 @@
+en:
+  adm:
+    role_assignments:
+      user:
+        add: "Add"
+        remove: "Remove"
+    pending_role_assignments:
+      title: "Pending role assignments"
+      email: "Email"
+      created_at: "Queued on"
+      remove: "Remove"
+      confirm_remove: "Are you sure you want to remove this pending role assignment?"
+      created: "The user with email %{email} has been invited as a project manager."
+      removed: "Pending role assignment removed."
+      already_pending: "This role is already queued for %{email}."
+      offer_preassign: "No user with email \"%{email}\" was found."
+      preassign_button: "Invite as project manager"

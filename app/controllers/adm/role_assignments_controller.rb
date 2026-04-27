@@ -79,6 +79,8 @@ module Adm
 
       def redirect_after_create(role_class)
         case role_class.name
+        when "Administrator"
+          adm_administrators_path
         when "ProjektManager"
           adm_projekts_managers_path
         when "LandingPageManager"

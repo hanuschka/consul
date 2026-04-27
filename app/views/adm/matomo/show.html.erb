@@ -1,0 +1,14 @@
+<%= content_for :title, t("adm.matomo.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.matomo.show.title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container adm-matomo">
+  <% if @matomo_configured %>
+    <iframe class="adm-matomo__iframe"
+            src="<%= @matomo_iframe_src %>"
+            title="<%= t("adm.matomo.show.iframe_title") %>"
+            referrerpolicy="no-referrer"></iframe>
+  <% else %>
+    <p><%= t("adm.matomo.show.not_configured") %></p>
+  <% end %>
+</div>

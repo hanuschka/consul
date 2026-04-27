@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
@@ -120,6 +120,20 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.update!(show_content_background: !@projekt.show_content_background)
 
     render json: { show_content_background: @projekt.show_content_background }
+  end
+
+  def convert_to_new_content_block_mode
+    authorize [:adm, :projekts, @projekt], :update?
+
+    result = Projekts::ConvertToNewContentBlockMode.call(projekt: @projekt)
+
+    if result.success?
+      flash[:notice] = t("custom.projekts.page.convert_to_content_blocks.success")
+    else
+      flash[:error] = t("custom.projekts.page.convert_to_content_blocks.error")
+    end
+
+    redirect_to page_path(@projekt.page.slug)
   end
 
   def toggle_activated

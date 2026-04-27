@@ -8,9 +8,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource.registering_from_web = true
     process_temp_attributes_for(resource)
 
-    @pending_invitation = find_valid_pending_invitation
-    @invited_role_type = @pending_invitation&.role_type
-
     if resource.valid?
       new_unique_stamp = resource.prepare_unique_stamp
       existing_user_with_same_stamp = User.find_by(unique_stamp: new_unique_stamp) if new_unique_stamp.present?
@@ -22,7 +19,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to new_user_registration_path,
           alert: t("custom.devise_views.users.registrations.create.existing_user_with_same_stamp")
       else
-        resource.skip_confirmation! if @pending_invitation.present?
         super
       end
     else
@@ -61,29 +57,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
     def after_sign_up_path_for(resource)
-      if @invited_role_type.present?
-        case @invited_role_type
-        when "ProjektManager"
-          adm_projekts_root_path
-        else
-          adm_root_path
-        end
-      else
+      case pending_invitation&.role_type
+      when nil
         super
+      when "ProjektManager"
+        adm_projekts_root_path
+      else
+        adm_root_path
       end
+    end
+
+    def build_resource(hash = {})
+      super
+      resource.skip_confirmation! if pending_invitation.present?
     end
 
   private
 
-    def find_valid_pending_invitation
+    def pending_invitation
+      return @pending_invitation if defined?(@pending_invitation)
+
       token = params[:invitation_token]
-      return nil if token.blank?
+      return @pending_invitation = nil if token.blank?
 
       pending = PendingRoleAssignment.find_by_invitation_token(token)
-      return nil if pending.nil?
-      return nil if resource.email&.strip&.downcase != pending.email
+      return @pending_invitation = nil if pending.nil?
 
-      pending
+      email = params.dig(:user, :email)&.strip&.downcase
+      return @pending_invitation = nil if email != pending.email
+
+      @pending_invitation = pending
     end
 
     def sign_up_params

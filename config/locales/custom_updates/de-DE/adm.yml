@@ -1,6 +1,14 @@
 de:
   adm:
     ai_required_note: Diese Funktion ist nur verfügbar, wenn die KI aktiviert ist.
+    navbar_items:
+      deleted_projekt: "[Gelöschtes Projekt]"
+      edit:
+        title: Navigationseintrag bearbeiten
+      form:
+        custom_title_label: Anzeigename (optional)
+        custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
+        update: Änderungen speichern
     projekts:
       phases:
         ai_user_flow:

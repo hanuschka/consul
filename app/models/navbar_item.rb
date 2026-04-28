@@ -56,13 +56,19 @@ class NavbarItem < ApplicationRecord
   end
 
   def title
+    return custom_title if custom_title.present?
+
     case kind
     when "presets"
       I18n.t("navbar.presets.#{preset}")
     when "projekts"
-      projekt.title
+      projekt&.title || I18n.t("adm.navbar_items.deleted_projekt")
     when "external"
       external_title
     end
+  end
+
+  def resource_missing?
+    kind == "projekts" && projekt.blank?
   end
 end

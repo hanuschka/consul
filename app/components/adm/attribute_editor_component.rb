@@ -104,6 +104,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
         "setting.#{@record.key}#{'_description' if type == :description}"
       elsif @record.is_a?(::SiteCustomization::Image)
         "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
+      elsif @record.is_a?(::SiteCustomization::ContentBlock) && @record.key.present?
+        ["adm.attribute_editor", record_type_key, @record.key, "#{@attribute}_#{type}"].join(".")
       else
         ["adm.attribute_editor", record_type_key, suffix, "#{@attribute}_#{type}"].compact.join(".")
       end

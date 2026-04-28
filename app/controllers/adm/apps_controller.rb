@@ -27,7 +27,7 @@ module Adm
         category_key: "ai",
         icon: "smart_toy",
         apps: [
-          { key: "voice_assistant",      codename: App::VOICE_ASSISTANT_CODENAME, icon: "record_voice_over" },
+          { key: "voice_assistant",      logo: "adm/apps/logo_ai_user_help.png",         icon: "record_voice_over" },
           { key: "ai_project_creation",  logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome" },
           { key: "ai_user_help",         logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent" },
           { key: "ai_proposal_creation", logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb" },
@@ -89,14 +89,12 @@ module Adm
       authorize [:adm, :apps]
       @breadcrumbs = [{ name: t("adm.apps.show.title"), icon: "dashboard" }]
 
-      db_apps = App.all.index_by(&:codename)
-
       @categories = APP_CATALOG.map do |cat|
         apps = cat[:apps].map do |app_def|
           app_def.merge(
             name:        t("adm.apps.show.apps.#{app_def[:key]}.name"),
             description: t("adm.apps.show.apps.#{app_def[:key]}.description"),
-            status:      app_status(app_def, db_apps)
+            status:      app_status(app_def[:key])
           )
         end
 
@@ -118,15 +116,12 @@ module Adm
         ai_project_chat
       ].freeze
 
-      def app_status(app_def, db_apps)
-        if AI_DEPENDENT_KEYS.include?(app_def[:key])
-          return Ai::Settings.ai_available? ? "active" : "inactive"
+      def app_status(app_key)
+        if AI_DEPENDENT_KEYS.include?(app_key)
+          Ai::Settings.ai_available? ? "active" : "inactive"
+        else
+          "inactive"
         end
-
-        codename = app_def[:codename]
-        record = codename ? db_apps[codename] : nil
-
-        record ? record.status : "inactive"
       end
   end
 end

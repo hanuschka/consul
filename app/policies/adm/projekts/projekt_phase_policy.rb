@@ -1,0 +1,43 @@
+class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
+  def index?
+    permitted?
+  end
+
+  def show?
+    permitted?
+  end
+
+  def create?
+    permitted?
+  end
+
+  def update?
+    permitted?
+  end
+
+  def destroy?
+    permitted?
+  end
+
+  class Scope < Scope
+    def resolve
+      scope.where.not(type: "ProjektPhase::DebatePhase")
+    end
+  end
+
+  private
+
+  def projekt_from_record
+    if @record.is_a?(Class)
+      nil
+    elsif @record.is_a?(Projekt)
+      @record
+    elsif @record.is_a?(ProjektPhase)
+      @record.projekt
+    else
+      @record.projekt_phase&.projekt
+    end
+  end
+end

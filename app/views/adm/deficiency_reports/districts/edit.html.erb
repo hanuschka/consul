@@ -1,0 +1,29 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: @district.name, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_districts_path) %>
+
+<div class="kern-container my-5">
+  <%= form_with model: @district, url: adm_deficiency_reports_district_path(@district), method: :put do |f| %>
+    <div class="mb-4">
+      <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), inline: true, hint: t(".default_responsible_hint")) do %>
+        <% grouped_options = {
+          t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] },
+          t(".officers") => DeficiencyReport::Officer.all.map { |o| [o.name, "Officer:#{o.id}"] }
+        } %>
+        <% selected = if @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::OfficerGroup)
+                        "OfficerGroup:#{@district.default_deficiency_report_responsible.id}"
+                      elsif @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::Officer)
+                        "Officer:#{@district.default_deficiency_report_responsible.id}"
+                      end %>
+        <div class="kern-form-input">
+          <%= select_tag :default_responsible,
+            grouped_options_for_select(grouped_options, selected),
+            include_blank: t(".no_responsible"),
+            class: "kern-form-input__input" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_submit_button(text: t(".submit")) %>
+  <% end %>
+</div>

@@ -13,11 +13,11 @@ class FormularAnswers::NestedDocumentComponent < ApplicationComponent
     end
 
     def max_documents_allowed
-      3
+      1
     end
 
     def max_file_size
-      3
+      5
     end
 
     def note

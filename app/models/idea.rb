@@ -5,6 +5,7 @@ class Idea < ApplicationRecord
   include Searchable
   include OnBehalfOfSubmittable
   include Memoable
+  include SectionTrackable
 
   belongs_to :author, class_name: "User", inverse_of: :ideas
 
@@ -91,9 +92,8 @@ class Idea < ApplicationRecord
     end
   end
 
-  def get_default_officer
-    map_location&.get_district&.default_idea_officer ||
-      category&.default_idea_officer
+  def accepted?
+    admin_accepted_at.present?
   end
 
   def remaining_days
@@ -104,5 +104,13 @@ class Idea < ApplicationRecord
 
   def tags
     []
+  end
+
+  def section_tracking_section
+    "ideas"
+  end
+
+  def section_tracking_user
+    author
   end
 end

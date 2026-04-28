@@ -120,8 +120,7 @@ class Api::QuestionsController < Api::BaseController
 
   def find_projekt_phase
     if params[:projekt_phase_id].present?
-      phase_type = params[:phase_type] || "ProjektPhase::QuestionPhase"
-      @projekt_phase = phase_type.constantize.find_by(id: params[:projekt_phase_id])
+      @projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
     end
   end
 

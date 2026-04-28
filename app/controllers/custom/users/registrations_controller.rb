@@ -67,7 +67,40 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  protected
+
+    def after_sign_up_path_for(resource)
+      case pending_invitation&.role_type
+      when nil
+        super
+      when "ProjektManager"
+        adm_projekts_root_path
+      else
+        adm_root_path
+      end
+    end
+
+    def build_resource(hash = {})
+      super
+      resource.skip_confirmation! if pending_invitation.present?
+    end
+
   private
+
+    def pending_invitation
+      return @pending_invitation if defined?(@pending_invitation)
+
+      token = params[:invitation_token]
+      return @pending_invitation = nil if token.blank?
+
+      pending = PendingRoleAssignment.find_by_invitation_token(token)
+      return @pending_invitation = nil if pending.nil?
+
+      email = params.dig(:user, :email)&.strip&.downcase
+      return @pending_invitation = nil if email != pending.email
+
+      @pending_invitation = pending
+    end
 
     def sign_up_params
       set_address_attributes

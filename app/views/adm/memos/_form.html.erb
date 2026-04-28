@@ -1,0 +1,14 @@
+<div id="memo-form-<%= dom_id(memoable) %>" class="memo-form">
+  <%= form_with(model: Memo.new, url: adm_memos_create_path(memoable), method: :post) do |f| %>
+    <%= f.hidden_field :memoable_id, value: memoable.id %>
+    <%= f.hidden_field :memoable_type, value: memoable.class.name %>
+    <%= f.hidden_field :parent_id, value: memoable.is_a?(Memo) ? memoable.id : nil %>
+    <% placeholder = memoable.is_a?(Memo) ? t("adm.memos.form.placeholder_reply") : t("adm.memos.form.placeholder") %>
+    <div class="adm-memo-input">
+      <textarea name="memo[text]" rows="1" placeholder="<%= placeholder %>" class="adm-memo-input__textarea" data-controller="adm-autogrow" data-action="input->adm-autogrow#resize"></textarea>
+      <button type="submit" class="adm-memo-input__send" aria-label="<%= t("adm.memos.form.submit") %>">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </div>
+  <% end %>
+</div>

@@ -29,6 +29,26 @@ class MapLocation < ApplicationRecord
 
   reverse_geocoded_by :latitude, :longitude
 
+  scope :with_deficiency_report_associations, -> {
+    includes(mappable: [:category, :sentiment])
+      .where(mappable_type: "DeficiencyReport")
+  }
+
+  scope :with_idea_associations, -> {
+    includes(mappable: :category)
+      .where(mappable_type: "Idea")
+  }
+
+  scope :with_proposal_associations, -> {
+    includes(mappable: :projekt_labels)
+      .where(mappable_type: "Proposal")
+  }
+
+  scope :with_investment_associations, -> {
+    includes(mappable: [:sentiment, :projekt_labels])
+      .where(mappable_type: "Budget::Investment")
+  }
+
   audited associated_with: :deficiency_report,
     only: %i[features latitude longitude],
     if: :audit_changes?
@@ -37,8 +57,20 @@ class MapLocation < ApplicationRecord
     MapLocation.find_or_create_by!(default: true)
   end
 
+  def self.awesome_icon_unicode_cache
+    @awesome_icon_unicode_cache ||= AwesomeIcon.pluck(:name, :unicode).to_h
+  end
+
   def available?
     latitude.present? && longitude.present? && zoom.present?
+  end
+
+  def map_layers
+    if mappable.respond_to?(:map_layers)
+      mappable.map_layers
+    else
+      MapLayer.default
+    end
   end
 
   def to_geo_json
@@ -108,6 +140,8 @@ class MapLocation < ApplicationRecord
     geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
 
     geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
+  rescue RGeo::Error::InvalidGeometry
+    false
   end
 
   private
@@ -175,28 +209,35 @@ class MapLocation < ApplicationRecord
       "#{street_address}, #{geocoder_data["address"]["postcode"]} #{locality}"
     end
 
-    def get_feature_color
-      if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.sentiment.present?
-        mappable.sentiment.color
-      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
-        mappable.category.color
+    def get_feature_color(category: nil, sentiment: nil)
+      sentiment ||= mappable.sentiment if mappable.respond_to?(:sentiment)
+      category ||= mappable.category if mappable.respond_to?(:category)
+
+      if sentiment.present? && (mappable.is_a?(Budget::Investment) || mappable.is_a?(Proposal))
+        sentiment.color
+      elsif category.present? && (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea))
+        category.color
       end
     end
 
-    def get_feature_icon_name
+    def get_feature_icon_name(category: nil, projekt_labels: nil)
       @icon_name ||= begin
-        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.projekt_labels.any?
-          mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
-          mappable.category.icon
+        projekt_labels ||= mappable.projekt_labels if mappable.respond_to?(:projekt_labels)
+        category ||= mappable.category if mappable.respond_to?(:category)
+
+        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && projekt_labels&.any?
+          projekt_labels.size == 1 ? projekt_labels.first.icon : "tags"
+        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+          category.icon
         end
       end
     end
 
-    def get_feature_icon_unicode
-      return unless get_feature_icon_name.present?
+    def get_feature_icon_unicode(category: nil, projekt_labels: nil)
+      icon_name = get_feature_icon_name(category: category, projekt_labels: projekt_labels)
+      return unless icon_name.present?
 
-      AwesomeIcon.find_by(name: get_feature_icon_name)&.unicode
+      self.class.awesome_icon_unicode_cache[icon_name]
     end
 
     def update_geocoder_data

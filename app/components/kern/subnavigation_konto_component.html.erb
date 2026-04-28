@@ -1,0 +1,24 @@
+<div class="subnavigation-konto">
+  <div class="subnavigation-konto__avatar">
+    <div class="subnavigation-konto__image-wrapper"
+         title="<%= t("custom.layouts.header.account_link") %>"
+         aria-label="<%= t("custom.layouts.header.account_link") %>">
+      <% if user_image_present? %>
+        <%= image_tag(current_user.image.variant(:popup)) %>
+      <% else %>
+        <div class="subnavigation-konto__image-placeholder">
+          <%= current_user.first_letter_of_name %>
+        </div>
+      <% end %>
+    </div>
+    <% if unread_notifications? %>
+      <span class="subnavigation-konto__notification-count">
+        <%= current_user.unread_notifications_count %>
+      </span>
+    <% end %>
+  </div>
+
+  <ul class="subnavigation-konto__flyout">
+    <%= render "devise/menu/login_items_new" %>
+  </ul>
+</div>

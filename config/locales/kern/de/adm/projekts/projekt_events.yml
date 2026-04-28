@@ -1,0 +1,66 @@
+de:
+  adm:
+    projekts:
+      projekt_events:
+        tabs:
+          show: Übersicht
+          edit: Bearbeiten
+          registrations: Anmeldungen
+        show:
+          title: Übersicht
+          registrations_button: "Anmeldungen (%{count})"
+          unlimited: Unbegrenzt
+          confirmed_count: Bestätigte Anmeldungen
+          waitlisted_count: Warteliste
+          no_accessibility_flags: Keine Barrierefreiheitsmerkmale angegeben.
+          sections:
+            general: Allgemein
+            schedule: Termin & Ort
+            registration: Anmeldung
+            accessibility: Barrierefreiheit
+        new:
+          title: Veranstaltung erstellen
+        create:
+          success: Veranstaltung wurde erfolgreich erstellt.
+        edit:
+          title: Veranstaltung bearbeiten
+        update:
+          success: Veranstaltung wurde erfolgreich aktualisiert.
+        destroy:
+          success: Veranstaltung wurde erfolgreich gelöscht.
+        send_notifications:
+          success: Benachrichtigungen wurden erfolgreich gesendet.
+        form:
+          title_label: Titel
+          title_placeholder: z. B. Bürgerversammlung zum Klimabudget
+          title_hint: "Geben Sie einen aussagekräftigen Titel für die Veranstaltung ein, der im Frontend als Überschrift angezeigt wird. Wählen Sie eine klare Formulierung, die den Anlass und das Thema der Veranstaltung vermittelt – z. B. 'Bürgerversammlung zum Klimabudget' oder 'Workshop Stadtentwicklung'."
+          location_label: Veranstaltungsort
+          location_placeholder: z. B. Rathaus, Marktplatz 1
+          location_hint: "Geben Sie den Veranstaltungsort an, z. B. Rathaus, Bürgerzentrum oder eine vollständige Adresse. Der Ort wird im Frontend zusammen mit Datum und Titel angezeigt und hilft Teilnehmern bei der Planung. Für Online-Veranstaltungen tragen Sie hier 'Online' oder den Namen der Plattform ein."
+          datetime_label: Beginn
+          datetime_hint: "Legt den Beginn der Veranstaltung fest. Datum und Uhrzeit werden im Frontend prominent angezeigt und dienen Teilnehmern zur zeitlichen Orientierung. Achten Sie darauf, dass der Termin realistisch geplant ist und genügend Vorlaufzeit für die Bewerbung der Veranstaltung bleibt."
+          end_datetime_label: Ende
+          end_datetime_hint: "Optionaler Endzeitpunkt der Veranstaltung. Wenn gesetzt, wird im Frontend ein Zeitraum angezeigt (z. B. '14:00 – 17:00 Uhr'). Lassen Sie das Feld leer, wenn das Ende nicht feststeht, und aktivieren Sie stattdessen die Option 'Offenes Ende' für Veranstaltungen ohne festen Schlusszeitpunkt."
+          open_ended_label: Offenes Ende
+          open_ended_hint: "Aktivieren Sie diese Option, wenn die Veranstaltung keinen festen Endzeitpunkt hat. Im Frontend wird dann nur der Beginn angezeigt, ergänzt durch den Hinweis 'Offenes Ende'. Geeignet für informelle Formate wie offene Sprechstunden, Bürger-Cafés oder Veranstaltungen mit flexiblem Ablauf."
+          weblink_label: Weblink
+          weblink_placeholder: https://
+          weblink_hint: "Optionaler Link zu einer externen Webseite mit weiteren Informationen zur Veranstaltung – z. B. eine Anmeldeseite, ein Videokonferenz-Link oder eine Detailseite. Der Link wird im Frontend als anklickbarer Verweis angezeigt. Geben Sie die vollständige URL ein, beginnend mit https://."
+          language_label: Sprache
+          language_placeholder: z. B. Deutsch
+          language_hint: "Geben Sie die Sprache an, in der die Veranstaltung durchgeführt wird – z. B. 'Deutsch', 'Englisch' oder 'Deutsch / Türkisch' bei mehrsprachigen Formaten. Diese Information hilft Teilnehmern einzuschätzen, ob sie der Veranstaltung sprachlich folgen können."
+          accessibility_legend: Barrierefreiheit
+          accessibility_hint: "Geben Sie an, welche Barrierefreiheitsmerkmale am Veranstaltungsort vorhanden sind. Diese Informationen werden im Frontend angezeigt und helfen Menschen mit Behinderungen bei der Entscheidung, ob sie teilnehmen können. Aktivieren Sie alle zutreffenden Optionen."
+          max_attendees_label: Maximale Teilnehmerzahl
+          max_attendees_hint: "Maximale Anzahl bestätigter Teilnehmer. Weitere Anmeldungen kommen automatisch auf eine Warteliste. Leer lassen für unbegrenzte Teilnehmerzahl."
+          admin_emails_label: Benachrichtigungs-E-Mails (Admins)
+          admin_emails_hint: "Komma-getrennte Liste von E-Mail-Adressen, die bei jeder neuen Anmeldung benachrichtigt werden sollen. Optional."
+          confirmation_email_text_label: Text der Bestätigungs-E-Mail
+          confirmation_email_text_hint: "Optionaler Text, der an Teilnehmer gesendet wird, wenn ihre Anmeldung bestätigt wurde. Erlaubte HTML-Tags: <a>, <br>. Leer lassen, um keine Bestätigungs-E-Mail zu versenden."
+          waitlist_email_text_label: Text der Warteliste-E-Mail
+          waitlist_email_text_hint: "Optionaler Text, der an Teilnehmer gesendet wird, wenn sie auf die Warteliste gesetzt wurden. Erlaubte HTML-Tags: <a>, <br>. Leer lassen, um keine Warteliste-E-Mail zu versenden."
+          description_label: Beschreibung
+          description_hint: "Ausführliche Beschreibung der Veranstaltung, die im Frontend unterhalb des Titels angezeigt wird. Erläutern Sie Ablauf, Inhalte und Ziele der Veranstaltung. Geben Sie ggf. Hinweise zur Anmeldung, Anfahrt oder besonderen Vorbereitungen. Der Text unterstützt Rich-Text-Formatierung mit Links und Hervorhebungen."
+          image_label: Titelbild
+          image_hint: "Optionales Bild, das im Frontend als visueller Aufmacher der Veranstaltung angezeigt wird. Verwenden Sie ein aussagekräftiges Bild im Querformat, das thematisch zur Veranstaltung passt. Empfohlene Mindestbreite: 800 Pixel. Unterstützte Formate: JPG, PNG."
+          submit: Speichern

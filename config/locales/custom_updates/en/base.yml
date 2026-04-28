@@ -56,7 +56,7 @@ en:
         gender:
           male: male
           female: female
-          other: third #custom
+          other_gen: non-binary #custom
         document_type:
           card: ID card
           pass: Passport
@@ -125,6 +125,9 @@ en:
         home_link: Start page
         projekt_events_link: Events
         projekt_management: Project manager
+        landing_pages: Landing pages
+        deficiency_report_management: Deficiency reports
+        idea_management: Ideas
         notification_item:
           no_notifications: No notifications
         title_html: Public Participation
@@ -167,6 +170,7 @@ en:
         starts_in_days:
           one: Starts in 1 day
           other: Starts in %{count} days
+        no_dates: Ongoing
       form:
         projekt_assignment: Project
         star_message: All Fields marked with a (*) are required

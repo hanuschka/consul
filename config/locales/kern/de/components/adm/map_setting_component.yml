@@ -1,0 +1,11 @@
+de:
+  components:
+    adm:
+      map_setting_component:
+        map_label: Kartenausschnitt festlegen
+        map_description: >
+          Der Kartenausschnitt kann festgelegt werden, indem die Karte mit gedrückter Maustaste verschoben wird.
+          Mit dem Mausrad lässt sich der Zoom einstellen.
+          Über die Symbole am rechten Kartenrand können Pins gesetzt, Linien gezogen und Polygone eingezeichnet werden.
+          Diese werden im Frontend rot dargestellt.
+          Es können mehrere Elemente gleichzeitig eingezeichnet werden.

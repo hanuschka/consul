@@ -8,11 +8,19 @@
   </div>
 <% else %>
   <% content = capture do %>
-    <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" onload="App.IframeResizer.resize(this)" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0"></iframe>
+    <iframe
+      src="<%= @iframe_url %>"
+      title="<%= @projekt_phase.title %>"
+      class="projekt-phase-iframe"
+      onload="App.IframeResizer.resize(this)"
+      width="<%= @iframe_width %>"
+      height="<%= @iframe_height %>"
+      frameborder="0"
+    ></iframe>
   <% end %>
 
   <% if extended_feature?("gdpr.two_click_iframe_solution") %>
-    <%= sanitize process_iframe_embeds(content), tags: %w[iframe], attributes: %w[class width height frameborder src data-src] %>
+    <%= sanitize process_iframe_embeds(content), tags: %w[iframe], attributes: %w[class width height frameborder src data-src title] %>
   <% else %>
     <%= content %>
   <% end %>

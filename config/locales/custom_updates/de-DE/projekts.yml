@@ -42,6 +42,32 @@ de:
       homepage_search_form:
         placeholder: Projekte durchsuchen...
       page:
+        content_block_link_popup:
+          link_text: Link-Text
+          link_url: Link-URL
+          open_in_new_tab: In neuem Tab öffnen
+          save: Speichern
+          cancel: Abbrechen
+          remove_link: Link entfernen
+        toggle_background_label: Hintergrund
+        toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
+        convert_to_content_blocks:
+          button: In Inhaltsblock-Modus umwandeln
+          tooltip: Seiteninhalt in einen bearbeitbaren Inhaltsblock konvertieren und den neuen Modus aktivieren
+          confirm: Seiteninhalt in einen Inhaltsblock umwandeln und den neuen Modus aktivieren?
+          success: Erfolgreich in den Inhaltsblock-Modus umgewandelt
+          error: Umwandlung fehlgeschlagen
+        topbar:
+          admin_view: Adminansicht
+          user_view: Nutzeransicht
+          preview_mode: Vorschaumodus
+          copy_code: Quellcode kopieren
+          edit_projekt: Projekteinstellungen
+          create_newsletter_draft: Newsletter-Entwurf
+          notify_reviewers: Prüfer benachrichtigen
+          edit_page: Seite bearbeiten
+          edit_landing: Landingpage bearbeiten
+          edit_homepage: Startseite bearbeiten
         footer:
           sidebar:
             projekt_labels:

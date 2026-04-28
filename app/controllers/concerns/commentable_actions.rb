@@ -50,6 +50,10 @@ module CommentableActions
                  else
                    nil
                  end
+
+    if @resources && params[:exclude_resource_id].present?
+      @resources = @resources.where.not(id: params[:exclude_resource_id])
+    end
   end
 
   def create

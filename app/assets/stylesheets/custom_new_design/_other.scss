@@ -6,11 +6,18 @@
     color: #222;
   }
 
+  @media screen and (min-width: $small-tablet-viewport-start) {
+    .main-menu--translate-widget {
+      align-self: center;
+    }
+  }
+
   .translate-widget {
     align-self: center;
     margin-right: 10px;
     font-size: 1.6rem;
     cursor: pointer;
+    min-width: 140px;
 
     .translate-widget-toggler {
       color: #222;
@@ -21,9 +28,9 @@
       margin-right: 30px;
 
       select.goog-te-combo {
-        width: 170px;
+        width: 135px;
 
-        @media (min-width: 640px) {
+        @media (max-width: 640px) {
           width: 82px;
         }
       }

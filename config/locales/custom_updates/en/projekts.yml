@@ -42,6 +42,34 @@ en:
       homepage_search_form:
         placeholder: Search projects...
       page:
+        content_block_link_popup:
+          link_text: Link text
+          link_url: Link URL
+          open_in_new_tab: Open in new tab
+          save: Save
+          cancel: Cancel
+          remove_link: Remove link
+        toggle_background_label: Background
+        toggle_background_tooltip: Show or hide the white background behind the content
+        convert_to_content_blocks:
+          button: Convert to new content block mode
+          tooltip: Convert the legacy page content into an editable content block and switch to the new mode
+          confirm: Convert the page content into a content block and switch to the new mode?
+          success: Successfully converted to content block mode
+          error: Conversion failed
+        topbar:
+          admin_view: Admin view
+          user_view: User view
+          preview_mode: Preview mode
+          copy_code: Copy source code
+          edit_projekt: Edit projekt
+          create_newsletter_draft: Create newsletter
+          notify_reviewers: Notify reviewers
+          edit_page: Edit page
+          edit_landing: Edit landing page
+          edit_homepage: Edit homepage
+          projekt_information:
+            title: Project information
         footer:
           sidebar:
             projekt_labels:
@@ -73,8 +101,6 @@ en:
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Create newsletter
             notify_reviewers: Notify reviewers
-          projekt_information:
-            title: Project information
           map:
             title: Map
           navigator:

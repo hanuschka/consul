@@ -29,6 +29,13 @@ module StatsHelper
     tag.div opt
   end
 
+  def stat_value(number)
+    formatted = number_with_delimiter(number)
+    css = "adm-stat-card__value"
+    css += " adm-stat-card__value--compact" if number.to_i >= 100_000
+    tag.div formatted, class: css
+  end
+
   def number_to_stats_percentage(number, options = {})
     number_to_percentage(number, { strip_insignificant_zeros: true, precision: 2 }.merge(options))
   end

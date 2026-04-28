@@ -1,0 +1,12 @@
+en:
+  adm:
+    site_customization:
+      content_cards:
+        title: Title
+        setting:
+          label:
+            limit: Number of items shown
+            debates_limit: Number of debates shown
+            proposals_limit: Number of proposals shown
+            investments_limit: Number of proposals shown
+            deficiency_reports_limit: Number of deficiency reports shown

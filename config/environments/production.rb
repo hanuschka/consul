@@ -30,8 +30,8 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = Uglifier.new(harmony: true)
-  # config.assets.css_compressor = :sass
+  config.assets.js_compressor = :terser
+  config.assets.css_compressor = nil
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
@@ -82,6 +82,14 @@ Rails.application.configure do
   # Disable locale fallbacks for I18n
   # (prevents using fallback locales set in application.rb).
   # config.i18n.fallbacks = false
+
+  # While the kern/en translation effort is incomplete, fall back to German
+  # for missing English keys in production only. In development we prefer to
+  # raise (see `raise_on_missing_translations` in development.rb) so gaps
+  # surface during development. Drop this once kern/en reaches parity.
+  config.after_initialize do
+    I18n.fallbacks.map("en" => "de")
+  end
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify

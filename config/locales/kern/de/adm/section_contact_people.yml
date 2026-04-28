@@ -1,0 +1,73 @@
+de:
+  adm:
+    section_contact_people:
+      index:
+        title: Ansprechpartner
+        new_link: Neuen Ansprechpartner erstellen
+        empty_title: Keine Ansprechpartner vorhanden
+        empty_description: Erstellen Sie einen neuen Ansprechpartner, um Kontaktpersonen den einzelnen Administrationsbereichen zuzuordnen.
+        filters:
+          all: Alle
+        sections:
+          ideas: Ideen
+          deficiency_reports: Mängelmelder
+          projekts: Projekte
+          moderation: Moderation
+          valuation: Bewertung
+          landing_pages: Themenseiten
+        table:
+          name: Name
+          section: Sektion
+          role: Rolle
+          email: E-Mail
+          phone: Telefon
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Ansprechpartner löschen möchten?
+      new:
+        title: Neuen Ansprechpartner erstellen
+      edit:
+        title: Ansprechpartner bearbeiten
+      create:
+        success: Ansprechpartner erfolgreich erstellt.
+      update:
+        success: Ansprechpartner erfolgreich aktualisiert.
+      destroy:
+        success: Ansprechpartner erfolgreich gelöscht.
+      search:
+        select: Auswählen
+        no_results: Keine Nutzer gefunden.
+      form:
+        submit: Speichern
+        select_user: Nutzer auswählen
+        search_user_placeholder: Nutzer suchen (Name oder E-Mail)...
+        select_section: Sektion auswählen
+        hints:
+          user: >
+            Wählen Sie den Nutzer aus, der als Ansprechpartner für den jeweiligen
+            Administrationsbereich angezeigt werden soll.
+          section: >
+            Wählen Sie den Administrationsbereich aus, dem dieser Ansprechpartner
+            zugeordnet werden soll.
+          role: >
+            Geben Sie die Rolle oder Funktion des Ansprechpartners an,
+            z.B. "Projektleitung" oder "Fachbereichsleitung".
+          email: >
+            Geben Sie die E-Mail-Adresse des Ansprechpartners ein,
+            unter der er für Rückfragen erreichbar ist.
+          phone: >
+            Geben Sie die Telefonnummer des Ansprechpartners ein,
+            unter der er für Rückfragen erreichbar ist.
+          position: >
+            Legen Sie die Reihenfolge fest, in der die Ansprechpartner
+            innerhalb einer Sektion angezeigt werden. Niedrigere Werte werden zuerst angezeigt.
+  activerecord:
+    attributes:
+      section_contact_person:
+        user: Nutzer
+        section: Sektion
+        role: Rolle
+        email: E-Mail
+        phone: Telefon
+        position: Position

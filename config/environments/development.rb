@@ -39,7 +39,7 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: "consul.localhost"}
+  config.action_mailer.default_url_options = { host: "consul.localhost", port: 3000 }
   config.action_mailer.asset_host = ENV.fetch("RAILS_LOCAL_DEV_URL", "http://localhost:3000")
 
   # Deliver emails to a development mailbox at /letter_opener
@@ -67,9 +67,6 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
-
   config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
   config.after_initialize do
@@ -92,3 +89,5 @@ Rails.application.configure do
     config.hosts << host
   end
 end
+
+Rack::MiniProfiler.config.position = 'bottom-right'

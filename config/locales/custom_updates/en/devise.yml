@@ -12,7 +12,7 @@ en:
             last_name_label: Last name
             street_name_label: Street name
             street_number_label: Street number
-            street_number_label_extension: Street number extension
+            street_number_extension_label: Street number extension
             plz_label: PLZ
             gender: Please select
             city_name_label: City
@@ -32,4 +32,5 @@ en:
             success: You have successfully signed in as Guest
           sign_out_guest:
             success: You have successfully signed out as Guest
+          create:
             existing_user_with_same_stamp: Please use the email address you originally registered with to log in to your account.

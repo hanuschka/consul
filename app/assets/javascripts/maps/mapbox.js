@@ -71,6 +71,7 @@
 
     initMap(callback) {
       const instance = this;
+      this.initialPitch = 53;
 
       function initMapInstance() {
         mapboxgl.accessToken = instance.element.dataset.mapboxPublicToken;
@@ -78,7 +79,7 @@
           container: instance.element,
           center: [instance.mapCenterLongitude, instance.mapCenterLatitude],
           zoom: instance.zoom,
-          pitch: 53,
+          pitch: instance.initialPitch,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
           cooperativeGestures: true,
@@ -154,6 +155,7 @@
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
+        instance.addResetViewControl();
         instance.setupPlugins();
         instance.setupEventListenersForUpdatingFormInputs();
         instance.setupEventListenersForUpdatingMapCenter();
@@ -162,6 +164,10 @@
 
     setupExpandControl() {
       this.map.addControl(new ExpandControl(this), 'top-right');
+    }
+
+    addResetViewControl() {
+      this.map.addControl(new ResetViewControl(this), 'top-right');
     }
 
     setupLayers() {
@@ -276,7 +282,7 @@
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.5 }
+          paint: { 'circle-radius': 12, 'circle-color': '#008000', 'circle-opacity': 0.5 }
         });
 
         instance.map.addLayer({
@@ -285,7 +291,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'LineString'],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': '#ff0000', 'line-width': 4 }
+          paint: { 'line-color': '#008000', 'line-width': 4 }
         });
 
         instance.map.addLayer({
@@ -294,7 +300,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: { 'fill-color': '#ff0000', 'fill-opacity': 0.2 }
+          paint: { 'fill-color': '#008000', 'fill-opacity': 0.2 }
         });
       }
 
@@ -364,7 +370,7 @@
     }
 
     renderAdminFeaturesNote() {
-      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#ff0000;">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#008000;">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
     }
 
     setupPlugins() {
@@ -1045,6 +1051,41 @@
           map.resize();
           this.mapboxMapInstance.toggleControlVisibility();
         }
+      });
+
+      return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
+
+  class ResetViewControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = '<i class="fas fa-home"></i>';
+      button.title = 'Ansicht zurücksetzen';
+
+      this._container.appendChild(button);
+
+      button.addEventListener('click', () => {
+        map.flyTo({
+          center: [this.mapboxMapInstance.mapCenterLongitude, this.mapboxMapInstance.mapCenterLatitude],
+          zoom: this.mapboxMapInstance.zoom,
+          pitch: this.mapboxMapInstance.initialPitch,
+          bearing: 0
+        });
       });
 
       return this._container;

@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@memo) do %>
+  <%= render "adm/memos/memo", memo: @memo %>
+<% end %>

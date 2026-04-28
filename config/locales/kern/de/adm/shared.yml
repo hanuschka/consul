@@ -1,0 +1,19 @@
+de:
+  adm:
+    shared:
+      show: Anzeigen
+      hide: Ausblenden
+      copy: Kopieren
+      edit: Bearbeiten
+      delete: Löschen
+      created_at: Erstellt am
+      audits:
+        title: Änderungslog
+        empty: Keine Änderungen vorhanden.
+        table:
+          id: ID
+          field: Feld
+          old_value: Alter Wert
+          new_value: Neuer Wert
+          edited_at: Geändert am
+          edited_by: Geändert von

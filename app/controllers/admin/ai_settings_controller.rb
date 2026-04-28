@@ -3,8 +3,6 @@ class Admin::AiSettingsController < Admin::BaseController
 
   def index
     @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
-    service = Setting["ai.llm_provider"].to_s.downcase
-    @api_key = ExternalApiKey.find_or_create_by(name: "api_key", service: service)
   end
 
   def update
@@ -30,7 +28,7 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def update_api_key
-      api_key = ExternalApiKey.find_or_create_by(name: api_key_params[:name], service: api_key_params[:service])
+      api_key = ExternalApiKey.find_by(name: api_key_params[:name], service: api_key_params[:service])
       api_key.update!(api_key_params)
 
       respond_to do |format|
@@ -50,17 +48,20 @@ class Admin::AiSettingsController < Admin::BaseController
     end
 
     def show_api_endpoint?
-      provider = Setting["ai.llm_provider"]
-      provider.to_s.downcase == "openai"
+      provider = Setting["ai.llm_provider"].to_s.downcase
+
+      ["openai", "ollama", "gemini"].include?(provider)
     end
 
     def show_model_field?
-      provider = Setting["ai.llm_provider"]
-      provider.to_s.downcase != "ollama"
+      provider = Setting["ai.llm_provider"].to_s.downcase
+
+      !provider.in?(["ollama", "openai"]) && Setting["ai.llm_api_endpoint"].blank?
     end
 
     def show_custom_model_field?
-      provider = Setting["ai.llm_provider"]
-      provider.to_s.downcase == "ollama"
+      provider = Setting["ai.llm_provider"].to_s.downcase
+
+      provider == "ollama" || Setting["ai.llm_api_endpoint"].present?
     end
 end

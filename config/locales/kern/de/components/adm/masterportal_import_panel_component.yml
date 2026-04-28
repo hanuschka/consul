@@ -5,6 +5,7 @@ de:
         title: Import von Masterportal-Daten
         endpoint_url_label: Endpunkt-URL (OGC API Features)
         load_collections: Datensätze laden
+        collections_label: Verfügbare Datensätze
         tree_hint: Auf „Datensätze laden“ klicken, um verfügbare Daten zu sehen.
         create_resource_label: Infos aus Masterportal importieren und %{resource_name} erzeugen
         import_button: Importieren

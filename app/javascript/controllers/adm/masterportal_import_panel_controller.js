@@ -201,8 +201,32 @@ export default class extends Controller {
 
   setStatusBadge(status) {
     const badge = this.statusBadgeTarget
-    badge.setAttribute("data-status", status.status || "pending")
-    badge.textContent = status.error || status.status || ""
+    const state = status.status || "pending"
+    badge.setAttribute("data-status", state)
+
+    const iconElement = badge.querySelector(".masterportal-import-panel--status-icon")
+    if (iconElement) {
+      iconElement.textContent = this.statusIconName(state)
+    }
+
+    const textElement = badge.querySelector(".masterportal-import-panel--status-text")
+    if (textElement) {
+      textElement.textContent = status.error || this.statusFallbackText(state)
+    }
+  }
+
+  statusIconName(state) {
+    if (state === "running") return "progress_activity"
+    if (state === "success") return "check_circle"
+    if (state === "failed") return "error"
+    return "schedule"
+  }
+
+  statusFallbackText(state) {
+    if (state === "running") return "Läuft…"
+    if (state === "success") return "Erfolgreich"
+    if (state === "failed") return "Fehlgeschlagen"
+    return "Bereit"
   }
 
   csrfToken() {

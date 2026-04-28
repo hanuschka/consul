@@ -59,6 +59,19 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
     end
   end
 
+  def status_icon
+    case @projekt_phase.masterportal_import_status
+    when "running"
+      "progress_activity"
+    when "success"
+      "check_circle"
+    when "failed"
+      "error"
+    else
+      "schedule"
+    end
+  end
+
   private
 
     attr_reader :projekt_phase

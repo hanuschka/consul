@@ -46,7 +46,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
 
     $document.on("click", ".js-file-upload-manager-select", this.handleImageSelected.bind(this));
     $document.on("click", ".file-upload-manager-dialog--item", this.handleItemClick.bind(this));
-    $document.on("click", ".pagination a", this.handleKaminariPaginationClick.bind(this));
+    $document.on("click", ".js-file-upload-manager-pagination .pagination a", this.handleKaminariPaginationClick.bind(this));
   },
 
   getDialogElement() {

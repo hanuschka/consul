@@ -1,0 +1,30 @@
+en:
+  adm:
+    projekts:
+      managers:
+        index:
+          title: Team
+          new_link: Add new project manager
+          no_projekt_managers_title: No project managers available
+          no_projekt_managers_description: >
+            Create a new project manager by searching for a registered user and
+            adding them. Project managers can then be assigned to individual projects
+            and receive individual permissions there.
+          manage_all_projekts: Admin
+          hint_text: >
+            Here you manage the project managers of the platform. Project managers are users who
+            receive extended rights for specific projects — e.g. administration, moderation,
+            or creating contributions on behalf of others. Assignment to individual projects
+            and granting specific permissions is done in the respective project settings.
+            The "Admin" toggle in the table automatically grants a project manager access to all
+            projects on the platform — without requiring an individual assignment per project.
+        new:
+          title: Add new team member
+          search_label: Search users
+          search_description: >
+            Search by email or username for registered users. You can then add them as
+            project managers and equip them with specific permissions in the respective
+            project settings. Via the "Admin" toggle on the overview page, the project
+            manager can subsequently be granted access to all projects.
+        search:
+          no_results: No users found matching these criteria.

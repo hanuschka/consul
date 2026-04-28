@@ -12,7 +12,7 @@ namespace :adm do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
 
-      resources :navbar_items, only: [:new, :create, :destroy],
+      resources :navbar_items, only: [:new, :create, :edit, :update, :destroy],
         controller: "/adm/navbar_items" do
         patch :reorder, on: :collection
       end

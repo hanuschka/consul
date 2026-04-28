@@ -1,0 +1,40 @@
+de:
+  adm:
+    projekts:
+      projekt_event_registrations:
+        index:
+          title: Anmeldungen
+          export_csv: CSV exportieren
+          no_items_title: Noch keine Anmeldungen
+          no_items_description: Sobald sich Personen für diese Veranstaltung anmelden, werden sie hier angezeigt.
+          no_results_filtered_title: Keine Anmeldungen entsprechen dem Filter
+          no_results_filtered_description: Passen Sie den Statusfilter an, um andere Anmeldungen anzuzeigen.
+          counts:
+            confirmed: "Bestätigt: %{confirmed} / %{max}"
+            total_active:
+              one: "1 aktive Anmeldung"
+              other: "%{count} aktive Anmeldungen"
+          columns:
+            name: Name
+            email: E-Mail
+            status: Status
+            registered_at: Angemeldet am
+            confirmed_at: Bestätigt am
+            actions: Aktionen
+          statuses:
+            pending_confirmation: Bestätigung ausstehend
+            confirmed: Bestätigt
+            waitlisted: Warteliste
+            cancelled: Storniert
+          actions:
+            resend_confirmation: Bestätigung erneut senden
+            destroy: Löschen
+          destroy:
+            confirm: Diese Anmeldung wirklich löschen?
+          resend_confirmation:
+            confirm: Bestätigungs-E-Mail erneut senden?
+        destroy:
+          success: Anmeldung wurde gelöscht.
+        resend_confirmation:
+          success: Bestätigungs-E-Mail wurde erneut gesendet.
+          not_pending: Diese Anmeldung benötigt keine Bestätigung.

@@ -78,6 +78,22 @@
       }
     }
 
+    .navbar-item__edit {
+      color: #cbd5e1;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s ease;
+
+      .material-symbols-outlined {
+        font-size: 20px !important;
+      }
+
+      &:hover {
+        color: #2563eb;
+      }
+    }
+
     .navbar-item__delete {
       color: #cbd5e1;
       flex-shrink: 0;

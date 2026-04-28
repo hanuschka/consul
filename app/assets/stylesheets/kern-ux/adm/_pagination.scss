@@ -20,4 +20,13 @@
       background-color: var(--kern-color-feedback-info-background);
     }
   }
+
+  // Pagy renders prev/next as disabled anchors on the first/last page and
+  // gap markers — style them so they look inactive and don't respond to hover.
+  a[aria-disabled="true"]:not(.current) {
+    color: var(--kern-color-layout-text-subtle);
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }

@@ -85,6 +85,21 @@ module AdmHelper
     end
   end
 
+  def projekt_event_tabs(projekt_phase, projekt_event)
+    [
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.show"),
+        url: adm_projekts_phase_projekt_event_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_events" && action_name.in?(%w[show edit update])
+      },
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.registrations"),
+        url: adm_projekts_phase_projekt_event_registrations_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_event_registrations"
+      }
+    ]
+  end
+
   def deficiency_report_tabs(deficiency_report, current_action: nil)
     current_action ||= action_name
 
@@ -203,4 +218,5 @@ module AdmHelper
       t("shared.moderation_statuses.flagged")
     end
   end
+
 end

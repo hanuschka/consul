@@ -1,0 +1,30 @@
+en:
+  adm:
+    projekts:
+      projekt_notifications:
+        new:
+          title: Create notification
+        create:
+          success: Notification created successfully.
+        edit:
+          title: Edit notification
+        update:
+          success: Notification updated successfully.
+        destroy:
+          success: Notification deleted successfully.
+        form:
+          title_label: Subject
+          title_hint: >
+            Enter a meaningful subject for the notification, shown to users as
+            a heading. The subject should summarize the content of the message briefly
+            and draw attention — e.g. "New participation phase started" or
+            "Voting results published".
+          title_placeholder: "e.g. New participation phase started"
+          body_label: Message
+          body_hint: >
+            Write the content of the notification sent to all users following this
+            project or participation phase. Inform them about news, results, or
+            next steps. Keep the text understandable and action-oriented so users
+            know what happens next.
+          body_placeholder: "Write your message to participants here..."
+          submit: Send message

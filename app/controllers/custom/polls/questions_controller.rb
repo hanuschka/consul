@@ -13,7 +13,9 @@ class Polls::QuestionsController < ApplicationController
       @answer_updated = "answered"
     end
 
-    render "polls/questions/answers"
+    respond_to do |format|
+      format.js { render "polls/questions/answers" }
+    end
   end
 
   def update_open_answer
@@ -28,7 +30,10 @@ class Polls::QuestionsController < ApplicationController
       @answer = @question.answers.find_by(author: current_user, answer: open_answer_params[:answer])
       @answer.destroy_and_remove_voter_participation if @answer.present?
     end
-    render "polls/questions/answers"
+
+    respond_to do |format|
+      format.js { render "polls/questions/answers" }
+    end
   end
 
   def csv_answers_streets

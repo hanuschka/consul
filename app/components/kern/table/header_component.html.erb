@@ -40,7 +40,7 @@
               <%= text_field_tag "#{@column}__search", params["#{@column}__search"],
                     class: "kern-form-input__input",
                     placeholder: t("shared.table.filter.search_placeholder", column_label: @label),
-                    data: { "table-header-target": "searchInput" } %>
+                    data: { "table-header-target": "searchInput", action: "keydown.enter->table-header#applyFilter" } %>
             </div>
           <% end %>
 
@@ -56,13 +56,13 @@
               <%= label_tag "#{@column}__from", t("shared.table.filter.date_range.from_label"), class: "kern-label" %>
               <%= date_field_tag "#{@column}__from", params["#{@column}__from"],
                     class: "kern-form-input__input",
-                    data: { "table-header-target": "dateFromInput" } %>
+                    data: { "table-header-target": "dateFromInput", action: "keydown.enter->table-header#applyFilter" } %>
             </div>
             <div class="kern-form-input mt-2">
               <%= label_tag "#{@column}__to", t("shared.table.filter.date_range.to_label"), class: "kern-label" %>
               <%= date_field_tag "#{@column}__to", params["#{@column}__to"],
                     class: "kern-form-input__input",
-                    data: { "table-header-target": "dateToInput" } %>
+                    data: { "table-header-target": "dateToInput", action: "keydown.enter->table-header#applyFilter" } %>
             </div>
           <% end %>
         </div>

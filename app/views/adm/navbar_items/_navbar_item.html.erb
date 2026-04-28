@@ -13,7 +13,11 @@
       <%= t("adm.navbar_items.form.kinds.#{navbar_item.kind}") %>
     </span>
 
+    <% edit_path = navbar_item.landing_page.present? ? edit_adm_landing_pages_landing_page_navbar_item_path(navbar_item.landing_page, navbar_item) : edit_adm_navbar_item_path(navbar_item) %>
     <% delete_path = navbar_item.landing_page.present? ? adm_landing_pages_landing_page_navbar_item_path(navbar_item.landing_page, navbar_item) : adm_navbar_item_path(navbar_item) %>
+    <%= link_to edit_path, class: "navbar-item__edit" do %>
+      <span class="material-symbols-outlined">edit</span>
+    <% end %>
     <%= link_to delete_path,
                 data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') },
                 class: "navbar-item__delete" do %>

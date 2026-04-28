@@ -291,6 +291,9 @@ de:
         recommended_debates: "Diskussionen-Empfehlungen anzeigen"
         recommended_proposals: "Antrags-Empfehlungen anzeigen"
         redeemable_code: "Bestätigungscode per Post (optional)"
+        terms_data_storage: "Bedingungen zur Datenspeicherung"
+        terms_data_protection: "Datenschutzbestimmungen"
+        terms_general: "Allgemeine Nutzungsbedingungen"
       direct_message:
         title: "Titel"
         body: "Nachricht"
@@ -550,6 +553,15 @@ de:
           attributes:
             email:
               password_already_set: "Diese*r Benutzer*in hat bereits ein Passwort"
+            terms_data_storage:
+              format: "%{message}"
+              accepted: "Die Bedingungen zur Datenspeicherung müssen akzeptiert werden"
+            terms_data_protection:
+              format: "%{message}"
+              accepted: "Die Datenschutzvereinbarung muss akzeptiert werden"
+            terms_general:
+              format: "%{message}"
+              accepted: "Die Allgemeinen Nutzungsbedingungen müssen akzeptiert werden"
         debate:
           attributes:
             tag_list:

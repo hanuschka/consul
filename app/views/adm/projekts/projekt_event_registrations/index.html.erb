@@ -1,0 +1,109 @@
+<%= content_for :title, [@projekt_event.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_event.title, breadcrumbs: @breadcrumbs, back_button_url: projekt_events_adm_projekts_phase_path(@projekt_phase)) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_event_tabs(@projekt_phase, @projekt_event)) %>
+
+<div class="kern-container mb-5">
+  <div class="mb-4">
+    <p class="m-0 fs-2">
+      <%= t(".counts.confirmed",
+            confirmed: @confirmed_count,
+            max: (@projekt_event.max_attendees.presence || "∞")) %>
+      &nbsp;·&nbsp;
+      <%= t(".counts.total_active", count: @non_cancelled_count) %>
+    </p>
+  </div>
+
+  <%
+    status_header = Kern::Table::HeaderComponent.new(:status, t(".columns.status"), **@status_header_options)
+    pills_component = Adm::FilterPillsComponent.new(headers: [status_header], params: params)
+    filters_active = pills_component.pills.any?
+    column_count = 6
+  %>
+
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <div class="flex-grow-1">
+      <%= render pills_component %>
+    </div>
+
+    <%= link_to url_for(request.query_parameters.merge(format: :csv)),
+          class: "adm-column-selector__toggle",
+          data: { turbo: false } do %>
+      <span class="material-symbols-outlined" aria-hidden="true">download</span>
+      <%= t(".export_csv") %>
+    <% end %>
+  </div>
+
+  <div class="kern-table-responsive" tabindex="0">
+    <table class="kern-table">
+      <thead class="kern-table__head">
+        <tr class="kern-table__row">
+          <th scope="col" class="kern-table__header"><%= t(".columns.name") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".columns.email") %></th>
+          <%= render status_header %>
+          <th scope="col" class="kern-table__header"><%= t(".columns.registered_at") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".columns.confirmed_at") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".columns.actions") %></th>
+        </tr>
+      </thead>
+
+      <tbody class="kern-table__body">
+        <% if @registrations.any? %>
+          <% @registrations.each do |registration| %>
+            <tr id="<%= dom_id(registration) %>" class="kern-table__row">
+              <th scope="row" class="kern-table__header">
+                <%= registration.display_name.strip.presence || registration.user&.username || "—" %>
+              </th>
+              <td class="kern-table__cell"><%= registration.email %></td>
+              <td class="kern-table__cell">
+                <%= t(".statuses.#{registration.status}", default: registration.status.to_s.humanize) %>
+              </td>
+              <td class="kern-table__cell"><%= l(registration.created_at, format: :long) %></td>
+              <td class="kern-table__cell">
+                <%= registration.confirmed_at.present? ? l(registration.confirmed_at, format: :long) : "—" %>
+              </td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% if registration.pending_confirmation? %>
+                    <% actions.with_action(
+                         label: t(".actions.resend_confirmation"),
+                         url: resend_confirmation_adm_projekts_phase_projekt_event_registration_path(
+                           @projekt_phase, @projekt_event, registration, status: Array(params[:status]).presence),
+                         icon: "send",
+                         data: { turbo_method: :post, turbo_confirm: t(".resend_confirmation.confirm") }) %>
+                  <% end %>
+                  <% actions.with_action(
+                       label: t(".actions.destroy"),
+                       url: adm_projekts_phase_projekt_event_registration_path(
+                         @projekt_phase, @projekt_event, registration, status: Array(params[:status]).presence),
+                       icon: "delete",
+                       style: :delete,
+                       data: { turbo_method: :delete, turbo_confirm: t(".destroy.confirm") }) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% elsif filters_active %>
+          <tr class="kern-table__row">
+            <td class="kern-table__cell kern-table__cell--empty" colspan="<%= column_count %>">
+              <%= empty_state(title: t(".no_results_filtered_title"), description: t(".no_results_filtered_description"), icon: "filter_alt_off") %>
+            </td>
+          </tr>
+        <% else %>
+          <tr class="kern-table__row">
+            <td class="kern-table__cell kern-table__cell--empty" colspan="<%= column_count %>">
+              <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "how_to_reg") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @registrations.any? %>
+    <div class="my-5">
+      <%== pagy_nav(@pagy) if @pagy && @pagy.pages > 1 %>
+    </div>
+  <% end %>
+</div>

@@ -13,3 +13,99 @@ de:
         request: Anfragen
         pending: Anfrage eingegangen
         active_label: Aktiviert
+        request_subject: "App-Anfrage: %{app_name}"
+        categories:
+          registration: Registrierung
+          verification: Verifizierung
+          ai: Künstliche Intelligenz
+          web_tracking: Web-Tracking
+          maps_3d: 3D-Karten
+          search: Suche
+          translation: Übersetzung
+          user_management: Nutzerverwaltung & Konferenz
+          participation: Beteiligungsphasen
+        apps:
+          facebook_login:
+            name: Facebook Login
+            description: Registrierung und Anmeldung über einen bestehenden Facebook-Account.
+          google_login:
+            name: Google Login
+            description: Registrierung und Anmeldung über einen bestehenden Google-Account.
+          x_login:
+            name: X Login
+            description: Registrierung und Anmeldung über einen bestehenden X (Twitter)-Account.
+          wordpress_login:
+            name: WordPress Login
+            description: Single Sign-On für Portale mit bestehendem WordPress-Nutzerstamm.
+          bundid:
+            name: BundID
+            description: Identitätsprüfung über das bundesweite Online-Bürgerkonto BundID – kompatibel mit eID und Nutzerkonto Bund.
+          bayernid:
+            name: BayernID
+            description: Identitätsprüfung über das bayerische Bürgerkonto für Kommunen in Bayern.
+          servicekonto_nrw:
+            name: servicekonto.NRW
+            description: Identitätsprüfung über das zentrale Servicekonto für Nordrhein-Westfalen.
+          openrathaus:
+            name: OpenRathaus
+            description: Identitätsprüfung über die OpenRathaus-Plattform für kommunale Dienste.
+          letter_verification:
+            name: Briefverifizierung
+            description: Verifizierung per Postbrief an die gemeldete Adresse – geeignet für Beteiligungen mit Wohnsitzpflicht.
+          sms_verification:
+            name: SMS-Verifizierung
+            description: Bestätigung der Telefonnummer per Einmal-Code (OTP) als niedrigschwellige Verifikationsstufe.
+          voice_assistant:
+            name: Voice Assistant
+            description: Beiträge und Mängelanzeigen per Spracheingabe einreichen. Senkt die Einstiegshürde und macht digitale Beteiligung für alle zugänglich.
+          ai_project_creation:
+            name: AI-Projektassistent
+            description: Unterstützt Verwaltungsmitarbeitende beim Anlegen neuer Beteiligungsprojekte – von Beschreibung bis Zeitplan.
+          ai_user_help:
+            name: AI-Nutzerhelfer
+            description: Beantwortet Bürgerfragen zur Plattform und zu laufenden Projekten direkt im Chatfenster.
+          ai_proposal_creation:
+            name: AI-Vorschlagsgenerator
+            description: Hilft Bürgerinnen und Bürgern, ihre Ideen als strukturierte Vorschläge zu formulieren.
+          ai_evaluation_phases:
+            name: AI-Auswertung
+            description: Fasst eingegangene Beiträge thematisch zusammen und erstellt automatische Auswertungsberichte.
+          ai_project_chat:
+            name: AI-Diskussionsbegleiter
+            description: Moderiert Kommentarbereiche, erkennt thematische Cluster und gibt Zusammenfassungen der Debatte.
+          matomo_cookie:
+            name: Matomo (Cookie)
+            description: Datenschutzkonforme Nutzungsanalyse mit Session-Cookies. Vollständige Datenkontrolle auf eigenem Server.
+          matomo_cookieless:
+            name: Matomo (Cookieless)
+            description: DSGVO-freundliches Tracking ohne Cookies – keine Einwilligung erforderlich, volle Datensouveränität.
+          masterportal:
+            name: Masterportal
+            description: Integration des Open-Source-Geoportals Masterportal für interaktive Geodatenvisualisierungen im Beteiligungsprozess.
+          virtual_city_systems:
+            name: Virtual City Systems
+            description: 3D-Stadtmodelle von Virtual City Systems als räumlicher Kontext für Planungs- und Beteiligungsverfahren.
+          elasticsearch:
+            name: Elasticsearch
+            description: Leistungsstarke Volltextsuche über alle Beteiligungsinhalte – schnell, relevant und skalierbar.
+          microsoft_translator:
+            name: Microsoft Translator
+            description: Automatische Übersetzung von Plattforminhalten und Bürgerbeiträgen über die Azure Cognitive Services.
+          google_translator:
+            name: Google Translator
+            description: Automatische Übersetzung über die Google Cloud Translation API für mehrsprachige Beteiligung.
+          brevo:
+            name: Brevo
+            description: E-Mail-Marketing und Nutzerverwaltung über Brevo – Newsletter, Segmentierung und automatisierte Kampagnen.
+          jitsi:
+            name: Jitsi
+            description: Open-Source-Videokonferenzen direkt auf der Plattform – ohne externe Anmeldung oder proprietäre Software.
+          bigbluebutton:
+            name: BigBlueButton
+            description: Webkonferenz-Lösung für digitale Bürgerversammlungen mit Präsentationsmodus, Umfragen und Breakout-Räumen.
+          youtube_livestream:
+            name: YouTube Livestream
+            description: Einbindung von YouTube-Livestreams in Beteiligungsprojekte für öffentliche Sitzungen und Informationsveranstaltungen.
+          rss_newsfeed:
+            name: RSS-Newsfeed
+            description: Automatisches Einlesen externer Nachrichtenquellen per RSS als Informationsgrundlage für Beteiligungsprozesse.

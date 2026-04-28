@@ -1,7 +1,9 @@
 class InvestmentsController < ApplicationController
   include Search
   include RandomSeed
+  include LandingPageResolvable
 
+  before_action :check_investments_overview_enabled, only: :index
   before_action :set_random_seed, only: :index
 
   skip_authorization_check only: [:index]
@@ -9,7 +11,17 @@ class InvestmentsController < ApplicationController
   has_orders %w[random supports ballots ballot_line_weight newest], only: :index
 
   def index
+    resolve_landing_page_from_slug
+
     @investments = Budget::Investment.all
+
+    if @landing_page.present?
+      @investments =
+        @investments
+          .joins(budget: { projekt_phase: :projekt })
+          .where(projekts: { id: landing_page_scoped_projekt_ids })
+    end
+
     @budgets = Budget.where(id: @investments.map(&:budget_id).uniq)
 
     set_status_filter_options
@@ -45,5 +57,9 @@ class InvestmentsController < ApplicationController
 
       @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"] if @investments.selected.any?
       @status_filter_options << [t("budgets.investments.index.filters.unfeasible"), "unfeasible"] if @investments.unfeasible.any?
+    end
+
+    def check_investments_overview_enabled
+      raise FeatureFlags::FeatureDisabled, :investments_overview unless Setting["extended_feature.general.enable_investments_overview"].present?
     end
 end

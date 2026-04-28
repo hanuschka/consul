@@ -1,0 +1,43 @@
+de:
+  shared:
+    "true": "Ja"
+    "false": "Nein"
+    back: "Zurück"
+    submit: "Speichern"
+    create: "Erstellen"
+    edit: "Bearbeiten"
+    cancel: "Abbrechen"
+    delete: "Löschen"
+    remove: "Entfernen"
+    confirm_delete: "Sind Sie sicher, dass Sie dies löschen möchten?"
+    confirm_remove: "Sind Sie sicher, dass Sie dies entfernen möchten?"
+    toggle_submenu: "Untermenü für %{title} umschalten"
+    navbar_more: "Mehr"
+    moderation_statuses:
+      flagged: Gemeldet
+      ignored: Meldung ignoriert
+      hidden: Herausmoderiert
+    table:
+      id: "ID"
+      title: "Titel"
+      username: "Benutzername"
+      user: "Nutzer"
+      email: "E-Mail"
+      actions: "Aktionen"
+      filter:
+        search_placeholder: "%{column_label} suchen..."
+        apply: "Filter anwenden"
+        close: "Schließen"
+        remove_filter: "%{filter} entfernen"
+        date_range:
+          from_label: "Von"
+          to_label: "Bis"
+          from_only: "ab %{date}"
+          to_only: "bis %{date}"
+      sort:
+        action_label: "Sortieren nach %{column_label}, %{direction}"
+        status_text_sorted: "Sortiert nach %{column_label} in %{direction} Reihenfolge"
+        status_text_unsorted: "Nicht sortiert"
+        directions:
+          asc: "aufsteigend"
+          desc: "absteigend"

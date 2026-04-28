@@ -8,26 +8,39 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
+  # Ordered list of projekt phases
+  PROJEKT_PHASES_TYPES = [
+    "ProjektPhase::CommentPhase",
+    "ProjektPhase::ProposalPhase",
+    "ProjektPhase::PointOfInterestPhase",
+    "ProjektPhase::QuestionPhase",
+    "ProjektPhase::VotingPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::BudgetPhase",
+    "ProjektPhase::LegislationPhase",
+    "ProjektPhase::FormularPhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::LivestreamPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::NewsfeedPhase"
+  ].freeze
+
+  DEPRECATED_PHASE_TYPES = [
+    "ProjektPhase::DebatePhase"
+  ].freeze
+
+  ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
+
   SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase",
-    "ProjektPhase::PointOfInterestPhase"
+    "ProjektPhase::NewsfeedPhase"
   ].freeze
-
-  PROJEKT_PHASES_TYPES = [
-    "ProjektPhase::CommentPhase",
-    "ProjektPhase::ProposalPhase",
-    "ProjektPhase::QuestionPhase",
-    "ProjektPhase::VotingPhase",
-    "ProjektPhase::BudgetPhase",
-    "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase",
-  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -44,8 +57,6 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
-  translates :projekt_selector_hint # needed for globalize fallback, not used otherwise
-  translates :resource_form_title_hint # needed for globalize fallback, not used otherwise
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -55,7 +66,8 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
 
-  has_many :age_range_projekt_phases_for_stats, -> { where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
+  has_many :age_range_projekt_phases_for_stats, -> {
+ where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
   has_many :age_ranges_for_stats, through: :age_range_projekt_phases_for_stats, source: :age_range
 
   belongs_to :age_restriction, class_name: "AgeRange", foreign_key: :age_range_id,
@@ -63,11 +75,15 @@ class ProjektPhase < ApplicationRecord
 
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_affiliations, through: :projekt
+  has_many :registered_address_district_affiliations, through: :projekt
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,
            after_add: :touch_updated_at, after_remove: :touch_updated_at
 
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+
+  has_many :registered_address_district_projekt_phase, dependent: :destroy
+  has_many :registered_address_districts, through: :registered_address_district_projekt_phase
 
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
@@ -77,9 +93,15 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :stat_questions,
+           class_name: "ProjektPhaseStatQuestion",
+           foreign_key: :projekt_phase_id,
+           dependent: :destroy
 
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
+  has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
+  has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -89,7 +111,25 @@ class ProjektPhase < ApplicationRecord
     verified: 2
   }
 
+  enum ai_stats_refresh_status: {
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :ai_stats_refresh
+
   validates :projekt, presence: true
+  validate :type_must_be_valid
+
+  def self.find_sti_class(type_name)
+    if ALL_PHASE_TYPES.include?(type_name)
+      super
+    else
+      self
+    end
+  rescue NameError
+    self
+  end
 
   default_scope { order(:given_order, :id) }
 
@@ -98,7 +138,10 @@ class ProjektPhase < ApplicationRecord
 
   scope :frontend_visible, -> { where(frontend_visibility: true) }
 
-  scope :active, -> { where(active: true) }
+  scope :active, -> {
+    where(active: true).where.not(type: "ProjektPhase::DebatePhase")
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     active
       .where("start_date IS NULL OR start_date <= ?", timestamp)
@@ -110,7 +153,7 @@ class ProjektPhase < ApplicationRecord
     where(id: ids_with_resources)
   }
 
-  scope :sorted, ->  {order(:given_order) }
+  scope :sorted, -> { order(:given_order) }
 
   scope :with_feature, ->(feature_key, state = "on") {
     joins(:settings)
@@ -160,7 +203,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id: id).exists?
+    self.class.current(timestamp).where(id:).exists?
   end
 
   def not_current?
@@ -177,8 +220,11 @@ class ProjektPhase < ApplicationRecord
       return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
       return :phase_not_active if not_active?
-      return :phase_expired if expired?
-      return :phase_not_current if not_current?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
 
       return :guest_not_logged_in if user_status == "guest" && !user
       return if user_status == "guest"
@@ -203,7 +249,9 @@ class ProjektPhase < ApplicationRecord
   end
 
   def geozone_restrictions_formatted
-    geozone_restrictions.map(&:name).flatten.join(", ")
+    return geozone_restrictions.map(&:name).flatten.join(", ") if geozone_restrictions.any?
+
+    registered_address_districts.sort_by(&:name_for_display).map(&:name_for_display).join(", ")
   end
 
   def street_restrictions_formatted
@@ -248,6 +296,22 @@ class ProjektPhase < ApplicationRecord
     phase_tab_name.presence || model_name.human
   end
 
+  def default_phase
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    setting&.value == id.to_s
+  end
+
+  def default_phase=(value)
+    setting = projekt.projekt_settings.find_by(key: "projekt_custom_feature.default_footer_tab")
+    return unless setting
+
+    if ActiveModel::Type::Boolean.new.cast(value)
+      setting.update!(value: id.to_s)
+    elsif setting.value == id.to_s
+      setting.update!(value: "")
+    end
+  end
+
   def all_settings
     @settings ||= settings.pluck(:key, :value)
   end
@@ -262,6 +326,10 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def max_submissions_per_user
+    option("resource.max_submissions_per_user").to_i
+  end
+
   def option(key)
     option = settings.find { |s| s.key == "option.#{key}" }
 
@@ -274,6 +342,10 @@ class ProjektPhase < ApplicationRecord
 
   def setting(key)
     setting = settings.find { |s| s.key == key }
+  end
+
+  def customizable_email_templates
+    raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
   def admin_nav_bar_items
@@ -358,6 +430,34 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def name
+    if type.present? && type != self.class.name
+      becomes(type.constantize).name
+    else
+      super
+    end
+  end
+
+  def regular
+    ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
+  end
+
+  def generate_ai_stats
+    stats = AiAnalytics::GenerateAllStats.call(self)
+    update_column(:ai_stats, stats)
+  end
+
+  def regular?
+    ProjektPhase.regular_phases.include?(self)
+  end
+
+  def registered_address_grouping_restriction_formatted
+    [
+      registered_address_grouping_restriction,
+      registered_address_grouping_restrictions[registered_address_grouping_restriction]
+    ].compact.join(": ")
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
@@ -371,12 +471,13 @@ class ProjektPhase < ApplicationRecord
       when "only_citizens"
         return :missing_user_data if user.plz.blank?
 
-        :only_citizens if user.not_current_city_citizen?
+        :only_citizens unless user.citizen?
       when "only_geozones"
         if user.plz.blank?
           :missing_user_data
-        elsif !geozone_restrictions.include?(user.geozone)
-          :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
+        elsif (geozone_restrictions.any? && !geozone_restrictions.include?(user.geozone)) ||
+               (registered_address_districts.any? && !registered_address_districts.include?(user.district))
+          :only_specific_geozones
         end
       when "only_streets"
         if user.registered_address_street.blank?
@@ -426,7 +527,17 @@ class ProjektPhase < ApplicationRecord
       return if projekt_phase_settings.nil?
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
-        settings.create!(key: key, value: value)
+        settings.create!(key:, value:)
+      end
+    end
+
+    def type_must_be_valid
+      if type.blank?
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
+      elsif !ALL_PHASE_TYPES.include?(type)
+        errors.add(:type,
+"is not included in the list of valid project phase types: #{ALL_PHASE_TYPES.join(", ")}")
       end
     end
 end

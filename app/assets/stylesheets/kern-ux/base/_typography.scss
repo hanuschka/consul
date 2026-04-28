@@ -1,0 +1,17 @@
+@use "../abstracts/mappings" as mappings;
+@use "../abstracts/breakpoints" as breakpoints;
+
+.fw-normal { font-weight: 400 !important; }
+.fw-medium { font-weight: 500 !important; }
+.fw-semibold { font-weight: 600 !important; }
+.fw-bold { font-weight: 700 !important; }
+
+@each $size, $value in mappings.$font-sizes {
+  .fs-#{$size} { font-size: $value !important; }
+
+  @each $bp, $bp-width in breakpoints.$grid-breakpoints {
+    @media (min-width: $bp-width) {
+      .fs-#{$bp}-#{$size} { font-size: $value !important; }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+<div class="ai-stats-card ai-clustering margin-bottom">
+  <h3 class="ai-stats-card--title">
+    <%= t(title_key + ".title") %>
+  </h3>
+
+  <p class="ai-clustering--description">
+    <%= total_resources_count %> <%= t(title_key + ".resources") %>
+    <%= t(title_key + ".in") %>
+    <%= total_categories_count %> <%= t(title_key + ".category_groups") %>
+  </p>
+
+  <div class="ai-clustering--list">
+    <% categories.each_with_index do |category, category_index| %>
+      <div class="ai-clustering--item-card" style="--item-color: <%= category_color(category_index) %>">
+        <div class="ai-clustering--item-header">
+          <h4 class="ai-stats-card--subtitle"><%= category["name"] %></h4>
+          <p class="ai-clustering--item-stats">
+            <%= subcategory_count(category) %> <%= t(title_key + ".subcategories") %>,
+            <%= resource_count(category) %> <%= t(title_key + ".resources") %>
+          </p>
+        </div>
+
+        <div class="ai-clustering--subitems-list">
+          <% category["subtopics"]&.each do |subcategory| %>
+            <div class="ai-clustering--subitem">
+              <%= render Shared::CollapseComponent.new do |c| %>
+                <% c.with_head do %>
+                  <div class="ai-clustering--subitem-header-content">
+                    <span class="ai-clustering--subitem-name"><%= subcategory["name"] %></span>
+                    <span class="ai-clustering--subitem-count"><%= subcategory_resource_count(subcategory) %></span>
+                  </div>
+                <% end %>
+                <% c.with_body do %>
+                  <div class="ai-clustering--subitem-body">
+                    <ul class="ai-clustering--resources-list">
+                      <% resources_for_subcategory(subcategory).each do |resource| %>
+                        <li>
+                          <%= link_to resource_path(resource), target: "_blank", class: "ai-clustering--resource-link" do %>
+                            <% if resource_has_image?(resource) %>
+                              <%= image_tag resource_image_url(resource), class: "ai-clustering--resource-image" %>
+                            <% else %>
+                              <div class="ai-clustering--resource-image-placeholder">
+                                <i class="fa fa-lightbulb" aria-hidden="true"></i>
+                              </div>
+                            <% end %>
+                            <div class="ai-clustering--resource-content">
+                              <span class="ai-clustering--resource-title"><%= resource.title %></span>
+                              <% if resource.projekt_labels.any? || resource.sentiment.present?  %>
+                                <div class="ai-clustering--resource-tags">
+                                  <% if resource.projekt_labels.any? %>
+                                    <div class="ai-clustering--resource-labels">
+                                      <% resource.projekt_labels.each do |label| %>
+                                        <span class="projekt-label">
+                                          <i class="fas fa-<%= label.icon %>"></i>
+                                          <%= label.name %>
+                                        </span>
+                                      <% end %>
+                                    </div>
+                                  <% end %>
+                                  <% if resource.sentiment.present? %>
+                                    <div class="ai-clustering--resource-sentiment">
+                                      <span class="sentiment" style="border-color:<%= resource.sentiment.color %>;background-color:<%= resource.sentiment.color %>;color:#fff">
+                                        <%= resource.sentiment.name %>
+                                      </span>
+                                    </div>
+                                  <% end %>
+                                </div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if bottom_content? %>
+    <%= bottom_content %>
+  <% end %>
+</div>
+

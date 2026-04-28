@@ -111,10 +111,6 @@
       @include icon(pencil-alt, solid);
     }
 
-    &.matomo-link {
-      @include icon(chart-bar, solid);
-    }
-
     &.stats-link {
       @include icon(chart-line, solid);
     }
@@ -125,6 +121,18 @@
 
     &.ml-link {
       @include icon(brain, solid);
+    }
+
+    &.api-clients-link {
+      @include icon(plug, solid);
+    }
+
+    &.ai-settings-link {
+      @include icon(magic, solid);
+    }
+
+    &.external-api-keys-link {
+      @include icon(key, solid);
     }
   }
 

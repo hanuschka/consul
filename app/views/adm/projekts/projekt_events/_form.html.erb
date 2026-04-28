@@ -1,0 +1,8 @@
+<%= form_with model: @projekt_event, url: url do |f| %>
+  <%= render "fields_general", f: f %>
+  <%= render "fields_schedule", f: f %>
+  <%= render "fields_registration", f: f %>
+  <%= render "fields_accessibility", f: f %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -1,0 +1,52 @@
+<%= tag.div data: controller_data_attributes do %>
+
+  <% if editable && !admin_editor %>
+    <div class="kern-title kern-title--small mb-2">
+      <%= t("components.adm.map_setting_component.map_label") %>
+    </div>
+  <% end %>
+
+  <div id="<%= container_id %>"
+       class="map_location map <%= map_location.rendering_library %> mb-4"
+       style="<%= container_style %>"
+       data-map-target="container"
+       data-map-location-id="<%= map_location.id %>">
+  </div>
+
+  <% if form && editable %>
+    <%= form.hidden_field :latitude, data: { map_target: "latitude" } %>
+    <%= form.hidden_field :longitude, data: { map_target: "longitude" } %>
+    <%= form.hidden_field :altitude, data: { map_target: "altitude" } %>
+    <%= form.hidden_field :zoom, data: { map_target: "zoom" } %>
+    <%= form.hidden_field :features, value: features_json, data: { map_target: "features" } %>
+  <% end %>
+
+  <% if form && admin_editor %>
+    <% if map_location.mappable_type == 'Projekt' %>
+      <div class="mb-4">
+        <%= form.check_box :show_admin_shape, hint: t('.show_admin_shape_hint') %>
+      </div>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+      label: t('components.kern.map_component.rendering_library_label'),
+      hint: t('components.kern.map_component.rendering_library_description')
+    ) do %>
+      <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
+          {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
+    <% end %>
+
+    <div data-map-target="mapboxStyleField" class="<%= 'd-none' unless map_location.mapbox? %>">
+      <%= render Kern::FormFieldComponent.new(
+        label: t('components.kern.map_component.mapbox_style_id_label'),
+        hint: t('components.kern.map_component.mapbox_style_id_description')
+      ) do %>
+        <%= form.text_field :mapbox_style_id,
+            class: "kern-input",
+            placeholder: "mapbox://styles/..." %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= content %>
+<% end %>

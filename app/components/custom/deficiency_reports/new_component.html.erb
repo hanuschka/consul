@@ -32,12 +32,9 @@
       <div class="flex-layout">
         <div class="main-column">
           <%= f.translatable_fields do |translations_form| %>
-            <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
-
             <div class="user-resources-form--banner-editor -deficiency-report">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
-                  data: suggest_data(deficiency_report),
                   label: false,
                   class: "user-resources-form--banner-editor-title js-user-resource-form-title",
                   placeholder: t("custom.deficiency_reports.form.title_placeholder"),
@@ -175,7 +172,7 @@
         </div>
         <% end %>
 
-        <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
+        <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.submit_button_new_design")) %>
       </div>
     <% end %>
 

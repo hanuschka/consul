@@ -45,6 +45,17 @@ class DeficiencyReportMailer < ApplicationMailer
     end
   end
 
+  def notify_author_about_submission(deficiency_report)
+    @deficiency_report = deficiency_report
+    subject = t("custom.deficiency_reports.mailers.notify_author_about_submission.subject")
+
+    @email_to = @deficiency_report.author.email
+
+    with_user(@deficiency_report.author) do
+      mail(to: @email_to, subject: subject)
+    end
+  end
+
   def send_feedback_form_link(deficiency_report)
     @deficiency_report = deficiency_report
     @email_to = deficiency_report.author.email

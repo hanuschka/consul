@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<% if ApiClient.active_dt? && @ai_assistant_config.present? %>
+<% if InternalApiClient.active_dt? && @ai_assistant_config.present? %>
   <div class="margin-bottom">
     <%= render "custom/admin/projekt_phases/settings/features_table", features: @ai_settings %>
   </div>
@@ -70,15 +70,6 @@
         <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
       </div>
     </div>
-  <% end %>
-
-  <% if embedded? %>
-    <% content_for :admin_frame_top_navigation do %>
-      <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
-    <% end %>
-    <%= content_for :admin_frame_bottom_navigation do %>
-      <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
-    <% end %>
   <% end %>
 <% elsif @ai_assistant_config_response["error"].present? %>
   <div class="row margin-bottom">

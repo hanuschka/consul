@@ -1,0 +1,114 @@
+<%= content_for :title, t("adm.home.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.home.show.title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+
+  <%# ── Intro ───────────────────────────────────────────── %>
+  <p class="adm-dashboard__intro">
+    <%= t("adm.home.show.intro_html",
+          org_name: Setting["org_name"],
+          ticket_link: link_to(t("adm.home.show.ticket_system"), Dt.ticket_system_url, target: "_blank", rel: "noopener")) %>
+  </p>
+
+  <%# ── Users ───────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">group</span>
+      <h3><%= t("adm.home.show.users.title") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_total %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.total") %></div>
+      </div>
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_new_week %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.new_this_week") %></div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Deficiency reports (module-gated) ──────────────── %>
+  <% if feature?(:deficiency_reports) %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">report</span>
+        <h3><%= t("adm.home.show.deficiency_reports.title") %></h3>
+      </div>
+      <div class="adm-dashboard__stats">
+        <div class="adm-stat-card">
+          <div class="adm-stat-card__value"><%= @reports_total %></div>
+          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.total") %></div>
+        </div>
+        <div class="adm-stat-card adm-stat-card--accent">
+          <div class="adm-stat-card__value"><%= @reports_open %></div>
+          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.open") %></div>
+        </div>
+        <div class="adm-stat-card adm-stat-card--warning">
+          <div class="adm-stat-card__value"><%= @reports_unassigned %></div>
+          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.unassigned") %></div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Projects ────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+      <h3><%= t("adm.home.show.projects.title") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @projects_total %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.total") %></div>
+      </div>
+      <div class="adm-stat-card adm-stat-card--accent">
+        <div class="adm-stat-card__value"><%= @projects_current %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.active") %></div>
+      </div>
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @projects_expired %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.expired") %></div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Stats link ────────────────────────────────────── %>
+  <div class="adm-dashboard__stats-link">
+    <%= link_to adm_statistics_path, class: "kern-link d-flex align-items-center gap-1" do %>
+      <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>
+      <%= t("adm.home.show.detailed_statistics") %>
+    <% end %>
+  </div>
+
+  <%# ── demokratie.today ────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">language</span>
+      <h3>demokratie.today</h3>
+    </div>
+    <div class="adm-dt-links">
+      <%= link_to Dt.ticket_system_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/ticket_system.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.ticket_system") %></span>
+      <% end %>
+      <%= link_to Dt.meetups_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/meetups.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.meetup") %></span>
+      <% end %>
+      <% if Dt.url.present? %>
+        <%= link_to Dt.url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+          <%= image_tag "dt/projekts_overview.jpg", alt: "" %>
+          <span><%= t("adm.home.show.dt.projekts_overview") %></span>
+        <% end %>
+      <% end %>
+      <%= link_to Dt.newsletter_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/newsletter.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.newsletter") %></span>
+      <% end %>
+    </div>
+  </div>
+
+</div>

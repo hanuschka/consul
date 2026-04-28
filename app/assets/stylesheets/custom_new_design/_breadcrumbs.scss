@@ -3,7 +3,7 @@
     font-size: 0.85em;
   }
 
-  .custom-breadcrumbs div.breadcrumbs-item {
-    color: $brand;
+  .custom-breadcrumbs span.breadcrumbs-item {
+    color: var(--brand-color);
   }
 }

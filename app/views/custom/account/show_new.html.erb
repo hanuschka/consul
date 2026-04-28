@@ -1,3 +1,5 @@
+<% provide :title do %><%= t("account.show.title") %><% end %>
+
 <% public_activity_component_content = capture do %>
   <%= render Users::NewPublicActivityComponent.new(current_user) %>
 <% end %>
@@ -17,42 +19,24 @@
 <% end %>
 
 <main class="user-page">
-  <div class="flex-layout padding-on-mobile">
-    <div class="main-column">
+  <div class="flex-layout padding-on-mobile account-page-layout">
+
+    <div style="grid-area: loader;">
       <%= render "shared/loader_spinner" %>
+    </div>
+    <div style="grid-area: banner;">
       <%= render(Users::ProfileBannerComponent.new(user: current_user, edit_mode: true)) %>
-      <div class="margin-bottom">
-        <h1 class="inline-block margin-bottom accout-page-notifications-title">
-          <%= t("notifications.index.title") %>
-        </h1>
-
-        <%= link_to t("notifications.index.mark_all_as_read"),
-          mark_all_as_read_notifications_path, method: :put,
-          class: "button hollow float-right-medium" %>
-
-        <ul class="menu simple clear" role="navigation" aria-label="<%= t('custom.accessibility.account.notifications.aria-label') %>">
-          <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
-            <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
-          </li>
-          <li class="<%= params[:notifications] == "read" ? "is-active" : "" %>">
-            <h2>
-              <%= link_to t("notifications.index.read"), account_path(notifications: "read") %>
-            </h2>
-          </li>
-        </ul>
-
-        <div class="hide-on-small-tablet">
-          <%= notifications_content %>
-        </div>
-      </div>
-      <div class="hide-on-small-tablet">
-        <%= public_activity_component_content %>
-      </div>
     </div>
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
-        <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
-        <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
+        <ul class="account-settings-actions">
+          <li>
+            <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
+          </li>
+          <li>
+            <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
+          </li>
+        </ul>
       <% end %>
 
       <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description_html"),  icon_name: "check") do |c| %>
@@ -190,10 +174,41 @@
         <% end %>
       <% end %>
     </aside>
-    <div class="show-on-small-tablet">
+
+    <div class="margin-bottom" style="grid-area: notifications;">
+      <h1 class="inline-block margin-bottom accout-page-notifications-title">
+        <%= t("notifications.index.title") %>
+      </h1>
+
+      <%= link_to t("notifications.index.mark_all_as_read"),
+        mark_all_as_read_notifications_path, method: :put,
+        class: "button hollow float-right-medium" %>
+
+      <ul
+        class="menu simple clear"
+        role="tablist"
+        aria-label="<%= t('custom.accessibility.account.notifications.tab_label') %>"
+      >
+        <li
+          role="tab"
+          aria-selected="<%= params[:notifications] != "read" %>"
+          class="<%= params[:notifications] == "read" ? "" : "is-active" %>"
+        >
+          <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
+        </li>
+        <li
+          role="tab"
+          aria-selected="<%= params[:notifications] == "read" %>"
+          class="<%= params[:notifications] == "read" ? "is-active" : "" %>"
+        >
+          <h2><%= link_to t("notifications.index.read"), account_path(notifications: "read") %></h2>
+        </li>
+      </ul>
+
       <%= notifications_content %>
     </div>
-    <div class="show-on-small-tablet">
+
+    <div style="grid-area: activity;">
       <%= public_activity_component_content %>
     </div>
   </div>

@@ -1,5 +1,5 @@
-ProjektStudio.utils.focusContentEditableElement = function(element) {
-  element.focus()
+ProjektStudio.utils.focusContentEditableElement = function(element, options = {}) {
+  element.focus({ preventScroll: options.preventScroll || true })
 
   const range = document.createRange();
   range.selectNodeContents(element);
@@ -8,31 +8,6 @@ ProjektStudio.utils.focusContentEditableElement = function(element) {
   selection.removeAllRanges();
   selection.addRange(range);
 }
-
-// ProjektStudio.utils.selectEndOfContentEditable = function(element) {
-//   // Focus the element first
-//   element.focus();
-
-//   // Create a range and position it at the end of the content
-//   const range = document.createRange();
-//   const selection = window.getSelection();
-
-//   // Remove any existing selections
-//   selection.removeAllRanges();
-
-//   // If the element has text content, position cursor at the end
-//   if (element.textContent.length > 0) {
-//     range.selectNodeContents(element);
-//     range.collapse(false); // false means collapse to end
-//   } else {
-//     // If element is empty, just position at the start
-//     range.setStart(element, 0);
-//     range.collapse(true);
-//   }
-
-//   // Apply the selection
-//   selection.addRange(range);
-// }
 
 ProjektStudio.utils.htmlToDomElement = function(html) {
   const div = document.createElement('div');

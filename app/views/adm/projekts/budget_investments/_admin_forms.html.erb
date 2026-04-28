@@ -1,0 +1,57 @@
+<% saved_editor = local_assigns.fetch(:saved_editor, nil) %>
+<% budget = investment.budget %>
+<% current_phase_index = budget.current_phase_index %>
+<% section_locals = { investment: investment, projekt_phase: projekt_phase, budget: budget, saved_editor: saved_editor } %>
+
+<%= turbo_frame_tag dom_id(investment, :admin_forms) do %>
+<section class="adm-admin-section" data-controller="adm-budget-investments--phases-accordion">
+  <div class="d-flex align-items-center flex-wrap gap-3 mb-4">
+    <h2 class="adm-detail-section-title m-0"><%= t("adm.projekts.budget_investments.show.admin_section_title") %></h2>
+    <%= render Adm::HintComponent.new do %>
+      <p class="adm-hint__text"><%= t("adm.projekts.budget_investments.show.admin_info_banner") %></p>
+      <% if !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+        <p class="adm-hint__text adm-hint__text--spaced"><%= t("adm.projekts.budget_investments.show.early_pricing_hint") %></p>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="adm-detail-meta-bar mb-4">
+    <div class="adm-detail-meta-bar__item">
+      <span class="adm-detail-meta-bar__label"><%= t("adm.projekts.budget_investments.show.author") %></span>
+      <span class="adm-detail-meta-bar__value"><%= investment.author.username %></span>
+    </div>
+    <span class="adm-detail-meta__separator"></span>
+    <div class="adm-detail-meta-bar__item">
+      <span class="adm-detail-meta-bar__label"><%= t("adm.projekts.budget_investments.show.created_at") %></span>
+      <span class="adm-detail-meta-bar__value"><%= I18n.l(investment.created_at.to_date) %></span>
+    </div>
+    <span class="adm-detail-meta__separator"></span>
+    <div class="adm-detail-meta-bar__item">
+      <span class="adm-detail-meta-bar__label"><%= t("adm.projekts.budget_investments.show.total_votes") %></span>
+      <span class="adm-detail-meta-bar__value"><%= investment.total_votes %></span>
+    </div>
+    <% if investment.preselected? || investment.budget.max_preselected.to_i > 0 %>
+      <span class="adm-detail-meta__separator"></span>
+      <div class="adm-detail-meta-bar__item">
+        <span class="adm-detail-meta-bar__label"><%= t("adm.projekts.budget_investments.show.preselected") %><% if investment.budget.max_preselected.to_i > 0 %> (Top <%= investment.budget.max_preselected %>)<% end %></span>
+        <span class="adm-detail-meta-bar__value <%= investment.preselected? ? 'adm-detail-meta-bar__value--positive' : '' %>"><%= human_boolean(investment.preselected?) %></span>
+      </div>
+    <% end %>
+    <span class="adm-detail-meta__separator"></span>
+    <span class="adm-admin-phase-badge">
+      <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 16px;">flag</span>
+      <%= t("adm.projekts.budget_investments.show.current_phase", phase: current_phase_index) %>
+    </span>
+  </div>
+
+  <%= render "adm/projekts/budget_investments/feasibility_section", **section_locals %>
+
+  <% if budget.show_money? %>
+    <%= render "adm/projekts/budget_investments/pricing_section", **section_locals %>
+  <% end %>
+
+  <%= render "adm/projekts/budget_investments/selection_section", **section_locals %>
+
+  <%= render "adm/projekts/budget_investments/winner_section", **section_locals %>
+</section>
+<% end %>

@@ -1,4 +1,9 @@
 <%= content_for :body_class, "proposals-show" %>
+
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <% preview = false unless local_assigns.has_key? :preview %>
 <% provide :title do %><%= @proposal.title %><% end %>
 <% content_for :meta_description do %>

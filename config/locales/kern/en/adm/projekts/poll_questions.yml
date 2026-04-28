@@ -1,0 +1,76 @@
+en:
+  adm:
+    projekts:
+      poll_questions:
+        new:
+          title: Create new question
+          bundle_title: Create new question bundle
+          nested_title: Create new sub-question
+        edit:
+          title: Edit question
+        show:
+          edit_question: Edit question
+          edit_bundle: Edit question bundle
+          answers_title: Answers
+          add_answer: Create new answer
+          no_answers_title: No answer options available
+          no_answers_description: Create answer options users can choose from for this question.
+          nested_questions_title: Sub-questions
+          add_nested_question: Create sub-question
+          no_nested_questions_title: No sub-questions available
+          no_nested_questions_description: Create sub-questions that are bundled within this topic and presented to users together.
+          table:
+            answer_title: Answers
+            nested_question_title: Sub-questions
+            description: Description
+            images: Images
+            documents: Documents
+            videos: Videos
+            vote_type: Answer options
+            show_answers: Show answers
+            actions: Actions
+        destroy:
+          success: Question deleted successfully.
+        form:
+          bundle_title: Topic bundle
+          title_placeholder: "e.g. Which measure do you support?"
+          no_contextualization: No contextualization
+          intro_hint: Shown on the frontend as introductory text above the question. Use this field to explain the context of the question, provide background information, or give orientation to participants. The text supports rich-text formatting and can contain links or highlights.
+          title_hint: >
+            Enter the question shown to users on the frontend. Formulate
+            the question clearly and understandably so participants immediately
+            grasp what it's about — e.g. "Which measure do you support?" or
+            "How do you rate the proposal?". Keep the wording short and concise.
+          bundle_intro_hint: >
+            Shown on the frontend as introductory text above the question bundle. Use this field to
+            explain the thematic frame of the question bundle and orient participants about which
+            sub-questions to expect. The text supports rich-text formatting and can contain links
+            or highlights.
+          bundle_title_hint: >
+            Enter the name of the topic bundle, shown on the frontend as a parent heading
+            for the contained sub-questions. The topic bundle groups several related
+            questions under a common title — e.g. "Mobility and transport"
+            or "Market square design".
+          bundle_title_placeholder: "e.g. Mobility and transport"
+          bundle_description_hint: >
+            Supplements the question bundle with a more detailed description, shown on the frontend below
+            the title. Use this field to explain the thematic context of the contained sub-questions and
+            provide background information. The text supports rich-text formatting and can contain links
+            or highlights.
+          description_hint: Supplements the question with a more detailed description or explanation. The text is shown on the frontend below the question and can contain additional information, explanations, or notes on the voting matter. The text supports rich-text formatting and can contain links.
+          answer_mandatory_hint: Defines whether answering this question is mandatory before the user can move to the next question or the closing page. Enable this option for core questions of the participation. Disable it for optional supplementary questions where abstention should be possible.
+          show_images_hint: Enables display of images on answer options. Images are shown on the frontend above the respective answer option and help users visually grasp the options. Especially suitable for design questions, location comparisons, or draft votes where visual impressions support the decision.
+          vote_type_hint: "Defines how users can vote on this question. With 'Single vote' each user chooses exactly one answer. With 'Multiple choice' votes can be distributed across multiple answers. With 'Weighted multiple choice' votes can be weighted differently. The rating scale is suitable for questions with gradations."
+          min_rating_scale_label_hint: Optional label at the left end of the rating scale, e.g. "Disagree" or "Poor". If the field is empty, the label is taken automatically from the question description. Use this field only if you want a different or shorter label for the minimum of the scale.
+          min_rating_scale_placeholder: "e.g. Disagree"
+          max_rating_scale_label_hint: Optional label at the right end of the rating scale, e.g. "Fully agree" or "Excellent". If the field is empty, the label is taken automatically from the question description. Use this field only if you want a different or shorter label for the maximum of the scale.
+          max_rating_scale_placeholder: "e.g. Fully agree"
+          max_votes_per_answer_hint: Limits how many votes a user can assign to a single answer option. With weighted multiple choice, users can distribute their votes with different strengths — this value prevents all votes from being concentrated on a single option. This promotes a broader distribution of votes.
+          max_votes_hint: Sets the maximum number of votes a user can distribute across the available answer options for this question. The value must be at least 2. Choose a value that matches the number of answer options — e.g. 3 votes for 6 options, so users have to prioritize rather than selecting everything.
+          show_hint_callout_hint: Shows a blue info box on the frontend above the answer options, explaining the chosen voting mode to users — e.g. how many votes can be cast. The box helps participants understand the voting procedure at a glance and can be enabled individually for each question if needed.
+          votation_type_hint_title: Information
+          votation_type_hints:
+            unique: Users can cast one vote per question.
+            multiple: Users can distribute their votes evenly across multiple answers per question.
+            multiple_with_weight: Users can distribute their votes with weighting across multiple answers per question.
+            rating_scale: Users can cast one vote per rating scale.

@@ -1,3 +1,5 @@
+<% provide :title do %><%= t("custom.projekts.index.title") %><% end %>
+
 <main class="projekts-page">
   <div class="help-header">
     <div class='row'>
@@ -52,7 +54,7 @@
       </div>
 
       <% if show_affiliation_filter_in_sidebar? %>
-        <%= render "shared/sidebar_filter/geozone_affiliations", selected_affiliated_geozones: @affiliated_geozones %>
+        <%= render "shared/sidebar_filter/geozone_affiliations", selected_affiliated_districts: @affiliated_districts %>
       <% end %>
 
       <%= render "shared/categories", taggable: "projekt" %>

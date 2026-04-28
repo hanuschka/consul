@@ -1,6 +1,7 @@
 class Budget
   class Investment < ApplicationRecord
     SORTING_OPTIONS = { id: "id", supports: "cached_votes_up", balloters: "ballot_lines_count" }.freeze
+    FEASIBILITIES = %w[undecided feasible unfeasible].freeze
 
     include Measurable
     include Sanitizable
@@ -209,7 +210,7 @@ class Budget
     end
 
     def searchable_values
-      { author.username    => "B",
+      { author&.username   => "B",
         heading.name       => "B",
         tag_list.join(" ") => "B"
       }.merge(searchable_globalized_values)

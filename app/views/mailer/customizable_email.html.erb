@@ -1,0 +1,9 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= strip_tags(@custom_email_subject) %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(@custom_email_body, tags: %w[a br p strong em ul ol li h1 h2 h3], attributes: %w[href target]) %>
+  </p>
+</td>

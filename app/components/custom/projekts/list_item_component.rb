@@ -5,9 +5,8 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   delegate :projekt_option, to: :helpers
 
-  def initialize(projekt:, additional_url_params: nil)
+  def initialize(projekt:)
     @projekt = projekt
-    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -21,6 +20,10 @@ class Projekts::ListItemComponent < ApplicationComponent
       url_target: url_target,
       image_url: image_url
     }
+  end
+
+  def active_and_visible_projekt_phases
+    @active_and_visible_projekt_phases ||= projekt.active_and_visible_projekt_phases
   end
 
   def projekt_phase_url_for(phase)
@@ -40,13 +43,7 @@ class Projekts::ListItemComponent < ApplicationComponent
   end
 
   def projekt_url
-    base_url = projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
-
-    if @additional_url_params.present?
-      base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
-    end
-
-    base_url
+    projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
   end
 
   def url_target

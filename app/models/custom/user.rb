@@ -1,6 +1,6 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
-class User < ApplicationRecord
+User.class_eval do
   audited only: [:username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
+  delegate :district, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -31,6 +32,7 @@ class User < ApplicationRecord
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :fulfill_pending_role_assignments
 
   has_secure_token :frame_sign_in_token
 
@@ -42,6 +44,7 @@ class User < ApplicationRecord
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :landing_page_manager
   has_one :deficiency_report_manager
   has_many :ideas, inverse_of: :author, foreign_key: :author_id
   has_one :idea_officer, class_name: "Idea::Officer"
@@ -52,9 +55,11 @@ class User < ApplicationRecord
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
 
+  belongs_to :api_client, optional: true
+
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
@@ -227,6 +232,14 @@ class User < ApplicationRecord
     projekt_manager.allowed_to?(permission, projekt)
   end
 
+  def landing_page_manager?(page = nil)
+    if page.present?
+      landing_page_manager.present? && landing_page_manager.allowed_to?(page)
+    else
+      landing_page_manager.present?
+    end
+  end
+
   def officing_manager?
     officing_manager.present?
   end
@@ -239,16 +252,9 @@ class User < ApplicationRecord
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
-  def current_city_citizen?
-    return false if geozone.nil?
-
-    @geozone_ids ||= Geozone.ids
-
-    @geozone_ids.include?(geozone.id)
-  end
-
-  def not_current_city_citizen?
-    !current_city_citizen?
+  def citizen?
+    (RegisteredAddress::District.any? && district.present?) ||
+      (Geozone.any? && geozone.present?)
   end
 
   def verified?
@@ -297,6 +303,16 @@ class User < ApplicationRecord
       "#{first_name} #{last_name}"
     else
       name
+    end
+  end
+
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
     end
   end
 
@@ -425,6 +441,14 @@ class User < ApplicationRecord
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def fulfill_pending_role_assignments
+      return unless email.present?
+
+      PendingRoleAssignment.for_email(email).find_each do |pending|
+        pending.fulfill!(self)
       end
     end
 end

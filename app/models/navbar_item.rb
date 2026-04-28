@@ -63,8 +63,6 @@ class NavbarItem < ApplicationRecord
       I18n.t("navbar.presets.#{preset}")
     when "projekts"
       projekt&.title || I18n.t("adm.navbar_items.deleted_projekt")
-    when "external"
-      external_title
     end
   end
 

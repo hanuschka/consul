@@ -1,0 +1,66 @@
+en:
+  adm:
+    projekts:
+      projekt_events:
+        tabs:
+          show: Overview
+          edit: Edit
+          registrations: Registrations
+        show:
+          title: Overview
+          registrations_button: "Registrations (%{count})"
+          unlimited: Unlimited
+          confirmed_count: Confirmed registrations
+          waitlisted_count: Waitlisted
+          no_accessibility_flags: No accessibility features specified.
+          sections:
+            general: General
+            schedule: Schedule & location
+            registration: Registration
+            accessibility: Accessibility
+        new:
+          title: Create event
+        create:
+          success: Event created successfully.
+        edit:
+          title: Edit event
+        update:
+          success: Event updated successfully.
+        destroy:
+          success: Event deleted successfully.
+        send_notifications:
+          success: Notifications sent successfully.
+        form:
+          title_label: Title
+          title_placeholder: e.g. Town hall meeting on the climate budget
+          title_hint: "Enter a meaningful title for the event, shown as a heading on the frontend. Choose a clear phrasing that conveys the occasion and topic of the event — e.g. 'Town hall meeting on the climate budget' or 'Workshop: Urban development'."
+          location_label: Event location
+          location_placeholder: e.g. Town hall, 1 Market Square
+          location_hint: "Enter the event location, e.g. town hall, community center, or a full address. The location is shown on the frontend together with date and title and helps participants plan. For online events, enter 'Online' or the name of the platform here."
+          datetime_label: Start
+          datetime_hint: "Defines the start of the event. Date and time are prominently shown on the frontend and help participants with time orientation. Make sure the date is realistically planned and leaves enough lead time to promote the event."
+          end_datetime_label: End
+          end_datetime_hint: "Optional end time of the event. If set, a time range is shown on the frontend (e.g. '14:00 – 17:00'). Leave the field empty if the end is undetermined, and instead enable the 'Open end' option for events without a fixed closing time."
+          open_ended_label: Open end
+          open_ended_hint: "Enable this option if the event has no fixed end time. Then only the start is shown on the frontend, supplemented by the note 'Open end'. Suitable for informal formats like open office hours, citizens' cafés, or events with flexible agenda."
+          weblink_label: Web link
+          weblink_placeholder: https://
+          weblink_hint: "Optional link to an external page with more information about the event — e.g. a registration page, a video-conference link, or a detail page. The link is shown as a clickable reference on the frontend. Enter the full URL, starting with https://."
+          language_label: Language
+          language_placeholder: e.g. German
+          language_hint: "Enter the language in which the event will be held — e.g. 'German', 'English', or 'German / Turkish' for multilingual formats. This information helps participants assess whether they can follow the event linguistically."
+          accessibility_legend: Accessibility
+          accessibility_hint: "Indicate which accessibility features are available at the event location. This information is shown on the frontend and helps people with disabilities decide whether they can attend. Enable all applicable options."
+          max_attendees_label: Maximum attendees
+          max_attendees_hint: "Maximum number of confirmed attendees. Additional registrations are automatically placed on a waiting list. Leave blank for unlimited."
+          admin_emails_label: Notification emails (admins)
+          admin_emails_hint: "Comma-separated list of email addresses to notify on every new registration. Optional."
+          confirmation_email_text_label: Confirmation email text
+          confirmation_email_text_hint: "Optional text sent to participants when their registration is confirmed. Allowed HTML tags: <a>, <br>. Leave blank to skip sending a confirmation email."
+          waitlist_email_text_label: Waitlist email text
+          waitlist_email_text_hint: "Optional text sent to participants when they are placed on the waitlist. Allowed HTML tags: <a>, <br>. Leave blank to skip sending a waitlist email."
+          description_label: Description
+          description_hint: "Detailed description of the event, shown below the title on the frontend. Explain the agenda, content, and goals of the event. Where appropriate, give hints about registration, directions, or special preparations. The text supports rich-text formatting with links and highlights."
+          image_label: Cover image
+          image_hint: "Optional image shown on the frontend as a visual lead for the event. Use a meaningful landscape image thematically matching the event. Recommended minimum width: 800 pixels. Supported formats: JPG, PNG."
+          submit: Save

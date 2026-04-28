@@ -1,0 +1,58 @@
+en:
+  adm:
+    age_ranges:
+      index:
+        title: Age groups
+        intro_title: About age groups
+        intro_text_p1: >
+          Age groups are maintained in two variants: for age restrictions in participation phases,
+          and for statistical analysis. Restriction groups limit participation in a phase to users
+          within a specific age range. Statistics groups are only used for analysis and do not
+          affect participation eligibility.
+        intro_text_p2: >
+          The order of age groups within each tab can be adjusted by drag & drop. This order
+          affects the display in selection lists and statistical reports. Each group needs a name,
+          a minimum age, and a maximum age.
+        new_age_range: Create new age group
+        empty_title: No age groups available
+        empty_description: Create a new age group for age restrictions or statistical analysis.
+        filters:
+          for_restrictions: Age restriction
+          for_stats: Age groups for statistics
+        table:
+          name: Name
+          range: Age range
+          actions: Actions
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this age group?
+      new:
+        title: Create new age group
+      edit:
+        title: Edit age group
+      create:
+        success: Age group successfully created.
+      update:
+        success: Age group successfully updated.
+      destroy:
+        success: Age group successfully deleted.
+      form:
+        submit: Save
+        hints:
+          name: >
+            Enter a meaningful name for the age group, e.g. "Youth (14–17)" or "Seniors (65+)".
+            This name is shown in selection lists for participation phases and in statistical
+            reports. A clearly labelled age range makes both restriction setup and later analysis
+            easier.
+          min_age: >
+            Set the lower age limit for this group. Users below this age are excluded from the
+            participation phase when an age restriction is active. For statistics groups, this value
+            is used to correctly assign users in reports.
+          max_age: >
+            Set the upper age limit for this group. Users above this age are excluded from the
+            participation phase when an age restriction is active. Make sure age ranges of different
+            groups don't overlap, so assignments stay unambiguous.
+          only_for_stats: >
+            When enabled, the age group is used only for statistical analysis and is not available
+            as an age restriction in participation phases. This setting cannot be changed after
+            creation. Use this option for age groups meant only for analysis and reporting.

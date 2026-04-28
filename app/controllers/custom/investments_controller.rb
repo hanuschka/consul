@@ -3,6 +3,7 @@ class InvestmentsController < ApplicationController
   include RandomSeed
   include LandingPageResolvable
 
+  before_action :check_investments_overview_enabled, only: :index
   before_action :set_random_seed, only: :index
 
   skip_authorization_check only: [:index]
@@ -56,5 +57,9 @@ class InvestmentsController < ApplicationController
 
       @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"] if @investments.selected.any?
       @status_filter_options << [t("budgets.investments.index.filters.unfeasible"), "unfeasible"] if @investments.unfeasible.any?
+    end
+
+    def check_investments_overview_enabled
+      raise FeatureFlags::FeatureDisabled, :investments_overview unless Setting["extended_feature.general.enable_investments_overview"].present?
     end
 end

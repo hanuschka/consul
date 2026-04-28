@@ -1,0 +1,10 @@
+en:
+  adm:
+    default_map_location:
+      show:
+        title: Default map
+        intro_title: About the default map
+        intro_text_p1: Here you set the default map view and map type globally. These settings apply to all project maps and are automatically inherited by individual project phases.
+        intro_text_p2: Currently supported are OpenStreetMap, Mapbox, and 3D maps from Virtual City Systems. If you want to connect your own Geo server instead, please contact demokratie.today support.
+      update:
+        success: Default map updated successfully.

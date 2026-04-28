@@ -215,10 +215,8 @@ class ProposalsController
   end
 
   def vote
-    if params[:value] == "no"
-      @follow = Follow.find_by(user: voting_user, followable: @proposal)
-      @follow&.destroy!
-      @voted = !@proposal.register_vote(voting_user, "no")
+    if up_and_down_voting_enabled?
+      @voted = @proposal.register_vote(voting_user, params[:value])
     else
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
@@ -272,5 +270,9 @@ class ProposalsController
       return current_user unless params[:offline_user_id].present?
 
       current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
+    end
+
+    def up_and_down_voting_enabled?
+      @proposal.projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

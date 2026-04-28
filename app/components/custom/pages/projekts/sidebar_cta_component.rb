@@ -6,7 +6,7 @@ class Pages::Projekts::SidebarCtaComponent < ApplicationComponent
   def render?
     return false if @projekt_phase.nil?
     return false if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) && !@projekt_phase.budget.accepting?
-    return true if @projekt_phase.is_a?(ProjektPhase::VotingPhase)
+    return @projekt_phase.poll.present? if @projekt_phase.is_a?(ProjektPhase::VotingPhase)
 
     @projekt_phase.type.in?(phase_types_with_new_button + phase_types_with_link)
   end

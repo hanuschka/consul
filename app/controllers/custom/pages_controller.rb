@@ -202,6 +202,7 @@ class PagesController < ApplicationController
         end
 
         @proposals_coordinates = all_proposal_map_locations(@resources)
+        @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
         @proposals =
           @resources
@@ -335,6 +336,7 @@ class PagesController < ApplicationController
         @investment_ids = @investments.ids
         @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment",
   mappable_id: @investment_ids).map(&:features_json_data)
+        @investment_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
         @investments = @investments.perform_sort_by(@current_order,
   session[:random_seed]).page(params[:page]).per(24)
       end
@@ -386,6 +388,8 @@ feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_na
                      ml.features["features"]
                    end.flatten
                  end
+
+      features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
       @pin_coordinates = {
         type: "FeatureCollection",

@@ -1,0 +1,98 @@
+.masterportal-import-panel {
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #f6f7f9;
+  border: 1px solid #e0e3e7;
+  border-radius: 4px;
+}
+
+.masterportal-import-panel--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+
+.masterportal-import-panel--title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.masterportal-import-panel--status {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  background: #e0e3e7;
+  border-radius: 4px;
+
+  &[data-status="running"] {
+    color: #664d03;
+    background: #fff3cd;
+  }
+
+  &[data-status="success"] {
+    color: #0f5132;
+    background: #d1e7dd;
+  }
+
+  &[data-status="failed"] {
+    color: #842029;
+    background: #f8d7da;
+  }
+}
+
+.masterportal-import-panel--label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.masterportal-import-panel--endpoint-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.masterportal-import-panel--url-input {
+  flex: 1;
+  padding: 6px 8px;
+  font-family: monospace;
+  font-size: 0.875rem;
+  border: 1px solid #ccd1d7;
+  border-radius: 4px;
+}
+
+.masterportal-import-panel--tree {
+  max-height: 300px;
+  padding: 8px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #e0e3e7;
+  border-radius: 4px;
+}
+
+.masterportal-import-panel--tree-node {
+  margin-bottom: 4px;
+}
+
+.masterportal-import-panel--tree-summary {
+  cursor: pointer;
+}
+
+.masterportal-import-panel--tree-children {
+  padding-left: 20px;
+  margin: 4px 0;
+  list-style: none;
+}
+
+.masterportal-import-panel--hint {
+  margin: 0;
+  font-style: italic;
+  color: #6c757d;
+}
+
+.masterportal-import-panel--create-resource-label {
+  display: block;
+  margin-bottom: 12px;
+}

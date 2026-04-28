@@ -113,6 +113,32 @@ User.class_eval do
     def administrators_ids
       joins(:administrator).ids
     end
+
+    def masterportal
+      @masterportal_user ||= find_or_create_masterportal_user
+    end
+
+    def find_or_create_masterportal_user
+      user = User.find_by(username: "masterportal")
+
+      if user.present?
+        return user
+      end
+
+      create_masterportal_user
+    end
+
+    def create_masterportal_user
+      user = User.new(
+        username: "masterportal",
+        email: "masterportal@system.consul",
+        password: SecureRandom.hex(32)
+      )
+
+      user.skip_confirmation!
+      user.save!(validate: false)
+      user
+    end
   end
 
   def actual?

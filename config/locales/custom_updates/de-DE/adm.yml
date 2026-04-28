@@ -1,7 +1,19 @@
 de:
   adm:
     ai_required_note: Diese Funktion ist nur verfügbar, wenn die KI aktiviert ist.
+    masterportal_imports:
+      collections:
+        root_label: "Masterportal"
+      errors:
+        upstream: "Masterportal ist nicht erreichbar."
+        host_not_allowlisted: "Endpunkt-Host ist nicht zulässig."
+        invalid_url: "Ungültige Endpunkt-URL."
     projekts:
+      projekt_point_of_interest_categories:
+        form:
+          icon_image_label: Kategorie-Symbol
+          icon_image_hint: "SVG, PNG oder JPEG. Max 512 KB."
+          icon_image_remove: Symbol entfernen
       phases:
         ai_user_flow:
           title: KI Textassistent

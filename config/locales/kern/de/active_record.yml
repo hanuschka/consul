@@ -15,6 +15,7 @@ de:
           leaflet: Leaflet
           mapbox: Mapbox
           virtualcity: Virtual City Map
+          leaflet_plus_masterportal: Leaflet + Masterportal
       map_layer:
         provider: URL des Kartenanbieters
         attribution: Quellenhinweis der Karte

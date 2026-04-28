@@ -180,6 +180,7 @@ module ProjektPhaseAdminActions
 
   def map_resources_overview
     @map_coordinates = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins).map(&:features_json_data)
+    @map_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
   end
 
   def user_functions

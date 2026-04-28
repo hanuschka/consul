@@ -2,7 +2,19 @@ en:
   adm:
     not_authorized: You are not authorized to perform this action.
     ai_required_note: This feature is only available when AI is enabled.
+    masterportal_imports:
+      collections:
+        root_label: "Masterportal"
+      errors:
+        upstream: "Could not reach Masterportal."
+        host_not_allowlisted: "Endpoint host is not allowed."
+        invalid_url: "Invalid endpoint URL."
     projekts:
+      projekt_point_of_interest_categories:
+        form:
+          icon_image_label: Category icon
+          icon_image_hint: "SVG, PNG or JPEG. Max 512 KB."
+          icon_image_remove: Remove icon
       phases:
         ai_user_flow:
           title: AI flow assistant

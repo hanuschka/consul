@@ -1,0 +1,69 @@
+<section
+  class="masterportal-import-panel"
+  data-controller="adm--masterportal-import-panel"
+  data-adm--masterportal-import-panel-endpoints-value="<%= endpoints_data.to_json %>"
+  data-adm--masterportal-import-panel-initial-status-value="<%= initial_status.to_json %>"
+>
+  <header class="masterportal-import-panel--header">
+    <h3 class="masterportal-import-panel--title"><%= t(".title") %></h3>
+
+    <div
+      class="masterportal-import-panel--status"
+      data-adm--masterportal-import-panel-target="statusBadge"
+      data-status="<%= initial_status[:status] %>"
+    >
+      <%= status_summary %>
+    </div>
+  </header>
+
+  <div class="masterportal-import-panel--body">
+    <label class="masterportal-import-panel--label" for="masterportal-endpoint-url">
+      <%= t(".endpoint_url_label") %>
+    </label>
+
+    <div class="masterportal-import-panel--endpoint-row">
+      <input
+        id="masterportal-endpoint-url"
+        type="url"
+        class="masterportal-import-panel--url-input"
+        data-adm--masterportal-import-panel-target="endpointUrl"
+        value="<%= default_endpoint_url %>"
+      >
+      <button
+        type="button"
+        class="button small"
+        data-adm--masterportal-import-panel-target="loadCollectionsButton"
+        data-action="click->adm--masterportal-import-panel#loadCollections"
+      >
+        <%= t(".load_collections") %>
+      </button>
+    </div>
+
+    <div
+      class="masterportal-import-panel--tree"
+      data-adm--masterportal-import-panel-target="tree"
+    >
+      <p class="masterportal-import-panel--hint"><%= t(".tree_hint") %></p>
+    </div>
+
+    <% if supports_domain_records? %>
+      <label class="masterportal-import-panel--create-resource-label">
+        <input
+          type="checkbox"
+          data-adm--masterportal-import-panel-target="createResourceCheckbox"
+        >
+        <%= t(".create_resource_label", resource_name: resource_name) %>
+      </label>
+    <% end %>
+
+    <button
+      type="button"
+      class="button primary"
+      data-adm--masterportal-import-panel-target="importButton"
+      data-action="click->adm--masterportal-import-panel#startImport"
+      disabled
+    >
+      <%= t(".import_button") %>
+    </button>
+  </div>
+</section>

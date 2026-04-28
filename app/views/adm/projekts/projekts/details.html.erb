@@ -14,6 +14,10 @@
     <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
   </div>
 
+  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :subtitle, :string) %>
+
+  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :image, :image) %>
+
   <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
     <%= render 'adm/projekts/projekts/details/duration', projekt: @projekt %>
   <% end %>

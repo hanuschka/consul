@@ -1,0 +1,6 @@
+en:
+  components:
+    adm:
+      site_customization:
+        content_card_component:
+          mixed_number: mixed

@@ -2,86 +2,85 @@ module Adm
   class AppsController < Adm::BaseController
     APP_CATALOG = [
       {
-        category: "Registrierung",
+        category_key: "registration",
         icon: "person_add",
         apps: [
-          { logo: "adm/apps/logo_facebook.png",          icon: "thumb_up",        name: "Facebook Login",    description: "Registrierung und Anmeldung über einen bestehenden Facebook-Account." },
-          { logo: "adm/apps/logo_google.png",            icon: "search",          name: "Google Login",      description: "Registrierung und Anmeldung über einen bestehenden Google-Account." },
-          { logo: "adm/apps/logo_x.png",                 icon: "tag",             name: "X Login",           description: "Registrierung und Anmeldung über einen bestehenden X (Twitter)-Account." },
-          { logo: "adm/apps/logo_wordpress.png",         icon: "rss_feed",        name: "WordPress Login",   description: "Single Sign-On für Portale mit bestehendem WordPress-Nutzerstamm." }
+          { key: "facebook_login",   logo: "adm/apps/logo_facebook.png",  icon: "thumb_up" },
+          { key: "google_login",     logo: "adm/apps/logo_google.png",    icon: "search" },
+          { key: "x_login",          logo: "adm/apps/logo_x.png",         icon: "tag" },
+          { key: "wordpress_login",  logo: "adm/apps/logo_wordpress.png", icon: "rss_feed" }
         ]
       },
       {
-        category: "Verifizierung",
+        category_key: "verification",
         icon: "verified_user",
         apps: [
-          { logo: "adm/apps/logo_bundid.png",            icon: "shield_person",   name: "BundID",               description: "Identitätsprüfung über das bundesweite Online-Bürgerkonto BundID – kompatibel mit eID und Nutzerkonto Bund." },
-          { logo: "adm/apps/logo_bayernid.png",          icon: "shield_person",   name: "BayernID",             description: "Identitätsprüfung über das bayerische Bürgerkonto für Kommunen in Bayern." },
-          { logo: "adm/apps/logo_servicekonto_nrw.png",  icon: "shield_person",   name: "servicekonto.NRW",     description: "Identitätsprüfung über das zentrale Servicekonto für Nordrhein-Westfalen." },
-          { logo: "adm/apps/logo_openrathaus.png",       icon: "shield_person",   name: "OpenRathaus",          description: "Identitätsprüfung über die OpenRathaus-Plattform für kommunale Dienste." },
-          { logo: "adm/apps/logo_letter.png",            icon: "mail_lock",       name: "Briefverifizierung",   description: "Verifizierung per Postbrief an die gemeldete Adresse – geeignet für Beteiligungen mit Wohnsitzpflicht." },
-          { logo: "adm/apps/logo_sms.png",               icon: "sms",             name: "SMS-Verifizierung",    description: "Bestätigung der Telefonnummer per Einmal-Code (OTP) als niedrigschwellige Verifikationsstufe." }
+          { key: "bundid",              logo: "adm/apps/logo_bundid.png",           icon: "shield_person" },
+          { key: "bayernid",            logo: "adm/apps/logo_bayernid.png",         icon: "shield_person" },
+          { key: "servicekonto_nrw",    logo: "adm/apps/logo_servicekonto_nrw.png", icon: "shield_person" },
+          { key: "openrathaus",         logo: "adm/apps/logo_openrathaus.png",      icon: "shield_person" },
+          { key: "letter_verification", logo: "adm/apps/logo_letter.png",           icon: "mail_lock" },
+          { key: "sms_verification",    logo: "adm/apps/logo_sms.png",              icon: "sms" }
         ]
       },
       {
-        category: "Künstliche Intelligenz",
+        category_key: "ai",
         icon: "smart_toy",
         apps: [
-          { codename: App::VOICE_ASSISTANT_CODENAME,
-            icon: "record_voice_over",                                             name: "Voice Assistant",        description: "Beiträge und Mängelanzeigen per Spracheingabe einreichen. Senkt die Einstiegshürde und macht digitale Beteiligung für alle zugänglich." },
-          { logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome",    name: "AI-Projektassistent",    description: "Unterstützt Verwaltungsmitarbeitende beim Anlegen neuer Beteiligungsprojekte – von Beschreibung bis Zeitplan." },
-          { logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent",   name: "AI-Nutzerhelfer",        description: "Beantwortet Bürgerfragen zur Plattform und zu laufenden Projekten direkt im Chatfenster." },
-          { logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb",       name: "AI-Vorschlagsgenerator", description: "Hilft Bürgerinnen und Bürgern, ihre Ideen als strukturierte Vorschläge zu formulieren." },
-          { logo: "adm/apps/logo_ai_evaluation_phases.png", icon: "analytics",       name: "AI-Auswertung",          description: "Fasst eingegangene Beiträge thematisch zusammen und erstellt automatische Auswertungsberichte." },
-          { logo: "adm/apps/logo_ai_project_chat.png",      icon: "forum",           name: "AI-Diskussionsbegleiter", description: "Moderiert Kommentarbereiche, erkennt thematische Cluster und gibt Zusammenfassungen der Debatte." }
+          { key: "voice_assistant",      logo: "adm/apps/logo_ai_user_help.png",         icon: "record_voice_over" },
+          { key: "ai_project_creation",  logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome" },
+          { key: "ai_user_help",         logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent" },
+          { key: "ai_proposal_creation", logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb" },
+          { key: "ai_evaluation_phases", logo: "adm/apps/logo_ai_evaluation_phases.png", icon: "analytics" },
+          { key: "ai_project_chat",      logo: "adm/apps/logo_ai_project_chat.png",      icon: "forum" }
         ]
       },
       {
-        category: "Web-Tracking",
+        category_key: "web_tracking",
         icon: "bar_chart",
         apps: [
-          { logo: "adm/apps/logo_matomo.png",            icon: "bar_chart",       name: "Matomo (Cookie)",       description: "Datenschutzkonforme Nutzungsanalyse mit Session-Cookies. Vollständige Datenkontrolle auf eigenem Server." },
-          { logo: "adm/apps/logo_matomo.png",            icon: "bar_chart",       name: "Matomo (Cookieless)",   description: "DSGVO-freundliches Tracking ohne Cookies – keine Einwilligung erforderlich, volle Datensouveränität." }
+          { key: "matomo_cookie",     logo: "adm/apps/logo_matomo.png", icon: "bar_chart" },
+          { key: "matomo_cookieless", logo: "adm/apps/logo_matomo.png", icon: "bar_chart" }
         ]
       },
       {
-        category: "3D-Karten",
+        category_key: "maps_3d",
         icon: "map",
         apps: [
-          { logo: "adm/apps/logo_masterportal.png",      icon: "layers",          name: "Masterportal",          description: "Integration des Open-Source-Geoportals Masterportal für interaktive Geodatenvisualisierungen im Beteiligungsprozess." },
-          { logo: "adm/apps/logo_vcsystems.png",         icon: "view_in_ar",      name: "Virtual City Systems",  description: "3D-Stadtmodelle von Virtual City Systems als räumlicher Kontext für Planungs- und Beteiligungsverfahren." }
+          { key: "masterportal",         logo: "adm/apps/logo_masterportal.png", icon: "layers" },
+          { key: "virtual_city_systems", logo: "adm/apps/logo_vcsystems.png",    icon: "view_in_ar" }
         ]
       },
       {
-        category: "Suche",
+        category_key: "search",
         icon: "search",
         apps: [
-          { logo: "adm/apps/logo_elasticsearch.png",     icon: "manage_search",   name: "Elasticsearch",         description: "Leistungsstarke Volltextsuche über alle Beteiligungsinhalte – schnell, relevant und skalierbar." }
+          { key: "elasticsearch", logo: "adm/apps/logo_elasticsearch.png", icon: "manage_search" }
         ]
       },
       {
-        category: "Übersetzung",
+        category_key: "translation",
         icon: "translate",
         apps: [
-          { logo: "adm/apps/logo_microsoft_translate.png", icon: "translate",     name: "Microsoft Translator",  description: "Automatische Übersetzung von Plattforminhalten und Bürgerbeiträgen über die Azure Cognitive Services." },
-          { logo: "adm/apps/logo_google_translate.png",    icon: "translate",     name: "Google Translator",     description: "Automatische Übersetzung über die Google Cloud Translation API für mehrsprachige Beteiligung." }
+          { key: "microsoft_translator", logo: "adm/apps/logo_microsoft_translate.png", icon: "translate" },
+          { key: "google_translator",    logo: "adm/apps/logo_google_translate.png",    icon: "translate" }
         ]
       },
       {
-        category: "Nutzerverwaltung & Konferenz",
+        category_key: "user_management",
         icon: "groups",
         apps: [
-          { logo: "adm/apps/logo_brevo.png",             icon: "mail",            name: "Brevo",         description: "E-Mail-Marketing und Nutzerverwaltung über Brevo – Newsletter, Segmentierung und automatisierte Kampagnen." },
-          { logo: "adm/apps/logo_jitsi.png",             icon: "video_call",      name: "Jitsi",         description: "Open-Source-Videokonferenzen direkt auf der Plattform – ohne externe Anmeldung oder proprietäre Software." },
-          { logo: "adm/apps/logo_bbb.png",               icon: "video_chat",      name: "BigBlueButton", description: "Webkonferenz-Lösung für digitale Bürgerversammlungen mit Präsentationsmodus, Umfragen und Breakout-Räumen." }
+          { key: "brevo",         logo: "adm/apps/logo_brevo.png", icon: "mail" },
+          { key: "jitsi",         logo: "adm/apps/logo_jitsi.png", icon: "video_call" },
+          { key: "bigbluebutton", logo: "adm/apps/logo_bbb.png",   icon: "video_chat" }
         ]
       },
       {
-        category: "Beteiligungsphasen",
+        category_key: "participation",
         icon: "how_to_vote",
         apps: [
-          { logo: "adm/apps/logo_livestream.png",        icon: "live_tv",         name: "YouTube Livestream", description: "Einbindung von YouTube-Livestreams in Beteiligungsprojekte für öffentliche Sitzungen und Informationsveranstaltungen." },
-          { logo: "adm/apps/logo_newsfeed.png",          icon: "rss_feed",        name: "RSS-Newsfeed",       description: "Automatisches Einlesen externer Nachrichtenquellen per RSS als Informationsgrundlage für Beteiligungsprozesse." }
+          { key: "youtube_livestream", logo: "adm/apps/logo_livestream.png", icon: "live_tv" },
+          { key: "rss_newsfeed",       logo: "adm/apps/logo_newsfeed.png",   icon: "rss_feed" }
         ]
       }
     ].freeze
@@ -90,19 +89,28 @@ module Adm
       authorize [:adm, :apps]
       @breadcrumbs = [{ name: t("adm.apps.show.title"), icon: "dashboard" }]
 
-      db_apps = App.all.index_by(&:codename)
-
       @categories = APP_CATALOG.map do |cat|
         apps = cat[:apps].map do |app_def|
-          codename = app_def[:codename]
-          record   = codename ? db_apps[codename] : nil
-          status   = record ? record.status : "inactive"
-
-          app_def.merge(status: status)
+          app_def.merge(
+            name:        t("adm.apps.show.apps.#{app_def[:key]}.name"),
+            description: t("adm.apps.show.apps.#{app_def[:key]}.description"),
+            status:      app_status(cat[:category_key], app_def[:key])
+          )
         end
 
-        cat.merge(apps: apps)
+        cat.merge(
+          category: t("adm.apps.show.categories.#{cat[:category_key]}"),
+          apps: apps
+        )
       end
+    end
+
+    private
+
+    def app_status(category_key, _app_key)
+      return "inactive" if category_key != "ai"
+
+      Rails.application.secrets.dig(:ai, :enabled) == true ? "active" : "inactive"
     end
   end
 end

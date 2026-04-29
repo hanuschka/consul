@@ -15,6 +15,12 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_title"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_description"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, :string) %>
+
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.sessions", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("sign_in_hint", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.registrations", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("registration_form_hint", I18n.locale), :body, :rich_text, wide: true) %>
+
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_handle"), :value, :string) %>

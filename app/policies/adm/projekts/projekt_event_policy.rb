@@ -1,20 +1,24 @@
 class Adm::Projekts::ProjektEventPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
+  def show?
+    manage_permitted?
+  end
+
   def create?
-    permitted?
+    manage_permitted?
   end
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   def destroy?
-    permitted?
+    manage_permitted?
   end
 
   def send_notifications?
-    permitted?
+    manage_permitted?
   end
 
   class Scope < Scope

@@ -294,6 +294,7 @@ de:
             datetime: Datum
             actions: Aktionen
             open_ended: Offenes Ende
+            registrations_count: "Anmeldungen (%{count})"
             send_notifications: Benachrichtigungen senden
             send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         milestones:

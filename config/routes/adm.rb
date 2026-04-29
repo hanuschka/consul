@@ -7,7 +7,7 @@ namespace :adm do
   resource :homepage, controller: "homepage", only: [:show]
   resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
-  resources :navbar_items, only: [:new, :create, :destroy] do
+  resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
   end
 

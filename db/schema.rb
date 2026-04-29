@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_19_181638) do
+ActiveRecord::Schema.define(version: 2026_04_28_154110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1654,13 +1654,14 @@ ActiveRecord::Schema.define(version: 2026_04_19_181638) do
     t.integer "kind"
     t.string "preset"
     t.bigint "projekt_id"
-    t.string "external_title"
     t.string "external_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
     t.integer "landing_page_id"
+    t.string "custom_title"
+    t.boolean "open_in_new_tab", default: false, null: false
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"

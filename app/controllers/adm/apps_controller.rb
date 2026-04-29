@@ -27,7 +27,7 @@ module Adm
         category_key: "ai",
         icon: "smart_toy",
         apps: [
-          { key: "voice_assistant",      codename: App::VOICE_ASSISTANT_CODENAME, icon: "record_voice_over" },
+          { key: "voice_assistant",      logo: "adm/apps/logo_ai_user_help.png",         icon: "record_voice_over" },
           { key: "ai_project_creation",  logo: "adm/apps/logo_ai_project_creation.png",  icon: "auto_awesome" },
           { key: "ai_user_help",         logo: "adm/apps/logo_ai_user_help.png",         icon: "support_agent" },
           { key: "ai_proposal_creation", logo: "adm/apps/logo_ai_proposal_creation.png", icon: "lightbulb" },
@@ -89,18 +89,12 @@ module Adm
       authorize [:adm, :apps]
       @breadcrumbs = [{ name: t("adm.apps.show.title"), icon: "dashboard" }]
 
-      db_apps = App.all.index_by(&:codename)
-
       @categories = APP_CATALOG.map do |cat|
         apps = cat[:apps].map do |app_def|
-          codename = app_def[:codename]
-          record   = codename ? db_apps[codename] : nil
-          status   = record ? record.status : "inactive"
-
           app_def.merge(
             name:        t("adm.apps.show.apps.#{app_def[:key]}.name"),
             description: t("adm.apps.show.apps.#{app_def[:key]}.description"),
-            status:      status
+            status:      app_status(cat[:category_key], app_def[:key])
           )
         end
 
@@ -109,6 +103,14 @@ module Adm
           apps: apps
         )
       end
+    end
+
+    private
+
+    def app_status(category_key, _app_key)
+      return "inactive" if category_key != "ai"
+
+      Rails.application.secrets.dig(:ai, :enabled) == true ? "active" : "inactive"
     end
   end
 end

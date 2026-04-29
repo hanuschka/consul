@@ -472,9 +472,17 @@
         type: "GET",
         dataType: "json",
         success: (data) => {
+          const popupOptions = { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) };
+
+          if (resourceType === "masterportal_pin") {
+            popupOptions.className = "masterportal-popup-wrapper";
+            popupOptions.minWidth = 260;
+            popupOptions.maxWidth = 360;
+          }
+
           e.target.bindPopup(
             App.MapPopup.generatePopupContent(data, resourceType, properties),
-            { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) }
+            popupOptions
           ).openPopup();
         }
       });

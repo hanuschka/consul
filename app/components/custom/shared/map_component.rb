@@ -80,7 +80,8 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def rendering_library
-      @rendering_library ||= map_location&.rendering_library || "leaflet"
+      lib = map_location&.rendering_library || "leaflet"
+      @rendering_library ||= lib == "leaflet_plus_masterportal" ? "leaflet" : lib
     end
 
     def admin_features

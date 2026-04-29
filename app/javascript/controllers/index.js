@@ -123,6 +123,9 @@ application.register("shared--admin-iframe", SharedAdminIframeController)
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
 
+import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
+application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
+
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 

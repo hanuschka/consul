@@ -132,6 +132,12 @@ de:
           attributes:
             overall_satisfaction:
               blank: Bitte wählen Sie eine Option aus.
+        projekt_point_of_interest_category:
+          attributes:
+            icon_image:
+              invalid_content_type: muss SVG, PNG oder JPEG sein
+              too_large: ist zu groß (max 512 KB)
+              unsafe_svg: SVG enthält unzulässige Inhalte
     attributes:
       map_location:
         latitude: Breitengrad
@@ -352,3 +358,4 @@ de:
         name: Name
         icon: Icon
         color: Farbe
+        icon_image: Kategorie-Symbol

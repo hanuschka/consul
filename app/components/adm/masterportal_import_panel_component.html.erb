@@ -1,0 +1,118 @@
+<section
+  class="masterportal-import-panel"
+  data-controller="adm--masterportal-import-panel"
+  data-adm--masterportal-import-panel-endpoints-value="<%= endpoints_data.to_json %>"
+  data-adm--masterportal-import-panel-initial-status-value="<%= initial_status.to_json %>"
+>
+  <div class="masterportal-import-panel--header">
+    <div class="masterportal-import-panel--header-left">
+      <div class="masterportal-import-panel--logo" aria-hidden="true">
+        <%= image_tag "custom/services/masterportal_logo.svg", alt: "" %>
+      </div>
+
+      <div class="masterportal-import-panel--header-text">
+        <h3 class="masterportal-import-panel--title"><%= t(".title") %></h3>
+
+        <% if resource_name.present? %>
+          <p class="masterportal-import-panel--subtitle">
+            <span class="material-symbols-outlined" aria-hidden="true">tag</span>
+            <%= @projekt_phase.title %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <div
+      class="masterportal-import-panel--status"
+      data-adm--masterportal-import-panel-target="statusBadge"
+      data-status="<%= initial_status[:status] %>"
+    >
+      <span class="material-symbols-outlined masterportal-import-panel--status-icon" aria-hidden="true">
+        <%= status_icon %>
+      </span>
+      <span class="masterportal-import-panel--status-text">
+        <%= status_summary %>
+      </span>
+    </div>
+  </div>
+
+  <div class="masterportal-import-panel--body">
+    <div class="masterportal-import-panel--field">
+      <label class="masterportal-import-panel--label" for="masterportal-endpoint-url-<%= @projekt_phase.id %>">
+        <span class="material-symbols-outlined" aria-hidden="true">link</span>
+        <%= t(".endpoint_url_label") %>
+      </label>
+
+      <div class="masterportal-import-panel--endpoint-row">
+        <input
+          id="masterportal-endpoint-url-<%= @projekt_phase.id %>"
+          type="url"
+          class="masterportal-import-panel--url-input"
+          data-adm--masterportal-import-panel-target="endpointUrl"
+          value="<%= default_endpoint_url %>"
+          placeholder="https://..."
+        >
+        <button
+          type="button"
+          class="masterportal-import-panel--load-button"
+          data-adm--masterportal-import-panel-target="loadCollectionsButton"
+          data-action="click->adm--masterportal-import-panel#loadCollections"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+          <span><%= t(".load_collections") %></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="masterportal-import-panel--field">
+      <div class="masterportal-import-panel--tree-label">
+        <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+        <%= t(".collections_label") %>
+      </div>
+
+      <div
+        class="masterportal-import-panel--tree"
+        data-adm--masterportal-import-panel-target="tree"
+      >
+        <div class="masterportal-import-panel--tree-empty">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_download</span>
+          <p class="masterportal-import-panel--hint"><%= t(".tree_hint") %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="masterportal-import-panel--actions">
+      <% if supports_domain_records? %>
+        <label class="masterportal-import-panel--switch">
+          <input
+            type="checkbox"
+            class="masterportal-import-panel--switch-input"
+            data-adm--masterportal-import-panel-target="createResourceCheckbox"
+          >
+          <span class="masterportal-import-panel--switch-track">
+            <span class="masterportal-import-panel--switch-thumb"></span>
+          </span>
+          <span class="masterportal-import-panel--switch-text">
+            <span class="masterportal-import-panel--switch-label">
+              <%= t(".create_resource_label", resource_name: resource_name) %>
+            </span>
+            <span class="masterportal-import-panel--switch-description">
+              <%= t(".create_resource_description") %>
+            </span>
+          </span>
+        </label>
+      <% end %>
+
+      <button
+        type="button"
+        class="masterportal-import-panel--import-button"
+        data-adm--masterportal-import-panel-target="importButton"
+        data-action="click->adm--masterportal-import-panel#startImport"
+        disabled
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <span><%= t(".import_button") %></span>
+      </button>
+    </div>
+  </div>
+</section>

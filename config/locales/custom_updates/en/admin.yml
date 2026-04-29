@@ -8,6 +8,24 @@ en:
         investment_proposals: Investment Proposals
     tags:
       destroy: Delete
+    proposals:
+      index:
+        download_geojson: Download GeoJSON
+        source_filter_label: Source
+        source_all: All
+        source_masterportal: From Masterportal
+        source_user: User-created
+        apply_filter: Apply filter
+        export_queued: "Export queued, you will receive a link by email."
+    budget_investments:
+      index:
+        download_geojson: Download GeoJSON
+        source_filter_label: Source
+        source_all: All
+        source_masterportal: From Masterportal
+        source_user: User-created
+        apply_filter: Apply filter
+        export_queued: "Export queued, you will receive a link by email."
   custom:
     admin:
       budgets:

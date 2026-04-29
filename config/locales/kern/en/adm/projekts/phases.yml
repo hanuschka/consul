@@ -176,6 +176,8 @@ en:
             actions: Actions
         map:
           title: Map
+        masterportal_pins:
+          title: Imported Masterportal pins
         officing_managers:
           title: Polling officers
           lock_on: Lock date

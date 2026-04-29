@@ -1,0 +1,12 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container mb-5">
+  <%= render Adm::MasterportalPinsListComponent.new(
+    projekt_phase: @projekt_phase,
+    pins: @masterportal_pins,
+    pagy: @pagy_masterportal_pins,
+    expanded: true
+  ) %>
+</div>

@@ -103,7 +103,24 @@ class Kern::MapComponent < ApplicationComponent
                    mappable.try(:projekt)&.map_layers ||
                    MapLayer.default
                end
-      layers.to_json
+
+      (layers.as_json + masterportal_wms_layer_injection).to_json
+    end
+
+    def masterportal_wms_layer_injection
+      return [] if map_location.rendering_library != "leaflet_plus_masterportal"
+
+      [{
+        "name" => I18n.t("components.kern.map_component.masterportal_wms_layer_name",
+                         default: "Masterportal (Regensburg)"),
+        "provider" => Rails.configuration.x.masterportal.wms_url,
+        "layer_names" => Rails.configuration.x.masterportal.wms_layers.join(","),
+        "protocol" => "wms",
+        "transparent" => true,
+        "opacity" => 0.8,
+        "show_by_default" => true,
+        "base" => false
+      }]
     end
 
     def mapbox_public_token

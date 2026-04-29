@@ -350,7 +350,9 @@ export default class LeafletAdapter extends BaseAdapter {
         markerOptions: (shape) => ({
           icon: this.createMarkerIcon(
             shape.feature?.properties?.color || this.defaultFeatureColor,
-            shape.feature?.properties?.feature_icon_name
+            shape.feature?.properties?.feature_icon_name,
+            null,
+            shape.feature
           )
         })
       })
@@ -377,7 +379,7 @@ export default class LeafletAdapter extends BaseAdapter {
                       instance.defaultFeatureColor
         var markerTitle = feature.properties?.feature_category_name || "Kartenmarkierung"
         return L.marker(latlng, {
-          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name, markerTitle)
+          icon: instance.createMarkerIcon(color, feature.properties?.feature_icon_name, markerTitle, feature)
         })
       },
 
@@ -419,6 +421,8 @@ export default class LeafletAdapter extends BaseAdapter {
           layer.options.feature_color = feature.properties?.feature_color || instance.defaultFeatureColor
           layer.options.feature_icon_name = feature.properties?.feature_icon_name || "circle"
           layer.options.feature_category_name = feature.properties?.feature_category_name || null
+          layer.options.feature_popup_template = feature.properties?.feature_popup_template || null
+          layer.options.feature = feature
 
           layer.on("click", (e) => instance.openFeaturePopup(e))
         }
@@ -465,8 +469,18 @@ export default class LeafletAdapter extends BaseAdapter {
     adminNote.addTo(this.map)
   }
 
-  createMarkerIcon(color, iconName, title) {
+  createMarkerIcon(color, iconName, title, feature) {
     const L = window.L
+
+    if (feature && feature.properties && feature.properties.feature_icon_url) {
+      return L.icon({
+        iconUrl: feature.properties.feature_icon_url,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -32]
+      })
+    }
+
     color = color || getBrandColor()
     iconName = iconName || "circle"
     title = title || "Kartenmarkierung"
@@ -481,6 +495,8 @@ export default class LeafletAdapter extends BaseAdapter {
 
   openFeaturePopup(e) {
     const layer = e.target
+    const popupOptions = { autoPanPadding: [0, 80], minWidth: 200, offset: window.L.point(0, -30) }
+
     const resourceType = layer.options.resource_type
     const properties = {
       id: layer.options.id,
@@ -495,9 +511,17 @@ export default class LeafletAdapter extends BaseAdapter {
     fetch(route)
       .then(response => response.json())
       .then(data => {
+        const finalOptions = Object.assign({}, popupOptions)
+
+        if (resourceType === "masterportal_pin") {
+          finalOptions.className = "masterportal-popup-wrapper"
+          finalOptions.minWidth = 260
+          finalOptions.maxWidth = 360
+        }
+
         layer.bindPopup(
           MapPopup.generatePopupContent(data, resourceType, properties),
-          { autoPanPadding: [0, 80], minWidth: 200, offset: window.L.point(0, -30) }
+          finalOptions
         ).openPopup()
       })
   }

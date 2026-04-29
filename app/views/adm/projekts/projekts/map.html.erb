@@ -21,4 +21,8 @@
   ) %>
 
   <%= render Adm::MapLayersComponent.new(map_layers: @projekt.map_layers, mappable: @projekt) %>
+
+  <% @projekt.projekt_phases.select { |phase| Adm::MasterportalImportPanelComponent::SUPPORTED_PHASE_TYPES.include?(phase.type) }.each do |phase| %>
+    <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: phase) %>
+  <% end %>
 </div>

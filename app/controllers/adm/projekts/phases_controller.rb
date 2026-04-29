@@ -399,10 +399,29 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
 
+    @masterportal_pins_count = @projekt_phase.masterportal_pins.count
+
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def masterportal_pins
+    authorize_phase(:update?)
+
+    pins_scope = @projekt_phase.masterportal_pins
+      .includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+      .with_attached_icon_image
+      .order(created_at: :desc)
+    @pagy_masterportal_pins, @masterportal_pins = pagy(pins_scope, limit: 12)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title, url: map_adm_projekts_phase_path(@projekt_phase) },
       { name: t(".title") }
     ]
   end

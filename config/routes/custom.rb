@@ -75,6 +75,12 @@ resources :projekt_point_of_interest_pins, only: [:new, :create] do
   end
 end
 
+resources :masterportal_pins, only: [] do
+  member do
+    get :json_data
+  end
+end
+
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 get "/:landing_page_slug/events", to: "projekt_events#index", as: :landing_page_events
 get "/:landing_page_slug/proposals", to: "proposals#index", as: :landing_page_proposals
@@ -97,3 +103,9 @@ get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geoco
 resources :projekt_content_block_templates, only: [:index]
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
+
+namespace :api do
+  namespace :masterportal do
+    resources :category_icons, only: [:create]
+  end
+end

@@ -122,4 +122,11 @@ namespace :adm do
       patch :reorder, on: :collection
     end
   end
+
+  resources :masterportal_imports, only: [:create] do
+    collection do
+      get :collections
+      get :status
+    end
+  end
 end

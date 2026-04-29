@@ -8,7 +8,7 @@ class Api::BaseController < ActionController::API
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
 
-  before_action :authenticate_http_basic, if: :http_basic_auth_site?
+  before_action :authenticate_http_basic, if: :require_http_basic_auth?
   before_action :authenticate_api_client!
   after_action :log_api_request
 
@@ -27,6 +27,14 @@ class Api::BaseController < ActionController::API
 
     def http_basic_auth_site?
       Rails.application.secrets.http_basic_auth
+    end
+
+    def require_http_basic_auth?
+      http_basic_auth_site? && !bearer_token_provided?
+    end
+
+    def bearer_token_provided?
+      request.authorization.to_s.match?(/\ABearer /i)
     end
 
     def authenticate_api_client!

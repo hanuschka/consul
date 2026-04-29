@@ -1,5 +1,12 @@
 de:
   components:
+    adm:
+      masterportal_import_panel_component:
+        progress:
+          running: "Import läuft"
+          processed: "%{count} Einträge bisher verarbeitet"
+          create_resource_on: "Aus jedem importierten Eintrag wird ein %{resource_name} erstellt"
+          create_resource_off: "Nur Pins werden importiert — keine Modul-Einträge"
     kern:
       map_component:
         masterportal_wms_layer_name: "Masterportal (Regensburg)"

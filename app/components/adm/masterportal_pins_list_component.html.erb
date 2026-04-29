@@ -63,23 +63,16 @@
 
           <% rows = pin.popup_data %>
           <% if rows.any? %>
-            <details class="masterportal-pin-card--details">
-              <summary class="masterportal-pin-card--details-summary">
-                <span class="material-symbols-outlined masterportal-pin-card--details-chevron" aria-hidden="true">expand_more</span>
-                <%= t(".show_properties", count: rows.size) %>
-              </summary>
-
-              <dl class="masterportal-pin-card--props">
-                <% rows.each do |row| %>
-                  <div class="masterportal-pin-card--prop">
-                    <dt class="masterportal-pin-card--prop-label"><%= row["label"] %></dt>
-                    <dd class="masterportal-pin-card--prop-value">
-                      <%== format_value_for_type(row) %>
-                    </dd>
-                  </div>
-                <% end %>
-              </dl>
-            </details>
+            <dl class="masterportal-pin-card--props">
+              <% rows.each do |row| %>
+                <div class="masterportal-pin-card--prop">
+                  <dt class="masterportal-pin-card--prop-label"><%= row["label"] %></dt>
+                  <dd class="masterportal-pin-card--prop-value">
+                    <%== format_value_for_type(row) %>
+                  </dd>
+                </div>
+              <% end %>
+            </dl>
           <% end %>
         </article>
       <% end %>

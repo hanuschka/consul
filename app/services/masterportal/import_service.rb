@@ -1,5 +1,6 @@
 class Masterportal::ImportService < ApplicationService
   MAX_FEATURES_PER_RUN = 20_000
+  PROGRESS_FLUSH_EVERY = 5
 
   PHASE_TO_BUILDER = {
     "ProjektPhase::ProposalPhase" => Masterportal::Converters::ProposalBuilder,
@@ -55,8 +56,14 @@ class Masterportal::ImportService < ApplicationService
         masterportal_import_status: "running",
         masterportal_last_endpoint_url: @endpoint_url,
         masterportal_last_collection_ids: @collection_ids.join(","),
+        masterportal_last_imported_count: 0,
         masterportal_import_error: nil
       )
+    end
+
+    def flush_progress!
+      processed = @stats[:imported] + @stats[:updated]
+      @projekt_phase.update_column(:masterportal_last_imported_count, processed)
     end
 
     def process_collection(collection_id)
@@ -109,6 +116,9 @@ class Masterportal::ImportService < ApplicationService
           @stats[:updated] += 1
         end
       end
+
+      processed = @stats[:imported] + @stats[:updated]
+      flush_progress! if (processed % PROGRESS_FLUSH_EVERY).zero?
     rescue => e
       @stats[:failed] += 1
       @stats[:errors] << { feature_id: feature["id"], error: e.message }

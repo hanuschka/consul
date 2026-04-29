@@ -8,6 +8,7 @@ export default class extends Controller {
     "createResourceCheckbox",
     "importButton",
     "statusBadge",
+    "actions",
     "progress",
     "progressCount",
     "progressResource",
@@ -222,6 +223,7 @@ export default class extends Controller {
   setRunningUi(status) {
     const isRunning = status.status === "running"
     this.progressTarget.hidden = !isRunning
+    this.actionsTarget.hidden = isRunning
     this.endpointUrlTarget.disabled = isRunning
     this.loadCollectionsButtonTarget.disabled = isRunning
 

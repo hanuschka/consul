@@ -1,6 +1,9 @@
 en:
   components:
     adm:
+      delete_progress_component:
+        default_headline: "Deleting…"
+        default_hint: "This may take a moment for large datasets. Please don't close this tab."
       masterportal_import_panel_component:
         progress:
           running: "Import is running"
@@ -33,6 +36,8 @@ en:
   masterportal:
     imported_proposal_default_title: "Imported point %{external_id}"
     imported_investment_default_title: "Imported point %{external_id}"
+    description:
+      properties_heading: "Properties from Masterportal"
     feature:
       category_label: "Category"
     accessibility_flags:

@@ -1,0 +1,30 @@
+<div
+  class="<%= wrapper_classes %>"
+  data-controller="adm--delete-progress"
+>
+  <div
+    class="adm-delete-progress"
+    data-adm--delete-progress-target="progress"
+    hidden
+    role="status"
+    aria-live="polite"
+  >
+    <span class="adm-delete-progress--spinner material-symbols-outlined" aria-hidden="true">
+      progress_activity
+    </span>
+    <div class="adm-delete-progress--text">
+      <span class="adm-delete-progress--headline"><%= headline %></span>
+      <span class="adm-delete-progress--hint"><%= hint %></span>
+    </div>
+  </div>
+
+  <%= helpers.kern_link_button url,
+        text: text,
+        icon: icon,
+        style: style,
+        data: {
+          turbo_method: :delete,
+          turbo_confirm: confirm,
+          "adm--delete-progress-target": "trigger"
+        } %>
+</div>

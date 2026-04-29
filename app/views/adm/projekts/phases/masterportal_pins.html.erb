@@ -8,42 +8,29 @@
 
 <div class="kern-container mb-5">
   <% if @projekt_phase.masterportal_pins.exists? %>
-    <div
-      class="d-flex justify-content-end align-items-center gap-3 mb-4"
-      data-controller="adm--masterportal-pins-delete"
-    >
-      <div
-        class="masterportal-pins-delete-progress"
-        data-adm--masterportal-pins-delete-target="progress"
-        hidden
-        role="status"
-        aria-live="polite"
-      >
-        <span class="masterportal-pins-delete-progress--spinner material-symbols-outlined" aria-hidden="true">
-          progress_activity
-        </span>
-        <div class="masterportal-pins-delete-progress--text">
-          <span class="masterportal-pins-delete-progress--headline"><%= t(".deleting") %></span>
-          <span class="masterportal-pins-delete-progress--hint"><%= t(".deleting_hint") %></span>
-        </div>
-      </div>
-
-      <%= kern_link_button destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
-            text: t(".delete_all_button"),
-            icon: "delete",
-            style: :danger,
-            data: {
-              turbo_method: :delete,
-              turbo_confirm: t(".delete_all_confirm"),
-              "adm--masterportal-pins-delete-target": "trigger"
-            } %>
+    <div class="mb-4">
+      <%= render Adm::DeleteProgressComponent.new(
+        url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
+        text: t(".delete_all_button"),
+        confirm: t(".delete_all_confirm"),
+        headline: t(".deleting"),
+        hint: t(".deleting_hint")
+      ) %>
     </div>
-  <% end %>
 
-  <%= render Adm::MasterportalPinsListComponent.new(
-    projekt_phase: @projekt_phase,
-    pins: @masterportal_pins,
-    pagy: @pagy_masterportal_pins,
-    expanded: true
-  ) %>
+    <%= render Adm::MasterportalPinsListComponent.new(
+      projekt_phase: @projekt_phase,
+      pins: @masterportal_pins,
+      pagy: @pagy_masterportal_pins,
+      expanded: true
+    ) %>
+  <% else %>
+    <%= empty_state(
+      icon: "location_off",
+      title: t(".empty.title"),
+      description: t(".empty.description"),
+      link_url: map_adm_projekts_phase_path(@projekt_phase),
+      link_text: t(".empty.link")
+    ) %>
+  <% end %>
 </div>

@@ -13,7 +13,7 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
       author: User.masterportal,
       projekt_phase: @pin.projekt_phase,
       title: title,
-      description: @pin.description.to_s.presence || fallback_title,
+      description: Masterportal::DescriptionHtmlBuilder.call(pin: @pin, fallback: fallback_title),
       summary: title,
       masterportal_pin_id: @pin.id,
       published_at: Time.current

@@ -63,6 +63,10 @@ de:
           delete_all_confirm: Dadurch werden alle aus dem Masterportal importierten Pins dieser Phase zusammen mit ihren verknüpften Vorschlägen, Investitionen oder Point-of-Interest-Pins endgültig gelöscht. Fortfahren?
           deleting: Masterportal-Pins werden gelöscht…
           deleting_hint: Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen.
+          empty:
+            title: Noch keine Masterportal-Pins
+            description: Diese Phase enthält keine importierten Masterportal-Pins. Starten Sie einen Import in der Kartenkonfiguration, um Pins hinzuzufügen.
+            link: Zur Kartenkonfiguration
         destroy_all_masterportal_pins:
           success: Alle Masterportal-Pins und die zugehörigen Ressourcen wurden gelöscht.
   projekt_phase_setting:

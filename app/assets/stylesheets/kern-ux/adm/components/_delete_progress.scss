@@ -1,4 +1,4 @@
-.masterportal-pins-delete-progress {
+.adm-delete-progress {
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -14,26 +14,30 @@
   }
 }
 
-.masterportal-pins-delete-progress--spinner {
+.adm-delete-progress--spinner {
   flex-shrink: 0;
   font-size: 22px;
   color: var(--kern-color-feedback-danger, #BD0F09);
-  animation: masterportal-import-panel--spin 1.4s linear infinite;
+  animation: adm-delete-progress--spin 1.4s linear infinite;
 }
 
-.masterportal-pins-delete-progress--text {
+.adm-delete-progress--text {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-.masterportal-pins-delete-progress--headline {
+.adm-delete-progress--headline {
   font-weight: 600;
   color: #7f1d1d;
 }
 
-.masterportal-pins-delete-progress--hint {
+.adm-delete-progress--hint {
   font-size: 14px;
   color: #b91c1c;
+}
+
+@keyframes adm-delete-progress--spin {
+  to { transform: rotate(360deg); }
 }

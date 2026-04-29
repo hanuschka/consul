@@ -273,11 +273,11 @@
 }
 
 // Criteria groups (hard / soft) shown on step 1.
-// `--hard-tone` and `--soft-tone` give each group its own visual identity:
-// hard = brand teal (mandatory gates), soft = warm amber (quality scoring).
+// `.-hard` and `.-soft` set `--tone-color` to give each group its own
+// identity: hard = brand teal (mandatory gates), soft = warm amber
+// (quality scoring). All tinted variants use color-mix() so SassC passes
+// the CSS variable through untouched.
 .ai-proposal-flow--criteria-groups {
-  --hard-tone: 13, 126, 133;   // teal — must pass
-  --soft-tone: 196, 132, 0;    // amber — quality / scored
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -285,17 +285,17 @@
 }
 
 .ai-proposal-flow--criteria-group {
-  --tone: var(--hard-tone);
+  --tone-color: #0d7e85;
   border-radius: 14px;
-  border: 1px solid rgba(var(--tone), 0.18);
+  border: 1px solid color-mix(in srgb, var(--tone-color) 18%, transparent);
   background:
     linear-gradient(180deg,
-      rgba(var(--tone), 0.05) 0%,
-      rgba(var(--tone), 0.015) 100%);
+      color-mix(in srgb, var(--tone-color) 5%, white) 0%,
+      color-mix(in srgb, var(--tone-color) 1.5%, white) 100%);
   padding: 1.1rem 1.2rem 1.2rem;
 
   &.-soft {
-    --tone: var(--soft-tone);
+    --tone-color: #c48400;
   }
 }
 
@@ -314,8 +314,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(var(--tone), 0.14);
-  color: rgb(var(--tone));
+  background: color-mix(in srgb, var(--tone-color) 14%, transparent);
+  color: var(--tone-color);
   font-size: 17px;
 }
 
@@ -331,7 +331,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgb(var(--tone));
+  color: var(--tone-color);
   line-height: 1;
   margin-bottom: 0.25rem;
 }
@@ -362,7 +362,7 @@
 }
 
 .ai-proposal-flow--criteria-card {
-  --tone: var(--hard-tone);
+  --tone-color: #0d7e85;
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -370,17 +370,17 @@
   gap: 0.7rem 0.85rem;
   padding: 0.85rem 0.95rem 0.85rem 0.95rem;
   background: white;
-  border: 1px solid rgba(var(--tone), 0.22);
-  border-left: 3px solid rgb(var(--tone));
+  border: 1px solid color-mix(in srgb, var(--tone-color) 22%, transparent);
+  border-left: 3px solid var(--tone-color);
   border-radius: 10px;
   transition: box-shadow 0.18s ease, transform 0.18s ease;
 
   &.-soft {
-    --tone: var(--soft-tone);
+    --tone-color: #c48400;
   }
 
   &:hover {
-    box-shadow: 0 4px 14px rgba(var(--tone), 0.16);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--tone-color) 16%, transparent);
     transform: translateY(-1px);
   }
 }
@@ -392,8 +392,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--tone), 0.14);
-  color: rgb(var(--tone));
+  background: color-mix(in srgb, var(--tone-color) 14%, transparent);
+  color: var(--tone-color);
   font-size: 14px;
   flex-shrink: 0;
 }
@@ -429,8 +429,8 @@
   text-transform: uppercase;
   padding: 0.2rem 0.5rem;
   border-radius: 100px;
-  background: rgba(var(--tone), 0.12);
-  color: rgb(var(--tone));
+  background: color-mix(in srgb, var(--tone-color) 12%, transparent);
+  color: var(--tone-color);
   white-space: nowrap;
 }
 
@@ -461,9 +461,10 @@
 }
 
 // Hard-fail evaluation card: shown when a mandatory criterion was not met.
-// Amber tone — a corrective signal, not destructive: the user can fix it.
+// Amber tone (#b8640e) — a corrective signal, not destructive: the user
+// can fix it. color-mix() keeps SassC happy with CSS variables.
 .ai-proposal-flow--hard-fail {
-  --hf-tone: 184, 100, 14;
+  --hf-color: #b8640e;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1.25rem;
@@ -471,12 +472,12 @@
   padding: 1.5rem 1.6rem 1.6rem;
   border-radius: 16px;
   background:
-    radial-gradient(ellipse at top left, rgba(var(--hf-tone), 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse at top left, color-mix(in srgb, var(--hf-color) 10%, transparent) 0%, transparent 65%),
     linear-gradient(180deg, #fffaf0 0%, #ffffff 100%);
-  border: 1px solid rgba(var(--hf-tone), 0.28);
+  border: 1px solid color-mix(in srgb, var(--hf-color) 28%, transparent);
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.04),
-    0 8px 24px rgba(var(--hf-tone), 0.08);
+    0 8px 24px color-mix(in srgb, var(--hf-color) 8%, transparent);
 }
 
 .ai-proposal-flow--hard-fail--badge {
@@ -487,12 +488,12 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg,
-    rgb(var(--hf-tone)) 0%,
-    color-mix(in srgb, rgb(var(--hf-tone)) 70%, #c44d10) 100%);
+    var(--hf-color) 0%,
+    color-mix(in srgb, var(--hf-color) 70%, #c44d10) 100%);
   color: white;
   font-size: 22px;
   flex-shrink: 0;
-  box-shadow: 0 6px 18px rgba(var(--hf-tone), 0.32);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--hf-color) 32%, transparent);
 }
 
 .ai-proposal-flow--hard-fail--content {
@@ -505,7 +506,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgb(var(--hf-tone));
+  color: var(--hf-color);
   margin-bottom: 0.4rem;
 }
 
@@ -519,8 +520,8 @@
 
 .ai-proposal-flow--hard-fail--criterion {
   background: white;
-  border: 1px solid rgba(var(--hf-tone), 0.22);
-  border-left: 3px solid rgb(var(--hf-tone));
+  border: 1px solid color-mix(in srgb, var(--hf-color) 22%, transparent);
+  border-left: 3px solid var(--hf-color);
   border-radius: 10px;
   padding: 0.85rem 1rem;
   margin-bottom: 1rem;
@@ -534,7 +535,7 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgb(var(--hf-tone));
+  color: var(--hf-color);
   margin-bottom: 0.4rem;
 
   i {
@@ -558,7 +559,7 @@
 }
 
 .ai-proposal-flow--hard-fail--feedback {
-  background: rgba(var(--hf-tone), 0.06);
+  background: color-mix(in srgb, var(--hf-color) 6%, transparent);
   border-radius: 10px;
   padding: 0.85rem 1rem;
 
@@ -578,7 +579,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgb(var(--hf-tone));
+  color: var(--hf-color);
   margin-bottom: 0.45rem;
 
   i {

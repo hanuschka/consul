@@ -88,7 +88,7 @@ class Masterportal::ImportService < ApplicationService
 
     def fetch_collection_icon(collection_id)
       Masterportal::WmsLegendFetcher.call(
-        wms_url: Rails.configuration.x.masterportal.wms_url,
+        wms_url: Rails.application.secrets.dig(:masterportal, :wms_url),
         layer: collection_id
       )
     end

@@ -116,8 +116,8 @@ class Kern::MapComponent < ApplicationComponent
       [{
         "name" => I18n.t("components.kern.map_component.masterportal_wms_layer_name",
                          default: "Masterportal (Regensburg)"),
-        "provider" => Rails.configuration.x.masterportal.wms_url,
-        "layer_names" => Rails.configuration.x.masterportal.wms_layers.join(","),
+        "provider" => Rails.application.secrets.dig(:masterportal, :wms_url),
+        "layer_names" => Rails.application.secrets.dig(:masterportal, :wms_layers).to_s,
         "protocol" => "wms",
         "transparent" => true,
         "opacity" => 0.8,

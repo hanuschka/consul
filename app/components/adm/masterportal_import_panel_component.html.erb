@@ -7,7 +7,7 @@
   <div class="masterportal-import-panel--header">
     <div class="masterportal-import-panel--header-left">
       <div class="masterportal-import-panel--logo" aria-hidden="true">
-        <%= image_tag "adm/apps/logo_masterportal.png", alt: "" %>
+        <%= image_tag "custom/services/masterportal_logo.svg", alt: "" %>
       </div>
 
       <div class="masterportal-import-panel--header-text">
@@ -92,8 +92,13 @@
           <span class="masterportal-import-panel--switch-track">
             <span class="masterportal-import-panel--switch-thumb"></span>
           </span>
-          <span class="masterportal-import-panel--switch-label">
-            <%= t(".create_resource_label", resource_name: resource_name) %>
+          <span class="masterportal-import-panel--switch-text">
+            <span class="masterportal-import-panel--switch-label">
+              <%= t(".create_resource_label", resource_name: resource_name) %>
+            </span>
+            <span class="masterportal-import-panel--switch-description">
+              <%= t(".create_resource_description") %>
+            </span>
           </span>
         </label>
       <% end %>

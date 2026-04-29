@@ -1,0 +1,13 @@
+en:
+  components:
+    adm:
+      masterportal_pins_summary_component:
+        pins_count:
+          one: imported pin
+          other: imported pins
+        linked_to: "Linked to %{resource_name}"
+        view_all: View all
+        resource_names:
+          proposals: proposals
+          budget_investments: budget investments
+          point_of_interest_pins: points of interest

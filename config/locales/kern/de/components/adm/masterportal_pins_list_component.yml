@@ -1,0 +1,20 @@
+de:
+  components:
+    adm:
+      masterportal_pins_list_component:
+        title: Importierte Pins
+        total:
+          one: "%{count} Pin insgesamt"
+          other: "%{count} Pins insgesamt"
+        columns:
+          title: Titel
+          collection: Datensatz
+          linked_resource: Verknüpfte Ressource
+          imported_at: Importiert
+        show_properties:
+          one: "%{count} Eigenschaft anzeigen"
+          other: "%{count} Eigenschaften anzeigen"
+        linked_resource:
+          proposal: Vorschlag öffnen
+          budget_investment: Bürgerbudget-Eintrag öffnen
+          point_of_interest_pin: Point of Interest

@@ -7,7 +7,8 @@ de:
         load_collections: Datensätze laden
         collections_label: Verfügbare Datensätze
         tree_hint: Auf „Datensätze laden“ klicken, um verfügbare Daten zu sehen.
-        create_resource_label: Infos aus Masterportal importieren und %{resource_name} erzeugen
+        create_resource_label: "%{resource_name} erzeugen"
+        create_resource_description: Aus jedem importierten Datensatz wird zusätzlich ein Eintrag im Modul angelegt.
         import_button: Importieren
         status:
           pending: Noch nicht ausgeführt

@@ -7,19 +7,29 @@ export default class extends Controller {
     "tree",
     "createResourceCheckbox",
     "importButton",
-    "statusBadge"
+    "statusBadge",
+    "actions",
+    "progress",
+    "progressCount",
+    "progressResource",
+    "progressResourceIcon",
+    "progressResourceText"
   ]
 
   static values = {
     endpoints: Object,
-    initialStatus: Object
+    initialStatus: Object,
+    progressCountTemplate: String,
+    progressCountToken: String
   }
 
   connect() {
     this.pollIntervalId = null
     this.selectedCollectionIds = new Set()
+    this.lastStatus = this.initialStatusValue.status
 
     if (this.initialStatusValue.status === "running") {
+      this.applyStatus(this.initialStatusValue)
       this.startStatusPolling()
     }
   }
@@ -136,16 +146,21 @@ export default class extends Controller {
   async startImport() {
     if (this.selectedCollectionIds.size === 0) return
 
-    this.importButtonTarget.disabled = true
-
     const createRecords =
       this.hasCreateResourceCheckboxTarget && this.createResourceCheckboxTarget.checked
+
+    this.applyStatus({
+      status: "running",
+      last_imported_count: 0,
+      create_resource: createRecords
+    })
 
     const formData = new FormData()
     formData.append("projekt_phase_id", this.endpointsValue.projekt_phase_id)
     formData.append("endpoint_url", this.endpointUrlTarget.value.trim())
     formData.append("create_domain_records", createRecords ? "1" : "0")
     this.selectedCollectionIds.forEach((id) => formData.append("collection_ids[]", id))
+
 
     try {
       const response = await fetch(this.endpointsValue.create_url, {
@@ -155,13 +170,9 @@ export default class extends Controller {
       })
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-      const body = await response.json()
-      this.applyStatus(body)
       this.startStatusPolling()
     } catch (error) {
-      this.setStatusBadge({ status: "failed", error: error.message })
-    } finally {
-      this.importButtonTarget.disabled = false
+      this.applyStatus({ status: "failed", error: error.message })
     }
   }
 
@@ -196,7 +207,60 @@ export default class extends Controller {
   }
 
   applyStatus(status) {
+    const wasRunning = this.lastStatus === "running"
+    const nextStatus = status.status
+
     this.setStatusBadge(status)
+    this.setRunningUi(status)
+    this.lastStatus = nextStatus
+
+    if (wasRunning && nextStatus === "success") {
+      this.stopStatusPolling()
+      window.location.reload()
+    }
+  }
+
+  setRunningUi(status) {
+    const isRunning = status.status === "running"
+    this.progressTarget.hidden = !isRunning
+    this.actionsTarget.hidden = isRunning
+    this.endpointUrlTarget.disabled = isRunning
+    this.loadCollectionsButtonTarget.disabled = isRunning
+
+    if (isRunning) {
+      this.importButtonTarget.disabled = true
+      this.updateProgressCount(status.last_imported_count)
+      this.updateProgressResource(status.create_resource)
+    } else {
+      this.updateImportButton()
+    }
+  }
+
+  updateProgressResource(createResource) {
+    if (!this.hasProgressResourceTarget) return
+    if (typeof createResource !== "boolean") return
+
+    const element = this.progressResourceTarget
+    const iconElement = this.progressResourceIconTarget
+    const textElement = this.progressResourceTextTarget
+
+    if (createResource) {
+      iconElement.textContent = "check_circle"
+      textElement.textContent = element.dataset.createOnText
+      element.dataset.state = "on"
+    } else {
+      iconElement.textContent = "do_not_disturb_on"
+      textElement.textContent = element.dataset.createOffText
+      element.dataset.state = "off"
+    }
+
+    element.hidden = false
+  }
+
+  updateProgressCount(count) {
+    const number = Number.isFinite(count) ? count : 0
+    this.progressCountTarget.textContent = this.progressCountTemplateValue
+      .replace(this.progressCountTokenValue, String(number))
   }
 
   setStatusBadge(status) {

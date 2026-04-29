@@ -1,5 +1,15 @@
 de:
   components:
+    adm:
+      delete_collection_component:
+        default_headline: "Löschen läuft…"
+        default_hint: "Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen."
+      masterportal_import_panel_component:
+        progress:
+          running: "Import läuft"
+          processed: "%{count} Einträge bisher verarbeitet"
+          create_resource_on: "Aus jedem importierten Eintrag wird ein %{resource_name} erstellt"
+          create_resource_off: "Nur Pins werden importiert — keine Modul-Einträge"
     kern:
       map_component:
         masterportal_wms_layer_name: "Masterportal (Regensburg)"
@@ -26,6 +36,8 @@ de:
   masterportal:
     imported_proposal_default_title: "Importierter Punkt %{external_id}"
     imported_investment_default_title: "Importierter Punkt %{external_id}"
+    description:
+      properties_heading: "Eigenschaften aus dem Masterportal"
     feature:
       category_label: "Kategorie"
     accessibility_flags:

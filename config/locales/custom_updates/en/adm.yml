@@ -66,6 +66,17 @@ en:
         projekt_phase:
           ai_user_flow: AI flow assistant
           ai_settings: Voice assistant
+        masterportal_pins:
+          delete_all_button: Delete all pins and associated resources
+          delete_all_confirm: This will permanently delete all imported Masterportal pins on this phase together with their associated proposals, budget investments or points of interest. Continue?
+          deleting: Deleting Masterportal pins…
+          deleting_hint: This may take a moment for large datasets. Please don't close this tab.
+          empty:
+            title: No Masterportal pins yet
+            description: This phase doesn't have any imported Masterportal pins. Run an import from the map configuration to add some.
+            link: Go to map configuration
+        destroy_all_masterportal_pins:
+          success: All Masterportal pins and their associated resources have been deleted.
   projekt_phase_setting:
     proposal_phase:
       feature:

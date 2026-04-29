@@ -1,12 +1,36 @@
 <%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(
+  title: t(".title"),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: map_adm_projekts_phase_path(@projekt_phase)
+) %>
 
 <div class="kern-container mb-5">
-  <%= render Adm::MasterportalPinsListComponent.new(
-    projekt_phase: @projekt_phase,
-    pins: @masterportal_pins,
-    pagy: @pagy_masterportal_pins,
-    expanded: true
-  ) %>
+  <% if @projekt_phase.masterportal_pins.exists? %>
+    <div class="mb-4">
+      <%= render Adm::DeleteCollectionComponent.new(
+        url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
+        text: t(".delete_all_button"),
+        confirm: t(".delete_all_confirm"),
+        headline: t(".deleting"),
+        hint: t(".deleting_hint")
+      ) %>
+    </div>
+
+    <%= render Adm::MasterportalPinsListComponent.new(
+      projekt_phase: @projekt_phase,
+      pins: @masterportal_pins,
+      pagy: @pagy_masterportal_pins,
+      expanded: true
+    ) %>
+  <% else %>
+    <%= empty_state(
+      icon: "location_off",
+      title: t(".empty.title"),
+      description: t(".empty.description"),
+      link_url: map_adm_projekts_phase_path(@projekt_phase),
+      link_text: t(".empty.link")
+    ) %>
+  <% end %>
 </div>

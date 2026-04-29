@@ -44,6 +44,16 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
     }
   end
 
+  PROGRESS_COUNT_TOKEN = "{{count}}".freeze
+
+  def progress_count_template
+    t(".progress.processed", count: PROGRESS_COUNT_TOKEN)
+  end
+
+  def progress_count_initial
+    progress_count_template.sub(PROGRESS_COUNT_TOKEN, "0")
+  end
+
   def status_summary
     case @projekt_phase.masterportal_import_status
     when "running"

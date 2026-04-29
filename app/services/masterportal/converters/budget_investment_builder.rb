@@ -15,7 +15,7 @@ class Masterportal::Converters::BudgetInvestmentBuilder < ApplicationService
       budget: budget,
       heading: heading,
       title: title,
-      description: @pin.description.to_s.presence || fallback_title,
+      description: Masterportal::DescriptionHtmlBuilder.call(pin: @pin, fallback: fallback_title),
       masterportal_pin_id: @pin.id
     )
     investment.resource_terms = "1"

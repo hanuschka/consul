@@ -130,12 +130,6 @@ summary.masterportal-pins-list--header {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-  transition: border-color 120ms ease, box-shadow 120ms ease;
-
-  &:hover {
-    border-color: #bfdbfe;
-    box-shadow: 0 4px 12px rgba(27, 95, 214, 0.08);
-  }
 }
 
 .masterportal-pin-card--main {
@@ -313,43 +307,6 @@ summary.masterportal-pins-list--header {
   font-size: 13px;
   line-height: 1.5;
   color: #334155;
-}
-
-.masterportal-pin-card--details {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px dashed #cbd5e1;
-}
-
-.masterportal-pin-card--details-summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--adm-color-primary, #1b5fd6);
-  list-style: none;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 120ms ease;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  &:hover {
-    background: #eff6ff;
-  }
-}
-
-.masterportal-pin-card--details-chevron {
-  font-size: 18px;
-  transition: transform 150ms ease;
-
-  .masterportal-pin-card--details[open] & {
-    transform: rotate(180deg);
-  }
 }
 
 .masterportal-pin-card--props {

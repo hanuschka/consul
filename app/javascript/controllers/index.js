@@ -126,6 +126,9 @@ application.register("adm-projekt-import", AdmProjektImportController)
 import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
 application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
 
+import AdmDeleteCollectionController from "./adm/delete_collection_controller"
+application.register("adm--delete-collection", AdmDeleteCollectionController)
+
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 

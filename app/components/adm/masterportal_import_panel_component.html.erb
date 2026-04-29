@@ -3,11 +3,13 @@
   data-controller="adm--masterportal-import-panel"
   data-adm--masterportal-import-panel-endpoints-value="<%= endpoints_data.to_json %>"
   data-adm--masterportal-import-panel-initial-status-value="<%= initial_status.to_json %>"
+  data-adm--masterportal-import-panel-progress-count-template-value="<%= progress_count_template %>"
+  data-adm--masterportal-import-panel-progress-count-token-value="<%= Adm::MasterportalImportPanelComponent::PROGRESS_COUNT_TOKEN %>"
 >
   <div class="masterportal-import-panel--header">
     <div class="masterportal-import-panel--header-left">
       <div class="masterportal-import-panel--logo" aria-hidden="true">
-        <%= image_tag "custom/services/masterportal_logo.svg", alt: "" %>
+        <%= image_tag "services/masterportal_logo.svg", alt: "" %>
       </div>
 
       <div class="masterportal-import-panel--header-text">
@@ -81,7 +83,10 @@
       </div>
     </div>
 
-    <div class="masterportal-import-panel--actions">
+    <div
+      class="masterportal-import-panel--actions"
+      data-adm--masterportal-import-panel-target="actions"
+    >
       <% if supports_domain_records? %>
         <label class="masterportal-import-panel--switch">
           <input
@@ -113,6 +118,43 @@
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span><%= t(".import_button") %></span>
       </button>
+    </div>
+
+    <div
+      class="masterportal-import-panel--progress"
+      data-adm--masterportal-import-panel-target="progress"
+      hidden
+      role="status"
+      aria-live="polite"
+    >
+      <span class="masterportal-import-panel--progress-spinner material-symbols-outlined" aria-hidden="true">
+        progress_activity
+      </span>
+      <div class="masterportal-import-panel--progress-text">
+        <span class="masterportal-import-panel--progress-headline"><%= t(".progress.running") %></span>
+        <span
+          class="masterportal-import-panel--progress-count"
+          data-adm--masterportal-import-panel-target="progressCount"
+        >
+          <%= progress_count_initial %>
+        </span>
+        <% if supports_domain_records? %>
+          <span
+            class="masterportal-import-panel--progress-resource"
+            data-adm--masterportal-import-panel-target="progressResource"
+            data-create-on-text="<%= t('.progress.create_resource_on', resource_name: resource_name) %>"
+            data-create-off-text="<%= t('.progress.create_resource_off') %>"
+            hidden
+          >
+            <span
+              class="material-symbols-outlined masterportal-import-panel--progress-resource-icon"
+              data-adm--masterportal-import-panel-target="progressResourceIcon"
+              aria-hidden="true"
+            ></span>
+            <span data-adm--masterportal-import-panel-target="progressResourceText"></span>
+          </span>
+        <% end %>
+      </div>
     </div>
   </div>
 </section>

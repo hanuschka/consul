@@ -18,7 +18,10 @@ class Kern::MapComponent < ApplicationComponent
   attr_reader :map_location, :form, :editable, :admin_editor, :height
 
   def rendering_library_options
-    MapLocation.rendering_libraries.keys.map do |key|
+    keys = MapLocation.rendering_libraries.keys
+    keys -= ["leaflet_plus_masterportal"] if !mappable.is_a?(ProjektPhase)
+
+    keys.map do |key|
       [key, I18n.t("activerecord.attributes.map_location.rendering_libraries.#{key}")]
     end
   end

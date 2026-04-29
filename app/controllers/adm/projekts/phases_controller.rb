@@ -425,6 +425,15 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
+  def destroy_all_masterportal_pins
+    authorize_phase(:update?)
+    Masterportal::DestroyAllPinsService.call(projekt_phase: @projekt_phase)
+
+    flash[:success] = t(".success")
+
+    redirect_to masterportal_pins_adm_projekts_phase_path(@projekt_phase)
+  end
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
     @categories = @projekt_phase.projekt_point_of_interest_categories.ordered

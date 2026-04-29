@@ -47,6 +47,7 @@ namespace :adm do
         # Map & location
         get :map
         get :masterportal_pins
+        delete :destroy_all_masterportal_pins
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
         get :map_resources_overview

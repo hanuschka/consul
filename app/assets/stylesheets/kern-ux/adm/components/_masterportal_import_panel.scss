@@ -92,10 +92,10 @@
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 6px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 600;
   color: #1e40af;
   background: #fff;
   border: 1px solid #bfdbfe;
@@ -104,7 +104,7 @@
 }
 
 .masterportal-import-panel--status-icon {
-  font-size: 16px;
+  font-size: 19px;
 }
 
 .masterportal-import-panel--status[data-status="pending"] {
@@ -464,4 +464,70 @@
     border-color: #cbd5e1;
     box-shadow: none;
   }
+}
+
+.masterportal-import-panel--progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #1e3a8a;
+  background: #f5f8ff;
+  border: 1px solid #c7d6f4;
+  border-radius: 10px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.masterportal-import-panel--progress-spinner {
+  flex-shrink: 0;
+  font-size: 24px !important;
+  color: var(--adm-color-primary, #1b5fd6);
+  animation: masterportal-import-panel--spin 1.4s linear infinite;
+}
+
+.masterportal-import-panel--progress-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.masterportal-import-panel--progress-headline {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.masterportal-import-panel--progress-count {
+  font-size: 14px;
+  color: #475569;
+  font-variant-numeric: tabular-nums;
+}
+
+.masterportal-import-panel--progress-resource {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #475569;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &[data-state="on"] {
+    color: #166534;
+  }
+
+  &[data-state="off"] {
+    color: #475569;
+  }
+}
+
+.masterportal-import-panel--progress-resource-icon {
+  font-size: 18px;
 }

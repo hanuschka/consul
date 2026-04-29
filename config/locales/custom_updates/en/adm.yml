@@ -43,6 +43,9 @@ en:
           description_placeholder: "Optional: explanation for citizens — what does this criterion mean?"
           ai_instruction_placeholder: "Instruction the AI should use when evaluating this criterion"
           drag_to_reorder: "Drag to reorder"
+          kind_label:
+            hard: "Required"
+            soft: "Quality"
           criteria_count:
             zero: "No criteria"
             one: "1 criterion"

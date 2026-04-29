@@ -32,7 +32,17 @@ en:
           field_description: Description (shown to citizens)
           field_ai_instruction: AI instruction (prompt for the model)
           name_placeholder: "Short name of the criterion"
+          description_placeholder: "Optional: explanation for citizens — what does this criterion mean?"
           ai_instruction_placeholder: "Instruction the AI should use when evaluating this criterion"
+          drag_to_reorder: "Drag to reorder"
+          criteria_count:
+            zero: "No criteria"
+            one: "1 criterion"
+            other: "%{count} criteria"
+          empty_hard:
+            "No hard criteria defined yet. Add the mandatory rules every proposal must meet below."
+          empty_soft:
+            "No soft criteria defined yet. These are used for qualitative scoring of proposals."
         ai_settings:
           title: Voice assistant
           empty_title: Voice assistant not available

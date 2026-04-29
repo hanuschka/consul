@@ -33,7 +33,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def resource_class
     base_class = "-#{@resource.class.name.split("::").last.downcase}"
 
-    if @resource.image.present?
+    if @resource.image&.attached?
       base_class += " -with-image"
     end
 

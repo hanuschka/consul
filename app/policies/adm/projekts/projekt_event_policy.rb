@@ -1,6 +1,10 @@
 class Adm::Projekts::ProjektEventPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
+  def show?
+    permitted?
+  end
+
   def create?
     permitted?
   end

@@ -14,6 +14,8 @@ class ProjektEvent < ApplicationRecord
   validates :datetime, presence: true
   validates :max_attendees, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
+  before_validation :nullify_zero_max_attendees
+
   default_scope { order(datetime: :asc) }
 
   scope :sort_by_all, -> {
@@ -63,4 +65,10 @@ class ProjektEvent < ApplicationRecord
 
     admin_emails.split(",").map { |e| e.strip.downcase }.include?(email.downcase)
   end
+
+  private
+
+    def nullify_zero_max_attendees
+      self.max_attendees = nil if max_attendees == 0
+    end
 end

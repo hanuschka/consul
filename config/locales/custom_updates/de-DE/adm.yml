@@ -34,6 +34,9 @@ de:
           description_placeholder: "Optional: Erläuterung für Bürger – was ist mit diesem Kriterium gemeint?"
           ai_instruction_placeholder: "Anweisung, die die KI bei der Bewertung dieses Kriteriums verwenden soll"
           drag_to_reorder: "Zum Sortieren ziehen"
+          kind_label:
+            hard: "Pflicht"
+            soft: "Qualität"
           criteria_count:
             zero: "Keine Kriterien"
             one: "1 Kriterium"

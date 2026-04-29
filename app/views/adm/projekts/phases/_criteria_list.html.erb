@@ -1,6 +1,9 @@
 <%
-  section_icon = kind == "hard" ? "verified" : "auto_awesome"
+  section_icon = kind == "hard" ? "rule" : "auto_awesome"
+  card_kind_icon = kind == "hard" ? "block" : "trending_up"
   section_modifier = "kern-criteria-section--#{kind}"
+  card_modifier = "kern-criteria-card--#{kind}"
+  kind_label = t("adm.projekts.phases.ai_user_flow.kind_label.#{kind}")
   count_label = t("adm.projekts.phases.ai_user_flow.criteria_count", count: criteria.size)
 %>
 
@@ -35,9 +38,16 @@
   <div data-adm-criteria-list-target="list" class="kern-criteria-list">
     <% criteria.each do |criterion| %>
       <article
-        class="kern-criteria-card"
+        class="kern-criteria-card <%= card_modifier %>"
         data-criterion-id="<%= criterion.id %>"
       >
+        <div class="kern-criteria-card__badge-row">
+          <span class="kern-criteria-card__kind-tag">
+            <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+            <%= kind_label %>
+          </span>
+        </div>
+
         <div class="kern-criteria-card__top">
           <span
             class="material-symbols-outlined kern-criteria-card__handle"
@@ -107,9 +117,16 @@
 
   <script type="text/template" data-adm-criteria-list-target="template">
     <article
-      class="kern-criteria-card kern-criteria-card--new"
+      class="kern-criteria-card kern-criteria-card--new <%= card_modifier %>"
       data-criterion-id="{{ id }}"
     >
+      <div class="kern-criteria-card__badge-row">
+        <span class="kern-criteria-card__kind-tag">
+          <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+          <%= kind_label %>
+        </span>
+      </div>
+
       <div class="kern-criteria-card__top">
         <span
           class="material-symbols-outlined kern-criteria-card__handle"

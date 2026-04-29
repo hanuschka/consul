@@ -4,7 +4,7 @@ import Sortable from "sortablejs"
 const EDITABLE_FIELDS = ["name", "description", "ai_instruction"]
 
 export default class extends Controller {
-  static targets = ["list", "inputName", "inputAiInstruction", "template"]
+  static targets = ["list", "inputName", "inputAiInstruction", "template", "count", "empty"]
   static values = {
     kind: String,
     createUrl: String,
@@ -16,6 +16,7 @@ export default class extends Controller {
   connect() {
     this.initSortable()
     this.bindFieldEdits()
+    this.refreshCountAndEmpty()
   }
 
   initSortable() {
@@ -85,6 +86,7 @@ export default class extends Controller {
     this.appendCriterion(data)
     this.inputNameTarget.value = ""
     this.inputAiInstructionTarget.value = ""
+    this.refreshCountAndEmpty()
   }
 
   deleteCriterion(e) {
@@ -94,7 +96,33 @@ export default class extends Controller {
     fetch(this.buildDeleteUrl(item.dataset.criterionId), {
       method: "DELETE",
       headers: this.headers()
-    }).then(() => item.remove())
+    }).then(() => {
+      item.remove()
+      this.refreshCountAndEmpty()
+    })
+  }
+
+  refreshCountAndEmpty() {
+    const count = this.listTarget.querySelectorAll("[data-criterion-id]").length
+
+    if (this.hasCountTarget) {
+      this.countTarget.textContent = this.formatCount(count)
+    }
+
+    if (this.hasEmptyTarget) {
+      this.emptyTarget.hidden = count > 0
+    }
+  }
+
+  formatCount(count) {
+    if (count === 0) return this.countTarget.dataset.zeroLabel || "0"
+    if (count === 1) return this.countTarget.dataset.oneLabel || "1"
+
+    const otherTpl = this.countTarget.dataset.otherLabel
+
+    if (otherTpl) return otherTpl.replace("%{count}", count)
+
+    return String(count)
   }
 
   appendCriterion(data) {

@@ -312,10 +312,24 @@
   margin-top: 1px;
 }
 
-.ai-proposal-flow--criteria-card--text {
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: #333;
+.ai-proposal-flow--criteria-card--body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.ai-proposal-flow--criteria-card--title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+
+.ai-proposal-flow--criteria-card--description {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #666;
 }
 
 .ai-proposal-flow--label {

@@ -18,21 +18,17 @@
     <% end %>
   <% end %>
 
-  <section class="kern-criteria-section">
-    <%= render(
-      "criteria_list",
-      projekt_phase: @projekt_phase,
-      kind: "hard",
-      criteria: @hard_criteria
-    ) %>
-  </section>
+  <%= render(
+    "criteria_list",
+    projekt_phase: @projekt_phase,
+    kind: "hard",
+    criteria: @hard_criteria
+  ) %>
 
-  <section class="kern-criteria-section">
-    <%= render(
-      "criteria_list",
-      projekt_phase: @projekt_phase,
-      kind: "soft",
-      criteria: @soft_criteria
-    ) %>
-  </section>
+  <%= render(
+    "criteria_list",
+    projekt_phase: @projekt_phase,
+    kind: "soft",
+    criteria: @soft_criteria
+  ) %>
 </div>

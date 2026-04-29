@@ -9,11 +9,13 @@ class Kern::Form::ImageComponent < ApplicationComponent
   private
 
     def show_preview?
-      @form.object.send(@attribute).attached? && image_errors.empty?
+      value = @form.object.send(@attribute)
+      value.respond_to?(:attached?) && value.attached? && image_errors.empty?
     end
 
     def preview_attachment
-      @form.object.send(@attribute)
+      value = @form.object.send(@attribute)
+      value.is_a?(::Image) ? value.attachment : value
     end
 
     def image_errors

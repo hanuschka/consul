@@ -23,11 +23,22 @@ en:
       placeholder: "e.g. »I would like a drinking fountain in the city park …«"
       submit_button: "Generate AI Draft"
       chars_label: "characters"
+    criteria:
+      hard_eyebrow: "Required"
+      hard_title: "Required Criteria"
+      hard_hint: "Your proposal must meet every one of these before it can be submitted."
+      hard_badge: "Required"
+      soft_eyebrow: "Scored"
+      soft_title: "Quality Criteria"
+      soft_hint: "These criteria contribute to the overall quality score of your proposal."
+      soft_badge: "Scored"
     evaluation:
       total_score: "Total Score"
       passed: "Your proposal meets the criteria!"
       failed: "Your proposal needs improvement."
+      hard_failed_eyebrow: "Revision needed"
       hard_failed_title: "Your proposal needs a change before it can be submitted."
+      feedback_label: "AI feedback"
       error_title: "Evaluation could not be completed."
       error_description: "Something went wrong during evaluation. Please try submitting again in a moment."
     step4:

@@ -23,11 +23,22 @@ de:
       placeholder: "Beschreiben Sie Ihre Idee kurz und prägnant."
       submit_button: "KI-Entwurf generieren"
       chars_label: "Zeichen"
+    criteria:
+      hard_eyebrow: "Pflicht"
+      hard_title: "Pflichtkriterien"
+      hard_hint: "Diese Kriterien müssen erfüllt sein, damit Ihr Vorschlag eingereicht werden kann."
+      hard_badge: "Pflicht"
+      soft_eyebrow: "Bewertet"
+      soft_title: "Bewertungskriterien"
+      soft_hint: "Diese Kriterien fließen in die Qualitätsbewertung Ihres Vorschlags ein."
+      soft_badge: "Bewertet"
     evaluation:
       total_score: "Gesamtpunktzahl"
       passed: "Ihr Vorschlag erfüllt die Kriterien!"
       failed: "Ihr Vorschlag bedarf noch Verbesserungen."
+      hard_failed_eyebrow: "Anpassung erforderlich"
       hard_failed_title: "Ihr Vorschlag muss angepasst werden, bevor er eingereicht werden kann."
+      feedback_label: "Hinweis der KI"
       error_title: "Bewertung konnte nicht abgeschlossen werden."
       error_description: "Bei der Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es in einem Moment erneut."
     step4:

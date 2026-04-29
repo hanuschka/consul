@@ -1,33 +1,53 @@
 <div class="ai-proposal-flow--evaluation">
   <% if hard_failed? %>
     <div class="ai-proposal-flow--hard-fail">
-      <div class="ai-proposal-flow--hard-fail--header">
-        <span class="material-symbols-outlined ai-proposal-flow--hard-fail--icon">error</span>
-        <strong class="ai-proposal-flow--hard-fail--title">
-          <%= t("ai_proposal_flow.evaluation.hard_failed_title") %>
-        </strong>
+      <div class="ai-proposal-flow--hard-fail--badge">
+        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
       </div>
 
-      <% if failed_criterion["name"].present? %>
-        <h3 class="ai-proposal-flow--hard-fail--criterion-name">
-          <%= failed_criterion["name"] %>
-        </h3>
-      <% end %>
-
-      <% if failed_criterion["description"].present? %>
-        <p class="ai-proposal-flow--hard-fail--criterion-description">
-          <%= failed_criterion["description"] %>
+      <div class="ai-proposal-flow--hard-fail--content">
+        <span class="ai-proposal-flow--hard-fail--eyebrow">
+          <%= t("ai_proposal_flow.evaluation.hard_failed_eyebrow") %>
+        </span>
+        <p class="ai-proposal-flow--hard-fail--lead">
+          <%= t("ai_proposal_flow.evaluation.hard_failed_title") %>
         </p>
-      <% end %>
 
-      <p class="ai-proposal-flow--hard-fail--feedback">
-        <%= failed_criterion["feedback"] %>
-      </p>
+        <% if failed_criterion["name"].present? %>
+          <div class="ai-proposal-flow--hard-fail--criterion">
+            <span class="ai-proposal-flow--hard-fail--criterion-label">
+              <i class="fas fa-shield-alt" aria-hidden="true"></i>
+              <%= t("ai_proposal_flow.criteria.hard_badge") %>
+            </span>
+            <h3 class="ai-proposal-flow--hard-fail--criterion-name">
+              <%= failed_criterion["name"] %>
+            </h3>
+            <% if failed_criterion["description"].present? %>
+              <p class="ai-proposal-flow--hard-fail--criterion-description">
+                <%= failed_criterion["description"] %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="ai-proposal-flow--hard-fail--feedback">
+          <span class="ai-proposal-flow--hard-fail--feedback-label">
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+            <%= t("ai_proposal_flow.evaluation.feedback_label") %>
+          </span>
+          <p><%= failed_criterion["feedback"] %></p>
+        </div>
+      </div>
     </div>
   <% elsif error? %>
     <div class="ai-proposal-flow--evaluation-error">
-      <strong><%= t("ai_proposal_flow.evaluation.error_title") %></strong>
-      <p><%= t("ai_proposal_flow.evaluation.error_description") %></p>
+      <div class="ai-proposal-flow--evaluation-error--badge">
+        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+      </div>
+      <div class="ai-proposal-flow--evaluation-error--content">
+        <strong><%= t("ai_proposal_flow.evaluation.error_title") %></strong>
+        <p><%= t("ai_proposal_flow.evaluation.error_description") %></p>
+      </div>
     </div>
   <% else %>
     <div class="ai-proposal-flow--evaluation-total">
@@ -39,6 +59,7 @@
       <div class="ai-proposal-flow--evaluation-criterion">
         <div class="ai-proposal-flow--evaluation-criterion--header">
           <span class="ai-proposal-flow--evaluation-criterion--text">
+            <i class="fas fa-star ai-proposal-flow--evaluation-criterion--icon" aria-hidden="true"></i>
             <%= criterion["name"].presence || criterion["text"] %>
           </span>
           <span class="ai-proposal-flow--evaluation-criterion--score">
@@ -57,7 +78,7 @@
 
     <% if overall_feedback.present? %>
       <div class="ai-proposal-flow--overall-box -passed">
-        <strong><%= t("ai_proposal_flow.evaluation.passed") %></strong>
+        <strong><i class="fas fa-check-circle" aria-hidden="true"></i> <%= t("ai_proposal_flow.evaluation.passed") %></strong>
         <p><%= overall_feedback %></p>
       </div>
     <% end %>

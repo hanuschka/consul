@@ -26,6 +26,6 @@ export default class extends Controller {
 
   showProgress() {
     this.progressTarget.hidden = false
-    this.triggerTarget.hidden = true
+    this.triggerTarget.style.display = "none"
   }
 }

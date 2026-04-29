@@ -1,7 +1,7 @@
 de:
   components:
     adm:
-      delete_progress_component:
+      delete_collection_component:
         default_headline: "Löschen läuft…"
         default_hint: "Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen."
       masterportal_import_panel_component:

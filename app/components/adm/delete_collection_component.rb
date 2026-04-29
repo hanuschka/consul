@@ -1,4 +1,4 @@
-class Adm::DeleteProgressComponent < ApplicationComponent
+class Adm::DeleteCollectionComponent < ApplicationComponent
   def initialize(
     url:,
     text:,

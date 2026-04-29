@@ -1,7 +1,7 @@
 en:
   components:
     adm:
-      delete_progress_component:
+      delete_collection_component:
         default_headline: "Deleting…"
         default_hint: "This may take a moment for large datasets. Please don't close this tab."
       masterportal_import_panel_component:

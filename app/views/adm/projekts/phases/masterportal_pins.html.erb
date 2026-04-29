@@ -9,7 +9,7 @@
 <div class="kern-container mb-5">
   <% if @projekt_phase.masterportal_pins.exists? %>
     <div class="mb-4">
-      <%= render Adm::DeleteProgressComponent.new(
+      <%= render Adm::DeleteCollectionComponent.new(
         url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
         text: t(".delete_all_button"),
         confirm: t(".delete_all_confirm"),

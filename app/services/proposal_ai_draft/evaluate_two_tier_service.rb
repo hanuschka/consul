@@ -38,7 +38,7 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
     end
 
     def first_failing_criterion(hard_result)
-      failing_ids = hard_result["criteria"].reject { it["passed"] }.map { it["id"] }
+      failing_ids = hard_result["criteria"].reject { |c| c["passed"] }.map { |c| c["id"] }
       return nil if failing_ids.empty?
 
       @resource
@@ -51,7 +51,7 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
 
     def hard_fail_result(hard_result)
       first_failing_criterion_record = first_failing_criterion(hard_result)
-      failing_feedback = hard_result["criteria"].find { it["id"] == first_failing_criterion_record&.id }
+      failing_feedback = hard_result["criteria"].find { |c| c["id"] == first_failing_criterion_record&.id }
 
       {
         "version" => RESULT_VERSION,

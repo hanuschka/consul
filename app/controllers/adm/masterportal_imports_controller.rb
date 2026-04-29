@@ -44,7 +44,7 @@ class Adm::MasterportalImportsController < Adm::BaseController
     end
 
     def allowed_hosts
-      default = Rails.configuration.x.masterportal.oaf_endpoint.presence
+      default = Rails.application.secrets.dig(:masterportal, :oaf_endpoint).presence
       from_default = default ? [URI.parse(default).host] : []
       from_env = ENV.fetch("MASTERPORTAL_ALLOWED_HOSTS", "").split(",").map(&:strip).reject(&:empty?)
 

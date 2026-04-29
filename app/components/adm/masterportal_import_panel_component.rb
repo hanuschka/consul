@@ -12,7 +12,7 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
   end
 
   def default_endpoint_url
-    Rails.configuration.x.masterportal.oaf_endpoint
+    Rails.application.secrets.dig(:masterportal, :oaf_endpoint)
   end
 
   def supports_domain_records?

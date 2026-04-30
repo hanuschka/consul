@@ -115,7 +115,20 @@ module PdfServices
       def render_attachment_image(pdf, image, width: nil)
         return unless image&.attachment&.attached?
 
-        render_safe_image(pdf, image.attachment, width: width || [pdf.bounds.width, 360].min)
+        bytes = pdf_variant_bytes(image) || image.attachment.download
+        pdf.image(StringIO.new(bytes), width: width || [pdf.bounds.width, 360].min, position: :center)
+        pdf.move_down 16
+      rescue StandardError
+        nil
+      end
+
+      def pdf_variant_bytes(image)
+        variant = image.variant(:pdf)
+        return nil unless variant.respond_to?(:processed)
+
+        variant.processed.download
+      rescue StandardError
+        nil
       end
 
       def render_image_and_map_side_by_side(pdf, image, map_location, gutter: 16)

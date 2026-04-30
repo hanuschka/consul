@@ -26,12 +26,56 @@
   </div>
 
   <% if map_location&.available? %>
-    <div class="masterportal-pins-summary--map">
-      <%= render Kern::MapComponent.new(
-        map_location: map_location,
-        feature_collection: feature_collection,
-        height: 380
-      ) %>
+    <div
+      class="masterportal-pins-summary--map-wrap"
+      data-controller="adm--masterportal-pins-search"
+      data-adm--masterportal-pins-search-feedback-template-value="<%= search_feedback_template %>"
+      data-adm--masterportal-pins-search-feedback-token-value="<%= Adm::MasterportalPinsSummaryComponent::SEARCH_FEEDBACK_TOKEN %>"
+      data-adm--masterportal-pins-search-feedback-empty-value="<%= t('.search.feedback_empty') %>"
+    >
+      <% if show_search? %>
+        <div class="masterportal-pins-summary--search">
+          <label for="<%= search_input_id %>" class="masterportal-pins-summary--search-label">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <span class="sr-only"><%= t(".search.label") %></span>
+          </label>
+
+          <input
+            id="<%= search_input_id %>"
+            type="search"
+            class="masterportal-pins-summary--search-input"
+            placeholder="<%= t('.search.placeholder') %>"
+            autocomplete="off"
+            data-adm--masterportal-pins-search-target="input"
+            data-action="input->adm--masterportal-pins-search#search"
+          >
+
+          <button
+            type="button"
+            class="masterportal-pins-summary--search-clear"
+            hidden
+            aria-label="<%= t('.search.clear') %>"
+            data-adm--masterportal-pins-search-target="clear"
+            data-action="click->adm--masterportal-pins-search#clear"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+          </button>
+
+          <span
+            class="masterportal-pins-summary--search-feedback"
+            aria-live="polite"
+            data-adm--masterportal-pins-search-target="feedback"
+          ></span>
+        </div>
+      <% end %>
+
+      <div class="masterportal-pins-summary--map">
+        <%= render Kern::MapComponent.new(
+          map_location: map_location,
+          feature_collection: feature_collection,
+          height: 380
+        ) %>
+      </div>
     </div>
   <% end %>
 </section>

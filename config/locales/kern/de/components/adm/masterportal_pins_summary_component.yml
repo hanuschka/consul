@@ -11,3 +11,9 @@ de:
           proposals: Vorschlägen
           budget_investments: Bürgerbudget-Einreichungen
           point_of_interest_pins: Points of Interest
+        search:
+          label: Pins durchsuchen
+          placeholder: Pins nach Titel, Adresse oder Eigenschaft suchen…
+          clear: Suche zurücksetzen
+          feedback_template: "%{count} Treffer"
+          feedback_empty: Keine Treffer

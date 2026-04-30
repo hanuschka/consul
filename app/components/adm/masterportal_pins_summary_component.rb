@@ -40,6 +40,20 @@ class Adm::MasterportalPinsSummaryComponent < ApplicationComponent
     }
   end
 
+  def search_input_id
+    "masterportal-pins-summary-search-#{projekt_phase.id}"
+  end
+
+  def show_search?
+    map_location&.available? && pins_count > 1
+  end
+
+  SEARCH_FEEDBACK_TOKEN = "{{count}}".freeze
+
+  def search_feedback_template
+    t(".search.feedback_template", count: SEARCH_FEEDBACK_TOKEN)
+  end
+
   private
 
     attr_reader :projekt_phase

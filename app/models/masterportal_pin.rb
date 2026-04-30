@@ -41,9 +41,17 @@ class MasterportalPin < ApplicationRecord
       "properties" => {
         "resource_type" => "masterportal_pin",
         "id" => id,
-        "feature_icon_url" => feature_icon_url
+        "feature_icon_url" => feature_icon_url,
+        "search_text" => searchable_text
       }
     }
+  end
+
+  def searchable_text
+    parts = [title, description, external_id, collection_id]
+    parts += flatten_property_values(properties)
+
+    parts.compact_blank.map { |part| part.to_s.strip }.compact_blank.join(" ").downcase
   end
 
   def popup_data
@@ -75,6 +83,17 @@ class MasterportalPin < ApplicationRecord
   end
 
   private
+
+    def flatten_property_values(value)
+      case value
+      when Hash
+        value.flat_map { |key, inner| [key.to_s] + flatten_property_values(inner) }
+      when Array
+        value.flat_map { |inner| flatten_property_values(inner) }
+      else
+        [value.to_s]
+      end
+    end
 
     def default_host
       Rails.application.routes.default_url_options[:host] ||

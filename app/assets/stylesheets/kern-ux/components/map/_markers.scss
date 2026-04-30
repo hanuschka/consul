@@ -1,0 +1,32 @@
+// DivIcon marker used by leaflet adapter when a feature has no icon image.
+// Mirrors the marker shape rendered in the main application pack so the same
+// pin styling appears on /adm and on the public site.
+
+.map-marker {
+  visibility: visible;
+  position: absolute;
+  margin-top: -5px;
+
+  .map-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #00cae9;
+    transform: rotate(-45deg);
+  }
+
+  .map-icon::before {
+    font-family: "Font Awesome 5 Free", "Font Awesome 5 Pro";
+    font-weight: bold;
+    color: #fff;
+    background: none;
+    font-size: 14px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: initial;
+    height: initial;
+    margin: 0;
+  }
+}

@@ -223,7 +223,7 @@ export default class extends Controller {
   setRunningUi(status) {
     const isRunning = status.status === "running"
     this.progressTarget.hidden = !isRunning
-    this.actionsTarget.hidden = isRunning
+    this.actionsTarget.style.display = isRunning ? "none" : ""
     this.endpointUrlTarget.disabled = isRunning
     this.loadCollectionsButtonTarget.disabled = isRunning
 

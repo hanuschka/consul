@@ -29,7 +29,24 @@ class Adm::MasterportalPinsSummaryComponent < ApplicationComponent
     helpers.masterportal_pins_adm_projekts_phase_path(@projekt_phase)
   end
 
+  def map_location
+    @projekt_phase.map_location
+  end
+
+  def feature_collection
+    {
+      "type" => "FeatureCollection",
+      "features" => pins.map(&:to_map_feature)
+    }
+  end
+
   private
 
     attr_reader :projekt_phase
+
+    def pins
+      @pins ||= projekt_phase
+        .masterportal_pins
+        .with_attached_icon_image
+    end
 end

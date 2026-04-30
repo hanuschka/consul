@@ -9,7 +9,7 @@ en:
         show:
           title: Overview
           registrations_button: "Registrations (%{count})"
-          unlimited: Unlimited
+          registration_disabled: Registration disabled
           confirmed_count: Confirmed registrations
           waitlisted_count: Waitlisted
           no_accessibility_flags: No accessibility features specified.
@@ -52,9 +52,9 @@ en:
           accessibility_legend: Accessibility
           accessibility_hint: "Indicate which accessibility features are available at the event location. This information is shown on the frontend and helps people with disabilities decide whether they can attend. Enable all applicable options."
           max_attendees_label: Maximum attendees
-          max_attendees_hint: "Maximum number of confirmed attendees. Additional registrations are automatically placed on a waiting list. Leave blank for unlimited."
-          admin_emails_label: Notification emails (admins)
-          admin_emails_hint: "Comma-separated list of email addresses to notify on every new registration. Optional."
+          max_attendees_hint: "Maximum number of confirmed attendees. Additional registrations are automatically placed on a waiting list. Leave blank or set to 0 to disable registration."
+          admin_emails_label: Bulk-registration email addresses
+          admin_emails_hint: "Comma-separated list of trusted email addresses that may register multiple attendees for this event. These addresses skip the email confirmation step. Optional."
           confirmation_email_text_label: Confirmation email text
           confirmation_email_text_hint: "Optional text sent to participants when their registration is confirmed. Allowed HTML tags: <a>, <br>. Leave blank to skip sending a confirmation email."
           waitlist_email_text_label: Waitlist email text

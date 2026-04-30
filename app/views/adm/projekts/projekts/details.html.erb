@@ -6,29 +6,31 @@
   <% end %>
 <% end %>
 
-<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
 <div class="kern-container mb-5">
-  <div data-controller="components-adm-page-title-sync"
-       data-action="turbo:submit-end->components-adm-page-title-sync#sync">
-    <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
-  </div>
+  <fieldset <%= "disabled" unless policy([:adm, :projekts, @projekt]).update? %> style="border:0; padding:0; margin:0;">
+    <div data-controller="components-adm-page-title-sync"
+         data-action="turbo:submit-end->components-adm-page-title-sync#sync">
+      <%= render Adm::AttributeEditorComponent.new(@projekt.page, :title, :string) %>
+    </div>
 
-  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :subtitle, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.page, :subtitle, :string) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :image, :image) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.page, :image, :image) %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
-    <%= render 'adm/projekts/projekts/details/duration', projekt: @projekt %>
-  <% end %>
+    <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
+      <%= render 'adm/projekts/projekts/details/duration', projekt: @projekt %>
+    <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
-    <%= render 'adm/projekts/projekts/details/landing_pages', projekt: @projekt %>
-  <% end %>
+    <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
+      <%= render 'adm/projekts/projekts/details/landing_pages', projekt: @projekt %>
+    <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
-    <%= render 'adm/projekts/projekts/details/geo_restriction', projekt: @projekt %>
-  <% end %>
+    <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
+      <%= render 'adm/projekts/projekts/details/geo_restriction', projekt: @projekt %>
+    <% end %>
 
-  <%= render Adm::AttributeEditorComponent.new(@projekt.page, :slug, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.page, :slug, :string) %>
+  </fieldset>
 </div>

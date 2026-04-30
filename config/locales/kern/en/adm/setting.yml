@@ -35,10 +35,10 @@ en:
     welcomepage:
       usage_stats: User overview
       usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
-      newsletter_subscription: Platform statistics
-      newsletter_subscription_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
-      platform_activity: Newsletter signup
-      platform_activity_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
+      newsletter_subscription: Newsletter signup
+      newsletter_subscription_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
+      platform_activity: Platform statistics
+      platform_activity_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
       projekt_search: Project search
       projekt_search_description: "When enabled, a search bar appears on the homepage, letting users search specifically for projects. This option and the homepage button are mutually exclusive. Project search is especially suitable for platforms with many ongoing or planned projects."
     extended_feature:

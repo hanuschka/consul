@@ -58,7 +58,6 @@ ProjektStudio.Banner = {
       field.firstElementChild.contentEditable = false
       container.dataset.originalFieldHtml = ""
 
-      const projektId = ProjektStudio.getCurrentProjektId();
       let value =
         field
           .firstElementChild
@@ -78,10 +77,11 @@ ProjektStudio.Banner = {
 
       App.Ajax
         .request({
-          url: `/admin/projekts/${projektId}/update_page`,
+          url: container.dataset.updateUrl,
           method: "PATCH",
-          dataType: "json",
           data: {
+            kind: container.dataset.kind,
+            attribute: container.dataset.attribute,
             [container.dataset.fieldName]: value
           }
         })
@@ -95,31 +95,30 @@ ProjektStudio.Banner = {
 
     if (file) {
       const imagePreview = imageUploaderContainer.querySelector(".js-projekt-image-upload-preview")
+      const previewUrl = URL.createObjectURL(file)
 
-      imagePreview.src = URL.createObjectURL(file)
+      imagePreview.src = previewUrl
       imagePreview.classList.add("-image-set")
 
-      const projektId = ProjektStudio.getCurrentProjektId();
       let formData = new FormData();
+      formData.append("kind", imageUploaderContainer.dataset.kind);
+      formData.append("attribute", imageUploaderContainer.dataset.attribute);
       formData.append(imageUploaderContainer.dataset.fieldName, file);
 
       App.Ajax
         .request({
-          url: `/admin/projekts/${projektId}/update_title_image`,
+          url: imageUploaderContainer.dataset.updateUrl,
           method: "PATCH",
           processData: false,
           contentType: false,
           data: formData
         })
-        .then((response) => {
+        .then(() => {
           const mainImage = imageUploaderContainer.querySelector(".resource-image--main");
           const blurImage = imageUploaderContainer.querySelector(".resource-image--blur");
-          const glightboxLink = imageUploaderContainer.querySelector(".glightbox");
 
-          mainImage.src = response.image_url;
-          blurImage.src = response.image_url;
-          glightboxLink.href = response.lightbox_image_url;
-          App.ImageGallery.setupGlighbox();
+          mainImage.src = previewUrl;
+          blurImage.src = previewUrl;
 
           mainImage.addEventListener("load", () => {
             imagePreview.classList.remove("-image-set");

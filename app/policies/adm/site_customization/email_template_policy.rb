@@ -16,7 +16,7 @@ class Adm::SiteCustomization::EmailTemplatePolicy < ApplicationPolicy
   private
 
     def allowed?
-      global_template? ? @user&.administrator? : permitted?
+      global_template? ? @user&.administrator? : manage_permitted?
     end
 
     def projekt_from_record

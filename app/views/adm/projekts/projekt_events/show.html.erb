@@ -104,7 +104,7 @@
   <%# === Section: Registration === %>
   <%
     registration_rows = [
-      { label: t("adm.projekts.projekt_events.form.max_attendees_label"), value: @projekt_event.max_attendees.presence || t(".unlimited") },
+      { label: t("adm.projekts.projekt_events.form.max_attendees_label"), value: @projekt_event.max_attendees.presence || t(".registration_disabled") },
       { label: t(".confirmed_count"), value: @projekt_event.projekt_event_registrations.where(status: "confirmed").count },
       { label: t(".waitlisted_count"), value: @projekt_event.projekt_event_registrations.where(status: "waitlisted").count }
     ]

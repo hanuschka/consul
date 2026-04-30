@@ -80,15 +80,20 @@ de:
           body_description: "Wird über den Eingabefeldern des Anmeldeformulars auf /users/sign_in angezeigt. Geeignet z. B. für aktuelle Hinweise, Wartungsmeldungen oder Anweisungen für externe Anmeldeverfahren. Bleibt das Feld leer, wird kein zusätzlicher Hinweis angezeigt."
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
-        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild mit klarem Motiv. Es sollte thematisch zur Beteiligungsplattform passen und auch bei unterschiedlichen Bildschirmgrößen gut wirken. Empfohlenes Format: 1920 × 760 Pixel."
+        header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild mit klarem Motiv. Es sollte thematisch zur Beteiligungsplattform passen und auch bei unterschiedlichen Bildschirmgrößen gut wirken. Empfohlenes Format: 1920 × 760 Pixel. Wird ignoriert, wenn unten ein Desktop-Hintergrundvideo hochgeladen ist."
         mobile_header_image_label: Hintergrundbild für Mobile
-        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Verwenden Sie ein Bild mit zentriertem Hauptmotiv, da es auf kleinen Bildschirmen zugeschnitten werden kann. Es sollte thematisch zur Plattform passen und auch in kleiner Darstellung klar erkennbar sein. Empfohlenes Format: 470 × 246 Pixel."
+        mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Verwenden Sie ein Bild mit zentriertem Hauptmotiv, da es auf kleinen Bildschirmen zugeschnitten werden kann. Es sollte thematisch zur Plattform passen und auch in kleiner Darstellung klar erkennbar sein. Empfohlenes Format: 470 × 246 Pixel. Wird ignoriert, wenn unten ein Mobile-Hintergrundvideo hochgeladen ist."
         logo_header_label: Logo (weißer Hintergrund)
         logo_header_description: "Dieses Logo wird in der oberen Navigationsleiste angezeigt, sobald der Hintergrund weiß ist – also z. B. nach dem Scrollen auf der Startseite. Es sollte gut lesbar auf hellem Hintergrund sein. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund. Empfohlenes Format: maximal 80 × 80 Pixel."
         logo_header_for_transparent_label: Logo (transparenter Hintergrund)
         logo_header_for_transparent_description: "Dieses Logo wird in der oberen Navigationsleiste angezeigt, solange der Hintergrund transparent ist – also z. B. über dem Headerbild. Es sollte gut auf wechselnden Hintergründen erkennbar sein. Verwenden Sie idealerweise ein helles PNG mit transparentem Hintergrund. Empfohlenes Format: max. 80 × 80 Pixel."
         logo_newsletter_email_label: Newsletter-Logo
         logo_newsletter_email_description: "Dieses Logo wird im Kopfbereich jeder Newsletter-E-Mail angezeigt und dient als visuelles Erkennungsmerkmal Ihrer Plattform. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund, das auf hellem Hintergrund gut lesbar ist. Das Logo sollte die Wiedererkennung Ihrer Kommune oder Plattform sicherstellen. Empfohlenes Format: 130 × 45 Pixel."
+      site_customization/video:
+        header_video_label: Hintergrundvideo für Desktop
+        header_video_description: "Optionales Video, das im oberen Bereich der Startseite auf Desktop-Geräten anstelle des Hintergrundbilds abgespielt wird. Das Video startet automatisch, ist stumm geschaltet und läuft in Endlosschleife. Verwenden Sie ein kurzes, ruhiges Video im Querformat. Erlaubte Formate: MP4, WebM. Maximale Größe: 50 MB."
+        mobile_header_video_label: Hintergrundvideo für Mobile
+        mobile_header_video_description: "Optionales Video, das im oberen Bereich der Startseite auf Mobilgeräten anstelle des Hintergrundbilds abgespielt wird. Das Video startet automatisch, ist stumm geschaltet und läuft in Endlosschleife. Verwenden Sie ein kurzes Video mit zentriertem Hauptmotiv und kleiner Dateigröße – auf Mobilgeräten zählen Ladezeit und Datenvolumen. Wird kein Mobile-Video hochgeladen, wird auf Mobilgeräten das Hintergrundbild angezeigt (Mobile-Bild bzw. Desktop-Bild). Erlaubte Formate: MP4, WebM. Maximale Größe: 50 MB."
       site_customization/page:
         projekt:
           title_label: Titel der Startseite

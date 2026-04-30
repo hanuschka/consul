@@ -23,7 +23,7 @@ module PdfServices
       end
 
       def render_header_banner(pdf, title_text:, qr_url: nil)
-        banner_height = 70
+        banner_height = 90
         qr_size = 50
 
         pdf.canvas do
@@ -51,33 +51,40 @@ module PdfServices
       end
 
       def render_meta_card(pdf, rows)
-        card_height = rows.length * 20 + 24
+        row_height = 16
+        card_padding = 12
+        card_height = rows.length * row_height + card_padding * 2
+        start_y = pdf.cursor
 
         pdf.fill_color COLORS[:card_bg]
-        pdf.fill_rounded_rectangle([0, pdf.cursor], pdf.bounds.width, card_height, 4)
+        pdf.fill_rounded_rectangle([0, start_y], pdf.bounds.width, card_height, 4)
         pdf.fill_color COLORS[:primary]
 
         pdf.stroke_color COLORS[:border]
-        pdf.rounded_rectangle([0, pdf.cursor], pdf.bounds.width, card_height, 4)
+        pdf.rounded_rectangle([0, start_y], pdf.bounds.width, card_height, 4)
         pdf.stroke
 
-        pdf.bounding_box([14, pdf.cursor - 12], width: pdf.bounds.width - 28, height: card_height - 24) do
+        pdf.bounding_box([14, start_y - card_padding], width: pdf.bounds.width - 28, height: card_height - card_padding * 2) do
           rows.each do |label, value|
             pdf.formatted_text [
               { text: "#{label}:  ", size: 10, styles: [:bold], color: COLORS[:secondary] },
               { text: value.to_s, size: 10, color: COLORS[:primary] }
             ]
-            pdf.move_down 4
+            pdf.move_down 2
           end
         end
 
-        pdf.move_down card_height + 16
+        pdf.move_cursor_to(start_y - card_height - 12)
       end
 
       def render_title_and_description(pdf, title:, description_html:)
         pdf.text title, size: 14, style: :bold, color: COLORS[:accent]
         pdf.move_down 6
 
+        render_description(pdf, description_html)
+      end
+
+      def render_description(pdf, description_html)
         description = html_to_paragraphs(description_html)
         return unless description.present?
 
@@ -99,16 +106,45 @@ module PdfServices
         pdf.move_down 12
       end
 
-      def render_map_image(pdf, map_location)
+      def render_map_image(pdf, map_location, width: nil)
         return unless map_location&.screenshot.present?
 
-        render_safe_image(pdf, map_location.screenshot, width: pdf.bounds.width)
+        render_safe_image(pdf, map_location.screenshot, width: width || pdf.bounds.width)
       end
 
-      def render_attachment_image(pdf, image)
+      def render_attachment_image(pdf, image, width: nil)
         return unless image&.attachment&.attached?
 
-        render_safe_image(pdf, image.attachment, width: [pdf.bounds.width, 360].min)
+        render_safe_image(pdf, image.attachment, width: width || [pdf.bounds.width, 360].min)
+      end
+
+      def render_image_and_map_side_by_side(pdf, image, map_location, gutter: 16)
+        has_image = image&.attachment&.attached?
+        has_map = map_location&.screenshot.present?
+        return unless has_image || has_map
+
+        column_width = (pdf.bounds.width - gutter) / 2
+        start_y = pdf.cursor
+
+        left_consumed = 0
+        if has_image
+          pdf.bounding_box([0, start_y], width: column_width) do
+            before = pdf.cursor
+            render_attachment_image(pdf, image, width: column_width)
+            left_consumed = before - pdf.cursor
+          end
+        end
+
+        right_consumed = 0
+        if has_map
+          pdf.bounding_box([column_width + gutter, start_y], width: column_width) do
+            before = pdf.cursor
+            render_map_image(pdf, map_location, width: column_width)
+            right_consumed = before - pdf.cursor
+          end
+        end
+
+        pdf.move_cursor_to(start_y - [left_consumed, right_consumed].max)
       end
 
       def render_footer(pdf)

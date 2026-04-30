@@ -46,6 +46,10 @@ class ProjektEvent < ApplicationRecord
     max_attendees.present?
   end
 
+  def started?
+    datetime.present? && datetime <= Time.zone.now
+  end
+
   def spots_available
     max_attendees - projekt_event_registrations.confirmed.count
   end

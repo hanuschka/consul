@@ -4,3 +4,5 @@ en:
       attribute_editors:
         image_component:
           remove: Remove image
+        video_component:
+          remove: Remove video

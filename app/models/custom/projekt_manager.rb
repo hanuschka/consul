@@ -18,4 +18,5 @@ class ProjektManager < ApplicationRecord
 
     assignment.permissions.include?(permission.to_s)
   end
+
 end

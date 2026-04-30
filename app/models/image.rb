@@ -82,7 +82,7 @@ class Image < ApplicationRecord
   end
 
   def attached?
-    attachment.attached?
+    attachment.attached? && attachment.blob.present?
   end
 
   def title

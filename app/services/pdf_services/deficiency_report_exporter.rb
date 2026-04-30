@@ -6,14 +6,14 @@ module PdfServices
     end
 
     def call
-      Prawn::Document.new(page_size: "A4", margin: [0, 0, 30, 0]) do |pdf|
+      Prawn::Document.new(page_size: "A4", margin: [0, 30, 50, 30]) do |pdf|
         setup_fonts(pdf)
         render_header_banner(pdf, title_text: "#{@deficiency_report.title} (#{@deficiency_report.id})", qr_url: record_url)
-        pdf.bounding_box([40, pdf.cursor], width: pdf.bounds.width - 80) do
+        pdf.bounding_box([40, pdf.cursor], width: pdf.bounds.width - 80, height: pdf.cursor - 30) do
           render_meta_card(pdf, meta_rows)
-          render_title_and_description(pdf, title: @deficiency_report.title, description_html: @deficiency_report.description)
-          render_map_image(pdf, @deficiency_report.map_location)
-          render_attachment_image(pdf, @deficiency_report.image)
+          render_description(pdf, @deficiency_report.description)
+          render_image_and_map_side_by_side(pdf, @deficiency_report.image, @deficiency_report.map_location)
+          render_official_answer(pdf)
         end
         render_footer(pdf)
       end
@@ -22,13 +22,12 @@ module PdfServices
     private
 
       def meta_rows
-        created_label = I18n.t("custom.admin.deficiency_reports.show.created_at")
-        updated_label = I18n.t("custom.admin.deficiency_reports.show.updated_at")
+        scope = "adm.deficiency_reports.deficiency_reports.show"
 
         rows = [
           ["ID", @deficiency_report.id.to_s],
-          [created_label, I18n.l(@deficiency_report.created_at, format: :long)],
-          [updated_label, I18n.l(@deficiency_report.updated_at, format: :long)]
+          [I18n.t("custom.admin.deficiency_reports.show.created_at"), I18n.l(@deficiency_report.created_at, format: :long)],
+          [I18n.t("custom.admin.deficiency_reports.show.updated_at"), I18n.l(@deficiency_report.updated_at, format: :long)]
         ]
 
         if @deficiency_report.status.present?
@@ -39,9 +38,40 @@ module PdfServices
           rows << [DeficiencyReport.human_attribute_name(:approximated_address), @deficiency_report.approximated_address]
         end
 
+        if @deficiency_report.author.present?
+          rows << [I18n.t("#{scope}.author"), @deficiency_report.author.username]
+        end
+
+        if @deficiency_report.category.present?
+          rows << [I18n.t("#{scope}.category"), @deficiency_report.category.name]
+        end
+
+        if @deficiency_report.on_behalf_of.present?
+          rows << [I18n.t("#{scope}.on_behalf_of_label"), @deficiency_report.on_behalf_of]
+        end
+
+        if @deficiency_report.video_url.present?
+          rows << [I18n.t("#{scope}.video_url"), @deficiency_report.video_url]
+        end
+
+        if @deficiency_report.documents.any?
+          rows << [I18n.t("#{scope}.documents_label"), @deficiency_report.documents.map(&:title).join(", ")]
+        end
+
         rows << ["Link", record_url]
 
         rows
+      end
+
+      def render_official_answer(pdf)
+        body = html_to_paragraphs(@deficiency_report.official_answer.to_s)
+        return unless body.present?
+
+        pdf.text I18n.t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
+                 size: 12, style: :bold, color: COLORS[:accent]
+        pdf.move_down 4
+        pdf.text body, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
+        pdf.move_down 16
       end
 
       def record_url

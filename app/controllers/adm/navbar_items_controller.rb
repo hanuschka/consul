@@ -74,8 +74,8 @@ module Adm
 
       def navbar_item_params
         params.require(:navbar_item).permit(
-          :kind, :preset, :projekt_id, :custom_title, :external_title, :external_url,
-          :landing_page_id
+          :kind, :preset, :projekt_id, :custom_title, :external_url,
+          :landing_page_id, :open_in_new_tab
         )
       end
 

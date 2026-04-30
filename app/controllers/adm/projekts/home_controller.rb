@@ -13,7 +13,10 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @section_setting = SectionSetting.for_section("projekts")
     @contact_persons = SectionContactPerson.for_section("projekts")
-    @activities = SectionActivity.for_section("projekts").limit(10)
+    visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
+    @activities = SectionActivity.for_section("projekts")
+      .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids)
+      .limit(10)
 
     @stats = [
       { value: Projekt.regular.count, label: t("adm.projekts.home.stats.total"), icon: "folder" },

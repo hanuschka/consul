@@ -1,0 +1,21 @@
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.max_attendees_label"), hint: t("adm.projekts.projekt_events.form.max_attendees_hint")) do %>
+  <%= f.number_field :max_attendees, label: false, min: 0 %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.admin_emails_label"), hint: t("adm.projekts.projekt_events.form.admin_emails_hint")) do %>
+  <%= f.text_field :admin_emails, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.confirmation_email_text_label"), hint: t("adm.projekts.projekt_events.form.confirmation_email_text_hint"), stacked: true) do %>
+  <%= f.text_area :confirmation_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(f.object.confirmation_email_text),
+        label: false,
+        data: { controller: "ckeditor", ckeditor_toolbar_value: "email" } %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.waitlist_email_text_label"), hint: t("adm.projekts.projekt_events.form.waitlist_email_text_hint"), stacked: true) do %>
+  <%= f.text_area :waitlist_email_text,
+        value: AdminWYSIWYGSanitizer.new.sanitize(f.object.waitlist_email_text),
+        label: false,
+        data: { controller: "ckeditor", ckeditor_toolbar_value: "email" } %>
+<% end %>

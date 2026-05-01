@@ -11,9 +11,3 @@ en:
           proposals: proposals
           budget_investments: budget investments
           point_of_interest_pins: points of interest
-        search:
-          label: Search pins
-          placeholder: Search pins by title, address or any property…
-          clear: Clear search
-          feedback_template: "%{count} matches"
-          feedback_empty: No matches

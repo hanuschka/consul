@@ -1,0 +1,12 @@
+<div
+  class="adm-turbo-frame-placeholder"
+  role="status"
+  aria-live="polite"
+  <%= "style=\"#{container_style}\"".html_safe if container_style %>
+>
+  <span class="material-symbols-outlined adm-turbo-frame-placeholder--icon" aria-hidden="true">
+    <%= icon %>
+  </span>
+
+  <span class="adm-turbo-frame-placeholder--text"><%= text %></span>
+</div>

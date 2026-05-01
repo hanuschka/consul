@@ -50,6 +50,23 @@ class Adm::MasterportalPinsListComponent < ApplicationComponent
     pin.title.presence || pin.external_id
   end
 
+  def delete_pin_path(pin)
+    helpers.destroy_masterportal_pin_adm_projekts_phase_path(
+      projekt_phase,
+      masterportal_pin_id: pin.id,
+      **preserved_listing_params
+    )
+  end
+
+  def preserved_listing_params
+    request_params = helpers.request.query_parameters
+    {
+      q: request_params["q"].presence,
+      view: request_params["view"].presence,
+      page: request_params["page"].presence
+    }.compact
+  end
+
   def coordinates(pin)
     "#{format_decimal(pin.latitude)}, #{format_decimal(pin.longitude)}"
   end

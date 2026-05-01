@@ -20,8 +20,15 @@
 
   <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: @projekt_phase) %>
 
-  <%= render Adm::MasterportalPinsSummaryComponent.new(
-    projekt_phase: @projekt_phase,
-    pins_count: @masterportal_pins_count
-  ) %>
+  <% if @masterportal_pins_count.to_i.positive? %>
+    <%= turbo_frame_tag(
+      dom_id(@projekt_phase, :masterportal_pins_summary),
+      src: masterportal_pins_summary_adm_projekts_phase_path(@projekt_phase)
+    ) do %>
+      <%= render Adm::TurboFramePlaceholderComponent.new(
+        text: t("adm.projekts.phases.masterportal_pins_summary.loading"),
+        min_height: 520
+      ) %>
+    <% end %>
+  <% end %>
 </div>

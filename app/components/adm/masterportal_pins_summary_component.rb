@@ -36,22 +36,8 @@ class Adm::MasterportalPinsSummaryComponent < ApplicationComponent
   def feature_collection
     {
       "type" => "FeatureCollection",
-      "features" => pins.map(&:to_map_feature)
+      "features" => pins.map { |pin| pin.to_map_feature(include_search_text: false) }
     }
-  end
-
-  def search_input_id
-    "masterportal-pins-summary-search-#{projekt_phase.id}"
-  end
-
-  def show_search?
-    map_location&.available? && pins_count > 1
-  end
-
-  SEARCH_FEEDBACK_TOKEN = "{{count}}".freeze
-
-  def search_feedback_template
-    t(".search.feedback_template", count: SEARCH_FEEDBACK_TOKEN)
   end
 
   private

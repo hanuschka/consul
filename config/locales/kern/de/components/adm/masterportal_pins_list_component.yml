@@ -18,3 +18,5 @@ de:
           proposal: Vorschlag öffnen
           budget_investment: Bürgerbudget-Eintrag öffnen
           point_of_interest_pin: Point of Interest
+        delete: Löschen
+        delete_confirm: 'Pin „%{title}" und ggf. den verknüpften Vorschlag/Investition/Point-of-Interest endgültig löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.'

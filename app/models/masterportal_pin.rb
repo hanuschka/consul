@@ -18,6 +18,23 @@ class MasterportalPin < ApplicationRecord
       )
   }
 
+  scope :text_search, lambda { |query|
+    cleaned = query.to_s.strip
+    next all if cleaned.blank?
+
+    pattern = "%#{sanitize_sql_like(cleaned)}%"
+    where(
+      "title ILIKE :pattern OR description ILIKE :pattern OR " \
+      "external_id ILIKE :pattern OR collection_id ILIKE :pattern OR " \
+      "(properties::text ILIKE :pattern AND EXISTS (" \
+        "SELECT 1 FROM jsonb_path_query(properties, 'strict $.**') AS v " \
+        "WHERE jsonb_typeof(v) IN ('string', 'number', 'boolean') " \
+        "AND (v #>> '{}') ILIKE :pattern" \
+      "))",
+      pattern: pattern
+    )
+  }
+
   def self.standalone_features_for_phase(projekt_phase)
     return [] if projekt_phase.blank?
 
@@ -31,19 +48,21 @@ class MasterportalPin < ApplicationRecord
     proposal || budget_investment || projekt_point_of_interest_pin
   end
 
-  def to_map_feature
+  def to_map_feature(include_search_text: true, include_icon_url: true)
+    properties = {
+      "resource_type" => "masterportal_pin",
+      "id" => id
+    }
+    properties["feature_icon_url"] = feature_icon_url if include_icon_url
+    properties["search_text"] = searchable_text if include_search_text
+
     {
       "type" => "Feature",
       "geometry" => {
         "type" => "Point",
         "coordinates" => [longitude.to_f, latitude.to_f]
       },
-      "properties" => {
-        "resource_type" => "masterportal_pin",
-        "id" => id,
-        "feature_icon_url" => feature_icon_url,
-        "search_text" => searchable_text
-      }
+      "properties" => properties
     }
   end
 

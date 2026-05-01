@@ -412,11 +412,22 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def masterportal_pins
     authorize_phase(:update?)
 
-    pins_scope = @projekt_phase.masterportal_pins
-      .includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
-      .with_attached_icon_image
-      .order(created_at: :desc)
-    @pagy_masterportal_pins, @masterportal_pins = pagy(pins_scope, limit: 12)
+    @masterportal_pins_view = (params[:view] == "map") ? "map" : "list"
+    @masterportal_pins_search_query = params[:q].to_s.strip
+
+    base_scope = @projekt_phase.masterportal_pins
+      .text_search(@masterportal_pins_search_query)
+
+    if @masterportal_pins_view == "map"
+      @masterportal_pins_for_map = base_scope.select(:id, :latitude, :longitude).order(:id)
+      @masterportal_pins_total_count = base_scope.count
+    else
+      list_scope = base_scope
+        .includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+        .with_attached_icon_image
+        .order(created_at: :desc)
+      @pagy_masterportal_pins, @masterportal_pins = pagy(list_scope, limit: 12)
+    end
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
@@ -427,6 +438,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def masterportal_pins_summary
+    authorize_phase(:update?)
+    @masterportal_pins_count = @projekt_phase.masterportal_pins.count
+
+    render layout: false
+  end
+
   def destroy_all_masterportal_pins
     authorize_phase(:update?)
     Masterportal::DestroyAllPinsService.call(projekt_phase: @projekt_phase)
@@ -434,6 +452,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     flash[:success] = t(".success")
 
     redirect_to masterportal_pins_adm_projekts_phase_path(@projekt_phase)
+  end
+
+  def destroy_masterportal_pin
+    authorize_phase(:update?)
+    pin = @projekt_phase.masterportal_pins.find(params[:masterportal_pin_id])
+    Masterportal::DestroyPinService.call(masterportal_pin: pin)
+
+    flash[:success] = t(".success")
+
+    redirect_to masterportal_pins_adm_projekts_phase_path(
+      @projekt_phase,
+      params.permit(:q, :view, :page).to_h.compact_blank
+    )
   end
   def projekt_point_of_interest_categories
     authorize_phase(:update?)

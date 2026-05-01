@@ -63,12 +63,25 @@ en:
           delete_all_confirm: This will permanently delete all imported Masterportal pins on this phase together with their associated proposals, budget investments or points of interest. Continue?
           deleting: Deleting Masterportal pins…
           deleting_hint: This may take a moment for large datasets. Please don't close this tab.
+          search:
+            label: Search pins
+            placeholder: Search by title, description, ID or any property…
+            submit: Search
+            clear: Clear
+            no_results: 'No pins match "%{query}".'
+          tabs:
+            list: List view
+            map: Map view
           empty:
             title: No Masterportal pins yet
             description: This phase doesn't have any imported Masterportal pins. Run an import from the map configuration to add some.
             link: Go to map configuration
         destroy_all_masterportal_pins:
           success: All Masterportal pins and their associated resources have been deleted.
+        destroy_masterportal_pin:
+          success: Pin and any linked resource have been deleted.
+        masterportal_pins_summary:
+          loading: Loading map…
   projekt_phase_setting:
     proposal_phase:
       feature:

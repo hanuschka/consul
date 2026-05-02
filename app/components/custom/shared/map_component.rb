@@ -44,6 +44,9 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:features] = @features
 
+      options[:masterportal_pins_layer_label] =
+        I18n.t("components.shared.map_component.layers.masterportal_pins")
+
       options[:admin_features] = admin_features
 
       options[:editable] = @editable

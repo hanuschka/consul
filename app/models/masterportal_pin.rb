@@ -81,7 +81,7 @@ class MasterportalPin < ApplicationRecord
     return nil if !icon_image.attached?
 
     Rails.application.routes.url_helpers.rails_blob_url(
-      icon_image, host: default_host, only_path: false
+      icon_image, only_path: true
     )
   end
 
@@ -93,9 +93,9 @@ class MasterportalPin < ApplicationRecord
 
     case record
     when Proposal
-      url_builder.proposal_url(record, host: default_host)
+      url_builder.proposal_url(record, only_path: true)
     when Budget::Investment
-      url_builder.budget_investment_url(record.budget, record, host: default_host)
+      url_builder.budget_investment_url(record.budget, record, only_path: true)
     when ProjektPointOfInterestPin
       nil
     end
@@ -112,11 +112,5 @@ class MasterportalPin < ApplicationRecord
       else
         [value.to_s]
       end
-    end
-
-    def default_host
-      Rails.application.routes.default_url_options[:host] ||
-        Setting["url"].presence ||
-        "localhost"
     end
 end

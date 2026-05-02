@@ -70,20 +70,20 @@
 
     <% if @available_kinds.include?("external") %>
       <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
-        <fieldset class="kern-fieldset">
-          <legend class="kern-label mb-3">
-            <%= t(".external_label") %>
-          </legend>
-          <div class="kern-fieldset__body">
-            <%= f.text_field :external_title, class: "mb-3", label: false, placeholder: t(".external.title_placeholder") %>
-            <%= f.text_field :external_url, class: "mb-3", label: false, placeholder: t(".external.url_placeholder") %>
-          <div>
-        </fieldset>
+        <%= f.text_field :external_url, label: t(".external_label"), placeholder: t(".external.url_placeholder") %>
       </div>
     <% end %>
 
+    <div class="mb-4">
+      <%= f.text_field :custom_title, label: t(".custom_title_label"), placeholder: t(".custom_title_placeholder") %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.check_box :open_in_new_tab, label: t(".open_in_new_tab_label") %>
+    </div>
+
     <div>
-      <%= kern_button(text: t(".create"), autofocus: false, type: "submit") %>
+      <%= kern_button(text: f.object.persisted? ? t(".update") : t(".create"), autofocus: false, type: "submit") %>
     </div>
   <% end %>
 </div>

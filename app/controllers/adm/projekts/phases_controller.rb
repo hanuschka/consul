@@ -132,7 +132,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def proposals
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     base_scope = @projekt_phase.proposals.with_hidden
     @pagy, @proposals = pagy(ProposalsQuery.call(base_scope, params))
 
@@ -147,7 +147,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def comments
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     base_scope = comments_for_phase
     @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
 
@@ -258,7 +258,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def budget_investments
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
@@ -637,6 +637,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     redirect_to ai_settings_adm_projekts_phase_path(@projekt_phase)
   end
+
   def projekt_notifications
     authorize_phase(:update?)
     @projekt_notifications = @projekt_phase.projekt_notifications.order(created_at: :desc)
@@ -648,6 +649,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_events
     authorize_phase(:update?)
     @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)
@@ -659,6 +661,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_livestreams
     authorize_phase(:update?)
     @projekt_livestreams = @projekt_phase.projekt_livestreams
@@ -670,6 +673,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_questions
     authorize_phase(:update?)
     @pagy, @projekt_questions = pagy(@projekt_phase.questions.order(id: :desc))
@@ -681,6 +685,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_arguments
     authorize_phase(:update?)
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro

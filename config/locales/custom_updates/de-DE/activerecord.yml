@@ -138,6 +138,10 @@ de:
               invalid_content_type: muss SVG, PNG oder JPEG sein
               too_large: ist zu groß (max 512 KB)
               unsafe_svg: SVG enthält unzulässige Inhalte
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: wurde bereits verwendet
     attributes:
       map_location:
         latitude: Breitengrad
@@ -298,7 +302,7 @@ de:
       projekt_event_registration:
         first_name: Vorname
         last_name: Nachname
-        email: E-Mail
+        email: E-Mail-Adresse
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

@@ -6,7 +6,6 @@ en:
       site_customization/content_card/translation:
         title: Title
       navbar_item:
-        external_title: Custom title
         external_url: Custom URL
       map_location:
         rendering_library: Rendering library

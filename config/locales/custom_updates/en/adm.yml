@@ -9,6 +9,14 @@ en:
         upstream: "Could not reach Masterportal."
         host_not_allowlisted: "Endpoint host is not allowed."
         invalid_url: "Invalid endpoint URL."
+    navbar_items:
+      deleted_projekt: "[Deleted project]"
+      edit:
+        title: Edit navbar item
+      form:
+        custom_title_label: Display name (optional)
+        custom_title_placeholder: Leave blank to use the default title
+        update: Save changes
     projekts:
       projekt_point_of_interest_categories:
         form:

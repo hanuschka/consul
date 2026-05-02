@@ -102,9 +102,14 @@ namespace :adm do
           patch :reorder
         end
       end
-      resources :projekt_events, except: %i[index show] do
+      resources :projekt_events, except: %i[index] do
         member do
           post :send_notifications
+        end
+        resources :registrations, only: %i[index destroy], controller: "projekt_event_registrations" do
+          member do
+            post :resend_confirmation
+          end
         end
       end
       resources :projekt_arguments, except: %i[index show] do

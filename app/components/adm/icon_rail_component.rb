@@ -36,7 +36,7 @@ class Adm::IconRailComponent < ApplicationComponent
         list << { icon: "account_balance_wallet", path: helpers.adm_valuation_root_path, key: "valuation", section: "Adm::Valuation" }
       end
 
-      if @current_user.administrator? || @current_user.officing_manager?
+      if Adm::Officing::BasePolicy.new(@current_user, nil).index?
         list << { icon: "how_to_vote", path: helpers.adm_officing_root_path, key: "officing", section: "Adm::Officing" }
       end
 

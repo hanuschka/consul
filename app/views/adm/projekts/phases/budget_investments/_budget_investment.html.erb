@@ -24,14 +24,34 @@
     <%= valuators ? valuators.join(", ") : "" %>
   </td>
   <td class="kern-table__cell">
+    <% investment_policy = Adm::Projekts::BudgetPolicy.new(current_user, investment) %>
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% unless investment.hidden? %>
-        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.manage"), url: adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "settings") %>
-        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.people"), url: people_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "group") %>
-        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.milestones"), url: milestones_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "flag") %>
-        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.progress_bars"), url: progress_bars_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "trending_up") %>
+      <% if investment_policy.show? %>
+        <% unless investment.hidden? %>
+          <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.manage"), url: adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "settings") %>
+          <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.people"), url: people_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "group") %>
+          <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.milestones"), url: milestones_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "flag") %>
+          <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.progress_bars"), url: progress_bars_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "trending_up") %>
+        <% end %>
+        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.audits"), url: audits_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "history") %>
       <% end %>
-      <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.audits"), url: audits_adm_projekts_phase_budget_investment_path(projekt_phase, investment), icon: "history") %>
+      <% if investment_policy.unhide? %>
+        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.unhide"),
+                               url: unhide_adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+                               icon: "visibility", style: :edit, divider: true,
+                               data: { turbo_method: :put }) %>
+      <% elsif investment_policy.hide? %>
+        <% if investment.flags_count > 0 && !investment.ignored_flag? %>
+          <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.ignore_flag"),
+                                 url: ignore_flag_adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+                                 icon: "flag", style: :delete, divider: true,
+                                 data: { turbo_method: :put }) %>
+        <% end %>
+        <% actions.with_action(label: t("adm.projekts.phases.budget_investments.table.hide"),
+                               url: hide_adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+                               icon: "visibility_off", style: :delete,
+                               data: { turbo_method: :put, turbo_confirm: t("adm.projekts.phases.budget_investments.table.confirm_hide", name: investment.title) }) %>
+      <% end %>
     <% end %>
   </td>
 </tr>

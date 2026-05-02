@@ -30,3 +30,13 @@ en:
             edit: Edit
       csv_download:
         not_found: The requested file was not found or has expired.
+      edit:
+        title: Edit user
+      form:
+        submit_with_reverify: Save & run residents' registry reverification
+        reverify_confirm: Are you sure?
+      flash:
+        updated: User updated
+        verified: User verified
+        verify_failed: User could not be verified
+        unverified: User verification removed

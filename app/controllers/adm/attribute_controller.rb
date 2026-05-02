@@ -9,9 +9,15 @@ module Adm
 
       if ai_gated_blocked?
         flash.now[:error] = t("adm.ai_required_note")
-      elsif @kind == :image && params[:remove_image] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+      elsif attachment_kind? && params[:remove_attachment] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
+      elsif @kind == :image && imageable_image_attribute?
+        if params[:remove_attachment] == "1"
+          remove_imageable_image
+        else
+          update_imageable_image
+        end
       elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
       end
@@ -24,6 +30,10 @@ module Adm
 
     private
 
+      def attachment_kind?
+        [:image, :video].include?(@kind)
+      end
+
       def find_record
         record_class = params[:record_type].tr("-", "/").classify.constantize
         record_class.find(params[:id])
@@ -34,6 +44,32 @@ module Adm
         attribute = params[:attribute].to_sym
 
         params.require(param_key).permit(attribute)
+      end
+
+      def imageable_image_attribute?
+        reflection = @record.class.reflect_on_association(params[:attribute].to_sym)
+        reflection.present? && reflection.klass.name == "Image"
+      end
+
+      def update_imageable_image
+        attachment = params.dig(@record.model_name.param_key.to_sym, params[:attribute].to_sym)
+        return unless attachment
+
+        image = @record.public_send(params[:attribute]) || ::Image.new(imageable: @record)
+        image.attachment = attachment
+        image.user = current_user
+
+        if image.save
+          @record.association(params[:attribute].to_sym).reset
+          flash.now[:success] = t(".success")
+        end
+      end
+
+      def remove_imageable_image
+        image = @record.public_send(params[:attribute])
+        image&.destroy
+        @record.association(params[:attribute].to_sym).reset
+        flash.now[:success] = t(".success")
       end
 
       def component_options

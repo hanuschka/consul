@@ -1649,7 +1649,6 @@ ActiveRecord::Schema.define(version: 2026_05_01_232756) do
     t.integer "kind"
     t.string "preset"
     t.bigint "projekt_id"
-    t.string "external_title"
     t.string "external_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -1657,6 +1656,7 @@ ActiveRecord::Schema.define(version: 2026_05_01_232756) do
     t.integer "position", default: 0, null: false
     t.integer "landing_page_id"
     t.string "custom_title"
+    t.boolean "open_in_new_tab", default: false, null: false
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
@@ -2932,6 +2932,13 @@ ActiveRecord::Schema.define(version: 2026_05_01_232756) do
     t.datetime "published_at"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
+  end
+
+  create_table "site_customization_videos", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_site_customization_videos_on_name", unique: true
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|

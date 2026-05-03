@@ -3,8 +3,8 @@ de:
     adm:
       masterportal_pins_summary_component:
         pins_count:
-          one: importierter Pin
-          other: importierte Pins
+          one: importierter Masterportal-Pin
+          other: importierte Masterportal-Pins
         linked_to: "Verknüpft mit %{resource_name}"
         view_all: Alle ansehen
         resource_names:

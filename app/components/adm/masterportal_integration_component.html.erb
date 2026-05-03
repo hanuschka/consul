@@ -43,16 +43,16 @@
   </div>
 
   <div class="masterportal-integration--body">
-    <div class="masterportal-integration--subsection">
-      <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: projekt_phase, embedded: true) %>
-    </div>
+    <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: projekt_phase, embedded: true) %>
 
     <% if has_pins? %>
       <div class="masterportal-integration--subsection">
         <%= turbo_frame_tag(summary_frame_id, src: summary_frame_src) do %>
           <%= render Adm::TurboFramePlaceholderComponent.new(
             text: summary_loading_label,
-            min_height: 520
+            min_height: 520,
+            logo_path: "services/masterportal_logo.svg",
+            logo_alt: "Masterportal"
           ) %>
         <% end %>
       </div>

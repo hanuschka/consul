@@ -1,12 +1,20 @@
 <div
-  class="adm-turbo-frame-placeholder"
+  class="adm-turbo-frame-placeholder<%= ' -with-logo' if logo_path.present? %>"
   role="status"
   aria-live="polite"
   <%= "style=\"#{container_style}\"".html_safe if container_style %>
 >
-  <span class="material-symbols-outlined adm-turbo-frame-placeholder--icon" aria-hidden="true">
-    <%= icon %>
-  </span>
+  <% if logo_path.present? %>
+    <div class="adm-turbo-frame-placeholder--logo">
+      <%= image_tag logo_path, alt: logo_alt %>
+    </div>
+  <% end %>
 
-  <span class="adm-turbo-frame-placeholder--text"><%= text %></span>
+  <div class="adm-turbo-frame-placeholder--status">
+    <span class="material-symbols-outlined adm-turbo-frame-placeholder--icon" aria-hidden="true">
+      <%= icon %>
+    </span>
+
+    <span class="adm-turbo-frame-placeholder--text"><%= text %></span>
+  </div>
 </div>

@@ -4,7 +4,13 @@
   title: t(".title"),
   breadcrumbs: @breadcrumbs,
   back_button_url: map_adm_projekts_phase_path(@projekt_phase)
-) %>
+) do |header| %>
+  <% header.with_actions do %>
+    <div class="masterportal-pins-page-logo">
+      <%= image_tag "services/masterportal_logo.svg", alt: "Masterportal", class: "masterportal-pins-page-logo--image" %>
+    </div>
+  <% end %>
+<% end %>
 
 <% if @projekt_phase.masterportal_pins.exists? %>
   <div class="kern-container">

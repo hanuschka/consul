@@ -574,3 +574,22 @@ summary.masterportal-pins-list--header {
     margin-bottom: 0;
   }
 }
+
+.masterportal-pins-page-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+}
+
+.masterportal-pins-page-logo--image {
+  display: block;
+  width: 80px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}

@@ -5,11 +5,35 @@
   gap: 12px;
   min-height: 220px;
   padding: 32px 24px;
-  margin-top: 20px;
   background: #f8fafc;
   border: 1px dashed #cbd5e1;
   border-radius: 12px;
   color: #475569;
+}
+
+.adm-turbo-frame-placeholder.-with-logo {
+  flex-direction: column;
+  gap: 20px;
+}
+
+.adm-turbo-frame-placeholder--logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  max-width: 100%;
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+.adm-turbo-frame-placeholder--status {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .adm-turbo-frame-placeholder--icon {

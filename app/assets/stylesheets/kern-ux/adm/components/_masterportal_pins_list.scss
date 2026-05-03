@@ -575,6 +575,20 @@ summary.masterportal-pins-list--header {
   }
 }
 
+.masterportal-pins-page-header-actions {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.masterportal-pins-page-title-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .masterportal-pins-page-logo {
   display: flex;
   align-items: center;

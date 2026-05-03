@@ -6,24 +6,27 @@
   back_button_url: map_adm_projekts_phase_path(@projekt_phase)
 ) do |header| %>
   <% header.with_actions do %>
-    <div class="masterportal-pins-page-logo">
-      <%= image_tag "services/masterportal_logo.svg", alt: "Masterportal", class: "masterportal-pins-page-logo--image" %>
+    <div class="masterportal-pins-page-header-actions">
+      <div class="masterportal-pins-page-title-group">
+        <div class="masterportal-pins-page-logo">
+          <%= image_tag "services/masterportal_logo.svg", alt: "Masterportal", class: "masterportal-pins-page-logo--image" %>
+        </div>
+      </div>
+      <% if @projekt_phase.masterportal_pins.exists? %>
+        <%= render Adm::DeleteCollectionComponent.new(
+          url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
+          text: t(".delete_all_button"),
+          confirm: t(".delete_all_confirm"),
+          headline: t(".deleting"),
+          hint: t(".deleting_hint")
+        ) %>
+      <% end %>
     </div>
   <% end %>
 <% end %>
 
 <% if @projekt_phase.masterportal_pins.exists? %>
   <div class="kern-container">
-    <div class="mb-4">
-      <%= render Adm::DeleteCollectionComponent.new(
-        url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
-        text: t(".delete_all_button"),
-        confirm: t(".delete_all_confirm"),
-        headline: t(".deleting"),
-        hint: t(".deleting_hint")
-      ) %>
-    </div>
-
     <%= form_with(
       url: masterportal_pins_adm_projekts_phase_path(@projekt_phase),
       method: :get,

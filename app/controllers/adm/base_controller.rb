@@ -66,6 +66,8 @@ class Adm::BaseController < ActionController::Base
         Adm::SiteCustomization::PagePolicy
       when "SiteCustomization::Image"
         Adm::SiteCustomization::ImagePolicy
+      when "SiteCustomization::Video"
+        Adm::SiteCustomization::VideoPolicy
       when "SiteCustomization::ContentBlock"
         Adm::SiteCustomization::ContentBlockPolicy
       when "Newsletter"

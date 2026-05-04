@@ -11,7 +11,6 @@ de:
           projekts: Projekte
           external: Eigener Link
         external:
-          title_placeholder: z. B. Kontakt oder Über uns
           url_placeholder: z. B. https://www.musterstadt.de/kontakt
         kind_label: Welchen Typ von Navigationsleisten-Element möchten Sie erstellen?
         preset_label: Systemseiten
@@ -20,4 +19,5 @@ de:
         external_label: Eigener Link
         no_projekts_title: Keine Projekte vorhanden
         no_projekts_description: Es sind noch keine Projekte vorhanden, die in die Navigation aufgenommen werden können. Erstellen Sie zuerst ein Projekt unter Projekte, um es anschließend als Navigationseintrag hinzuzufügen.
+        open_in_new_tab_label: In neuem Tab öffnen
         create: Navigationsleisten-Element erstellen

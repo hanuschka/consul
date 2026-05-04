@@ -60,6 +60,9 @@ de:
         title: Aktive Beteiligungsprozesse
       archived_projekt_cards:
         title: Abgeschlossene Beteiligungsprozesse
+      header:
+        pause_video: Hintergrundvideo anhalten
+        play_video: Hintergrundvideo abspielen
     devise_views:
       users:
         registrations:

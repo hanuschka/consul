@@ -25,6 +25,7 @@ en:
       map_component:
         layers:
           masterportal_pins: "Masterportal pins"
+          masterportal_wms_layer_name: "Masterportal (Regensburg)"
       masterportal_pin_info_component:
         title: "Masterportal data"
         category: "Category"

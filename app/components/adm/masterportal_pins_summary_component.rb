@@ -47,6 +47,5 @@ class Adm::MasterportalPinsSummaryComponent < ApplicationComponent
     def pins
       @pins ||= projekt_phase
         .masterportal_pins
-        .with_attached_icon_image
     end
 end

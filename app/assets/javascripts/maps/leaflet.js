@@ -450,10 +450,19 @@
       L.geoJSON(featureCollection, {
         pointToLayer: function(feature, latlng) {
           var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+          var icon;
 
-          return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle),
-          });
+          if (feature.properties.feature_icon_url) {
+            icon = L.icon({
+              iconUrl: feature.properties.feature_icon_url,
+              iconSize: [36, 36],
+              iconAnchor: [18, 36]
+            });
+          } else {
+            icon = App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle);
+          }
+
+          return L.marker(latlng, { icon: icon });
         },
         style: function (feature) {
           return {

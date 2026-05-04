@@ -67,8 +67,6 @@ class Masterportal::ImportService < ApplicationService
     end
 
     def process_collection(collection_id)
-      icon_attachment = fetch_collection_icon(collection_id)
-
       count = 0
 
       OgcApiFeatures::Client.fetch_features(@endpoint_url, collection_id) do |feature|
@@ -78,22 +76,11 @@ class Masterportal::ImportService < ApplicationService
           raise "Collection #{collection_id} exceeds MAX_FEATURES_PER_RUN"
         end
 
-        process_feature(
-          feature: feature,
-          collection_id: collection_id,
-          icon_attachment: icon_attachment
-        )
+        process_feature(feature: feature, collection_id: collection_id)
       end
     end
 
-    def fetch_collection_icon(collection_id)
-      Masterportal::WmsLegendFetcher.call(
-        wms_url: Rails.application.secrets.dig(:masterportal, :wms_url),
-        layer: collection_id
-      )
-    end
-
-    def process_feature(feature:, collection_id:, icon_attachment:)
+    def process_feature(feature:, collection_id:)
       if !point_geometry?(feature)
         @stats[:skipped] += 1
         return
@@ -103,8 +90,6 @@ class Masterportal::ImportService < ApplicationService
 
       ActiveRecord::Base.transaction do
         was_new_record, pin = persist_pin(feature: feature, collection_id: collection_id)
-
-        attach_icon(pin: pin, icon_attachment: icon_attachment)
 
         if @create_domain_records && pin.associated_record.nil?
           persist_domain_record(pin)
@@ -136,17 +121,6 @@ class Masterportal::ImportService < ApplicationService
       pin.save!
 
       [was_new, pin]
-    end
-
-    def attach_icon(pin:, icon_attachment:)
-      return if icon_attachment.nil?
-      return if pin.icon_image.attached?
-
-      pin.icon_image.attach(
-        io: icon_attachment[:io],
-        filename: icon_attachment[:filename],
-        content_type: icon_attachment[:content_type]
-      )
     end
 
     def persist_domain_record(pin)

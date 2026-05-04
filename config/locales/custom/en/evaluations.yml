@@ -3,6 +3,9 @@ en:
     evaluations:
       generated_at: "Generated at %{time}"
   adm:
+    ai_action_button:
+      processing: AI is working…
+
     projekts:
       projekts:
         projekt:
@@ -59,6 +62,7 @@ en:
             proposal: Proposal
             investment: Investment
           pdf_options:
+            include_report: Include report (project summary, settings, phase summaries)
             sections:
               kpis: KPIs
               ranking: Ranking chart
@@ -80,6 +84,33 @@ en:
           voting_phase: Voting phase
           budget_phase: Budget phase
           comment_phase: Comment phase
+          report_tab:
+            title: Report
+            kpi_label: Overview
+          report:
+            project_summary_label: Project page
+            project_summary_subtitle: Subtitle
+            project_summary_no_subtitle: No subtitle
+            project_summary_no_image: No project image
+            project_summary_ai_label: AI summary of project content
+            project_summary_ai_empty: No content available for AI summary.
+            settings_label: Project settings
+            settings_open_phases:
+              one: "Currently open phase"
+              other: "Currently open phases"
+            settings_open_phases_none: No open phase
+            settings_polls:
+              one: "poll"
+              other: "polls"
+            settings_polls_none: No polls
+            settings_tags: Tags
+            settings_tags_none: No tags
+            settings_sdgs: Sustainable development goals
+            settings_sdgs_none: No SDGs
+            phases_label: Phase summaries
+            phases_empty: No AI phase summaries available yet.
+            phase_short_summary_empty: No data available for this phase yet.
+            qr_code_label: Open project page
         generate_evaluation:
           started: Evaluation is being generated. Please reload the page in a few minutes.
         evaluation_pdf_options:

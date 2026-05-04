@@ -14,12 +14,12 @@
       <h3><%= t(".not_generated_title") %></h3>
       <p><%= t(".not_generated_description") %></p>
 
-      <%= kern_link_button(
-        generate_evaluation_adm_projekts_projekt_path(@projekt),
+      <%= render Adm::AiActionButtonComponent.new(
+        url: generate_evaluation_adm_projekts_projekt_path(@projekt),
         text: t(".generate_button"),
-        icon: "autorenew",
+        icon: "auto_awesome",
         style: :primary,
-        data: { turbo_method: :post }
+        processing_text: t(".processing_title")
       ) %>
     </div>
 
@@ -35,12 +35,12 @@
       <h3><%= t(".failed_title") %></h3>
       <p><%= t(".failed_description") %></p>
 
-      <%= kern_link_button(
-        generate_evaluation_adm_projekts_projekt_path(@projekt),
+      <%= render Adm::AiActionButtonComponent.new(
+        url: generate_evaluation_adm_projekts_projekt_path(@projekt),
         text: t(".regenerate_button"),
-        icon: "refresh",
+        icon: "auto_awesome",
         style: :primary,
-        data: { turbo_method: :post }
+        processing_text: t(".processing_title")
       ) %>
     </div>
 
@@ -58,12 +58,12 @@
           icon: "picture_as_pdf",
           style: :primary
         ) %>
-        <%= kern_link_button(
-          generate_evaluation_adm_projekts_projekt_path(@projekt),
+        <%= render Adm::AiActionButtonComponent.new(
+          url: generate_evaluation_adm_projekts_projekt_path(@projekt),
           text: t(".regenerate_button"),
-          icon: "refresh",
+          icon: "auto_awesome",
           style: :secondary,
-          data: { turbo_method: :post }
+          processing_text: t(".processing_title")
         ) %>
       </div>
     </div>

@@ -1,0 +1,238 @@
+<%
+  data = evaluation.data || {}
+  phases = data["phases"] || []
+  project_content_summary = data["project_content_summary"]
+  report_settings = data["report_settings"] || {}
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
+
+  page = projekt.page
+  page_title = page&.title.to_s
+  page_subtitle = page&.subtitle.to_s
+  page_image = page&.image
+
+  open_phases = (report_settings["open_phases"] || []).reject(&:blank?)
+  polls_count = report_settings["polls_count"].to_i
+  tags = (report_settings["tags"] || []).reject(&:blank?)
+  sdg_goals = report_settings["sdg_goals"] || []
+
+  renderable_phases = phases.select { |p| phase_palette.present? && p["phase_type"].present? }
+
+  qr_url =
+    if pdf_mode && page&.slug.present?
+      base_url = Setting["url"].to_s.chomp("/").presence || request.base_url
+      "#{base_url}/#{page.slug}"
+    end
+  qr_svg =
+    if qr_url.present?
+      RQRCode::QRCode.new(qr_url).as_svg(
+        module_size: 4,
+        standalone: true,
+        use_path: true,
+        viewbox: true
+      )
+    end
+%>
+
+<div class="report-summary">
+  <% if pdf_mode && qr_svg.present? %>
+    <div class="report-summary--qr">
+      <div class="report-summary--qr-img"><%= raw(qr_svg) %></div>
+      <div class="report-summary--qr-meta">
+        <div class="report-summary--qr-label">
+          <%= t("adm.projekts.projekts.evaluation.report.qr_code_label") %>
+        </div>
+        <div class="report-summary--qr-url"><%= qr_url %></div>
+      </div>
+    </div>
+  <% end %>
+
+  <section class="report-summary--card report-summary--project">
+    <h2 class="report-summary--project-title"><%= page_title %></h2>
+
+    <div class="report-summary--project-grid">
+      <div class="report-summary--project-media">
+        <% if page_image&.attached? %>
+          <%= image_tag page_image.variant(:medium),
+            class: "report-summary--project-image",
+            alt: page_title %>
+        <% else %>
+          <div class="report-summary--project-image-fallback">
+            <span class="material-symbols-outlined" aria-hidden="true">image</span>
+            <span><%= t("adm.projekts.projekts.evaluation.report.project_summary_no_image") %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="report-summary--project-body">
+        <% if page_subtitle.present? %>
+          <div class="report-summary--project-subtitle">
+            <%= sanitize(page_subtitle, tags: ["br"]) %>
+          </div>
+        <% else %>
+          <div class="report-summary--project-subtitle -muted">
+            <%= t("adm.projekts.projekts.evaluation.report.project_summary_no_subtitle") %>
+          </div>
+        <% end %>
+
+        <div class="report-summary--ai-block">
+          <div class="report-summary--ai-label">
+            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <%= t("adm.projekts.projekts.evaluation.report.project_summary_ai_label") %>
+          </div>
+          <% if project_content_summary.present? %>
+            <div class="report-summary--ai-body">
+              <%= sanitize(project_content_summary) %>
+            </div>
+          <% else %>
+            <div class="report-summary--ai-body -muted">
+              <%= t("adm.projekts.projekts.evaluation.report.project_summary_ai_empty") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="report-summary--card report-summary--settings">
+    <div class="report-summary--section-label">
+      <%= t("adm.projekts.projekts.evaluation.report.settings_label") %>
+    </div>
+
+    <div class="report-summary--settings-grid">
+      <div class="report-summary--stat-card">
+        <div class="report-summary--stat-card-head">
+          <strong class="report-summary--stat-card-number"><%= open_phases.size %></strong>
+          <span class="report-summary--stat-card-label">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases", count: [open_phases.size, 1].max) %>
+          </span>
+        </div>
+        <% if open_phases.any? %>
+          <ul class="report-summary--stat-card-list">
+            <% open_phases.each do |title| %>
+              <li><%= title %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="report-summary--stat-card-empty">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases_none") %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="report-summary--stat-card">
+        <div class="report-summary--stat-card-head">
+          <strong class="report-summary--stat-card-number"><%= polls_count %></strong>
+          <span class="report-summary--stat-card-label">
+            <%= t("adm.projekts.projekts.evaluation.polls") %>
+          </span>
+        </div>
+        <% if !polls_count.positive? %>
+          <div class="report-summary--stat-card-empty">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_polls_none") %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="report-summary--stat-card">
+        <div class="report-summary--stat-card-head">
+          <strong class="report-summary--stat-card-number"><%= tags.size %></strong>
+          <span class="report-summary--stat-card-label">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_tags") %>
+          </span>
+        </div>
+        <% if tags.any? %>
+          <ul class="report-summary--stat-card-list">
+            <% tags.each do |name| %>
+              <li><%= name %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="report-summary--stat-card-empty">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_tags_none") %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="report-summary--stat-card">
+        <div class="report-summary--stat-card-head">
+          <strong class="report-summary--stat-card-number"><%= sdg_goals.size %></strong>
+          <span class="report-summary--stat-card-label">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_sdgs") %>
+          </span>
+        </div>
+        <% if sdg_goals.any? %>
+          <ul class="report-summary--sdg-list">
+            <% sdg_goals.each do |goal| %>
+              <% sdg_record = SDG::Goal.find_by(code: goal["code"]) %>
+              <% if sdg_record %>
+                <li class="report-summary--sdg-list-item">
+                  <span class="report-summary--sdg-list-icon">
+                    <%= render SDG::Goals::IconComponent.new(sdg_record) %>
+                  </span>
+                  <span class="report-summary--sdg-list-name"><%= sdg_record.title %></span>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="report-summary--stat-card-empty">
+            <%= t("adm.projekts.projekts.evaluation.report.settings_sdgs_none") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section class="report-summary--card report-summary--phases">
+    <div class="report-summary--section-label">
+      <%= t("adm.projekts.projekts.evaluation.report.phases_label") %>
+    </div>
+
+    <% if renderable_phases.any? %>
+      <div class="report-summary--phases-list">
+        <% renderable_phases.each_with_index do |phase, idx| %>
+          <%
+            color = phase_palette[idx % phase_palette.size]
+            tab_config = phase_tab_config[phase["phase_type"]]
+            short_summary = phase["short_summary"]
+          %>
+          <div
+            class="report-summary--phase-card"
+            style="--phase-accent:<%= color[:accent] %>;--phase-accent-light:<%= color[:accent_light] %>"
+          >
+            <div class="report-summary--phase-head">
+              <span class="report-summary--phase-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">
+                  <%= tab_config&.dig(:material_icon) || "flag" %>
+                </span>
+              </span>
+              <div class="report-summary--phase-meta">
+                <div class="report-summary--phase-title"><%= phase["phase_title"] %></div>
+                <div class="report-summary--phase-type">
+                  <%= t(
+                    "adm.projekts.projekts.evaluation.#{phase["phase_type"].to_s.split("::").last.underscore}",
+                    default: phase["phase_type"].to_s.split("::").last
+                  ) %>
+                </div>
+              </div>
+            </div>
+
+            <% if short_summary.present? %>
+              <div class="report-summary--phase-body">
+                <%= sanitize(short_summary) %>
+              </div>
+            <% else %>
+              <div class="report-summary--phase-body-empty">
+                <%= t("adm.projekts.projekts.evaluation.report.phase_short_summary_empty") %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="report-summary--phases-empty">
+        <%= t("adm.projekts.projekts.evaluation.report.phases_empty") %>
+      </div>
+    <% end %>
+  </section>
+</div>

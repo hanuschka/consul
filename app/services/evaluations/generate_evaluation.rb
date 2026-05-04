@@ -12,6 +12,7 @@ class Evaluations::GenerateEvaluation < ApplicationService
 
     ai_data = collect_ai_data
     ai_summary = generate_ai_summary(stats)
+    project_content_summary = generate_project_content_summary
     selected_questions = collect_selected_questions
 
     evaluation.update!(
@@ -21,6 +22,8 @@ class Evaluations::GenerateEvaluation < ApplicationService
         totals: stats[:totals],
         phases: merge_phase_data(stats[:phases], ai_data),
         ai_project_summary: ai_summary,
+        project_content_summary: project_content_summary,
+        report_settings: collect_report_settings,
         selected_questions: selected_questions
       },
       selected_question_ids: @selected_question_ids
@@ -63,6 +66,35 @@ class Evaluations::GenerateEvaluation < ApplicationService
     nil
   end
 
+  def generate_project_content_summary
+    Evaluations::GenerateProjectContentSummary.call(@projekt)
+  rescue StandardError => e
+    Rails.logger.warn("[Evaluation] Project content summary generation failed: #{e.message}")
+    nil
+  end
+
+  def collect_report_settings
+    open_phase_titles = @projekt
+      .projekt_phases
+      .active
+      .select(&:current?)
+      .map(&:title)
+      .compact_blank
+
+    polls_count = @projekt
+      .polls
+      .joins(:projekt_phase)
+      .where(projekt_phases: { active: true })
+      .count
+
+    {
+      open_phases: open_phase_titles,
+      polls_count: polls_count,
+      tags: @projekt.tags_list.map(&:name).compact_blank,
+      sdg_goals: @projekt.sdg_goals.order(:code).map { |g| { code: g.code.to_i, title: g.title.to_s } }
+    }
+  end
+
   def collect_selected_questions
     return [] if @selected_question_ids.blank?
 
@@ -88,6 +120,7 @@ class Evaluations::GenerateEvaluation < ApplicationService
         ai_stats: phase_ai[:ai_stats],
         ai_stats_refreshed_at: phase_ai[:ai_stats_refreshed_at],
         evaluation_summary: generate_phase_evaluation_summary(phase),
+        short_summary: generate_phase_short_summary(phase),
         key_findings: generate_phase_key_findings(phase)
       )
     end
@@ -121,5 +154,12 @@ class Evaluations::GenerateEvaluation < ApplicationService
 
   def generate_phase_key_findings(phase)
     Evaluations::GeneratePhaseKeyFindings.call(phase)
+  end
+
+  def generate_phase_short_summary(phase)
+    Evaluations::GeneratePhaseShortSummary.call(phase)
+  rescue StandardError => e
+    Rails.logger.warn("[Evaluation] Phase short summary generation failed: #{e.message}")
+    nil
   end
 end

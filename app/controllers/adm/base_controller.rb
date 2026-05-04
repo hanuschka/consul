@@ -12,7 +12,7 @@ class Adm::BaseController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError do |exception|
     Sentry.capture_exception(exception, level: :warning)
-    redirect_to adm_root_path, alert: t("adm.not_authorized")
+    redirect_to root_path, alert: t("adm.not_authorized")
   end
 
   helper KernHelper
@@ -66,6 +66,8 @@ class Adm::BaseController < ActionController::Base
         Adm::SiteCustomization::PagePolicy
       when "SiteCustomization::Image"
         Adm::SiteCustomization::ImagePolicy
+      when "SiteCustomization::Video"
+        Adm::SiteCustomization::VideoPolicy
       when "SiteCustomization::ContentBlock"
         Adm::SiteCustomization::ContentBlockPolicy
       when "Newsletter"

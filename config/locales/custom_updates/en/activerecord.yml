@@ -88,6 +88,10 @@ en:
           attributes:
             overall_satisfaction:
               blank: Please select an option.
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: has already been used
     attributes:
       map_location:
         latitude: Latitude
@@ -202,7 +206,7 @@ en:
       projekt_event_registration:
         first_name: First name
         last_name: Last name
-        email: Email
+        email: Email address
       projekt_event:
         title: Event title
         location: Event location

@@ -110,7 +110,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -243,8 +243,6 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
-        "extended_feature.general.enable_polls_overview": false,
-        "extended_feature.general.enable_proposals_overview": false,
         "extended_feature.general.enable_google_translate": false,
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,

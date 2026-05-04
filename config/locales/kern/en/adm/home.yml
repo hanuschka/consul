@@ -1,0 +1,31 @@
+en:
+  adm:
+    home:
+      show:
+        title: Welcome
+        intro_html: >
+          Welcome to the administration area of <strong>%{org_name}</strong>.
+          Here you see an overview of users, projects, and participation activity on your platform.
+          Via the navigation on the left, you can reach all administrative areas — from user management to settings and content.
+          For questions or technical issues, the demokratie.today team is available via the %{ticket_link}.
+        ticket_system: ticket system
+        users:
+          title: Users
+          total: "Total (active)"
+          new_this_week: New this week
+        deficiency_reports:
+          title: Deficiency reports
+          total: Total
+          open: Open
+          unassigned: Unassigned
+        projects:
+          title: Projects
+          total: Total
+          active: Active
+          expired: Expired
+        detailed_statistics: Detailed statistics
+        dt:
+          ticket_system: Ticket system
+          meetup: Monthly Consul meetup
+          projekts_overview: Participation projects from other cities
+          newsletter: Subscribe to newsletter

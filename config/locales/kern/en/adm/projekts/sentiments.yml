@@ -1,0 +1,20 @@
+en:
+  adm:
+    projekts:
+      sentiments:
+        new:
+          title: Create new sentiment
+        edit:
+          title: Edit sentiment
+        create:
+          success: Sentiment created successfully.
+        update:
+          success: Sentiment updated successfully.
+        destroy:
+          success: Sentiment deleted successfully.
+        form:
+          name_label: Name
+          name_hint: "The sentiment name is shown on the frontend as a selectable option for users to express their stance on a proposal. Choose a short, understandable label like 'Positive', 'Neutral', or 'Critical'. The name should be immediately clear to all users and describe the mood unambiguously."
+          color_label: Color
+          color_hint: "The color is shown on the frontend as a visual marker next to the sentiment and enables quick visual categorization. Choose a color that intuitively matches the sentiment's meaning — e.g. green for positive, yellow for neutral, and red for critical moods. The color should provide enough contrast with the background."
+          submit: Save

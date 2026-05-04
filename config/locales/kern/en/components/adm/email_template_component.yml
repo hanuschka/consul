@@ -1,0 +1,18 @@
+en:
+  components:
+    adm:
+      email_template_component:
+        trigger: Trigger
+        trigger_description: Describes the event that triggers the automatic sending of this email.
+        recipient: Recipient
+        recipient_description: Who is this email sent to?
+        subject: Subject
+        subject_description: The subject line of the email. Shown to the recipient in their inbox.
+        subject_placeholder: Enter subject...
+        body: Content
+        body_description: The email body in HTML format. Use the available variables to insert dynamic content such as names or links.
+        available_variables: "Available variables"
+        send_test: Send test email to me
+        customized: Customized
+        default_template: Default template
+        default_template_description: The preset template used as long as no individual customization has been made.

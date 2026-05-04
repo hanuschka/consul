@@ -12,6 +12,8 @@ class WelcomeController < ApplicationController
   def index
     @header_image = header_image_attachment("header_image", "header_large")
     @mobile_header_image = header_image_attachment("mobile_header_image", "header_mobile")
+    @header_video = SiteCustomization::Video.find_by(name: "header_video")&.persisted_video
+    @mobile_header_video = SiteCustomization::Video.find_by(name: "mobile_header_video")&.persisted_video
     @content_cards = SiteCustomization::ContentCard.homepage.active.to_a
 
     respond_to do |format|

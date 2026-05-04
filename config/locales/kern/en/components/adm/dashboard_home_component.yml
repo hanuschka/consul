@@ -1,0 +1,15 @@
+en:
+  components:
+    adm:
+      dashboard_home_component:
+        team_title: "Team"
+        team_add: "Add team member"
+        team_manage: "Manage team"
+        recent_title: "Recently edited"
+        recent_show_all: "Show all"
+        updated_at: "Edited"
+        no_team: "No team members yet."
+        no_recent: "No entries yet."
+        notice_dismiss: "Dismiss notice"
+        contact_persons_title: "Contact persons"
+        settings_link: "Section settings"

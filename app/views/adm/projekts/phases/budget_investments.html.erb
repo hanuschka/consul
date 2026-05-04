@@ -21,10 +21,13 @@
               <div data-adm-column-selector-target="list"></div>
             </div>
           </div>
-          <% if @budget.balloting_or_later? %>
+          <% budget_policy = policy([:adm, :projekts, @budget]) %>
+          <% if budget_policy.calculate_winners? %>
             <%= kern_link_button calculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
                   text: t(".calculate_winners"), icon: "calculate", style: :secondary,
                   data: { turbo_method: :put, turbo_confirm: t(".calculate_winners_confirm") } %>
+          <% end %>
+          <% if budget_policy.recalculate_winners? %>
             <%= kern_link_button recalculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
                   text: t(".recalculate_winners"), icon: "sync", style: :secondary,
                   data: { turbo_method: :put, turbo_confirm: t(".recalculate_winners_confirm") } %>

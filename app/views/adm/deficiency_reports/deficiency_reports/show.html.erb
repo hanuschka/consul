@@ -1,6 +1,6 @@
 <%= content_for :title, @deficiency_report.title %>
 
-<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_deficiency_reports_list_path) %>
+<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_root_path) %>
 
 <%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
 
@@ -178,13 +178,15 @@
 
     <% if DeficiencyReport::OfficialAnswerTemplate.any? %>
       <%= render Kern::FormFieldComponent.new(label: t(".answer_template_label"), hint: t(".answer_template_hint"), divider: false) do %>
-        <select class="kern-form-select__select" style="width: 100%;"
-          onchange="if(this.value) { document.querySelectorAll('.ck-editor__editable').forEach(function(editor) { if(editor.ckeditorInstance) editor.ckeditorInstance.setData(this.value) }.bind(this)) }">
-          <option value=""><%= t(".answer_template_prompt") %></option>
-          <% DeficiencyReport::OfficialAnswerTemplate.all.each do |template| %>
-            <option value="<%= j(template.text.to_s) %>"><%= template.title %></option>
-          <% end %>
-        </select>
+        <div class="kern-form-input">
+          <select class="kern-form-input__input"
+            onchange="if(this.value) { document.querySelectorAll('.ck-editor__editable').forEach(function(editor) { if(editor.ckeditorInstance) editor.ckeditorInstance.setData(this.value) }.bind(this)) }">
+            <option value=""><%= t(".answer_template_prompt") %></option>
+            <% DeficiencyReport::OfficialAnswerTemplate.all.each do |template| %>
+              <%= content_tag(:option, template.title, value: template.text) %>
+            <% end %>
+          </select>
+        </div>
       <% end %>
     <% end %>
 

@@ -294,6 +294,8 @@ en:
             datetime: Date
             actions: Actions
             open_ended: Open end
+            show: Overview
+            registrations_count: "Registrations (%{count})"
             send_notifications: Send notifications
             send_notifications_confirm: Are you sure you want to send notifications to all users?
         milestones:

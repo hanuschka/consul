@@ -4,7 +4,7 @@
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
           <% if show_embedded_controlls? %>
-            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :title, kind: :string) do %>
               <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
           <% else %>
@@ -20,7 +20,7 @@
 
         <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
           <% if show_embedded_controlls? %>
-            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
+            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :subtitle, kind: :string, allow_br_tags: true) do %>
               <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
           <% else %>
@@ -78,7 +78,12 @@
 
       <div class="custom-page--banner-image">
         <% if show_embedded_controlls? %>
-          <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
+          <div
+            data-field-name="site_customization_page[image]"
+            data-update-url="<%= adm_attribute_path(record_type: 'site_customization-page', id: @custom_page.id) %>"
+            data-attribute="image"
+            data-kind="image"
+            class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">

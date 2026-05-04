@@ -35,10 +35,10 @@ de:
     welcomepage:
       usage_stats: Nutzerübersicht
       usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."
-      newsletter_subscription: Plattformstatistik
-      newsletter_subscription_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
-      platform_activity: Newsletter-Anmeldung
-      platform_activity_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      newsletter_subscription: Newsletter-Anmeldung
+      newsletter_subscription_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      platform_activity: Plattformstatistik
+      platform_activity_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
       projekt_search: Projektsuche
       projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus. Die Projektsuche eignet sich besonders bei Plattformen mit vielen laufenden oder geplanten Projekten."
     extended_feature:

@@ -36,9 +36,14 @@ de:
         website: "Webseite"
         location_note: "Lage"
         accessibility: "Barrierefreiheit"
+      masterportal_pin_properties_component:
+        title: "Eigenschaften aus dem Masterportal"
+        flag_true: "Ja"
+        flag_false: "Nein"
   masterportal:
     imported_proposal_default_title: "Importierter Punkt %{external_id}"
     imported_investment_default_title: "Importierter Punkt %{external_id}"
+    imported_resource_description: "Dieser Eintrag wurde aus dem Masterportal importiert. Die Detailinformationen werden direkt aus den Masterportal-Daten geladen."
     description:
       properties_heading: "Eigenschaften aus dem Masterportal"
     feature:

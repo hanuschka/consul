@@ -36,9 +36,14 @@ en:
         website: "Website"
         location_note: "Location"
         accessibility: "Accessibility"
+      masterportal_pin_properties_component:
+        title: "Properties from Masterportal"
+        flag_true: "Yes"
+        flag_false: "No"
   masterportal:
     imported_proposal_default_title: "Imported point %{external_id}"
     imported_investment_default_title: "Imported point %{external_id}"
+    imported_resource_description: "This entry was imported from Masterportal. Detailed information is loaded directly from the Masterportal data."
     description:
       properties_heading: "Properties from Masterportal"
     feature:

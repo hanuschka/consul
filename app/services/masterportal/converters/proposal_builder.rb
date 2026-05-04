@@ -13,7 +13,7 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
       author: User.masterportal,
       projekt_phase: @pin.projekt_phase,
       title: title,
-      description: Masterportal::DescriptionHtmlBuilder.call(pin: @pin, fallback: fallback_title),
+      description: I18n.t("masterportal.imported_resource_description"),
       summary: title,
       masterportal_pin_id: @pin.id,
       published_at: Time.current

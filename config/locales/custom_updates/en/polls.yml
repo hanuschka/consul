@@ -36,6 +36,9 @@ en:
           more_info: More info
           save_open_answer: Save answer
           update_open_answer: Edit answer
+          open_answer_saving: "Saving…"
+          open_answer_saved: "Saved"
+          open_answer_save_failed: "Saving failed"
       results:
         open_answers: Open answers
         scoped_popup_callout: The following analysis shows how the users who voted for this answer option answered the following questions.

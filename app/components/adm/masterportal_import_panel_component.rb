@@ -7,8 +7,13 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
 
   SUPPORTED_PHASE_TYPES = RESOURCE_NAME_KEYS.keys.freeze
 
-  def initialize(projekt_phase:)
+  def initialize(projekt_phase:, embedded: false)
     @projekt_phase = projekt_phase
+    @embedded = embedded
+  end
+
+  def embedded?
+    @embedded
   end
 
   def default_endpoint_url

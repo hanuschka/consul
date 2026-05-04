@@ -18,3 +18,5 @@ en:
           proposal: Open proposal
           budget_investment: Open budget investment
           point_of_interest_pin: Point of interest
+        delete: Delete
+        delete_confirm: 'Delete pin "%{title}" and any linked proposal/investment/point of interest? This cannot be undone.'

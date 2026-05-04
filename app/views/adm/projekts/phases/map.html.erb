@@ -18,10 +18,8 @@
 
   <%= render Adm::MapLayersComponent.new(map_layers: @projekt_phase.map_layers, mappable: @projekt_phase) %>
 
-  <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: @projekt_phase) %>
-
-  <%= render Adm::MasterportalPinsSummaryComponent.new(
+  <%= render Adm::MasterportalIntegrationComponent.new(
     projekt_phase: @projekt_phase,
-    pins_count: @masterportal_pins_count
+    masterportal_pins_count: @masterportal_pins_count
   ) %>
 </div>

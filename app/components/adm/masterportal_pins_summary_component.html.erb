@@ -1,25 +1,39 @@
-<%= link_to index_path, class: "masterportal-pins-summary" do %>
-  <div class="masterportal-pins-summary--icon" aria-hidden="true">
-    <span class="material-symbols-outlined">location_on</span>
-  </div>
-
-  <div class="masterportal-pins-summary--info">
-    <div class="masterportal-pins-summary--count">
-      <span class="masterportal-pins-summary--count-number"><%= pins_count %></span>
-      <span class="masterportal-pins-summary--count-label">
-        <%= t(".pins_count", count: pins_count) %>
-      </span>
+<section class="masterportal-pins-summary">
+  <div class="masterportal-pins-summary--header">
+    <div class="masterportal-pins-summary--icon" aria-hidden="true">
+      <span class="material-symbols-outlined">location_on</span>
     </div>
 
-    <% if resource_name.present? %>
-      <p class="masterportal-pins-summary--resource">
-        <%= t(".linked_to", resource_name: resource_name) %>
-      </p>
+    <div class="masterportal-pins-summary--info">
+      <div class="masterportal-pins-summary--count">
+        <span class="masterportal-pins-summary--count-number"><%= pins_count %></span>
+        <span class="masterportal-pins-summary--count-label">
+          <%= t(".pins_count", count: pins_count) %>
+        </span>
+      </div>
+
+      <% if resource_name.present? %>
+        <p class="masterportal-pins-summary--resource">
+          <%= t(".linked_to", resource_name: resource_name) %>
+        </p>
+      <% end %>
+    </div>
+
+    <%= link_to index_path, class: "masterportal-pins-summary--cta", target: "_top" do %>
+      <span class="masterportal-pins-summary--cta-text"><%= t(".view_all") %></span>
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
     <% end %>
   </div>
 
-  <div class="masterportal-pins-summary--cta">
-    <span class="masterportal-pins-summary--cta-text"><%= t(".view_all") %></span>
-    <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-  </div>
-<% end %>
+  <% if map_location&.available? %>
+    <div class="masterportal-pins-summary--map-wrap">
+      <div class="masterportal-pins-summary--map">
+        <%= render Kern::MapComponent.new(
+          map_location: map_location,
+          feature_collection: feature_collection,
+          height: 520
+        ) %>
+      </div>
+    </div>
+  <% end %>
+</section>

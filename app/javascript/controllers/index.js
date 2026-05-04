@@ -102,6 +102,9 @@ application.register("formular-fields--kind", FormularFieldsKindController)
 import KernFormImageController from "./kern/form/image_controller"
 application.register("kern--form--image", KernFormImageController)
 
+import KernFormVideoController from "./kern/form/video_controller"
+application.register("kern--form--video", KernFormVideoController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 

@@ -37,6 +37,7 @@
       this.baseLayers = {};
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -250,8 +251,27 @@
         }
       }
 
+      // Set up the toggleable Masterportal pins overlay (only when pins exist)
+      this.setupMasterportalPinsOverlay();
+
       // Add layer control if needed
       this.addLayerControl();
+    }
+
+    setupMasterportalPinsOverlay() {
+      this.masterportalPinsClusterGroup = null;
+      this.hasMasterportalPins = false;
+
+      if (this.editable) return;
+
+      const split = App.Map.splitMasterportalFeatures(this.features);
+      if (split.masterportal.features.length === 0) return;
+
+      this.hasMasterportalPins = true;
+      this.masterportalPinsClusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
+      this.masterportalPinsClusterGroup.options.show_by_default = true;
+      this.masterportalPinsClusterGroup.addTo(this.map);
+      this.overlayLayers[this.masterportalPinsLayerLabel] = this.masterportalPinsClusterGroup;
     }
 
     createLayer(item) {
@@ -410,55 +430,66 @@
 
     renderFeatures() {
       if (this.features && Object.keys(this.features).length > 0) {
-        const self = this;
+        const split = App.Map.splitMasterportalFeatures(this.features);
 
-        L.geoJSON(this.features, {
-          pointToLayer: function(feature, latlng) {
-            var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+        this.renderFeatureCollection(split.regular, this.clusterGroup);
 
-            return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle),
-            });
-          },
-          style: function (feature) {
-            return {
-              weight: 2,
-              color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            if (self.editable) {
-              self.setupEventListenersForEditableFeature(self.map, layer)
-              self.editableLayers.push(layer);
-
-              layer.addTo(self.map);
-
-              layer.on('pm:edit', function(e) {
-                self.updateFeaturesInput(self.featuresInput, self.editableLayers);
-              });
-            } else {
-              if (feature.geometry.type === 'Point') {
-                self.clusterGroup.addLayer(layer);
-              } else {
-                self.deflateFeatures.addLayer(layer);
-              }
-
-              if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
-                layer.options.resource_type = feature.properties.resource_type || null;
-                layer.options.id = feature.properties.id || null;
-                layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
-                layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
-                layer.options.feature_category_name = feature.properties.feature_category_name || null;
-
-                layer.on("click", self.openMarkerPopup);
-              }
-            }
-          }
-        });
+        if (this.masterportalPinsClusterGroup) {
+          this.renderFeatureCollection(split.masterportal, this.masterportalPinsClusterGroup);
+        }
       }
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng);
       }
+    }
+
+    renderFeatureCollection(featureCollection, pointCluster) {
+      if (!featureCollection || featureCollection.features.length === 0) return;
+      const self = this;
+
+      L.geoJSON(featureCollection, {
+        pointToLayer: function(feature, latlng) {
+          var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+
+          return L.marker(latlng, {
+            icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle),
+          });
+        },
+        style: function (feature) {
+          return {
+            weight: 2,
+            color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
+          };
+        },
+        onEachFeature: function (feature, layer) {
+          if (self.editable) {
+            self.setupEventListenersForEditableFeature(self.map, layer)
+            self.editableLayers.push(layer);
+
+            layer.addTo(self.map);
+
+            layer.on('pm:edit', function(e) {
+              self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+            });
+          } else {
+            if (feature.geometry.type === 'Point') {
+              pointCluster.addLayer(layer);
+            } else {
+              self.deflateFeatures.addLayer(layer);
+            }
+
+            if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
+              layer.options.resource_type = feature.properties.resource_type || null;
+              layer.options.id = feature.properties.id || null;
+              layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
+              layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
+              layer.options.feature_category_name = feature.properties.feature_category_name || null;
+
+              layer.on("click", self.openMarkerPopup);
+            }
+          }
+        }
+      });
     }
 
     openMarkerPopup(e) {

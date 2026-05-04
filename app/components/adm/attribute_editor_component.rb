@@ -43,6 +43,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::RichTextComponent
     when :image
       Adm::AttributeEditors::ImageComponent
+    when :video
+      Adm::AttributeEditors::VideoComponent
     when :color
       Adm::AttributeEditors::ColorComponent
     when :select
@@ -102,7 +104,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
         "projekt_phase_setting.#{@record.projekt_phase.name}.#{@record.key}#{'_description' if type == :description}"
       elsif setting_type?
         "setting.#{@record.key}#{'_description' if type == :description}"
-      elsif @record.is_a?(::SiteCustomization::Image)
+      elsif @record.is_a?(::SiteCustomization::Image) || @record.is_a?(::SiteCustomization::Video)
         "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
       elsif @record.is_a?(::SiteCustomization::ContentBlock) && @record.key.present?
         ["adm.attribute_editor", record_type_key, @record.key, "#{@attribute}_#{type}"].join(".")

@@ -4,27 +4,117 @@
   title: t(".title"),
   breadcrumbs: @breadcrumbs,
   back_button_url: map_adm_projekts_phase_path(@projekt_phase)
-) %>
-
-<div class="kern-container mb-5">
-  <% if @projekt_phase.masterportal_pins.exists? %>
-    <div class="mb-4">
-      <%= render Adm::DeleteCollectionComponent.new(
-        url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
-        text: t(".delete_all_button"),
-        confirm: t(".delete_all_confirm"),
-        headline: t(".deleting"),
-        hint: t(".deleting_hint")
-      ) %>
+) do |header| %>
+  <% header.with_actions do %>
+    <div class="masterportal-pins-page-header-actions">
+      <div class="masterportal-pins-page-title-group">
+        <div class="masterportal-pins-page-logo">
+          <%= image_tag "services/masterportal_logo.svg", alt: "Masterportal", class: "masterportal-pins-page-logo--image" %>
+        </div>
+      </div>
+      <% if @projekt_phase.masterportal_pins.exists? %>
+        <%= render Adm::DeleteCollectionComponent.new(
+          url: destroy_all_masterportal_pins_adm_projekts_phase_path(@projekt_phase),
+          text: t(".delete_all_button"),
+          confirm: t(".delete_all_confirm"),
+          headline: t(".deleting"),
+          hint: t(".deleting_hint")
+        ) %>
+      <% end %>
     </div>
+  <% end %>
+<% end %>
 
-    <%= render Adm::MasterportalPinsListComponent.new(
-      projekt_phase: @projekt_phase,
-      pins: @masterportal_pins,
-      pagy: @pagy_masterportal_pins,
-      expanded: true
-    ) %>
-  <% else %>
+<% if @projekt_phase.masterportal_pins.exists? %>
+  <div class="kern-container">
+    <%= form_with(
+      url: masterportal_pins_adm_projekts_phase_path(@projekt_phase),
+      method: :get,
+      local: true,
+      html: { class: "masterportal-pins-search-form", role: "search" }
+    ) do %>
+      <%= hidden_field_tag :view, @masterportal_pins_view %>
+
+      <label class="masterportal-pins-search-form--label" for="masterportal-pins-search-input">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <span class="sr-only"><%= t(".search.label") %></span>
+      </label>
+
+      <input
+        id="masterportal-pins-search-input"
+        type="search"
+        name="q"
+        value="<%= @masterportal_pins_search_query %>"
+        class="masterportal-pins-search-form--input"
+        placeholder="<%= t('.search.placeholder') %>"
+        autocomplete="off"
+      >
+
+      <button type="submit" class="masterportal-pins-search-form--submit">
+        <%= t(".search.submit") %>
+      </button>
+
+      <% if @masterportal_pins_search_query.present? %>
+        <%= link_to t(".search.clear"),
+              masterportal_pins_adm_projekts_phase_path(@projekt_phase, view: @masterportal_pins_view),
+              class: "masterportal-pins-search-form--clear" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%
+    tab_link_params = { q: @masterportal_pins_search_query.presence }.compact
+    view_tabs = [
+      {
+        label: t(".tabs.list"),
+        icon: "list",
+        url: masterportal_pins_adm_projekts_phase_path(@projekt_phase, **tab_link_params),
+        current: @masterportal_pins_view == "list"
+      },
+      {
+        label: t(".tabs.map"),
+        icon: "map",
+        url: masterportal_pins_adm_projekts_phase_path(@projekt_phase, view: "map", **tab_link_params),
+        current: @masterportal_pins_view == "map"
+      }
+    ]
+  %>
+
+  <%= render Adm::TabsComponent.new(tabs: view_tabs) %>
+
+  <div class="kern-container mb-5">
+    <% if @masterportal_pins_view == "map" %>
+      <% if @masterportal_pins_total_count.to_i > 0 && @projekt_phase.map_location&.available? %>
+        <%= render Adm::MasterportalPinsMapViewComponent.new(
+          projekt_phase: @projekt_phase,
+          pins: @masterportal_pins_for_map,
+          total_count: @masterportal_pins_total_count,
+          search_query: @masterportal_pins_search_query
+        ) %>
+      <% else %>
+        <div class="masterportal-pins-search-form--no-results">
+          <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+          <p><%= t(".search.no_results", query: @masterportal_pins_search_query) %></p>
+        </div>
+      <% end %>
+    <% else %>
+      <% if @masterportal_pins.any? %>
+        <%= render Adm::MasterportalPinsListComponent.new(
+          projekt_phase: @projekt_phase,
+          pins: @masterportal_pins,
+          pagy: @pagy_masterportal_pins,
+          expanded: true
+        ) %>
+      <% else %>
+        <div class="masterportal-pins-search-form--no-results">
+          <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+          <p><%= t(".search.no_results", query: @masterportal_pins_search_query) %></p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="kern-container mb-5">
     <%= empty_state(
       icon: "location_off",
       title: t(".empty.title"),
@@ -32,5 +122,5 @@
       link_url: map_adm_projekts_phase_path(@projekt_phase),
       link_text: t(".empty.link")
     ) %>
-  <% end %>
-</div>
+  </div>
+<% end %>

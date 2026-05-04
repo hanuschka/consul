@@ -47,7 +47,10 @@ namespace :adm do
         # Map & location
         get :map
         get :masterportal_pins
+        get :masterportal_pins_summary
         delete :destroy_all_masterportal_pins
+        delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
+               as: :destroy_masterportal_pin
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
         get :map_resources_overview

@@ -55,9 +55,25 @@
               <% end %>
             </div>
 
-            <div class="masterportal-pin-card--imported">
-              <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
-              <%= l(pin.last_imported_at || pin.created_at, format: :short) %>
+            <div class="masterportal-pin-card--actions">
+              <div class="masterportal-pin-card--imported">
+                <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+                <%= l(pin.last_imported_at || pin.created_at, format: :short) %>
+              </div>
+
+              <%= link_to(
+                delete_pin_path(pin),
+                class: "masterportal-pin-card--delete",
+                title: t(".delete"),
+                aria: { label: t(".delete") },
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: t(".delete_confirm", title: display_title(pin))
+                }
+              ) do %>
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                <span class="masterportal-pin-card--delete-label"><%= t(".delete") %></span>
+              <% end %>
             </div>
           </div>
 

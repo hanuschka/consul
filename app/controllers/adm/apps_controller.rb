@@ -94,7 +94,7 @@ module Adm
           app_def.merge(
             name:        t("adm.apps.show.apps.#{app_def[:key]}.name"),
             description: t("adm.apps.show.apps.#{app_def[:key]}.description"),
-            status:      app_status(app_def[:key])
+            status:      app_status(cat[:category_key], app_def[:key])
           )
         end
 
@@ -107,21 +107,10 @@ module Adm
 
     private
 
-      AI_DEPENDENT_KEYS = %w[
-        voice_assistant
-        ai_project_creation
-        ai_user_help
-        ai_proposal_creation
-        ai_evaluation_phases
-        ai_project_chat
-      ].freeze
+      def app_status(category_key, _app_key)
+        return "inactive" if category_key != "ai"
 
-      def app_status(app_key)
-        if AI_DEPENDENT_KEYS.include?(app_key)
-          Ai::Settings.ai_available? ? "active" : "inactive"
-        else
-          "inactive"
-        end
+        Ai::Settings.ai_available? ? "active" : "inactive"
       end
   end
 end

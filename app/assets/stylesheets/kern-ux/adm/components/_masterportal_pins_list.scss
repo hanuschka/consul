@@ -1,22 +1,10 @@
 .masterportal-pins-list {
-  position: relative;
   margin-top: 24px;
   overflow: hidden;
   background: var(--kern-color-layout-background-default, #fff);
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.08);
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--adm-color-primary, #1b5fd6) 0%, #4f8af0 100%);
-    z-index: 1;
-  }
 }
 
 .masterportal-pins-list--collapse {
@@ -33,8 +21,7 @@
   list-style: none;
   display: block;
   padding: 18px 24px;
-  background: linear-gradient(135deg, #f5f8ff 0%, #eef3fb 100%);
-  background-image: linear-gradient(135deg, #f5f8ff 0%, #eef3fb 100%);
+  background: #f5f8ff;
   border-bottom: 1px solid #cbd5e1;
 
   &::-webkit-details-marker {
@@ -48,8 +35,7 @@ summary.masterportal-pins-list--header {
   transition: background 120ms ease, border-color 150ms ease;
 
   &:hover {
-    background: linear-gradient(135deg, #eef3fb 0%, #e6eefa 100%);
-    background-image: linear-gradient(135deg, #eef3fb 0%, #e6eefa 100%);
+    background: #eef3fb;
   }
 }
 
@@ -101,7 +87,7 @@ summary.masterportal-pins-list--header {
   align-items: center;
   gap: 6px;
   padding: 5px 12px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: #1e40af;
   background: #fff;
@@ -241,13 +227,21 @@ summary.masterportal-pins-list--header {
   }
 }
 
+.masterportal-pin-card--actions {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
 .masterportal-pin-card--imported {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
   gap: 4px;
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #64748b;
   background: #f8fafc;
@@ -259,6 +253,43 @@ summary.masterportal-pins-list--header {
     font-size: 14px;
     color: #94a3b8;
   }
+}
+
+.masterportal-pin-card--delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #b91c1c;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+
+  .material-symbols-outlined {
+    font-size: 20px !important;
+  }
+
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25);
+  }
+}
+
+.masterportal-pin-card--delete-label {
+  white-space: nowrap;
 }
 
 .masterportal-pin-card--linked {
@@ -355,4 +386,224 @@ summary.masterportal-pins-list--header {
   display: flex;
   justify-content: center;
   padding: 16px 24px 24px;
+}
+
+.masterportal-pins-search-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 18px;
+  margin-bottom: 35px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+}
+
+.masterportal-pins-search-form--label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: #64748b;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.masterportal-pins-search-form--input {
+  flex: 1;
+  min-width: 220px;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  font-size: 15px;
+  color: #1e293b;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+
+  &:hover {
+    border-color: #94a3b8;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--adm-color-primary, #1b5fd6);
+    box-shadow: 0 0 0 3px rgba(27, 95, 214, 0.18);
+  }
+}
+
+.masterportal-pins-search-form--submit {
+  flex-shrink: 0;
+  height: 40px;
+  margin: 0;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--adm-color-primary, #1b5fd6);
+  border: 1px solid var(--adm-color-primary, #1b5fd6);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+
+  &:hover {
+    background: #154eb0;
+    border-color: #154eb0;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(27, 95, 214, 0.3);
+  }
+}
+
+.masterportal-pins-search-form--clear {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #475569;
+  text-decoration: underline;
+
+  &:hover {
+    color: #1e293b;
+  }
+}
+
+.masterportal-pins-search-form--no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 24px;
+  margin-top: 16px;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+
+  .material-symbols-outlined {
+    font-size: 36px;
+    color: #94a3b8;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    text-align: center;
+  }
+}
+
+.masterportal-pins-map-view {
+  margin-top: 16px;
+  overflow: hidden;
+  background: var(--kern-color-layout-background-default, #fff);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+.masterportal-pins-map-view--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 24px;
+  background: #f5f8ff;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.masterportal-pins-map-view--title-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.masterportal-pins-map-view--title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--adm-color-primary, #1b5fd6) 0%, #4f8af0 100%);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(27, 95, 214, 0.2);
+
+  .material-symbols-outlined {
+    font-size: 22px;
+  }
+}
+
+.masterportal-pins-map-view--title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.masterportal-pins-map-view--count-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+}
+
+.masterportal-pins-map-view--map {
+  .map {
+    margin-bottom: 0 !important;
+  }
+
+  .map_location {
+    margin-bottom: 0;
+  }
+}
+
+.masterportal-pins-page-header-actions {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.masterportal-pins-page-title-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.masterportal-pins-page-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+}
+
+.masterportal-pins-page-logo--image {
+  display: block;
+  width: 80px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }

@@ -5,7 +5,8 @@ class Kern::MapComponent < ApplicationComponent
     editable: false,
     admin_editor: false,
     height: 400,
-    resources: nil
+    resources: nil,
+    feature_collection: nil
   )
     @map_location = map_location
     @form = form
@@ -13,6 +14,7 @@ class Kern::MapComponent < ApplicationComponent
     @admin_editor = admin_editor
     @height = height
     @resources = resources
+    @feature_collection = feature_collection
   end
 
   attr_reader :map_location, :form, :editable, :admin_editor, :height
@@ -27,7 +29,8 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   def container_id
-    map_location.default? ? "default_map" : dom_id(mappable, "map")
+    base = map_location.default? ? "default_map" : dom_id(mappable, "map")
+    @feature_collection.present? ? "#{base}_collection_#{object_id}" : base
   end
 
   def mappable
@@ -65,7 +68,9 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def features_json
-      if @resources.present?
+      if @feature_collection.present?
+        @feature_collection.is_a?(String) ? @feature_collection : @feature_collection.to_json
+      elsif @resources.present?
         items = MapLocation.where(mappable: @resources).flat_map do |ml|
           parsed = ml.features.is_a?(String) ? JSON.parse(ml.features) : ml.features
           parsed&.dig("features") || []

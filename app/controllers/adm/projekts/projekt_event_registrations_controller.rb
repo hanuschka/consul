@@ -10,7 +10,7 @@ class Adm::Projekts::ProjektEventRegistrationsController < Adm::Projekts::BaseCo
 
   def index
     scope = @projekt_event.projekt_event_registrations
-      .order(Arel.sql("array_position(ARRAY['confirmed','waitlisted','pending_confirmation','cancelled']::text[], status)"))
+      .order(Arel.sql("array_position(ARRAY['confirmed','waitlisted','pending_confirmation','cancelled']::text[], status::text)"))
       .order(:created_at)
     selected_statuses = Array(params[:status]) & ALL_STATUSES
     filtered_scope = selected_statuses.any? ? scope.where(status: selected_statuses) : scope

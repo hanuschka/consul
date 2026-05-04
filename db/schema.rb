@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_29_073122) do
+ActiveRecord::Schema.define(version: 2026_05_01_232756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -201,10 +201,6 @@ ActiveRecord::Schema.define(version: 2026_04_29_073122) do
     t.index ["pushed_to_dt"], name: "index_api_request_logs_on_pushed_to_dt"
     t.index ["request_path"], name: "index_api_request_logs_on_request_path"
   end
-
-  create_table "apps", force: :cascade do |t|
-  end
-
 
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
@@ -1560,9 +1556,14 @@ ActiveRecord::Schema.define(version: 2026_04_29_073122) do
     t.datetime "last_imported_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index "((properties)::text) gin_trgm_ops", name: "index_masterportal_pins_on_properties_text_trgm", using: :gin
+    t.index ["collection_id"], name: "index_masterportal_pins_on_collection_id_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["description"], name: "index_masterportal_pins_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["external_id"], name: "index_masterportal_pins_on_external_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_pins_on_phase_and_collection_id"
     t.index ["projekt_phase_id", "external_id"], name: "index_masterportal_pins_on_phase_and_external_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_pins_on_projekt_phase_id"
+    t.index ["title"], name: "index_masterportal_pins_on_title_trgm", opclass: :gin_trgm_ops, using: :gin
   end
 
   create_table "memos", force: :cascade do |t|
@@ -1648,7 +1649,6 @@ ActiveRecord::Schema.define(version: 2026_04_29_073122) do
     t.integer "kind"
     t.string "preset"
     t.bigint "projekt_id"
-    t.string "external_title"
     t.string "external_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -1656,6 +1656,7 @@ ActiveRecord::Schema.define(version: 2026_04_29_073122) do
     t.integer "position", default: 0, null: false
     t.integer "landing_page_id"
     t.string "custom_title"
+    t.boolean "open_in_new_tab", default: false, null: false
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
@@ -2931,6 +2932,13 @@ ActiveRecord::Schema.define(version: 2026_04_29_073122) do
     t.datetime "published_at"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
+  end
+
+  create_table "site_customization_videos", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_site_customization_videos_on_name", unique: true
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|

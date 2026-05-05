@@ -89,15 +89,33 @@
 
       <% entries = poll["open_text_entries"] || [] %>
       <% if entries.any? && show_section.call("open_responses") %>
-        <div class="open-responses">
-          <div class="er-section-header">
-            <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            </div>
-            <span class="er-section-title">
+        <%
+          pdf_mode_local = local_assigns.fetch(:pdf_mode, false)
+          open_by_default = pdf_mode_local || entries.size <= 6
+        %>
+        <details
+          class="open-responses"
+          style="--or-accent:<%= accent %>;--or-accent-light:<%= accent_light %>"
+          <%= ' open' if open_by_default %>
+        >
+          <summary class="open-responses-summary">
+            <span class="open-responses-summary-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">chat_bubble</span>
+            </span>
+            <span class="open-responses-summary-title">
               <%= t("adm.projekts.projekts.evaluation.open_responses_title", count: entries.size) %>
             </span>
-          </div>
+            <span class="open-responses-summary-count"><%= entries.size %></span>
+            <span class="open-responses-toggle">
+              <span class="open-responses-toggle-label-show">
+                <%= t("adm.projekts.projekts.evaluation.open_responses_show") %>
+              </span>
+              <span class="open-responses-toggle-label-hide">
+                <%= t("adm.projekts.projekts.evaluation.open_responses_hide") %>
+              </span>
+              <span class="material-symbols-outlined open-responses-toggle-icon" aria-hidden="true">expand_more</span>
+            </span>
+          </summary>
           <div class="response-grid">
             <% entries.each do |entry| %>
               <% text = (entry.is_a?(Hash) ? entry["body"] : entry).to_s.strip %>
@@ -105,7 +123,7 @@
               <div class="response-item"><%= text %></div>
             <% end %>
           </div>
-        </div>
+        </details>
       <% end %>
     </div>
   <% end %>

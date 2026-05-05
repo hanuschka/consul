@@ -99,12 +99,15 @@
     </div>
 
     <div class="report-summary--settings-grid">
-      <div class="report-summary--stat-card">
+      <div class="report-summary--stat-card -emerald">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= open_phases.size %></strong>
-          <span class="report-summary--stat-card-label">
+          <div class="report-summary--stat-card-label">
+            <span class="report-summary--stat-card-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+            </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases", count: [open_phases.size, 1].max) %>
-          </span>
+          </div>
         </div>
         <% if open_phases.any? %>
           <ul class="report-summary--stat-card-list">
@@ -119,12 +122,15 @@
         <% end %>
       </div>
 
-      <div class="report-summary--stat-card">
+      <div class="report-summary--stat-card -indigo">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= polls_count %></strong>
-          <span class="report-summary--stat-card-label">
+          <div class="report-summary--stat-card-label">
+            <span class="report-summary--stat-card-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">how_to_vote</span>
+            </span>
             <%= t("adm.projekts.projekts.evaluation.polls") %>
-          </span>
+          </div>
         </div>
         <% if !polls_count.positive? %>
           <div class="report-summary--stat-card-empty">
@@ -133,12 +139,15 @@
         <% end %>
       </div>
 
-      <div class="report-summary--stat-card">
+      <div class="report-summary--stat-card -amber">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= tags.size %></strong>
-          <span class="report-summary--stat-card-label">
+          <div class="report-summary--stat-card-label">
+            <span class="report-summary--stat-card-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+            </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_tags") %>
-          </span>
+          </div>
         </div>
         <% if tags.any? %>
           <ul class="report-summary--stat-card-list">
@@ -153,12 +162,15 @@
         <% end %>
       </div>
 
-      <div class="report-summary--stat-card">
+      <div class="report-summary--stat-card -rose">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= sdg_goals.size %></strong>
-          <span class="report-summary--stat-card-label">
+          <div class="report-summary--stat-card-label">
+            <span class="report-summary--stat-card-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">eco</span>
+            </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_sdgs") %>
-          </span>
+          </div>
         </div>
         <% if sdg_goals.any? %>
           <ul class="report-summary--sdg-list">

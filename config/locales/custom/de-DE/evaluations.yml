@@ -74,6 +74,8 @@ de:
               ai_questions: KI-Fragen
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
+          open_responses_show: Beiträge anzeigen
+          open_responses_hide: Beiträge ausblenden
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür

@@ -74,6 +74,8 @@ en:
               ai_questions: AI questions
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
+          open_responses_show: Show responses
+          open_responses_hide: Hide responses
           verdict:
             clear_yes: Clearly in favor
             majority_yes: Majority in favor

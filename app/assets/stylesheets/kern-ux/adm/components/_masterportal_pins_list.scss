@@ -414,6 +414,50 @@ summary.masterportal-pins-list--header {
   }
 }
 
+.masterportal-pins-search-form--filter-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 36px;
+  margin-right: -4px;
+  color: #64748b;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.masterportal-pins-search-form--select {
+  flex-shrink: 0;
+  height: 40px;
+  margin: 0;
+  padding: 0 32px 0 12px;
+  font-size: 15px;
+  color: #1e293b;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%2364748b' d='M6 8.5 1.5 4h9z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+
+  &:hover {
+    border-color: #94a3b8;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--adm-color-primary, #1b5fd6);
+    box-shadow: 0 0 0 3px rgba(27, 95, 214, 0.18);
+  }
+}
+
 .masterportal-pins-search-form--input {
   flex: 1;
   min-width: 220px;

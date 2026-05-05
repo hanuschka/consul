@@ -25,7 +25,6 @@ en:
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
-          matomo: Matomo
         pages: Pages
         pages_subitems:
           privacy: Privacy policy
@@ -46,6 +45,9 @@ en:
           recipient_groups: Recipient groups
           unregistered_newsletter_subscribers: Unregistered subscribers
         stats: Statistics
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
         apps: Apps
         developer: Developer area
         developer_subitems:

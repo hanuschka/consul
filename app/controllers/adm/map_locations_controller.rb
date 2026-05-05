@@ -60,7 +60,7 @@ module Adm
 
       def map_location_params
         params.require(:map_location).permit(
-          :latitude, :longitude, :altitude, :zoom, :features, :rendering_library, :show_admin_shape
+          :latitude, :longitude, :altitude, :zoom, :features, :rendering_library, :show_admin_shape, :mapbox_style_id
         )
       end
   end

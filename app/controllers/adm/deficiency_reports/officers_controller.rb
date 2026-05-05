@@ -2,6 +2,8 @@ class Adm::DeficiencyReports::OfficersController < Adm::DeficiencyReports::BaseC
   include Pagy::Backend
 
   def index
+    authorize DeficiencyReport::Officer, policy_class: Adm::DeficiencyReports::OfficerPolicy
+
     @pagy, @officers = pagy(
       policy_scope(DeficiencyReport::Officer, policy_scope_class: Adm::DeficiencyReports::OfficerPolicy::Scope)
         .joins(:user)

@@ -234,6 +234,7 @@ de:
             bundle_question: Fragenbündel
             edit_answers: Antwortliste
             edit_questions: Fragenliste
+            edit_question: Frage bearbeiten
             actions: Aktionen
         officing_manager_audits:
           title: Änderungslog Abstimmungshelfer
@@ -293,6 +294,8 @@ de:
             datetime: Datum
             actions: Aktionen
             open_ended: Offenes Ende
+            show: Übersicht
+            registrations_count: "Anmeldungen (%{count})"
             send_notifications: Benachrichtigungen senden
             send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         milestones:

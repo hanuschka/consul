@@ -12,6 +12,7 @@ ProjektStudio.Banner = {
     $document.on("click", ".js-projekt-banner--text-edit-save", this.saveEditedText.bind(this));
     $document.on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
     // $document.on("change", ".js-projekt-banner--image-upload-input", this.handleInputType.bind(this));
+    $document.on("click", ".js-projekt-banner--image-delete-button", this.deleteTitleImage.bind(this));
   },
 
   handleInputType() {
@@ -58,7 +59,6 @@ ProjektStudio.Banner = {
       field.firstElementChild.contentEditable = false
       container.dataset.originalFieldHtml = ""
 
-      const projektId = ProjektStudio.getCurrentProjektId();
       let value =
         field
           .firstElementChild
@@ -78,10 +78,11 @@ ProjektStudio.Banner = {
 
       App.Ajax
         .request({
-          url: `/admin/projekts/${projektId}/update_page`,
+          url: container.dataset.updateUrl,
           method: "PATCH",
-          dataType: "json",
           data: {
+            kind: container.dataset.kind,
+            attribute: container.dataset.attribute,
             [container.dataset.fieldName]: value
           }
         })
@@ -95,37 +96,102 @@ ProjektStudio.Banner = {
 
     if (file) {
       const imagePreview = imageUploaderContainer.querySelector(".js-projekt-image-upload-preview")
+      const previewUrl = URL.createObjectURL(file)
 
-      imagePreview.src = URL.createObjectURL(file)
+      imagePreview.src = previewUrl
       imagePreview.classList.add("-image-set")
 
-      const projektId = ProjektStudio.getCurrentProjektId();
       let formData = new FormData();
+      formData.append("kind", imageUploaderContainer.dataset.kind);
+      formData.append("attribute", imageUploaderContainer.dataset.attribute);
       formData.append(imageUploaderContainer.dataset.fieldName, file);
 
       App.Ajax
         .request({
-          url: `/admin/projekts/${projektId}/update_title_image`,
+          url: imageUploaderContainer.dataset.updateUrl,
           method: "PATCH",
           processData: false,
           contentType: false,
           data: formData
         })
-        .then((response) => {
-          const mainImage = imageUploaderContainer.querySelector(".resource-image--main");
-          const blurImage = imageUploaderContainer.querySelector(".resource-image--blur");
-          const glightboxLink = imageUploaderContainer.querySelector(".glightbox");
+        .then(() => {
+          let mainImage = imageUploaderContainer.querySelector(".resource-image--main");
+          let blurImage = imageUploaderContainer.querySelector(".resource-image--blur");
 
-          mainImage.src = response.image_url;
-          blurImage.src = response.image_url;
-          glightboxLink.href = response.lightbox_image_url;
-          App.ImageGallery.setupGlighbox();
+          if (!mainImage || !blurImage) {
+            const resourceImage = imageUploaderContainer.querySelector(".resource-image");
+            if (resourceImage) {
+              resourceImage.innerHTML =
+                `<img class="resource-image--main" alt="">` +
+                `<img class="resource-image--blur" aria-hidden="true">`;
+              mainImage = resourceImage.querySelector(".resource-image--main");
+              blurImage = resourceImage.querySelector(".resource-image--blur");
+            }
+          }
 
-          mainImage.addEventListener("load", () => {
-            imagePreview.classList.remove("-image-set");
-            imagePreview.src = "";
-          }, { once: true });
+          if (mainImage && blurImage) {
+            mainImage.addEventListener("load", () => {
+              imagePreview.classList.remove("-image-set");
+              imagePreview.src = "";
+            }, { once: true });
+
+            mainImage.style.width = "100%";
+            mainImage.style.height = "100%";
+            mainImage.style.objectFit = "cover";
+
+            mainImage.src = previewUrl;
+            blurImage.src = previewUrl;
+          }
+
+          const glightbox = imageUploaderContainer.querySelector("a.glightbox");
+          if (glightbox) glightbox.setAttribute("href", previewUrl);
+
+          const deleteButton = imageUploaderContainer.querySelector(".js-projekt-banner--image-delete-button");
+          if (deleteButton) deleteButton.classList.remove("d-none");
+
+          if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
         })
     }
+  },
+
+  async deleteTitleImage(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const container = button.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    const confirmMessage = container.dataset.deleteConfirm;
+    if (confirmMessage && !window.confirm(confirmMessage)) return;
+
+    const formData = new FormData();
+    formData.append("kind", container.dataset.kind);
+    formData.append("attribute", container.dataset.attribute);
+    formData.append("remove_attachment", "1");
+
+    await App.Ajax.request({
+      url: container.dataset.updateUrl,
+      method: "PATCH",
+      processData: false,
+      contentType: false,
+      data: formData
+    });
+
+    const resourceImage = container.querySelector(".resource-image");
+    if (resourceImage) {
+      const iconClass = container.dataset.placeholderIconClass || "fa-image";
+      const ariaLabel = container.dataset.placeholderAriaLabel || "";
+      resourceImage.innerHTML =
+        `<div class="resource-image--missing-image-placeholder" role="img" aria-label="${ariaLabel}">` +
+          `<i class="resource-image--missing-image-placeholder-icon fa ${iconClass}" aria-hidden="true"></i>` +
+        `</div>`;
+    }
+
+    const glightbox = container.querySelector("a.glightbox");
+    if (glightbox) glightbox.removeAttribute("href");
+
+    button.classList.add("d-none");
+
+    if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   }
 };

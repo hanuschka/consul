@@ -1,18 +1,20 @@
 class Adm::Ideas::IdeaPolicy < ApplicationPolicy
+  include Adm::Ideas::Concerns::IdeaManageable
+
   def index?
     idea_manager_or_officer?
   end
 
   def show?
-    idea_manager_or_officer?
+    idea_manager? || assigned_officer?
   end
 
   def edit?
-    idea_manager_or_officer?
+    idea_manager? || assigned_officer?
   end
 
   def update?
-    idea_manager_or_officer?
+    idea_manager? || assigned_officer?
   end
 
   def destroy?
@@ -20,7 +22,7 @@ class Adm::Ideas::IdeaPolicy < ApplicationPolicy
   end
 
   def audits?
-    idea_manager_or_officer?
+    idea_manager? || assigned_officer?
   end
 
   def accept?
@@ -43,11 +45,18 @@ class Adm::Ideas::IdeaPolicy < ApplicationPolicy
 
   private
 
-    def idea_manager?
-      @user&.administrator? || @user&.idea_manager?
-    end
-
     def idea_manager_or_officer?
       idea_manager? || @user&.idea_officer?
+    end
+
+    def assigned_officer?
+      return false unless @user&.idea_officer?
+      return false unless @record.is_a?(Idea)
+      return true unless Setting["ideas.admins_must_assign_officer"].present?
+
+      officer = @user.idea_officer
+      return true if officer.manage_all?
+
+      @record.officer == officer
     end
 end

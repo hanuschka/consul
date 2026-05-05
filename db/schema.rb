@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_10_120002) do
+ActiveRecord::Schema.define(version: 2026_04_30_103115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1565,6 +1565,7 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
+    t.string "mapbox_style_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
@@ -1653,13 +1654,14 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.integer "kind"
     t.string "preset"
     t.bigint "projekt_id"
-    t.string "external_title"
     t.string "external_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
     t.integer "landing_page_id"
+    t.string "custom_title"
+    t.boolean "open_in_new_tab", default: false, null: false
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
@@ -2396,9 +2398,11 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
     t.bigint "landing_page_id"
+    t.datetime "published_at"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["published_at"], name: "index_projekts_on_published_at"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
@@ -2881,6 +2885,13 @@ ActiveRecord::Schema.define(version: 2026_04_10_120002) do
     t.datetime "published_at"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
+  end
+
+  create_table "site_customization_videos", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_site_customization_videos_on_name", unique: true
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|

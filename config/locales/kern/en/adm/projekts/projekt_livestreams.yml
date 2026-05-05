@@ -1,0 +1,36 @@
+en:
+  adm:
+    projekts:
+      projekt_livestreams:
+        show:
+          add_question: Add question
+          no_questions: No quick polls available.
+          table:
+            question: Question
+            options: Answers
+            actions: Actions
+        new:
+          title: Add livestream
+        create:
+          success: Livestream created successfully.
+        edit:
+          title: Edit livestream
+        update:
+          success: Livestream updated successfully.
+        destroy:
+          success: Livestream deleted successfully.
+        send_notifications:
+          success: Notifications sent successfully.
+        form:
+          url_label: Video URL
+          url_hint: "Enter the full URL of the livestream on YouTube or Vimeo. The URL is used to embed the video player on the frontend. Regular video URLs from both platforms are supported. Make sure the video is publicly accessible or set to 'unlisted'."
+          url_placeholder: "https://www.youtube.com/watch?v=..."
+          title_label: Title
+          title_hint: "Enter a meaningful title for the livestream, shown as a heading on the frontend. If you leave the field empty, the title is automatically fetched from YouTube or Vimeo. A manually entered title takes precedence over the automatically retrieved one."
+          title_placeholder: "e.g. Town hall meeting on the climate budget"
+          starts_at_label: Start
+          starts_at_hint: "Defines the start time of the livestream. Date and time are shown on the frontend so participants can schedule the event. If you leave the field empty, the start time is automatically taken from the video platform if available there."
+          description_label: Description
+          description_hint: "Optional description shown on the frontend below the livestream title. Explain the occasion, agenda, and topics of the broadcast. If you leave the field empty, the description is automatically taken from the video platform. A manually entered text takes precedence."
+          description_placeholder: "e.g. Live broadcast of the town hall meeting on the topic of..."
+          submit: Save

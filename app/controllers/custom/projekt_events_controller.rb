@@ -4,6 +4,8 @@ class ProjektEventsController < ApplicationController
   include ProjektControllerHelper
   include LandingPageResolvable
 
+  before_action :check_projekt_events_page_enabled, only: :index
+
   skip_authorization_check
   has_filters %w[incoming all past], only: [:index]
 
@@ -37,4 +39,10 @@ class ProjektEventsController < ApplicationController
       end
     end
   end
+
+  private
+
+    def check_projekt_events_page_enabled
+      raise FeatureFlags::FeatureDisabled, :projekt_events_page unless Setting["extended_feature.general.enable_projekt_events_page"].present?
+    end
 end

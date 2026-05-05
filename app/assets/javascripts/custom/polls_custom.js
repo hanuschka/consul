@@ -2,6 +2,8 @@
   "use strict";
   App.PollsCustom = {
     resizeDebounceTimer: null,
+    openAnswerAutosaveTimers: new WeakMap(),
+    openAnswerStatusTimers: new WeakMap(),
 
     initialize: function() {
       this.destroy();
@@ -9,6 +11,7 @@
       App.PollsCustom.showOpenAnswers();
 
       $("body").on("click.pollsCustom", ".js-show-open-answers", this.handleOpenAnswersToggle.bind(this));
+      $("body").on("input.pollsCustom", ".js-poll-open-answer-autosave textarea", this.handleOpenAnswerInput.bind(this));
 
       this.formatVisibleRatingScales();
 
@@ -21,6 +24,72 @@
       if ($(".js-rating-scale").length > 0) {
         $(window).on("resize.pollsCustom", this.handleWindowResize);
       }
+    },
+
+    handleOpenAnswerInput: function(event) {
+      const form = event.currentTarget.closest("form");
+      if (!form) return;
+
+      clearTimeout(this.openAnswerAutosaveTimers.get(form));
+      this.openAnswerAutosaveTimers.set(form, setTimeout(() => {
+        this.submitOpenAnswerForm(form);
+      }, 500));
+    },
+
+    submitOpenAnswerForm: function(form) {
+      const textarea = form.querySelector("textarea");
+      if (!textarea) return;
+
+      const savingText = form.dataset.savingText;
+      const savedText = form.dataset.savedText;
+      const errorText = form.dataset.errorText;
+
+      // Capture textarea state for restore after the answers section is re-rendered.
+      const wasFocused = document.activeElement === textarea;
+      const selStart = textarea.selectionStart;
+      const selEnd = textarea.selectionEnd;
+
+      const status = form.querySelector(".js-poll-open-answer-status");
+      if (status) {
+        status.textContent = savingText || "";
+        status.className = "poll-open-answer-status js-poll-open-answer-status -saving";
+      }
+
+      const answersWrapper = form.closest('[id$="_answers"]');
+      if (answersWrapper) {
+        const observer = new MutationObserver(() => {
+          observer.disconnect();
+
+          const newForm = answersWrapper.querySelector(".js-poll-open-answer-autosave");
+          if (!newForm) return;
+
+          const newTextarea = newForm.querySelector("textarea");
+          if (newTextarea) {
+            if (wasFocused) newTextarea.focus();
+            try { newTextarea.setSelectionRange(selStart, selEnd); } catch (_) {}
+          }
+
+          const newStatus = newForm.querySelector(".js-poll-open-answer-status");
+          if (newStatus) {
+            newStatus.textContent = savedText || "";
+            newStatus.className = "poll-open-answer-status js-poll-open-answer-status -saved";
+            this.openAnswerStatusTimers.set(newForm, setTimeout(() => {
+              newStatus.textContent = "";
+              newStatus.className = "poll-open-answer-status js-poll-open-answer-status";
+            }, 2000));
+          }
+        });
+        observer.observe(answersWrapper, { childList: true, subtree: true });
+      }
+
+      $(form).one("ajax:error", () => {
+        if (status) {
+          status.textContent = errorText || "";
+          status.className = "poll-open-answer-status js-poll-open-answer-status -error";
+        }
+      });
+
+      $(form).submit();
     },
 
     // ".pollsCustom" is a jQuery event namespace — it tags bindings

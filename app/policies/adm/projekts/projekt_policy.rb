@@ -25,7 +25,8 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
     include Adm::Projekts::PermissionCheck::ScopeCheck
 
     def resolve
-      scope.where(id: visible_projekt_ids)
+      scope.regular
+        .where(id: visible_projekt_ids)
         .includes([:projekt_settings, :parent, [page: :translations]])
         .order(updated_at: :desc)
     end

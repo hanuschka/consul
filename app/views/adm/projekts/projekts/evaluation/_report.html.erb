@@ -36,22 +36,22 @@
 
   phase_tab_config = {
     "ProjektPhase::ProposalPhase" => {
-      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>),
+      material_icon: "lightbulb",
       kpi_key: "proposals_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
     },
     "ProjektPhase::VotingPhase" => {
-      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>),
+      material_icon: "how_to_vote",
       kpi_key: "participants_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.participants"
     },
     "ProjektPhase::BudgetPhase" => {
-      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>),
+      material_icon: "euro_symbol",
       kpi_key: "investments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.investments"
     },
     "ProjektPhase::CommentPhase" => {
-      icon: %q(<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>),
+      material_icon: "chat_bubble",
       kpi_key: "comments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.comments"
     }
@@ -60,16 +60,20 @@
   pdf_mode = local_assigns.fetch(:pdf_mode, false)
   selection = local_assigns.fetch(:selection, nil)
 
+  include_report_section = selection.nil? || selection.include_report?
+
   renderable_phases = phases.select do |p|
     next false unless phase_type_partial.key?(p["phase_type"])
     next true if selection.nil?
 
     selection.include_phase?(p["phase_id"])
   end
+
+  report_tab_material_icon = "summarize"
 %>
 
 
-<div class="evaluation-report <%= 'evaluation-report--pdf' if pdf_mode %>">
+<div class="adm-projekt-evaluation-report <%= 'adm-projekt-evaluation-report--pdf' if pdf_mode %>">
   <%# Hidden in admin (tabs) view; rendered for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
   <% if pdf_mode %>
     <div class="er-header">
@@ -104,13 +108,13 @@
     </div>
   <% end %>
 
-  <% if ai_project_summary.present? %>
-    <div class="er-project-summary">
-      <div class="er-project-summary-title">
-        <%= t("adm.projekts.projekts.evaluation.project_summary") %>
-      </div>
-      <div class="er-project-summary-body"><%= sanitize(ai_project_summary) %></div>
-    </div>
+  <% if pdf_mode && include_report_section %>
+    <%= render "adm/projekts/projekts/evaluation/report_summary_section",
+      evaluation: evaluation,
+      projekt: projekt,
+      phase_palette: phase_palette,
+      phase_tab_config: phase_tab_config,
+      pdf_mode: true %>
   <% end %>
 
   <% if renderable_phases.any? %>
@@ -131,13 +135,27 @@
           } %>
       <% end %>
     <% else %>
-      <% radio_group_name = "evaluation-phase-group-#{evaluation.id}" %>
+      <%
+        radio_group_name = "evaluation-phase-group-#{evaluation.id}"
+        report_input_id = "evaluation-phase-radio-#{evaluation.id}-report"
+        report_accent = "#7C3AED"
+        report_accent_light = "#EDE9FE"
+      %>
 
       <div
         class="evaluation-phase-tabs"
         data-controller="adm--evaluation-phase-tabs"
       >
-        <% renderable_phases.each_with_index do |phase, idx| %>
+        <input
+          type="radio"
+          name="<%= radio_group_name %>"
+          id="<%= report_input_id %>"
+          class="evaluation-phase-tabs__radio"
+          data-adm--evaluation-phase-tabs-target="radio"
+          data-phase-id="report"
+          checked
+        >
+        <% renderable_phases.each do |phase| %>
           <%
             input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
           %>
@@ -148,11 +166,29 @@
             class="evaluation-phase-tabs__radio"
             data-adm--evaluation-phase-tabs-target="radio"
             data-phase-id="<%= phase["phase_id"] %>"
-            <%= "checked" if idx.zero? %>
           >
         <% end %>
 
         <div class="evaluation-phase-tabs__nav" role="tablist">
+          <label
+            for="<%= report_input_id %>"
+            role="tab"
+            class="evaluation-phase-tab"
+            style="--tab-accent:<%= report_accent %>;--tab-accent-light:<%= report_accent_light %>"
+          >
+            <span class="evaluation-phase-tab__icon">
+              <span class="material-symbols-outlined" aria-hidden="true"><%= report_tab_material_icon %></span>
+            </span>
+            <span class="evaluation-phase-tab__body">
+              <span class="evaluation-phase-tab__name">
+                <%= t("adm.projekts.projekts.evaluation.report_tab.title") %>
+              </span>
+              <span class="evaluation-phase-tab__meta">
+                <span><%= t("adm.projekts.projekts.evaluation.report_tab.kpi_label") %></span>
+              </span>
+            </span>
+          </label>
+
           <% renderable_phases.each_with_index do |phase, idx| %>
             <%
               color = phase_palette[idx % phase_palette.size]
@@ -167,7 +203,9 @@
               class="evaluation-phase-tab"
               style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
             >
-              <span class="evaluation-phase-tab__icon"><%= raw(config[:icon]) %></span>
+              <span class="evaluation-phase-tab__icon">
+                <span class="material-symbols-outlined" aria-hidden="true"><%= config[:material_icon] %></span>
+              </span>
               <span class="evaluation-phase-tab__body">
                 <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
                 <span class="evaluation-phase-tab__meta">
@@ -180,6 +218,15 @@
         </div>
 
         <div class="evaluation-phase-tabs__panels">
+          <div role="tabpanel" class="evaluation-phase-panel evaluation-phase-panel--report">
+            <%= render "adm/projekts/projekts/evaluation/report_summary_section",
+              evaluation: evaluation,
+              projekt: projekt,
+              phase_palette: phase_palette,
+              phase_tab_config: phase_tab_config,
+              pdf_mode: false %>
+          </div>
+
           <% renderable_phases.each_with_index do |phase, idx| %>
             <%
               color = phase_palette[idx % phase_palette.size]
@@ -198,6 +245,13 @@
         </div>
       </div>
     <% end %>
+  <% elsif !pdf_mode %>
+    <%= render "adm/projekts/projekts/evaluation/report_summary_section",
+      evaluation: evaluation,
+      projekt: projekt,
+      phase_palette: phase_palette,
+      phase_tab_config: phase_tab_config,
+      pdf_mode: false %>
   <% end %>
 
 </div>

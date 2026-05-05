@@ -5,8 +5,6 @@ class MasterportalPin < ApplicationRecord
           class_name: "Budget::Investment", dependent: :nullify
   has_one :projekt_point_of_interest_pin, foreign_key: :masterportal_pin_id,
           dependent: :nullify
-  has_one_attached :icon_image
-
   validates :external_id, :endpoint_url, :collection_id, :latitude, :longitude, presence: true
 
   scope :standalone, lambda {
@@ -40,7 +38,6 @@ class MasterportalPin < ApplicationRecord
 
     where(projekt_phase_id: projekt_phase.id)
       .standalone
-      .with_attached_icon_image
       .map(&:to_map_feature)
   end
 
@@ -78,11 +75,11 @@ class MasterportalPin < ApplicationRecord
   end
 
   def feature_icon_url
-    return nil if !icon_image.attached?
+    asset_name = "masterportal/pins/#{collection_id}.png"
+    path = Rails.root.join("app/assets/images/#{asset_name}")
+    return nil if !path.exist?
 
-    Rails.application.routes.url_helpers.rails_blob_url(
-      icon_image, only_path: true
-    )
+    ActionController::Base.helpers.asset_path(asset_name)
   end
 
   def associated_resource_url

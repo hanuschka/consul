@@ -23,6 +23,21 @@
     class: "pdf-options-form"
   ) do |form| %>
 
+    <div class="pdf-options-phase">
+      <label class="pdf-options-phase__toggle">
+        <%= check_box_tag(
+          "pdf_options[include_report]",
+          "1",
+          true,
+          id: "pdf_options_include_report"
+        ) %>
+        <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
+        <span class="pdf-options-phase__type">
+          <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
+        </span>
+      </label>
+    </div>
+
     <% phases = @evaluation.data["phases"] || [] %>
     <% phases.each do |phase| %>
       <%

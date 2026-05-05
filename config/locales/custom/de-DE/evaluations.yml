@@ -3,6 +3,9 @@ de:
     evaluations:
       generated_at: "Erstellt am %{time}"
   adm:
+    ai_action_button:
+      processing: KI arbeitet…
+
     projekts:
       projekts:
         projekt:
@@ -59,6 +62,7 @@ de:
             proposal: Vorschlag
             investment: Investition
           pdf_options:
+            include_report: Bericht einbeziehen (Projektzusammenfassung, Einstellungen, Phasen-Zusammenfassungen)
             sections:
               kpis: Kennzahlen
               ranking: Ranking-Diagramm
@@ -70,6 +74,8 @@ de:
               ai_questions: KI-Fragen
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
+          open_responses_show: Beiträge anzeigen
+          open_responses_hide: Beiträge ausblenden
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür
@@ -80,6 +86,33 @@ de:
           voting_phase: Abstimmungsphase
           budget_phase: Bürgerhaushaltsphase
           comment_phase: Kommentarphase
+          report_tab:
+            title: Bericht
+            kpi_label: Übersicht
+          report:
+            project_summary_label: Projektseite
+            project_summary_subtitle: Untertitel
+            project_summary_no_subtitle: Kein Untertitel
+            project_summary_no_image: Kein Projektbild
+            project_summary_ai_label: KI-Zusammenfassung des Projektinhalts
+            project_summary_ai_empty: Keine Inhalte für die KI-Zusammenfassung verfügbar.
+            settings_label: Projekteinstellungen
+            settings_open_phases:
+              one: "Aktuell offene Phase"
+              other: "Aktuell offene Phasen"
+            settings_open_phases_none: Keine offene Phase
+            settings_polls:
+              one: "Abstimmung"
+              other: "Abstimmungen"
+            settings_polls_none: Keine Abstimmungen
+            settings_tags: Schlagwörter
+            settings_tags_none: Keine Schlagwörter
+            settings_sdgs: Nachhaltigkeitsziele
+            settings_sdgs_none: Keine SDGs
+            phases_label: Phasen-Zusammenfassungen
+            phases_empty: Es liegen noch keine KI-Phasen-Zusammenfassungen vor.
+            phase_short_summary_empty: Für diese Phase liegen noch keine Daten vor.
+            qr_code_label: Projektseite öffnen
         generate_evaluation:
           started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.
         evaluation_pdf_options:

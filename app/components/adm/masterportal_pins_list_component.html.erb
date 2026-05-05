@@ -5,8 +5,8 @@
         <article id="<%= dom_id(pin) %>" class="masterportal-pin-card">
           <div class="masterportal-pin-card--main">
             <div class="masterportal-pin-card--icon">
-              <% if pin.icon_image.attached? %>
-                <%= image_tag pin.icon_image, class: "masterportal-pin-card--icon-image", alt: "" %>
+              <% if pin.feature_icon_url.present? %>
+                <%= image_tag pin.feature_icon_url, class: "masterportal-pin-card--icon-image", alt: "" %>
               <% else %>
                 <span class="material-symbols-outlined" aria-hidden="true">place</span>
               <% end %>

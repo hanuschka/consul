@@ -43,13 +43,18 @@ class MapLocation < ApplicationRecord
   }
 
   scope :with_proposal_associations, -> {
-    includes(mappable: :projekt_labels)
+    includes(mappable: [:projekt_labels, :masterportal_pin])
       .where(mappable_type: "Proposal")
   }
 
   scope :with_investment_associations, -> {
-    includes(mappable: [:sentiment, :projekt_labels])
+    includes(mappable: [:sentiment, :projekt_labels, :masterportal_pin])
       .where(mappable_type: "Budget::Investment")
+  }
+
+  scope :with_point_of_interest_pin_associations, -> {
+    includes(mappable: :masterportal_pin)
+      .where(mappable_type: "ProjektPointOfInterestPin")
   }
 
   audited associated_with: :deficiency_report,
@@ -273,7 +278,7 @@ class MapLocation < ApplicationRecord
     end
 
     def imported_from_masterportal?
-      mappable.respond_to?(:masterportal_pin) && mappable.masterportal_pin.present?
+      mappable.respond_to?(:masterportal_pin_id) && mappable.masterportal_pin_id.present?
     end
 
     def audit_changes?

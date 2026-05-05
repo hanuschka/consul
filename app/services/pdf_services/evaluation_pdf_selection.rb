@@ -8,7 +8,7 @@ class PdfServices::EvaluationPdfSelection
 
   ALL_SECTIONS = PHASE_SECTIONS.values.flatten.uniq.freeze
 
-  attr_reader :phase_ids, :sections_by_phase
+  attr_reader :phase_ids, :sections_by_phase, :include_report
 
   def self.all(evaluation)
     phases = evaluation.data["phases"] || []
@@ -17,7 +17,7 @@ class PdfServices::EvaluationPdfSelection
       hash[phase["phase_id"].to_i] = available_sections(phase["phase_type"])
     end
 
-    new(phase_ids: phase_ids, sections_by_phase: sections_by_phase)
+    new(phase_ids: phase_ids, sections_by_phase: sections_by_phase, include_report: true)
   end
 
   def self.from_params(evaluation, raw_params)
@@ -34,16 +34,23 @@ class PdfServices::EvaluationPdfSelection
       hash[phase_id] = Array(section_list).map(&:to_s) & ALL_SECTIONS
     end
 
-    new(phase_ids: phase_ids, sections_by_phase: sections_by_phase)
+    include_report = ActiveModel::Type::Boolean.new.cast(params_hash[:include_report])
+
+    new(
+      phase_ids: phase_ids,
+      sections_by_phase: sections_by_phase,
+      include_report: include_report
+    )
   end
 
   def self.available_sections(phase_type)
     PHASE_SECTIONS[phase_type] || []
   end
 
-  def initialize(phase_ids:, sections_by_phase:)
+  def initialize(phase_ids:, sections_by_phase:, include_report: true)
     @phase_ids = phase_ids
     @sections_by_phase = sections_by_phase
+    @include_report = include_report
   end
 
   def include_phase?(phase_id)
@@ -54,5 +61,9 @@ class PdfServices::EvaluationPdfSelection
     return false unless include_phase?(phase_id)
 
     (sections_by_phase[phase_id.to_i] || []).include?(section.to_s)
+  end
+
+  def include_report?
+    @include_report
   end
 end

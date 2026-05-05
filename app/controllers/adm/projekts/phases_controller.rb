@@ -424,7 +424,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     else
       list_scope = base_scope
         .includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
-        .with_attached_icon_image
         .order(created_at: :desc)
       @pagy_masterportal_pins, @masterportal_pins = pagy(list_scope, limit: 12)
     end

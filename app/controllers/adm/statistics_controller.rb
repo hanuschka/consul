@@ -2,7 +2,10 @@ module Adm
   class StatisticsController < Adm::BaseController
     def show
       authorize [:adm, :statistics]
-      @breadcrumbs = [{ name: t("adm.statistics.show.title"), icon: "bar_chart_4_bars" }]
+      @breadcrumbs = [
+        { name: t("adm.menu.items.stats"), icon: "bar_chart_4_bars" },
+        { name: t("adm.menu.items.stats_subitems.overview") }
+      ]
 
       load_user_stats
       load_projekt_stats

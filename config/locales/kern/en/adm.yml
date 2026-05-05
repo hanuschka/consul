@@ -8,6 +8,7 @@ en:
       aria_label: Administration menu
       items:
         home: Home
+        team: Team
         projekts: Projects
         application: Application
         modules: Modules
@@ -25,7 +26,6 @@ en:
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
-          matomo: Matomo
         pages: Pages
         pages_subitems:
           privacy: Privacy policy
@@ -33,7 +33,6 @@ en:
           impressum: Legal notice
         profiles: Profiles
         profiles_subitems:
-          administrators: Administrators
           deficiency_report_managers: Deficiency managers
           idea_managers: Idea managers
           section_contact_people: Contact persons
@@ -46,6 +45,9 @@ en:
           recipient_groups: Recipient groups
           unregistered_newsletter_subscribers: Unregistered subscribers
         stats: Statistics
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
         apps: Apps
         developer: Developer area
         developer_subitems:

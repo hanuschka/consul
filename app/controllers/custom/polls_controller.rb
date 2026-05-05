@@ -22,6 +22,7 @@ class PollsController < ApplicationController
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 

@@ -1,5 +1,5 @@
 class Pages::Projekts::SidebarBudgetPhasesComponent < ApplicationComponent
-  delegate :format_date_range, to: :helpers
+  delegate :format_budget_phase_duration, to: :helpers
   attr_reader :budget, :phases
 
   def initialize(budget)

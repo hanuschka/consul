@@ -21,8 +21,21 @@ class SiteCustomization::Page < ApplicationRecord
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
+  has_one_attached :landing_desktop_header_video
+  has_one_attached :landing_mobile_header_video
+
   has_one_attached :landing_site_logo_for_transparent_background
   has_one_attached :landing_site_logo_for_white_background
+
+  LANDING_VIDEO_FORMATS = ["video/mp4", "video/webm"].freeze
+  LANDING_VIDEO_MAX_SIZE = 50.megabytes
+
+  validates :landing_desktop_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_desktop_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_desktop_header_video.attached? }}
+  validates :landing_mobile_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_mobile_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_mobile_header_video.attached? }}
 
   before_save :sanitize_title_and_subtitle
   before_save :capture_old_title

@@ -7,11 +7,11 @@ module Adm
       authorize @record, :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
-      if @kind == :image && params[:remove_image] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+      if attachment_kind? && params[:remove_attachment] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
       elsif @kind == :image && imageable_image_attribute?
-        if params[:remove_image] == "1"
+        if params[:remove_attachment] == "1"
           remove_imageable_image
         else
           update_imageable_image
@@ -27,6 +27,10 @@ module Adm
     end
 
     private
+
+      def attachment_kind?
+        [:image, :video].include?(@kind)
+      end
 
       def find_record
         record_class = params[:record_type].tr("-", "/").classify.constantize

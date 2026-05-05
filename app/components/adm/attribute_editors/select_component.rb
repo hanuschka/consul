@@ -8,7 +8,11 @@ class Adm::AttributeEditors::SelectComponent < Adm::AttributeEditorComponent
 
   def translated_select_options
     @select_options.map do |option|
-      [I18n.t("#{i18n_key(:label)}_options.#{option}", default: option.to_s.humanize), option]
+      if option.is_a?(Array)
+        option
+      else
+        [I18n.t("#{i18n_key(:label)}_options.#{option}", default: option.to_s.humanize), option]
+      end
     end
   end
 

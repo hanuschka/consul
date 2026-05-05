@@ -7,12 +7,22 @@
       width: 100%;
     }
 
+    &:not(:has(*)) {
+      display: none;
+    }
+
+    @media(max-width: $medium-tablet-viewport-start) {
+      min-width: 0;
+      max-width: 250px;
+    }
+
     @media(max-width: $small-tablet-viewport-start) {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       width: 100%;
+      max-width: none;
       margin: auto;
       margin-bottom: 20px;
     }
@@ -49,18 +59,14 @@
     padding-top: 0;
 
     i {
-      color: $brand;
+      color: var(--brand-color);
       margin-right: 8px;
     }
   }
 
-  .sidebar-title + br {
-    display: none;
-  }
-
   .sdg-tag-icon:before {
     top: 0;
-    color: $brand;
+    color: var(--brand-color);
     margin-right: 8px;
   }
 
@@ -84,7 +90,7 @@
 
   .projekt-tag-chip-icon:before {
     margin-right: 8px;
-    color: $brand;
+    color: var(--brand-color);
   }
 
   .geozone-affiliation-filter {

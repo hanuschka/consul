@@ -2,10 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = { column: String }
-  static targets = [ "filterMenu", "searchInput" ]
+  static targets = [ "filterMenu", "searchInput", "dateFromInput", "dateToInput" ]
 
   connect() {
-    this.url = new URL(window.location);
+    this.frame = this.element.closest("turbo-frame");
+    this.url = new URL(this.frame?.src || window.location, window.location.origin);
   }
 
   toggleFilterMenu(event) {
@@ -13,10 +14,14 @@ export default class extends Controller {
     event.preventDefault();
 
     this.filterMenuTarget.classList.toggle("d-none");
+
+    const wrapper = this.element.closest(".kern-table-responsive");
+    if (wrapper) {
+      wrapper.style.overflow = this.filterMenuTarget.classList.contains("d-none") ? "" : "visible";
+    }
   }
 
   selectFilterOption(event) {
-    const checkbox = event.target;
     const paramName = `${this.columnValue}[]`;
 
     const selectedOptions = Array.from(
@@ -31,14 +36,29 @@ export default class extends Controller {
 
   applyFilter() {
     if (this.hasSearchInputTarget) {
-      const searchValue = this.searchInputTarget.value.trim();
-      if (searchValue !== "") {
-        this.url.searchParams.set(this.searchInputTarget.name, searchValue);
-      } else {
-        this.url.searchParams.delete(this.searchInputTarget.name);
-      }
+      this.setOrDeleteParam(this.searchInputTarget.name, this.searchInputTarget.value.trim());
     }
 
-    window.location.href = this.url.toString();
+    if (this.hasDateFromInputTarget) {
+      this.setOrDeleteParam(this.dateFromInputTarget.name, this.dateFromInputTarget.value);
+    }
+
+    if (this.hasDateToInputTarget) {
+      this.setOrDeleteParam(this.dateToInputTarget.name, this.dateToInputTarget.value);
+    }
+
+    if (this.frame) {
+      this.frame.src = this.url.toString();
+    } else {
+      window.location.href = this.url.toString();
+    }
+  }
+
+  setOrDeleteParam(name, value) {
+    if (value && value !== "") {
+      this.url.searchParams.set(name, value);
+    } else {
+      this.url.searchParams.delete(name);
+    }
   }
 }

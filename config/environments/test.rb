@@ -45,7 +45,8 @@ Rails.application.configure do
   config.active_support.deprecation = :stderr
 
   # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  # Kept off while kern/en is incomplete — flip on once parity is reached.
+  # config.i18n.raise_on_missing_translations = true
 
   # Store files in tmp folders.
   config.active_storage.service = :test

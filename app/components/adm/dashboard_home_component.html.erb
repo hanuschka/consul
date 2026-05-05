@@ -1,0 +1,227 @@
+<div class="kern-container">
+
+  <%# ── 1. Notice / Info box ──────────────────────────────────────────────── %>
+  <% if show_notice? %>
+    <div class="adm-dashboard__notice" data-section="<%= notice.section %>">
+      <span class="material-symbols-outlined adm-dashboard__notice-icon" aria-hidden="true">info</span>
+      <div class="adm-dashboard__notice-text"><%= notice.notice_message %></div>
+      <button type="button" class="adm-dashboard__notice-close" aria-label="<%= t(".notice_dismiss") %>">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+  <% end %>
+
+  <%# ── 2. Header row: intro + quick links | stat cards ───────────────── %>
+  <% if show_intro_or_stats? %>
+    <div class="adm-dashboard__header-row">
+      <% if intro_text.present? || quick_links.any? %>
+        <div class="adm-dashboard__header-left">
+          <% if intro_text.present? %>
+            <p class="adm-dashboard__intro"><%= intro_text %></p>
+          <% end %>
+
+          <% if quick_links.any? %>
+            <div class="adm-dashboard__quick-links">
+              <% quick_links.each do |link| %>
+                <%= kern_link_button link[:path],
+                    text: link[:label],
+                    style: link[:primary] ? :primary : :secondary %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if stats.any? %>
+        <div class="adm-dashboard__stats">
+          <% stats.each do |stat| %>
+            <div class="adm-stat-card">
+              <% if stat[:icon] %>
+                <div class="adm-stat-card__header">
+                  <span class="adm-stat-card__icon material-symbols-outlined" aria-hidden="true"><%= stat[:icon] %></span>
+                </div>
+              <% end %>
+              <span class="adm-stat-card__value <%= 'adm-stat-card__value--compact' if stat[:value].to_s.length >= 6 %>"><%= stat[:value] %></span>
+              <span class="adm-stat-card__label"><%= stat[:label] %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ── 3. Team + Contact Persons (side by side) ─────────────────────── %>
+  <div class="adm-dashboard__people-row">
+    <%# ── Team (left) ── %>
+    <div class="adm-dashboard__section adm-dashboard__people-col">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+        <h3><%= t(".team_title") %></h3>
+      </div>
+
+      <% if team_members.any? %>
+        <div class="adm-team-grid">
+          <% team_members.each do |member| %>
+            <div class="adm-team-member" title="<%= member.user.name %>">
+              <% if member.user.image.present? %>
+                <%= image_tag(member.user.image.variant(:thumb2), class: "adm-team-member__avatar", alt: member.user.name) %>
+              <% else %>
+                <div class="adm-team-member__avatar adm-team-member__avatar--placeholder">
+                  <%= member.user.first_letter_of_name %>
+                </div>
+              <% end %>
+              <span class="adm-team-member__name"><%= member.user.name %></span>
+            </div>
+          <% end %>
+
+          <% if team_url.present? %>
+            <%= link_to team_url, class: "adm-team-member adm-team-add", title: t(".team_add") do %>
+              <div class="adm-team-member__avatar adm-team-member__avatar--add">
+                <span class="material-symbols-outlined" aria-hidden="true">add</span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% elsif team_url.present? %>
+        <%= empty_state(title: t(".no_team"), icon: "group", link_url: team_url, link_text: t(".team_manage")) %>
+      <% else %>
+        <%= empty_state(title: t(".no_team"), icon: "group") %>
+      <% end %>
+    </div>
+
+    <%# ── Contact Persons (right) ── %>
+    <% if show_contact_persons? %>
+      <div class="adm-dashboard__section adm-dashboard__people-col">
+        <div class="adm-dashboard__section-header">
+          <span class="material-symbols-outlined" aria-hidden="true">contact_phone</span>
+          <h3><%= t(".contact_persons_title") %></h3>
+        </div>
+
+        <div class="adm-dashboard__contact-persons">
+          <% contact_persons.each do |person| %>
+            <div class="adm-dashboard__contact-card">
+              <% if person.user.image.present? %>
+                <%= image_tag(person.user.image.variant(:thumb2), class: "adm-dashboard__contact-avatar", alt: person.user.name) %>
+              <% else %>
+                <div class="adm-dashboard__contact-avatar adm-dashboard__contact-avatar--placeholder">
+                  <%= person.user.first_letter_of_name %>
+                </div>
+              <% end %>
+              <div class="adm-dashboard__contact-info">
+                <div class="adm-dashboard__contact-name"><%= person.name %></div>
+                <% if person.role.present? %>
+                  <div class="adm-dashboard__contact-role"><%= person.role %></div>
+                <% end %>
+                <div class="adm-dashboard__contact-details">
+                  <% if person.email.present? %>
+                    <a href="mailto:<%= person.email %>">
+                      <span class="material-symbols-outlined" style="font-size: 14px;" aria-hidden="true">mail</span>
+                      <%= person.email %>
+                    </a>
+                  <% end %>
+                  <% if person.phone.present? %>
+                    <a href="tel:<%= person.phone %>">
+                      <span class="material-symbols-outlined" style="font-size: 14px;" aria-hidden="true">phone</span>
+                      <%= person.phone %>
+                    </a>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── 4. Recently Edited (full width) ──────────────────────────────── %>
+  <% if show_recent? %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">history</span>
+      <h3><%= t(".recent_title") %></h3>
+    </div>
+
+    <% if recent_items.any? %>
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <% if recent_item_partial.present? %>
+                <% recent_item_headers.each do |header| %>
+                  <th scope="col" class="kern-table__header"><%= header %></th>
+                <% end %>
+              <% else %>
+                <% recent_item_columns.each do |col| %>
+                  <th scope="col" class="kern-table__header"><%= col[:label] %></th>
+                <% end %>
+                <th scope="col" class="kern-table__header"><%= t(".updated_at") %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody class="kern-table__body">
+            <% if recent_item_partial.present? %>
+              <% recent_items.each do |item| %>
+                <% local_name = recent_item_as || recent_item_partial.split("/").last.delete_prefix("_").to_sym %>
+                <%= render recent_item_partial, **{ local_name => item } %>
+              <% end %>
+            <% else %>
+              <% recent_items.each do |item| %>
+                <tr class="kern-table__row">
+                  <% recent_item_columns.each_with_index do |col, i| %>
+                    <% if i == 0 %>
+                      <th scope="row" class="kern-table__header">
+                        <% if col[:url] %>
+                          <%= link_to col[:value].call(item), col[:url].call(item), class: "link strong" %>
+                        <% else %>
+                          <%= col[:value].call(item) %>
+                        <% end %>
+                      </th>
+                    <% else %>
+                      <td class="kern-table__cell">
+                        <% if col[:url] %>
+                          <%= link_to col[:value].call(item), col[:url].call(item), class: "kern-link" %>
+                        <% else %>
+                          <%= col[:value].call(item) %>
+                        <% end %>
+                      </td>
+                    <% end %>
+                  <% end %>
+                  <td class="kern-table__cell"><%= l(item.updated_at, format: :short) %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <%= empty_state(title: t(".no_recent"), icon: "history") %>
+    <% end %>
+  </div>
+  <% end %>
+
+  <%# ── 5. Activity Feed ─────────────────────────────────────────────── %>
+  <%= render Adm::ActivityFeedComponent.new(activities: activities) %>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Restore dismissed notice state from sessionStorage
+    document.querySelectorAll('.adm-dashboard__notice').forEach(function(notice) {
+      var section = notice.dataset.section;
+      if (sessionStorage.getItem('notice-dismissed-' + section) === 'true') {
+        notice.style.display = 'none';
+      }
+    });
+
+    // Handle notice dismiss click
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.adm-dashboard__notice-close')) {
+        var notice = e.target.closest('.adm-dashboard__notice');
+        notice.style.display = 'none';
+        sessionStorage.setItem('notice-dismissed-' + notice.dataset.section, 'true');
+      }
+    });
+  });
+</script>

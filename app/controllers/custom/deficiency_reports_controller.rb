@@ -99,9 +99,7 @@ class DeficiencyReportsController < ApplicationController
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
-      if Setting["deficiency_reports.admin_acceptance_required"].present?
-        DeficiencyReportMailer.notify_author_about_submission(@deficiency_report).deliver_later
-      end
+      DeficiencyReportMailer.notify_author_about_submission(@deficiency_report).deliver_later
       redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.create.flash_success")
     else
       render :new
@@ -117,11 +115,6 @@ class DeficiencyReportsController < ApplicationController
   def vote
     @deficiency_report.register_vote(current_user, params[:value])
     set_deficiency_report_votes(@deficiency_report)
-  end
-
-  def suggest
-    @limit = 5
-    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
   end
 
   def notify_officer_about_new_comments

@@ -1,20 +1,30 @@
 module ProjektsHelper
   def breadcrumbs_links(base_projekt, divider = '/', home_page_link = true)
-    divider_tag = content_tag(:div, divider, class: 'breadcrumbs-divider')
+    divider_tag = content_tag(:span, " #{divider} ", class: 'breadcrumbs-divider', "aria-hidden": "true")
 
-    links = base_projekt.breadcrumb_trail_ids.map do |projekt_id|
+    items = []
+
+    if home_page_link
+      items << link_to(t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item')
+    end
+
+    base_projekt.breadcrumb_trail_ids.each do |projekt_id|
       projekt = Projekt.find(projekt_id)
 
       if !projekt.page.published? || (projekt == base_projekt && home_page_link)
-        content_tag(:div, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
+        items << content_tag(:span, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
       else
-        link_to projekt.page.title, projekt.page.url, class: 'breadcrumbs-item'
+        items << link_to(projekt.page.title, projekt.page.url, class: 'breadcrumbs-item')
       end
     end
 
-    links.unshift(link_to t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item') if home_page_link
+    list_items = items.each_with_index.map do |item, index|
+      li_content = index > 0 ? (divider_tag + item) : item
+      content_tag(:li, li_content, class: 'breadcrumbs-list-item')
+    end
 
-    content_tag(:nav, safe_join(links, divider_tag).html_safe, class: 'custom-breadcrumbs', "aria-label": "Breadcrumb")
+    list = content_tag(:ol, safe_join(list_items), class: 'breadcrumbs-list')
+    content_tag(:nav, list, class: 'custom-breadcrumbs', "aria-label": "Breadcrumb")
   end
 
   def projekt_filter_resources_name
@@ -35,7 +45,7 @@ module ProjektsHelper
     url = projekt.page.url
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, url, tabindex: "-1", class: classes.join(" "), data: { turbolinks: false }
+      link_to projekt.page.title, url, class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
       link_to projekt.page.title, url, class: classes.join(" ")
     else
@@ -97,6 +107,26 @@ module ProjektsHelper
     elsif start_date.present? && start_date.to_date > Date.today
       days_left = (start_date.to_date - Date.today).to_i
       t('custom.shared.dates.starts_in_days', count: days_left)
+    end
+  end
+
+  def format_budget_phase_duration(phase)
+    now = Time.zone.now
+    starts_at = phase.starts_at
+    ends_at   = phase.ends_at
+
+    if ends_at.present? && ends_at <= now
+      last_active_day = (ends_at - 1.second).to_date
+      t("custom.shared.dates.ends_on", date: l(last_active_day, format: :long))
+    elsif ends_at.present? && starts_at.present? && starts_at <= now
+      last_active_day = (ends_at - 1.second).to_date
+      if last_active_day == now.to_date
+        t("custom.shared.dates.ends_today")
+      else
+        t("custom.shared.dates.days_left", count: (last_active_day - now.to_date).to_i + 1)
+      end
+    elsif starts_at.present? && starts_at > now
+      t("custom.shared.dates.starts_in_days", count: (starts_at.to_date - now.to_date).to_i)
     end
   end
 

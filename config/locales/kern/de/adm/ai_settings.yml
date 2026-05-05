@@ -1,0 +1,14 @@
+de:
+  adm:
+    ai_settings:
+      flash:
+        updated: KI-Einstellung erfolgreich aktualisiert
+      index:
+        title: KI-Einstellungen
+        intro: >
+          Hier konfigurieren Sie die Verbindung zu einem KI-Anbieter. Die Plattform nutzt KI-Funktionen unter anderem für die Erstellung von Vorschlägen, die Analyse von Abstimmungen, die automatische Inhaltsgenerierung und semantische Auswertungen. Wählen Sie einen Anbieter, ein Modell und hinterlegen Sie Ihren API-Schlüssel, um diese Funktionen zu aktivieren. Achtung: Änderungen an diesen Einstellungen erfordern technisches Verständnis. Fehlerhafte Konfigurationen können dazu führen, dass KI-Funktionen nicht mehr korrekt arbeiten. Wenden Sie sich im Zweifel an demokratie.today.
+        setting_name: Einstellung
+        value: Wert
+        update: Aktualisieren
+        no_settings: Keine KI-Einstellungen verfügbar
+        enter_api_key: API-Schlüssel hier eingeben

@@ -23,6 +23,7 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
+      App.KlaroAccessibility.initialize();
       App.VoiceAssistant.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
@@ -35,8 +36,12 @@
       App.ContentBlockTemplatesSelector.initialize();
       App.AdminTopbarViewMode.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();
+      App.Studio.SiteContentBlockEditor.initialize();
+      App.FlashMessages.initialize();
+      App.SessionTimeoutWarning.initialize();
     }
   };
 }).call(this);

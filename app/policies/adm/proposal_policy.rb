@@ -2,11 +2,27 @@ class Adm::ProposalPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def show?
-    permitted?
+    manage_permitted? || moderate_permitted?
   end
 
   def update?
-    permitted?
+    manage_permitted?
+  end
+
+  def toggle_admin_accepted?
+    manage_permitted? || moderate_permitted?
+  end
+
+  def hide?
+    moderate_permitted?
+  end
+
+  def ignore_flag?
+    moderate_permitted? && !@record.ignored_flag? && !@record.hidden?
+  end
+
+  def unhide?
+    moderate_permitted? && @record.hidden?
   end
 
   class Scope < Scope

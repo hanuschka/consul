@@ -4,4 +4,32 @@ de:
       user:
         add: "Hinzufügen"
         remove: "Entfernen"
+    pending_role_assignments:
+      title: "Ausstehende Rollenzuweisungen"
+      email: "E-Mail"
+      created_at: "Vorgemerkt am"
+      remove: "Entfernen"
+      confirm_remove: "Möchten Sie diese ausstehende Rollenzuweisung wirklich entfernen?"
+      created: "Der Nutzer mit der E-Mail-Adresse %{email} wurde als %{role} eingeladen."
+      removed: "Ausstehende Rollenzuweisung wurde entfernt."
+      already_pending: "Für %{email} wurde diese Rolle bereits vorgemerkt."
+      offer_preassign: "Nutzer mit der E-Mail-Adresse \"%{email}\" wurde nicht gefunden."
+      preassign_button:
+        administrator: "Als Administrator einladen"
+        moderator: "Als Moderator einladen"
+        projekt_manager: "Als Projektmanager einladen"
+        officing_manager: "Als Wahllokalverantwortlicher einladen"
+        valuator: "Als Bewerter einladen"
+        landing_page_manager: "Als Themenseiten-Manager einladen"
+        deficiency_report_manager: "Als Mängel-Administrator einladen"
+        idea_manager: "Als Ideen-Administrator einladen"
+      role_name:
+        administrator: "Administrator"
+        moderator: "Moderator"
+        projekt_manager: "Projektmanager"
+        officing_manager: "Wahllokalverantwortlicher"
+        valuator: "Bewerter"
+        landing_page_manager: "Themenseiten-Manager"
+        deficiency_report_manager: "Mängel-Administrator"
+        idea_manager: "Ideen-Administrator"
 

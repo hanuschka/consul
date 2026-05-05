@@ -12,6 +12,13 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    content_blocks:
+      code_editor_modal:
+        title: "Code-Editor"
+        title_sidebar: "Code-Editor für Sidebar-Bereich"
+        title_footer: "Code-Editor für Footer-Bereich"
+        save: "Speichern"
+        cancel: "Abbrechen"
     projekt_content_blocks:
       create:
         success: Inhaltsblock erstellt
@@ -53,6 +60,9 @@ de:
         title: Aktive Beteiligungsprozesse
       archived_projekt_cards:
         title: Abgeschlossene Beteiligungsprozesse
+      header:
+        pause_video: Hintergrundvideo anhalten
+        play_video: Hintergrundvideo abspielen
     devise_views:
       users:
         registrations:
@@ -91,6 +101,7 @@ de:
     layouts:
       footer:
         impressum: Impressum
+        navigation_heading: Fußzeilennavigation
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         demokratie: demokratie.today
         demokratie_url: "https://demokratie.today/"

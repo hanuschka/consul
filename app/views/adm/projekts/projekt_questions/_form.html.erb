@@ -8,7 +8,7 @@
     <%= f.text_field :title, label: false, placeholder: t(".title_label") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".question_options_label"), hint: t(".question_options_hint")) do %>
+  <%= render Kern::FormFieldComponent.new(label: t(".question_options_label"), hint: t(".question_options_hint"), stacked: true) do %>
     <div data-controller="adm-nested-fields">
       <div data-adm-nested-fields-target="container">
         <%= f.fields_for :question_options do |ff| %>
@@ -34,5 +34,5 @@
     <%= f.check_box :comments_enabled %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

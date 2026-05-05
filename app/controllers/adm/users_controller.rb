@@ -3,18 +3,29 @@ module Adm
     def index
       authorize [:adm, User]
       base_scope = UsersQuery.call(policy_scope([:adm, User]), params)
+        .includes(:registered_address, :administrator, :moderator, :valuator, :manager, :poll_officer, :organization)
 
       respond_to do |format|
         format.html do
           @pagy, @users = pagy(base_scope)
 
           @username_header_options = { sort: true, search: true }
-          gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).index_by(&:itself)
+          @email_header_options = { search: true }
+          @first_name_header_options = { search: true }
+          @last_name_header_options = { search: true }
+          @city_name_header_options = { sort: true }
+          @created_at_header_options = { sort: true }
+          @verified_at_header_options = { sort: true }
+
+          gender_options = policy_scope([:adm, User]).distinct.pluck(:gender).compact.index_by(&:itself)
           @gender_header_options = { filter_options: gender_options }
-          @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") }}
+          @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") } }
+
+          document_type_options = policy_scope([:adm, User]).distinct.pluck(:document_type).compact.index_by(&:itself)
+          @document_type_header_options = { filter_options: document_type_options }
 
           @breadcrumbs = [
-            { name: t("adm.menu.items.profiles") },
+            { name: t("adm.menu.items.profiles"), icon: "3p" },
             { name: t("adm.menu.items.profiles_subitems.users") }
           ]
         end
@@ -43,5 +54,73 @@ module Adm
         redirect_to adm_users_path, alert: t("adm.users.csv_download.not_found")
       end
     end
+
+    def edit
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @breadcrumbs = edit_breadcrumbs
+    end
+
+    def update
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      if @user.update(user_params)
+        if params[:reverify].present?
+          @user.reverify!
+          @user.update!(reverify: true)
+        end
+
+        redirect_to adm_users_path, notice: t("adm.users.flash.updated")
+      else
+        @breadcrumbs = edit_breadcrumbs
+
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def verify
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      if @user.verify!
+        @user.update!(reverify: false)
+        Mailer.manual_verification_confirmation(@user).deliver_later
+
+        redirect_to adm_users_path, notice: t("adm.users.flash.verified")
+      else
+        redirect_to adm_users_path, alert: t("adm.users.flash.verify_failed")
+      end
+    end
+
+    def unverify
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @user.unverify!
+      @user.update!(reverify: false)
+
+      redirect_to adm_users_path, notice: t("adm.users.flash.unverified")
+    end
+
+    private
+
+      def user_params
+        params.require(:user).permit(
+          :email,
+          :first_name, :last_name,
+          :city_name, :plz, :street_name, :street_number, :street_number_extension,
+          :gender, :date_of_birth
+        )
+      end
+
+      def edit_breadcrumbs
+        [
+          { name: t("adm.menu.items.profiles"), icon: "3p" },
+          { name: t("adm.menu.items.profiles_subitems.users"), url: adm_users_path },
+          { name: @user.name.presence || @user.email }
+        ]
+      end
   end
 end

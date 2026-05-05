@@ -94,8 +94,6 @@ namespace :projekt_management do
     member do
       patch :update_standard_phase
       get :frame_new_phase_selector
-      patch :update_page
-      patch :update_title_image
       patch :update_map
       post :notify_reviewers
     end
@@ -207,7 +205,12 @@ namespace :projekt_management do
 
   namespace :site_customization do
     resources :pages, only: [:update]
-    resources :content_blocks, only: [:edit, :update]
+    resources :content_blocks, only: [:edit, :update] do
+      member do
+        patch :update_inline
+        patch :change_with_ai
+      end
+    end
   end
 
   scope module: :poll do

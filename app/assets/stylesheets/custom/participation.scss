@@ -8,7 +8,7 @@
   font-size: 0.9rem;
   position: relative;
   overflow: visible !important;
-  background-color: $brand;
+  background-color: var(--brand-color);
   color: $text-over-brand;
 
   a {

@@ -6,6 +6,7 @@ class SiteCustomization::Page < ApplicationRecord
   self.inheritance_column = nil
 
   include Imageable
+  include SectionTrackable
   attr_reader :origin
 
   belongs_to :projekt, touch: true
@@ -13,15 +14,33 @@ class SiteCustomization::Page < ApplicationRecord
   has_many :comments, through: :projekt
 
   has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
+  has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
+  has_many :landing_page_managers, through: :landing_page_manager_assignments
+  has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
 
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
+  has_one_attached :landing_desktop_header_video
+  has_one_attached :landing_mobile_header_video
+
   has_one_attached :landing_site_logo_for_transparent_background
   has_one_attached :landing_site_logo_for_white_background
 
+  LANDING_VIDEO_FORMATS = ["video/mp4", "video/webm"].freeze
+  LANDING_VIDEO_MAX_SIZE = 50.megabytes
+
+  validates :landing_desktop_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_desktop_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_desktop_header_video.attached? }}
+  validates :landing_mobile_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_mobile_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_mobile_header_video.attached? }}
+
   before_save :sanitize_title_and_subtitle
+  before_save :capture_old_title
   before_save :set_published_at
+  after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
 
   scope :regular, -> {
@@ -83,16 +102,36 @@ class SiteCustomization::Page < ApplicationRecord
     end
   end
 
-  def sync_projekt_for_global_overview
-    return unless projekt.present?
+  def section_tracking_section
+    "landing_pages"
+  end
 
-    changed_set = saved_changes.except('created_at', 'updated_at')
-    return if changed_set.empty?
+  def section_tracking_user
+    nil
+  end
 
-    if projekt.should_be_exported_for_global_overview?
-      if projekt.hidden_at.blank?
-        Projekts::OverviewProjektUpdatedJob.perform_later(projekt)
-      end
+  def capture_old_title
+    @old_title = projekt&.name if title_changed?
+  end
+
+  def sync_projekt_name
+    return unless projekt.present? && @old_title
+
+    new_title = title
+
+    projekt.update_column(:name, new_title)
+
+    projekt.polls.each do |poll|
+      next unless poll.name.present?
+
+      suffix = poll.name.delete_prefix(@old_title).strip
+      poll.update(name: [new_title, suffix.presence].compact.join(" "))
     end
+
+    @old_title = nil
+  end
+
+  def sync_projekt_for_global_overview
+    projekt&.sync_for_global_overview_from_page_changes(saved_changes)
   end
 end

@@ -54,7 +54,7 @@ class Setting < ApplicationRecord
 
         # metadata
         "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
-        "url": "http://example.com", # Public-facing URL of the app.
+        "url": "https://deine-stadt.de", # Public-facing URL of the app.
         "mailer_from_address": "noreply@consul.dev",
         "mailer_from_name": "CONSUL",
         "meta_title": nil,
@@ -76,8 +76,11 @@ class Setting < ApplicationRecord
         "extended_option.gdpr.devise_verification_token_validity_days": 3,
         # gdpr
 
+        # newsletter
+        "advanced_newsletter": false,
+        # newsletter
 
-        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+        "extended_option.general.city_name": "Consul",
 
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
@@ -107,7 +110,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -165,6 +168,7 @@ class Setting < ApplicationRecord
         # Emails under the domain's subdomains will also be included
         "email_domain_for_officials": "",
         # CONSUL installation's organization name
+        "brand_color": "",
         "newsletter_brand_color": "#004a83",
         "proposal_notification_minimum_interval_in_days": 3,
         "direct_message_max_per_day": 3,
@@ -204,10 +208,6 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
-        "welcomepage.usage_stats": true,
-        "welcomepage.platform_activity": true,
-        "welcomepage.newsletter_subscription": false,
-        "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.show_in_main_menu": false,
@@ -273,7 +273,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.show_suggested_proposals_in_proposal_sidebar": false,
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
-        "extended_option.proposals.max_active_proposals_per_user": 100,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,

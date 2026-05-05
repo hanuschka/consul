@@ -2,23 +2,27 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def index?
-    permitted?
+    manage_permitted?
   end
 
   def show?
-    permitted?
+    manage_permitted?
   end
 
   def create?
-    permitted?
+    manage_permitted?
   end
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   def destroy?
-    permitted?
+    manage_permitted?
+  end
+
+  def moderate?
+    manage_permitted? || moderate_permitted?
   end
 
   class Scope < Scope
@@ -30,6 +34,14 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
   private
 
   def projekt_from_record
-    @record.projekt
+    if @record.is_a?(Class)
+      nil
+    elsif @record.is_a?(Projekt)
+      @record
+    elsif @record.is_a?(ProjektPhase)
+      @record.projekt
+    else
+      @record.projekt_phase&.projekt
+    end
   end
 end

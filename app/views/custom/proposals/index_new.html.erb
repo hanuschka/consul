@@ -20,7 +20,8 @@
 
   <%= render Shared::MapComponent.new(
     features: @proposals_coordinates,
-    process: 'proposals'
+    process: 'proposals',
+    collapsible: true
   ) %>
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">

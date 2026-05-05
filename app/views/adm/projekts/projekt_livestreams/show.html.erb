@@ -15,7 +15,7 @@
   <% end %>
 
   <div class="d-flex justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_projekt_question_path(@projekt_phase, projekt_livestream_id: @projekt_livestream.id), text: t(".add_question") %>
+    <%= kern_link_button new_adm_projekts_phase_projekt_question_path(@projekt_phase, projekt_livestream_id: @projekt_livestream.id), text: t(".add_question"), style: :primary %>
   </div>
 
   <% if @projekt_livestream.projekt_questions.any? %>
@@ -42,8 +42,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_question_path(@projekt_phase, question)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_question_path(@projekt_phase, question), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_question_path(@projekt_phase, question), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_question_path(@projekt_phase, question), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>

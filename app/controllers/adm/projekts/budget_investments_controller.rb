@@ -4,8 +4,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits]
-  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits]
+  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
+  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits toggle_image_concealed]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -20,7 +20,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         @breadcrumbs = breadcrumbs_for_action(@investment.title)
       end
       format.pdf do
-        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment)
+        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment, @projekt_phase)
         send_data pdf_content.render, filename: "budget_investment_#{@investment.id}.pdf", type: "application/pdf"
       end
     end
@@ -49,7 +49,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   def administer
     authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
 
-    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
   end
 
   def people
@@ -75,11 +75,42 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
+  ADMIN_FORM_EDITORS = %w[feasibility pricing selection winner].freeze
+
   def update
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
-    if @investment.update(investment_params)
-      redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment), notice: t(".success")
+    success = @investment.update(investment_params)
+
+    if ADMIN_FORM_EDITORS.include?(params[:editor])
+      render turbo_stream: turbo_stream.replace(
+        helpers.dom_id(@investment, :admin_forms),
+        partial: "adm/projekts/budget_investments/admin_forms",
+        locals: {
+          investment: @investment,
+          projekt_phase: @projekt_phase,
+          saved_editor: success ? params[:editor] : nil
+        }
+      )
+      return
+    end
+
+    if success
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append("flash-messages", html:
+            helpers.content_tag(:div, class: "kern-flash kern-flash--success", role: "alert") do
+              helpers.content_tag(:span, t("adm.attribute.update.success")) +
+              helpers.button_tag(type: "button", class: "kern-flash__close", aria: { label: "Close" }, onclick: "this.parentElement.remove()") do
+                helpers.content_tag(:span, "close", class: "material-symbols-outlined")
+              end
+            end
+          )
+        end
+        format.html do
+          redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment), notice: t(".success")
+        end
+      end
     else
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.budget_investments.edit.title"))
       render :edit, status: :unprocessable_entity
@@ -109,6 +140,40 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     )
   end
 
+  def hide
+    @investment = @projekt_phase.budget.investments.find(params[:id])
+    authorize [:adm, :projekts, @investment], :hide?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.hide
+    Activity.log(current_user, :hide, @investment)
+    @investment.reload
+  end
+
+  def unhide
+    @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
+    authorize [:adm, :projekts, @investment], :unhide?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.restore
+    Activity.log(current_user, :restore, @investment)
+    @investment.reload
+  end
+
+  def ignore_flag
+    @investment = @projekt_phase.budget.investments.find(params[:id])
+    authorize [:adm, :projekts, @investment], :ignore_flag?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.ignore_flag
+    @investment.reload
+  end
+
+  def toggle_image_concealed
+    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
+
+    @investment.image.toggle!(:concealed)
+
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment)
+  end
+
   def destroy
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
@@ -123,7 +188,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_investment
-      @investment = @projekt_phase.budget.investments.find(params[:id])
+      @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
     end
 
     def investment_params
@@ -145,7 +210,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_tabs
-      @tabs = %w[show administer people milestones progress_bars audits].map do |tab_action|
+      @tabs = %w[show people milestones progress_bars audits].map do |tab_action|
         {
           label: t("adm.projekts.budget_investments.tabs.#{tab_action}"),
           url: send(
@@ -160,8 +225,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), url: adm_projekts_root_path },
-        { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+        { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.budget_investments.title"), url: budget_investments_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }

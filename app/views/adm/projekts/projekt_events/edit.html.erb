@@ -1,7 +1,30 @@
-<%= content_for :title, t(".title") %>
+<%= content_for :title, [@projekt_event.title, t(".title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @projekt_event.title, breadcrumbs: @breadcrumbs, back_button_url: projekt_events_adm_projekts_phase_path(@projekt_phase)) %>
 
-<div class="kern-container my-5">
-  <%= render "form", url: adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event) %>
+<%= render Adm::TabsComponent.new(tabs: projekt_event_tabs(@projekt_phase, @projekt_event)) %>
+
+<div class="kern-container kern-container--form my-5">
+  <%= turbo_frame_tag "projekt_event_#{@section}" do %>
+    <section class="adm-detail-section">
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t("adm.projekts.projekt_events.show.sections.#{@section}") %></h2>
+      </div>
+
+      <%= form_with model: @projekt_event,
+            url: adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event, section: @section),
+            data: { turbo_frame: "projekt_event_#{@section}" } do |f| %>
+        <%= render "fields_#{@section}", f: f %>
+
+        <div class="d-flex gap-2 mt-3">
+          <%= kern_button(type: "submit",
+                text: t("adm.projekts.projekt_events.form.submit"),
+                icon: "save") %>
+          <%= kern_link_button(adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event),
+                text: t("shared.cancel"), style: :secondary,
+                data: { turbo_frame: "projekt_event_#{@section}" }) %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
 </div>

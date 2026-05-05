@@ -22,6 +22,7 @@ scope "budget_investments/generate", as: :generate_budget_investment do
 end
 
 get "blobs/:key", to: "blobs#show", as: :blob_asset
+get "blobs/:key/variant", to: "blobs#variant", as: :blob_variant
 get "ckeditor/assets",      to: "ckeditor/assets#index"
 get "ckeditor/assets/:key", to: "blobs#show"
 
@@ -62,7 +63,6 @@ resources :map_locations, only: [] do
   end
 end
 
-get "admin/matomo", to: "admin/matomo#index"
 get "admin/connection", to: "admin/connection#index"
 
 get "users", to: "users#index"
@@ -74,6 +74,10 @@ resources :projekt_point_of_interest_pins, only: [:new, :create] do
 end
 
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
+get "/:landing_page_slug/events", to: "projekt_events#index", as: :landing_page_events
+get "/:landing_page_slug/proposals", to: "proposals#index", as: :landing_page_proposals
+get "/:landing_page_slug/polls", to: "polls#index", as: :landing_page_polls
+get "/:landing_page_slug/investments", to: "investments#index", as: :landing_page_investments
 get "/:landing_page_slug/projekts/:id",
   to: redirect("/%{id}")
 get "/:landing_page_slug/polls/:id",
@@ -89,3 +93,5 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
 resources :projekt_content_block_templates, only: [:index]
+
+post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping

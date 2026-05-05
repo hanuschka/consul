@@ -37,7 +37,7 @@ de:
       duration:
         title: Laufzeit
         dates_label: Laufzeit der Phase
-        dates_description: Wann soll die Phase beginnen und enden?
+        dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
       naming:
         title: Benennung
       restrictions:
@@ -47,13 +47,13 @@ de:
           <p>Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.</p>
           <p>Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.</p>
         user_status_label: Teilnahme nach Nutzerstatus
-        user_status_hint: "Es gibt drei Stufen des Nutzerstatus: Gastnutzer (Teilnahme ohne Registrierung), registrierte Nutzer (mit Consul-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Der Nutzerstatus beeinflusst, wer an der Beteiligung teilnehmen darf."
+        user_status_hint: "Legt fest, welchen Verifikationsstatus Nutzer mindestens haben müssen, um an dieser Phase teilzunehmen. Es gibt drei Stufen: Gastnutzer (ohne Registrierung), registrierte Nutzer (mit Plattform-Konto) und verifizierte Nutzer (z. B. durch Melderegisterabgleich). Höhere Stufen erfordern entsprechende Nachweise bei der Registrierung."
         geozone_label: Gebietsbeschränkung der Teilnahme
-        geozone_hint: Für die Gebietsbeschränkung muss vorab eine CSV mit allen relevanten Adressen an demokratie.today gesendet werden. Nach dem Upload im Backend können die gewünschten Einschränkungen aktiviert werden.
+        geozone_hint: "Schränkt die Teilnahme auf Nutzer ein, deren registrierte Adresse in einem bestimmten geografischen Gebiet liegt. Für die Nutzung muss ein Administrator vorab eine CSV-Datei mit den relevanten Adressen an demokratie.today übermitteln. Nach dem Import können die gewünschten Gebiete hier aktiviert und die Beschränkung für diese Phase zugewiesen werden."
         age_label: Altersbeschränkung der Teilnahme
-        age_hint: Die Teilnahme kann auf bestimmte Altersgruppen beschränkt werden. Die Alterscluster werden zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden.“
+        age_hint: "Schränkt die Teilnahme auf Nutzer ein, deren Alter innerhalb einer festgelegten Altersgruppe liegt. Die Altersgruppen werden von einem Administrator zentral unter Einstellungen > Altersgruppen verwaltet und müssen dort vorab angelegt werden. Nutzer ohne hinterlegtes Geburtsdatum werden aufgefordert, dieses vor der Teilnahme anzugeben."
         individual_groups_label: Beschränkung auf starke Gruppen
-        individual_groups_hint: "Die Teilnahme kann auf vorab definierte Gruppen beschränkt werden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen.  Diese Gruppen müssen zuvor unter Einstellungen > Starke Gruppen angelegt werden."
+        individual_groups_hint: "Schränkt die Teilnahme auf Mitglieder bestimmter Nutzergruppen ein, die vorab unter Einstellungen > Starke Gruppen angelegt wurden – z. B. Jugendräte, Verwaltungsmitarbeitende oder Projektgruppen. Nur Nutzer, die einer der hier ausgewählten Gruppen zugeordnet sind, können an dieser Beteiligungsphase teilnehmen."
         user_status:
           guest: Gäste (keine Registrierung erforderlich)
           registered: Registrierte Nutzer
@@ -61,7 +61,7 @@ de:
         geozone:
           no_restriction: Keine Einschränkung
           only_citizens: Nur Bürger
-          only_geozones: Nur bestimmte Bezirke
+          only_geozones: Nur bestimmte Gebiete
           only_streets: Nur bestimmte Straßen
           search_street: Straße suchen...
         extended_geozone:

@@ -6,86 +6,76 @@ module PdfServices
     end
 
     def call
-      Prawn::Document.new(page_size: "A4", margin: 30) do |pdf|
-        font_path = Rails.root.join("app/assets/fonts/custom/Asap-Variable.ttf")
-        pdf.font_families.update("Asap" => { normal: font_path, bold: font_path, italic: font_path, bold_italic: font_path })
-        pdf.font "Asap"
-
-        pdf.text @deficiency_report.title, size: 20, style: :bold
-
-        pdf.move_down 10
-
-        pdf.formatted_text [
-          { text: "ID: ", size: 10, styles: [:bold] },
-          { text: @deficiency_report.id.to_s, size: 10 }
-        ]
-
-        pdf.formatted_text [
-          { text: "#{I18n.t("custom.admin.deficiency_reports.show.created_at")}: ", size: 10, styles: [:bold] },
-          { text: @deficiency_report.created_at.strftime("%d %b %Y"), size: 10 }
-        ]
-
-        pdf.formatted_text [
-          { text: "#{I18n.t("custom.admin.deficiency_reports.show.updated_at")}: ", size: 10, styles: [:bold] },
-          { text: @deficiency_report.updated_at.strftime("%d %b %Y"), size: 10 }
-        ]
-
-        pdf.move_down 10
-
-        pdf.svg(svg, at: [pdf.bounds.left + 500 - 80, pdf.bounds.top - 30], width: 80)
-
-        pdf.move_down 10
-
-        if @deficiency_report.approximated_address.present?
-          pdf.formatted_text [
-            { text: "#{DeficiencyReport.human_attribute_name(:approximated_address)}: ", size: 10, styles: [:bold] },
-            { text: @deficiency_report.approximated_address, size: 10 }
-          ]
+      Prawn::Document.new(page_size: "A4", margin: [0, 30, 50, 30]) do |pdf|
+        setup_fonts(pdf)
+        render_header_banner(pdf, title_text: "#{@deficiency_report.title} (#{@deficiency_report.id})", qr_url: record_url)
+        pdf.bounding_box([40, pdf.cursor], width: pdf.bounds.width - 80, height: pdf.cursor - 30) do
+          render_meta_card(pdf, meta_rows)
+          render_description(pdf, @deficiency_report.description)
+          render_image_and_map_side_by_side(pdf, @deficiency_report.image, @deficiency_report.map_location)
+          render_official_answer(pdf)
         end
-
-        pdf.move_down 10
-
-        pdf.formatted_text [
-          { text: "#{I18n.t("custom.admin.deficiency_reports.show.link")}: ", size: 10, styles: [:bold] },
-          { text: deficiency_report_url, size: 10, link: deficiency_report_url }
-        ]
-
-        pdf.move_down 10
-
-        if @deficiency_report&.map_location&.screenshot.present?
-          image_data = StringIO.open(@deficiency_report.map_location.screenshot.download)
-          pdf.image(image_data, width: 500)
-        end
-
-        pdf.move_down 10
-
-        if @deficiency_report.image.present?
-          image_data = StringIO.open(@deficiency_report.image.attachment.download)
-          pdf.image(image_data, width: 500)
-        end
-
-        pdf.move_down 20
-
-        pdf.text html_to_paragraphs(@deficiency_report.description), size: 10, inline_format: true
-
-        pdf.move_down 10
+        render_footer(pdf)
       end
     end
 
     private
 
-      def deficiency_report_url
-        Rails.application.routes.url_helpers.deficiency_report_url(@deficiency_report, host: @host)
+      def meta_rows
+        scope = "adm.deficiency_reports.deficiency_reports.show"
+
+        rows = [
+          ["ID", @deficiency_report.id.to_s],
+          [I18n.t("custom.admin.deficiency_reports.show.created_at"), I18n.l(@deficiency_report.created_at, format: :long)],
+          [I18n.t("custom.admin.deficiency_reports.show.updated_at"), I18n.l(@deficiency_report.updated_at, format: :long)]
+        ]
+
+        if @deficiency_report.status.present?
+          rows << [DeficiencyReport.human_attribute_name(:status), @deficiency_report.status.title]
+        end
+
+        if @deficiency_report.approximated_address.present?
+          rows << [DeficiencyReport.human_attribute_name(:approximated_address), @deficiency_report.approximated_address]
+        end
+
+        if @deficiency_report.author.present?
+          rows << [I18n.t("#{scope}.author"), @deficiency_report.author.username]
+        end
+
+        if @deficiency_report.category.present?
+          rows << [I18n.t("#{scope}.category"), @deficiency_report.category.name]
+        end
+
+        if @deficiency_report.on_behalf_of.present?
+          rows << [I18n.t("#{scope}.on_behalf_of_label"), @deficiency_report.on_behalf_of]
+        end
+
+        if @deficiency_report.video_url.present?
+          rows << [I18n.t("#{scope}.video_url"), @deficiency_report.video_url]
+        end
+
+        if @deficiency_report.documents.any?
+          rows << [I18n.t("#{scope}.documents_label"), @deficiency_report.documents.map(&:title).join(", ")]
+        end
+
+        rows << ["Link", record_url]
+
+        rows
       end
 
-      def svg
-        qrcode = RQRCode::QRCode.new(deficiency_report_url)
+      def render_official_answer(pdf)
+        body = html_to_paragraphs(@deficiency_report.official_answer.to_s)
+        return unless body.present?
 
-        qrcode.as_svg(
-          module_size: 80,
-          standalone: true,
-          use_path: true
-        )
+        pdf.text I18n.t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
+                 size: 12, style: :bold, color: COLORS[:accent]
+        pdf.move_down 4
+        pdf.text body, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
+        pdf.move_down 16
+      end
+
+      def record_url
+        Rails.application.routes.url_helpers.deficiency_report_url(@deficiency_report, host: @host)
       end
   end
 end

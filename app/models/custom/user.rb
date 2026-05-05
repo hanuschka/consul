@@ -35,6 +35,7 @@ User.class_eval do
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :fulfill_pending_role_assignments
 
   has_secure_token :frame_sign_in_token
 
@@ -46,6 +47,7 @@ User.class_eval do
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :landing_page_manager
   has_one :deficiency_report_manager
   has_many :ideas, inverse_of: :author, foreign_key: :author_id
   has_one :idea_officer, class_name: "Idea::Officer"
@@ -60,7 +62,7 @@ User.class_eval do
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
@@ -231,6 +233,14 @@ User.class_eval do
     return false unless projekt_manager?
 
     projekt_manager.allowed_to?(permission, projekt)
+  end
+
+  def landing_page_manager?(page = nil)
+    if page.present?
+      landing_page_manager.present? && landing_page_manager.allowed_to?(page)
+    else
+      landing_page_manager.present?
+    end
   end
 
   def officing_manager?
@@ -438,6 +448,14 @@ User.class_eval do
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def fulfill_pending_role_assignments
+      return unless email.present?
+
+      PendingRoleAssignment.for_email(email).find_each do |pending|
+        pending.fulfill!(self)
       end
     end
 end

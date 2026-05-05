@@ -1,21 +1,21 @@
 <%= form_with model: [:adm, @age_range] do |f| %>
-  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:name), hint: t(".hints.name")) do %>
     <%= f.text_field :name, label: false, placeholder: AgeRange.human_attribute_name(:name) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:min_age)) do %>
+  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:min_age), hint: t(".hints.min_age")) do %>
     <%= f.number_field :min_age, label: false, placeholder: AgeRange.human_attribute_name(:min_age) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:max_age)) do %>
+  <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:max_age), hint: t(".hints.max_age")) do %>
     <%= f.number_field :max_age, label: false, placeholder: AgeRange.human_attribute_name(:max_age) %>
   <% end %>
 
   <% if @age_range.new_record? %>
-    <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:only_for_stats)) do %>
+    <%= render Kern::FormFieldComponent.new(label: AgeRange.human_attribute_name(:only_for_stats), hint: t(".hints.only_for_stats")) do %>
       <%= f.check_box :only_for_stats %>
     <% end %>
   <% end %>
 
-  <%= form_submit_button(text: t(".submit")) %>
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

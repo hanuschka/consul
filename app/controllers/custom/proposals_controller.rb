@@ -14,6 +14,8 @@ class ProposalsController
   before_action :set_random_seed, only: :index
 
   def index_customization
+    resolve_landing_page_from_slug
+
     if params[:order].nil?
       @current_order = Setting["selectable_setting.proposals.default_order"]
     end
@@ -23,6 +25,7 @@ class ProposalsController
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -34,10 +37,14 @@ class ProposalsController
     remove_archived_from_order_links
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
+
+    if @landing_page.present?
+      @scoped_projekt_ids = @scoped_projekt_ids & landing_page_scoped_projekt_ids
+    end
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekt_ids = @resources.joins(:projekt_phase).pluck("projekt_phases.projekt_id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
     @categories = Tag.category.joins(:taggings)
       .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
@@ -168,7 +175,13 @@ class ProposalsController
 
   def show
     super
-    @projekt = @proposal.projekt_phase.projekt
+    @projekt = @proposal.projekt_phase&.projekt
+
+    if @projekt.nil?
+      redirect_to proposals_path
+
+      return
+    end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
       head :not_found, content_type: "text/html" and return
@@ -203,10 +216,8 @@ class ProposalsController
   end
 
   def vote
-    if params[:value] == "no"
-      @follow = Follow.find_by(user: voting_user, followable: @proposal)
-      @follow&.destroy!
-      @voted = !@proposal.register_vote(voting_user, "no")
+    if up_and_down_voting_enabled?
+      @voted = @proposal.register_vote(voting_user, params[:value])
     else
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
@@ -264,5 +275,9 @@ class ProposalsController
       return current_user unless params[:offline_user_id].present?
 
       current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
+    end
+
+    def up_and_down_voting_enabled?
+      @proposal.projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

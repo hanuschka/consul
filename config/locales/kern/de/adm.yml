@@ -1,5 +1,6 @@
 de:
   adm:
+    not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
     title: Administration
     sidebar:
       toggle: Seitenleiste umschalten
@@ -9,37 +10,59 @@ de:
         home: Home
         projekts: Projekte
         application: Applikation
+        modules: Module
         application_subitems:
           homepage: Startseite
-          documents: Eigene Dokumente
-          navbar: Navigationsleiste
-          metadata_settings: Metadaten & Kommunikation
+          documents: Dokumente
+          pages: Systemseiten
+          navbar: Navigation
+          metadata_settings: Metadaten
           gdpr_settings: DSGVO
-          registration_settings: Registrierung & Verifizierung
-          registered_addresses: Registrierte Adressen
-          default_map_location: Karten
+          registration_settings: Konto & Zugang
+          registered_addresses: Adressen
+          default_map_location: Standardkarte
           tags: Tags
-          individual_groups: Individuelle Gruppen
+          individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
+          email_templates: System-E-Mails
+        pages: Seiten
+        pages_subitems:
+          privacy: Datenschutzbestimmungen
+          conditions: Nutzungsbedingungen
+          impressum: Impressum
         profiles: Profile
         profiles_subitems:
-          administrators: Globaler Admin
-          projekt_managers: Projektmanager
-          deficiency_report_managers: Mängelmelder (Admin)
-          deficiency_report_officers: Mängelmelder (Sachbearbeiter)
-          idea_managers: Ideenplattform (Admin)
-          moderators: Globale Moderatoren
-          valuators: Budgetgutachter
-          users: Benutzer
-        notifications: Notification
-        stats: Statistics
+          administrators: Administratoren
+          deficiency_report_managers: Mängel-Administratoren
+          idea_managers: Ideen-Administratoren
+          section_contact_people: Ansprechpartner
+          users: Nutzer
+        notifications: Benachrichtigungen
+        notifications_subitems:
+          modal_notifications: Popup-Benachrichtigungen
+          newsletters: Newsletter
+          email_templates: System-E-Mails
+          recipient_groups: Empfängergruppen
+          unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
+        stats: Statistiken
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
         apps: Apps
+        developer: Bereich für Entwickler
+        developer_subitems:
+          connection: DT-Verbindung
+          ai_settings: KI-Einstellungen
+          external_api_keys: API-Schlüssel
+          api_clients: API-Clients
+          api_request_logs: API-Anfragen-Logs
+    email_templates:
+      send_test:
+        success: "Test-E-Mail wurde an %{email} gesendet."
+    global_email_templates:
+      index:
+        title: System-E-Mails
+    deficiency_reports:
+      title: Mängelmelder
     ideas:
-      menu:
-        aria_label: Ideenplattform Menü
-        items:
-          ideas: Ideen
-          officers: Sachbearbeiter
-          categories: Kategorien
-          settings: Einstellungen
-          districts: Bezirke
+      title: Ideen

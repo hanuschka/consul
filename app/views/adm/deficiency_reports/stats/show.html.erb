@@ -1,0 +1,204 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container" data-controller="adm-charts">
+
+  <%# ── Übersicht ──────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
+      <h3><%= t(".sections.overview") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">report</span>
+        </div>
+        <div class="adm-stat-card__value"><%= number_with_delimiter(@total) %></div>
+        <div class="adm-stat-card__label"><%= t(".cards.total") %></div>
+      </div>
+
+      <div class="adm-stat-card adm-stat-card--accent">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">pending</span>
+        </div>
+        <div class="adm-stat-card__value"><%= number_with_delimiter(@open) %></div>
+        <div class="adm-stat-card__label"><%= t(".cards.open") %></div>
+        <% if @open_pct %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__ratio"><%= @open_pct %> %</span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">add_circle</span>
+        </div>
+        <div class="adm-stat-card__value"><%= number_with_delimiter(@new_this_week) %></div>
+        <div class="adm-stat-card__label"><%= t(".cards.new_this_week") %></div>
+        <% if @trend_week %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__trend adm-stat-card__trend--<%= @trend_week[:delta] > 0 ? 'up' : @trend_week[:delta] < 0 ? 'down' : 'neutral' %>">
+              <%= @trend_week[:delta] > 0 ? "▲ +#{@trend_week[:delta]}" : @trend_week[:delta] < 0 ? "▼ #{@trend_week[:delta]}" : "= 0" %>
+              <% if @trend_week[:pct] %> (<%= @trend_week[:pct] > 0 ? '+' : '' %><%= @trend_week[:pct] %> %)<% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">calendar_month</span>
+        </div>
+        <div class="adm-stat-card__value"><%= number_with_delimiter(@new_this_month) %></div>
+        <div class="adm-stat-card__label"><%= t(".cards.new_this_month") %></div>
+        <% if @trend_month %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__trend adm-stat-card__trend--<%= @trend_month[:delta] > 0 ? 'up' : @trend_month[:delta] < 0 ? 'down' : 'neutral' %>">
+              <%= @trend_month[:delta] > 0 ? "▲ +#{@trend_month[:delta]}" : @trend_month[:delta] < 0 ? "▼ #{@trend_month[:delta]}" : "= 0" %>
+              <% if @trend_month[:pct] %> (<%= @trend_month[:pct] > 0 ? '+' : '' %><%= @trend_month[:pct] %> %)<% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card adm-stat-card--warning">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">person_search</span>
+        </div>
+        <div class="adm-stat-card__value"><%= number_with_delimiter(@unassigned) %></div>
+        <div class="adm-stat-card__label"><%= t(".cards.unassigned") %></div>
+      </div>
+
+    </div>
+  </div>
+
+  <%# ── Zufriedenheit ──────────────────────────────────── %>
+  <% if @feedback_count&.positive? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">sentiment_satisfied</span>
+        <h3><%= t(".sections.satisfaction") %></h3>
+      </div>
+      <div class="adm-dashboard__stats">
+
+        <div class="adm-stat-card">
+          <div class="adm-stat-card__header">
+            <span class="material-symbols-outlined adm-stat-card__icon">feedback</span>
+          </div>
+          <div class="adm-stat-card__value"><%= number_with_delimiter(@feedback_count) %></div>
+          <div class="adm-stat-card__label"><%= t(".cards.feedback_count") %></div>
+        </div>
+
+        <% if @satisfaction_avg %>
+          <div class="adm-stat-card">
+            <div class="adm-stat-card__header">
+              <span class="material-symbols-outlined adm-stat-card__icon">thumb_up</span>
+            </div>
+            <div class="adm-stat-card__value"><%= @satisfaction_avg %></div>
+            <div class="adm-stat-card__label"><%= t(".cards.satisfaction_avg") %></div>
+          </div>
+        <% end %>
+
+        <% if @response_time_avg %>
+          <div class="adm-stat-card">
+            <div class="adm-stat-card__header">
+              <span class="material-symbols-outlined adm-stat-card__icon">schedule</span>
+            </div>
+            <div class="adm-stat-card__value"><%= @response_time_avg %></div>
+            <div class="adm-stat-card__label"><%= t(".cards.response_time_avg") %></div>
+          </div>
+        <% end %>
+
+        <% if @communication_avg %>
+          <div class="adm-stat-card">
+            <div class="adm-stat-card__header">
+              <span class="material-symbols-outlined adm-stat-card__icon">chat</span>
+            </div>
+            <div class="adm-stat-card__value"><%= @communication_avg %></div>
+            <div class="adm-stat-card__label"><%= t(".cards.communication_avg") %></div>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Charts ─────────────────────────────────────────── %>
+  <% has_chart_data = @chart_reports[:values].any?(&:positive?) || @status_chart_labels.any? || @category_chart_labels.any? %>
+  <% if has_chart_data %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+        <h3><%= t(".sections.charts") %></h3>
+      </div>
+
+      <% if @chart_reports[:values].any?(&:positive?) %>
+        <div class="adm-stats-charts">
+          <div class="adm-chart-card">
+            <div class="adm-chart-card__title"><%= t(".charts.reports_per_month") %></div>
+            <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_reports[:values].sum) %></div>
+            <div class="adm-chart-card__canvas-wrapper"
+                 data-area-chart
+                 data-chart-labels="<%= @chart_reports[:labels].to_json %>"
+                 data-chart-values="<%= @chart_reports[:values].to_json %>"
+                 data-chart-color="#6BA3D6">
+              <canvas></canvas>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @status_chart_labels.any? || @category_chart_labels.any? %>
+        <div class="adm-stats-demographics">
+          <% if @status_chart_labels.any? %>
+            <div class="adm-stats-demographics__group">
+              <h4><%= t(".charts.by_status") %></h4>
+              <div data-bar-chart
+                   data-chart-labels="<%= @status_chart_labels.to_json %>"
+                   data-chart-values="<%= @status_chart_values.to_json %>"
+                   data-chart-orientation="horizontal">
+                <canvas></canvas>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @category_chart_labels.any? %>
+            <div class="adm-stats-demographics__group">
+              <h4><%= t(".charts.by_category") %></h4>
+              <div data-bar-chart
+                   data-chart-labels="<%= @category_chart_labels.to_json %>"
+                   data-chart-values="<%= @category_chart_values.to_json %>"
+                   data-chart-orientation="horizontal">
+                <canvas></canvas>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ── Detailtabellen ─────────────────────────────────── %>
+  <% if @total.positive? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
+        <h3><%= t(".sections.details") %></h3>
+      </div>
+
+      <h4 class="mt-4 mb-3"><%= t(".type.status") %></h4>
+      <%= render "metric_rows", groups: @by_status, all_reports: @all_deficiency_reports, type: :status %>
+
+      <h4 class="mt-5 mb-3"><%= t(".type.category") %></h4>
+      <%= render "metric_rows", groups: @by_category, all_reports: @all_deficiency_reports, type: :category %>
+
+      <h4 class="mt-5 mb-3"><%= t(".type.responsible") %></h4>
+      <%= render "metric_rows", groups: @by_responsible, all_reports: @all_deficiency_reports, type: :responsible %>
+    </div>
+  <% end %>
+
+</div>

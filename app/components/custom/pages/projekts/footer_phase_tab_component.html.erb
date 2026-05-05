@@ -2,6 +2,8 @@
   id="filter-subnav-<%= phase.id %>"
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
+  role="tab"
+  aria-selected="<%= phase.id == params[:projekt_phase_id] %>"
 >
   <%= link_to tab_url,
     onclick: "$('#footer-content').addClass('show-loader');",
@@ -17,15 +19,15 @@
 
     <div class='tab-info-summary'>
       <% if phase.is_a?(ProjektPhase::MilestonePhase) && phase.milestones.any?  %>
-        <span><i class="far fa-calendar"></i><%= format_date(phase.milestones.last.publication_date.to_date) %></span>
+        <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.milestones.last.publication_date.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::ProjektNotificationPhase) && phase.projekt_notifications.any? %>
-        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_notifications.last.updated_at.to_date) %></span>
+        <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.projekt_notifications.last.updated_at.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::EventPhase) && phase.projekt_events.sort_by_incoming.any? %>
-        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %></span>
+        <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::LivestreamPhase) && phase.projekt_livestreams.any? %>
-        <span><i class="far fa-calendar"></i><%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %></span>
+        <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::BudgetPhase) && phase.budget.present? %>
-        <span class="time-icon"><%= format_date_range(phase.budget.current_phase.starts_at.to_date, (phase.budget.current_phase.ends_at.to_date - 1.day)) %></span>
+        <span class="time-icon"><%= format_budget_phase_duration(phase.budget.current_phase) %></span>
       <% elsif phase.start_date.present? && phase.regular? %>
         <span class="time-icon"><%= format_date_range(phase.start_date, phase.end_date) %></span>
       <% else phase.regular? %>
@@ -91,7 +93,7 @@
             </i>
           </button>
         <% end %>
-        <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>

@@ -7,6 +7,9 @@ de:
       deficiency_report_manager:
         one: Mängelmelder Admin
         other: Mängelmelder Admins
+      deficiency_report/feedback_form:
+        one: Feedbackformular
+        other: Feedbackformulare
       deficiency_report/officer_group:
         one: Sachbearbeitergruppe
         other: Sachbearbeitergruppen
@@ -23,8 +26,8 @@ de:
         one: Altersgruppe
         other: Altersgruppen
       modal_notification:
-        one: Popup Benachrichtigung
-        other: Popup Benachrichtungen
+        one: Popup-Benachrichtigung
+        other: Popup-Benachrichtigungen
       votation_type:
         one: Art der Abstimmung
         other: Arte der Abstimmung
@@ -127,6 +130,14 @@ de:
               blank: Bitte wählen Sie mindestens ein Label
             sentiment_id:
               blank: Bitte wählen Sie ein Sentiment
+        deficiency_report/feedback_form:
+          attributes:
+            overall_satisfaction:
+              blank: Bitte wählen Sie eine Option aus.
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: wurde bereits verwendet
     attributes:
       map_location:
         latitude: Breitengrad
@@ -150,9 +161,12 @@ de:
       poll/question/translation:
         intro: Einleitungssatz
       poll/question/answer:
-        more_info_link: Erklärungslink
-        more_info_iframe: Iframe-Link
-        terminates_poll: Beendet die Umfrage
+        title: Titel der Antwort
+        open_answer: Offene Antwort
+        more_info_link: Weiterführender Link
+        more_info_iframe: Eingebettete Webseite
+        terminates_poll: Abstimmung beenden
+        next_question_id: Nächste Frage
       poll/translation:
         closing_note: Text der Abschlussseite
       widget/card:
@@ -170,6 +184,13 @@ de:
         official_answer_approved: Antwort freigeben
         approximated_address: Addresse
         responsible: Sachbearbeiter*in
+      deficiency_report/feedback_form:
+        overall_satisfaction: Gesamtzufriedenheit
+        response_time_satisfaction: Reaktionszeit
+        communication_satisfaction: Kommunikation
+        resolved: Anliegen gelöst
+        what_liked_note: Was hat Ihnen gefallen
+        what_improve_note: Was können wir verbessern
       deficiency_report/category:
         default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
       deficiency_report/officer_group:
@@ -236,8 +257,8 @@ de:
         only_for_stats: Nur für Statistiken
       modal_notification:
         title: Titel
-        active_from: Von
-        active_to: Bis
+        active_from: Aktiv von
+        active_to: Aktiv bis
         html_content: Inhalt
       votation_type:
         max_votes: Maximale Stimmanzahl
@@ -253,8 +274,8 @@ de:
         rating_scale: Bewertungsskala
       individual_group:
         name: Name
-        visible: sichtbar
-        kind: Art
+        visible: Sichtbarkeit
+        kind: Gruppentyp
         kinds:
           hard: starke Gruppe
           soft: schwache Gruppe
@@ -277,7 +298,7 @@ de:
       projekt_event_registration:
         first_name: Vorname
         last_name: Nachname
-        email: E-Mail
+        email: E-Mail-Adresse
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

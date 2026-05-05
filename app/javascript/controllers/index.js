@@ -22,16 +22,25 @@ application.register("components-adm-attribute-editor", ComponentsAdmAttributeEd
 import ComponentsAdmNewNavbarItemController from "./components/adm/new_navbar_item_controller"
 application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarItemController)
 
+import IconFilterController from "./icon_filter_controller"
+application.register("icon-filter", IconFilterController)
+
 
 
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
+
+import AdmCriteriaListController from "./adm/criteria_list_controller"
+application.register("adm-criteria-list", AdmCriteriaListController)
 
 import KernFormNestedEntriesController from "./kern/form/nested_entries_controller"
 application.register("kern--form--nested-entries", KernFormNestedEntriesController)
 
 import KernFormCheckFilter from "./kern_form_check_filter_controller"
 application.register("kern-form-check-filter", KernFormCheckFilter)
+
+import KernRegisteredAddressSelectorController from "./kern/registered_address_selector_controller"
+application.register("kern--registered-address-selector", KernRegisteredAddressSelectorController)
 
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
@@ -40,8 +49,6 @@ import TableActionsController from "./components/table/actions_controller"
 application.register("table-actions", TableActionsController)
 
 
-import ModeSwitcherController from "./mode_switcher_controller"
-application.register("mode-switcher", ModeSwitcherController)
 
 import MapController from "./map_controller"
 application.register("map", MapController)
@@ -70,6 +77,9 @@ application.register("map-screenshot", MapScreenshotController)
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 
+import AdmChartsController from "./adm/charts_controller"
+application.register("adm-charts", AdmChartsController)
+
 
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)
@@ -80,6 +90,39 @@ application.register("formular-fields--kind", FormularFieldsKindController)
 import KernFormImageController from "./kern/form/image_controller"
 application.register("kern--form--image", KernFormImageController)
 
+import KernFormVideoController from "./kern/form/video_controller"
+application.register("kern--form--video", KernFormVideoController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
+
+import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
+application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
+
+import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
+application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
+
+import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
+application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
+
+import ClipboardController from "./clipboard_controller"
+application.register("clipboard", ClipboardController)
+
+import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
+application.register("adm-markdown-editor", AdmMarkdownEditorController)
+
+import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
+application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
+
+import AdmColumnSelectorController from "./adm/column_selector_controller"
+application.register("adm-column-selector", AdmColumnSelectorController)
+
+import AdmAutogrowController from "./adm/autogrow_controller"
+application.register("adm-autogrow", AdmAutogrowController)
+
+import AdmUserSelectController from "./adm/user_select_controller"
+application.register("adm-user-select", AdmUserSelectController)
+
+import HiddenTokenController from "./hidden_token_controller"
+application.register("hidden-token", HiddenTokenController)
 

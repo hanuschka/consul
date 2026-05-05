@@ -10,7 +10,8 @@
   <%= render Shared::MapComponent.new(
      mappable: @projekt_phase,
      features: @investment_coordinates,
-     process: 'investments'
+     process: 'investments',
+     collapsible: true
    ) %>
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">

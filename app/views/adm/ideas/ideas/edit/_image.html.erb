@@ -1,9 +1,0 @@
-<%= turbo_frame_tag "edit__image" do %>
-  <%= form_with model: idea, url: adm_ideas_idea_path(idea), method: :patch, multipart: true do |form| %>
-    <%= render Kern::Form::ImageableImageComponent.new(form: form, auto_submit: true) %>
-  <% end %>
-
-  <% if flash[:success].present? %>
-    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
-  <% end %>
-<% end %>

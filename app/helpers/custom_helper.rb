@@ -24,8 +24,8 @@ module CustomHelper
 
   def legislation_process_tabs(process)
     {
-      "info"           => edit_admin_legislation_process_path(process),
-      "draft_versions" => admin_legislation_process_draft_versions_path(process),
+      "info"           => general_settings_adm_projekts_phase_path(process.projekt_phase),
+      "draft_versions" => legislation_process_draft_versions_adm_projekts_phase_path(process.projekt_phase),
     }
   end
 

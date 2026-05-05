@@ -11,7 +11,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def path
     return @options[:path] if @options[:path].present?
 
-    adm_attribute_path(record_type: record_type_key, id: @record.id)
+    adm_attribute_path(record_type: record_type_key.tr("/", "-"), id: @record.id)
   end
 
   def label
@@ -33,6 +33,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::RichTextComponent
     when :image
       Adm::AttributeEditors::ImageComponent
+    when :video
+      Adm::AttributeEditors::VideoComponent
     when :color
       Adm::AttributeEditors::ColorComponent
     when :select
@@ -55,6 +57,26 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:disabled] == true
   end
 
+  def wide?
+    @options[:wide] == true
+  end
+
+  def stacked?
+    @kind == :rich_text
+  end
+
+  def inline?
+    @options[:inline] == true
+  end
+
+  def divider?
+    @options.fetch(:divider, true)
+  end
+
+  def hide_label?
+    @options[:hide_label] == true
+  end
+
   private
 
     def i18n_key(type)
@@ -62,8 +84,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
         "projekt_phase_setting.#{@record.projekt_phase.name}.#{@record.key}#{'_description' if type == :description}"
       elsif setting_type?
         "setting.#{@record.key}#{'_description' if type == :description}"
-      elsif @record.is_a?(::SiteCustomization::Image)
+      elsif @record.is_a?(::SiteCustomization::Image) || @record.is_a?(::SiteCustomization::Video)
         "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
+      elsif @record.is_a?(::SiteCustomization::ContentBlock) && @record.key.present?
+        ["adm.attribute_editor", record_type_key, @record.key, "#{@attribute}_#{type}"].join(".")
       else
         ["adm.attribute_editor", record_type_key, suffix, "#{@attribute}_#{type}"].compact.join(".")
       end

@@ -43,10 +43,6 @@ class Proposals::NewVotesComponent < ApplicationComponent
       proposal.votable_by?(current_user)
     end
 
-    def support_aria_label
-      t("proposals.proposal.support_label", proposal: proposal.title)
-    end
-
     def permission_problem_key
       @permission_problem_key ||= @proposal_phase.permission_problem(current_user, location: :votes_component)
     end

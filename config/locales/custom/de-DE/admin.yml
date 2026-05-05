@@ -763,6 +763,7 @@ de:
       hidden_users: Verborgene Benutzerinnen und Benutzer
       administrators: Administrator*innen
       api_clients: API-Clients
+      api_request_logs: API-Anfragen-Logs
       managers: Verwalter*innen
       sdg_managers: SDG Manager*innen
       moderators: Moderator*innen
@@ -819,6 +820,24 @@ de:
       comments: "Kommentare"
       local_census_records: Verwaltung des lokalen Registers
       machine_learning: "AI / Machine learning"
+    api_request_logs:
+      index:
+        title: API-Anfragen-Logs
+        id: ID
+        http_method: Methode
+        request_path: Pfad
+        response_status: Status
+        api_client: API-Client
+        no_logs: Keine API-Anfragen-Logs vorhanden.
+      show:
+        http_method: HTTP-Methode
+        request_path: Anfrage-Pfad
+        full_url: Vollständige URL
+        response_status: Antwort-Status
+        api_client: API-Client
+        created_at: Erstellt am
+        query_params: Query-Parameter
+        body_params: Body-Parameter
     api_clients:
       edit_button: "Bearbeiten"
       access_level:
@@ -1538,12 +1557,12 @@ de:
           proposals: Vorschläge
           budgets: Offene Haushalte
           budget_investments: Investitionsvorschläge
-          unverified_users: Nicht verifizierte Accounts
-          user_level_three: Nutzerinnen und Nutzer auf Stufe 3
-          user_level_two: Nutzerinnen und Nutzer auf Stufe 2
-          users: Benutzerinnen und Benutzer gesamt
-          verified_users: Verifizierte Accounts
-          verified_users_who_didnt_vote_proposals: Verifizierte Benutzerinnen und Benutzer, die nicht für Vorschläge abgestimmt haben
+          unverified_users: Nicht verifizierte Benutzer*innen
+          user_level_three: Verifiziert
+          user_level_two: Registriert
+          users: Benutzer*innen gesamt
+          verified_users: Verifizierte Benutzer*innen
+          verified_users_who_didnt_vote_proposals: Verifizierte Benutzer*innen, die nicht für Vorschläge abgestimmt haben
           visits: Besuche
           votes: Gesamtbewertung
         budgets_title: Partizipative Haushaltsplanung

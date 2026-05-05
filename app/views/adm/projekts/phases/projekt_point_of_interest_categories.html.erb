@@ -35,8 +35,8 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_point_of_interest_category_path(@projekt_phase, category)) %>
-                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_point_of_interest_category_path(@projekt_phase, category), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_projekt_point_of_interest_category_path(@projekt_phase, category), icon: "edit", style: :edit) %>
+                  <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_point_of_interest_category_path(@projekt_phase, category), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>
             </tr>
@@ -45,8 +45,6 @@
       </table>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <%= t(".no_categories") %>
-    </div>
+    <%= empty_state(title: t(".no_categories_title"), description: t(".no_categories_description"), icon: "category") %>
   <% end %>
 </div>

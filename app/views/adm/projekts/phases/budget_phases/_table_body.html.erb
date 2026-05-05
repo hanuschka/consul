@@ -3,11 +3,11 @@
     <th scope="row" class="kern-table__header">
       <%= budget_phase.name %>
       <% if budget_phase.current? %>
-        <span class="kern-badge kern-badge--success"><%= t("adm.projekts.phases.budget_phases.table.current") %></span>
+        <span class="kern-status-dot kern-status-dot--active" title="<%= t("adm.projekts.phases.budget_phases.table.current") %>"></span>
       <% end %>
     </th>
-    <td class="kern-table__cell"><%= budget_phase.starts_at&.strftime("%d.%m.%Y") %></td>
-    <td class="kern-table__cell"><%= budget_phase.ends_at&.strftime("%d.%m.%Y") %></td>
+    <td class="kern-table__cell"><%= budget_phase.starts_at&.strftime("%d.%m.%Y %H:%M") %></td>
+    <td class="kern-table__cell"><%= (budget_phase.ends_at - 1.minute)&.strftime("%d.%m.%Y %H:%M") if budget_phase.ends_at %></td>
     <td class="kern-table__cell">
       <div id="<%= dom_id(budget_phase, :enabled) %>">
         <%= render Adm::AttributeEditors::BooleanComponent.new(
@@ -19,7 +19,7 @@
     </td>
     <td class="kern-table__cell">
       <%= render Kern::Table::ActionsComponent.new do |actions| %>
-        <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_budget_phase_path(projekt_phase, budget_phase)) %>
+        <% actions.with_action(label: t("shared.edit"), url: edit_adm_projekts_phase_budget_phase_path(projekt_phase, budget_phase), icon: "edit", style: :edit) %>
       <% end %>
     </td>
   </tr>

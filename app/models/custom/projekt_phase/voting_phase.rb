@@ -18,15 +18,26 @@ class ProjektPhase::VotingPhase < ProjektPhase
     4
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_poll"]
+    ]
+  end
+
   def admin_nav_bar_items
     %w[duration naming restrictions general_settings
        poll_questions
        officing_managers officing_manager_audits
+       email_templates
        age_ranges_for_stats]
   end
 
   def safe_to_destroy?
     polls.empty?
+  end
+
+  def after_hide
+    polls.each(&:hide)
   end
 
   def poll

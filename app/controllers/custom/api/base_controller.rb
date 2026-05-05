@@ -1,5 +1,6 @@
 class Api::BaseController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
 
   class ForbiddenError < StandardError; end
   class UnauthorizedError < StandardError; end
@@ -7,13 +8,26 @@ class Api::BaseController < ActionController::API
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
 
+  before_action :authenticate_http_basic, if: :http_basic_auth_site?
   before_action :authenticate_api_client!
+  after_action :log_api_request
+
   # rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized
 
   private
+
+    def authenticate_http_basic
+      authenticate_or_request_with_http_basic do |username, password|
+        username == Rails.application.secrets.http_basic_username && password == Rails.application.secrets.http_basic_password
+      end
+    end
+
+    def http_basic_auth_site?
+      Rails.application.secrets.http_basic_auth
+    end
 
     def authenticate_api_client!
       token = request.headers["Authorization"]&.split(" ")&.last
@@ -64,6 +78,27 @@ class Api::BaseController < ActionController::API
       render json: {
         error: { type: "not_found", messages: ["Not found"] }
       }, status: :not_found
+    end
+
+    def log_api_request
+      return if skip_api_request_log?
+
+      ApiRequestLogs::CreateAndPushJob.perform_later(
+        request.method,
+        request.path,
+        request.url,
+        request.query_parameters.to_h,
+        request.request_parameters.to_h,
+        response.status,
+        @current_client&.id
+      )
+    rescue StandardError
+    end
+
+    SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze
+
+    def skip_api_request_log?
+      SKIP_LOG_RESPONSE_STATUSES.include?(response.status)
     end
 
     def render_internal_server_error(exception)

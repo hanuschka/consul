@@ -1,8 +1,29 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
-<% if show_admin_controls_for_projekt?(@projekt) %>
-  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
-  <%= render Projekts::ContentBlockEditPopupsComponent.new %>
+<% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <% content_for :admin_topbar_actions do %>
+    <% if @custom_page.landing? %>
+      <% if current_user&.administrator? %>
+        <%= link_to edit_adm_landing_pages_landing_page_path(@custom_page),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_landing") %></span>
+        <% end %>
+      <% end %>
+    <% elsif @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
+      <%= render "pages/topbar/admin_topbar_projekt_actions" %>
+    <% else %>
+      <% if current_user&.administrator? %>
+        <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
+              class: "button hollow projekt-page--admin-topbar-button",
+              target: "_blank" do %>
+          <i class="fas fa-edit"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_page") %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <% if @custom_page.landing? %>
@@ -66,16 +87,12 @@
       </div>
     <% end %>
 
-    <% if show_admin_controls_for_projekt?(@projekt) %>
-      <%= render "pages/topbar/admin_topbar" %>
-    <% end %>
-
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
     <% if @custom_page.projekt.present? %>
       <% if native_projekt_studio?(@projekt) %>
         <div
-          class="js-projekt-studio-hide-on-preview"
+          class="js-studio-hide-on-preview"
           style="position: relative; height: 1px;"
         >
           <div
@@ -88,7 +105,7 @@
               aria-pressed="<%= @custom_page.projekt.show_content_background %>"
               data-projekt-id="<%= @custom_page.projekt.id %>"
               data-show-background="<%= @custom_page.projekt.show_content_background %>"
-              data-url="<%= toggle_hide_content_background_admin_projekt_path(@custom_page.projekt) %>"
+              data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
             ></button>
             <span
               class="projekt-studio--toggle-background-label"
@@ -99,6 +116,24 @@
               <%= t('custom.projekts.page.toggle_background_label') %>
             </span>
           </div>
+
+          <% if @custom_page.projekt.new_content_block_mode? == false %>
+            <%= button_to convert_to_new_content_block_mode_adm_projekts_projekt_path(@custom_page.projekt),
+                  method: :patch,
+                  form: { class: "projekt-studio--convert-to-blocks-form js-studio-hide-on-preview" },
+                  class: "projekt-studio--convert-to-blocks-button",
+                  title: t("custom.projekts.page.convert_to_content_blocks.tooltip"),
+                  data: {
+                    tooltip: true,
+                    "hover-delay": 300,
+                    confirm: t("custom.projekts.page.convert_to_content_blocks.confirm")
+                  } do %>
+              <i class="fas fa-cubes projekt-studio--convert-to-blocks-button--icon"></i>
+              <span class="projekt-studio--convert-to-blocks-button--label">
+                <%= t("custom.projekts.page.convert_to_content_blocks.button") %>
+              </span>
+            <% end %>
+          <% end %>
         </div>
       <% end %>
       <div class="flex-layout">
@@ -128,8 +163,7 @@
 
     <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_admin_controls_for_projekt?(@custom_page.projekt)) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
-        <div class="projekt-footer-anchor" id="projekt-footer"> </div>
-        <div class="projekt-footer flex-layout">
+        <div class="projekt-footer flex-layout" id="projekt-footer">
           <div class="full-width-column">
             <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase, namespace: @namespace) %>
             <% if @default_projekt_phase.present? %>

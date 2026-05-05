@@ -3,6 +3,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
   def menu_items
     [
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
+      { label: t("adm.menu.items.team"),          icon: "badge",            path: adm_administrators_path, active_prefix: "/adm/administrators" },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
       { label: t("adm.menu.items.modules"),       icon: "widgets",          path: adm_modules_path },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
@@ -41,7 +42,6 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def profiles_subitems
       [
-        { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
         { label: t("adm.menu.items.profiles_subitems.section_contact_people"), path: adm_section_contact_people_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]

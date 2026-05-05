@@ -8,6 +8,7 @@ en:
       aria_label: Administration menu
       items:
         home: Home
+        team: Team
         projekts: Projects
         application: Application
         modules: Modules
@@ -32,7 +33,6 @@ en:
           impressum: Legal notice
         profiles: Profiles
         profiles_subitems:
-          administrators: Administrators
           deficiency_report_managers: Deficiency managers
           idea_managers: Idea managers
           section_contact_people: Contact persons

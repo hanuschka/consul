@@ -35,10 +35,10 @@ de:
     welcomepage:
       usage_stats: Nutzerübersicht
       usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."
-      newsletter_subscription: Plattformstatistik
-      newsletter_subscription_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
-      platform_activity: Newsletter-Anmeldung
-      platform_activity_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      newsletter_subscription: Newsletter-Anmeldung
+      newsletter_subscription_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      platform_activity: Plattformstatistik
+      platform_activity_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
       projekt_search: Projektsuche
       projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus. Die Projektsuche eignet sich besonders bei Plattformen mit vielen laufenden oder geplanten Projekten."
     extended_feature:
@@ -130,14 +130,10 @@ de:
         enable_investments_overview: Budgetübersicht
         enable_investments_overview_description: >
           Aktiviert eine zentrale Übersichtsseite, die alle Bürgervorschläge aus laufenden und abgeschlossenen Bürgerhaushalten zusammenfasst. Bürger können dort den Stand der Vorschläge, Machbarkeitsbewertungen und Abstimmungsergebnisse projektübergreifend einsehen.
-        enable_polls_overview: Abstimmungsübersicht
-        enable_polls_overview_description: >
-          Aktiviert eine zentrale Übersichtsseite, die alle laufenden und abgeschlossenen Abstimmungen aus den Beteiligungsprojekten zusammenfasst. Bürger können dort auf einen Blick sehen, wo sie aktuell abstimmen können und welche Ergebnisse bereits vorliegen.
-        enable_proposals_overview: Vorschlagsübersicht
-        enable_proposals_overview_description: >
-          Aktiviert eine zentrale Übersichtsseite, die alle eingereichten Bürgervorschläge aus den Beteiligungsprojekten projektübergreifend zusammenfasst. Bürger können dort Vorschläge durchsuchen, unterstützen und kommentieren, ohne zuerst ein konkretes Projekt aufrufen zu müssen.
     extended_option:
       general:
+        city_name: Name der Stadt/Gemeinde
+        city_name_description: "Wird bei der BundID-Verifizierung verwendet, um den Wohnort der Nutzer abzufragen."
         title: Titel der Anwendung
         title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
@@ -346,15 +342,6 @@ de:
     #     enable_projekt_filter: Projektfilter anzeigen
     #     enable_projekt_filter_description: Zeigt den Projektfilter in der Abstimmungsübersichtseite
 
-    # extended_option:
-    #   general:
-    #     city_name: Name der Applikation
-    #     city_name_description: Wird unter anderem bei der BundID-Verifizierung verwendet
-    #     launch_date: Erscheinungsdatum
-    #     launch_date_description: "Bitte geben Sie das Erscheinungsdatum im folgenden Format an: \"dd.mm.yyyy\". So sollte beispielsweise der 3. Oktober 1990 als 03.10.1990 geschrieben werden."
-    #     homepage_button_text: Homepage-Button-Text
-    #     homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
-    #     homepage_button_link: Homepage-Button-Link
     #     homepage_button_link_description: Link, der über den Button angesteuert werden soll
 
     #   proposals:

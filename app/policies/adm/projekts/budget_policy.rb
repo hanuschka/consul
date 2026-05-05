@@ -2,39 +2,39 @@ class Adm::Projekts::BudgetPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def show?
-    permitted?
+    manage_permitted?
   end
 
   def edit?
-    permitted?
+    manage_permitted?
   end
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   def destroy?
-    permitted?
+    manage_permitted?
   end
 
   def hide?
-    can_moderate_projekt?
+    moderate_permitted?
   end
 
   def unhide?
-    can_moderate_projekt? && @record.hidden?
+    moderate_permitted? && @record.hidden?
   end
 
   def ignore_flag?
-    can_moderate_projekt? && !@record.ignored_flag? && !@record.hidden?
+    moderate_permitted? && !@record.ignored_flag? && !@record.hidden?
   end
 
   def calculate_winners?
-    permitted? && @record.balloting_or_later?
+    manage_permitted? && @record.balloting_or_later?
   end
 
   def recalculate_winners?
-    permitted? && @record.balloting_or_later?
+    manage_permitted? && @record.balloting_or_later?
   end
 
   class Scope < Scope
@@ -47,9 +47,5 @@ class Adm::Projekts::BudgetPolicy < ApplicationPolicy
 
   def projekt_from_record
     @record.respond_to?(:projekt) ? @record.projekt : @record.budget&.projekt
-  end
-
-  def can_moderate_projekt?
-    @user&.has_pm_permission_to?("moderate", projekt_from_record)
   end
 end

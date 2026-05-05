@@ -17,8 +17,8 @@ class NavbarItem < ApplicationRecord
     ideas: "process.ideas",
     projekts: "process.projekts",
     investments: "extended_feature.general.enable_investments_overview",
-    polls: "extended_feature.general.enable_polls_overview",
-    proposals: "extended_feature.general.enable_proposals_overview"
+    polls: "process.polls",
+    proposals: "process.proposals"
   }.freeze
 
   def self.enabled_presets
@@ -56,13 +56,17 @@ class NavbarItem < ApplicationRecord
   end
 
   def title
+    return custom_title if custom_title.present?
+
     case kind
     when "presets"
       I18n.t("navbar.presets.#{preset}")
     when "projekts"
-      projekt.title
-    when "external"
-      external_title
+      projekt&.title || I18n.t("adm.navbar_items.deleted_projekt")
     end
+  end
+
+  def resource_missing?
+    kind == "projekts" && projekt.blank?
   end
 end

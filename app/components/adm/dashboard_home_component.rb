@@ -1,5 +1,5 @@
 class Adm::DashboardHomeComponent < ApplicationComponent
-  delegate :empty_state, :time_ago_in_words, :kern_link_button, to: :helpers
+  delegate :empty_state, :kern_link_button, to: :helpers
 
   attr_reader :team_members, :team_url, :recent_items, :recent_items_url, :recent_item_columns,
               :recent_item_partial, :recent_item_headers, :recent_item_as,
@@ -39,29 +39,7 @@ class Adm::DashboardHomeComponent < ApplicationComponent
     contact_persons.any?
   end
 
-  def show_activities?
-    activities.any?
-  end
-
-  def activity_description(activity)
-    user_name = activity.user&.name || t(".activity_unknown_user")
-    trackable_name = activity.metadata&.dig("trackable_name") || activity.trackable_type&.demodulize || "—"
-    action_label = t(".activity_action_#{activity.action}", default: activity.action)
-    changed_fields = activity.metadata&.dig("changed_fields")
-    detail = if changed_fields.present?
-               " (#{changed_fields.map { |f| human_attribute_for(activity, f) }.join(', ')})"
-             else
-               ""
-             end
-    "#{user_name} #{t('.activity_has')} #{trackable_name} #{action_label}#{detail}"
-  end
-
-  def human_attribute_for(activity, field)
-    klass = activity.trackable_type&.safe_constantize
-    klass ? klass.human_attribute_name(field) : field.humanize
-  end
-
-  def activity_time(activity)
-    time_ago_in_words(activity.created_at)
+  def show_recent?
+    !recent_items.nil?
   end
 end

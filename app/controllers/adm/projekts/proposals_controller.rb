@@ -50,7 +50,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
   end
 
   def toggle_admin_accepted
-    authorize [:adm, @proposal], :update?
+    authorize [:adm, @proposal], :toggle_admin_accepted?
 
     @proposal.update!(proposal_params)
   end

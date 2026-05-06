@@ -17,3 +17,5 @@ de:
         max_image_size: Die maximale Bildgröße beträgt %{size} MB.
         supported_formats: "Dateiformat: %{formats}"
         credits_field_placeholder: Hier klicken, um Copyright des Bildes hinzuzufügen
+        generating_title: "KI erstellt ein Bild …"
+        generating_subtitle: "Das kann bis zu 25 Sekunden dauern. Sie können stattdessen auch ein eigenes Bild hochladen."

@@ -19,16 +19,14 @@ de:
     step1:
       criteria_heading: "Kriterien zum Einreichen Ihrer Idee"
       idea_heading: "Ihre Idee"
-      textarea_label: "BESCHREIBEN SIE IHRE IDEE KURZ UND PRÄGNANT"
-      placeholder: "Beschreiben Sie Ihre Idee kurz und prägnant."
-      submit_button: "KI-Entwurf generieren"
+      textarea_label: "Was möchten Sie verbessern? Beschreiben Sie kurz Problem, Ort und Lösungsidee."
+      placeholder: "z.B. »Ich möchte einen Trinkbrunnen im Stadtpark nahe dem Spielplatz.«\noder: »Der Belag der Ahornstraße ist sehr uneben und muss erneuert werden.«\noder: »Wir brauchen einen sicheren Überweg nahe dem Schuleingang in der Eichenstraße.«"
+      submit_button: "Vorschlag einreichen"
       chars_label: "Zeichen"
     criteria:
-      hard_eyebrow: "Pflicht"
       hard_title: "Pflichtkriterien"
       hard_hint: "Diese Kriterien müssen erfüllt sein, damit Ihr Vorschlag eingereicht werden kann."
       hard_badge: "Pflicht"
-      soft_eyebrow: "Bewertet"
       soft_title: "Bewertungskriterien"
       soft_hint: "Diese Kriterien fließen in die Qualitätsbewertung Ihres Vorschlags ein."
       soft_badge: "Bewertet"
@@ -54,6 +52,7 @@ de:
       back_edit: "Vorschlag editieren"
       next_evaluation: "Weiter zur Bewertung"
       submit: "Vorschlag einreichen"
+      back_to_projekt_phase: "Zurück zum Projekt"
   admin:
     projekt_phases:
       user_resource_criteria:

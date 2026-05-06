@@ -39,6 +39,33 @@
   min-height: 180px !important;
 }
 
+.ai-proposal-flow--page-footer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1.25rem;
+  padding: 0 0.5rem;
+}
+
+.ai-proposal-flow--back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  i {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  &:hover {
+    color: var(--brand-color);
+    text-decoration: none;
+  }
+}
+
 .ai-proposal-flow--header {
   background:
     radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--brand-color) 13%, white) 0%, transparent 55%),
@@ -69,12 +96,12 @@
   }
 
   h1 {
-    font-size: 1.35rem !important;
+    font-size: 1.7rem !important;
     font-weight: 700 !important;
     letter-spacing: -0.01em;
     color: #1a1a1a;
-    margin-bottom: 0.3rem !important;
-    margin-top: 0.65rem !important;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
   }
 
   p {
@@ -83,6 +110,13 @@
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
+}
+
+.ai-proposal-flow--header--title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.3rem;
 }
 
 .ai-proposal-flow--projekt-badge {
@@ -94,7 +128,7 @@
   border: 1px solid color-mix(in srgb, var(--brand-color) 28%, transparent);
   border-radius: 100px;
   color: var(--brand-color);
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -218,33 +252,31 @@
 .ai-proposal-flow--project-banner {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 18px;
+  padding-right: 20px;
+  margin-bottom: 28px;
   text-decoration: none;
   color: inherit;
-  gap: 20px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 8%, white) 0%, white 100%);
-  border: 1.5px solid color-mix(in srgb, var(--brand-color) 20%, transparent);
-  border-radius: 16px;
-  padding: 15px 22px 15px 20px;
-  margin-bottom: 28px;
+  background: color-mix(in srgb, var(--brand-color) 5%, white);
+  border: 1px solid color-mix(in srgb, var(--brand-color) 18%, transparent);
+  border-radius: 10px;
+  overflow: hidden;
 
   &:hover {
     opacity: 0.85;
+    text-decoration: none;
   }
 }
 
-.ai-proposal-flow--project-banner--initial {
-  width: 70px;
-  height: 70px;
-  border-radius: 5px;
+.ai-proposal-flow--project-banner--image {
+  width: 170px;
+  height: 100px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--brand-color) 15%, white);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(13, 126, 133, .28);
-  overflow: hidden;
-  flex-shrink: 0;
 
   img {
     width: 100%;
@@ -253,23 +285,48 @@
   }
 }
 
+.ai-proposal-flow--project-banner--initial {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--brand-color);
+  line-height: 1;
+}
+
+.ai-proposal-flow--project-banner--content {
+  flex: 1;
+  min-width: 0;
+}
+
 .ai-proposal-flow--project-banner--name {
   display: block;
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
 }
 
 .ai-proposal-flow--project-banner--description {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #666;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.ai-proposal-flow--project-banner--arrow {
+  color: color-mix(in srgb, var(--brand-color) 50%, transparent);
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 
 .ai-proposal-flow--section-heading {
-  font-size: 28px !important;
+  font-size: 25px !important;
   font-weight: 700;
   padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem !important;
 }
 
 // Criteria groups (hard / soft) shown on step 1.
@@ -280,30 +337,35 @@
 .ai-proposal-flow--criteria-groups {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0;
   margin-bottom: 2rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 .ai-proposal-flow--criteria-group {
   --tone-color: #0d7e85;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--tone-color) 18%, transparent);
   background:
     linear-gradient(180deg,
       color-mix(in srgb, var(--tone-color) 5%, white) 0%,
       color-mix(in srgb, var(--tone-color) 1.5%, white) 100%);
-  padding: 1.1rem 1.2rem 1.2rem;
+  padding: 0.8rem 1.2rem 1.2rem;
 
   &.-soft {
     --tone-color: #c48400;
   }
 }
 
+.ai-proposal-flow--criteria-group + .ai-proposal-flow--criteria-group {
+  border-top: 1px solid #e5e5e5;
+}
+
 .ai-proposal-flow--criteria-group--header {
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
 }
 
 .ai-proposal-flow--criteria-group--icon {
@@ -326,16 +388,6 @@
   min-width: 0;
 }
 
-.ai-proposal-flow--criteria-group--eyebrow {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--tone-color);
-  line-height: 1;
-  margin-bottom: 0.25rem;
-}
-
 .ai-proposal-flow--criteria-group--title {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
@@ -354,7 +406,7 @@
 .ai-proposal-flow--criteria-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.7rem;
+  gap: 0.5rem;
 
   @media (max-width: $mobile-viewport-start) {
     grid-template-columns: 1fr;
@@ -370,18 +422,11 @@
   gap: 0.7rem 0.85rem;
   padding: 0.85rem 0.95rem 0.85rem 0.95rem;
   background: white;
-  border: 1px solid color-mix(in srgb, var(--tone-color) 22%, transparent);
-  border-left: 3px solid var(--tone-color);
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
 
   &.-soft {
     --tone-color: #c48400;
-  }
-
-  &:hover {
-    box-shadow: 0 4px 14px color-mix(in srgb, var(--tone-color) 16%, transparent);
-    transform: translateY(-1px);
   }
 }
 
@@ -410,7 +455,6 @@
   font-weight: 600;
   line-height: 1.4;
   color: #1a1a1a;
-  padding-right: 4.5rem;
 }
 
 .ai-proposal-flow--criteria-card--description {
@@ -435,29 +479,62 @@
 }
 
 .ai-proposal-flow--label {
-  font-size: 14px !important;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #838383 !important;
-  text-transform: uppercase;
-  margin-bottom: 0px;
+  display: block;
+  font-size: 0.95rem !important;
+  font-weight: 500;
+  color: #444 !important;
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+
+.ai-proposal-flow--idea-input-wrapper {
+  position: relative;
 }
 
 .ai-proposal-flow--idea-textarea {
   width: 100%;
-  min-height: 140px;
+  min-height: 200px;
+  padding: 18px 20px 36px !important;
+  border: 1px solid color-mix(in srgb, var(--brand-color) 28%, #b0b0b0) !important;
+  border-radius: 14px !important;
+  background: white !important;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 14px color-mix(in srgb, var(--brand-color) 5%, transparent) !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--brand-color) 42%, #909090) !important;
+  }
+
+  &:focus {
+    border-color: var(--brand-color) !important;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 6px 20px color-mix(in srgb, var(--brand-color) 12%, transparent),
+      0 0 0 4px color-mix(in srgb, var(--brand-color) 16%, transparent) !important;
+    outline: none;
+  }
 
   &::placeholder {
-    color: #838383;
+    color: #aaa;
+    font-style: italic;
     opacity: 1;
   }
 }
 
 .ai-proposal-flow--char-counter {
-  text-align: right;
-  font-size: 0.85rem;
-  color: var(--color-grey-medium, #888);
-  margin-top: 0.25rem;
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  font-size: 0.8rem;
+  color: #aaa;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0 4px;
+  border-radius: 4px;
 }
 
 // Hard-fail evaluation card: shown when a mandatory criterion was not met.
@@ -774,6 +851,42 @@
   flex-direction: row-reverse;
   align-items: center;
   margin-top: 10px;
+}
+
+.ai-proposal-flow--navigation.-centered {
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.custom-new-design .ai-proposal-flow--submit-btn.-large {
+  padding: 10px 40px !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  border-radius: 100px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow:
+    0 3px 8px color-mix(in srgb, var(--brand-color) 22%, transparent),
+    0 12px 32px color-mix(in srgb, var(--brand-color) 20%, transparent);
+
+  i {
+    font-size: 1.4rem;
+    height: 1.2em;
+  }
+}
+
+.icon-sparkles {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  mask-image: asset-data-url("icons/sparkles.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
 }
 
 .ai-proposal-flow--success {

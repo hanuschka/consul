@@ -17,3 +17,5 @@ en:
         max_image_size: Maximum image size is %{size} MB.
         supported_formats: "File format: %{formats}"
         credits_field_placeholder: Click here to add image credits
+        generating_title: "AI is creating an image …"
+        generating_subtitle: "This can take up to 25 seconds. You can also upload your own image instead."

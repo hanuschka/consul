@@ -2,7 +2,6 @@ en:
   adm:
     statistics:
       show:
-        title: Statistics
         sections:
           users: Users
           projects: Projects

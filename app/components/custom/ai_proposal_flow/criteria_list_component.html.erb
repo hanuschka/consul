@@ -1,16 +1,15 @@
 <div class="ai-proposal-flow--criteria-groups">
   <% if hard_criteria.any? %>
     <section class="ai-proposal-flow--criteria-group -hard">
-      <header class="ai-proposal-flow--criteria-group--header">
+      <div class="ai-proposal-flow--criteria-group--header">
         <span class="ai-proposal-flow--criteria-group--icon">
           <i class="fas fa-shield-alt"></i>
         </span>
         <div class="ai-proposal-flow--criteria-group--titles">
-          <span class="ai-proposal-flow--criteria-group--eyebrow"><%= t("ai_proposal_flow.criteria.hard_eyebrow") %></span>
           <h3 class="ai-proposal-flow--criteria-group--title"><%= t("ai_proposal_flow.criteria.hard_title") %></h3>
           <p class="ai-proposal-flow--criteria-group--hint"><%= t("ai_proposal_flow.criteria.hard_hint") %></p>
         </div>
-      </header>
+      </div>
 
       <div class="ai-proposal-flow--criteria-grid">
         <% hard_criteria.each do |criterion| %>
@@ -24,7 +23,6 @@
                 <span class="ai-proposal-flow--criteria-card--description"><%= criterion.description %></span>
               <% end %>
             </div>
-            <span class="ai-proposal-flow--criteria-card--badge -hard"><%= t("ai_proposal_flow.criteria.hard_badge") %></span>
           </article>
         <% end %>
       </div>
@@ -33,16 +31,15 @@
 
   <% if soft_criteria.any? %>
     <section class="ai-proposal-flow--criteria-group -soft">
-      <header class="ai-proposal-flow--criteria-group--header">
+      <div class="ai-proposal-flow--criteria-group--header">
         <span class="ai-proposal-flow--criteria-group--icon">
           <i class="fas fa-star"></i>
         </span>
         <div class="ai-proposal-flow--criteria-group--titles">
-          <span class="ai-proposal-flow--criteria-group--eyebrow"><%= t("ai_proposal_flow.criteria.soft_eyebrow") %></span>
           <h3 class="ai-proposal-flow--criteria-group--title"><%= t("ai_proposal_flow.criteria.soft_title") %></h3>
           <p class="ai-proposal-flow--criteria-group--hint"><%= t("ai_proposal_flow.criteria.soft_hint") %></p>
         </div>
-      </header>
+      </div>
 
       <div class="ai-proposal-flow--criteria-grid">
         <% soft_criteria.each do |criterion| %>
@@ -56,7 +53,6 @@
                 <span class="ai-proposal-flow--criteria-card--description"><%= criterion.description %></span>
               <% end %>
             </div>
-            <span class="ai-proposal-flow--criteria-card--badge -soft"><%= t("ai_proposal_flow.criteria.soft_badge") %></span>
           </article>
         <% end %>
       </div>

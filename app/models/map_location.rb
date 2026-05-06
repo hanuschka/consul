@@ -137,6 +137,7 @@ class MapLocation < ApplicationRecord
     return {} if !imported_from_masterportal?
 
     pin = mappable.masterportal_pin
+    return {} if pin.blank?
 
     {
       "resource_type" => "masterportal_pin",

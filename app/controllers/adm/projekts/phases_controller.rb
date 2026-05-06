@@ -414,9 +414,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     @masterportal_pins_view = (params[:view] == "map") ? "map" : "list"
     @masterportal_pins_search_query = params[:q].to_s.strip
+    @masterportal_pins_collection_ids =
+      @projekt_phase.masterportal_pins.distinct.pluck(:collection_id).compact.sort
+
+    requested_collection_id = params[:collection_id].to_s.strip.presence
+    @masterportal_pins_collection_id =
+      if @masterportal_pins_collection_ids.include?(requested_collection_id)
+        requested_collection_id
+      end
 
     base_scope = @projekt_phase.masterportal_pins
       .text_search(@masterportal_pins_search_query)
+
+    if @masterportal_pins_collection_id.present?
+      base_scope = base_scope.where(collection_id: @masterportal_pins_collection_id)
+    end
 
     if @masterportal_pins_view == "map"
       @masterportal_pins_for_map = base_scope.select(:id, :latitude, :longitude).order(:id)
@@ -462,7 +474,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     redirect_to masterportal_pins_adm_projekts_phase_path(
       @projekt_phase,
-      params.permit(:q, :view, :page).to_h.compact_blank
+      params.permit(:q, :view, :page, :collection_id).to_h.compact_blank
     )
   end
   def projekt_point_of_interest_categories

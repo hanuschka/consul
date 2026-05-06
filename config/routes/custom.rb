@@ -5,8 +5,8 @@ post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_a
 delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
 
 scope "proposals/generate", as: :generate_proposal do
-  get   "new",              to: "proposals/generate#new_flow",       as: :new
-  post  "draft",            to: "proposals/generate#generate_draft", as: :draft
+  get   ":projekt_phase_id/new",   to: "proposals/generate#new_flow",       as: :new
+  post  ":projekt_phase_id/draft", to: "proposals/generate#generate_draft", as: :draft
   get   ":id/edit_draft",   to: "proposals/generate#edit_draft",     as: :edit_draft
   patch ":id/update_draft", to: "proposals/generate#update_draft",   as: :update_draft
   get   ":id/evaluation",   to: "proposals/generate#evaluation",     as: :evaluation
@@ -15,8 +15,8 @@ scope "proposals/generate", as: :generate_proposal do
 end
 
 scope "budget_investments/generate", as: :generate_budget_investment do
-  get   "new",              to: "budget_investments/generate#new_flow",       as: :new
-  post  "draft",            to: "budget_investments/generate#generate_draft", as: :draft
+  get   ":projekt_phase_id/new",   to: "budget_investments/generate#new_flow",       as: :new
+  post  ":projekt_phase_id/draft", to: "budget_investments/generate#generate_draft", as: :draft
   get   ":id/edit_draft",   to: "budget_investments/generate#edit_draft",     as: :edit_draft
   patch ":id/update_draft", to: "budget_investments/generate#update_draft",   as: :update_draft
   get   ":id/evaluation",   to: "budget_investments/generate#evaluation",     as: :evaluation

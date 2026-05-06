@@ -16,6 +16,8 @@
 
       if (!$textarea.length) return;
 
+      $counter.text($textarea.val().length);
+
       $textarea.on("input", function() { $counter.text(this.value.length); });
     },
 

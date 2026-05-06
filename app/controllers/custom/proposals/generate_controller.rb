@@ -1,6 +1,6 @@
 class Proposals::GenerateController < AiProposalFlowBaseController
   def new_flow
-    @generate_draft_url = generate_proposal_draft_path
+    @generate_draft_url = generate_proposal_draft_path(projekt_phase_id: @projekt_phase.id)
     render "ai_proposal_flow/new_flow"
   end
 

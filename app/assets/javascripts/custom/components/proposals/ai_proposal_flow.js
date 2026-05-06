@@ -123,6 +123,7 @@
     },
 
     showLoader() {
+      $(".js-ai-flow-body-content").hide();
       $(".js-ai-proposal-loader").removeAttr("hidden");
     }
   };

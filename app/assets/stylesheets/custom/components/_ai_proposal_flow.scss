@@ -69,7 +69,7 @@
   }
 
   h1 {
-    font-size: 1.35rem !important;
+    font-size: 1.7rem !important;
     font-weight: 700 !important;
     letter-spacing: -0.01em;
     color: #1a1a1a;
@@ -225,33 +225,31 @@
 .ai-proposal-flow--project-banner {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 18px;
+  padding-right: 20px;
+  margin-bottom: 28px;
   text-decoration: none;
   color: inherit;
-  gap: 20px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-color) 8%, white) 0%, white 100%);
-  border: 1.5px solid color-mix(in srgb, var(--brand-color) 20%, transparent);
-  border-radius: 16px;
-  padding: 15px 22px 15px 20px;
-  margin-bottom: 28px;
+  background: color-mix(in srgb, var(--brand-color) 5%, white);
+  border: 1px solid color-mix(in srgb, var(--brand-color) 18%, transparent);
+  border-radius: 10px;
+  overflow: hidden;
 
   &:hover {
     opacity: 0.85;
+    text-decoration: none;
   }
 }
 
-.ai-proposal-flow--project-banner--initial {
-  width: 70px;
-  height: 70px;
-  border-radius: 5px;
+.ai-proposal-flow--project-banner--image {
+  width: 170px;
+  height: 100px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--brand-color) 15%, white);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(13, 126, 133, .28);
-  overflow: hidden;
-  flex-shrink: 0;
 
   img {
     width: 100%;
@@ -260,16 +258,41 @@
   }
 }
 
+.ai-proposal-flow--project-banner--initial {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--brand-color);
+  line-height: 1;
+}
+
+.ai-proposal-flow--project-banner--content {
+  flex: 1;
+  min-width: 0;
+}
+
 .ai-proposal-flow--project-banner--name {
   display: block;
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
 }
 
 .ai-proposal-flow--project-banner--description {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #666;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.ai-proposal-flow--project-banner--arrow {
+  color: color-mix(in srgb, var(--brand-color) 50%, transparent);
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 
 .ai-proposal-flow--section-heading {

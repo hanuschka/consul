@@ -24,11 +24,9 @@ de:
       submit_button: "KI-Entwurf generieren"
       chars_label: "Zeichen"
     criteria:
-      hard_eyebrow: "Pflicht"
       hard_title: "Pflichtkriterien"
       hard_hint: "Diese Kriterien müssen erfüllt sein, damit Ihr Vorschlag eingereicht werden kann."
       hard_badge: "Pflicht"
-      soft_eyebrow: "Bewertet"
       soft_title: "Bewertungskriterien"
       soft_hint: "Diese Kriterien fließen in die Qualitätsbewertung Ihres Vorschlags ein."
       soft_badge: "Bewertet"

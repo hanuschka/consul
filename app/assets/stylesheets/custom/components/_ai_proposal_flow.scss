@@ -326,16 +326,6 @@
   min-width: 0;
 }
 
-.ai-proposal-flow--criteria-group--eyebrow {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--tone-color);
-  line-height: 1;
-  margin-bottom: 0.25rem;
-}
-
 .ai-proposal-flow--criteria-group--title {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
@@ -370,18 +360,11 @@
   gap: 0.7rem 0.85rem;
   padding: 0.85rem 0.95rem 0.85rem 0.95rem;
   background: white;
-  border: 1px solid color-mix(in srgb, var(--tone-color) 22%, transparent);
-  border-left: 3px solid var(--tone-color);
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
 
   &.-soft {
     --tone-color: #c48400;
-  }
-
-  &:hover {
-    box-shadow: 0 4px 14px color-mix(in srgb, var(--tone-color) 16%, transparent);
-    transform: translateY(-1px);
   }
 }
 

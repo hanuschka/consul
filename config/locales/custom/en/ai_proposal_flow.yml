@@ -24,11 +24,9 @@ en:
       submit_button: "Generate AI Draft"
       chars_label: "characters"
     criteria:
-      hard_eyebrow: "Required"
       hard_title: "Required Criteria"
       hard_hint: "Your proposal must meet every one of these before it can be submitted."
       hard_badge: "Required"
-      soft_eyebrow: "Scored"
       soft_title: "Quality Criteria"
       soft_hint: "These criteria contribute to the overall quality score of your proposal."
       soft_badge: "Scored"

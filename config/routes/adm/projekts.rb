@@ -181,6 +181,7 @@ namespace :adm do
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :update_color, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]

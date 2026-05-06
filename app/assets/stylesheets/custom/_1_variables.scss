@@ -9,7 +9,7 @@ $mobile-side-padding: 20px;
 $main-column-max-width: 925px;
 $topbar-max-width: 1245px;
 $topbar-height: 90px;
-$admin-topbar-height: 40px;
+$admin-topbar-height: 48px;
 $topbar-height-mobile: 60px;
 $mobile-custom-fixed-tabs-height: 50px;
 
@@ -19,4 +19,15 @@ $mobile-custom-fixed-tabs-height: 50px;
   --admin-topbar-height: #{$admin-topbar-height};
   --tobar-max-width: #{$topbar-max-width};
   --mobile-custom-fixed-tabs-height: #{$mobile-custom-fixed-tabs-height};
+}
+
+// Touch-viewport bump: 44x44 tap-targets need ~6px breathing room above and
+// below (44 + 2x6 = 56). Defined here in the variables file so every bundle
+// (application.scss, custom_new_design.scss, projekt_studio.scss) that
+// re-imports _1_variables picks it up — otherwise the last bundle's top-level
+// `:root` declaration overrides any media-query override placed elsewhere.
+@media (max-width: $small-tablet-viewport-start) {
+  :root {
+    --admin-topbar-height: 56px;
+  }
 }

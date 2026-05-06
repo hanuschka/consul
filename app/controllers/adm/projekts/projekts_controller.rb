@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
@@ -120,6 +120,17 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.update!(show_content_background: !@projekt.show_content_background)
 
     render json: { show_content_background: @projekt.show_content_background }
+  end
+
+  def update_color
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if @projekt.update(color: params[:color].presence)
+      render json: { ok: true, color: @projekt.color }
+    else
+      render json: { ok: false, errors: @projekt.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def convert_to_new_content_block_mode

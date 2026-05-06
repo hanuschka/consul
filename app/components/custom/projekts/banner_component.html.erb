@@ -29,13 +29,41 @@
             </div>
           <% end %>
         <% end %>
+
+        <% if show_meta_chips? %>
+          <div class="custom-page--banner-chips">
+            <% if end_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= end_date_chip_text %>
+              </span>
+            <% end %>
+            <% phase_status_chips.each do |chip| %>
+              <% if chip[:phase].present? %>
+                <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
+                  class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
+                  onclick: "$('#footer-content').addClass('show-loader');",
+                  title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
+                  aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
+                  data: {
+                    index: chip[:index],
+                    remote: true,
+                    "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: chip[:phase].id, anchor: "projekt-footer")
+                  } do %>
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                <% end %>
+              <% else %>
+                <span class="custom-page--banner-chip <%= chip[:modifier] %>">
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
 
-      <% if @custom_page.projekt.present? %>
-        <div class="custom-page--banner-breadcrumbs">
-          <%= helpers.breadcrumbs_links(@custom_page.projekt) %>
-        </div>
-      <% end %>
     </div>
 
     <% if (@custom_page.image.present? || show_embedded_controlls?) %>

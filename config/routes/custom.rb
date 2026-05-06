@@ -1,7 +1,8 @@
 get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
 
-post "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
-post "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
+post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
+post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
+delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
 
 scope "proposals/generate", as: :generate_proposal do
   get   "new",              to: "proposals/generate#new_flow",       as: :new

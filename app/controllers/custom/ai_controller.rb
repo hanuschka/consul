@@ -72,6 +72,24 @@ class AiController < ApplicationController
     render json: { image_url: image_url(resource.image.attachment) }
   end
 
+  def remove_image_from_resource
+    resource = find_assignable_resource
+
+    if resource.blank?
+      render json: { error: "Resource not found" }, status: :not_found
+      return
+    end
+
+    if resource.respond_to?(:draft) && !resource.draft
+      render json: { error: "Resource is not a draft" }, status: :forbidden
+      return
+    end
+
+    resource.image&.destroy
+
+    render json: { success: true }
+  end
+
   private
 
     def find_assignable_resource

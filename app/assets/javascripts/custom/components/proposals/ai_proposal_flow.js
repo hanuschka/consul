@@ -7,6 +7,7 @@
       this.initStep1SubmitLoader();
       this.initStep2ImageGeneration();
       this.initStep2SubmitLoader();
+      this.initStep2RemoveImage();
     },
 
     initCharCounter() {
@@ -48,8 +49,15 @@
       this.generateAndAssignImage(dataset);
     },
 
+    IMAGE_GENERATION_MAX_WAIT_MS: 25000,
+
     generateAndAssignImage(dataset) {
       App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(true);
+      this.setSubmitButtonDisabled(true);
+
+      const safetyTimer = setTimeout(() => {
+        this.setSubmitButtonDisabled(false);
+      }, this.IMAGE_GENERATION_MAX_WAIT_MS);
 
       setTimeout(() => {
         App.Ajax
@@ -61,15 +69,49 @@
             resource_type: dataset.resourceType,
             resource_id: dataset.resourceId
           })
-          .then((responseData) => {
-            const $upload = $(".js-direct-image-upload:visible").first();
+          .then(
+            (responseData) => {
+              clearTimeout(safetyTimer);
 
-            $upload.find(".js-direct-image-upload-image-preview").attr("src", responseData.image_url);
-            $upload.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
+              const $upload = $(".js-direct-image-upload:visible").first();
 
-            App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
-          });
+              $upload.find(".js-direct-image-upload-image-preview").attr("src", responseData.image_url);
+              $upload.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
+
+              App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
+              this.setSubmitButtonDisabled(false);
+            },
+            () => {
+              clearTimeout(safetyTimer);
+              App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
+              this.setSubmitButtonDisabled(false);
+            }
+          );
       }, 100);
+    },
+
+    setSubmitButtonDisabled(disabled) {
+      $(".js-ai-flow-step2-submit").prop("disabled", disabled);
+    },
+
+    initStep2RemoveImage() {
+      const $body = $(".js-ai-flow-step2-body");
+
+      if (!$body.length) return;
+
+      const dataset = $body.get(0).dataset;
+
+      if (!dataset.removeImageUrl) return;
+
+      $body.on("click", ".action-remove a.delete", () => {
+        App.Ajax.delete(dataset.removeImageUrl, {
+          resource_type: dataset.resourceType,
+          resource_id: dataset.resourceId
+        });
+
+        $body.find(".js-direct-image-upload--id").val("");
+        $body.find(".js-direct-image-upload--cached-attachment").val("");
+      });
     },
 
     initStep2SubmitLoader() {

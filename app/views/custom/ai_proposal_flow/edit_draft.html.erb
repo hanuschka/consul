@@ -4,6 +4,7 @@
   <div
     class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
     data-generate-image-url="<%= @generate_image_url %>"
+    data-remove-image-url="<%= ai_remove_image_from_resource_path %>"
     data-aspect-ratio="16:9"
     data-image-prompt="<%= @draft_resource.ai_image_prompt %>"
     data-has-image="<%= @draft_resource.image.present? || @draft_resource.generated_image? %>"
@@ -35,7 +36,7 @@
       <button
         type="submit"
         form="<%= dom_id(@draft_resource, :form) %>"
-        class="button ai-proposal-flow--navigation--submit"
+        class="button ai-proposal-flow--navigation--submit js-ai-flow-step2-submit"
       >
         <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
       </button>

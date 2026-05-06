@@ -122,6 +122,8 @@ class Api::BaseController < ActionController::API
     SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze
 
     def skip_api_request_log?
+      return true if @current_client.blank?
+
       SKIP_LOG_RESPONSE_STATUSES.include?(response.status)
     end
 

@@ -3,11 +3,12 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
   def menu_items
     [
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
+      { label: t("adm.menu.items.team"),          icon: "badge",            path: adm_administrators_path, active_prefix: "/adm/administrators" },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
       { label: t("adm.menu.items.modules"),       icon: "widgets",          path: adm_modules_path },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
       { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems },
-      { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: adm_statistics_path },
+      { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: "#", subitems: stats_subitems },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
       { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
@@ -28,14 +29,19 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.documents"),             path: adm_documents_path },
-        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" },
+        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" }
+      ]
+    end
+
+    def stats_subitems
+      [
+        { label: t("adm.menu.items.stats_subitems.overview"), path: adm_statistics_path },
         matomo_subitem
       ].compact
     end
 
     def profiles_subitems
       [
-        { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
         { label: t("adm.menu.items.profiles_subitems.section_contact_people"), path: adm_section_contact_people_path },
         { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]
@@ -54,7 +60,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def matomo_subitem
       return unless feature?("matomo")
 
-      { label: t("adm.menu.items.application_subitems.matomo"), path: adm_matomo_path }
+      { label: t("adm.menu.items.stats_subitems.matomo"), path: adm_matomo_path }
     end
 
     def notifications_subitems

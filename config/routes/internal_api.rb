@@ -53,10 +53,20 @@ namespace :internal_api do
 
   resources :images, only: [:create, :destroy]
 
+  resources :api_request_logs, only: [] do
+    collection do
+      delete :destroy_bad
+    end
+  end
+
+  resources :apps, only: [:update]
+
   scope path: "settings" do
     patch "enable", to: "settings#enable"
     patch "disable", to: "settings#disable"
   end
 
   get "dashboard/api_works", to: "dashboard#api_works"
+
+  get "monitoring", to: "monitoring#show"
 end

@@ -21,7 +21,7 @@
     // analog zum Plus-Button in `_add_content_block.scss` (.add-new-content-block-button).
     position: absolute;
     top: 50%;
-    left: -36px;
+    left: -37px;
     right: auto;
     transform: translateY(-50%);
     display: inline-flex;
@@ -121,6 +121,16 @@
   i {
     font-size: 18px !important;
     width: auto;
+  }
+
+  // Color-coded variants — only the icon color changes; background and border
+  // stay neutral so the buttons keep their glassy on-banner look.
+  &.-save i {
+    color: #00830e;
+  }
+
+  &.-cancel i {
+    color: #004a83;
   }
 }
 

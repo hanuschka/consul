@@ -89,14 +89,19 @@
             alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: @custom_page.class.model_name.human, title: @custom_page.title)
           },
           role: "button",
-          title: t("custom.accessibility.banner-image.glightbox-aria-label"),
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [930, 585]),
+              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [500, 300]),
+              image_url_2x: @custom_page.image&.attachment&.variant(
+                resize_to_fill: [1000, 600],
+                saver: { quality: 80 },
+                strip: true,
+                format: "jpeg"
+              ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page
             )

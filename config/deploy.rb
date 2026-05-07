@@ -47,6 +47,10 @@ set :fnm_map_bins, %w[bundle node npm puma pumactl rake yarn]
 
 set :puma_conf, "#{release_path}/config/puma/#{fetch(:rails_env)}.rb"
 set :puma_systemctl_user, :user
+# Puma owns its socket via the `bind` directive in config/puma/defaults.rb;
+# don't let capistrano-puma also generate a systemd .socket unit, otherwise
+# the two race to bind the same path and puma crashes on boot.
+set :puma_enable_socket_service, false
 
 set :delayed_job_workers, 2
 set :delayed_job_roles, :background

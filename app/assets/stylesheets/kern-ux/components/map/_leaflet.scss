@@ -36,11 +36,42 @@
 }
 
 .leaflet-control-geosearch {
+  font-size: 12px;
+
   form {
+    width: 200px;
+    min-width: 0;
+
     input {
       font-family: inherit;
+      font-size: 12px;
+      height: 26px;
+      padding: 0 8px;
     }
   }
+
+  a.reset {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+  }
+
+  .results {
+    font-size: 12px;
+
+    > * {
+      padding: 4px 8px;
+      line-height: 1.3;
+    }
+  }
+}
+
+.leaflet-control-geosearch.bar {
+  width: 200px;
+}
+
+.leaflet-geosearch-bar {
+  width: 200px;
 }
 
 // Geoman toolbar adjustments

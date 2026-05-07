@@ -1,6 +1,10 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Download original
     navbar_items:
       deleted_projekt: "[Deleted project]"
       edit:

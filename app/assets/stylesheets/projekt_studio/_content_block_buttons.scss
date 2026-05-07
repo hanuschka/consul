@@ -36,8 +36,7 @@
   gap: 6px;
   height: 32px;
   padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 15px;
   line-height: 1;
   color: rgba(0, 0, 0, 0.65);
   background: transparent;
@@ -53,10 +52,6 @@
 
   &:active {
     background-color: rgba(0, 0, 0, 0.08);
-  }
-
-  i {
-    font-size: 14px;
   }
 
   // Speichern — primary-Variante
@@ -200,17 +195,17 @@
 }
 
 // Aktiver Edit-Mode (während Block bearbeitet wird) — Stift bekommt Brand-Tint
-.projekt-content-block-wrapper.-in-edit-mode {
-  .js-edit-text-projekt-content-block {
-    color: var(--brand-color);
-    background: color-mix(in srgb, var(--brand-color) 12%, transparent);
+// .projekt-content-block-wrapper.-in-edit-mode {
+//   .js-edit-text-projekt-content-block {
+//     color: var(--brand-color);
+//     background: color-mix(in srgb, var(--brand-color) 12%, transparent);
 
-    &:hover {
-      background: color-mix(in srgb, var(--brand-color) 18%, transparent);
-      color: var(--brand-color);
-    }
-  }
-}
+//     &:hover {
+//       background: color-mix(in srgb, var(--brand-color) 18%, transparent);
+//       color: var(--brand-color);
+//     }
+//   }
+// }
 
 // =============================================================================
 // AI-Submit (separates Spezial-Element, behalten)

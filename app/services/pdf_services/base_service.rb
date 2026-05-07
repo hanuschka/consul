@@ -184,7 +184,7 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 360, map_max_height: 360, both_scale: 0.7, gap: 12, bottom_padding: 16)
+      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 360, map_max_height: 360, both_scale: 0.7, gap: 12, bottom_padding: 16, max_total_height: nil)
         image_bytes = nil
         if image&.attachment&.attached?
           image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
@@ -198,26 +198,29 @@ module PdfServices
         return if image_bytes.blank? && map_bytes.blank?
 
         if image_bytes.present? && map_bytes.present?
+          image_h = image_max_height * both_scale
+          map_h = map_max_height * both_scale
+
+          if max_total_height
+            available = max_total_height - gap
+            wanted = image_h + map_h
+            if wanted > available && available > 0
+              ratio = available / wanted.to_f
+              image_h *= ratio
+              map_h *= ratio
+            end
+          end
+
           scaled_width = pdf.bounds.width * both_scale
-
-          render_single_image_row(
-            pdf,
-            image_bytes,
-            image_max_height * both_scale,
-            max_width: scaled_width
-          )
+          render_single_image_row(pdf, image_bytes, image_h, max_width: scaled_width)
           pdf.move_down gap
-
-          render_single_image_row(
-            pdf,
-            map_bytes,
-            map_max_height * both_scale,
-            max_width: scaled_width
-          )
+          render_single_image_row(pdf, map_bytes, map_h, max_width: scaled_width)
         elsif image_bytes.present?
-          render_single_image_row(pdf, image_bytes, image_max_height)
+          h = max_total_height ? [image_max_height, max_total_height].min : image_max_height
+          render_single_image_row(pdf, image_bytes, h)
         else
-          render_single_image_row(pdf, map_bytes, map_max_height)
+          h = max_total_height ? [map_max_height, max_total_height].min : map_max_height
+          render_single_image_row(pdf, map_bytes, h)
         end
 
         pdf.move_down bottom_padding

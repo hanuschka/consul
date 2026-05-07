@@ -12,7 +12,17 @@ module PdfServices
         pdf.indent(24, 24) do
           render_meta_card(pdf, meta_rows, qr_url: record_url, timestamp: I18n.l(Time.current, format: :long))
           render_description(pdf, @deficiency_report.description)
-          render_image_and_map_side_by_side(pdf, @deficiency_report.image, @deficiency_report.map_location)
+
+          answer_reserved = official_answer_reserved_height(pdf)
+          available_for_media = pdf.cursor - answer_reserved - 24
+          available_for_media = 50 if available_for_media < 50
+
+          render_image_and_map_side_by_side(
+            pdf,
+            @deficiency_report.image,
+            @deficiency_report.map_location,
+            max_total_height: available_for_media
+          )
           render_official_answer(pdf)
         end
       end
@@ -71,6 +81,19 @@ module PdfServices
         pdf.move_down 4
         pdf.text body, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
         pdf.move_down 16
+      end
+
+      def official_answer_reserved_height(pdf)
+        body = html_to_paragraphs(@deficiency_report.official_answer.to_s)
+        return 0 if body.blank?
+
+        heading_height = pdf.height_of(
+          I18n.t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
+          size: 12,
+          width: pdf.bounds.width
+        )
+        body_height = pdf.height_of(body, size: 10, leading: 4, width: pdf.bounds.width, inline_format: true)
+        heading_height + 4 + body_height + 16
       end
 
       def record_url

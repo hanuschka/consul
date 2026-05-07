@@ -24,7 +24,7 @@ $topbar-hover-tint: rgba(255, 255, 255, 0.06);
 $topbar-shadow: 0 4px 12px rgba(0, 0, 0, 0.35); // ui-ux-pro-max: deeper shadow for dark elevation
 
 $topbar-radius: 6px;
-$topbar-font-size: 12px;
+$topbar-font-size: 14px;
 $topbar-control-height: 36px;
 $topbar-tap-target: 44px;
 $topbar-transition: 150ms ease;
@@ -291,7 +291,7 @@ $topbar-transition: 150ms ease;
   background: $topbar-surface;
   border-color: $topbar-border;       // rgba(255,255,255,0.25) — visible white outline
   border-radius: $topbar-radius;
-  padding: 7px 11px;
+  padding: 7px 11px !important;
   font-size: $topbar-font-size;
   font-weight: 500;
   color: $topbar-text;                // rgba(255,255,255,0.92) — strong white text

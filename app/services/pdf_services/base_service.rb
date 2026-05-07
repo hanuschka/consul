@@ -28,10 +28,11 @@ module PdfServices
       end
 
       def render_header_banner(pdf, title_text:, qr_url: nil)
-        banner_height = 45
+        banner_height = 65
         qr_size = 36
-        title_size = 15
-        title_box_height = 18
+        title_size = 22
+        title_box_height = 26
+        title_top_padding = 22
 
         pdf.canvas do
           pdf.fill_color COLORS[:header_bg]
@@ -48,7 +49,7 @@ module PdfServices
           title_width = pdf.bounds.width - 10
         end
 
-        title_y = pdf.bounds.top - (banner_height - title_box_height) / 2
+        title_y = pdf.bounds.top - title_top_padding
         pdf.bounding_box([20, title_y], width: title_width, height: title_box_height) do
           pdf.text title_text, size: title_size, style: :bold, color: COLORS[:header_text], overflow: :shrink_to_fit, valign: :center
         end
@@ -141,7 +142,7 @@ module PdfServices
         return unless description.present?
 
         pdf.text description, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
-        pdf.move_down 10
+        pdf.move_down 6
       end
 
       def render_labeled_rows(pdf, rows, size: 9)

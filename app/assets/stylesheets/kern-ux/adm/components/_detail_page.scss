@@ -208,6 +208,26 @@
   }
 }
 
+.adm-deficiency-report-row__image-cell {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  padding: 4px;
+}
+
+.adm-deficiency-report-row__thumb-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.adm-deficiency-report-row__thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
+}
+
 .adm-detail-media-card--bounded-image {
   grid-template-rows: auto auto;
 }

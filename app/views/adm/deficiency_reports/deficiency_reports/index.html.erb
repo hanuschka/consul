@@ -28,11 +28,11 @@
   <%= turbo_frame_tag "deficiency_reports_table" do %>
     <% pills_component = Adm::FilterPillsComponent.new(headers: headers.values, params: params) %>
     <% filters_active = pills_component.pills.any? %>
-    <% column_count = 14 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
+    <% column_count = 15 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
 
     <div data-controller="adm-column-selector"
          data-adm-column-selector-cookie-value="adm-deficiency-reports-columns"
-         data-adm-column-selector-defaults-value="id,title,created_at,status,responsible,archived_state,hidden_state"
+         data-adm-column-selector-defaults-value="id,image,title,created_at,status,responsible,archived_state,hidden_state"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center gap-3 mb-3">
         <div class="flex-grow-1">
@@ -60,6 +60,7 @@
           <thead class="kern-table__head">
             <tr class="kern-table__row">
               <%= render headers[:id] %>
+              <th scope="col" class="kern-table__header" data-field="image"><%= t(".table.image") %></th>
               <%= render headers[:title] %>
               <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
                 <th scope="col" class="kern-table__header" data-field="admin_accepted"><%= t(".table.admin_accepted") %></th>

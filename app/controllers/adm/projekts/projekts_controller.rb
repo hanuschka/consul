@@ -111,7 +111,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     NotificationServices::NewProjektNotifier.call(@projekt)
 
-    redirect_to page_path(@projekt.page.slug), notice: t(".success")
+    respond_to do |format|
+      format.html { redirect_to page_path(@projekt.page.slug), notice: t(".success") }
+      format.json { render json: { success: true, message: t(".success") } }
+    end
   end
 
   def toggle_hide_content_background

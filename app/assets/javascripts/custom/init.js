@@ -44,6 +44,7 @@
       App.FlashMessages.initialize();
       App.SessionTimeoutWarning.initialize();
       App.MobileFixedBottomActionComponentCustom.initialize();
+      App.NotifyReviewers.initialize();
     }
   };
 }).call(this);

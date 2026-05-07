@@ -318,6 +318,40 @@ $topbar-transition: 150ms ease;
     border-color: $topbar-border-strong;
     color: $topbar-text-strong;
   }
+
+  // AJAX progress / feedback states for .js-notify-reviewers (and any other
+  // topbar button that opts in to .-loading / .-success / .-error).
+  &.-loading {
+    cursor: wait;
+    opacity: 0.85;
+  }
+
+  &.-success {
+    background: rgba(69, 172, 80, 0.22);
+    border-color: rgba(151, 220, 158, 0.7);
+    color: #fff;
+    animation: projekt-topbar-button-success-pulse 600ms ease-out;
+
+    i {
+      color: #b8f0bd;
+    }
+  }
+
+  &.-error {
+    background: rgba(219, 55, 0, 0.22);
+    border-color: rgba(255, 144, 116, 0.7);
+    color: #fff;
+
+    i {
+      color: #ffc4b3;
+    }
+  }
+}
+
+@keyframes projekt-topbar-button-success-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(69, 172, 80, 0.55); }
+  60%  { box-shadow: 0 0 0 6px rgba(69, 172, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(69, 172, 80, 0); }
 }
 
 // Primary action: Projekteinstellungen — visually emphasised, brand-color CTA.

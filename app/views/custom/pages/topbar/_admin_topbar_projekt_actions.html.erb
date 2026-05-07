@@ -20,12 +20,11 @@
 
 <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
   <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt),
-        method: "post",
         role: "button",
-        class: "button hollow projekt-page--admin-topbar-button",
+        class: "button hollow projekt-page--admin-topbar-button js-notify-reviewers",
         title: t("custom.projekts.page.topbar.notify_reviewers") do %>
-    <i class="fas fa-bell" aria-hidden="true"></i>
-    <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+    <i class="fas fa-bell js-notify-reviewers-icon" aria-hidden="true"></i>
+    <span class="js-notify-reviewers-label"><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
   <% end %>
 <% end %>
 

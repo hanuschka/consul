@@ -171,10 +171,16 @@ end
 
 task :restart_delayed_jobs do
   on roles(:app) do
+    template_unit_present = test("[ -f /etc/systemd/system/delayed_job@.service ]")
     within release_path do
       with rails_env: fetch(:rails_env) do
-        fetch(:delayed_job_workers).times do |i|
-          execute "sudo systemctl restart delayed_job@#{i + 1}"
+        if template_unit_present
+          fetch(:delayed_job_workers).times do |i|
+            execute "sudo systemctl restart delayed_job@#{i + 1}"
+          end
+        else
+          # Legacy cli_* branches: only the literal delayed_job2 unit exists.
+          execute "sudo systemctl restart delayed_job2"
         end
       end
     end

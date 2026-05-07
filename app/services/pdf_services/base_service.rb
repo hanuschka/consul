@@ -28,8 +28,10 @@ module PdfServices
       end
 
       def render_header_banner(pdf, title_text:, qr_url: nil)
-        banner_height = 90
-        qr_size = 50
+        banner_height = 45
+        qr_size = 36
+        title_size = 15
+        title_box_height = 18
 
         pdf.canvas do
           pdf.fill_color COLORS[:header_bg]
@@ -39,33 +41,49 @@ module PdfServices
         if qr_url
           qr_y = pdf.bounds.top - (banner_height - qr_size) / 2
           pdf.fill_color COLORS[:white]
-          pdf.fill_rounded_rectangle([pdf.bounds.width - 40 - qr_size - 5, qr_y + 5], qr_size + 10, qr_size + 10, 3)
+          pdf.fill_rounded_rectangle([pdf.bounds.width - 40 - qr_size - 4, qr_y + 4], qr_size + 8, qr_size + 8, 3)
           pdf.svg(generate_qr_svg(qr_url), at: [pdf.bounds.width - 40 - qr_size, qr_y], width: qr_size)
-          title_width = pdf.bounds.width - 80 - qr_size - 30
+          title_width = pdf.bounds.width - 10 - qr_size - 24
         else
-          title_width = pdf.bounds.width - 80
+          title_width = pdf.bounds.width - 10
         end
 
-        title_y = pdf.bounds.top - (banner_height - 20) / 2
-        pdf.bounding_box([40, title_y], width: title_width, height: 24) do
-          pdf.text title_text, size: 18, style: :bold, color: COLORS[:header_text], overflow: :shrink_to_fit, valign: :center
+        title_y = pdf.bounds.top - (banner_height - title_box_height) / 2
+        pdf.bounding_box([20, title_y], width: title_width, height: title_box_height) do
+          pdf.text title_text, size: title_size, style: :bold, color: COLORS[:header_text], overflow: :shrink_to_fit, valign: :center
         end
 
         pdf.fill_color COLORS[:primary]
-        pdf.move_cursor_to pdf.bounds.top - banner_height - 16
+        pdf.move_cursor_to pdf.bounds.top - banner_height - 12
       end
 
-      def render_meta_card(pdf, rows)
-        card_padding = 12
+      def render_meta_card(pdf, rows, qr_url: nil, timestamp: nil)
+        card_padding = 8
         row_spacing = 2
-        inner_width = pdf.bounds.width - 28
+        qr_size = 84
+        qr_gap = 12
+        ts_height = 10
+        ts_gap = 10
+
+        text_inner_width =
+          if qr_url || timestamp
+            pdf.bounds.width - 8 - qr_size - qr_gap
+          else
+            pdf.bounds.width - 8
+          end
 
         text_height = rows.sum do |label, value|
           line = "#{label}:  #{value}"
-          pdf.height_of(line, size: 10, width: inner_width) + row_spacing
+          pdf.height_of(line, size: 10, width: text_inner_width) + row_spacing
         end
 
-        card_height = text_height + card_padding * 2
+        right_height = 0
+        right_height += ts_height if timestamp
+        right_height += ts_gap if timestamp && qr_url
+        right_height += qr_size if qr_url
+
+        content_height = [text_height, right_height].max
+        card_height = content_height + card_padding * 2
         start_y = pdf.cursor
 
         pdf.fill_color COLORS[:card_bg]
@@ -76,7 +94,7 @@ module PdfServices
         pdf.rounded_rectangle([0, start_y], pdf.bounds.width, card_height, 4)
         pdf.stroke
 
-        pdf.bounding_box([14, start_y - card_padding], width: inner_width, height: card_height - card_padding * 2) do
+        pdf.bounding_box([14, start_y - card_padding], width: text_inner_width, height: card_height - card_padding * 2) do
           rows.each do |label, value|
             pdf.formatted_text [
               { text: "#{label}:  ", size: 10, styles: [:bold], color: COLORS[:secondary] },
@@ -84,6 +102,28 @@ module PdfServices
             ]
             pdf.move_down row_spacing
           end
+        end
+
+        right_x = pdf.bounds.width - card_padding - qr_size
+        right_top_y = start_y - card_padding
+
+        if timestamp
+          pdf.text_box timestamp,
+                       at: [right_x, right_top_y],
+                       width: qr_size,
+                       height: ts_height,
+                       align: :right,
+                       size: 8,
+                       overflow: :shrink_to_fit,
+                       valign: :top,
+                       inline_format: false,
+                       color: COLORS[:secondary]
+        end
+
+        if qr_url
+          qr_y = right_top_y
+          qr_y -= ts_height + ts_gap if timestamp
+          pdf.svg(generate_qr_svg(qr_url), at: [right_x, qr_y], width: qr_size)
         end
 
         pdf.move_cursor_to(start_y - card_height - 12)
@@ -101,7 +141,7 @@ module PdfServices
         return unless description.present?
 
         pdf.text description, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
-        pdf.move_down 16
+        pdf.move_down 10
       end
 
       def render_labeled_rows(pdf, rows, size: 9)
@@ -143,7 +183,7 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 256, map_max_height: 200, gutter: 16, bottom_padding: 16)
+      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 256, map_max_height: 360, map_scale: 0.64, gap: 12, bottom_padding: 16)
         image_bytes = nil
         if image&.attachment&.attached?
           image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
@@ -156,12 +196,18 @@ module PdfServices
 
         return if image_bytes.blank? && map_bytes.blank?
 
-        if image_bytes.present? && map_bytes.present?
-          render_two_column_row(pdf, image_bytes, map_bytes, image_max_height, map_max_height, gutter)
-        elsif image_bytes.present?
+        if image_bytes.present?
           render_single_image_row(pdf, image_bytes, image_max_height)
-        else
-          render_single_image_row(pdf, map_bytes, map_max_height)
+          pdf.move_down gap if map_bytes.present?
+        end
+
+        if map_bytes.present?
+          render_single_image_row(
+            pdf,
+            map_bytes,
+            map_max_height * map_scale,
+            max_width: pdf.bounds.width * map_scale
+          )
         end
 
         pdf.move_down bottom_padding
@@ -188,15 +234,16 @@ module PdfServices
         pdf.move_cursor_to(start_y - row_height)
       end
 
-      def render_single_image_row(pdf, bytes, max_height)
+      def render_single_image_row(pdf, bytes, max_height, max_width: nil)
         io = StringIO.new(bytes)
+        fit_width = max_width || pdf.bounds.width
 
         begin
-          pdf.image(io, fit: [pdf.bounds.width, max_height], position: :center)
+          pdf.image(io, fit: [fit_width, max_height], position: :center)
         rescue Prawn::Errors::CannotFit
           pdf.start_new_page
           io.rewind
-          pdf.image(io, fit: [pdf.bounds.width, max_height], position: :center)
+          pdf.image(io, fit: [fit_width, max_height], position: :center)
         end
       rescue StandardError
         nil

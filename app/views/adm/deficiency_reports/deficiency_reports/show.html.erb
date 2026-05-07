@@ -46,14 +46,29 @@
       <% has_map = @deficiency_report.map_location.present? %>
 
       <% if has_image || has_map %>
-        <div class="adm-detail-media-grid <%= (has_image && has_map) ? 'adm-detail-media-grid--two' : '' %> mb-4">
+        <% original_image_url = has_image ? url_for(@deficiency_report.image.attachment) : nil %>
+        <div class="adm-detail-media-grid <%= 'adm-detail-media-grid--two adm-detail-media-grid--no-stretch' if has_image && has_map %> mb-4">
           <% if has_image %>
-            <div class="adm-detail-media-card">
+            <div class="adm-detail-media-card adm-detail-media-card--bounded-image">
               <div class="adm-detail-media-card__label">
                 <span class="material-symbols-outlined" aria-hidden="true">image</span>
                 <%= t(".image_label") %>
               </div>
-              <%= image_tag(@image_url, style: "width: 100%;") %>
+              <div class="adm-detail-media-card__image-frame">
+                <a class="adm-detail-media-card__lightbox glightbox"
+                   href="<%= original_image_url %>"
+                   data-controller="glightbox"
+                   data-glightbox-title-value="<%= @deficiency_report.title %>">
+                  <%= image_tag(@image_url, class: "adm-detail-media-card__bounded-image", alt: @deficiency_report.title) %>
+                </a>
+                <a class="adm-detail-media-card__download-original"
+                   href="<%= original_image_url %>"
+                   download
+                   rel="noopener">
+                  <span class="material-symbols-outlined" aria-hidden="true">download</span>
+                  <%= t(".download_original") %>
+                </a>
+              </div>
             </div>
           <% end %>
 
@@ -63,7 +78,7 @@
                 <span class="material-symbols-outlined" aria-hidden="true">map</span>
                 <%= t(".map_label") %>
               </div>
-              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location) %>
+              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location, height: 400) %>
             </div>
           <% end %>
         </div>

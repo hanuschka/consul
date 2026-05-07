@@ -9,7 +9,7 @@ module PdfServices
       Prawn::Document.new(page_size: "A4", margin: [0, 30, 50, 30]) do |pdf|
         setup_fonts(pdf)
         render_header_banner(pdf, title_text: "#{@deficiency_report.title} (#{@deficiency_report.id})", qr_url: record_url)
-        pdf.bounding_box([40, pdf.cursor], width: pdf.bounds.width - 80, height: pdf.cursor - 30) do
+        pdf.indent(40, 40) do
           render_meta_card(pdf, meta_rows)
           render_description(pdf, @deficiency_report.description)
           render_image_and_map_side_by_side(pdf, @deficiency_report.image, @deficiency_report.map_location)

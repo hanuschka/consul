@@ -17,8 +17,13 @@ module PdfServices
     private
 
       def setup_fonts(pdf)
-        font_path = Rails.root.join("app/assets/fonts/custom/Asap-Variable.ttf")
-        pdf.font_families.update("Asap" => { normal: font_path, bold: font_path, italic: font_path, bold_italic: font_path })
+        fonts_dir = Rails.root.join("app/assets/fonts/custom")
+        pdf.font_families.update("Asap" => {
+          normal: fonts_dir.join("Asap-Regular.ttf"),
+          bold: fonts_dir.join("Asap-Bold.ttf"),
+          italic: fonts_dir.join("Asap-Italic.ttf"),
+          bold_italic: fonts_dir.join("Asap-BoldItalic.ttf")
+        })
         pdf.font "Asap"
       end
 
@@ -51,9 +56,16 @@ module PdfServices
       end
 
       def render_meta_card(pdf, rows)
-        row_height = 16
         card_padding = 12
-        card_height = rows.length * row_height + card_padding * 2
+        row_spacing = 2
+        inner_width = pdf.bounds.width - 28
+
+        text_height = rows.sum do |label, value|
+          line = "#{label}:  #{value}"
+          pdf.height_of(line, size: 10, width: inner_width) + row_spacing
+        end
+
+        card_height = text_height + card_padding * 2
         start_y = pdf.cursor
 
         pdf.fill_color COLORS[:card_bg]
@@ -64,13 +76,13 @@ module PdfServices
         pdf.rounded_rectangle([0, start_y], pdf.bounds.width, card_height, 4)
         pdf.stroke
 
-        pdf.bounding_box([14, start_y - card_padding], width: pdf.bounds.width - 28, height: card_height - card_padding * 2) do
+        pdf.bounding_box([14, start_y - card_padding], width: inner_width, height: card_height - card_padding * 2) do
           rows.each do |label, value|
             pdf.formatted_text [
               { text: "#{label}:  ", size: 10, styles: [:bold], color: COLORS[:secondary] },
               { text: value.to_s, size: 10, color: COLORS[:primary] }
             ]
-            pdf.move_down 2
+            pdf.move_down row_spacing
           end
         end
 
@@ -131,39 +143,69 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, gutter: 16, row_height: 260, bottom_padding: 16)
-        has_image = image&.attachment&.attached?
-        has_map = map_location&.screenshot.present?
-        return unless has_image || has_map
-
-        column_width = (pdf.bounds.width - gutter) / 2
-        start_y = pdf.cursor
-        available_height = [row_height, start_y - 30].min
-        return if available_height <= 0
-
-        if has_image
+      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 256, map_max_height: 200, gutter: 16, bottom_padding: 16)
+        image_bytes = nil
+        if image&.attachment&.attached?
           image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
-
-          pdf.bounding_box([0, start_y], width: column_width, height: available_height) do
-            render_fitted_image(pdf, image_bytes, column_width, available_height)
-          end
         end
 
-        if has_map
+        map_bytes = nil
+        if map_location&.screenshot.present?
           map_bytes = safe_download(map_location.screenshot)
-
-          pdf.bounding_box([column_width + gutter, start_y], width: column_width, height: available_height) do
-            render_fitted_image(pdf, map_bytes, column_width, available_height)
-          end
         end
 
-        pdf.move_cursor_to(start_y - available_height - bottom_padding)
+        return if image_bytes.blank? && map_bytes.blank?
+
+        if image_bytes.present? && map_bytes.present?
+          render_two_column_row(pdf, image_bytes, map_bytes, image_max_height, map_max_height, gutter)
+        elsif image_bytes.present?
+          render_single_image_row(pdf, image_bytes, image_max_height)
+        else
+          render_single_image_row(pdf, map_bytes, map_max_height)
+        end
+
+        pdf.move_down bottom_padding
+      end
+
+      def render_two_column_row(pdf, image_bytes, map_bytes, image_max_height, map_max_height, gutter)
+        column_width = (pdf.bounds.width - gutter) / 2
+        row_height = [image_max_height, map_max_height].max
+        start_y = pdf.cursor
+
+        if start_y - row_height < pdf.bounds.absolute_bottom - pdf.bounds.top
+          pdf.start_new_page
+          start_y = pdf.cursor
+        end
+
+        pdf.bounding_box([0, start_y], width: column_width, height: row_height) do
+          render_fitted_image(pdf, image_bytes, column_width, image_max_height)
+        end
+
+        pdf.bounding_box([column_width + gutter, start_y], width: column_width, height: row_height) do
+          render_fitted_image(pdf, map_bytes, column_width, map_max_height)
+        end
+
+        pdf.move_cursor_to(start_y - row_height)
+      end
+
+      def render_single_image_row(pdf, bytes, max_height)
+        io = StringIO.new(bytes)
+
+        begin
+          pdf.image(io, fit: [pdf.bounds.width, max_height], position: :center)
+        rescue Prawn::Errors::CannotFit
+          pdf.start_new_page
+          io.rewind
+          pdf.image(io, fit: [pdf.bounds.width, max_height], position: :center)
+        end
+      rescue StandardError
+        nil
       end
 
       def render_fitted_image(pdf, bytes, width, height)
         return if bytes.blank?
 
-        pdf.image(StringIO.new(bytes), fit: [width, height], position: :center, vposition: :top)
+        pdf.image(StringIO.new(bytes), fit: [width, height], position: :center, vposition: :center)
       rescue StandardError
         nil
       end

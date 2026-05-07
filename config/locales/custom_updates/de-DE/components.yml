@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      download_pdf_button_component:
+        label: "PDF herunterladen"
+        loading: "PDF wird erstellt..."

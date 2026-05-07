@@ -118,7 +118,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
 
     $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
-    $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
+    $(".js-add-first-content-block-wrapper").toggle(!hasNoContentBlocks)
     $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
 

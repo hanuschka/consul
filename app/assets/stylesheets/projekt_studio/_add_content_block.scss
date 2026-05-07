@@ -178,5 +178,15 @@
 }
 
 .add-first-content-block-wrapper {
-  margin-bottom: 10px;
+  // Match default content-block margin so the templates button has room
+  // to sit visually in the gap before the first content block.
+  margin-bottom: 25px;
+
+  // Override default `top: -13px` from .add-new-content-block-section
+  // (which floats the button in the gap BELOW a content block). For the
+  // add-first wrapper there is nothing above, so we flip the offset and
+  // place the button in the margin-bottom gap, just above the first block.
+  .add-new-content-block-section {
+    top: 12px;
+  }
 }

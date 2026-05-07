@@ -1,5 +1,9 @@
 de:
   adm:
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Original herunterladen
     navbar_items:
       deleted_projekt: "[Gelöschtes Projekt]"
       edit:

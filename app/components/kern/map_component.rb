@@ -5,6 +5,7 @@ class Kern::MapComponent < ApplicationComponent
     editable: false,
     admin_editor: false,
     height: 400,
+    width: nil,
     resources: nil
   )
     @map_location = map_location
@@ -12,10 +13,11 @@ class Kern::MapComponent < ApplicationComponent
     @editable = editable
     @admin_editor = admin_editor
     @height = height
+    @width = width
     @resources = resources
   end
 
-  attr_reader :map_location, :form, :editable, :admin_editor, :height
+  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|
@@ -32,7 +34,10 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   def container_style
-    "height: #{height}px;"
+    parts = ["height: #{height}px"]
+    parts << "width: #{width}px" if width.present?
+    parts << "max-width: 100%"
+    parts.join("; ") + ";"
   end
 
   def controller_data_attributes

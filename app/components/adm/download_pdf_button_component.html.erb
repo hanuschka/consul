@@ -1,0 +1,10 @@
+<%= tag.span class: "adm-pdf-download", data: { controller: "pdf-download" } do %>
+  <%= link_to url, class: "adm-pdf-download__trigger adm-detail-meta__item", data: link_data do %>
+    <span class="material-symbols-outlined adm-pdf-download__icon" aria-hidden="true"><%= icon %></span>
+    <%= label %>
+  <% end %>
+  <span class="adm-pdf-download__loading" data-pdf-download-target="loading" aria-hidden="true">
+    <span class="adm-pdf-download__spinner" aria-hidden="true"></span>
+    <%= loading_label %>
+  </span>
+<% end %>

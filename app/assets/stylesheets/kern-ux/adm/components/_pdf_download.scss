@@ -1,0 +1,53 @@
+.adm-pdf-download {
+  display: inline-grid;
+  grid-template-areas: "adm-pdf-download-stack";
+  align-items: center;
+  justify-items: end;
+}
+
+.adm-pdf-download__trigger {
+  grid-area: adm-pdf-download-stack;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-metric-space-x-small, 6px);
+}
+
+.adm-pdf-download__trigger[aria-disabled="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.adm-pdf-download__icon {
+  font-size: 16px;
+  vertical-align: text-bottom;
+}
+
+.adm-pdf-download__loading {
+  grid-area: adm-pdf-download-stack;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-metric-space-x-small, 6px);
+  font-size: var(--kern-font-size-14, 14px);
+  color: var(--kern-color-layout-text-subtle, #666);
+  visibility: hidden;
+}
+
+.adm-pdf-download__loading.-active {
+  visibility: visible;
+}
+
+.adm-pdf-download__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid transparent;
+  border-top-color: var(--kern-color-action-default, #2c3e6b);
+  border-right-color: var(--kern-color-action-default, #2c3e6b);
+  border-radius: 50%;
+  animation: adm-pdf-download-spin 0.8s linear infinite;
+}
+
+@keyframes adm-pdf-download-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

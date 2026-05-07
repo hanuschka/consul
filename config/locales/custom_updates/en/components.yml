@@ -1,0 +1,6 @@
+en:
+  components:
+    adm:
+      download_pdf_button_component:
+        label: "Download PDF"
+        loading: "Generating PDF..."

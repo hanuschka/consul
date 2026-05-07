@@ -30,8 +30,8 @@ module PdfServices
       def render_header_banner(pdf, title_text:, qr_url: nil)
         banner_height = 65
         qr_size = 36
-        title_size = 22
-        title_box_height = 26
+        title_size = 18
+        title_box_height = 22
         title_top_padding = 22
 
         pdf.canvas do
@@ -184,7 +184,7 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 256, map_max_height: 360, map_scale: 0.64, gap: 12, bottom_padding: 16)
+      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 360, map_max_height: 360, both_scale: 0.7, gap: 12, bottom_padding: 16)
         image_bytes = nil
         if image&.attachment&.attached?
           image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
@@ -197,18 +197,27 @@ module PdfServices
 
         return if image_bytes.blank? && map_bytes.blank?
 
-        if image_bytes.present?
-          render_single_image_row(pdf, image_bytes, image_max_height)
-          pdf.move_down gap if map_bytes.present?
-        end
+        if image_bytes.present? && map_bytes.present?
+          scaled_width = pdf.bounds.width * both_scale
 
-        if map_bytes.present?
+          render_single_image_row(
+            pdf,
+            image_bytes,
+            image_max_height * both_scale,
+            max_width: scaled_width
+          )
+          pdf.move_down gap
+
           render_single_image_row(
             pdf,
             map_bytes,
-            map_max_height * map_scale,
-            max_width: pdf.bounds.width * map_scale
+            map_max_height * both_scale,
+            max_width: scaled_width
           )
+        elsif image_bytes.present?
+          render_single_image_row(pdf, image_bytes, image_max_height)
+        else
+          render_single_image_row(pdf, map_bytes, map_max_height)
         end
 
         pdf.move_down bottom_padding

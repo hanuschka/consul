@@ -14,7 +14,10 @@ export default class extends Controller {
       touchNavigation: true,
       loop: false,
       zoomable: true,
-      draggable: true
+      draggable: true,
+      openEffect: "fade",
+      closeEffect: "fade",
+      slideEffect: "fade"
     })
   }
 

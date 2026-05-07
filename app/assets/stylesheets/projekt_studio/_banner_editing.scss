@@ -48,7 +48,7 @@
     .projekt-banner-edit-field--text-edit-controlls {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
     // Im Edit-Mode liegen Save/Cancel zusammen rechts neben dem Pencil-Slot.
@@ -57,7 +57,7 @@
     // Edit-Container margin-left -8px = 52px nutzbarer Gutter, genau Platz für
     // zwei 28px-Buttons + 4px Gap.
     .projekt-banner-edit-field--controlls {
-      left: -52px;
+      left: -83px;
     }
   }
 }
@@ -106,8 +106,8 @@
 }
 
 .projekt-banner-edit-field-controlls-button {
-  width: 28px !important;
-  height: 28px !important;
+  width: 35px !important;
+  height: 35px !important;
   background: rgba(255, 255, 255, 0.75) !important;
   border: 1px solid rgba(255, 255, 255, 0.8) !important;
   border-radius: 50% !important;
@@ -119,7 +119,7 @@
   }
 
   i {
-    font-size: 12px !important;
+    font-size: 18px !important;
     width: auto;
   }
 }

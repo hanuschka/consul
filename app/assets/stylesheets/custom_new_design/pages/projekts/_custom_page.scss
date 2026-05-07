@@ -321,7 +321,14 @@ $phase-marker-border: #cbd5e1;
     min-height: 380px;
     border-radius: 12px;
     background-color: var(--brand-color-lighter);
+    // Top 3.75px brand-color stripe is the FIRST background-image layer so it
+    // paints above the radial decorative gradients. Drawn on the element
+    // itself (not a ::before) so it's automatically clipped to the
+    // `border-radius: 12px`, which lets us drop `overflow: clip` and let
+    // studio edit-pencils overflow without their rectangle corners poking
+    // past the banner's rounded shape.
     background-image:
+      linear-gradient(to bottom, var(--brand-color) 4px, transparent 4px),
       radial-gradient(ellipse 75% 60% at 88% 12%, color-mix(in srgb, var(--brand-color) 32%, transparent), transparent 62%),
       radial-gradient(ellipse 55% 45% at 8% 88%, rgba(255, 255, 255, 0.5), transparent 65%);
     box-shadow:
@@ -330,18 +337,7 @@ $phase-marker-border: #cbd5e1;
     position: relative;
     padding: 0 60px;
     color: $dark;
-    overflow: clip;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--brand-color);
-      z-index: 2;
-    }
+    overflow: visible;
 
     @media(max-width: $big-tablet-viewport-start) {
       padding: 0 30px;

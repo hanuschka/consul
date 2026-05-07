@@ -34,23 +34,31 @@ export default class extends Controller {
       return
     }
 
+    const trigger = event.currentTarget
+    const href = trigger && trigger.href ? trigger.href : (this.element.href || null)
+
+    if (!href) {
+      console.error("Map screenshot: clicked element has no href")
+      return
+    }
+
     event.preventDefault()
 
     const mapLocationId = mapElement.dataset.mapLocationId
     if (!mapLocationId) {
       console.error("Map location ID not found on container")
-      window.location.href = this.element.href
+      window.location.href = href
       return
     }
 
     try {
       const blob = await this.takeScreenshot(mapElement)
       await this.uploadScreenshot(blob, mapLocationId)
-      window.location.href = this.element.href
     } catch (error) {
       console.error("Screenshot failed:", error)
-      // Navigate anyway on error
-      window.location.href = this.element.href
+    } finally {
+      window.location.href = href
+      this.element.dispatchEvent(new CustomEvent("pdf-download:complete", { bubbles: true }))
     }
   }
 

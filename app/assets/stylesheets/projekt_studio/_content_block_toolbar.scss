@@ -1,27 +1,35 @@
 // =============================================================================
-// Linear-Style Content-Block-Toolbar — Layout & Container
+// Linear-style content-block toolbar — layout & container
 // -----------------------------------------------------------------------------
-// Floating-Toolbar oberhalb des Blocks. Hover-Reveal mit unsichtbarer Brücke.
-// Vier Gruppen mit 8px Gap und vertikalem 1px-Divider zwischen ihnen:
-//   1. Save / Cancel               (.projekt-content-block-edit--buttons-wrapper)
-//   2. Format-Tools                (.js-simple-edit-mode-controlls)
-//   3. Mode-Switch (Edit/AI/Code)  (.projekt-content-block-edit-main-controlls — erste 3 Buttons)
-//   4. Block-Actions (Copy/Move/Delete) (gleicher Wrapper, getrennt durch interne separator)
+// Floating toolbar above the block. Hover-reveal with invisible bridge.
+// Four groups with 8px gap and a vertical 1px divider between them:
+//   1. Save / Cancel                    (.projekt-content-block-edit--buttons-wrapper)
+//   2. Format tools                     (.js-simple-edit-mode-controlls)
+//   3. Mode switch (Edit/AI/Code)       (.projekt-content-block-edit-main-controlls — first 3 buttons)
+//   4. Block actions (Copy/Move/Delete) (same wrapper, separated by internal separator)
 // =============================================================================
 
 .projekt-content-block--toolbar-border {
   display: none;
 }
 
-// Toolbar schwebt oberhalb des Blocks (out-of-flow) — kein Layout-Shift
+// Toolbar floats above the block (out-of-flow) — no layout shift
 .projekt-content-block-wrapper {
   position: relative;
 
   .projekt-content-block--toolbar {
-    position: absolute;
-    top: -48px;
-    right: 0;
-    z-index: 10;
+    // Sticky on scroll, visually like absolute above the block at rest:
+    // - margin-top: -48px lifts the toolbar visually above the wrapper top edge
+    //   (content still starts at wrapper top, no layout shift).
+    // - top: <topbar-offset> is the stick position below header & admin topbar.
+    // - margin-left: auto right-aligns the fit-content toolbar
+    //   (right:0 doesn't work with sticky/relative the way it does with absolute).
+    position: sticky;
+    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+    margin-top: -48px;
+    margin-left: auto;
+    width: fit-content;
+    z-index: 200;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -37,8 +45,8 @@
     pointer-events: none;
     transition: opacity 180ms ease;
 
-    // Unsichtbare Hover-Brücke zwischen Toolbar und Block — verhindert dass die
-    // Toolbar verschwindet, wenn die Maus durch die 8px Lücke wandert
+    // Invisible hover bridge between toolbar and block — prevents the toolbar
+    // from disappearing when the mouse moves through the 8px gap
     &::after {
       content: "";
       position: absolute;
@@ -49,11 +57,11 @@
       pointer-events: auto;
     }
 
-    // Vertikale Dividers zwischen den Toolbar-Gruppen
+    // Vertical dividers between the toolbar groups
     // ---------------------------------------------------------------------
-    // Anwendung auf alle "Gruppen-Wrapper" außer der ersten Gruppe (Save/Cancel
-    // wird per :first-child ausgeschlossen — sie liegt links und braucht
-    // keinen Trenner davor).
+    // Applied to all "group wrappers" except the first group (Save/Cancel is
+    // excluded via :first-child — it sits on the left and needs no divider
+    // before it).
     > .js-simple-edit-mode-controlls,
     > .projekt-content-block-edit-main-controlls {
       position: relative;
@@ -72,8 +80,8 @@
         pointer-events: none;
       }
 
-      // Wenn diese Gruppe das erste sichtbare Element ist (z.B. außerhalb des
-      // Edit-Modes ist Save/Cancel ausgeblendet), Divider entfernen.
+      // When this group is the first visible element (e.g. outside edit mode
+      // Save/Cancel is hidden), remove the divider.
       &:first-child {
         margin-left: 0;
         padding-left: 0;
@@ -91,8 +99,23 @@
     pointer-events: auto;
   }
 
-  // Im Edit-Mode: Toolbar bleibt an exakt gleicher Position wie Hover.
-  // Edit-Buttons wachsen nach links — Stift bleibt visuell an seiner Position.
+  // Outside edit mode only the mode-switch/block-actions group is visible
+  // (Save/Cancel and format-tools are display:none). The divider is computed
+  // via :first-child on DOM order, not on visibility — so explicitly hide it
+  // here when no edit-mode class is active.
+  &:not(.-in-edit-mode) {
+    .projekt-content-block--toolbar > .projekt-content-block-edit-main-controlls {
+      margin-left: 0;
+      padding-left: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  // In edit mode: toolbar stays at the exact same position as on hover.
+  // Edit buttons grow to the left — the pencil stays visually in place.
   &.-in-edit-mode {
     .relative {
       overflow: visible;
@@ -103,7 +126,6 @@
       position: sticky;
       top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
       right: auto;
-      margin-bottom: 12px;
       opacity: 1;
       pointer-events: auto;
       outline: 2px solid #c9dced;
@@ -111,8 +133,8 @@
   }
 }
 
-// Interner Separator (Mode-Switch ↔ Block-Actions innerhalb derselben Gruppe)
-// Wird vom Template als <div class="projekt-content-block-edit--separator"> gerendert.
+// Internal separator (mode-switch ↔ block-actions within the same group).
+// Rendered by the template as <div class="projekt-content-block-edit--separator">.
 .projekt-content-block-edit--separator {
   width: 1px;
   height: 20px;
@@ -122,27 +144,29 @@
 }
 
 // =============================================================================
-// Sidebar-Override: Toolbar bündig unter dem Card-Titel
+// Sidebar override: toolbar flush below the card title
 // =============================================================================
 .sidebar-card .projekt-content-block-wrapper {
   .projekt-content-block--toolbar {
-    top: -11px;
-    bottom: auto;
-    right: 0;
+    // Same "sticky-absolute" positioning as the main toolbar: margin-top:-48px
+    // hoists it visually above the wrapper top, top: <topbar-offset> is the
+    // sticky stick-position. Visibility is opacity-driven (inherited from the
+    // main rule); we override the max-height collapse from sidebar_card.scss
+    // so the hoist actually renders.
+    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+    margin-top: -48px;
     margin-bottom: 0;
+    max-height: none;
+    overflow: visible;
   }
 
   &.-in-edit-mode .projekt-content-block--toolbar {
-    position: -webkit-sticky;
-    position: sticky;
-    top: $topbar-height + 10px;
-    right: auto;
     margin-bottom: 12px;
   }
 }
 
 // =============================================================================
-// Mobile: Toolbar dauerhaft sichtbar (kein Hover)
+// Mobile: toolbar always visible (no hover)
 // =============================================================================
 @media (max-width: $small-tablet-viewport-start) {
   .projekt-content-block-wrapper .projekt-content-block--toolbar {
@@ -152,7 +176,7 @@
 }
 
 // =============================================================================
-// Margin-Spinner (Vertical-Spacing-Input)
+// Margin spinner (vertical-spacing input)
 // =============================================================================
 .content-block-margin-input {
   display: inline-flex;
@@ -196,7 +220,7 @@
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-color) 18%, transparent);
     }
 
-    // Native Browser-Spinner verstecken
+    // Hide native browser spinner
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -207,15 +231,18 @@
 }
 
 // =============================================================================
-// Text-Format-Dropdown (H2/H3/Text-Auswahl)
+// Text format dropdown (H2/H3/Text selection)
 // =============================================================================
 .js-content-block-header-dropdown {
+  width: 65px;
   height: 32px;
 
   .dropdown-select-menu-toggle {
     display: inline-flex;
+    justify-content: space-between;
     align-items: center;
     gap: 6px;
+    width: 100%;
     height: 32px;
     padding: 6px 10px;
     font-size: 13px;
@@ -232,6 +259,12 @@
       border-color: rgba(0, 0, 0, 0.18);
     }
 
+    // Hide the shared CSS chevron (::before in dropdown_select_menu.scss)
+    // here — we only show the FA chevron via ::after.
+    &::before {
+      // display: none;
+    }
+
     &::after {
       content: "\f078"; // fa-chevron-down
       font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", FontAwesome;
@@ -244,7 +277,7 @@
 }
 
 // =============================================================================
-// Default-Notification (links neben Toolbar, z.B. "Standard-Inhalt")
+// Default notification (left of toolbar, e.g. "Standard content")
 // =============================================================================
 .projekt-content-block--default-notification {
   display: flex;
@@ -259,7 +292,7 @@
 }
 
 // =============================================================================
-// Item-Action-Wrapper (Legacy — separates Element, nicht Teil der Toolbar)
+// Item-action wrapper (legacy — separate element, not part of the toolbar)
 // =============================================================================
 .content-block--item-action-wrapper {
   list-style: none;

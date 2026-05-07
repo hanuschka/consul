@@ -56,7 +56,9 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--kern-color-layout-text-default, #1a1a2e);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 6px;
   text-decoration: none;
@@ -65,13 +67,13 @@
     0 10px 24px rgba(0, 0, 0, 0.22);
 
   &:hover {
-    background: var(--kern-color-layout-background-subtle, #f3f4f6);
+    background: rgba(255, 255, 255, 0.88);
     color: var(--kern-color-action-default, #2c3e6b);
     text-decoration: none;
   }
 
   &:active {
-    background: var(--kern-color-layout-background-muted, #e5e7eb);
+    background: rgba(255, 255, 255, 0.96);
     color: var(--kern-color-action-pressed, #243456);
     text-decoration: none;
   }

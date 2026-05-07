@@ -4,7 +4,8 @@ class InternalApi::MonitoringController < InternalApi::BaseController
       status:       "online",
       checked_at:   Time.current.iso8601,
       system_stats: Admin::SystemStatsService.call,
-      app_metadata: Admin::AppMetadataService.call
+      app_metadata: Admin::AppMetadataService.call,
+      features:     Admin::FeaturesService.call
     }
   end
 end

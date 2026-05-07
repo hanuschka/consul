@@ -95,9 +95,9 @@
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [500, 300]),
+              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [550, 330]),
               image_url_2x: @custom_page.image&.attachment&.variant(
-                resize_to_fill: [1000, 600],
+                resize_to_fill: [1100, 660],
                 saver: { quality: 80 },
                 strip: true,
                 format: "jpeg"

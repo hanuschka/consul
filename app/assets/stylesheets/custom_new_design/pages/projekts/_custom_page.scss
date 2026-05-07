@@ -454,7 +454,7 @@ $phase-marker-border: #cbd5e1;
     color: rgba(0, 0, 0, 0.78);
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 
     &:hover,
     &:focus {
@@ -462,7 +462,6 @@ $phase-marker-border: #cbd5e1;
       border-color: rgba(255, 255, 255, 0.95);
       color: rgba(0, 0, 0, 0.9);
       text-decoration: none;
-      transform: translateY(-1px);
     }
 
     &:focus-visible {
@@ -501,10 +500,10 @@ $phase-marker-border: #cbd5e1;
   }
 
   .custom-page--banner-image {
-    min-width: 500px;
-    max-width: 500px;
-    width: 500px;
-    height: 300px !important;
+    min-width: 550px;
+    max-width: 550px;
+    width: 550px;
+    height: 330px !important;
     align-self: center;
     flex-shrink: 0;
     position: static;
@@ -753,10 +752,10 @@ $phase-marker-border: #cbd5e1;
       padding: 0 40px;
 
       .custom-page--banner-image {
-        min-width: 300px;
+        min-width: 330px;
         top: 20px;
         bottom: unset;
-        height: 240px !important;
+        height: 264px !important;
       }
     }
   }

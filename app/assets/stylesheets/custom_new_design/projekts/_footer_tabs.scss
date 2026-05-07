@@ -83,7 +83,7 @@
       transition: 50ms ease opacity;
       justify-content: space-between;
 
-      .projekt-frame-icon-button {
+      .studio-icon-button {
         &:hover {
           cursor: pointer;
           background-color: var(--brand-color-lighter);
@@ -97,7 +97,7 @@
       }
     }
 
-    .projekt-frame-icon-button {
+    .studio-icon-button {
       color: var(--brand-color);
     }
   }

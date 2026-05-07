@@ -3,7 +3,7 @@
 // -----------------------------------------------------------------------------
 // Universelles 32x32 Icon-Button-System mit konsistenten Größen, Spacings und
 // Hover/Active-States. Drei Varianten:
-//   - Default Icon-Button (.projekt-frame-icon-button)
+//   - Default Icon-Button (.studio-icon-button)
 //   - Label-Button (.projekt-content-block-edit--button)         32px hoch
 //   - Save (-green) / Cancel / Delete (-delete) / Disabled
 // =============================================================================
@@ -128,11 +128,11 @@
 // =============================================================================
 // Icon-Only-Buttons (Mode-Switch, Format-Tools, Block-Actions) — 32x32
 // =============================================================================
-.projekt-frame-icon-button-wrapper {
+.studio-icon-button-wrapper {
   border-radius: 6px;
 }
 
-.projekt-frame-icon-button {
+.studio-icon-button {
   display: inline-flex !important;
   justify-content: center;
   align-items: center;
@@ -222,7 +222,7 @@
     padding: 3px 5px;
   }
 
-  .projekt-frame-icon-button {
+  .studio-icon-button {
     width: 28px;
     height: 28px;
     font-size: 13px;

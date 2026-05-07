@@ -6,7 +6,9 @@
   margin: 0;
   padding: 0;
   overflow: visible;
-  // Section visuell in die Mitte des Block-Margins (DEFAULT_MARGIN_BOTTOM=25px) ziehen
+  // Pull the section visually into the middle of the block margin
+  // (DEFAULT_MARGIN_BOTTOM = 25px) so the floating + button sits in the gap
+  // BELOW the preceding content block.
   top: -13px;
 
   &.-opened {
@@ -16,6 +18,15 @@
     .projekt-content-block-templates-selector {
       display: block;
     }
+  }
+
+  // "Add at top" variant — placed directly inside .content-blocks-container
+  // before the first content block. Override the default negative top (which
+  // assumes the section sits in the gap below a block) and add margin-bottom
+  // so the button lands in the gap above the first content block.
+  &.-at-top {
+    top: 12px;
+    margin-bottom: 25px;
   }
 }
 
@@ -177,16 +188,3 @@
   width: 100%;
 }
 
-.add-first-content-block-wrapper {
-  // Match default content-block margin so the templates button has room
-  // to sit visually in the gap before the first content block.
-  margin-bottom: 25px;
-
-  // Override default `top: -13px` from .add-new-content-block-section
-  // (which floats the button in the gap BELOW a content block). For the
-  // add-first wrapper there is nothing above, so we flip the offset and
-  // place the button in the margin-bottom gap, just above the first block.
-  .add-new-content-block-section {
-    top: 12px;
-  }
-}

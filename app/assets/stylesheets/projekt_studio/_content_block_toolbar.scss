@@ -131,6 +131,20 @@
       outline: 2px solid #c9dced;
     }
   }
+
+  // Variant: toolbar anchored to the LEFT side of the wrapper instead of
+  // the right (e.g. for content blocks living inside narrow columns where
+  // the right edge would clip the toolbar). Driven by the backend helper:
+  // `render_custom_block(..., toolbar_position: :left)` emits
+  // `data-toolbar-position="left"` on the .js-site-content-block, which
+  // App.Studio.SiteContentBlockEditor copies onto the wrapper at wrap time.
+  &[data-toolbar-position="left"] {
+    .projekt-content-block--toolbar {
+      margin-left: 0;
+      margin-right: auto;
+      justify-content: flex-start;
+    }
+  }
 }
 
 // Internal separator (mode-switch ↔ block-actions within the same group).

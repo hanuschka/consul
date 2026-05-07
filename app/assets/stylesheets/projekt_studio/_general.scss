@@ -48,8 +48,8 @@ body.custom-new-design {
   top: 14px;
   right: 16px;
   font-size: 13px;
-  width: 32px;
-  height: 32px;
+  width: 35px;
+  height: 35px;
   z-index: 2;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
@@ -62,7 +62,7 @@ body.custom-new-design {
   i {
     margin: auto;
     color: var(--brand-color);
-    font-size: 13px;
+    font-size: 15px;
   }
 
   &:hover:not(:disabled) {

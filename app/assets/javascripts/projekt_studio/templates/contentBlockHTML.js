@@ -11,10 +11,16 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       class="js-content-blocks-list content-blocks-container"
     >
       <div
-        class="js-add-first-content-block-wrapper add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper js-studio-hide-on-preview"
+        class="add-new-content-block-section js-show-content-block-templates-section js-add-content-block-at-top -at-top js-studio-hide-on-preview"
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
-        ${showContentBlockTemplatesButton()}
+        <button
+          type="button"
+          class="js-show-content-block-templates add-new-content-block-button"
+          title="Neuen Inhaltsblock am Anfang hinzufügen"
+        >
+          <i class="fas fa-plus"></i>
+        </button>
       </div>
 
       ${contentBlocks && contentBlocks.join("")}
@@ -22,7 +28,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   `
 }
 
-ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, aiUrl} = {}) {
+ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, aiUrl, toolbarPosition} = {}) {
   const isSiteContext = context === 'site';
 
   return `
@@ -34,6 +40,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-edit-mode=""
       ${updateUrl ? `data-update-url="${updateUrl}"` : ''}
       ${aiUrl ? `data-ai-url="${aiUrl}"` : ''}
+      ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
       data-context="${context || 'projekt'}"
       >
       <div class="relative">
@@ -260,6 +267,18 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               ` : `
+              <div class="projekt-content-block-edit--separator"></div>
+              <button
+                type="button"
+                data-tooltip
+                data-hover-delay="800"
+                tabindex="0"
+                title="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
+                class="studio-icon-button js-open-template-selector-for-replace"
+              >
+                <i class="fas fa-exchange-alt">
+                </i>
+              </button>
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 class="studio-icon-button projekt-content-block--move-button js-dnd-handle"

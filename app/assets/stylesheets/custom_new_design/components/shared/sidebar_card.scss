@@ -14,14 +14,8 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   margin-bottom: 18px;
   color: $main-text-color;
-  font-size: 14px;
+  font-size: 15px;
   width: 100%;
-  transition: box-shadow 180ms ease, border-color 180ms ease;
-
-  &:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    border-color: rgba(0, 0, 0, 0.08);
-  }
 
   .sidebar-collapse-icon {
     display: none;
@@ -93,12 +87,12 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   .social-share-full .social-share-button {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 5px;
   }
 
   .social-share-button .ssb-icon {
-    width: 38px !important;
-    height: 38px !important;
+    width: 42px !important;
+    height: 42px !important;
     margin: 0 !important;
     border-radius: 8px;
     background: #f3f4f6 !important;
@@ -109,7 +103,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
     transition: background-color 150ms ease, color 150ms ease;
 
     &::before {
-      font-size: 15px !important;
+      font-size: 21px !important;
       line-height: 1 !important;
       margin: 0 !important;
     }
@@ -275,7 +269,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   margin: 0;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 500;
   line-height: 1.4;
   transition: background-color 150ms ease;

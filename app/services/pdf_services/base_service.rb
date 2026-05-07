@@ -196,25 +196,40 @@ module PdfServices
         end
 
         return if image_bytes.blank? && map_bytes.blank?
+        return if max_total_height && max_total_height < 30
 
         if image_bytes.present? && map_bytes.present?
           image_h = image_max_height * both_scale
           map_h = map_max_height * both_scale
+          stacked_total = image_h + gap + map_h
 
-          if max_total_height
-            available = max_total_height - gap
-            wanted = image_h + map_h
-            if wanted > available && available > 0
-              ratio = available / wanted.to_f
+          if max_total_height && stacked_total > max_total_height
+            row_height = [image_h, map_h].max
+            if row_height > max_total_height && max_total_height > 0
+              ratio = max_total_height / row_height.to_f
               image_h *= ratio
               map_h *= ratio
+              row_height = [image_h, map_h].max
             end
-          end
 
-          scaled_width = pdf.bounds.width * both_scale
-          render_single_image_row(pdf, image_bytes, image_h, max_width: scaled_width)
-          pdf.move_down gap
-          render_single_image_row(pdf, map_bytes, map_h, max_width: scaled_width)
+            column_width = (pdf.bounds.width - gap) / 2
+            start_y = pdf.cursor
+
+            pdf.bounding_box([0, start_y], width: column_width, height: row_height) do
+              render_fitted_image(pdf, image_bytes, column_width, image_h)
+            end
+
+            pdf.bounding_box([column_width + gap, start_y], width: column_width, height: row_height) do
+              render_fitted_image(pdf, map_bytes, column_width, map_h)
+            end
+
+            pdf.move_cursor_to(start_y - row_height)
+          else
+            scaled_width = pdf.bounds.width * both_scale
+            render_single_image_row(pdf, image_bytes, image_h, max_width: scaled_width)
+            pdf.move_down gap
+            render_single_image_row(pdf, map_bytes, map_h, max_width: scaled_width)
+          end
         elsif image_bytes.present?
           h = max_total_height ? [image_max_height, max_total_height].min : image_max_height
           render_single_image_row(pdf, image_bytes, h)

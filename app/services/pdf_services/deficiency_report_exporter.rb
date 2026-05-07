@@ -15,7 +15,6 @@ module PdfServices
 
           answer_reserved = official_answer_reserved_height(pdf)
           available_for_media = pdf.cursor - answer_reserved - 24
-          available_for_media = 50 if available_for_media < 50
 
           render_image_and_map_side_by_side(
             pdf,

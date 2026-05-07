@@ -131,33 +131,47 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, gutter: 16)
+      def render_image_and_map_side_by_side(pdf, image, map_location, gutter: 16, row_height: 260, bottom_padding: 16)
         has_image = image&.attachment&.attached?
         has_map = map_location&.screenshot.present?
         return unless has_image || has_map
 
         column_width = (pdf.bounds.width - gutter) / 2
         start_y = pdf.cursor
+        available_height = [row_height, start_y - 30].min
+        return if available_height <= 0
 
-        left_consumed = 0
         if has_image
-          pdf.bounding_box([0, start_y], width: column_width) do
-            before = pdf.cursor
-            render_attachment_image(pdf, image, width: column_width)
-            left_consumed = before - pdf.cursor
+          image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
+
+          pdf.bounding_box([0, start_y], width: column_width, height: available_height) do
+            render_fitted_image(pdf, image_bytes, column_width, available_height)
           end
         end
 
-        right_consumed = 0
         if has_map
-          pdf.bounding_box([column_width + gutter, start_y], width: column_width) do
-            before = pdf.cursor
-            render_map_image(pdf, map_location, width: column_width)
-            right_consumed = before - pdf.cursor
+          map_bytes = safe_download(map_location.screenshot)
+
+          pdf.bounding_box([column_width + gutter, start_y], width: column_width, height: available_height) do
+            render_fitted_image(pdf, map_bytes, column_width, available_height)
           end
         end
 
-        pdf.move_cursor_to(start_y - [left_consumed, right_consumed].max)
+        pdf.move_cursor_to(start_y - available_height - bottom_padding)
+      end
+
+      def render_fitted_image(pdf, bytes, width, height)
+        return if bytes.blank?
+
+        pdf.image(StringIO.new(bytes), fit: [width, height], position: :center, vposition: :top)
+      rescue StandardError
+        nil
+      end
+
+      def safe_download(attachment)
+        attachment.download
+      rescue StandardError
+        nil
       end
 
       def render_footer(pdf)

@@ -184,7 +184,7 @@ module PdfServices
         nil
       end
 
-      def render_image_and_map_side_by_side(pdf, image, map_location, image_max_height: 360, map_max_height: 360, both_scale: 0.7, gap: 12, bottom_padding: 16, max_total_height: nil)
+      def render_image_and_map_stacked(pdf, image, map_location, image_max_height: 520, map_max_height: 760, gap: 16, bottom_padding: 16, page_break_top_padding: 24)
         image_bytes = nil
         if image&.attachment&.attached?
           image_bytes = pdf_variant_bytes(image) || safe_download(image.attachment)
@@ -196,70 +196,37 @@ module PdfServices
         end
 
         return if image_bytes.blank? && map_bytes.blank?
-        return if max_total_height && max_total_height < 30
+
+        if image_bytes.present?
+          render_single_image_row(pdf, image_bytes, image_max_height)
+        end
 
         if image_bytes.present? && map_bytes.present?
-          image_h = image_max_height * both_scale
-          map_h = map_max_height * both_scale
-          stacked_total = image_h + gap + map_h
+          pdf.move_down gap
+        end
 
-          if max_total_height && stacked_total > max_total_height
-            row_height = [image_h, map_h].max
-            if row_height > max_total_height && max_total_height > 0
-              ratio = max_total_height / row_height.to_f
-              image_h *= ratio
-              map_h *= ratio
-              row_height = [image_h, map_h].max
-            end
+        if map_bytes.present?
+          map_scaled_height = scaled_image_height(map_bytes, pdf.bounds.width, map_max_height)
 
-            column_width = (pdf.bounds.width - gap) / 2
-            start_y = pdf.cursor
-
-            pdf.bounding_box([0, start_y], width: column_width, height: row_height) do
-              render_fitted_image(pdf, image_bytes, column_width, image_h)
-            end
-
-            pdf.bounding_box([column_width + gap, start_y], width: column_width, height: row_height) do
-              render_fitted_image(pdf, map_bytes, column_width, map_h)
-            end
-
-            pdf.move_cursor_to(start_y - row_height)
-          else
-            scaled_width = pdf.bounds.width * both_scale
-            render_single_image_row(pdf, image_bytes, image_h, max_width: scaled_width)
-            pdf.move_down gap
-            render_single_image_row(pdf, map_bytes, map_h, max_width: scaled_width)
+          if map_scaled_height > pdf.cursor
+            pdf.start_new_page
+            pdf.move_down page_break_top_padding
           end
-        elsif image_bytes.present?
-          h = max_total_height ? [image_max_height, max_total_height].min : image_max_height
-          render_single_image_row(pdf, image_bytes, h)
-        else
-          h = max_total_height ? [map_max_height, max_total_height].min : map_max_height
-          render_single_image_row(pdf, map_bytes, h)
+
+          render_single_image_row(pdf, map_bytes, map_max_height)
         end
 
         pdf.move_down bottom_padding
       end
 
-      def render_two_column_row(pdf, image_bytes, map_bytes, image_max_height, map_max_height, gutter)
-        column_width = (pdf.bounds.width - gutter) / 2
-        row_height = [image_max_height, map_max_height].max
-        start_y = pdf.cursor
+      def scaled_image_height(bytes, max_width, max_height)
+        return 0 if bytes.blank?
 
-        if start_y - row_height < pdf.bounds.absolute_bottom - pdf.bounds.top
-          pdf.start_new_page
-          start_y = pdf.cursor
-        end
-
-        pdf.bounding_box([0, start_y], width: column_width, height: row_height) do
-          render_fitted_image(pdf, image_bytes, column_width, image_max_height)
-        end
-
-        pdf.bounding_box([column_width + gutter, start_y], width: column_width, height: row_height) do
-          render_fitted_image(pdf, map_bytes, column_width, map_max_height)
-        end
-
-        pdf.move_cursor_to(start_y - row_height)
+        info = Prawn.image_handler.find(bytes).new(bytes)
+        ratio = [max_width.to_f / info.width, max_height.to_f / info.height].min
+        info.height * ratio
+      rescue StandardError
+        0
       end
 
       def render_single_image_row(pdf, bytes, max_height, max_width: nil)

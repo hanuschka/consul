@@ -76,10 +76,99 @@ export default class extends Controller {
   async screenshotFromDom(element) {
     const { toBlob } = await import("html-to-image")
 
-    return toBlob(element, {
-      quality: 0.95,
-      cacheBust: true
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready
+    }
+
+    const restoreIcons = this.bakeMarkerIcons(element)
+
+    try {
+      return await toBlob(element, {
+        quality: 0.95,
+        cacheBust: true,
+        filter: this.excludeMapControls
+      })
+    } finally {
+      restoreIcons()
+    }
+  }
+
+  bakeMarkerIcons(root) {
+    const icons = root.querySelectorAll(".map-icon")
+    const cleanups = []
+
+    const styleEl = document.createElement("style")
+    styleEl.textContent = ".js-screenshot-hide-pseudo::before { display: none !important; }"
+    document.head.appendChild(styleEl)
+    cleanups.push(() => styleEl.remove())
+
+    icons.forEach(icon => this.bakeSingleMarkerIcon(icon, cleanups))
+
+    return () => cleanups.forEach(fn => fn())
+  }
+
+  bakeSingleMarkerIcon(icon, cleanups) {
+    const before = window.getComputedStyle(icon, "::before")
+    const rawContent = before.content
+    if (!rawContent || rawContent === "none" || rawContent === "normal") return
+
+    const text = rawContent.replace(/^["']|["']$/g, "")
+    if (!text) return
+
+    const dataUrl = this.renderGlyphToDataUrl({
+      text,
+      fontFamily: before.fontFamily,
+      fontWeight: before.fontWeight,
+      fontSize: parseFloat(before.fontSize) || 14,
+      color: before.color || "#fff"
     })
+    if (!dataUrl) return
+
+    const img = document.createElement("img")
+    img.src = dataUrl
+    img.style.cssText = "position: absolute; inset: 0; margin: auto; transform: rotate(45deg); pointer-events: none;"
+
+    icon.classList.add("js-screenshot-hide-pseudo")
+    icon.appendChild(img)
+
+    cleanups.push(() => {
+      icon.classList.remove("js-screenshot-hide-pseudo")
+      img.remove()
+    })
+  }
+
+  renderGlyphToDataUrl({ text, fontFamily, fontWeight, fontSize, color }) {
+    try {
+      const dpr = window.devicePixelRatio || 1
+      const padding = 4
+      const size = Math.ceil(fontSize) + padding * 2
+      const canvas = document.createElement("canvas")
+      canvas.width = size * dpr
+      canvas.height = size * dpr
+      const ctx = canvas.getContext("2d")
+      ctx.scale(dpr, dpr)
+      ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
+      ctx.fillStyle = color
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(text, size / 2, size / 2)
+      return canvas.toDataURL("image/png")
+    } catch (e) {
+      return null
+    }
+  }
+
+  excludeMapControls(node) {
+    if (!node.classList) return true
+
+    const controlClasses = [
+      "leaflet-control-container",
+      "mapboxgl-control-container",
+      "maplibregl-control-container",
+      "ol-control"
+    ]
+
+    return !controlClasses.some(cls => node.classList.contains(cls))
   }
 
   screenshotFromCanvas(canvas) {

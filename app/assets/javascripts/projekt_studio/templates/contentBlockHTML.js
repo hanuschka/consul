@@ -270,18 +270,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               ` : `
               <div class="projekt-content-block-edit--separator"></div>
               <button
-                type="button"
-                data-tooltip
-                data-hover-delay="800"
-                tabindex="0"
-                title="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
-                class="studio-icon-button js-open-template-selector-for-replace"
-              >
-                <i class="fas fa-exchange-alt">
-                </i>
-              </button>
-              <div class="projekt-content-block-edit--separator"></div>
-              <button
                 class="studio-icon-button projekt-content-block--move-button js-dnd-handle"
                 title="Inhaltsbock verschieben"
               >

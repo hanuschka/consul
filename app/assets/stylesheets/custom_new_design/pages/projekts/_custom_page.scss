@@ -502,10 +502,10 @@ $phase-marker-border: #cbd5e1;
   }
 
   .custom-page--banner-image {
-    min-width: 550px;
-    max-width: 550px;
-    width: 550px;
-    height: 330px !important;
+    // min-width: 550px;
+    max-width: 580px;
+    width: 100%;
+    height: 350px !important;
     align-self: center;
     cursor: zoom-in;
     overflow: hidden;

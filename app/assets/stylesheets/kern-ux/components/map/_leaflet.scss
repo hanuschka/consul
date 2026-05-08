@@ -113,22 +113,11 @@
   align-items: center;
   justify-content: center;
 
-  &::before {
-    font-family: "Material Symbols Outlined";
-    font-variation-settings: "FILL" 1;
-    color: #fff;
-    font-size: 16px;
-    transform: rotate(45deg);
-  }
-
-  &.icon-circle::before {
-    content: "circle";
-  }
-
-  // Font Awesome icons (icon-* classes from custom/icons.scss)
-  &[class*="icon-"]:not(.icon-circle)::before {
+  &[class*="icon-"]::before {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
+    color: #fff;
     font-size: 14px;
+    transform: rotate(45deg);
   }
 }

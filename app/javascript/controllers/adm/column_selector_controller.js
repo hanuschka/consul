@@ -1,31 +1,48 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Column visibility toggle for kern-table.
-// Reads th[data-field] headers, builds checkboxes, persists selection in a cookie.
+// Reads th[data-field] headers, builds checkboxes, persists selection in localStorage.
 export default class extends Controller {
   static values = {
-    cookie: String,
+    storageKey: String,
     defaults: String // comma-separated default visible columns
   }
 
   static targets = ["table", "menu", "list"]
 
   connect() {
+    this.checkboxByField = new Map()
+    this.visibleByField = new Map()
+    this.fields = []
+
     this.buildCheckboxes()
-    this.applyFromCookie()
+    this.applyFromStorage()
     this.observeRowChanges()
   }
 
   disconnect() {
-    this.rowObserver?.disconnect()
+    if (this.rowObserver) this.rowObserver.disconnect()
   }
 
   observeRowChanges() {
     const tbody = this.tableTarget.querySelector("tbody")
     if (!tbody) return
 
-    this.rowObserver = new MutationObserver(() => this.applyFromCookie())
+    this.rowObserver = new MutationObserver(mutations => this.handleRowMutations(mutations))
     this.rowObserver.observe(tbody, { childList: true })
+  }
+
+  handleRowMutations(mutations) {
+    mutations.forEach(m => m.addedNodes.forEach(node => this.applyVisibilityToNode(node)))
+  }
+
+  applyVisibilityToNode(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) return
+
+    node.querySelectorAll("[data-field]").forEach(el => {
+      const show = this.visibleByField.get(el.dataset.field)
+      el.classList.toggle("d-none", !show)
+    })
   }
 
   toggle() {
@@ -38,58 +55,61 @@ export default class extends Controller {
     }
   }
 
-  // Build checkboxes from table headers that have data-field
   buildCheckboxes() {
     const headers = this.tableTarget.querySelectorAll("thead th[data-field]")
-    this.fields = []
-
-    headers.forEach(header => {
-      const field = header.dataset.field || header.closest("[data-field]")?.dataset.field
-      if (!field) return
-
-      const labelEl = header.querySelector("[id$='-label']")
-      const text = labelEl ? labelEl.textContent.trim() : header.textContent.trim()
-      this.fields.push(field)
-
-      const label = document.createElement("label")
-      label.className = "adm-column-selector__item"
-
-      const checkbox = document.createElement("input")
-      checkbox.type = "checkbox"
-      checkbox.dataset.field = field
-      checkbox.className = "adm-column-selector__checkbox"
-      checkbox.addEventListener("change", () => this.toggleColumn(field, checkbox.checked))
-
-      const span = document.createElement("span")
-      span.textContent = text
-
-      label.appendChild(checkbox)
-      label.appendChild(span)
-      this.listTarget.appendChild(label)
-    })
+    headers.forEach(header => this.appendCheckbox(header))
   }
 
-  applyFromCookie() {
-    let value = this.getCookie(this.cookieValue)
-    if (!value) {
-      value = this.defaultsValue
-      this.setCookie(this.cookieValue, value)
-    }
+  appendCheckbox(header) {
+    const field = header.dataset.field
+    const labelEl = header.querySelector("[id$='-label']")
+    const text = labelEl ? labelEl.textContent.trim() : header.textContent.trim()
 
-    const visible = value.split(",")
+    this.fields.push(field)
+
+    const label = document.createElement("label")
+    label.className = "adm-column-selector__item"
+
+    const checkbox = document.createElement("input")
+    checkbox.type = "checkbox"
+    checkbox.dataset.field = field
+    checkbox.className = "adm-column-selector__checkbox"
+    checkbox.addEventListener("change", () => this.toggleColumn(field, checkbox.checked))
+
+    const span = document.createElement("span")
+    span.textContent = text
+
+    label.appendChild(checkbox)
+    label.appendChild(span)
+    this.listTarget.appendChild(label)
+    this.checkboxByField.set(field, checkbox)
+  }
+
+  applyFromStorage() {
+    const saved = this.readStorage()
+    const defaults = new Set(this.defaultsValue.split(",").filter(f => f.length > 0))
 
     this.fields.forEach(field => {
-      const show = visible.includes(field)
+      const show = this.resolveVisibility(field, saved, defaults)
+      this.visibleByField.set(field, show)
       this.setColumnVisibility(field, show)
-
-      const checkbox = this.listTarget.querySelector(`input[data-field="${field}"]`)
-      if (checkbox) checkbox.checked = show
+      this.checkboxByField.get(field).checked = show
     })
+
+    this.saveToStorage()
+  }
+
+  resolveVisibility(field, saved, defaults) {
+    if (saved && saved.visible.includes(field)) return true
+    if (saved && saved.hidden.includes(field)) return false
+
+    return defaults.has(field)
   }
 
   toggleColumn(field, show) {
+    this.visibleByField.set(field, show)
     this.setColumnVisibility(field, show)
-    this.saveToCookie()
+    this.saveToStorage()
   }
 
   setColumnVisibility(field, show) {
@@ -98,20 +118,32 @@ export default class extends Controller {
     })
   }
 
-  saveToCookie() {
-    const checked = this.listTarget.querySelectorAll("input:checked")
-    const value = Array.from(checked).map(cb => cb.dataset.field).join(",")
-    this.setCookie(this.cookieValue, value)
+  saveToStorage() {
+    const visible = []
+    const hidden = []
+
+    this.fields.forEach(field => {
+      if (this.visibleByField.get(field)) {
+        visible.push(field)
+      } else {
+        hidden.push(field)
+      }
+    })
+
+    localStorage.setItem(this.storageKeyValue, JSON.stringify({ visible, hidden }))
   }
 
-  getCookie(name) {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"))
-    return match ? decodeURIComponent(match[2]) : ""
-  }
+  readStorage() {
+    const raw = localStorage.getItem(this.storageKeyValue)
+    if (raw === null) return null
 
-  setCookie(name, value) {
-    const date = new Date()
-    date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year
-    document.cookie = `${name}=${encodeURIComponent(value)};expires=${date.toUTCString()};path=/`
+    try {
+      const parsed = JSON.parse(raw)
+      if (!parsed || !Array.isArray(parsed.visible) || !Array.isArray(parsed.hidden)) return null
+
+      return parsed
+    } catch (e) {
+      return null
+    }
   }
 }

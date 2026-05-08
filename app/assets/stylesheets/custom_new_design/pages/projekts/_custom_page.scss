@@ -316,7 +316,6 @@ $phase-marker-border: #cbd5e1;
   .custom-page--banner {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     width: 100%;
     min-height: 380px;
     border-radius: 12px;
@@ -336,6 +335,7 @@ $phase-marker-border: #cbd5e1;
       0 12px 40px rgba(0, 0, 0, 0.08);
     position: relative;
     padding: 0 60px;
+    padding-bottom: 20px;
     color: $dark;
     overflow: visible;
 
@@ -497,6 +497,7 @@ $phase-marker-border: #cbd5e1;
 
   .custom-page--banner-text-section {
     // max-width: 90%;
+    padding-top: 90px;
   }
 
   .custom-page--banner-image {

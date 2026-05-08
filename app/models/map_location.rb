@@ -81,6 +81,14 @@ class MapLocation < ApplicationRecord
     end
   end
 
+  def pin_coordinates
+    feature = to_geo_json["features"].first
+    coords = feature&.dig("geometry", "coordinates")
+    return nil if coords.blank?
+
+    { latitude: coords[1], longitude: coords[0] }
+  end
+
   def to_geo_json
     @geo_json ||= begin
       if features.present? && features["type"] == "FeatureCollection"

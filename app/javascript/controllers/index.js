@@ -83,6 +83,12 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
+import PdfDownloadController from "./pdf_download_controller"
+application.register("pdf-download", PdfDownloadController)
+
+import GlightboxController from "./glightbox_controller"
+application.register("glightbox", GlightboxController)
+
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 

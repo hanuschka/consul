@@ -9,6 +9,13 @@ en:
         upstream: "Could not reach Masterportal."
         host_not_allowlisted: "Endpoint host is not allowed."
         invalid_url: "Invalid endpoint URL."
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Download original
+        index:
+          table:
+            image: Image
     navbar_items:
       deleted_projekt: "[Deleted project]"
       edit:

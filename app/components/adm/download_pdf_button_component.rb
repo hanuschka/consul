@@ -1,10 +1,11 @@
 class Adm::DownloadPdfButtonComponent < ApplicationComponent
-  def initialize(url:, map_location: nil, map_container_id: nil, label: nil, loading_label: nil, icon: "download")
+  def initialize(url:, map_location: nil, map_container_id: nil, label: nil, loading_label: nil, success_label: nil, icon: "download")
     @url = url
     @map_location = map_location
     @map_container_id = map_container_id
     @label = label
     @loading_label = loading_label
+    @success_label = success_label
     @icon = icon
   end
 
@@ -18,6 +19,10 @@ class Adm::DownloadPdfButtonComponent < ApplicationComponent
 
     def loading_label
       @loading_label || t(".loading")
+    end
+
+    def success_label
+      @success_label || t(".success")
     end
 
     def map_capture_enabled?

@@ -1,10 +1,14 @@
 <%= tag.span class: "adm-pdf-download", data: { controller: "pdf-download" } do %>
-  <%= link_to url, class: "adm-pdf-download__trigger adm-detail-meta__item", data: link_data do %>
-    <span class="material-symbols-outlined adm-pdf-download__icon" aria-hidden="true"><%= icon %></span>
-    <%= label %>
+  <%= link_to url, class: "adm-pdf-download__trigger kern-btn kern-btn--secondary", data: link_data do %>
+    <span class="kern-label material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+    <span class="kern-label"><%= label %></span>
   <% end %>
-  <span class="adm-pdf-download__loading" data-pdf-download-target="loading" aria-hidden="true">
+  <span class="adm-pdf-download__loading kern-btn kern-btn--secondary" data-pdf-download-target="loading" aria-hidden="true">
     <span class="adm-pdf-download__spinner" aria-hidden="true"></span>
-    <%= loading_label %>
+    <span class="kern-label"><%= loading_label %></span>
+  </span>
+  <span class="adm-pdf-download__success kern-btn kern-btn--secondary" data-pdf-download-target="success" aria-hidden="true">
+    <span class="kern-label material-symbols-outlined adm-pdf-download__success-icon" aria-hidden="true">check_circle</span>
+    <span class="kern-label"><%= success_label %></span>
   </span>
 <% end %>

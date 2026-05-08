@@ -4,6 +4,9 @@ de:
       deficiency_reports:
         show:
           download_original: Original herunterladen
+        index:
+          table:
+            image: Bild
     navbar_items:
       deleted_projekt: "[Gelöschtes Projekt]"
       edit:

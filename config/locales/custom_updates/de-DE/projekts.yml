@@ -1,6 +1,9 @@
 de:
   custom:
     projekts:
+      banner_upload:
+        uploading: "Bild wird hochgeladen…"
+        processing: "Bild wird verarbeitet…"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite

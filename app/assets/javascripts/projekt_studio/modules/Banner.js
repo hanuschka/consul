@@ -294,6 +294,20 @@ ProjektStudio.Banner = {
 
     if (ring) ring.style.setProperty("--upload-progress", percent)
     if (label) label.textContent = `${percent}%`
+
+    this.setUploadProgressMessage(container, percent >= 100 ? "processing" : "uploading")
+  },
+
+  setUploadProgressMessage(container, state) {
+    const message = container.querySelector(".js-projekt-banner-upload-progress-message")
+
+    if (!message) return
+
+    const text = state === "processing"
+      ? message.dataset.processingText
+      : message.dataset.uploadingText
+
+    if (text) message.textContent = text
   },
 
   handleUploadSuccess(container, imagePreview, previewUrl) {

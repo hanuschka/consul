@@ -1,6 +1,9 @@
 en:
   custom:
     projekts:
+      banner_upload:
+        uploading: "Uploading image…"
+        processing: "Processing image…"
       overview_page:
         projekt_name: Overview page
         projekt_name_for_proposal: New projekt proposal

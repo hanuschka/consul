@@ -266,6 +266,7 @@ class PagesController < ApplicationController
     end
 
     def set_budget_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
       @budget = @projekt_phase.budget
       return if @budget.blank?
 

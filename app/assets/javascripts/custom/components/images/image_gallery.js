@@ -7,8 +7,8 @@
       this.bindScrollbarWidthCapture()
     },
 
-    getFixedElements() {
-      return document.querySelectorAll(".top-bar-wrapper, .projekt-page--admin-topbar")
+    getFixedElement() {
+      return document.querySelector(".topbar-header")
     },
 
     measureScrollbarWidth() {
@@ -48,7 +48,6 @@
                                     <button class="gnext gbtn" tabindex="0" aria-label="Nächste">{nextSVG}</button>
                                     <button class="gprev gbtn" tabindex="0" aria-label="Vorherige">{prevSVG}</button>
                                     <button class="gclose gbtn" tabindex="0" aria-label="Schließen (ESC)">{closeSVG}</button>
-                                    <div class="glightbox-esc-hint" aria-live="polite">ESC = Schließen</div>
                                   </div>
                                 </div>`;
 
@@ -74,11 +73,13 @@
         if (scrollbarWidth > 0) {
           document.body.style.paddingRight = scrollbarWidth + "px";
 
-          this.getFixedElements().forEach((el) => {
-            var currentPaddingRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
-            el.dataset.lightboxOriginalPaddingRight = el.style.paddingRight;
-            el.style.paddingRight = (currentPaddingRight + scrollbarWidth) + "px";
-          });
+          var fixedElement = this.getFixedElement();
+
+          if (fixedElement) {
+            var currentPaddingRight = parseFloat(getComputedStyle(fixedElement).paddingRight) || 0;
+            fixedElement.dataset.lightboxOriginalPaddingRight = fixedElement.style.paddingRight;
+            fixedElement.style.paddingRight = (currentPaddingRight + scrollbarWidth) + "px";
+          }
         }
 
         setTimeout(() => {
@@ -92,10 +93,12 @@
       this.lightbox.on('close', () => {
         document.body.style.paddingRight = "";
 
-        this.getFixedElements().forEach((el) => {
-          el.style.paddingRight = el.dataset.lightboxOriginalPaddingRight || "";
-          delete el.dataset.lightboxOriginalPaddingRight;
-        });
+        var fixedElement = this.getFixedElement();
+
+        if (fixedElement) {
+          fixedElement.style.paddingRight = fixedElement.dataset.lightboxOriginalPaddingRight || "";
+          delete fixedElement.dataset.lightboxOriginalPaddingRight;
+        }
 
         if (this.triggerElement) {
           this.triggerElement.focus();

@@ -1,7 +1,7 @@
 module MultilineSubtitleNormalizer
   module_function
 
-  MAX_VISIBLE_LENGTH = 500
+  MAX_VISIBLE_LENGTH = 200
   MAX_LINE_BREAKS = 4
 
   INVISIBLE_CHARS_REGEX =

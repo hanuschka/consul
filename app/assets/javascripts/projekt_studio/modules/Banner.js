@@ -264,6 +264,11 @@ ProjektStudio.Banner = {
             mainImage.style.height = "100%";
             mainImage.style.objectFit = "cover";
 
+            mainImage.removeAttribute("srcset");
+            mainImage.removeAttribute("sizes");
+            blurImage.removeAttribute("srcset");
+            blurImage.removeAttribute("sizes");
+
             mainImage.src = previewUrl;
             blurImage.src = previewUrl;
           }

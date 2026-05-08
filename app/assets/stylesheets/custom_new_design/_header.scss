@@ -1,11 +1,14 @@
 .custom-new-design {
   .top-bar-wrapper {
-    position: fixed;
     width: 100%;
+  }
 
-    @media (max-width: 480px) {
-      position: static;
-    }
+  header.topbar-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1002;
   }
 
   header {
@@ -13,11 +16,6 @@
     z-index: 1000;
     margin-bottom: 0;
     max-width: none;
-    height: 90px;
-
-    @media(max-width: $small-tablet-viewport-start) {
-      height: $topbar-height-mobile;
-    }
 
     @media(max-width: $mobile-viewport-start) {
       z-index: 1002;
@@ -42,6 +40,8 @@
     // max-width: 1920px;
     margin: auto;
     background-color: white;
+    display: flex;
+    align-items: center;
 
     @media(max-width: $small-tablet-viewport-start) {
       height: $topbar-height-mobile;
@@ -258,7 +258,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     // height: 150px;
     display: flex;
     align-items: center;
-    padding-top: 18px;
+    // padding-top: 18px;
     justify-content: flex-start !important;
     background: transparent !important;
 
@@ -924,9 +924,19 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 }
 
 
-body:has(.projekt-page--admin-topbar) {
-  header.topbar-header {
-    margin-top: var(--admin-topbar-height);
+body.custom-new-design {
+  padding-top: $topbar-height;
+
+  @media(max-width: $small-tablet-viewport-start) {
+    padding-top: $topbar-height-mobile;
+  }
+}
+
+body.custom-new-design:has(.projekt-page--admin-topbar) {
+  padding-top: calc(#{$topbar-height} + var(--admin-topbar-height));
+
+  @media(max-width: $small-tablet-viewport-start) {
+    padding-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height));
   }
 
   @media (max-width: $small-tablet-viewport-start) {

@@ -316,6 +316,7 @@ $phase-marker-border: #cbd5e1;
   .custom-page--banner {
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
     width: 100%;
     min-height: 380px;
     border-radius: 12px;
@@ -335,7 +336,8 @@ $phase-marker-border: #cbd5e1;
       0 12px 40px rgba(0, 0, 0, 0.08);
     position: relative;
     padding: 0 60px;
-    padding-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     color: $dark;
     overflow: visible;
 
@@ -496,7 +498,7 @@ $phase-marker-border: #cbd5e1;
 
   .custom-page--banner-text-section {
     // max-width: 90%;
-    padding-top: 90px;
+    padding-top: 75px;
   }
 
   .custom-page--banner-image {
@@ -505,9 +507,6 @@ $phase-marker-border: #cbd5e1;
     width: 550px;
     height: 330px !important;
     align-self: center;
-    flex-shrink: 0;
-    position: static;
-    bottom: auto;
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;

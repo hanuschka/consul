@@ -47,11 +47,6 @@ $topbar-transition: 150ms ease;
   // admin topbar stays visually stable when the color-picker changes the page.
   --admin-topbar-accent: #{$brand};
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1001;
   width: 100%;
   height: var(--admin-topbar-height);
   padding: 0 14px;

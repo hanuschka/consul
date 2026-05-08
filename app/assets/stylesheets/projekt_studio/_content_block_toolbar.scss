@@ -13,24 +13,32 @@
   display: none;
 }
 
-// Toolbar floats above the block (out-of-flow) — no layout shift
+// Toolbar floats above the block (out-of-flow) — no layout shift.
+// "absolute + sticky" pattern: outer .projekt-content-block--toolbar-zone is
+// position:absolute (takes no flow space, so toggling `display` on the inner
+// toolbar causes no vertical layout shift). Inner .projekt-content-block--toolbar
+// is position:sticky (sticks below the topbar while the wrapper is in view).
+// The zone's top:-48px lifts the toolbar's at-rest position visually above
+// the wrapper's top edge, replacing the old margin-top:-48px hoist.
 .projekt-content-block-wrapper {
   position: relative;
 
+  .projekt-content-block--toolbar-zone {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 200;
+    pointer-events: none;
+  }
+
   .projekt-content-block--toolbar {
-    // Sticky on scroll, visually like absolute above the block at rest:
-    // - margin-top: -48px lifts the toolbar visually above the wrapper top edge
-    //   (content still starts at wrapper top, no layout shift).
-    // - top: <topbar-offset> is the stick position below header & admin topbar.
-    // - margin-left: auto right-aligns the fit-content toolbar
-    //   (right:0 doesn't work with sticky/relative the way it does with absolute).
     position: sticky;
     top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
-    margin-top: -48px;
     margin-left: auto;
     width: fit-content;
-    z-index: 200;
-    display: flex;
+    display: none;
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
@@ -41,9 +49,7 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
+    pointer-events: auto;
 
     // Invisible hover bridge between toolbar and block — prevents the toolbar
     // from disappearing when the mouse moves through the 8px gap
@@ -95,8 +101,7 @@
 
   &:hover .projekt-content-block--toolbar,
   &:focus-within .projekt-content-block--toolbar {
-    opacity: 1;
-    pointer-events: auto;
+    display: flex;
   }
 
   // Outside edit mode only the mode-switch/block-actions group is visible
@@ -122,12 +127,7 @@
     }
 
     .projekt-content-block--toolbar {
-      position: -webkit-sticky;
-      position: sticky;
-      top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
-      right: auto;
-      opacity: 1;
-      pointer-events: auto;
+      display: flex;
       outline: 2px solid #c9dced;
     }
   }
@@ -162,13 +162,6 @@
 // =============================================================================
 .sidebar-card .projekt-content-block-wrapper {
   .projekt-content-block--toolbar {
-    // Same "sticky-absolute" positioning as the main toolbar: margin-top:-48px
-    // hoists it visually above the wrapper top, top: <topbar-offset> is the
-    // sticky stick-position. Visibility is opacity-driven (inherited from the
-    // main rule); we override the max-height collapse from sidebar_card.scss
-    // so the hoist actually renders.
-    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
-    margin-top: -48px;
     margin-bottom: 0;
     max-height: none;
     overflow: visible;
@@ -180,8 +173,7 @@
 // =============================================================================
 @media (max-width: $small-tablet-viewport-start) {
   .projekt-content-block-wrapper .projekt-content-block--toolbar {
-    opacity: 1;
-    pointer-events: auto;
+    display: flex;
   }
 }
 

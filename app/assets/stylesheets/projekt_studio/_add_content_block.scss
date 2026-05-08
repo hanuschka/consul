@@ -25,8 +25,7 @@
   // assumes the section sits in the gap below a block) and add margin-bottom
   // so the button lands in the gap above the first content block.
   &.-at-top {
-    top: 12px;
-    margin-bottom: 25px;
+    top: -5px;
   }
 }
 

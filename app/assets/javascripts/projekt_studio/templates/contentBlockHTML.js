@@ -44,7 +44,8 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       data-context="${context || 'projekt'}"
       >
       <div class="relative">
-        <div class="projekt-content-block--toolbar js-studio-hide-on-preview">
+        <div class="projekt-content-block--toolbar-zone js-studio-hide-on-preview">
+        <div class="projekt-content-block--toolbar">
 
             <div class="d-flex projekt-content-block-edit--buttons-wrapper">
               <button
@@ -304,6 +305,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
+        </div>
         </div>
 
         <div class="projekt-content-block--toolbar-border js-projekt-content-block--toolbar-anchor js-studio-hide-on-preview"></div>

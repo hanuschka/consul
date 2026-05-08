@@ -1,3 +1,5 @@
+# Previously we had a lot of issues with inputs copied from 3rd party apps into
+# subtitle, so we need to do good normalization for it
 module MultilineSubtitleNormalizer
   module_function
 

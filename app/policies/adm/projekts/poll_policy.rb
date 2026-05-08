@@ -2,7 +2,7 @@ class Adm::Projekts::PollPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   class Scope < Scope

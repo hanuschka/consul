@@ -75,7 +75,7 @@
     <%= links_section %>
   </div>
 
-  <% if resource.image.present? %>
+  <% if resource.image&.attached? && big_image_url.present? %>
     <%= link_to big_image_url,
       target: "_blank",
       class: "glightbox resource-page-banner--image",

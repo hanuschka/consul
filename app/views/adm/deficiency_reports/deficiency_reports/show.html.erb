@@ -12,18 +12,11 @@
         <%= t(".view_on_site") %>
       <% end %>
     </span>
-    <span class="adm-detail-meta__item">
-      <%= link_to adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
-            data: @deficiency_report.map_location.present? ? {
-              turbo: false,
-              controller: "map-screenshot",
-              map_screenshot_container_value: dom_id(@deficiency_report, "map"),
-              action: "click->map-screenshot#capture"
-            } : { turbo: false } do %>
-        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">download</span>
-        <%= t(".download_pdf") %>
-      <% end %>
-    </span>
+    <%= render Adm::DownloadPdfButtonComponent.new(
+      url: adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
+      map_location: @deficiency_report.map_location,
+      map_container_id: dom_id(@deficiency_report, "map")
+    ) %>
   </div>
 </div>
 
@@ -53,14 +46,19 @@
       <% has_map = @deficiency_report.map_location.present? %>
 
       <% if has_image || has_map %>
-        <div class="adm-detail-media-grid <%= (has_image && has_map) ? 'adm-detail-media-grid--two' : '' %> mb-4">
+        <% original_image_url = has_image ? url_for(@deficiency_report.image.attachment) : nil %>
+        <div class="adm-detail-media-grid <%= 'adm-detail-media-grid--two adm-detail-media-grid--no-stretch' if has_image && has_map %> mb-4">
           <% if has_image %>
-            <div class="adm-detail-media-card">
+            <div class="adm-detail-media-card adm-detail-media-card--bounded-image">
               <div class="adm-detail-media-card__label">
                 <span class="material-symbols-outlined" aria-hidden="true">image</span>
                 <%= t(".image_label") %>
               </div>
-              <%= image_tag(@image_url, style: "width: 100%;") %>
+              <%= render Adm::ImageWithLightboxComponent.new(
+                display_url: @image_url,
+                original_url: original_image_url,
+                title: @deficiency_report.title
+              ) %>
             </div>
           <% end %>
 
@@ -70,7 +68,8 @@
                 <span class="material-symbols-outlined" aria-hidden="true">map</span>
                 <%= t(".map_label") %>
               </div>
-              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location) %>
+              <% pin_zoom = (@deficiency_report.map_location.latitude.present? && @deficiency_report.map_location.longitude.present?) ? 17 : nil %>
+              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location, height: 400, zoom: pin_zoom) %>
             </div>
           <% end %>
         </div>

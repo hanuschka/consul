@@ -4,8 +4,8 @@ module Adm
       authorize [:adm, :matomo]
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
-        { name: t("adm.menu.items.application_subitems.matomo") }
+        { name: t("adm.menu.items.stats"), icon: "bar_chart_4_bars" },
+        { name: t("adm.menu.items.stats_subitems.matomo") }
       ]
 
       base_url     = Rails.application.secrets.matomo_base_url

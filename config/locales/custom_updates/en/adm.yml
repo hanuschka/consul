@@ -1,6 +1,21 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Download original
+        index:
+          table:
+            image: Image
+    navbar_items:
+      deleted_projekt: "[Deleted project]"
+      edit:
+        title: Edit navbar item
+      form:
+        custom_title_label: Display name (optional)
+        custom_title_placeholder: Leave blank to use the default title
+        update: Save changes
     projekts:
       phases:
         ai_user_flow:

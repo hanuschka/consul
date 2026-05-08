@@ -1,5 +1,20 @@
 de:
   adm:
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Original herunterladen
+        index:
+          table:
+            image: Bild
+    navbar_items:
+      deleted_projekt: "[Gelöschtes Projekt]"
+      edit:
+        title: Navigationseintrag bearbeiten
+      form:
+        custom_title_label: Anzeigename (optional)
+        custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
+        update: Änderungen speichern
     projekts:
       phases:
         ai_user_flow:

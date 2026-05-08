@@ -6,6 +6,8 @@ proposals:
     previous: "Previous proposal"
     next: "Next proposal"
     exit_quiz_mode: "Back to proposals list"
+  notice:
+    pending_acceptance: "Thank you! Your proposal has been submitted and is awaiting admin review before publication."
 
 budgets:
   investments:

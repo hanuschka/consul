@@ -5,19 +5,7 @@
 <%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
 
 <div class="kern-container">
-  <div class="d-flex align-items-center justify-content-end gap-3 mt-1 mb-4">
-    <span class="adm-detail-meta__item">
-      <%= link_to deficiency_report_path(@deficiency_report), target: "_blank", rel: "noopener" do %>
-        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">open_in_new</span>
-        <%= t(".view_on_site") %>
-      <% end %>
-    </span>
-    <%= render Adm::DownloadPdfButtonComponent.new(
-      url: adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
-      map_location: @deficiency_report.map_location,
-      map_container_id: dom_id(@deficiency_report, "map")
-    ) %>
-  </div>
+
 </div>
 
 <div class="kern-container mb-5">
@@ -27,8 +15,23 @@
     <%= turbo_frame_tag "deficiency_report_content" do %>
       <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
         <h2 class="adm-detail-section-title m-0"><%= t(".section_content") %></h2>
-        <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-              text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" }) %>
+
+        <div class="d-flex align-items-center justify-content-end gap-3 mt-1 mb-4">
+          <span class="adm-detail-meta__item">
+            <%= link_to deficiency_report_path(@deficiency_report), target: "_blank", rel: "noopener" do %>
+              <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">open_in_new</span>
+              <%= t(".view_on_site") %>
+            <% end %>
+          </span>
+          <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+                               text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" })
+          %>
+          <%= render Adm::DownloadPdfButtonComponent.new(
+            url: adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
+            map_location: @deficiency_report.map_location,
+            map_container_id: dom_id(@deficiency_report, "map")
+          ) %>
+        </div>
       </div>
 
       <%# === Title + Description in card === %>

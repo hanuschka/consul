@@ -240,10 +240,6 @@
     handleTabClose: function() {},
 
     sendGreeting: function() {
-      const language = this.element.dataset.language;
-      const greetingText =
-        language === "en" ? "Hi" : "Hallo";
-
       const greetingMessage = {
         type: "response.create"
       };

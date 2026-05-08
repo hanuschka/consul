@@ -81,6 +81,7 @@ export default class extends Controller {
     }
 
     const restoreIcons = this.bakeMarkerIcons(element)
+    const restoreGestureWarning = this.suppressGestureWarning(element)
 
     try {
       return await toBlob(element, {
@@ -90,7 +91,32 @@ export default class extends Controller {
       })
     } finally {
       restoreIcons()
+      restoreGestureWarning()
     }
+  }
+
+  suppressGestureWarning(root) {
+    const warningClasses = [
+      "leaflet-gesture-handling-touch-warning",
+      "leaflet-gesture-handling-scroll-warning"
+    ]
+
+    const containers = root.classList && root.classList.contains("leaflet-container")
+      ? [root]
+      : Array.from(root.querySelectorAll(".leaflet-container"))
+
+    const removed = []
+
+    containers.forEach(container => {
+      warningClasses.forEach(cls => {
+        if (container.classList.contains(cls)) {
+          container.classList.remove(cls)
+          removed.push([container, cls])
+        }
+      })
+    })
+
+    return () => removed.forEach(([container, cls]) => container.classList.add(cls))
   }
 
   bakeMarkerIcons(root) {

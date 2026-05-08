@@ -6,6 +6,7 @@
     background-color: white;
     display: flex;
     align-items: center;
+    box-shadow: $top-bar-banner-shadow;
 
     @media(max-width: $small-tablet-viewport-start) {
       height: $topbar-height-mobile;
@@ -289,6 +290,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     right: 0;
     z-index: 1000;
     background-color: white !important;
+    box-shadow: $top-bar-banner-shadow;
 
     @media (max-width: 480px) {
       position: static;

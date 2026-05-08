@@ -13,6 +13,9 @@ $admin-topbar-height: 48px;
 $topbar-height-mobile: 60px;
 $mobile-custom-fixed-tabs-height: 50px;
 
+// $top-bar-banner-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+$top-bar-banner-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+
 :root {
   --topbar-height: #{$topbar-height};
   --topbar-height-mobile: #{$topbar-height-mobile};

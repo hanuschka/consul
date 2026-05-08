@@ -68,8 +68,14 @@
                 <span class="material-symbols-outlined" aria-hidden="true">map</span>
                 <%= t(".map_label") %>
               </div>
-              <% pin_zoom = (@deficiency_report.map_location.latitude.present? && @deficiency_report.map_location.longitude.present?) ? 17 : nil %>
-              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location, height: 400, zoom: pin_zoom) %>
+              <% pin = @deficiency_report.map_location.pin_coordinates %>
+              <%= render Kern::MapComponent.new(
+                map_location: @deficiency_report.map_location,
+                height: 400,
+                latitude: pin&.dig(:latitude),
+                longitude: pin&.dig(:longitude),
+                zoom: pin ? 17 : nil
+              ) %>
             </div>
           <% end %>
         </div>

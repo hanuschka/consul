@@ -54,21 +54,11 @@
                 <span class="material-symbols-outlined" aria-hidden="true">image</span>
                 <%= t(".image_label") %>
               </div>
-              <div class="adm-detail-media-card__image-frame">
-                <a class="adm-detail-media-card__lightbox glightbox"
-                   href="<%= original_image_url %>"
-                   data-controller="glightbox"
-                   data-glightbox-title-value="<%= @deficiency_report.title %>">
-                  <%= image_tag(@image_url, class: "adm-detail-media-card__bounded-image", alt: @deficiency_report.title) %>
-                </a>
-                <a class="adm-detail-media-card__download-original"
-                   href="<%= original_image_url %>"
-                   download
-                   rel="noopener">
-                  <span class="material-symbols-outlined" aria-hidden="true">download</span>
-                  <%= t(".download_original") %>
-                </a>
-              </div>
+              <%= render Adm::ImageWithLightboxComponent.new(
+                display_url: @image_url,
+                original_url: original_image_url,
+                title: @deficiency_report.title
+              ) %>
             </div>
           <% end %>
 
@@ -78,7 +68,8 @@
                 <span class="material-symbols-outlined" aria-hidden="true">map</span>
                 <%= t(".map_label") %>
               </div>
-              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location, height: 400) %>
+              <% pin_zoom = (@deficiency_report.map_location.latitude.present? && @deficiency_report.map_location.longitude.present?) ? 17 : nil %>
+              <%= render Kern::MapComponent.new(map_location: @deficiency_report.map_location, height: 400, zoom: pin_zoom) %>
             </div>
           <% end %>
         </div>

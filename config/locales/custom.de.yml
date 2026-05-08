@@ -6,6 +6,8 @@ proposals:
     previous: "Vorheriger Beitrag"
     next: "Nächster Beitrag"
     exit_quiz_mode: "Zurück zur Vorschlagsliste"
+  notice:
+    pending_acceptance: "Vielen Dank! Ihr Vorschlag wurde eingereicht und wird vor der Veröffentlichung vom Admin geprüft."
 
 projekt:
   file_import:

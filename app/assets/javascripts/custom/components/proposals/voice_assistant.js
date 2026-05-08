@@ -245,11 +245,7 @@
         language === "en" ? "Hi" : "Hallo";
 
       const greetingMessage = {
-        type: "response.create",
-        response: {
-          modalities: ["text", "audio"],
-          instructions: greetingText
-        }
+        type: "response.create"
       };
 
       const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 350;

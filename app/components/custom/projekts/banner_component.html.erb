@@ -29,13 +29,41 @@
             </div>
           <% end %>
         <% end %>
+
+        <% if show_meta_chips? %>
+          <div class="custom-page--banner-chips">
+            <% if end_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= end_date_chip_text %>
+              </span>
+            <% end %>
+            <% phase_status_chips.each do |chip| %>
+              <% if chip[:phase].present? %>
+                <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
+                  class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
+                  onclick: "$('#footer-content').addClass('show-loader');",
+                  title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
+                  aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
+                  data: {
+                    index: chip[:index],
+                    remote: true,
+                    "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: chip[:phase].id, anchor: "projekt-footer")
+                  } do %>
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                <% end %>
+              <% else %>
+                <span class="custom-page--banner-chip <%= chip[:modifier] %>">
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
 
-      <% if @custom_page.projekt.present? %>
-        <div class="custom-page--banner-breadcrumbs">
-          <%= helpers.breadcrumbs_links(@custom_page.projekt) %>
-        </div>
-      <% end %>
     </div>
 
     <% if (@custom_page.image.present? || show_embedded_controlls?) %>
@@ -62,14 +90,19 @@
             alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: @custom_page.class.model_name.human, title: @custom_page.title)
           },
           role: "button",
-          title: t("custom.accessibility.banner-image.glightbox-aria-label"),
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [930, 585]),
+              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [550, 330]),
+              image_url_2x: @custom_page.image&.attachment&.variant(
+                resize_to_fill: [1100, 660],
+                saver: { quality: 80 },
+                strip: true,
+                format: "jpeg"
+              ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page
             )
@@ -90,6 +123,27 @@
             class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
+            <div
+              class="projekt-banner-upload-progress js-projekt-banner-upload-progress"
+              role="status"
+              aria-live="polite"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-progress-label') %>"
+              hidden
+            >
+              <div class="projekt-banner-upload-progress--backdrop"></div>
+              <div class="projekt-banner-upload-progress--ring js-projekt-banner-upload-progress-ring">
+                <div class="projekt-banner-upload-progress--ring-inner">
+                  <span class="projekt-banner-upload-progress--percent js-projekt-banner-upload-progress-percent">0%</span>
+                </div>
+              </div>
+              <div
+                class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
+                data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
+                data-processing-text="<%= t('custom.projekts.banner_upload.processing') %>"
+              >
+                <%= t('custom.projekts.banner_upload.uploading') %>
+              </div>
+            </div>
             <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
               <i class="fas fa-pencil-alt"></i>
             </label>

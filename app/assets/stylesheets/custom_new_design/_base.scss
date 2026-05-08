@@ -66,6 +66,20 @@ ul.no-ul-style {
     .custom-fixed-tabs--content {
       top: 60px + $admin-topbar-height;
     }
+
+    // Mirror the touch-viewport bump of --admin-topbar-height (48px -> 56px)
+    // for these Sass-var consumers, which are evaluated at compile time and
+    // therefore can't follow the runtime CSS custom property. Breakpoint kept
+    // in sync with _admin_topbar.scss ($small-tablet-viewport-start = 750px).
+    @media (max-width: $small-tablet-viewport-start) {
+      .notice-container {
+        top: 110px + $admin-topbar-height + 8px;
+      }
+
+      .custom-fixed-tabs--content {
+        top: 60px + $admin-topbar-height + 8px;
+      }
+    }
   }
 
 

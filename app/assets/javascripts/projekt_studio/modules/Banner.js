@@ -1,5 +1,12 @@
 ProjektStudio.Banner = {
   initialized: false,
+
+  // Mirror of MultilineSubtitleNormalizer regexes (lib/multiline_subtitle_normalizer.rb).
+  // Kept in sync as a defense-in-depth pre-clean for pasted text before it hits the backend.
+  INVISIBLE_CHARS_REGEX: /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u180E]/g,
+  CONTROL_CHARS_REGEX: /[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g,
+  NON_BREAKING_SPACE_REGEX: /\u00A0/g,
+
   initialize() {
     this.initEventListeners()
   },
@@ -10,83 +17,201 @@ ProjektStudio.Banner = {
     $document.on("click", ".js-projekt-banner-text-edit-button", this.turnOnTextEdit.bind(this));
     $document.on("click", ".js-projekt-banner--text-edit-cancel", this.cancelTextEdit.bind(this));
     $document.on("click", ".js-projekt-banner--text-edit-save", this.saveEditedText.bind(this));
+    $document.on("paste", ".js-projekt-banner--edit-field-content [contenteditable]", this.handlePaste.bind(this));
+    $document.on("input", ".js-projekt-banner--edit-field-content [contenteditable]", this.handleInput.bind(this));
     $document.on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
-    // $document.on("change", ".js-projekt-banner--image-upload-input", this.handleInputType.bind(this));
     $document.on("click", ".js-projekt-banner--image-delete-button", this.deleteTitleImage.bind(this));
   },
 
-  handleInputType() {
-    editor.addEventListener('input', () => {
-      editor.innerHTML = editor.innerHTML.replace(/<br\s*\/?>/gi, ' ');
-    });
-  },
-
   turnOnTextEdit(e) {
-    const {
-      container, field
-    } = this.getFieldElementsForButton(e.currentTarget)
+    const { container, field } = this.getFieldElementsForButton(e.currentTarget)
 
     container.classList.add("-text-edit-mode")
     container.dataset.originalFieldHtml = field.innerHTML.trim();
 
     field.firstElementChild.contentEditable = "plaintext-only"
     ProjektStudio.utils.focusContentEditableElement(field.firstElementChild)
+
+    this.updateCharCounter(container, field)
   },
 
   cancelTextEdit(e) {
-    const {
-      container, field
-    } = this.getFieldElementsForButton(e.currentTarget)
+    const { container, field } = this.getFieldElementsForButton(e.currentTarget)
 
-    container.classList.remove("-text-edit-mode")
+    container.classList.remove("-text-edit-mode", "-over-limit")
     field.firstElementChild.contentEditable = false
     field.innerHTML = container.dataset.originalFieldHtml;
   },
 
   getFieldElementsForButton(button) {
     const container = button.closest(".js-projekt-banner--edit-field-container")
-    console.log({button, container})
     const field = container.querySelector(".js-projekt-banner--edit-field-content")
 
     return { button, container, field }
   },
 
+  getFieldElementsFromContent(contentEditableEl) {
+    const container = contentEditableEl.closest(".js-projekt-banner--edit-field-container")
+    const field = container.querySelector(".js-projekt-banner--edit-field-content")
+
+    return { container, field }
+  },
+
   saveEditedText(e) {
     const { container, field } = this.getFieldElementsForButton(e.currentTarget)
 
-    if (container.classList.contains("-text-edit-mode")) {
-      container.classList.remove("-text-edit-mode")
-      field.firstElementChild.contentEditable = false
-      container.dataset.originalFieldHtml = ""
+    if (!container.classList.contains("-text-edit-mode")) return
+    if (container.classList.contains("-over-limit")) return
 
-      let value =
-        field
-          .firstElementChild
-          .innerHTML
-          .trim()
+    const allowBrTags = container.dataset.allowBrTags === "true"
+    const plainText = this.readPlainText(field, allowBrTags)
 
-      if (container.dataset.allowBrTags === "true") {
-        value = value.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+    container.classList.remove("-text-edit-mode")
+    field.firstElementChild.contentEditable = false
+    container.dataset.originalFieldHtml = ""
+
+    if (plainText) this.renderPlainTextToField(field, plainText, allowBrTags)
+
+    App.Ajax
+      .request({
+        url: container.dataset.updateUrl,
+        method: "PATCH",
+        data: {
+          kind: container.dataset.kind,
+          attribute: container.dataset.attribute,
+          [container.dataset.fieldName]: plainText
+        }
+      })
+  },
+
+  // Read editor content as plain text. Walk the tree because innerText is
+  // CSS-aware and can lose content during state transitions (e.g. when
+  // contentEditable flips from "plaintext-only" to false the browser may
+  // strip placeholder nodes or recompute layout). textContent ignores <br>
+  // line breaks. Manual walk is robust to both cases.
+  readPlainText(field, allowBrTags) {
+    const target = field.firstElementChild
+
+    if (!target) return ""
+
+    if (!allowBrTags) return (target.textContent || "").replace(/\s+/g, " ").trim()
+
+    return this.extractTextWithLineBreaks(target).replace(/\r\n|\r/g, "\n").trim()
+  },
+
+  // Concatenate text nodes; insert "\n" for <br> and at boundaries of block
+  // elements (Chrome wraps Enter-inserted lines in <div>, Firefox in <p>).
+  extractTextWithLineBreaks(root) {
+    const blockTags = /^(?:DIV|P|LI|H[1-6]|ARTICLE|SECTION|BLOCKQUOTE|TR|PRE)$/
+
+    let out = ""
+
+    const walk = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        out += node.textContent
+        return
       }
-      else {
-        value = value.replace(/<br\s*\/?>/gi, ' ');
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return
+
+      if (node.tagName === "BR") {
+        out += "\n"
+        return
       }
 
-      value = value.trim()
+      const isBlock = node !== root && blockTags.test(node.tagName)
 
-      field.firstElementChild.innerHTML = value;
+      if (isBlock && out && !out.endsWith("\n")) out += "\n"
 
-      App.Ajax
-        .request({
-          url: container.dataset.updateUrl,
-          method: "PATCH",
-          data: {
-            kind: container.dataset.kind,
-            attribute: container.dataset.attribute,
-            [container.dataset.fieldName]: value
-          }
-        })
+      node.childNodes.forEach(walk)
+
+      if (isBlock && !out.endsWith("\n")) out += "\n"
     }
+
+    walk(root)
+    return out
+  },
+
+  // Render plain text back into the field as text nodes joined by <br> elements.
+  // Avoids innerHTML so untrusted content can never be interpreted as markup.
+  renderPlainTextToField(field, text, allowBrTags) {
+    const target = field.firstElementChild
+
+    target.textContent = ""
+
+    if (!allowBrTags) {
+      target.appendChild(document.createTextNode(text))
+      return
+    }
+
+    const lines = text.split("\n")
+    lines.forEach((line, index) => {
+      if (index > 0) target.appendChild(document.createElement("br"))
+      target.appendChild(document.createTextNode(line))
+    })
+  },
+
+  handlePaste(e) {
+    const contentEditableEl = e.currentTarget || e.target
+    const { container } = this.getFieldElementsFromContent(contentEditableEl)
+    const allowBrTags = container.dataset.allowBrTags === "true"
+
+    e.preventDefault()
+
+    const clipboard = (e.originalEvent || e).clipboardData
+    if (!clipboard) return
+
+    const raw = clipboard.getData("text/plain") || ""
+    const cleaned = this.cleanPastedText(raw, allowBrTags)
+
+    if (!cleaned) return
+
+    document.execCommand("insertText", false, cleaned)
+  },
+
+  cleanPastedText(text, allowBrTags) {
+    let out = text
+      .normalize("NFC")
+      .replace(this.INVISIBLE_CHARS_REGEX, "")
+      .replace(this.CONTROL_CHARS_REGEX, "")
+      .replace(this.NON_BREAKING_SPACE_REGEX, " ")
+
+    if (allowBrTags) {
+      out = out.replace(/\r\n|\r/g, "\n")
+    }
+    else {
+      out = out.replace(/\s+/g, " ")
+    }
+
+    return out
+  },
+
+  handleInput(e) {
+    const contentEditableEl = e.currentTarget || e.target
+    const { container, field } = this.getFieldElementsFromContent(contentEditableEl)
+    this.updateCharCounter(container, field)
+  },
+
+  updateCharCounter(container, field) {
+    const counter = container.querySelector(".js-projekt-banner-edit-field--char-counter")
+
+    if (!counter) return
+
+    const maxLength = parseInt(container.dataset.maxVisibleLength, 10)
+    const maxLineBreaks = parseInt(container.dataset.maxLineBreaks, 10)
+    const allowBrTags = container.dataset.allowBrTags === "true"
+    const plainText = this.readPlainText(field, allowBrTags)
+    const visibleLength = Array.from(plainText.replace(/\n/g, "")).length
+    const lineBreaks = allowBrTags ? (plainText.match(/\n/g) || []).length : 0
+
+    const currentEl = counter.querySelector(".js-projekt-banner-edit-field--char-counter-current")
+
+    if (currentEl) currentEl.textContent = visibleLength
+
+    const overLength = Number.isFinite(maxLength) && visibleLength > maxLength
+    const overLines = Number.isFinite(maxLineBreaks) && lineBreaks > maxLineBreaks
+
+    container.classList.toggle("-over-limit", overLength || overLines)
   },
 
   async updateTitleImage(e) {

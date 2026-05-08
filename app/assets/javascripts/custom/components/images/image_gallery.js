@@ -4,14 +4,31 @@
     initialize: function() {
       this.setMissingHrefs()
       this.setupGlighbox()
+      this.bindScrollbarWidthCapture()
     },
 
-    getStickyHeader() {
-      return document.querySelector(".top-bar-wrapper")
+    getFixedElements() {
+      return document.querySelectorAll(".top-bar-wrapper, .projekt-page--admin-topbar")
     },
 
-    getScrollbarWidth: function() {
+    measureScrollbarWidth() {
       return window.innerWidth - document.documentElement.clientWidth;
+    },
+
+    bindScrollbarWidthCapture() {
+      this.cachedScrollbarWidth = this.measureScrollbarWidth();
+
+      window.addEventListener("resize", () => {
+        if (!document.documentElement.classList.contains("glightbox-open")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        if (event.target.closest(".glightbox")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      }, true);
     },
 
     initializeFor(element) {
@@ -22,8 +39,6 @@
       if (this.lightbox) {
         this.lightbox.destroy();
       }
-
-      this.scrollbarWidth = this.getScrollbarWidth();
 
       var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
                                   <div class="gloader visible"></div>
@@ -54,10 +69,16 @@
       this.lightbox.on('open', () => {
         this.triggerElement = document.activeElement;
 
-        var stickyHeader = this.getStickyHeader();
+        var scrollbarWidth = this.cachedScrollbarWidth;
 
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
+        if (scrollbarWidth > 0) {
+          document.body.style.paddingRight = scrollbarWidth + "px";
+
+          this.getFixedElements().forEach((el) => {
+            var currentPaddingRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
+            el.dataset.lightboxOriginalPaddingRight = el.style.paddingRight;
+            el.style.paddingRight = (currentPaddingRight + scrollbarWidth) + "px";
+          });
         }
 
         setTimeout(() => {
@@ -69,11 +90,12 @@
         }, 100);
       });
       this.lightbox.on('close', () => {
-        var stickyHeader = this.getStickyHeader();
+        document.body.style.paddingRight = "";
 
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = "0";
-        }
+        this.getFixedElements().forEach((el) => {
+          el.style.paddingRight = el.dataset.lightboxOriginalPaddingRight || "";
+          delete el.dataset.lightboxOriginalPaddingRight;
+        });
 
         if (this.triggerElement) {
           this.triggerElement.focus();

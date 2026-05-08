@@ -158,3 +158,40 @@
     outline: none;
   }
 }
+
+.projekt-banner-edit-field--char-counter {
+  display: none;
+  position: absolute;
+  right: 8px;
+  bottom: 4px;
+  z-index: 3;
+  padding: 2px 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.55);
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.projekt-banner-edit-field--char-counter-separator {
+  margin: 0 2px;
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.projekt-banner-edit-field-container.-text-edit-mode .projekt-banner-edit-field--char-counter {
+  display: inline-flex;
+  align-items: center;
+}
+
+.projekt-banner-edit-field-container.-over-limit .projekt-banner-edit-field--char-counter {
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+.projekt-banner-edit-field-container.-over-limit .projekt-banner-edit-field-controlls-button.-save {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

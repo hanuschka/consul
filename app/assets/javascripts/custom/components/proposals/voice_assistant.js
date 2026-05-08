@@ -242,16 +242,8 @@
     handleTabClose: function() {},
 
     sendGreeting: function() {
-      const language = this.element.dataset.language;
-      const greetingText =
-        language === "en" ? "Hi" : "Hallo";
-
       const greetingMessage = {
-        type: "response.create",
-        response: {
-          modalities: ["text", "audio"],
-          instructions: greetingText
-        }
+        type: "response.create"
       };
 
       const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 350;

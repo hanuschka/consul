@@ -1,7 +1,6 @@
 class Admin::AppMetadataService < ApplicationService
   def call
     {
-      version:        read_version,
       git_sha:        read_git_sha,
       git_sha_short:  read_git_sha&.first(7),
       last_deploy_at: read_last_deploy_at&.iso8601,
@@ -15,24 +14,6 @@ class Admin::AppMetadataService < ApplicationService
   end
 
   private
-
-  def read_version
-    changelog_path = Rails.root.join("CHANGELOG.md")
-
-    return nil if !File.exist?(changelog_path)
-
-    File.foreach(changelog_path) do |line|
-      match = line.match(/^##\s*\[?(\d+\.\d+(?:\.\d+)?)\]?/)
-
-      if match
-        return match[1]
-      end
-    end
-
-    nil
-  rescue StandardError
-    nil
-  end
 
   def read_git_sha
     revision_path = Rails.root.join("REVISION")

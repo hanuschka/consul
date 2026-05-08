@@ -1,5 +1,6 @@
 ProjektStudio.Banner = {
   initialized: false,
+  COUNTER_VISIBILITY_THRESHOLD: 55,
 
   // Mirror of MultilineSubtitleNormalizer regexes (lib/multiline_subtitle_normalizer.rb).
   // Kept in sync as a defense-in-depth pre-clean for pasted text before it hits the backend.
@@ -212,76 +213,141 @@ ProjektStudio.Banner = {
     const overLines = Number.isFinite(maxLineBreaks) && lineBreaks > maxLineBreaks
 
     container.classList.toggle("-over-limit", overLength || overLines)
+    container.classList.toggle("-counter-visible", visibleLength > this.COUNTER_VISIBILITY_THRESHOLD)
   },
 
   async updateTitleImage(e) {
     const fileInput = e.currentTarget;
     const file = fileInput.files[0];
-    const imageUploaderContainer = fileInput.closest(".js-projekt-image-uploader")
+    const container = fileInput.closest(".js-projekt-image-uploader")
 
-    if (file) {
-      const imagePreview = imageUploaderContainer.querySelector(".js-projekt-image-upload-preview")
-      const previewUrl = URL.createObjectURL(file)
+    if (!file) return
 
-      imagePreview.src = previewUrl
-      imagePreview.classList.add("-image-set")
+    const imagePreview = container.querySelector(".js-projekt-image-upload-preview")
+    const previewUrl = URL.createObjectURL(file)
 
-      let formData = new FormData();
-      formData.append("kind", imageUploaderContainer.dataset.kind);
-      formData.append("attribute", imageUploaderContainer.dataset.attribute);
-      formData.append(imageUploaderContainer.dataset.fieldName, file);
+    imagePreview.src = previewUrl
+    imagePreview.classList.add("-image-set")
 
-      App.Ajax
-        .request({
-          url: imageUploaderContainer.dataset.updateUrl,
-          method: "PATCH",
-          processData: false,
-          contentType: false,
-          data: formData
-        })
-        .then(() => {
-          let mainImage = imageUploaderContainer.querySelector(".resource-image--main");
-          let blurImage = imageUploaderContainer.querySelector(".resource-image--blur");
+    this.showUploadProgress(container)
 
-          if (!mainImage || !blurImage) {
-            const resourceImage = imageUploaderContainer.querySelector(".resource-image");
-            if (resourceImage) {
-              resourceImage.innerHTML =
-                `<img class="resource-image--main" alt="">` +
-                `<img class="resource-image--blur" aria-hidden="true">`;
-              mainImage = resourceImage.querySelector(".resource-image--main");
-              blurImage = resourceImage.querySelector(".resource-image--blur");
-            }
-          }
+    const formData = new FormData();
+    formData.append("kind", container.dataset.kind);
+    formData.append("attribute", container.dataset.attribute);
+    formData.append(container.dataset.fieldName, file);
 
-          if (mainImage && blurImage) {
-            mainImage.addEventListener("load", () => {
-              imagePreview.classList.remove("-image-set");
-              imagePreview.src = "";
-            }, { once: true });
+    App.Ajax
+      .request({
+        url: container.dataset.updateUrl,
+        method: "PATCH",
+        processData: false,
+        contentType: false,
+        data: formData,
+        xhr: () => this.buildUploadXhr(container)
+      })
+      .then(() => {
+        this.handleUploadSuccess(container, imagePreview, previewUrl)
+      })
+      .always(() => {
+        this.hideUploadProgress(container)
+      })
+  },
 
-            mainImage.style.width = "100%";
-            mainImage.style.height = "100%";
-            mainImage.style.objectFit = "cover";
+  buildUploadXhr(container) {
+    const xhr = new XMLHttpRequest();
 
-            mainImage.removeAttribute("srcset");
-            mainImage.removeAttribute("sizes");
-            blurImage.removeAttribute("srcset");
-            blurImage.removeAttribute("sizes");
+    xhr.upload.addEventListener("progress", (event) => {
+      this.handleUploadProgressEvent(container, event)
+    });
 
-            mainImage.src = previewUrl;
-            blurImage.src = previewUrl;
-          }
+    return xhr;
+  },
 
-          const glightbox = imageUploaderContainer.querySelector("a.glightbox");
-          if (glightbox) glightbox.setAttribute("href", previewUrl);
+  handleUploadProgressEvent(container, event) {
+    if (!event.lengthComputable) return
 
-          const deleteButton = imageUploaderContainer.querySelector(".js-projekt-banner--image-delete-button");
-          if (deleteButton) deleteButton.classList.remove("d-none");
+    const percent = Math.min(100, Math.round((event.loaded / event.total) * 100))
+    this.setUploadProgress(container, percent)
+  },
 
-          if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
-        })
+  showUploadProgress(container) {
+    const overlay = container.querySelector(".js-projekt-banner-upload-progress")
+
+    if (!overlay) return
+
+    this.setUploadProgress(container, 0)
+    overlay.hidden = false
+  },
+
+  hideUploadProgress(container) {
+    const overlay = container.querySelector(".js-projekt-banner-upload-progress")
+
+    if (!overlay) return
+
+    overlay.hidden = true
+    this.setUploadProgress(container, 0)
+  },
+
+  setUploadProgress(container, percent) {
+    const ring = container.querySelector(".js-projekt-banner-upload-progress-ring")
+    const label = container.querySelector(".js-projekt-banner-upload-progress-percent")
+
+    if (ring) ring.style.setProperty("--upload-progress", percent)
+    if (label) label.textContent = `${percent}%`
+  },
+
+  handleUploadSuccess(container, imagePreview, previewUrl) {
+    const { mainImage, blurImage } = this.resolveResourceImageEls(container)
+
+    if (mainImage && blurImage) {
+      this.swapResourceImageSrc(mainImage, blurImage, imagePreview, previewUrl)
     }
+
+    const glightbox = container.querySelector("a.glightbox");
+    if (glightbox) glightbox.setAttribute("href", previewUrl);
+
+    const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
+    if (deleteButton) deleteButton.classList.remove("d-none");
+
+    if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  resolveResourceImageEls(container) {
+    let mainImage = container.querySelector(".resource-image--main");
+    let blurImage = container.querySelector(".resource-image--blur");
+
+    if (mainImage && blurImage) return { mainImage, blurImage }
+
+    const resourceImage = container.querySelector(".resource-image");
+    if (!resourceImage) return { mainImage: null, blurImage: null }
+
+    resourceImage.innerHTML =
+      `<img class="resource-image--main" alt="">` +
+      `<img class="resource-image--blur" aria-hidden="true">`;
+
+    return {
+      mainImage: resourceImage.querySelector(".resource-image--main"),
+      blurImage: resourceImage.querySelector(".resource-image--blur")
+    }
+  },
+
+  swapResourceImageSrc(mainImage, blurImage, imagePreview, previewUrl) {
+    mainImage.addEventListener("load", () => {
+      imagePreview.classList.remove("-image-set");
+      imagePreview.src = "";
+    }, { once: true });
+
+    mainImage.style.width = "100%";
+    mainImage.style.height = "100%";
+    mainImage.style.objectFit = "cover";
+
+    mainImage.removeAttribute("srcset");
+    mainImage.removeAttribute("sizes");
+    blurImage.removeAttribute("srcset");
+    blurImage.removeAttribute("sizes");
+
+    mainImage.src = previewUrl;
+    blurImage.src = previewUrl;
   },
 
   async deleteTitleImage(e) {

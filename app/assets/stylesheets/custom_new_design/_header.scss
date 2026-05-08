@@ -290,7 +290,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     right: 0;
     z-index: 1000;
     background-color: white !important;
-    box-shadow: $top-bar-banner-shadow;
+    box-shadow: $top-bar-banner-shadow !important;
 
     @media (max-width: 480px) {
       position: static;

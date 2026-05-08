@@ -181,7 +181,7 @@
   color: rgba(0, 0, 0, 0.35);
 }
 
-.projekt-banner-edit-field-container.-text-edit-mode .projekt-banner-edit-field--char-counter {
+.projekt-banner-edit-field-container.-text-edit-mode.-counter-visible .projekt-banner-edit-field--char-counter {
   display: inline-flex;
   align-items: center;
 }
@@ -194,4 +194,66 @@
 .projekt-banner-edit-field-container.-over-limit .projekt-banner-edit-field-controlls-button.-save {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.projekt-banner-upload-progress {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.projekt-banner-upload-progress--backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.32);
+  backdrop-filter: blur(10px) saturate(1.1);
+}
+
+.projekt-banner-upload-progress--ring {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      #ffffff 0%,
+      #ffffff calc(var(--upload-progress, 0) * 1%),
+      rgba(255, 255, 255, 0.28) calc(var(--upload-progress, 0) * 1%),
+      rgba(255, 255, 255, 0.28) 100%
+    );
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  transition: background 180ms ease-out;
+}
+
+.projekt-banner-upload-progress--ring-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.projekt-banner-upload-progress--percent {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }

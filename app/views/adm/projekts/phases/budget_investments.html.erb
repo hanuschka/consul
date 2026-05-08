@@ -7,7 +7,7 @@
 <div class="kern-container mb-5">
   <% if @investments.any? %>
     <div data-controller="adm-column-selector"
-         data-adm-column-selector-cookie-value="adm-budget-investments-columns"
+         data-adm-column-selector-storage-key-value="adm-budget-investments-columns"
          data-adm-column-selector-defaults-value="id,created_at,title,feasibility,valuation_finished,total_votes,selected,winner"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center justify-content-between mb-3">

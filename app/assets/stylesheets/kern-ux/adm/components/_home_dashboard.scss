@@ -136,10 +136,10 @@
   flex-direction: column;
   transition: box-shadow 0.18s ease, transform 0.18s ease;
 
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
-    transform: translateY(-2px);
-  }
+  // &:hover {
+  //   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+  //   transform: translateY(-2px);
+  // }
 
   &__header {
     display: flex;

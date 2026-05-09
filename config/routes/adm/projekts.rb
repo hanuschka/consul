@@ -189,6 +189,8 @@ namespace :adm do
       patch :update_color, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
+      patch :update_image, on: :member
+      delete :delete_image, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create] do

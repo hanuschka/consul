@@ -113,10 +113,8 @@
       <div class="custom-page--banner-image">
         <% if show_embedded_controlls? %>
           <div
-            data-field-name="site_customization_page[image]"
-            data-update-url="<%= adm_attribute_path(record_type: 'site_customization-page', id: @custom_page.id) %>"
-            data-attribute="image"
-            data-kind="image"
+            data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
+            data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
             data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"

@@ -6,6 +6,11 @@
   <% else %>
     <div class="resource-image--missing-image-placeholder" role="img" aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>">
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>" aria-hidden="true"></i>
+      <% if @placeholder_hint.present? %>
+        <div class="resource-image--missing-image-placeholder-hint">
+          <%= @placeholder_hint %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>

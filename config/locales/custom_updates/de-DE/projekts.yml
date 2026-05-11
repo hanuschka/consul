@@ -4,6 +4,7 @@ de:
       banner_upload:
         uploading: "Bild wird hochgeladen…"
         processing: "Bild wird verarbeitet…"
+        min_image_size_hint: "Empfohlene Mindestbildgröße: %{width}×%{height} px"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite

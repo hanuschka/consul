@@ -3,7 +3,7 @@
     <div class="custom-page--banner-text-section-wrapper">
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
-          <% if show_embedded_controlls? %>
+          <% if show_admin_controls? %>
             <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :title, kind: :string) do %>
               <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
@@ -18,8 +18,8 @@
           <% end %>
         </div>
 
-        <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
-          <% if show_embedded_controlls? %>
+        <% if (@custom_page.subtitle.present? || show_admin_controls?) %>
+          <% if show_admin_controls? %>
             <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :subtitle, kind: :string, allow_br_tags: true) do %>
               <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
@@ -66,7 +66,7 @@
 
     </div>
 
-    <% if (@custom_page.image.present? || show_embedded_controlls?) %>
+    <% if (@custom_page.image.present? || show_admin_controls?) %>
       <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
 
       <% if @custom_page.image.present? %>
@@ -97,20 +97,21 @@
           <%= render(
             Shared::ResourceImageComponent.new(
               image_url: @custom_page.image&.attachment&.variant(
-                resize_to_fill: [1100, 660],
-                saver: { quality: 80 },
+                resize_to_fill: [590, 355],
+                saver: { quality: 85 },
                 strip: true,
                 format: "jpeg"
               ),
               image_placeholder_icon_class: "fa-comments",
-              resource: @custom_page
+              resource: @custom_page,
+              placeholder_hint: show_admin_controls? ? t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355) : nil
             )
           ) %>
         <% end %>
       <% end %>
 
       <div class="custom-page--banner-image">
-        <% if show_embedded_controlls? %>
+        <% if show_admin_controls? %>
           <div
             data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
             data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"

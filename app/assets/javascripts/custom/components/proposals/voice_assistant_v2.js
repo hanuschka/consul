@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  App.VoiceAssistant = {
+  App.VoiceAssistantV2 = {
     element: null,
     status: "not_initialized",
     initialData: null,
@@ -26,7 +26,7 @@
       const element = document.querySelector(".js-voice-assistant");
 
       if (!element) { return; }
-      if (element.dataset.version && element.dataset.version !== "v1") { return; }
+      if (element.dataset.version !== "v2") { return; }
 
       this.element = element;
       this.status = "not_initialized";
@@ -107,7 +107,7 @@
 
         if (this.urlParams.get("dont_start_voice_session") === "true") {
           setTimeout(function() {
-            App.VoiceAssistant.setStatus(App.VoiceAssistant.statuses.running);
+            App.VoiceAssistantV2.setStatus(App.VoiceAssistantV2.statuses.running);
           }, 1500);
           return;
         }
@@ -115,6 +115,8 @@
         await this.requestSession();
       } catch (error) {
         console.error("Failed to initialize connection:", error);
+        this.setStatus(this.statuses.initialized);
+        this.showError("Mikrofon-Zugriff nicht möglich. Bitte Browser-Berechtigungen prüfen.");
       }
     },
 
@@ -145,7 +147,9 @@
       const offer = await this.rtcPeerConnection.createOffer();
       await this.rtcPeerConnection.setLocalDescription(offer);
 
-      const answer = await this.startOpenaiVoiceSession(ephemeralKey, offer, model);
+      await this.waitForIceGatheringComplete();
+
+      const answer = await this.startOpenaiVoiceSession(ephemeralKey, model);
       await this.rtcPeerConnection.setRemoteDescription(answer);
 
       this.dataChannel = dataChannel;
@@ -154,15 +158,40 @@
       this.dataChannel.onclose = this.handleDataChannelClose.bind(this);
     },
 
-    startOpenaiVoiceSession: async function(ephemeralKey, offer, model) {
-      const baseUrl = "https://api.openai.com/v1/realtime";
+    waitForIceGatheringComplete: function() {
+      const pc = this.rtcPeerConnection;
 
-      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+      if (pc.iceGatheringState === "complete") {
+        return Promise.resolve();
+      }
+
+      return new Promise(function(resolve) {
+        const checkState = function() {
+          if (pc.iceGatheringState === "complete") {
+            pc.removeEventListener("icegatheringstatechange", checkState);
+            resolve();
+          }
+        };
+
+        pc.addEventListener("icegatheringstatechange", checkState);
+
+        setTimeout(function() {
+          pc.removeEventListener("icegatheringstatechange", checkState);
+          resolve();
+        }, 5000);
+      });
+    },
+
+    startOpenaiVoiceSession: async function(ephemeralKey, model) {
+      const body = new FormData();
+      body.set("sdp", this.rtcPeerConnection.localDescription.sdp);
+      body.set("session", JSON.stringify({ type: "realtime", model: model }));
+
+      const sdpResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
         method: "POST",
-        body: offer.sdp,
+        body: body,
         headers: {
-          Authorization: `Bearer ${ephemeralKey}`,
-          "Content-Type": "application/sdp"
+          Authorization: `Bearer ${ephemeralKey}`
         }
       });
 
@@ -204,7 +233,7 @@
       const doneMessage = {
         type: "response.create",
         response: {
-          modalities: ["text", "audio"],
+          output_modalities: ["audio"],
           instructions: "I'm done. Generate title and description."
         }
       };
@@ -227,11 +256,11 @@
       this.setStatus(this.statuses.stoping);
 
       setTimeout(function() {
-        if (App.VoiceAssistant.dataChannel) {
-          App.VoiceAssistant.dataChannel.close();
-          App.VoiceAssistant.rtcPeerConnection.close();
+        if (App.VoiceAssistantV2.dataChannel) {
+          App.VoiceAssistantV2.dataChannel.close();
+          App.VoiceAssistantV2.rtcPeerConnection.close();
         }
-        App.VoiceAssistant.setStatus(App.VoiceAssistant.statuses.initialized);
+        App.VoiceAssistantV2.setStatus(App.VoiceAssistantV2.statuses.initialized);
       }, 100);
     },
 
@@ -249,12 +278,6 @@
 
     sendGreeting: function() {
       this.greetingResponseId = null;
-
-      this.dataChannel.send(JSON.stringify({
-        type: "session.update",
-        session: { turn_detection: null }
-      }));
-
       this.dataChannel.send(JSON.stringify({ type: "response.create" }));
     },
 
@@ -264,11 +287,15 @@
       this.dataChannel.send(JSON.stringify({
         type: "session.update",
         session: {
-          turn_detection: {
-            type: "server_vad",
-            threshold: 0.5,
-            prefix_padding_ms: 300,
-            silence_duration_ms: 500
+          audio: {
+            input: {
+              turn_detection: {
+                type: "server_vad",
+                threshold: 0.5,
+                prefix_padding_ms: 300,
+                silence_duration_ms: 500
+              }
+            }
           }
         }
       }));
@@ -301,8 +328,8 @@
           sum += Math.abs(dataArray[i] - 128);
         }
 
-        if (App.VoiceAssistant.wave) {
-          App.VoiceAssistant.wave.setAmplitude(sum / dataArray.length / 8);
+        if (App.VoiceAssistantV2.wave) {
+          App.VoiceAssistantV2.wave.setAmplitude(sum / dataArray.length / 8);
         }
 
         requestAnimationFrame(animate);
@@ -319,7 +346,7 @@
           this.greetingResponseId = message.response && message.response.id;
         }
 
-        if (message.type === "response.audio.done"
+        if (message.type === "output_audio_buffer.done"
             && this.greetingResponseId
             && message.response_id === this.greetingResponseId) {
           this.greetingResponseId = null;
@@ -464,6 +491,14 @@
 
     getExpandButton: function() {
       return this.element.querySelector(".js-voice-assistant-expand-button");
+    },
+
+    showError: function(message) {
+      const messagebar = this.getMessagebar();
+      messagebar.innerHTML = message;
+      messagebar.title = message;
+      messagebar.classList.add("-error");
+      messagebar.classList.add("-visible");
     },
 
     getMessagebar: function() {

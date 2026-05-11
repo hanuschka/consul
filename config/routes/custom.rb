@@ -99,6 +99,7 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id",
 post "iframe_sessions", to: "iframe_sessions#create"
 
 post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
+post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
 resources :projekt_content_block_templates, only: [:index]

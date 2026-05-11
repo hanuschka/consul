@@ -5,10 +5,10 @@ class Projekts::BannerComponent < ApplicationComponent
     @compact = compact
   end
 
-  def show_embedded_controlls?
+  def show_admin_controls?
     return false if @compact
 
-    @show_embedded_controlls ||= show_admin_controls_for_projekt?(@projekt)
+    @show_admin_controls ||= show_admin_controls_for_projekt?(@projekt)
   end
 
   def banner_wrapper_class

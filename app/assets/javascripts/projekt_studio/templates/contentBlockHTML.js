@@ -43,7 +43,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
       data-context="${context || 'projekt'}"
       >
-      <div class="relative">
+      <div class="relative projekt-content-block-wrapper--inner">
         <div class="projekt-content-block--toolbar-zone js-studio-hide-on-preview">
         <div class="projekt-content-block--toolbar">
 

@@ -20,6 +20,15 @@
 // is position:sticky (sticks below the topbar while the wrapper is in view).
 // The zone's top:-48px lifts the toolbar's at-rest position visually above
 // the wrapper's top edge, replacing the old margin-top:-48px hoist.
+.projekt-content-block-wrapper--inner {
+  position: relative;
+
+  &:hover .projekt-content-block--toolbar,
+  &:focus-within .projekt-content-block--toolbar {
+    display: flex;
+  }
+}
+
 .projekt-content-block-wrapper {
   position: relative;
 
@@ -97,11 +106,6 @@
         }
       }
     }
-  }
-
-  &:hover .projekt-content-block--toolbar,
-  &:focus-within .projekt-content-block--toolbar {
-    display: flex;
   }
 
   // Outside edit mode only the mode-switch/block-actions group is visible

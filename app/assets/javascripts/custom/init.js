@@ -45,6 +45,7 @@
       App.SessionTimeoutWarning.initialize();
       App.MobileFixedBottomActionComponentCustom.initialize();
       App.NotifyReviewers.initialize();
+      App.LoaderSpinner.initialize();
     }
   };
 }).call(this);

@@ -1,5 +1,6 @@
 <section class="projekt-question-section js-projekt-question-section" data-question-id="<%= projekt_question.id %>">
-  <div class="projekt-question-container row">
+  <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+    <div class="projekt-question-container row">
     <div class="projekt-question-container-question-block">
       <div class="projekt-question-container small-12 medium-8 column">
         <h3 class="quiz-question"><%= projekt_question.title %></h3>
@@ -50,9 +51,10 @@
     </div>
   </div>
 
-  <% if projekt_question.comments_enabled? && comment_tree.present? %>
-    <div class="small-12 medium-9 projekt-question--comments-wrapper js-comments-liveupdate-wrapper" data-last-comment-id="<%= projekt_question.comments&.last&.id %>">
-      <%= render Shared::NewCommentsComponent.new(projekt_question, comment_tree, force_remote: true) %>
-    </div>
+    <% if projekt_question.comments_enabled? && comment_tree.present? %>
+      <div class="small-12 medium-9 projekt-question--comments-wrapper js-comments-liveupdate-wrapper" data-last-comment-id="<%= projekt_question.comments&.last&.id %>">
+        <%= render Shared::NewCommentsComponent.new(projekt_question, comment_tree, force_remote: true) %>
+      </div>
+    <% end %>
   <% end %>
 </section>

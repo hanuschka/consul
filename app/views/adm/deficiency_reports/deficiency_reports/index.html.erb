@@ -31,7 +31,7 @@
     <% column_count = 15 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
 
     <div data-controller="adm-column-selector"
-         data-adm-column-selector-cookie-value="adm-deficiency-reports-columns-v2"
+         data-adm-column-selector-storage-key-value="adm-deficiency-reports-columns-v2"
          data-adm-column-selector-defaults-value="id,image,title,created_at,status,responsible,archived_state,hidden_state"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center gap-3 mb-3">

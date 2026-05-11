@@ -6,6 +6,8 @@ class Kern::MapComponent < ApplicationComponent
     admin_editor: false,
     height: 400,
     width: nil,
+    latitude: nil,
+    longitude: nil,
     zoom: nil,
     resources: nil
   )
@@ -15,6 +17,8 @@ class Kern::MapComponent < ApplicationComponent
     @admin_editor = admin_editor
     @height = height
     @width = width
+    @latitude = latitude
+    @longitude = longitude
     @zoom = zoom
     @resources = resources
   end
@@ -46,8 +50,8 @@ class Kern::MapComponent < ApplicationComponent
     {
       controller: "map",
       map_rendering_library_value: rendering_library,
-      map_latitude_value: map_location.latitude,
-      map_longitude_value: map_location.longitude,
+      map_latitude_value: @latitude || map_location.latitude,
+      map_longitude_value: @longitude || map_location.longitude,
       map_zoom_value: @zoom || map_location.zoom,
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,

@@ -145,7 +145,9 @@
       const offer = await this.rtcPeerConnection.createOffer();
       await this.rtcPeerConnection.setLocalDescription(offer);
 
-      const answer = await this.startOpenaiVoiceSession(ephemeralKey, offer, model);
+      await this.waitForIceGatheringComplete();
+
+      const answer = await this.startOpenaiVoiceSession(ephemeralKey, model);
       await this.rtcPeerConnection.setRemoteDescription(answer);
 
       this.dataChannel = dataChannel;
@@ -154,15 +156,40 @@
       this.dataChannel.onclose = this.handleDataChannelClose.bind(this);
     },
 
-    startOpenaiVoiceSession: async function(ephemeralKey, offer, model) {
-      const baseUrl = "https://api.openai.com/v1/realtime";
+    waitForIceGatheringComplete: function() {
+      const pc = this.rtcPeerConnection;
 
-      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+      if (pc.iceGatheringState === "complete") {
+        return Promise.resolve();
+      }
+
+      return new Promise(function(resolve) {
+        const checkState = function() {
+          if (pc.iceGatheringState === "complete") {
+            pc.removeEventListener("icegatheringstatechange", checkState);
+            resolve();
+          }
+        };
+
+        pc.addEventListener("icegatheringstatechange", checkState);
+
+        setTimeout(function() {
+          pc.removeEventListener("icegatheringstatechange", checkState);
+          resolve();
+        }, 5000);
+      });
+    },
+
+    startOpenaiVoiceSession: async function(ephemeralKey, model) {
+      const body = new FormData();
+      body.set("sdp", this.rtcPeerConnection.localDescription.sdp);
+      body.set("session", JSON.stringify({ type: "realtime", model: model }));
+
+      const sdpResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
         method: "POST",
-        body: offer.sdp,
+        body: body,
         headers: {
-          Authorization: `Bearer ${ephemeralKey}`,
-          "Content-Type": "application/sdp"
+          Authorization: `Bearer ${ephemeralKey}`
         }
       });
 
@@ -198,7 +225,7 @@
       const doneMessage = {
         type: "response.create",
         response: {
-          modalities: ["text", "audio"],
+          output_modalities: ["audio"],
           instructions: "I'm done. Generate title and description."
         }
       };

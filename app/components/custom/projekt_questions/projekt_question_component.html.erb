@@ -3,42 +3,29 @@
     <div class="projekt-question-container row">
     <div class="projekt-question-container-question-block">
       <div class="projekt-question-container small-12 medium-8 column">
-        <h3 class="quiz-question"><%= projekt_question.title %></h3>
-        <div class="project-question-list js-project-question-list" id="legislation-answer-form" data-question-url="<%= projekt_projekt_question_path(projekt, projekt_question.id, format: :js) %>">
+        <h3 class="projekt-question-section--quiz-question"><%= projekt_question.title %></h3>
+        <div class="projekt-question-answer-list js-project-question-list" id="legislation-answer-form" data-question-url="<%= projekt_projekt_question_path(projekt, projekt_question.id, format: :js) %>">
           <%= render "custom/projekts/partials/projekt_question_answer_form", projekt: projekt, projekt_question: projekt_question, projekt_answer: projekt_question_answer %>
           <%= render "custom/projekts/partials/projekt_question_particapation_not_allowed", projekt_question: projekt_question %>
         </div>
       </div>
-      <div class="projekt-question-next-question-section small-12 medium-4 column quiz-header small-collapse">
+      <div class="projekt-question-next-question-section projekt-question-section--quiz-header small-12 medium-4 column small-collapse">
         <div class="projekt-next-question-button-section">
           <% if projekt_question.previous_question_id %>
-            <%= link_to projekt_projekt_question_path(projekt, projekt_question.previous_question_id, format: :js), remote: true, class: "quiz-next-link js-projekt-question-next" do %>
-              <div class="quiz-next">
-                <span>
+            <%= link_to projekt_projekt_question_path(projekt, projekt_question.previous_question_id, format: :js), remote: true, class: "button projekt-question-section--quiz-next-link projekt-question-section--quiz-next js-projekt-question-next" do %>
                 <span class="icon-angle-left" aria-hidden="true" />
-                </span>
-
-                <span>
-                  <%= t("custom.projekts.projekt_questions.previous_question") %>
-                </span>
-              </div>
+                <%= t("custom.projekts.projekt_questions.previous_question") %>
             <% end %>
           <% end %>
           <% if projekt_question.next_question_id %>
-            <%= link_to projekt_projekt_question_path(projekt, projekt_question.next_question_id, format: :js), remote: true, class: "quiz-next-link js-projekt-question-next" do %>
-              <div class="quiz-next">
-                <%= t("custom.projekts.projekt_questions.next_question") %>
-
-                <span class="icon-angle-right" aria-hidden="true" />
-              </div>
+            <%= link_to projekt_projekt_question_path(projekt, projekt_question.next_question_id, format: :js), remote: true, class: "button projekt-question-section--quiz-next-link projekt-question-section--quiz-next js-projekt-question-next" do %>
+              <%= t("custom.projekts.projekt_questions.next_question") %>
+              <span class="icon-angle-right" aria-hidden="true" />
             <% end %>
           <% elsif projekt_question.first_question_id && projekt_question.first_question_id != projekt_question.id %>
-            <%= link_to projekt_projekt_question_path(projekt, projekt_question.first_question_id, format: :js), remote: true, class: "quiz-next-link js-projekt-question-next" do %>
-              <div class="quiz-next js-projekt-question-section-next-button">
+            <%= link_to projekt_projekt_question_path(projekt, projekt_question.first_question_id, format: :js), remote: true, class: "button projekt-question-section--quiz-next-link projekt-question-section--quiz-next js-projekt-question-section-next-button js-projekt-question-next" do %>
                 <%= t("legislation.questions.show.first_question") %>
-
                 <span class="icon-angle-right" aria-hidden="true" />
-              </div>
             <% end %>
           <% end %>
         </div>

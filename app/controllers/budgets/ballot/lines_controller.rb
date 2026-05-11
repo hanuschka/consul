@@ -1,7 +1,9 @@
 module Budgets
   module Ballot
     class LinesController < ApplicationController
-      before_action :authenticate_user!
+      include GuestUsers
+
+      before_action :authenticate_user_or_guest!
       before_action :load_budget
       before_action :load_ballot
       before_action :load_tag_cloud

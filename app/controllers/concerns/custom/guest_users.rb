@@ -13,6 +13,10 @@ module GuestUsers
     current_user && !current_user.guest?
   end
 
+  def authenticate_user_or_guest!
+    authenticate_user! unless current_user.present?
+  end
+
   private
 
     def guest_user

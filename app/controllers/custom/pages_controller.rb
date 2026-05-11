@@ -267,6 +267,7 @@ class PagesController < ApplicationController
     end
 
     def set_budget_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
       @budget = @projekt_phase.budget
       return if @budget.blank?
 
@@ -369,32 +370,17 @@ class PagesController < ApplicationController
     def set_point_of_interest_phase_footer_tab_variables
       auto_sign_in_guest_for(@projekt_phase)
 
-      map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+      map_locations = MapLocation.where(
+        mappable_type: "ProjektPointOfInterestPin",
+        mappable_id: @projekt_phase.projekt_point_of_interest_pins.select(:id)
+      )
       selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
 
-      features = if selected_categories.present?
-                   map_locations.map do |ml|
-                     ml.features["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]))&.unicode }) end
-                     ml.features["features"].select do |f|
-   f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) end
-                   end.flatten.compact
-                 else
-                   map_locations.map do |ml|
-                     ml.features["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) end
-                     ml.features["features"]
-                   end.flatten
-                 end
-
-      features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
-
-      @pin_coordinates = {
-        type: "FeatureCollection",
-        features:
-      }
+      @pin_coordinates = MapLocation.enriched_feature_collection(
+        map_locations,
+        category_icons: selected_categories&.pluck(:icon),
+        extra_features: MasterportalPin.standalone_features_for_phase(@projekt_phase)
+      )
     end
 
     def set_newsfeed_phase_footer_tab_variables

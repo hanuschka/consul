@@ -4,7 +4,10 @@
 >
     <div class="direct-image-upload--inner">
       <div class="direct-image-upload--generating-animation js-direct-image-upload-generating-animation">
-        <%= helpers.svg_tag("loader_animations/bars-scale") %>
+        <div class="direct-image-upload--generating-animation-content">
+          <%= helpers.svg_tag("loader_animations/bars-scale") %>
+          <p class="direct-image-upload--generating-animation-text"><%= t(".generating_image") %></p>
+        </div>
       </div>
 
       <div class="js-direct-image-upload--file-attach-area direct-image-upload--file-attach-area">

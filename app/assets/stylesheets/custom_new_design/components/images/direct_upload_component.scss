@@ -47,8 +47,10 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
-  backdrop-filter: saturate(1.2) brightness(0.96);
+  background-color: rgb(243, 243, 243);
 
   svg {
     width: 50px;
@@ -58,6 +60,23 @@
   rect {
     fill: #7fa3c6;
   }
+}
+
+.direct-image-upload--generating-animation-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.direct-image-upload--generating-animation-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 .direct-image-upload {

@@ -16,4 +16,16 @@ class Admin::FieldEditComponent < ViewComponent::Base
       id: @record.id
     )
   end
+
+  def max_visible_length
+    return nil unless @allow_br_tags
+
+    MultilineSubtitleNormalizer::MAX_VISIBLE_LENGTH
+  end
+
+  def max_line_breaks
+    return nil unless @allow_br_tags
+
+    MultilineSubtitleNormalizer::MAX_LINE_BREAKS
+  end
 end

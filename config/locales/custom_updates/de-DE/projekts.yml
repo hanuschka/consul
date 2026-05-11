@@ -1,6 +1,9 @@
 de:
   custom:
     projekts:
+      banner_upload:
+        uploading: "Bild wird hochgeladen…"
+        processing: "Bild wird verarbeitet…"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite
@@ -51,6 +54,14 @@ de:
           remove_link: Link entfernen
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
+        color_picker:
+          label: Projektfarbe
+          tooltip: Brand-Color für dieses Projekt
+          reset: Auf Standardfarbe zurücksetzen
+          status:
+            saving: Speichere…
+            saved: Gespeichert
+            error: Fehler beim Speichern
         convert_to_content_blocks:
           button: In Inhaltsblock-Modus umwandeln
           tooltip: Seiteninhalt in einen bearbeitbaren Inhaltsblock konvertieren und den neuen Modus aktivieren
@@ -58,6 +69,7 @@ de:
           success: Erfolgreich in den Inhaltsblock-Modus umgewandelt
           error: Umwandlung fehlgeschlagen
         topbar:
+          view_switch_label: Ansicht wechseln
           admin_view: Adminansicht
           user_view: Nutzeransicht
           preview_mode: Vorschaumodus
@@ -101,6 +113,7 @@ de:
             notify_reviewers: Prüfer benachrichtigen
           projekt_information:
             title: Projektinformation
+            admin_empty_hint: "Hier können zusätzliche Projektinfos eingegeben werden wie z.B. Kontakte. Dieser Block wird nur angezeigt, wenn er Inhalt enthält."
           map:
             title: Karte
           navigator:
@@ -108,6 +121,17 @@ de:
           phases:
             title: Phasen
             participate: Offen für Beteiligung!
+            running: Läuft
+            running_until: Läuft bis %{date}
+            starts_in:
+              one: Startet in 1 Tag
+              other: Startet in %{count} Tagen
+            ended_on: Beendet am %{date}
+          banner:
+            end_date_chip: "bis %{date}"
+            projekt_completed_chip: Projekt abgeschlossen
+            projekt_starts_soon_chip: Startet bald
+            go_to_phase: "Zur Phase: %{title}"
           sdgs:
             title: SDGs
           tags:
@@ -115,7 +139,7 @@ de:
           navigator:
             title: Aufbau
           projekt_start: Projektstart
-          projekt_end: Gepl. Fertigstellung
+          projekt_end: Geplante Fertigstellung
           phases_subscription:
             title: Benachrichtigungen
             description: Möchten Sie zu diesem Projekt auf dem Laufenden bleiben?

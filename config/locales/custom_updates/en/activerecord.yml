@@ -67,6 +67,8 @@ en:
         one: Category
         other: Categories
     errors:
+      messages:
+        too_many_lines: must contain at most %{count} lines
       models:
         proposal:
           attributes:

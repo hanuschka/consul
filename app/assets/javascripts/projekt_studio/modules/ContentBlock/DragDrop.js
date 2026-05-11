@@ -14,7 +14,7 @@ ProjektStudio.ContentBlock.DragDrop = {
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
-          draggable: ".js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)",
+          draggable: ".js-projekt-content-block-wrapper",
           onUpdate: (e) => { this.moveContentBlock(e) },
         });
     }, 200)

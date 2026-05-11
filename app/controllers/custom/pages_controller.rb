@@ -367,42 +367,16 @@ class PagesController < ApplicationController
     def set_point_of_interest_phase_footer_tab_variables
       auto_sign_in_guest_for(@projekt_phase)
 
-      map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+      map_locations = MapLocation.where(
+        mappable_type: "ProjektPointOfInterestPin",
+        mappable_id: @projekt_phase.projekt_point_of_interest_pins.select(:id)
+      )
       selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
-      selected_category_icons = selected_categories&.pluck(:icon)
 
-      icon_names = map_locations.flat_map do |ml|
-        ml.to_geo_json["features"].map do |f|
-          f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]
-        end
-      end.compact.uniq
-
-      icon_unicodes = AwesomeIcon.where(name: icon_names).pluck(:name, :unicode).to_h
-
-      features = map_locations.flat_map do |ml|
-        enriched = ml.to_geo_json["features"].map do |f|
-          icon_name = f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]
-          f.merge("properties" => f["properties"].merge(
-            "resource_type" => "projekt_point_of_interest_pin",
-            "id" => ml.mappable_id,
-            "feature_icon_unicode" => icon_unicodes[icon_name]
-          ))
-        end
-
-        if selected_category_icons.present?
-          enriched.select do |f|
-            f["properties"]["feature_icon_name"].in?(selected_category_icons) ||
-              f["properties"]["fa_icon_class"].in?(selected_category_icons)
-          end
-        else
-          enriched
-        end
-      end
-
-      @pin_coordinates = {
-        type: "FeatureCollection",
-        features:
-      }
+      @pin_coordinates = MapLocation.enriched_feature_collection(
+        map_locations,
+        category_icons: selected_categories&.pluck(:icon)
+      )
     end
 
     def set_newsfeed_phase_footer_tab_variables

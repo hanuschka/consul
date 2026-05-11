@@ -50,7 +50,8 @@
     <%= link_to @url, class: 'resource-item--image-link', target: @url_target, tabindex: "-1", 'aria-hidden': true do %>
       <%= render(
         Shared::ResourceImageComponent.new(
-          image_url: @image_url,
+          image_url: image_url,
+          image_url_2x: image_url_2x,
           image_placeholder_icon_class: @image_placeholder_icon_class,
           resource: @resource)
       ) %>

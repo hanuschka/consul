@@ -29,6 +29,11 @@ de:
           icon_image_label: Kategorie-Symbol
           icon_image_hint: "SVG, PNG oder JPEG. Max 512 KB."
           icon_image_remove: Symbol entfernen
+      projekts:
+        update_image:
+          success: Bild erfolgreich aktualisiert.
+        delete_image:
+          success: Bild erfolgreich entfernt.
       phases:
         ai_user_flow:
           title: KI Textassistent

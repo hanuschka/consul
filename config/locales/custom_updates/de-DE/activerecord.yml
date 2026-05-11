@@ -81,6 +81,7 @@ de:
         other: Kategorien
     errors:
       messages:
+        too_many_lines: 'darf höchstens %{count} Zeilen enthalten'
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
         file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
         file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'

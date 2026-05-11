@@ -10,6 +10,7 @@
   </td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t('adm.newsletters.index.table.show'), url: adm_newsletter_path(newsletter), icon: "visibility", style: :edit) %>
       <% actions.with_action(label: t('adm.newsletters.index.table.edit'), url: edit_adm_newsletter_path(newsletter), icon: "edit", style: :edit) %>
       <% actions.with_action(
         label: t('adm.newsletters.index.table.delete'),

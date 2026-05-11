@@ -1,6 +1,10 @@
 en:
   custom:
     projekts:
+      banner_upload:
+        uploading: "Uploading image…"
+        processing: "Processing image…"
+        min_image_size_hint: "Recommended minimum image size: %{width}×%{height} px"
       overview_page:
         projekt_name: Overview page
         projekt_name_for_proposal: New projekt proposal
@@ -51,7 +55,22 @@ en:
           remove_link: Remove link
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
+        color_picker:
+          label: Project color
+          tooltip: Brand color for this project
+          reset: Reset to default color
+          status:
+            saving: Saving…
+            saved: Saved
+            error: Save failed
+        convert_to_content_blocks:
+          button: Convert to new content block mode
+          tooltip: Convert the legacy page content into an editable content block and switch to the new mode
+          confirm: Convert the page content into a content block and switch to the new mode?
+          success: Successfully converted to content block mode
+          error: Conversion failed
         topbar:
+          view_switch_label: Switch view
           admin_view: Admin view
           user_view: User view
           preview_mode: Preview mode
@@ -95,6 +114,9 @@ en:
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Create newsletter
             notify_reviewers: Notify reviewers
+          projekt_information:
+            title: Project information
+            admin_empty_hint: "You can add extra project info here, e.g. contacts. This block is only shown when it contains content."
           map:
             title: Map
           navigator:
@@ -102,6 +124,17 @@ en:
           phases:
             title: Phases
             participate: Open for participation!
+            running: Running
+            running_until: Running until %{date}
+            starts_in:
+              one: Starts in 1 day
+              other: Starts in %{count} days
+            ended_on: Ended on %{date}
+          banner:
+            end_date_chip: "until %{date}"
+            projekt_completed_chip: Projekt completed
+            projekt_starts_soon_chip: Starting soon
+            go_to_phase: "Go to phase: %{title}"
           sdgs:
             title: SDGs
           tags:

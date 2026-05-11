@@ -1,0 +1,30 @@
+en:
+  adm:
+    section_settings:
+      title: Section settings
+      flash:
+        updated: Settings saved successfully.
+      sections:
+        ideas: Ideas
+        deficiency_reports: "Deficiency reports"
+        projekts: Projects
+        moderation: Moderation
+        valuation: Valuation
+        landing_pages: Topic pages
+      edit:
+        title: "Edit %{section}"
+        intro_text: Introduction text
+        intro_text_hint: "This text is shown on the landing page of the respective section and serves as a short orientation for your team. Describe in a few sentences what the section is responsible for and what tasks are handled here. The text should give new team members a quick overview (max. 350 characters)."
+        intro_text_placeholder: Enter introduction text...
+        notice_message: Notice message
+        notice_message_hint: "The notice message is shown as a yellow info box at the very top of the section's landing page. Use it for current information, deadlines, or processing notes for your team. Users can dismiss the message for the current session by clicking the X, and it reappears on the next visit."
+        notice_message_placeholder: Enter notice message...
+        notice_active: Notice active
+        notice_active_hint: "Controls whether the notice message entered above is shown on the section's landing page as a yellow info box. Disable this option to temporarily hide the message without deleting the text. This lets you easily toggle recurring notices, e.g. for seasonal deadlines or project-specific instructions."
+      intro_text_defaults:
+        projekts: "Here you manage your participation projects. Create new projects, configure phases and settings, and keep track of ongoing and completed participation processes."
+        deficiency_reports: "Here you manage incoming deficiency reports from citizens. Assign reports, track their processing status, and coordinate the resolution of reported issues."
+        ideas: "Here you manage submitted citizen ideas. Review new submissions, assign ideas to processors, and follow their status from submission to implementation."
+        moderation: "Here you moderate user-generated content on the platform. Review reported posts, comments, and user accounts, and ensure a respectful and constructive exchange."
+        valuation: "Here you evaluate submitted participatory-budget proposals. Check feasibility, estimate costs, and document your evaluation results for further processing."
+        landing_pages: "Here you manage your platform's topic pages. Create and edit pages on specific topics, publish or hide content, and shape the information architecture."

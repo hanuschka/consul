@@ -45,16 +45,24 @@
               </td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(
-                    label: t("shared.table.show", default: t("adm.shared.show")),
-                    url: adm_external_api_key_path(api_key),
-                    icon: "visibility"
-                  ) %>
-                  <% actions.with_action(
-                    label: t("shared.table.edit", default: t("adm.shared.edit")),
-                    url: edit_adm_external_api_key_path(api_key),
-                    style: :edit
-                  ) %>
+                  <% if api_key.value.present? %>
+                    <% actions.with_action(
+                      label: t("shared.table.show", default: t("adm.shared.show")),
+                      url: adm_external_api_key_path(api_key),
+                      icon: "visibility"
+                    ) %>
+                    <% actions.with_action(
+                      label: t("shared.table.edit", default: t("adm.shared.edit")),
+                      url: edit_adm_external_api_key_path(api_key),
+                      style: :edit
+                    ) %>
+                  <% else %>
+                    <% actions.with_action(
+                      label: t("adm.external_api_keys.show.add_key"),
+                      url: edit_adm_external_api_key_path(api_key),
+                      icon: "add"
+                    ) %>
+                  <% end %>
                 <% end %>
               </td>
             </tr>

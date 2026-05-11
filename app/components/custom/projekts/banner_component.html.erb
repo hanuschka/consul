@@ -3,8 +3,8 @@
     <div class="custom-page--banner-text-section-wrapper">
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
-          <% if show_embedded_controlls? %>
-            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+          <% if show_admin_controls? %>
+            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :title, kind: :string) do %>
               <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
             <% end %>
           <% else %>
@@ -18,9 +18,9 @@
           <% end %>
         </div>
 
-        <% if (@custom_page.subtitle.present? || show_embedded_controlls?) %>
-          <% if show_embedded_controlls? %>
-            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', allow_br_tags: true) do %>
+        <% if (@custom_page.subtitle.present? || show_admin_controls?) %>
+          <% if show_admin_controls? %>
+            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :subtitle, kind: :string, allow_br_tags: true) do %>
               <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
             <% end %>
           <% else %>
@@ -29,16 +29,44 @@
             </div>
           <% end %>
         <% end %>
+
+        <% if show_meta_chips? %>
+          <div class="custom-page--banner-chips">
+            <% if end_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= end_date_chip_text %>
+              </span>
+            <% end %>
+            <% phase_status_chips.each do |chip| %>
+              <% if chip[:phase].present? %>
+                <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
+                  class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
+                  onclick: "$('#footer-content').addClass('show-loader');",
+                  title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
+                  aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
+                  data: {
+                    index: chip[:index],
+                    remote: true,
+                    "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: chip[:phase].id, anchor: "projekt-footer")
+                  } do %>
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                <% end %>
+              <% else %>
+                <span class="custom-page--banner-chip <%= chip[:modifier] %>">
+                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                  <%= chip[:text] %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
 
-      <% if @custom_page.projekt.present? %>
-        <div class="custom-page--banner-breadcrumbs">
-          <%= helpers.breadcrumbs_links(@custom_page.projekt) %>
-        </div>
-      <% end %>
     </div>
 
-    <% if (@custom_page.image.present? || show_embedded_controlls?) %>
+    <% if (@custom_page.image.present? || show_admin_controls?) %>
       <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
 
       <% if @custom_page.image.present? %>
@@ -58,29 +86,62 @@
           class: "glightbox",
           data: {
             gallery: "banner-#{@custom_page.id}",
+            type: "image",
             alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: @custom_page.class.model_name.human, title: @custom_page.title)
           },
           role: "button",
-          title: t("custom.accessibility.banner-image.glightbox-aria-label"),
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(resize_to_fill: [930, 585]),
+              image_url: @custom_page.image&.attachment&.variant(
+                resize_to_fill: [590, 355],
+                saver: { quality: 85 },
+                strip: true,
+                format: "jpeg"
+              ),
               image_placeholder_icon_class: "fa-comments",
-              resource: @custom_page
+              resource: @custom_page,
+              placeholder_hint: show_admin_controls? ? t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355) : nil
             )
           ) %>
         <% end %>
       <% end %>
 
       <div class="custom-page--banner-image">
-        <% if show_embedded_controlls? %>
-          <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
+        <% if show_admin_controls? %>
+          <div
+            data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
+            data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
+            data-placeholder-icon-class="fa-comments"
+            data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
+            data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"
+            class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
+            <div
+              class="projekt-banner-upload-progress js-projekt-banner-upload-progress"
+              role="status"
+              aria-live="polite"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-progress-label') %>"
+              hidden
+            >
+              <div class="projekt-banner-upload-progress--backdrop"></div>
+              <div class="projekt-banner-upload-progress--ring js-projekt-banner-upload-progress-ring">
+                <div class="projekt-banner-upload-progress--ring-inner">
+                  <span class="projekt-banner-upload-progress--percent js-projekt-banner-upload-progress-percent">0%</span>
+                </div>
+              </div>
+              <div
+                class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
+                data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
+                data-processing-text="<%= t('custom.projekts.banner_upload.processing') %>"
+              >
+                <%= t('custom.projekts.banner_upload.uploading') %>
+              </div>
+            </div>
             <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
               <i class="fas fa-pencil-alt"></i>
             </label>
@@ -90,6 +151,11 @@
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
+            <button type="button"
+                    class="image-change-button projekt-image-upload-button projekt-image-delete-button js-projekt-banner--image-delete-button js-studio-hide-on-preview <%= 'd-none' unless @custom_page.image.present? %>"
+                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>">
+              <i class="fas fa-trash"></i>
+            </button>
           </div>
         <% else %>
           <%= banner_image %>

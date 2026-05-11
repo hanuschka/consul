@@ -2,20 +2,28 @@ class Adm::SiteCustomization::EmailTemplatePolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def index?
-    permitted?
+    allowed?
   end
 
   def edit?
-    permitted?
+    allowed?
   end
 
   def update?
-    permitted?
+    allowed?
   end
 
   private
 
+    def allowed?
+      global_template? ? @user&.administrator? : manage_permitted?
+    end
+
     def projekt_from_record
       @record.is_a?(Class) ? nil : @record.projekt_phase&.projekt
+    end
+
+    def global_template?
+      @record.is_a?(Class) || @record.projekt_phase.nil?
     end
 end

@@ -81,6 +81,7 @@ de:
         other: Kategorien
     errors:
       messages:
+        too_many_lines: 'darf höchstens %{count} Zeilen enthalten'
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
         file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
         file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'
@@ -132,6 +133,10 @@ de:
           attributes:
             overall_satisfaction:
               blank: Bitte wählen Sie eine Option aus.
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: wurde bereits verwendet
     attributes:
       map_location:
         latitude: Breitengrad
@@ -292,7 +297,7 @@ de:
       projekt_event_registration:
         first_name: Vorname
         last_name: Nachname
-        email: E-Mail
+        email: E-Mail-Adresse
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

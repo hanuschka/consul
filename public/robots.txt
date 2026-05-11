@@ -6,6 +6,7 @@
 User-agent: Googlebot
 Disallow: /users/
 Disallow: /comments/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -13,11 +14,13 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
 
 User-agent: Bingbot
 Disallow: /users/
 Disallow: /comments/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -25,11 +28,13 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
 
 User-agent: facebookexternalhit
 Disallow: /users/
 Disallow: /comments/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -37,7 +42,11 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
+
+User-agent: meta-webindexer
+Disallow: /
 
 # Block AI training crawlers
 User-agent: GPTBot
@@ -67,6 +76,10 @@ Disallow: /
 
 User-agent: PetalBot
 Disallow: /
+
+User-agent: SiteimproveBot
+Disallow: /users/
+Disallow: /comments/
 
 # Block everything else
 User-agent: *

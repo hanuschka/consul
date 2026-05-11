@@ -68,6 +68,14 @@
       <aside class="sidebar">
         <%= render Sidebar::ResourceAuthorComponent.new(resource: @deficiency_report) %>
 
+        <% if deficiency_reports_feature?("allow_voting") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.show.sidebar.vote"), icon_name: "thumbs-up")) do %>
+            <div id="<%= dom_id(@deficiency_report) %>_votes">
+              <%= render "deficiency_reports/votes", deficiency_report: @deficiency_report %>
+            </div>
+          <% end %>
+        <% end %>
+
         <% if feature?(:allow_attached_documents) && @deficiency_report.documents.present? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
             <%= render(Sidebar::DocumentListComponent.new(documents: @deficiency_report.documents)) %>
@@ -108,7 +116,7 @@
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>
-              <%= link_to "Administrieren", deficiency_report_management_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
+              <%= link_to "Administrieren", adm_deficiency_reports_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
           <% end %>
         <% end %>
 

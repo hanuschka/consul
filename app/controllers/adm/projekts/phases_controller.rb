@@ -1,10 +1,10 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:new, :create]
+  before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
   before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
 
   def new
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
 
     @breadcrumbs = [
@@ -16,7 +16,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def create
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
@@ -27,7 +27,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def reorder
-    authorize [:adm, :projekts, ProjektPhase], :update?
+    authorize @projekt, :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
     ordered_ids = params[:tree].map { |item| item[:id] }
     ProjektPhase.order_phases(ordered_ids)
     head :ok
@@ -58,6 +58,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def naming
     authorize_phase(:update?)
+
+    if @projekt_phase.name == "voting_phase"
+      poll = @projekt_phase.poll
+      image = poll.image || poll.build_image(user: current_user)
+      @poll_image = image if Adm::ImagePolicy.new(current_user, image).update?
+      @poll_image&.save!(validate: false) if @poll_image&.new_record?
+    end
+
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -124,7 +132,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def proposals
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     base_scope = @projekt_phase.proposals.with_hidden
     @pagy, @proposals = pagy(ProposalsQuery.call(base_scope, params))
 
@@ -139,7 +147,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def comments
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     base_scope = comments_for_phase
     @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
 
@@ -243,7 +251,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def budget_investments
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
@@ -315,7 +323,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
     @formular_answers = @formular.formular_answers
-    @formular_follow_up_letters = @formular.formular_follow_up_letters
 
     respond_to do |format|
       format.html do
@@ -331,6 +338,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
           filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
       end
     end
+  end
+
+  def formular_follow_up_emails
+    authorize_phase(:update?)
+    @formular = @projekt_phase.formular
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
+    @formular_follow_up_letters = @formular.formular_follow_up_letters
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
   end
   def milestones
     authorize_phase(:update?)
@@ -548,6 +570,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     redirect_to ai_settings_adm_projekts_phase_path(@projekt_phase)
   end
+
   def projekt_notifications
     authorize_phase(:update?)
     @projekt_notifications = @projekt_phase.projekt_notifications.order(created_at: :desc)
@@ -559,6 +582,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_events
     authorize_phase(:update?)
     @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)
@@ -570,6 +594,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_livestreams
     authorize_phase(:update?)
     @projekt_livestreams = @projekt_phase.projekt_livestreams
@@ -581,6 +606,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_questions
     authorize_phase(:update?)
     @pagy, @projekt_questions = pagy(@projekt_phase.questions.order(id: :desc))
@@ -592,6 +618,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def projekt_arguments
     authorize_phase(:update?)
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro

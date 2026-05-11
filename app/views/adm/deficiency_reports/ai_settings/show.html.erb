@@ -49,11 +49,6 @@
       </div>
     </div>
   <% else %>
-    <div class="kern-alert kern-alert--info" role="alert">
-      <div class="kern-alert__header">
-        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
-        <span class="kern-title"><%= t(".not_connected") %></span>
-      </div>
-    </div>
+    <%= empty_state(title: t(".not_connected"), description: t(".not_connected_description"), icon: "smart_toy") %>
   <% end %>
 </div>

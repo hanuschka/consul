@@ -3,6 +3,14 @@ class Adm::ModeratorPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def create?
+    @user&.administrator?
+  end
+
+  def destroy?
+    @user&.administrator?
+  end
+
   class Scope < Scope
     def resolve
       scope.all

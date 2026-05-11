@@ -35,12 +35,17 @@
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
       App.AdminTopbarViewMode.initialize();
+      App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();
       App.Studio.SiteContentBlockEditor.initialize();
       App.FlashMessages.initialize();
       App.SessionTimeoutWarning.initialize();
+      App.MobileFixedBottomActionComponentCustom.initialize();
+      App.NotifyReviewers.initialize();
+      App.LoaderSpinner.initialize();
     }
   };
 }).call(this);

@@ -1,36 +1,78 @@
 de:
   adm:
     deficiency_reports:
+      home:
+        title: Willkommen im Mängelmelder
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          open: Offen
+          closed: Geschlossen
+        quick_links:
+          all: Alle Meldungen
+          open: Offene Meldungen
+          closed: Geschlossene Meldungen
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          home: Home
+          officers: Team
+          deficiency_reports: Meldungen
+          categories: Kategorien
+          statuses: Status
+          settings: Funktionen
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI-Einstellungen
       deficiency_reports:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
+          columns: Spalten
+          export: Exportieren
           no_deficiency_reports: Keine Mängelmelder vorhanden
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Meldungen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Meldungen zu sehen.
           table:
             id: ID
             admin_accepted: Sichtbarkeit
             created_at: Erstellungsdatum
+            updated_at: Änderungsdatum
+            status_changed_at: Statusänderung
             title: Titel
             author: Autor
             status: Status
             location: Standort
+            address: Adresse
             district: Bezirk
             category: Kategorie
             responsible: Sachbearbeiter
+            archived_state: Archiv
+            hidden_state: Herausmoderiert
+          archived_state:
+            active: Aktiv
+            archived: Archiviert
+          hidden_state:
+            visible: Sichtbar
+            hidden: Herausmoderiert
         tabs:
-          show: Anzeigen
+          show: Verwalten
           administer: Administrieren
           edit: Bearbeiten
           audits: Änderungslog
           feedback_form: Feedback
         show:
           title: Mängelmelder
+          section_admin: Verwaltung
+          section_content: Meldung
           edit: Bearbeiten
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
-          admin_accepted_status: Status der Freigabe
+          admin_accepted_status: Freigabe
           accepted: Freigegeben
           not_accepted: Nicht freigegeben
           status: Status
@@ -48,6 +90,12 @@ de:
           address: Adresse
           responsible_label: Sachbearbeiter
           author: Autor
+          votes: Bewertungen
+          comments: Kommentare
+          answer_template_label: Antwortvorlage
+          answer_template_hint: >
+            Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
+          answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
           official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
         update_official_answer:
@@ -79,9 +127,13 @@ de:
           responsible: Sachbearbeiter
           responsible_hint: Weisen Sie dieser Meldung einen zuständigen Sachbearbeiter oder eine Sachbearbeitergruppe zu. Der zugewiesene Sachbearbeiter erhält E-Mail-Benachrichtigungen bei Änderungen und kann die Meldung direkt bearbeiten. Bei Gruppeneinträgen wird die Standard-E-Mail der Gruppe für Benachrichtigungen verwendet.
           no_status: Kein Status
+          no_statuses_title: Keine Statuswerte vorhanden
+          no_statuses_description: Erstellen Sie zunächst Statuswerte unter „Status", um Meldungen einen Bearbeitungsstand zuweisen zu können.
           officers: Sachbearbeiter
           officer_groups: Sachbearbeitergruppen
           no_responsible: "-- Kein Sachbearbeiter --"
+          no_officers_title: Keine Sachbearbeiter vorhanden
+          no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", um Meldungen zuweisen zu können.
         audits:
           title: Änderungslog
         feedback_form:
@@ -172,7 +224,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Sachbearbeiter
+          title: Team
           page_hint: "Hier verwalten Sie die Sachbearbeiter für den Mängelmelder. Sachbearbeiter können eingereichte Meldungen bearbeiten, den Status aktualisieren und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Nur bereits registrierte Nutzer können als Sachbearbeiter hinzugefügt werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Mängelmelder hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Meldungen, kommunizieren mit den Bürgern und aktualisieren den Bearbeitungsstatus.
@@ -182,7 +234,8 @@ de:
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:
@@ -231,8 +284,10 @@ de:
         form:
           title_label: Titel
           title_hint: Der Titel der Antwortvorlage dient als interne Bezeichnung und wird in der Auswahlliste angezeigt, wenn ein Sachbearbeiter eine offizielle Antwort auf eine Meldung verfasst. Wählen Sie einen aussagekräftigen Titel, der den Inhalt der Vorlage kurz beschreibt, z. B. „Standardantwort Straßenschaden" oder „Rückmeldung Grünfläche".
+          title_placeholder: z.B. Standardantwort Straßenschaden
           text_label: Text
           text_hint: Der Text der Antwortvorlage wird als Standardinhalt in das Antwortfeld eingefügt, wenn ein Sachbearbeiter diese Vorlage auswählt. Der Text kann vor dem Absenden noch individuell angepasst werden. Formulieren Sie den Text bürgerfreundlich und sachlich, da er als offizielle Antwort der Verwaltung öffentlich auf der Meldung erscheint.
+          text_placeholder: Ihre Antwortvorlage...
           submit: Speichern
       officer_groups:
         index:
@@ -259,10 +314,14 @@ de:
         form:
           name_label: Name
           name_hint: Der Name der Sachbearbeitergruppe wird in Auswahllisten angezeigt, wenn Meldungen einem zuständigen Bearbeiter zugewiesen werden. Wählen Sie einen eindeutigen und beschreibenden Namen, z. B. „Tiefbauamt" oder „Grünflächenpflege". Der Name ist nur intern sichtbar und wird nicht auf der öffentlichen Seite der Meldung angezeigt.
+          name_placeholder: z.B. Tiefbauamt
           default_email_label: Standard-E-Mail
           default_email_hint: Die Standard-E-Mail-Adresse wird für alle Benachrichtigungen verwendet, die an diese Sachbearbeitergruppe gesendet werden, z. B. bei neuen Meldungen oder Statusänderungen. Verwenden Sie idealerweise eine Funktionsadresse wie tiefbau@stadt.de, damit die Benachrichtigungen unabhängig von einzelnen Personen zugestellt werden.
+          default_email_placeholder: z.B. tiefbau@stadt.de
           officers_label: Sachbearbeiter
           officers_hint: Wählen Sie die Sachbearbeiter aus, die Mitglieder dieser Gruppe sein sollen. Alle ausgewählten Personen können Meldungen bearbeiten, die dieser Gruppe zugewiesen sind. Die Mitgliedschaft in einer Gruppe beeinflusst, welche Meldungen in der persönlichen Übersicht des Sachbearbeiters angezeigt werden und welche Benachrichtigungen erfolgen.
+          no_officers_title: Keine Sachbearbeiter vorhanden
+          no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
           submit: Speichern
       stats:
         show:
@@ -308,7 +367,7 @@ de:
           total_row: Gesamt
       ai_settings:
         show:
-          title: KI-prompt
+          title: KI Sprachassistent
           page_hint: "Hier konfigurieren Sie den KI-Assistenten für den Mängelmelder. Die KI analysiert eingehende Meldungen automatisch anhand der definierten Fragen und Kriterien. Passen Sie die Fragen, Bewertungskriterien und Abschlussworte an, um die automatische Analyse auf Ihre Anforderungen zuzuschneiden. Leere Felder verwenden die Standardvorgaben."
           questions: Fragen
           questions_hint: Definieren Sie hier die Fragen, die der KI-Assistent bei der automatischen Analyse eingehender Meldungen berücksichtigen soll. Diese Fragen steuern, welche Informationen aus der Meldung extrahiert und ausgewertet werden. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardfragen zu verwenden. Mehrere Fragen können zeilenweise aufgelistet werden.
@@ -317,7 +376,8 @@ de:
           parting_words: Abschlussworte
           parting_words_hint: Die Abschlussworte werden vom KI-Assistenten am Ende jeder automatischen Analyse angefügt. Nutzen Sie dieses Feld, um zusätzliche Hinweise oder Kontextinformationen bereitzustellen, die der KI als Orientierung bei der Zusammenfassung dienen. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardformulierungen zu verwenden.
           update_button: Speichern
-          not_connected: Die KI-App ist nicht verbunden
+          not_connected: KI-App ist nicht verbunden
+          not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
       deficiency_report_audits:
         show:
           title: Änderungsdetails

@@ -1,9 +1,34 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header" style="min-width: 250px; width: 250px; max-width: 250px;">
-    <%= link_to truncate(deficiency_report.title, length: 25), deficiency_report_path(deficiency_report), target: "_blank", class: "kern-link", title: deficiency_report.title %>
+  <td class="kern-table__cell" data-field="id"><%= deficiency_report.id %></td>
+  <td class="kern-table__cell adm-deficiency-report-row__image-cell" data-field="image">
+    <%= link_to adm_deficiency_reports_deficiency_report_path(deficiency_report),
+          class: "adm-deficiency-report-row__thumb-link",
+          data: { turbo_frame: "_top" },
+          title: deficiency_report.title do %>
+      <% if deficiency_report.image&.attachment&.attached? %>
+        <%= image_tag deficiency_report.image.attachment.variant(resize_to_limit: [80, 80], format: "jpeg"),
+              class: "adm-deficiency-report-row__thumb",
+              alt: deficiency_report.title,
+              loading: "lazy" %>
+      <% elsif deficiency_report.category&.icon.present? %>
+        <% category = deficiency_report.category %>
+        <span class="adm-deficiency-report-row__thumb adm-deficiency-report-row__thumb--category"
+              style="background: <%= "color-mix(in srgb, #{category.color} 18%, transparent)" if category.color.present? %>; color: <%= category.color %>;"
+              aria-hidden="true">
+          <i class="fas fa-<%= category.icon %>"></i>
+        </span>
+      <% else %>
+        <span class="adm-deficiency-report-row__thumb adm-deficiency-report-row__thumb--placeholder" aria-hidden="true">
+          <span class="material-symbols-outlined">image_not_supported</span>
+        </span>
+      <% end %>
+    <% end %>
+  </td>
+  <th scope="row" class="kern-table__header" data-field="title" style="min-width: 250px; width: 250px; max-width: 250px;">
+    <%= link_to truncate(deficiency_report.title, length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title, data: { turbo_frame: "_top" } %>
   </th>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
-    <td class="kern-table__cell">
+    <td class="kern-table__cell" data-field="admin_accepted">
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         deficiency_report,
         :admin_accepted,
@@ -11,19 +36,28 @@
       ) %>
     </td>
   <% end %>
-  <td class="kern-table__cell"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
-  <td class="kern-table__cell"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
-  <td class="kern-table__cell"><%= deficiency_report.status&.title %></td>
-  <td class="kern-table__cell"><%= deficiency_report.district&.name %></td>
-  <td class="kern-table__cell"><%= deficiency_report.category&.name %></td>
-  <td class="kern-table__cell"><%= deficiency_report.responsible&.name %></td>
+  <td class="kern-table__cell" data-field="created_at"><%= l(deficiency_report.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="updated_at"><%= l(deficiency_report.updated_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="status_changed_at"><%= l(deficiency_report.status_changed_at, format: "%d.%m.%Y") if deficiency_report.status_changed_at %></td>
+  <td class="kern-table__cell" data-field="author"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell" data-field="status"><%= deficiency_report.status&.title %></td>
+  <td class="kern-table__cell" data-field="address"><%= deficiency_report.approximated_address %></td>
+  <td class="kern-table__cell" data-field="district"><%= deficiency_report.district&.name %></td>
+  <td class="kern-table__cell" data-field="category"><%= deficiency_report.category&.name %></td>
+  <td class="kern-table__cell" data-field="responsible"><%= deficiency_report.responsible&.name %></td>
+  <td class="kern-table__cell" data-field="archived_state">
+    <%= t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{deficiency_report.archived_at.present? ? 'archived' : 'active'}") %>
+  </td>
+  <td class="kern-table__cell" data-field="hidden_state">
+    <%= t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{deficiency_report.hidden_at.present? ? 'hidden' : 'visible'}") %>
+  </td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "visibility") %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.administer"), url: administer_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "settings") %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "history") %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.show.view_on_site"), url: deficiency_report_path(deficiency_report), icon: "open_in_new", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "visibility", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "history", data: { turbo_frame: "_top" }) %>
       <% if deficiency_report.feedback_form.present? %>
-        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "feedback") %>
+        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "feedback", data: { turbo_frame: "_top" }) %>
       <% end %>
       <% actions.with_action(
         label: t("shared.delete"),

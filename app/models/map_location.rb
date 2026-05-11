@@ -69,8 +69,16 @@ class MapLocation < ApplicationRecord
     if mappable.respond_to?(:map_layers)
       mappable.map_layers
     else
-      MapLayer.general
+      MapLayer.default
     end
+  end
+
+  def pin_coordinates
+    feature = to_geo_json["features"].first
+    coords = feature&.dig("geometry", "coordinates")
+    return nil if coords.blank?
+
+    { latitude: coords[1], longitude: coords[0] }
   end
 
   def to_geo_json
@@ -140,6 +148,8 @@ class MapLocation < ApplicationRecord
     geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
 
     geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
+  rescue RGeo::Error::InvalidGeometry
+    false
   end
 
   private
@@ -211,9 +221,9 @@ class MapLocation < ApplicationRecord
       sentiment ||= mappable.sentiment if mappable.respond_to?(:sentiment)
       category ||= mappable.category if mappable.respond_to?(:category)
 
-      if (mappable_type == "DeficiencyReport" || mappable.is_a?(Budget::Investment)) && sentiment.present?
+      if sentiment.present? && (mappable.is_a?(Budget::Investment) || mappable.is_a?(Proposal))
         sentiment.color
-      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+      elsif category.present? && (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea))
         category.color
       end
     end

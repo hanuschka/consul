@@ -1,6 +1,6 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
-    root to: "projekts#index"
+    root to: "home#show"
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
@@ -39,6 +39,7 @@ namespace :adm do
         get :poll_questions
         get :formular
         get :formular_answers
+        get :formular_follow_up_emails
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -93,12 +94,17 @@ namespace :adm do
       end
       resources :formular_fields, except: %i[index show] do
         collection do
-          post :reorder
+          patch :reorder
         end
       end
-      resources :projekt_events, except: %i[index show] do
+      resources :projekt_events, except: %i[index] do
         member do
           post :send_notifications
+        end
+        resources :registrations, only: %i[index destroy], controller: "projekt_event_registrations" do
+          member do
+            post :resend_confirmation
+          end
         end
       end
       resources :projekt_arguments, except: %i[index show] do
@@ -180,7 +186,11 @@ namespace :adm do
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :update_color, on: :member
+      patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
+      patch :update_image, on: :member
+      delete :delete_image, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create] do

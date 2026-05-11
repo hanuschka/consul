@@ -6,38 +6,107 @@
   <% end %>
 <% end %>
 
+<%
+  headers = {
+    id:             Kern::Table::HeaderComponent.new(:id, t(".table.id"), **@id_header_options.merge(data_field: "id")),
+    title:          Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options.merge(data_field: "title")),
+    author:         Kern::Table::HeaderComponent.new(:author, t(".table.author"), **@author_header_options.merge(data_field: "author")),
+    created_at:     Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
+    updated_at:     Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"), **@updated_at_header_options.merge(data_field: "updated_at")),
+    status_changed_at: Kern::Table::HeaderComponent.new(:status_changed_at, t(".table.status_changed_at"), **@status_changed_at_header_options.merge(data_field: "status_changed_at")),
+    status:         Kern::Table::HeaderComponent.new(:deficiency_report_status_id, t(".table.status"), **@status_header_options.merge(data_field: "status")),
+    address:        Kern::Table::HeaderComponent.new(:approximated_address, t(".table.address"), **@address_header_options.merge(data_field: "address")),
+    district:       Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options.merge(data_field: "district")),
+    category:       Kern::Table::HeaderComponent.new(:deficiency_report_category_id, t(".table.category"), **@category_header_options.merge(data_field: "category")),
+    responsible:    Kern::Table::HeaderComponent.new(:responsible, t(".table.responsible"), **@responsible_header_options.merge(data_field: "responsible")),
+    archived_state: Kern::Table::HeaderComponent.new(:archived_state, t(".table.archived_state"), **@archived_state_header_options.merge(data_field: "archived_state")),
+    hidden_state:   Kern::Table::HeaderComponent.new(:hidden_state, t(".table.hidden_state"), **@hidden_state_header_options.merge(data_field: "hidden_state"))
+  }
+%>
+
 <div class="kern-container my-5">
-  <% if @deficiency_reports.any? %>
-    <div class="kern-table-responsive" tabindex="0">
-      <table class="kern-table">
-        <thead class="kern-table__head">
-          <tr class="kern-table__row">
-            <%= render Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options) %>
-            <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
-              <th scope="col" class="kern-table__header"><%= t(".table.admin_accepted") %></th>
+  <%= turbo_frame_tag "deficiency_reports_table" do %>
+    <% pills_component = Adm::FilterPillsComponent.new(headers: headers.values, params: params) %>
+    <% filters_active = pills_component.pills.any? %>
+    <% column_count = 15 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0) %>
+
+    <div data-controller="adm-column-selector"
+         data-adm-column-selector-storage-key-value="adm-deficiency-reports-columns-v2"
+         data-adm-column-selector-defaults-value="id,image,title,created_at,status,responsible,archived_state,hidden_state"
+         data-action="click@window->adm-column-selector#close">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="flex-grow-1">
+          <%= render pills_component %>
+        </div>
+        <%= link_to url_for(request.query_parameters.merge(format: :csv)),
+              class: "adm-column-selector__toggle",
+              data: { turbo: false } do %>
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          <%= t(".export") %>
+        <% end %>
+        <div class="adm-column-selector">
+          <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
+            <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
+            <%= t(".columns") %>
+          </button>
+          <div class="adm-column-selector__menu" data-adm-column-selector-target="menu">
+            <div data-adm-column-selector-target="list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table" data-adm-column-selector-target="table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <%= render headers[:id] %>
+              <th scope="col" class="kern-table__header" data-field="image"><%= t(".table.image") %></th>
+              <%= render headers[:title] %>
+              <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
+                <th scope="col" class="kern-table__header" data-field="admin_accepted"><%= t(".table.admin_accepted") %></th>
+              <% end %>
+              <%= render headers[:created_at] %>
+              <%= render headers[:updated_at] %>
+              <%= render headers[:status_changed_at] %>
+              <%= render headers[:author] %>
+              <%= render headers[:status] %>
+              <%= render headers[:address] %>
+              <%= render headers[:district] %>
+              <%= render headers[:category] %>
+              <%= render headers[:responsible] %>
+              <%= render headers[:archived_state] %>
+              <%= render headers[:hidden_state] %>
+              <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% if @deficiency_reports.any? %>
+              <% @deficiency_reports.each do |deficiency_report| %>
+                <%= render "deficiency_report_row", deficiency_report: deficiency_report %>
+              <% end %>
+            <% elsif filters_active %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell kern-table__cell--empty" colspan="<%= column_count %>">
+                  <%= empty_state(title: t(".no_results_filtered_title"), description: t(".no_results_filtered_description"), icon: "filter_alt_off") %>
+                </td>
+              </tr>
+            <% else %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell kern-table__cell--empty" colspan="<%= column_count %>">
+                  <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "report_problem") %>
+                </td>
+              </tr>
             <% end %>
-            <%= render Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
-            <%= render Kern::Table::HeaderComponent.new(:deficiency_report_status_id, t(".table.status"), **@status_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.district") %></th>
-            <%= render Kern::Table::HeaderComponent.new(:deficiency_report_category_id, t(".table.category"), **@category_header_options) %>
-            <th scope="col" class="kern-table__header"><%= t(".table.responsible") %></th>
-            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
-          </tr>
-        </thead>
+          </tbody>
+        </table>
+      </div>
 
-        <tbody class="kern-table__body">
-          <% @deficiency_reports.each do |deficiency_report| %>
-            <%= render "deficiency_report_row", deficiency_report: deficiency_report %>
-          <% end %>
-        </tbody>
-      </table>
+      <% if @deficiency_reports.any? %>
+        <div class="my-5">
+          <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+        </div>
+      <% end %>
     </div>
-
-    <div class="my-5">
-      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-    </div>
-  <% else %>
-    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "report_problem") %>
   <% end %>
 </div>

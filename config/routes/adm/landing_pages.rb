@@ -1,6 +1,7 @@
 namespace :adm do
   scope :landing_pages, module: :landing_pages, as: :landing_pages do
-    root to: "landing_pages#index"
+    root to: "home#show"
+    get "list", to: "landing_pages#index", as: :landing_pages_list
 
     resources :managers, only: [:index, :new, :edit, :update, :destroy] do
       post :search, on: :collection
@@ -11,7 +12,7 @@ namespace :adm do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
 
-      resources :navbar_items, only: [:new, :create, :destroy],
+      resources :navbar_items, only: [:new, :create, :edit, :update, :destroy],
         controller: "/adm/navbar_items" do
         patch :reorder, on: :collection
       end

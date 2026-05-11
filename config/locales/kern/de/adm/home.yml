@@ -3,3 +3,29 @@ de:
     home:
       show:
         title: Herzlich willkommen
+        intro_html: >
+          Willkommen im Verwaltungsbereich von <strong>%{org_name}</strong>.
+          Hier sehen Sie eine Übersicht über Nutzer, Projekte und Beteiligungsaktivitäten auf Ihrer Plattform.
+          Über die Navigation auf der linken Seite erreichen Sie alle Verwaltungsbereiche — von der Nutzerverwaltung bis hin zu Einstellungen und Inhalten.
+          Bei Fragen oder technischen Problemen steht Ihnen das demokratie.today-Team über das %{ticket_link} zur Verfügung.
+        ticket_system: Ticketsystem
+        users:
+          title: Nutzer
+          total: "Gesamt (aktiv)"
+          new_this_week: Neu diese Woche
+        deficiency_reports:
+          title: Mängelanzeigen
+          total: Gesamt
+          open: Offen
+          unassigned: Nicht zugewiesen
+        projects:
+          title: Projekte
+          total: Gesamt
+          active: Aktiv
+          expired: Abgelaufen
+        detailed_statistics: Detaillierte Statistiken
+        dt:
+          ticket_system: Ticketsystem
+          meetup: Monatliches Consul-Meetup
+          projekts_overview: Beteiligungsprojekte anderer Städte
+          newsletter: Newsletter abonnieren

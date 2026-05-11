@@ -22,6 +22,7 @@ scope "budget_investments/generate", as: :generate_budget_investment do
 end
 
 get "blobs/:key", to: "blobs#show", as: :blob_asset
+get "blobs/:key/variant", to: "blobs#variant", as: :blob_variant
 get "ckeditor/assets",      to: "ckeditor/assets#index"
 get "ckeditor/assets/:key", to: "blobs#show"
 
@@ -62,7 +63,6 @@ resources :map_locations, only: [] do
   end
 end
 
-get "admin/matomo", to: "admin/matomo#index"
 get "admin/connection", to: "admin/connection#index"
 
 get "users", to: "users#index"

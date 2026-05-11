@@ -10,6 +10,11 @@ class Adm::BaseController < ActionController::Base
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    Sentry.capture_exception(exception, level: :warning)
+    redirect_to root_path, alert: t("adm.not_authorized")
+  end
+
   helper KernHelper
   helper_method :adm_menu_component, :adm_header_title
 
@@ -61,12 +66,16 @@ class Adm::BaseController < ActionController::Base
         Adm::SiteCustomization::PagePolicy
       when "SiteCustomization::Image"
         Adm::SiteCustomization::ImagePolicy
+      when "SiteCustomization::Video"
+        Adm::SiteCustomization::VideoPolicy
       when "SiteCustomization::ContentBlock"
         Adm::SiteCustomization::ContentBlockPolicy
       when "Newsletter"
         Adm::NewsletterPolicy
       when "Image"
         Adm::ImagePolicy
+      when "Poll"
+        Adm::Projekts::PollPolicy
       else
         raise ArgumentError, "No policy class defined for #{record_class.name}"
       end

@@ -3,10 +3,12 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
   def menu_items
     [
       { label: t("adm.menu.items.home"),          icon: "home",             path: adm_root_path },
+      { label: t("adm.menu.items.team"),          icon: "badge",            path: adm_administrators_path, active_prefix: "/adm/administrators" },
       { label: t("adm.menu.items.application"),   icon: "desktop_windows",  path: "#", subitems: application_subitems },
+      { label: t("adm.menu.items.modules"),       icon: "widgets",          path: adm_modules_path },
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
-      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems, divider: true },
-      { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: adm_statistics_path },
+      { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems },
+      { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: "#", subitems: stats_subitems },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
       { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
@@ -31,27 +33,34 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       ]
     end
 
+    def stats_subitems
+      [
+        { label: t("adm.menu.items.stats_subitems.overview"), path: adm_statistics_path },
+        matomo_subitem
+      ].compact
+    end
+
     def profiles_subitems
       [
-        # Plattformweit
-        { label: t("adm.menu.items.profiles_subitems.administrators"), path: adm_administrators_path },
-        { label: t("adm.menu.items.profiles_subitems.moderators"), path: adm_moderators_path },
-        { label: t("adm.menu.items.profiles_subitems.officing_managers"), path: adm_officing_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path },
-
-        # Bereichsspezifisch
-        { label: t("adm.menu.items.profiles_subitems.idea_managers"), path: adm_idea_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.deficiency_report_managers"), path: adm_deficiency_report_managers_path },
-        { label: t("adm.menu.items.profiles_subitems.valuators"), path: adm_valuators_path }
+        { label: t("adm.menu.items.profiles_subitems.section_contact_people"), path: adm_section_contact_people_path },
+        { label: t("adm.menu.items.profiles_subitems.users"), path: adm_users_path }
       ]
     end
+
     def developer_subitems
       [
         { label: t("adm.menu.items.developer_subitems.ai_settings"),        path: adm_ai_settings_path,        active_prefix: "/adm/ai_settings" },
         { label: t("adm.menu.items.developer_subitems.external_api_keys"),  path: adm_external_api_keys_path,  active_prefix: "/adm/external_api_keys" },
         { label: t("adm.menu.items.developer_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
+        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
+        { label: t("adm.menu.items.developer_subitems.connection"),         path: adm_connection_path,         active_prefix: "/adm/connection" }
       ]
+    end
+
+    def matomo_subitem
+      return unless feature?("matomo")
+
+      { label: t("adm.menu.items.stats_subitems.matomo"), path: adm_matomo_path }
     end
 
     def notifications_subitems

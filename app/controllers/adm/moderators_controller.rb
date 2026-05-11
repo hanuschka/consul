@@ -1,5 +1,5 @@
 module Adm
-  class ModeratorsController < Adm::BaseController
+  class ModeratorsController < Adm::Moderation::BaseController
     include Admin::PendingRoleAssignable
 
     def index
@@ -7,8 +7,7 @@ module Adm
       @pagy, @moderators = pagy(policy_scope([:adm, Moderator]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.moderators") }
+        { name: t("adm.moderators.index.title"), icon: "badge" }
       ]
     end
 
@@ -16,8 +15,7 @@ module Adm
       authorize [:adm, Moderator], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.moderators"), url: adm_moderators_path },
+        { name: t("adm.moderators.index.title"), url: adm_moderators_path, icon: "badge" },
         { name: t(".title") }
       ]
     end

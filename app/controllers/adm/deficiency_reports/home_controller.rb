@@ -1,0 +1,24 @@
+class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseController
+  def show
+    authorize DeficiencyReport, :index?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @team_members = DeficiencyReport::Officer.includes(user: :image).order(:id)
+
+    @section_setting = SectionSetting.for_section("deficiency_reports")
+    @contact_persons = SectionContactPerson.for_section("deficiency_reports")
+    @activities = SectionActivity.for_section("deficiency_reports").limit(10)
+
+    @stats = [
+      { value: DeficiencyReport.count, label: t("adm.deficiency_reports.home.stats.total"), icon: "report" },
+      { value: DeficiencyReport.where("created_at >= ?", 1.week.ago).count, label: t("adm.deficiency_reports.home.stats.new_this_week"), icon: "new_releases" },
+      { value: DeficiencyReport.not_closed.count, label: t("adm.deficiency_reports.home.stats.open"), icon: "error" },
+      { value: DeficiencyReport.closed.count, label: t("adm.deficiency_reports.home.stats.closed"), icon: "check_circle" }
+    ]
+
+    @quick_links = []
+
+    @breadcrumbs = [
+      { name: t("adm.deficiency_reports.home.title"), icon: "home" }
+    ]
+  end
+end

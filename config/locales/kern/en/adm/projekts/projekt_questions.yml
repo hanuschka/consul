@@ -1,0 +1,30 @@
+en:
+  adm:
+    projekts:
+      projekt_questions:
+        new:
+          title: Create question
+        create:
+          success: Question created successfully.
+        edit:
+          title: Edit question
+        update:
+          success: Question updated successfully.
+        destroy:
+          success: Question deleted successfully.
+        send_notifications:
+          success: Notifications sent successfully.
+        form:
+          title_label: Question
+          title_hint: Enter the title of the quick poll. The title is shown as the question on the frontend and should be clear and understandable — e.g. "Which topic is most important to you?" or "How do you rate the proposal?". Keep the wording short so it remains readable on all devices.
+          question_options_label: Answer options
+          question_options_hint: Define the answer options users can choose from. Each option is shown on the frontend as a selectable button. Add at least two options and keep the wording short and unambiguous. The order of options matches the display order on the frontend.
+          add_option: Add option
+          show_answers_count_label: Show answer count
+          show_answers_count_hint: Enables display of the current answer distribution on the frontend. After casting their vote, users see how many participants chose each option. Disable this feature if results should only be published after the participation closes, to enable unbiased opinion formation.
+          comments_enabled_label: Open answer
+          comments_enabled_hint: Enables an additional free-text field below the answer options, in which users can formulate their own answer or reasoning. This feature is suitable for capturing qualitative feedback alongside the given options — e.g. additions, comments, or alternative suggestions.
+          submit: Save
+        projekt_question_option_fields:
+          value_placeholder: Answer option
+          remove_option: Remove

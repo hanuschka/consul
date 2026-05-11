@@ -5,6 +5,10 @@ class Kern::MapComponent < ApplicationComponent
     editable: false,
     admin_editor: false,
     height: 400,
+    width: nil,
+    latitude: nil,
+    longitude: nil,
+    zoom: nil,
     resources: nil
   )
     @map_location = map_location
@@ -12,10 +16,14 @@ class Kern::MapComponent < ApplicationComponent
     @editable = editable
     @admin_editor = admin_editor
     @height = height
+    @width = width
+    @latitude = latitude
+    @longitude = longitude
+    @zoom = zoom
     @resources = resources
   end
 
-  attr_reader :map_location, :form, :editable, :admin_editor, :height
+  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|
@@ -32,16 +40,19 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   def container_style
-    "height: #{height}px;"
+    parts = ["height: #{height}px"]
+    parts << "width: #{width}px" if width.present?
+    parts << "max-width: 100%"
+    parts.join("; ") + ";"
   end
 
   def controller_data_attributes
     {
       controller: "map",
       map_rendering_library_value: rendering_library,
-      map_latitude_value: map_location.latitude,
-      map_longitude_value: map_location.longitude,
-      map_zoom_value: map_location.zoom,
+      map_latitude_value: @latitude || map_location.latitude,
+      map_longitude_value: @longitude || map_location.longitude,
+      map_zoom_value: @zoom || map_location.zoom,
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,
       map_admin_editor_value: admin_editor,
@@ -101,7 +112,7 @@ class Kern::MapComponent < ApplicationComponent
                else
                  mappable.try(:projekt_phase)&.map_layers ||
                    mappable.try(:projekt)&.map_layers ||
-                   MapLayer.general
+                   MapLayer.default
                end
       layers.to_json
     end
@@ -111,7 +122,7 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def mapbox_style_id
-      Rails.application.secrets.dig(:mapbox, :style_id)
+      map_location.mapbox_style_id.presence || Rails.application.secrets.dig(:mapbox, :style_id)
     end
 
     def vc_map_module_url

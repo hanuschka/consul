@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_03_120000) do
+ActiveRecord::Schema.define(version: 2026_04_30_103115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "age_range_translations", force: :cascade do |t|
     t.bigint "age_range_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.index ["age_range_id"], name: "index_age_range_translations_on_age_range_id"
     t.index ["locale"], name: "index_age_range_translations_on_locale"
@@ -193,12 +193,10 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.jsonb "body_params", default: {}, null: false
     t.integer "response_status"
     t.integer "api_client_id"
-    t.boolean "pushed_to_dt", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["api_client_id"], name: "index_api_request_logs_on_api_client_id"
     t.index ["created_at"], name: "index_api_request_logs_on_created_at"
-    t.index ["pushed_to_dt"], name: "index_api_request_logs_on_pushed_to_dt"
     t.index ["request_path"], name: "index_api_request_logs_on_request_path"
   end
 
@@ -428,7 +426,6 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.text "ai_idea_text"
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
-    t.datetime "published_at"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -529,8 +526,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
-    t.bigint "projekt_id"
     t.boolean "hide_money", default: false
+    t.bigint "projekt_id"
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
@@ -611,6 +608,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.string "ancestry"
     t.integer "confidence_score", default: 0, null: false
     t.boolean "valuation", default: false
+    t.tsvector "tsv"
     t.index ["ancestry"], name: "index_comments_on_ancestry"
     t.index ["cached_votes_down"], name: "index_comments_on_cached_votes_down"
     t.index ["cached_votes_total"], name: "index_comments_on_cached_votes_total"
@@ -618,6 +616,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
     t.index ["confidence_score"], name: "index_comments_on_confidence_score"
     t.index ["hidden_at"], name: "index_comments_on_hidden_at"
+    t.index ["tsv"], name: "index_comments_on_tsv", using: :gin
     t.index ["user_id"], name: "index_comments_on_user_id"
     t.index ["valuation"], name: "index_comments_on_valuation"
   end
@@ -733,8 +732,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "deficiency_report_category_translations", force: :cascade do |t|
     t.bigint "deficiency_report_category_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.index ["deficiency_report_category_id"], name: "index_d61b31ba5bbffdea13be0cd92b8cb671cb6d18b5"
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
@@ -781,6 +780,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
   end
 
@@ -794,8 +794,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "deficiency_report_status_translations", force: :cascade do |t|
     t.bigint "deficiency_report_status_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "description"
     t.index ["deficiency_report_status_id"], name: "index_9003f0b89e1dd7ed97cbb6fd7a245a79809763a3"
@@ -816,8 +816,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "deficiency_report_translations", force: :cascade do |t|
     t.bigint "deficiency_report_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "description"
     t.text "summary"
@@ -879,6 +879,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.string "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string "tenant"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -1122,6 +1123,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "manage_all", default: false, null: false
     t.index ["user_id"], name: "index_idea_officers_on_user_id"
   end
 
@@ -1239,6 +1241,15 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_landing_page_managers_on_user_id"
+  end
+
+  create_table "landing_pages_projekts", force: :cascade do |t|
+    t.bigint "site_customization_page_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
+    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
+    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
+    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
   end
 
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
@@ -1531,7 +1542,7 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
-    t.string "polygon_color", default: "#008000"
+    t.string "mapbox_style_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
@@ -1596,8 +1607,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "modal_notification_translations", force: :cascade do |t|
     t.bigint "modal_notification_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "html_content"
     t.index ["locale"], name: "index_modal_notification_translations_on_locale"
@@ -1620,13 +1631,14 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.integer "kind"
     t.string "preset"
     t.bigint "projekt_id"
-    t.string "external_title"
     t.string "external_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
     t.integer "position", default: 0, null: false
     t.integer "landing_page_id"
+    t.string "custom_title"
+    t.boolean "open_in_new_tab", default: false, null: false
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
@@ -1693,8 +1705,10 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.bigint "created_by_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "invitation_token"
     t.index ["email", "role_type"], name: "index_pending_role_assignments_on_email_and_role_type", unique: true
     t.index ["email"], name: "index_pending_role_assignments_on_email"
+    t.index ["invitation_token"], name: "index_pending_role_assignments_on_invitation_token", unique: true, where: "(invitation_token IS NOT NULL)"
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
@@ -1921,7 +1935,6 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.integer "user_id"
     t.string "origin"
     t.integer "officer_id"
-    t.string "token"
     t.bigint "officing_manager_id"
     t.index ["booth_assignment_id"], name: "index_poll_voters_on_booth_assignment_id"
     t.index ["document_number"], name: "index_poll_voters_on_document_number"
@@ -2024,7 +2037,6 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "end_datetime"
-    t.string "summary"
     t.bigint "projekt_phase_id"
     t.boolean "open_ended", default: false
     t.string "language"
@@ -2045,8 +2057,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "projekt_label_translations", force: :cascade do |t|
     t.bigint "projekt_label_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.index ["locale"], name: "index_projekt_label_translations_on_locale"
     t.index ["projekt_label_id"], name: "index_projekt_label_translations_on_projekt_label_id"
@@ -2158,21 +2170,21 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "projekt_phase_translations", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "phase_tab_name"
-    t.text "cta_button_name"
     t.text "resource_form_title"
-    t.text "resource_form_intro"
     t.string "labels_name"
     t.string "sentiments_name"
-    t.string "resource_form_title_placeholder"
+    t.string "cta_button_name"
     t.text "description"
     t.string "comment_form_title"
     t.string "comment_form_button"
-    t.text "resource_form_description_placeholder"
     t.text "welcome_text_in_show"
     t.string "support_button_text"
+    t.text "resource_form_intro"
+    t.text "resource_form_title_placeholder"
+    t.text "resource_form_description_placeholder"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2323,8 +2335,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   create_table "projekt_translations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.text "description"
     t.index ["locale"], name: "index_projekt_translations_on_locale"
     t.index ["projekt_id"], name: "index_projekt_translations_on_projekt_id"
@@ -2354,14 +2366,15 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "on_global_overview", default: false
-    t.boolean "from_dt", default: false
     t.string "import_file_status"
     t.jsonb "import_file_data"
     t.boolean "show_content_background", default: true
     t.bigint "landing_page_id"
+    t.datetime "published_at"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["published_at"], name: "index_projekts_on_published_at"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
@@ -2382,6 +2395,8 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.datetime "hidden_at"
     t.datetime "ignored_at"
     t.datetime "confirmed_hide_at"
+    t.tsvector "tsv"
+    t.index ["tsv"], name: "index_proposal_notifications_on_tsv", using: :gin
   end
 
   create_table "proposal_translations", id: :serial, force: :cascade do |t|
@@ -2669,11 +2684,49 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.index ["goal_id"], name: "index_sdg_targets_on_goal_id"
   end
 
+  create_table "section_activities", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "section", null: false
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.string "action", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.index ["section", "created_at"], name: "index_section_activities_on_section_and_created_at"
+    t.index ["trackable_type", "trackable_id"], name: "index_section_activities_on_trackable_type_and_trackable_id"
+    t.index ["user_id"], name: "index_section_activities_on_user_id"
+  end
+
+  create_table "section_contact_people", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "section", null: false
+    t.string "role"
+    t.string "email"
+    t.string "phone"
+    t.integer "position", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["section", "position"], name: "index_section_contact_people_on_section_and_position"
+    t.index ["user_id"], name: "index_section_contact_people_on_user_id"
+  end
+
+  create_table "section_settings", force: :cascade do |t|
+    t.string "section", null: false
+    t.string "intro_text"
+    t.text "notice_message"
+    t.boolean "notice_active", default: false, null: false
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_section_settings_on_author_id"
+    t.index ["section"], name: "index_section_settings_on_section", unique: true
+  end
+
   create_table "sentiment_translations", force: :cascade do |t|
     t.bigint "sentiment_id", null: false
     t.string "locale", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.index ["locale"], name: "index_sentiment_translations_on_locale"
     t.index ["sentiment_id"], name: "index_sentiment_translations_on_sentiment_id"
@@ -2808,6 +2861,13 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
+  create_table "site_customization_videos", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_site_customization_videos_on_name", unique: true
+  end
+
   create_table "stats_versions", id: :serial, force: :cascade do |t|
     t.string "process_type"
     t.integer "process_id"
@@ -2856,6 +2916,15 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.index ["legislation_proposals_count"], name: "index_tags_on_legislation_proposals_count"
     t.index ["name"], name: "index_tags_on_name", unique: true
     t.index ["proposals_count"], name: "index_tags_on_proposals_count"
+  end
+
+  create_table "tenants", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "schema"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tenants_on_name", unique: true
+    t.index ["schema"], name: "index_tenants_on_schema", unique: true
   end
 
   create_table "topics", id: :serial, force: :cascade do |t|
@@ -2992,8 +3061,6 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
-    t.string "keycloak_link"
-    t.text "keycloak_id_token", default: ""
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3283,6 +3350,9 @@ ActiveRecord::Schema.define(version: 2026_04_03_120000) do
   add_foreign_key "resource_sentiments", "sentiments"
   add_foreign_key "saved_content_blocks", "users"
   add_foreign_key "sdg_managers", "users"
+  add_foreign_key "section_activities", "users"
+  add_foreign_key "section_contact_people", "users"
+  add_foreign_key "section_settings", "users", column: "author_id"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

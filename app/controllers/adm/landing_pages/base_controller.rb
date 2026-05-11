@@ -1,6 +1,11 @@
 class Adm::LandingPages::BaseController < Adm::BaseController
   before_action :verify_landing_page_manager
 
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    Sentry.capture_exception(exception, level: :warning)
+    redirect_to adm_landing_pages_root_path, alert: t("adm.not_authorized")
+  end
+
   private
 
     def adm_menu_component

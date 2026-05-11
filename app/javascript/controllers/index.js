@@ -19,9 +19,6 @@ application.register("sortable", SortableController)
 import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
 application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
 
-import ComponentsAdmPageTitleSyncController from "./components/adm/page_title_sync_controller"
-application.register("components-adm-page-title-sync", ComponentsAdmPageTitleSyncController)
-
 import ComponentsAdmNewNavbarItemController from "./components/adm/new_navbar_item_controller"
 application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarItemController)
 
@@ -77,6 +74,12 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
+import PdfDownloadController from "./pdf_download_controller"
+application.register("pdf-download", PdfDownloadController)
+
+import GlightboxController from "./glightbox_controller"
+application.register("glightbox", GlightboxController)
+
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 
@@ -93,11 +96,20 @@ application.register("formular-fields--kind", FormularFieldsKindController)
 import KernFormImageController from "./kern/form/image_controller"
 application.register("kern--form--image", KernFormImageController)
 
+import KernFormVideoController from "./kern/form/video_controller"
+application.register("kern--form--video", KernFormVideoController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
+import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
+application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
+
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
+
+import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
+application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
@@ -113,6 +125,9 @@ application.register("adm-column-selector", AdmColumnSelectorController)
 
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
+
+import AdmUserSelectController from "./adm/user_select_controller"
+application.register("adm-user-select", AdmUserSelectController)
 
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)

@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
@@ -111,7 +111,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     NotificationServices::NewProjektNotifier.call(@projekt)
 
-    redirect_to page_path(@projekt.page.slug), notice: t(".success")
+    respond_to do |format|
+      format.html { redirect_to page_path(@projekt.page.slug), notice: t(".success") }
+      format.json { render json: { success: true, message: t(".success") } }
+    end
   end
 
   def toggle_hide_content_background
@@ -120,6 +123,17 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.update!(show_content_background: !@projekt.show_content_background)
 
     render json: { show_content_background: @projekt.show_content_background }
+  end
+
+  def update_color
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if @projekt.update(color: params[:color].presence)
+      render json: { ok: true, color: @projekt.color }
+    else
+      render json: { ok: false, errors: @projekt.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def convert_to_new_content_block_mode
@@ -153,6 +167,33 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_phases = @projekt.projekt_phases
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def update_image
+    authorize [:adm, :projekts, @projekt], :update?
+
+    page = @projekt.page
+    image = page.image || ::Image.new(imageable: page)
+    image.attachment = params.require(:file)
+    image.user = current_user
+
+    if image.save
+      page.association(:image).reset
+
+      render json: { ok: true, message: t(".success") }
+    else
+      render json: { ok: false, errors: image.errors.full_messages },
+             status: :unprocessable_entity
+    end
+  end
+
+  def delete_image
+    authorize [:adm, :projekts, @projekt], :update?
+
+    @projekt.page.image&.destroy
+    @projekt.page.association(:image).reset
+
+    render json: { ok: true, message: t(".success") }
   end
 
   private

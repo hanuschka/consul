@@ -17,6 +17,11 @@ en:
         custom_title_placeholder: Leave blank to use the default title
         update: Save changes
     projekts:
+      projekts:
+        update_image:
+          success: Image updated successfully.
+        delete_image:
+          success: Image removed successfully.
       phases:
         ai_user_flow:
           title: AI flow assistant

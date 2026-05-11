@@ -101,7 +101,6 @@ class Projekt < ApplicationRecord
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
-  # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity
 
@@ -130,7 +129,7 @@ class Projekt < ApplicationRecord
     )
   end
 
-  # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
+  validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
@@ -841,10 +840,6 @@ class Projekt < ApplicationRecord
       (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
-    end
-
-    def set_default_color
-      self.color ||= "#004a83"
     end
 
     def touch_updated_at(geozone)

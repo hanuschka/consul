@@ -51,9 +51,9 @@
     <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_sdg") %1> %>
     <%# <% end %1> %>
 
-    <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt), method: "post", role: "button", class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-bell"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.notify_reviewers") %>
+    <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt), role: "button", class: "button hollow expanded left-aligned js-notify-reviewers" do %>
+      <i class="fas fa-bell js-notify-reviewers-icon"></i>
+      <span class="js-notify-reviewers-label"><%= t("custom.projekts.page.sidebar.admin_controls.notify_reviewers") %></span>
     <% end %>
   <% end %>
 </div>

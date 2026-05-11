@@ -16,6 +16,11 @@ de:
         custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
         update: Änderungen speichern
     projekts:
+      projekts:
+        update_image:
+          success: Bild erfolgreich aktualisiert.
+        delete_image:
+          success: Bild erfolgreich entfernt.
       phases:
         ai_user_flow:
           title: KI Textassistent

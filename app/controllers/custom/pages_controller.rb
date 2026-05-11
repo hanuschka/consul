@@ -369,23 +369,35 @@ class PagesController < ApplicationController
 
       map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
       selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
+      selected_category_icons = selected_categories&.pluck(:icon)
 
-      features = if selected_categories.present?
-                   map_locations.map do |ml|
-                     ml.to_geo_json["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]))&.unicode }) end
-                     ml.to_geo_json["features"].select do |f|
-   f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) end
-                   end.flatten.compact
-                 else
-                   map_locations.map do |ml|
-                     ml.to_geo_json["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) end
-                     ml.to_geo_json["features"]
-                   end.flatten
-                 end
+      icon_names = map_locations.flat_map do |ml|
+        ml.to_geo_json["features"].map do |f|
+          f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]
+        end
+      end.compact.uniq
+
+      icon_unicodes = AwesomeIcon.where(name: icon_names).pluck(:name, :unicode).to_h
+
+      features = map_locations.flat_map do |ml|
+        enriched = ml.to_geo_json["features"].map do |f|
+          icon_name = f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]
+          f.merge("properties" => f["properties"].merge(
+            "resource_type" => "projekt_point_of_interest_pin",
+            "id" => ml.mappable_id,
+            "feature_icon_unicode" => icon_unicodes[icon_name]
+          ))
+        end
+
+        if selected_category_icons.present?
+          enriched.select do |f|
+            f["properties"]["feature_icon_name"].in?(selected_category_icons) ||
+              f["properties"]["fa_icon_class"].in?(selected_category_icons)
+          end
+        else
+          enriched
+        end
+      end
 
       @pin_coordinates = {
         type: "FeatureCollection",

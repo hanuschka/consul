@@ -232,9 +232,7 @@ ProjektStudio.Banner = {
     this.showUploadProgress(container)
 
     const formData = new FormData();
-    formData.append("kind", container.dataset.kind);
-    formData.append("attribute", container.dataset.attribute);
-    formData.append(container.dataset.fieldName, file);
+    formData.append("file", file);
 
     App.Ajax
       .request({
@@ -374,17 +372,9 @@ ProjektStudio.Banner = {
     const confirmMessage = container.dataset.deleteConfirm;
     if (confirmMessage && !window.confirm(confirmMessage)) return;
 
-    const formData = new FormData();
-    formData.append("kind", container.dataset.kind);
-    formData.append("attribute", container.dataset.attribute);
-    formData.append("remove_attachment", "1");
-
     await App.Ajax.request({
-      url: container.dataset.updateUrl,
-      method: "PATCH",
-      processData: false,
-      contentType: false,
-      data: formData
+      url: container.dataset.deleteUrl,
+      method: "DELETE"
     });
 
     const resourceImage = container.querySelector(".resource-image");

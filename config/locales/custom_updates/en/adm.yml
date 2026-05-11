@@ -30,6 +30,11 @@ en:
           icon_image_label: Category icon
           icon_image_hint: "SVG, PNG or JPEG. Max 512 KB."
           icon_image_remove: Remove icon
+      projekts:
+        update_image:
+          success: Image updated successfully.
+        delete_image:
+          success: Image removed successfully.
       phases:
         ai_user_flow:
           title: AI flow assistant

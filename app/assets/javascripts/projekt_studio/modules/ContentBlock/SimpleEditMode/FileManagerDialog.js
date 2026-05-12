@@ -34,7 +34,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     'application/x-rar-compressed': 'fa-file-zipper',
     'application/x-7z-compressed': 'fa-file-zipper',
     'application/json': 'fa-file-code',
-    'application/xml': 'fa-file-code'
+    'application/xml': 'fa-file-code',
+    'application/rtf': 'fa-file-lines',
+    'text/rtf': 'fa-file-lines',
+    'text/csv': 'fa-file-csv',
+    'application/vnd.oasis.opendocument.text': 'fa-file-word',
+    'application/vnd.oasis.opendocument.spreadsheet': 'fa-file-excel'
   },
 
   getFileTypeIcon(contentType) {

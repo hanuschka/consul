@@ -55,7 +55,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def settings_dashboard
-    authorize :deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+    authorize :deficiency_report, :settings?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
     @breadcrumbs = [{ name: t("adm.deficiency_reports.deficiency_reports.settings.title"), icon: "settings" }]
   end
 

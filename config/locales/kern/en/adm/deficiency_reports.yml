@@ -20,7 +20,7 @@ en:
           deficiency_reports: Reports
           categories: Categories
           statuses: Statuses
-          settings: Features
+          settings: Configuration
           official_answer_templates: Response templates
           districts: Areas
           officer_groups: Officer groups
@@ -31,8 +31,8 @@ en:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
           columns: Columns
-          export: Export
-          export_geojson: GeoJSON
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
           no_deficiency_reports: No deficiency reports available
           no_items_title: No reports available
           no_items_description: Reports will be shown here as soon as they are submitted.
@@ -142,7 +142,12 @@ en:
           created_at: Created on
           for_report: For
         settings:
-          title: Features
+          title: Configuration
+          tabs:
+            features: Features
+            dashboard: Dashboard settings
+        settings_dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
       categories:
         index:
           title: Categories

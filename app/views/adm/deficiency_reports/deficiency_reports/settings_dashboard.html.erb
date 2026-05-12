@@ -1,0 +1,29 @@
+<%= content_for :title, t("adm.deficiency_reports.deficiency_reports.settings.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.deficiency_reports.deficiency_reports.settings.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.deficiency_reports.deficiency_reports.settings.tabs.features"),
+    url: adm_deficiency_reports_settings_path
+  },
+  {
+    label: t("adm.deficiency_reports.deficiency_reports.settings.tabs.dashboard"),
+    url: adm_deficiency_reports_settings_dashboard_path,
+    current: true
+  }
+]) %>
+
+<div class="kern-container my-5">
+  <p class="adm-hint__text mb-3">
+    <%= t("adm.deficiency_reports.deficiency_reports.settings_dashboard.intro") %>
+  </p>
+
+  <%= render Adm::SectionSettingsComponent.new(
+    section: "deficiency_reports",
+    module_setting_keys: []
+  ) %>
+</div>

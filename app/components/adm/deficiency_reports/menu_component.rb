@@ -16,7 +16,7 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
          { label: t("adm.deficiency_reports.menu.items.statuses"), icon: "flag", path: adm_deficiency_reports_statuses_path }
        end),
       (if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).settings?
-         { label: t("adm.deficiency_reports.menu.items.settings"), icon: "settings", path: adm_deficiency_reports_settings_path }
+         { label: t("adm.deficiency_reports.menu.items.settings"), icon: "settings", path: adm_deficiency_reports_settings_path, active_pattern: %r{/adm/deficiency_reports/settings(/dashboard)?\z} }
        end),
       (if Adm::DeficiencyReports::OfficialAnswerTemplatePolicy.new(current_user, nil).index?
          { label: t("adm.deficiency_reports.menu.items.official_answer_templates"), icon: "description", path: adm_deficiency_reports_official_answer_templates_path }

@@ -20,7 +20,7 @@ de:
           deficiency_reports: Meldungen
           categories: Kategorien
           statuses: Status
-          settings: Funktionen
+          settings: Konfiguration
           official_answer_templates: Antwortvorlagen
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
@@ -31,8 +31,8 @@ de:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
           columns: Spalten
-          export: Exportieren
-          export_geojson: GeoJSON
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_deficiency_reports: Keine Mängelmelder vorhanden
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
@@ -142,7 +142,12 @@ de:
           created_at: Erstellt am
           for_report: Für
         settings:
-          title: Funktionen
+          title: Konfiguration
+          tabs:
+            features: Funktionen
+            dashboard: Dashboard-Einstellungen
+        settings_dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
       categories:
         index:
           title: Kategorien

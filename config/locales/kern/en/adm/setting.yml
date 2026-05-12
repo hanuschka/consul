@@ -177,6 +177,8 @@ en:
         show_in_individual_list_description: Shows the project on the projects overview page in a standalone, individual list — separate from automatically generated lists like "Ongoing projects" or "Completed projects". This option is suitable for highlighted or permanently visible projects.
         allow_indexing: Search-engine indexing
         allow_indexing_description: Allows search engines like Google to index the project page and show it in search results. If this option is disabled, a "noindex" tag is set, so the page remains reachable via the platform but cannot be found through external search engines.
+        consider_underway: List project as active participation
+        consider_underway_description: Ensures the project is always listed as active participation on the overview — even when no regular participation phase is currently running. Useful for permanently featured projects or for projects between phases that should remain visible to users as an active participation option.
     ideas:
       show_in_main_menu: Ideas in navigation
       show_in_main_menu_description: Shows the Ideas menu item in the main navigation.

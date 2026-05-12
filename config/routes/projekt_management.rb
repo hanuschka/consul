@@ -15,6 +15,7 @@ namespace :projekt_management do
       get :map
       patch :update_map
       get :proposals
+      get :comments
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats

@@ -11,6 +11,24 @@ de:
         investment_proposals: Investitionsvorschläge
     tags:
       destroy: Löschen
+    proposals:
+      index:
+        download_geojson: GeoJSON herunterladen
+        source_filter_label: Quelle
+        source_all: Alle
+        source_masterportal: Aus Masterportal
+        source_user: Benutzer-erstellt
+        apply_filter: Filter anwenden
+        export_queued: "Export wurde in die Warteschlange gestellt. Sie erhalten per E-Mail einen Link."
+    budget_investments:
+      index:
+        download_geojson: GeoJSON herunterladen
+        source_filter_label: Quelle
+        source_all: Alle
+        source_masterportal: Aus Masterportal
+        source_user: Benutzer-erstellt
+        apply_filter: Filter anwenden
+        export_queued: "Export wurde in die Warteschlange gestellt. Sie erhalten per E-Mail einen Link."
   custom:
     admin:
       legislation:
@@ -718,6 +736,18 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
+          comments: Kommentare
+          ai_settings: KI Anweisung
+          user_resource_criteria: Nutzer Ressourcen Kriterien
+        comments:
+          page_title: Kommentare
+          id: ID
+          body: Kommentar
+          author: Autor
+          created_at: Erstellt am
+          no_comments: Es gibt keine Kommentare.
+          ai_settings: Sprachassistent
+          ai_user_flow: AI Flow Assistent
           ai_settings: KI Sprachassistent
           ai_user_flow: KI Textassistent
         notice:

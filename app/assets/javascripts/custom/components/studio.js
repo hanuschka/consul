@@ -21,7 +21,7 @@
       ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize();
+      ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize();
       ProjektStudio.ContentBlock.AiEditMode.initialize();
       ProjektStudio.ContentBlock.CodeEditMode.initialize();
@@ -69,6 +69,7 @@
           const updateUrl = block.dataset.updateUrl;
           const aiUrl = block.dataset.aiUrl;
           const defaultContent = block.dataset.defaultContent;
+          const toolbarPosition = block.dataset.toolbarPosition;
 
           const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
             block.innerHTML,
@@ -76,7 +77,8 @@
               contentBlockId: contentBlockId,
               context: "site",
               updateUrl: updateUrl,
-              aiUrl: aiUrl
+              aiUrl: aiUrl,
+              toolbarPosition: toolbarPosition
             }
           );
 

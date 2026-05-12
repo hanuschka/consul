@@ -110,6 +110,31 @@
 
     // shared functions
 
+    splitMasterportalFeatures(input) {
+      const collection = App.Map.formattedFeatures(input);
+
+      const masterportal = {
+        type: "FeatureCollection",
+        id: "masterportal-pin-features",
+        features: []
+      };
+      const regular = {
+        type: "FeatureCollection",
+        id: "regular-features",
+        features: []
+      };
+
+      collection.features.forEach(function(feature) {
+        if (feature && feature.properties && feature.properties.resource_type === "masterportal_pin") {
+          masterportal.features.push(feature);
+        } else {
+          regular.features.push(feature);
+        }
+      });
+
+      return { regular: regular, masterportal: masterportal };
+    },
+
     formattedFeatures(input) {
       if (Array.isArray(input)) {
         let merged = {

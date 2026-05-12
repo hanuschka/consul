@@ -4,7 +4,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @team_members = scoped_team_members
 
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
     @pagy, @projekts = pagy(base_scope, limit: 10)
 
     @name_header_options = { sort: true, search: true }
@@ -28,6 +28,9 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @quick_links = [
       (if policy([:adm, :projekts, Projekt]).create?
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
+       end),
+      (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
+         { label: t("adm.projekts.home.quick_links.import_projekt"), path: import_projekt_adm_projekts_projekts_path }
        end)
     ].compact
 

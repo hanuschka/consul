@@ -14,6 +14,7 @@ class Adm::Projekts::ProjektPointOfInterestCategoriesController < Adm::Projekts:
     authorize [:adm, :projekts, @category]
 
     if @category.save
+      purge_icon_image_if_requested
       redirect_to projekt_point_of_interest_categories_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
     else
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.projekt_point_of_interest_categories.new.title"))
@@ -31,6 +32,7 @@ class Adm::Projekts::ProjektPointOfInterestCategoriesController < Adm::Projekts:
     authorize [:adm, :projekts, @category]
 
     if @category.update(category_params)
+      purge_icon_image_if_requested
       redirect_to projekt_point_of_interest_categories_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
     else
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.projekt_point_of_interest_categories.edit.title"))
@@ -61,7 +63,13 @@ class Adm::Projekts::ProjektPointOfInterestCategoriesController < Adm::Projekts:
     end
 
     def category_params
-      params.require(:projekt_point_of_interest_category).permit(:name, :color, :icon)
+      params.require(:projekt_point_of_interest_category).permit(:name, :color, :icon, :icon_image)
+    end
+
+    def purge_icon_image_if_requested
+      return if params.dig(:projekt_point_of_interest_category, :remove_icon_image) != "1"
+
+      @category.icon_image.purge
     end
 
     def breadcrumbs_for_action(action_title)

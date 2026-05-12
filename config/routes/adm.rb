@@ -21,6 +21,9 @@ namespace :adm do
     get :search, on: :collection
   end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
+  resources :map_locations, only: [] do
+    post :update_screenshot, on: :member
+  end
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :individual_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
@@ -120,6 +123,13 @@ namespace :adm do
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
+    end
+  end
+
+  resources :masterportal_imports, only: [:create] do
+    collection do
+      get :collections
+      get :status
     end
   end
 end

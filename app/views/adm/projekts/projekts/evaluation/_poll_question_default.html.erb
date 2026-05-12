@@ -1,0 +1,55 @@
+<%
+  answers = question["answers"] || []
+  chart_type = question["chart_type"]
+  is_scale = chart_type == "scale"
+  is_multi = chart_type == "multi"
+  max_answer_count = answers.map { |a| a["count"].to_i }.max.to_i
+  max_answer_count = 1 if max_answer_count.zero?
+%>
+
+<div class="card">
+  <div class="card-title"><%= question["title"] %></div>
+  <div class="card-subtitle">
+    <% if is_scale && answers.any? %>
+      <%= t("adm.projekts.projekts.evaluation.scale_subtitle",
+        min: answers.first["title"],
+        max: answers.last["title"],
+        n: question["total_responses"].to_i) %>
+      <% if question["average"].present? %>
+        &middot; &empty; <%= question["average"] %>
+      <% end %>
+    <% elsif is_multi %>
+      <%= t("adm.projekts.projekts.evaluation.multiple_subtitle",
+        mentions: question["total_mentions"].to_i) %>
+    <% else %>
+      n = <%= question["total_responses"].to_i %>
+    <% end %>
+  </div>
+
+  <% if is_scale %>
+    <div class="scale-grid">
+      <% answers.each do |answer| %>
+        <% height_pct = (answer["count"].to_f / max_answer_count * 100).round(1) %>
+        <div class="scale-col">
+          <span class="scale-count"><%= answer["count"].to_i %></span>
+          <div class="scale-bar" style="height:<%= height_pct %>%;background:<%= accent %>"></div>
+          <span class="scale-num"><%= answer["title"] %></span>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <% answers.each do |answer| %>
+      <div class="hbar">
+        <div class="hbar-top">
+          <span class="hbar-label"><%= answer["title"] %></span>
+          <span class="hbar-value">
+            <%= answer["count"].to_i %> &middot; <%= answer["percentage"] %>%
+          </span>
+        </div>
+        <div class="hbar-track">
+          <div class="hbar-fill" style="width:<%= answer["percentage"] %>%;background:<%= accent %>"></div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

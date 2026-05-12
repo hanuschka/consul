@@ -9,13 +9,32 @@ module Schemas
         name: { type: :string, description: 'The name of the budget phase', example: 'Participatory Budget 2024' },
         slug: { type: :string, description: 'URL-friendly identifier for the budget', example: 'budget-2024' },
         description: { type: :string, nullable: true, description: 'Description of the budget and its objectives', example: 'Public funding allocation for community projects' },
-        currency_symbol: { type: :string, description: 'Currency symbol used (e.g., $, €, £)', example: '$' },
-        total_budget: { type: :number, nullable: true, description: 'Total budget amount available for allocation', example: 1000000 },
+        currency_symbol: { type: :string, description: 'Currency symbol used (e.g., $, €, £, ¥)', example: '€' },
+        voting_style: { type: :string, description: 'Voting mechanism: knapsack, approval or distributed', example: 'knapsack' },
+        published: { type: :boolean, description: 'Whether the budget is publicly visible' },
+        hide_money: { type: :boolean, description: 'Whether monetary values are hidden from public view' },
+        max_number_of_winners: { type: :integer, description: 'Maximum number of winning proposals (0 = unlimited)', example: 0 },
+        show_results_after_first_vote: { type: :boolean, description: 'Show voting results in real time' },
+        show_percentage_values_only: { type: :boolean, description: 'Display only percentages instead of absolute values' },
+        max_preselected: { type: :integer, description: 'Maximum pre-selected proposals (0 = disabled)', example: 0 },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this budget belongs to', example: 5 },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the budget was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the budget was last modified', example: '2024-01-15T10:00:00Z' }
       },
       required: %w[id name slug currency_symbol projekt_phase_id created_at updated_at]
+    }.freeze
+
+    BUDGET_PHASE_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, description: 'Unique identifier' },
+        kind: { type: :string, description: 'Phase kind: informing, accepting, reviewing, selecting, valuating, publishing_prices, balloting, reviewing_ballots, finished' },
+        name: { type: :string, description: 'Phase display name' },
+        starts_at: { type: :string, format: :date_time, nullable: true, description: 'Phase start date' },
+        ends_at: { type: :string, format: :date_time, nullable: true, description: 'Phase end date' },
+        enabled: { type: :boolean, description: 'Whether this phase is active' }
+      },
+      required: %w[id kind name enabled]
     }.freeze
 
     BUDGET_INVESTMENT_SCHEMA = {
@@ -38,6 +57,7 @@ module Schemas
     def self.all
       {
         Budget: BUDGET_SCHEMA,
+        BudgetPhase: BUDGET_PHASE_SCHEMA,
         BudgetInvestment: BUDGET_INVESTMENT_SCHEMA
       }
     end

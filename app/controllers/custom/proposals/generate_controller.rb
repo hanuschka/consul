@@ -1,6 +1,6 @@
 class Proposals::GenerateController < AiProposalFlowBaseController
   def new_flow
-    @generate_draft_url = generate_proposal_draft_path
+    @generate_draft_url = generate_proposal_draft_path(projekt_phase_id: @projekt_phase.id)
     render "ai_proposal_flow/new_flow"
   end
 
@@ -32,8 +32,7 @@ idea_text: @draft_resource.ai_idea_text)
     @draft_resource.update!(params_with_image_user)
 
     if @draft_resource.projekt_phase.user_resource_criteria.exists?
-      evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
-      @draft_resource.update!(ai_evaluation_result: evaluation)
+      ProposalAiDraft::EvaluateTwoTierService.call(resource: @draft_resource)
 
       redirect_to generate_proposal_evaluation_path(@draft_resource)
     else

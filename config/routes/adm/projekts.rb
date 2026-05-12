@@ -46,6 +46,11 @@ namespace :adm do
 
         # Map & location
         get :map
+        get :masterportal_pins
+        get :masterportal_pins_summary
+        delete :destroy_all_masterportal_pins
+        delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
+               as: :destroy_masterportal_pin
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
         get :map_resources_overview
@@ -116,6 +121,11 @@ namespace :adm do
           post :send_notifications
         end
       end
+      resources :stat_questions, only: [] do
+        member do
+          get :poll
+        end
+      end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
         member do
           post :send_emails
@@ -178,23 +188,32 @@ namespace :adm do
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
+      collection do
+        get :import_projekt
+      end
       get :details, on: :member
       get :visibility, on: :member
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :evaluation, on: :member
+      post :generate_evaluation, on: :member
+      get :evaluation_pdf_options, on: :member
+      get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :update_color, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
+      patch :update_image, on: :member
+      delete :delete_image, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create] do
         patch :reorder, on: :collection
       end
       resources :manager_assignments, only: [:update]
-      patch :update_default_phase, on: :member
     end
   end
 end

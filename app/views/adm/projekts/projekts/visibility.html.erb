@@ -14,6 +14,7 @@
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.consider_underway"), :value, :boolean) %>
 
     <% if @individual_groups.any? %>
       <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_description')) do %>

@@ -13,6 +13,15 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
+application.register("adm--ai-question-form", AdmAiQuestionFormController)
+
+import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
+application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
+
+import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
+application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
@@ -74,6 +83,12 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
+import PdfDownloadController from "./pdf_download_controller"
+application.register("pdf-download", PdfDownloadController)
+
+import GlightboxController from "./glightbox_controller"
+application.register("glightbox", GlightboxController)
+
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 
@@ -107,6 +122,18 @@ application.register("adm-budget-investments--phases-accordion", AdmBudgetInvest
 
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
+
+import SharedAdminIframeController from "./shared/admin_iframe_controller"
+application.register("shared--admin-iframe", SharedAdminIframeController)
+
+import AdmProjektImportController from "./adm/projekt_import_controller"
+application.register("adm-projekt-import", AdmProjektImportController)
+
+import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
+application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
+
+import AdmDeleteCollectionController from "./adm/delete_collection_controller"
+application.register("adm--delete-collection", AdmDeleteCollectionController)
 
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)

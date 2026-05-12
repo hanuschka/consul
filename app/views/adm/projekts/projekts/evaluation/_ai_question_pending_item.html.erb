@@ -1,0 +1,15 @@
+<div
+  id="<%= dom_id(stat_question) %>"
+  class="ai-question-item ai-question-item--pending"
+  data-controller="adm--ai-question-pending"
+  data-adm--ai-question-pending-status-url-value="<%= poll_adm_projekts_phase_stat_question_path(projekt_phase, stat_question) %>"
+  data-adm--ai-question-pending-delete-url-value="<%= delete_stat_question_projekt_phase_path(projekt_phase, question_id: stat_question.id) %>"
+  data-adm--ai-question-pending-interval-value="5000"
+  data-adm--ai-question-pending-timeout-value="420000"
+>
+  <%= render Shared::SpinnerComponent.new(size: :medium) %>
+  <p class="ai-question-item--text"><%= truncate(stat_question.question, length: 150) %></p>
+  <p class="ai-question-item--status">
+    <%= t("custom.participation_stats.ai_question.processing_message") %>
+  </p>
+</div>

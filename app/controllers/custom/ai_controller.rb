@@ -29,6 +29,10 @@ class AiController < ApplicationController
       )
     end
 
+    if response.success?
+      mark_resource_generated_image
+    end
+
     render json: response.parsed_response, status: response.code
   end
 
@@ -62,18 +66,44 @@ class AiController < ApplicationController
     end
 
     attach_generated_image(resource, image_response.parsed_response["image"])
+    resource.update_column(:generated_image, true)
     resource.reload
 
     render json: { image_url: image_url(resource.image.attachment) }
+  end
+
+  def remove_image_from_resource
+    resource = find_assignable_resource
+
+    if resource.blank?
+      render json: { error: "Resource not found" }, status: :not_found
+      return
+    end
+
+    if resource.respond_to?(:draft) && !resource.draft
+      render json: { error: "Resource is not a draft" }, status: :forbidden
+      return
+    end
+
+    resource.image&.destroy
+
+    render json: { success: true }
   end
 
   private
 
     def find_assignable_resource
       resource_class = ASSIGNABLE_RESOURCE_TYPES[params[:resource_type]]
-      return nil unless resource_class
+      return nil if resource_class.blank?
 
       resource_class.unscoped.find_by(id: params[:resource_id])
+    end
+
+    def mark_resource_generated_image
+      resource = find_assignable_resource
+      return if resource.blank?
+
+      resource.update_column(:generated_image, true)
     end
 
     def attach_generated_image(resource, base64_image)

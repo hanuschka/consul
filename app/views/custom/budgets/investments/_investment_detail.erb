@@ -15,6 +15,10 @@
   <%= auto_link_already_sanitized_html wysiwyg(investment.description) %>
 </div>
 
+<% if investment.masterportal_pin.present? %>
+  <%= render Shared::MasterportalPinInfoComponent.new(masterportal_pin: investment.masterportal_pin) %>
+<% end %>
+
 <%= render_image(investment.image, :large, true) if investment.image.present? %>
 
 <% if investment.location.present? %>

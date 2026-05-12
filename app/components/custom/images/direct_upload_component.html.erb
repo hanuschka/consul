@@ -5,6 +5,12 @@
     <div class="direct-image-upload--inner">
       <div class="direct-image-upload--generating-animation js-direct-image-upload-generating-animation">
         <%= helpers.svg_tag("loader_animations/bars-scale") %>
+        <div class="direct-image-upload--generating-animation--title">
+          <%= t("custom.user_resources.image_upload.generating_title") %>
+        </div>
+        <div class="direct-image-upload--generating-animation--subtitle">
+          <%= t("custom.user_resources.image_upload.generating_subtitle") %>
+        </div>
       </div>
 
       <div class="js-direct-image-upload--file-attach-area direct-image-upload--file-attach-area">

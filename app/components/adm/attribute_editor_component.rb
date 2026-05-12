@@ -23,6 +23,16 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:description].presence || I18n.t(i18n_key(:description), default: nil)
   end
 
+  def note
+    @options[:note].presence || ai_gated_note
+  end
+
+  def ai_gated?
+    return true if @options[:ai_gated] == true
+
+    @record.respond_to?(:ai_gated?) && @record.ai_gated?
+  end
+
   def component_for_type
     case @kind
     when :boolean
@@ -54,7 +64,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def disabled?
-    @options[:disabled] == true
+    @options[:disabled] == true || ai_gated_disabled?
   end
 
   def wide?
@@ -78,6 +88,16 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   private
+
+    def ai_gated_disabled?
+      ai_gated? && !Ai::Settings.ai_available?
+    end
+
+    def ai_gated_note
+      return nil if !ai_gated_disabled?
+
+      I18n.t("adm.ai_required_note")
+    end
 
     def i18n_key(type)
       if @record.is_a?(::ProjektPhaseSetting)

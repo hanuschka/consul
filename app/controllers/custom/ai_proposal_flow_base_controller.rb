@@ -13,9 +13,9 @@ class AiProposalFlowBaseController < ApplicationController
 
     def load_draft_resource
       @draft_resource = resource_class.unscoped.find(params[:id])
-      authorize! :update, @draft_resource
+      verify_ownership!
 
-      unless @draft_resource.draft?
+      if !@draft_resource.draft?
         Rails.logger.warn("[AiProposalFlow] Draft published: #{resource_class} #{@draft_resource.id}")
         redirect_to new_flow_redirect_path
       end
@@ -23,7 +23,13 @@ class AiProposalFlowBaseController < ApplicationController
 
     def load_published_resource
       @draft_resource = resource_class.unscoped.find(params[:id])
-      authorize! :update, @draft_resource
+      verify_ownership!
+    end
+
+    def verify_ownership!
+      if @draft_resource.author != current_user
+        raise CanCan::AccessDenied.new("Not authorized", :update, resource_class)
+      end
     end
 
     def resource_class            = raise NotImplementedError

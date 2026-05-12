@@ -5,12 +5,12 @@ de:
       home:
         title: Willkommen zur Budget-Begutachtung
         stats:
-          total: Investitionen gesamt
+          total: Vorschläge gesamt
           not_valued: Noch nicht begutachtet
           in_valuation: In Begutachtung
           valued: Abgeschlossen
         quick_links:
-          all: Alle Investitionen
+          all: Alle Vorschläge
           not_valued: Nicht begutachtete
       menu:
         aria_label: Budget-Begutachtung Navigation

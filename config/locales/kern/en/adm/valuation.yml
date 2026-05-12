@@ -5,12 +5,12 @@ en:
       home:
         title: Welcome to Budget Assessment
         stats:
-          total: Total investments
+          total: Total proposals
           not_valued: Not yet assessed
           in_valuation: In assessment
           valued: Completed
         quick_links:
-          all: All investments
+          all: All proposals
           not_valued: Not assessed
       menu:
         aria_label: Budget Assessment navigation

@@ -1,0 +1,42 @@
+.files-index {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.files-index--filter-bar {
+  margin-bottom: 24px;
+}
+
+.files-index--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+
+.files-index--pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.files-index--grid .file-upload-manager-dialog--item {
+  min-height: 280px;
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 750px) {
+  .files-index {
+    padding: 16px;
+  }
+
+  .files-index--grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .files-index--grid .file-upload-manager-dialog--item {
+    min-height: 200px;
+  }
+}

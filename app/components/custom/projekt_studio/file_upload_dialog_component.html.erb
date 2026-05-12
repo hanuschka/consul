@@ -20,14 +20,7 @@
     <!-- Controls Bar -->
     <div class="file-upload-manager-dialog--toolbar">
       <div class="file-upload-manager-dialog--toolbar-left">
-        <div class="file-upload-manager-dialog--search-wrapper">
-          <input type="text" class="file-upload-manager-dialog--search-input js-file-upload-manager-search" placeholder="Suchen...">
-          <button type="button" class="file-upload-manager-dialog--search-clear js-file-upload-manager-search-clear" style="display: none;" aria-label="Suche zurücksetzen">
-            <i class="fa fa-xmark"></i>
-          </button>
-          <span class="file-upload-manager-dialog--search-icon"></span>
-        </div>
-
+        <%= render Files::FilterBarComponent.new %>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">

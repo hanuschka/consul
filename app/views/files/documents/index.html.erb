@@ -1,0 +1,16 @@
+<%= javascript_include_tag "lib/files/filter_serializer" %>
+
+<%= content_for :title, t("files.documents.index.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("files.documents.index.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<div class="kern-container my-5">
+  <%= render Files::IndexComponent.new(
+    type: "document",
+    assets: @assets,
+    endpoint: files_documents_path
+  ) %>
+</div>

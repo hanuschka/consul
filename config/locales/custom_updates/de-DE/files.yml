@@ -1,0 +1,39 @@
+de:
+  adm:
+    menu:
+      items:
+        files: Dateien
+        files_subitems:
+          images: Bilder
+          documents: Dokumente
+  files:
+    images:
+      index:
+        title: Bilder
+    documents:
+      index:
+        title: Dokumente
+    filter_bar:
+      search_placeholder: Suchen…
+      extension: Dateityp
+      size_min: Min. Größe (MB)
+      size_max: Max. Größe (MB)
+      created_from: Erstellt ab
+      created_to: Erstellt bis
+      updated_from: Geändert ab
+      updated_to: Geändert bis
+      sort_default: Sortierung
+      reset: Zurücksetzen
+      sort:
+        created_desc: Neueste zuerst
+        created_asc: Älteste zuerst
+        updated_desc: Zuletzt geändert
+        updated_asc: Am längsten unverändert
+        name_asc: Name A–Z
+        name_desc: Name Z–A
+        size_asc: Kleinste zuerst
+        size_desc: Größte zuerst
+    card:
+      edit: Bearbeiten
+      delete: Löschen
+      upload: Hochladen

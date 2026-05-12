@@ -1,0 +1,83 @@
+<div class="files-filter-bar js-fm-filter-bar">
+  <input
+    type="search"
+    class="js-fm-filter-search"
+    placeholder="<%= t("files.filter_bar.search_placeholder") %>"
+    aria-label="<%= t("files.filter_bar.search_placeholder") %>"
+    data-action="input->files--filter-bar#searchChanged"
+  >
+
+  <input
+    type="text"
+    class="js-fm-filter-extension"
+    placeholder="<%= t("files.filter_bar.extension") %>"
+    aria-label="<%= t("files.filter_bar.extension") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="number"
+    class="js-fm-filter-size-min"
+    placeholder="<%= t("files.filter_bar.size_min") %>"
+    aria-label="<%= t("files.filter_bar.size_min") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="number"
+    class="js-fm-filter-size-max"
+    placeholder="<%= t("files.filter_bar.size_max") %>"
+    aria-label="<%= t("files.filter_bar.size_max") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="date"
+    class="js-fm-filter-created-from"
+    placeholder="<%= t("files.filter_bar.created_from") %>"
+    aria-label="<%= t("files.filter_bar.created_from") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="date"
+    class="js-fm-filter-created-to"
+    placeholder="<%= t("files.filter_bar.created_to") %>"
+    aria-label="<%= t("files.filter_bar.created_to") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="date"
+    class="js-fm-filter-updated-from"
+    placeholder="<%= t("files.filter_bar.updated_from") %>"
+    aria-label="<%= t("files.filter_bar.updated_from") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <input
+    type="date"
+    class="js-fm-filter-updated-to"
+    placeholder="<%= t("files.filter_bar.updated_to") %>"
+    aria-label="<%= t("files.filter_bar.updated_to") %>"
+    data-action="change->files--filter-bar#filterChanged"
+  >
+
+  <select
+    class="js-fm-filter-sort"
+    aria-label="<%= t("files.filter_bar.sort_default") %>"
+    data-action="change->files--filter-bar#sortChanged"
+  >
+    <% Files::FilterBarComponent::SORT_OPTIONS.each do |key| %>
+      <option value="<%= key %>"><%= t("files.filter_bar.sort.#{key}") %></option>
+    <% end %>
+  </select>
+
+  <button
+    type="button"
+    class="js-fm-filter-reset"
+    data-action="click->files--filter-bar#resetClicked"
+  >
+    <%= t("files.filter_bar.reset") %>
+  </button>
+</div>

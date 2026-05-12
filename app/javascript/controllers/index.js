@@ -153,3 +153,6 @@ application.register("adm-user-select", AdmUserSelectController)
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)
 
+import FilesFilterBarController from "./files/filter_bar_controller"
+application.register("files--filter-bar", FilesFilterBarController)
+

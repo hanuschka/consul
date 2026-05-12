@@ -1,0 +1,21 @@
+<div
+  class="files-index"
+  data-controller="files--filter-bar"
+  data-files--filter-bar-type-value="<%= type %>"
+  data-files--filter-bar-endpoint-value="<%= endpoint %>"
+>
+  <div class="files-index--filter-bar" data-files--filter-bar-target="form">
+    <%= render Files::FilterBarComponent.new %>
+  </div>
+
+  <div class="files-index--grid" data-files--filter-bar-target="grid">
+    <%= render partial: "ckeditor/assets/items", locals: { assets: assets } %>
+  </div>
+
+  <div
+    class="files-index--pagination"
+    data-files--filter-bar-target="pagination"
+  >
+    <%= render partial: "ckeditor/assets/pagination", locals: { assets: assets } %>
+  </div>
+</div>

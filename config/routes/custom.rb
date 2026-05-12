@@ -36,6 +36,11 @@ namespace :ckeditor do
   resources :documents, only: [:create, :update, :destroy]
 end
 
+namespace :files do
+  resources :images, only: [:index]
+  resources :documents, only: [:index]
+end
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 

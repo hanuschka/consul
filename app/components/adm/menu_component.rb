@@ -9,6 +9,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.menu.items.profiles"),      icon: "3p",               path: "#", subitems: profiles_subitems },
       { label: t("adm.menu.items.notifications"), icon: "send",             path: "#", subitems: notifications_subitems },
       { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: "#", subitems: stats_subitems },
+      { label: t("adm.menu.items.files"),         icon: "folder",           path: "#", subitems: files_subitems },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
       { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
@@ -30,6 +31,13 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.documents"),             path: adm_documents_path },
         { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" }
+      ]
+    end
+
+    def files_subitems
+      [
+        { label: t("adm.menu.items.files_subitems.images"),    path: files_images_path },
+        { label: t("adm.menu.items.files_subitems.documents"), path: files_documents_path }
       ]
     end
 

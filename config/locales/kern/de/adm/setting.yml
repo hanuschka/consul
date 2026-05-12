@@ -180,6 +180,8 @@ de:
         show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer eigenständigen, individuellen Liste an – getrennt von den automatisch generierten Listen wie „Laufende Projekte” oder „Abgeschlossene Projekte”. Diese Option eignet sich z. B. für hervorgehobene oder dauerhaft sichtbare Projekte.
         allow_indexing: Suchmaschinen-Indexierung
         allow_indexing_description: Erlaubt Suchmaschinen wie Google, die Projektseite zu indexieren und in Suchergebnissen anzuzeigen. Ist diese Option deaktiviert, wird ein „noindex”-Tag gesetzt, sodass die Seite zwar über die Plattform erreichbar bleibt, aber nicht über externe Suchmaschinen gefunden werden kann.
+        consider_underway: Projekt als aktive Beteiligung führen
+        consider_underway_description: Stellt sicher, dass das Projekt in der Übersicht stets als aktive Beteiligung aufgeführt wird – auch dann, wenn aktuell keine reguläre Beteiligungsphase läuft. Geeignet z. B. für dauerhaft beworbene Projekte oder solche zwischen zwei Phasen, die für Nutzer weiterhin als aktive Beteiligungsmöglichkeit sichtbar bleiben sollen.
     ideas:
       show_in_main_menu: Ideen in der Navigation
       show_in_main_menu_description: Zeigt den Menüpunkt Ideen in der Hauptnavigation an

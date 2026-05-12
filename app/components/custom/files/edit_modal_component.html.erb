@@ -1,0 +1,80 @@
+<span
+  hidden
+  data-files-edit-failed-message="<%= t("files.edit_modal.update_failed") %>"
+></span>
+
+<dialog
+  class="files-edit-modal js-files-edit-modal"
+  data-files--filter-bar-target="editModal"
+>
+  <form
+    class="files-edit-modal--content"
+    data-files--filter-bar-target="editForm"
+    data-action="submit->files--filter-bar#editModalSubmit"
+  >
+    <div class="files-edit-modal--header">
+      <h2 class="files-edit-modal--title"><%= t("files.edit_modal.title") %></h2>
+
+      <button
+        type="button"
+        class="files-edit-modal--close"
+        data-action="click->files--filter-bar#editModalClose"
+        aria-label="<%= t("files.edit_modal.close") %>"
+      >
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="files-edit-modal--body">
+      <div class="files-edit-modal--field">
+        <label class="files-edit-modal--label"><%= t("files.edit_modal.title_label") %></label>
+        <input
+          type="text"
+          class="files-edit-modal--input"
+          data-files--filter-bar-target="editTitle"
+          placeholder="<%= t("files.edit_modal.title_label") %>"
+        >
+      </div>
+
+      <div class="files-edit-modal--field">
+        <label class="files-edit-modal--label"><%= t("files.edit_modal.description") %></label>
+        <textarea
+          class="files-edit-modal--textarea"
+          data-files--filter-bar-target="editDescription"
+          placeholder="<%= t("files.edit_modal.description") %>"
+        ></textarea>
+      </div>
+
+      <div
+        class="files-edit-modal--field"
+        data-files--filter-bar-target="editAltField"
+      >
+        <label class="files-edit-modal--label"><%= t("files.edit_modal.alt_text") %></label>
+        <input
+          type="text"
+          class="files-edit-modal--input"
+          data-files--filter-bar-target="editAlt"
+          placeholder="<%= t("files.edit_modal.alt_text") %>"
+        >
+      </div>
+    </div>
+
+    <div class="files-edit-modal--footer">
+      <button
+        type="button"
+        class="files-edit-modal--cancel-button"
+        data-action="click->files--filter-bar#editModalClose"
+      >
+        <%= t("files.edit_modal.cancel") %>
+      </button>
+
+      <button
+        type="submit"
+        class="files-edit-modal--save-button"
+      >
+        <i class="fa fa-floppy-disk"></i>
+        <%= t("files.edit_modal.save") %>
+      </button>
+    </div>
+  </form>
+</dialog>

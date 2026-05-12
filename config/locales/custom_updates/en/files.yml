@@ -16,12 +16,17 @@ en:
     filter_bar:
       search_placeholder: Search…
       extension: File type
+      extension_any: All file types
       size_min: Min size (MB)
       size_max: Max size (MB)
       created_from: Created from
       created_to: Created to
       updated_from: Modified from
       updated_to: Modified to
+      imageable_type: Assigned to
+      imageable_type_any: All
+      documentable_type: Assigned to
+      documentable_type_any: All
       sort_default: Sort
       reset: Reset
       sort:
@@ -33,7 +38,25 @@ en:
         name_desc: Name Z–A
         size_asc: Smallest first
         size_desc: Largest first
+    upload_failed: Upload failed
     card:
       edit: Edit
       delete: Delete
       upload: Upload
+      open_in_new_tab: Open in new tab
+      download: Download
+      size: Size
+      dimensions: Dimensions
+      created: Created
+      modified: Modified
+      imageable_type: Assigned to
+      documentable_type: Assigned to
+    edit_modal:
+      title: Edit file
+      title_label: Title
+      description: Description
+      alt_text: Alt text
+      cancel: Cancel
+      save: Save
+      close: Close
+      update_failed: Update failed

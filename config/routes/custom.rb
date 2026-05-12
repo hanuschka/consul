@@ -37,8 +37,12 @@ namespace :ckeditor do
 end
 
 namespace :files do
-  resources :images, only: [:index]
-  resources :documents, only: [:index]
+  resources :images, only: [:index, :update] do
+    get :imageable_type_filter, on: :collection
+  end
+  resources :documents, only: [:index, :update] do
+    get :documentable_type_filter, on: :collection
+  end
 end
 
 resources :user_resources, only: [:index]

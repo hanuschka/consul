@@ -10,6 +10,8 @@
     "created_to",
     "updated_from",
     "updated_to",
+    "imageable_type",
+    "documentable_type",
     "sort",
     "type",
     "page"
@@ -24,6 +26,8 @@
     { key: "created_to", selector: ".js-fm-filter-created-to" },
     { key: "updated_from", selector: ".js-fm-filter-updated-from" },
     { key: "updated_to", selector: ".js-fm-filter-updated-to" },
+    { key: "imageable_type", selector: ".js-fm-filter-imageable-type" },
+    { key: "documentable_type", selector: ".js-fm-filter-documentable-type" },
     { key: "sort", selector: ".js-fm-filter-sort" }
   ];
 

@@ -16,12 +16,17 @@ de:
     filter_bar:
       search_placeholder: Suchen…
       extension: Dateityp
+      extension_any: Alle Dateitypen
       size_min: Min. Größe (MB)
       size_max: Max. Größe (MB)
       created_from: Erstellt ab
       created_to: Erstellt bis
       updated_from: Geändert ab
       updated_to: Geändert bis
+      imageable_type: Zugewiesen an
+      imageable_type_any: Alle
+      documentable_type: Zugewiesen an
+      documentable_type_any: Alle
       sort_default: Sortierung
       reset: Zurücksetzen
       sort:
@@ -33,7 +38,25 @@ de:
         name_desc: Name Z–A
         size_asc: Kleinste zuerst
         size_desc: Größte zuerst
+    upload_failed: Hochladen fehlgeschlagen
     card:
       edit: Bearbeiten
       delete: Löschen
       upload: Hochladen
+      open_in_new_tab: In neuem Tab öffnen
+      download: Herunterladen
+      size: Größe
+      dimensions: Abmessungen
+      created: Erstellt
+      modified: Geändert
+      imageable_type: Zugewiesen an
+      documentable_type: Zugewiesen an
+    edit_modal:
+      title: Datei bearbeiten
+      title_label: Titel
+      description: Beschreibung
+      alt_text: Alternativer Text
+      cancel: Abbrechen
+      save: Speichern
+      close: Schließen
+      update_failed: Aktualisierung fehlgeschlagen

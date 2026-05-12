@@ -8,11 +8,22 @@ export default class extends Controller {
     endpoint: String
   }
 
-  static targets = ["form", "grid", "pagination"]
+  static targets = [
+    "form",
+    "grid",
+    "pagination",
+    "editModal",
+    "editForm",
+    "editTitle",
+    "editDescription",
+    "editAlt",
+    "editAltField"
+  ]
 
   connect() {
     this.currentPage = 1
     this.searchTimer = null
+    this.editingAsset = null
 
     this.onPaginationClick = this.onPaginationClick.bind(this)
     this.onPopState = this.onPopState.bind(this)
@@ -33,7 +44,7 @@ export default class extends Controller {
     window.removeEventListener("popstate", this.onPopState)
   }
 
-  searchChanged() {
+  inputChanged() {
     if (this.searchTimer) clearTimeout(this.searchTimer)
 
     this.searchTimer = setTimeout(() => {
@@ -57,6 +68,114 @@ export default class extends Controller {
     this.clearFormInputs()
     this.currentPage = 1
     this.refresh()
+  }
+
+  editClicked(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const card = event.target.closest(".files-asset-card")
+
+    if (!card) return
+
+    this.editingAsset = card
+    this.editTitleTarget.value = card.dataset.title || ""
+    this.editDescriptionTarget.value = card.dataset.description || ""
+    this.editAltTarget.value = card.dataset.altText || ""
+
+    const onlyTitle = card.dataset.onlyTitle === "true"
+    const descriptionField = this.editDescriptionTarget.closest(".files-edit-modal--field")
+
+    if (onlyTitle) {
+      if (descriptionField) descriptionField.style.display = "none"
+      this.editAltFieldTarget.style.display = "none"
+    } else {
+      if (descriptionField) descriptionField.style.display = ""
+      this.editAltFieldTarget.style.display = card.dataset.type === "picture" ? "" : "none"
+    }
+
+    this.editModalTarget.showModal()
+  }
+
+  editModalClose(event) {
+    if (event) event.preventDefault()
+
+    this.editModalTarget.close()
+    this.editingAsset = null
+  }
+
+  async editModalSubmit(event) {
+    event.preventDefault()
+
+    if (!this.editingAsset) return
+
+    const card = this.editingAsset
+    const updateUrl = card.dataset.updateUrl
+    const id = card.dataset.id
+    const type = card.dataset.type
+    const fallbackEndpoint = type === "picture" ? "/ckeditor/pictures" : "/ckeditor/documents"
+    const url = updateUrl || `${fallbackEndpoint}/${id}`
+
+    const formData = this.buildEditFormData(card)
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "X-CSRF-TOKEN": this.csrfToken(),
+          "Accept": "application/json"
+        },
+        body: formData
+      })
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      const data = await response.json()
+
+      this.applyUpdateToCard(card, data)
+      this.editModalClose()
+    } catch (error) {
+      console.error("Files edit submit failed", error)
+      alert(this.editFailedMessage())
+    }
+  }
+
+  buildEditFormData(card) {
+    const formData = new FormData()
+    const onlyTitle = card.dataset.onlyTitle === "true"
+    const type = card.dataset.type
+
+    if (onlyTitle) {
+      formData.append(`${type}[title]`, this.editTitleTarget.value)
+      return formData
+    }
+
+    formData.append(`${type}[title]`, this.editTitleTarget.value)
+    formData.append(`${type}[description]`, this.editDescriptionTarget.value)
+
+    if (type === "picture") {
+      formData.append(`${type}[alt_text]`, this.editAltTarget.value)
+    }
+
+    return formData
+  }
+
+  applyUpdateToCard(card, data) {
+    if (data.title !== undefined) card.dataset.title = data.title || ""
+    if (data.description !== undefined) card.dataset.description = data.description || ""
+    if (data.alt_text !== undefined) card.dataset.altText = data.alt_text || ""
+  }
+
+  csrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]')
+
+    return meta ? meta.getAttribute("content") : ""
+  }
+
+  editFailedMessage() {
+    const el = document.querySelector("[data-files-edit-failed-message]")
+
+    return el ? el.getAttribute("data-files-edit-failed-message") : "Update failed"
   }
 
   onPaginationClick(event) {
@@ -136,6 +255,8 @@ export default class extends Controller {
       ".js-fm-filter-created-to",
       ".js-fm-filter-updated-from",
       ".js-fm-filter-updated-to",
+      ".js-fm-filter-imageable-type",
+      ".js-fm-filter-documentable-type",
       ".js-fm-filter-sort"
     ]
 

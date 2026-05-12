@@ -5,12 +5,40 @@
 <%= render Adm::HeaderComponent.new(
   title: t("files.images.index.title"),
   breadcrumbs: @breadcrumbs
-) %>
+) do |header| %>
+  <% header.with_actions do %>
+    <div
+      class="files-page-actions"
+      data-controller="files--upload"
+      data-files--upload-endpoint-value="/ckeditor/pictures"
+    >
+      <button
+        type="button"
+        class="files-page-actions--upload-button"
+        data-action="click->files--upload#triggerPicker"
+      >
+        <i class="fa fa-upload"></i>
+        <%= t("files.card.upload") %>
+      </button>
+      <input
+        type="file"
+        accept="image/*"
+        class="js-files-upload-input"
+        data-files--upload-target="input"
+        data-action="change->files--upload#fileChanged"
+        hidden
+      >
+      <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+    </div>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
   <%= render Files::IndexComponent.new(
     type: "picture",
     assets: @assets,
-    endpoint: files_images_path
+    endpoint: files_images_path,
+    card_component: Files::ImageCardComponent,
+    imageable_type_frame_src: imageable_type_filter_files_images_path(imageable_type: params[:imageable_type])
   ) %>
 </div>

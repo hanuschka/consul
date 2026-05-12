@@ -1,4 +1,8 @@
 class Adm::ImagePolicy < ApplicationPolicy
+  def index?
+    @user&.administrator?
+  end
+
   def update?
     @user&.administrator? || projekt_manager_for_imageable?
   end

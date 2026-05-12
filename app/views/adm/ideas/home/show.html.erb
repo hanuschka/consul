@@ -25,5 +25,6 @@
   contact_persons: @contact_persons,
   notice: @section_setting,
   activities: @activities,
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "ideas") : nil
+  activity_pagy: @pagy_activities,
+  section_settings_path: policy([:adm, Setting]).update? ? adm_ideas_settings_path : nil
 ) %>

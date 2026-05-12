@@ -4,7 +4,7 @@ de:
       projekt_event_registrations:
         index:
           title: Anmeldungen
-          export_csv: CSV exportieren
+          download_csv: CSV herunterladen
           no_items_title: Noch keine Anmeldungen
           no_items_description: Sobald sich Personen für diese Veranstaltung anmelden, werden sie hier angezeigt.
           no_results_filtered_title: Keine Anmeldungen entsprechen dem Filter

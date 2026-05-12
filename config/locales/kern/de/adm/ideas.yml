@@ -176,7 +176,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Team
+          title: Sachbearbeiter
           page_hint: "Hier verwalten Sie die Sachbearbeiter für Ideen. Sachbearbeiter können eingereichte Ideen bearbeiten, deren Umsetzbarkeit bewerten und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Sachbearbeiter können Kategorien und Gebieten als Standardverantwortliche zugeordnet werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Ideen hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Ideen, bewerten deren Umsetzbarkeit und kommunizieren mit den Einreichern.

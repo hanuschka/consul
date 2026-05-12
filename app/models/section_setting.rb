@@ -1,5 +1,5 @@
 class SectionSetting < ApplicationRecord
-  SECTIONS = %w[ideas deficiency_reports projekts moderation valuation landing_pages].freeze
+  SECTIONS = %w[ideas deficiency_reports projekts moderation valuation landing_pages officing].freeze
 
   belongs_to :author, class_name: "User", optional: true
 

@@ -230,7 +230,7 @@ en:
           submit: Save
       officers:
         index:
-          title: Team
+          title: Officers
           page_hint: "Here you manage the officers for the deficiency reporter. Officers can edit submitted reports, update the status, and write official responses. Use the search field to find registered users and assign them the officer role. Only already-registered users can be added as officers."
           search_label: Search users
           search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for the deficiency reporter. Officers process submitted reports, communicate with citizens, and update the processing status.

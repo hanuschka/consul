@@ -8,20 +8,30 @@
   recent_items: nil,
   recent_items_url: nil,
   intro_text: @section_setting&.intro_text_with_fallback,
-  quick_links: @quick_links,
+  quick_links: [],
   stats: @stats,
   contact_persons: @contact_persons,
   notice: @section_setting,
   activities: [],
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "projekts") : nil
+  section_settings_path: policy([:adm, Setting]).update? ? adm_projekts_settings_path : nil
 ) %>
 
 <div class="kern-container">
-  <div class="adm-dashboard__section">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
     <div class="adm-dashboard__section-header">
       <span class="material-symbols-outlined" aria-hidden="true">folder</span>
       <h3><%= t("adm.projekts.title") %></h3>
     </div>
+
+    <% if @quick_links.any? %>
+      <div class="adm-dashboard__section-actions">
+        <% @quick_links.each do |link| %>
+          <%= kern_link_button link[:path],
+              text: link[:label],
+              style: link[:primary] ? :primary : :secondary %>
+        <% end %>
+      </div>
+    <% end %>
 
   <%= turbo_frame_tag "projekts_table" do %>
     <% if @projekts.any? %>
@@ -53,5 +63,5 @@
   <% end %>
   </div>
 
-  <%= render Adm::ActivityFeedComponent.new(activities: @activities) %>
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
 </div>

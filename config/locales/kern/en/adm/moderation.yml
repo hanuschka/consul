@@ -23,6 +23,7 @@ en:
           proposals: Proposals
           budget_investments: Proposals (budget)
           comments: Comments
+          settings: Configuration
       users:
         index:
           title: Block users

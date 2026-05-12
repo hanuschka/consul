@@ -1,27 +1,28 @@
 en:
   adm:
     valuation:
-      title: Valuation
+      title: Budget Assessment
       home:
-        title: Welcome to valuation
+        title: Welcome to Budget Assessment
         stats:
           total: Total investments
-          not_valued: Not yet evaluated
-          in_valuation: In valuation
+          not_valued: Not yet assessed
+          in_valuation: In assessment
           valued: Completed
         quick_links:
           all: All investments
-          not_valued: Not evaluated
+          not_valued: Not assessed
       menu:
-        aria_label: Valuation navigation
+        aria_label: Budget Assessment navigation
         items:
           home: Home
           valuators: Team
           investments: Proposals
+          settings: Configuration
       investments:
         index:
-          title: Valuation
-          page_hint: Here you see all participatory-budget proposals assigned to you for evaluation. As a valuator you review feasibility and estimate the cost of proposals. Click Edit to open the valuation form. After you finish your valuation, the author can no longer edit the proposal.
+          title: Budget Assessment
+          page_hint: Here you see all participatory-budget proposals assigned to you for assessment. As a valuator you review feasibility and estimate the cost of proposals. Click Edit to open the assessment form. After you finish your assessment, the author can no longer edit the proposal.
           table:
             id: ID
             title: Title
@@ -29,8 +30,8 @@ en:
             valuator: Valuator
             edit: Edit
           no_investments: No proposals available yet.
-          no_items_title: No proposals assigned for valuation
-          no_items_description: Proposals will be shown here as soon as they are assigned to you for valuation.
+          no_items_title: No proposals assigned for assessment
+          no_items_description: Proposals will be shown here as soon as they are assigned to you for assessment.
         details:
           details: More info
           author: Author
@@ -43,11 +44,12 @@ en:
             city: Author does not contribute to implementation
             user: Author contributes to implementation
           user_cost_estimate: "User's cost estimate (€)"
-          valuation_finished: Valuation finished
+          valuation_finished: Assessment finished
           assigned_valuators: Assigned valuators
-          undefined: Not yet evaluated
+          undefined: Not yet assessed
         form:
           feasibility_title: Criteria review
-          feasibility_hint: Check whether the proposal meets the criteria. After the valuation is completed, the author can no longer edit the proposal.
+          feasibility_hint: Check whether the proposal meets the criteria. After the assessment is completed, the author can no longer edit the proposal.
         notice:
           updated: Dossier updated
+

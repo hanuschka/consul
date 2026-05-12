@@ -6,7 +6,7 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
 
     @section_setting = SectionSetting.for_section("deficiency_reports")
     @contact_persons = SectionContactPerson.for_section("deficiency_reports")
-    @activities = SectionActivity.for_section("deficiency_reports").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("deficiency_reports"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: DeficiencyReport.count, label: t("adm.deficiency_reports.home.stats.total"), icon: "report" },
@@ -18,7 +18,7 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
     @quick_links = []
 
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.home.title"), icon: "home" }
+      { name: t("adm.deficiency_reports.menu.items.home"), icon: "home" }
     ]
   end
 end

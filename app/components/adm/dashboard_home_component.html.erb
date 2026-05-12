@@ -41,7 +41,8 @@
                   <span class="adm-stat-card__icon material-symbols-outlined" aria-hidden="true"><%= stat[:icon] %></span>
                 </div>
               <% end %>
-              <span class="adm-stat-card__value <%= 'adm-stat-card__value--compact' if stat[:value].to_s.length >= 6 %>"><%= stat[:value] %></span>
+              <% formatted_value = stat[:value].is_a?(Numeric) ? number_with_delimiter(stat[:value]) : stat[:value].to_s %>
+              <span class="adm-stat-card__value <%= 'adm-stat-card__value--compact' if formatted_value.length >= 6 %>"><%= formatted_value %></span>
               <span class="adm-stat-card__label"><%= stat[:label] %></span>
             </div>
           <% end %>
@@ -201,7 +202,7 @@
   <% end %>
 
   <%# ── 5. Activity Feed ─────────────────────────────────────────────── %>
-  <%= render Adm::ActivityFeedComponent.new(activities: activities) %>
+  <%= render Adm::ActivityFeedComponent.new(activities: activities, pagy: activity_pagy) %>
 
 </div>
 

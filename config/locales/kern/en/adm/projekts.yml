@@ -21,13 +21,7 @@ en:
           projekts: Projects
           managers: Team
           landing_pages: Topic pages
-          overview_page: Projects overview page
-      overview_page:
-        title: Projects overview page
-        hint_text: >
-          Configure the public projects overview page here, where all participation projects are
-          listed. Via the navigation you control which project lists appear in the top filter bar.
-          In the footer tab you define which project lists appear at the bottom of the page.
+          settings: Configuration
       landing_pages:
         index:
           title: Topic pages
@@ -138,7 +132,7 @@ en:
           no_managers_description: Create a new project manager under "Project managers" in the sidebar, then assign them to the project.
           no_managers_link: Create project manager
           assignment:
-            hint: Please define which rights should be assigned to the project manager.
+            hint: Define here which rights should be assigned to the selected project manager for this project. The selection determines which actions are available — for example administering the project, moderating content, creating contributions on behalf of others, receiving notifications, or accessing GraphQL. Multiple rights can be combined.
             permissions:
               manage: Administer project
               moderate: Moderate content

@@ -9,22 +9,38 @@ en:
         deficiency_reports: "Deficiency reports"
         projekts: Projects
         moderation: Moderation
-        valuation: Valuation
+        valuation: Budget Assessment
         landing_pages: Topic pages
+        officing: Officing
       edit:
         title: "Edit %{section}"
-        intro_text: Introduction text
-        intro_text_hint: "This text is shown on the landing page of the respective section and serves as a short orientation for your team. Describe in a few sentences what the section is responsible for and what tasks are handled here. The text should give new team members a quick overview (max. 350 characters)."
-        intro_text_placeholder: Enter introduction text...
-        notice_message: Notice message
-        notice_message_hint: "The notice message is shown as a yellow info box at the very top of the section's landing page. Use it for current information, deadlines, or processing notes for your team. Users can dismiss the message for the current session by clicking the X, and it reappears on the next visit."
-        notice_message_placeholder: Enter notice message...
-        notice_active: Notice active
-        notice_active_hint: "Controls whether the notice message entered above is shown on the section's landing page as a yellow info box. Disable this option to temporarily hide the message without deleting the text. This lets you easily toggle recurring notices, e.g. for seasonal deadlines or project-specific instructions."
+        intro_text: "Introduction text for %{section}"
+        intro_text_hint: "This text is shown on the landing page of the „%{section}“ section and serves as a short orientation for your team. Describe in a few sentences what this section is responsible for. The text should give new team members a quick overview (max. 350 characters)."
+        intro_text_placeholder: "Enter introduction text for „%{section}“..."
+        notice_message: "Notice message for %{section}"
+        notice_message_hint: "The notice message is shown as a yellow info box at the very top of the „%{section}“ section's landing page. Use it for current information, deadlines, or processing notes for your team. Users can dismiss the message for the current session by clicking the X; it reappears on the next visit."
+        notice_message_placeholder: "Enter notice message for „%{section}“..."
+        notice_active: "Notice for %{section} active"
+        notice_active_hint: "Controls whether the notice message entered above is shown on the „%{section}“ section's landing page as a yellow info box. Disable this option to temporarily hide the message without deleting the text — e.g. for seasonal deadlines or project-specific instructions."
       intro_text_defaults:
-        projekts: "Here you manage your participation projects. Create new projects, configure phases and settings, and keep track of ongoing and completed participation processes."
-        deficiency_reports: "Here you manage incoming deficiency reports from citizens. Assign reports, track their processing status, and coordinate the resolution of reported issues."
-        ideas: "Here you manage submitted citizen ideas. Review new submissions, assign ideas to processors, and follow their status from submission to implementation."
-        moderation: "Here you moderate user-generated content on the platform. Review reported posts, comments, and user accounts, and ensure a respectful and constructive exchange."
-        valuation: "Here you evaluate submitted participatory-budget proposals. Check feasibility, estimate costs, and document your evaluation results for further processing."
-        landing_pages: "Here you manage your platform's topic pages. Create and edit pages on specific topics, publish or hide content, and shape the information architecture."
+        projekts: "Here you manage all your participation projects in one central place. Create new projects, configure phases and settings, assign project managers, and keep a clear overview of ongoing, scheduled, and completed participation processes. The quick links above take you directly to the most important actions."
+        deficiency_reports: "Here you manage incoming deficiency reports from citizens in one central place and keep track of all submitted cases. Assign reports to the right caseworkers, follow the processing status, document responses, and coordinate the timely resolution of reported issues across the municipality."
+        ideas: "Here you manage all submitted citizen ideas of your platform in one central place. Review new submissions, assign proposals to the appropriate caseworkers, categorise topics, and follow the status of each idea from submission through expert review to implementation or official response."
+        moderation: "Here you moderate all user-generated content on your platform from one central place. Review reported posts, comments, and user accounts, make decisions about visibility and bans, and ensure a respectful, constructive exchange. The overview helps you spot new reports quickly."
+        valuation: "Here you assess the submitted participatory-budget proposals regarding their feasibility. Check the technical and legal viability, estimate costs and effort, document your assessment results in a comprehensible way, and prepare the proposals for further processing or the upcoming citizen vote on the budget."
+        landing_pages: "Here you manage all topic pages of your platform from one central place. Create and edit standalone pages on focus topics such as youth participation or urban development, publish or hide content, and shape a clear information architecture with custom backgrounds and logos."
+        officing: "As a polling official you record offline votes — for example from citizens who voted in person, by post, or by phone. You verify voting eligibility against the population register and document votes for budgets, proposals, and polls, including via bulk voting. The phases assigned to you appear on the home page."
+      contact_people:
+        title: Contact persons
+        new_link: Create new contact person
+        empty_title: No contact persons available
+        empty_description: Create a new contact person to assign contacts to individual administrative areas.
+        table:
+          name: Name
+          role: Role
+          email: Email
+          phone: Phone
+          actions: Actions
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this contact person?

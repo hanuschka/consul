@@ -2,24 +2,20 @@ module Adm
   class SectionContactPeopleController < Adm::BaseController
     before_action :load_section_contact_person, only: [:edit, :update, :destroy]
 
-    def index
-      authorize [:adm, SectionContactPerson]
-      scope = policy_scope([:adm, SectionContactPerson]).includes(:user).order(:section, :position)
-      scope = scope.where(section: params[:section]) if params[:section].in?(SectionContactPerson::SECTIONS)
-      @pagy, @section_contact_people = pagy(scope)
+    SECTION_REDIRECTS = {
+      "projekts"            => :adm_projekts_settings_path,
+      "ideas"               => :adm_ideas_settings_path,
+      "deficiency_reports"  => :adm_deficiency_reports_settings_path,
+      "landing_pages"       => :adm_landing_pages_settings_path,
+      "moderation"          => :adm_moderation_settings_path,
+      "valuation"           => :adm_valuation_settings_path
+    }.freeze
 
-      @current_section_filter = params[:section]
-
-      @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.section_contact_people.index.title") }
-      ]
-    end
+    helper_method :back_url
 
     def new
-      @section_contact_person = SectionContactPerson.new
+      @section_contact_person = SectionContactPerson.new(section: params[:section])
       authorize [:adm, @section_contact_person]
-
       @breadcrumbs = form_breadcrumbs
     end
 
@@ -28,8 +24,9 @@ module Adm
       authorize [:adm, @section_contact_person]
 
       if @section_contact_person.save
-        redirect_to adm_section_contact_people_path, notice: t(".success")
+        redirect_to redirect_path_for(@section_contact_person.section), notice: t(".success")
       else
+        @breadcrumbs = form_breadcrumbs
         render :new, status: :unprocessable_entity
       end
     end
@@ -40,19 +37,20 @@ module Adm
 
     def update
       if @section_contact_person.update(section_contact_person_params)
-        redirect_to adm_section_contact_people_path, notice: t(".success")
+        redirect_to redirect_path_for(@section_contact_person.section), notice: t(".success")
       else
+        @breadcrumbs = form_breadcrumbs
         render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
       @section_contact_person.destroy!
-      redirect_to adm_section_contact_people_path, notice: t(".success")
+      redirect_to redirect_path_for(@section_contact_person.section), notice: t(".success")
     end
 
     def search
-      authorize [:adm, SectionContactPerson], :create?
+      authorize [:adm, SectionContactPerson], :search?
       @users = params[:search].to_s.length >= 2 ? User.search(params[:search]).limit(4) : User.none
     end
 
@@ -63,16 +61,25 @@ module Adm
         authorize [:adm, @section_contact_person]
       end
 
-      def form_breadcrumbs
-        [
-          { name: t("adm.menu.items.profiles"), icon: "3p" },
-          { name: t("adm.section_contact_people.index.title"), url: adm_section_contact_people_path },
-          { name: t(".title") }
-        ]
-      end
-
       def section_contact_person_params
         params.require(:section_contact_person).permit(:user_id, :section, :role, :email, :phone, :position)
+      end
+
+      def redirect_path_for(section)
+        helper_name = SECTION_REDIRECTS[section]
+        helper_name ? send(helper_name) : adm_root_path
+      end
+
+      def back_url
+        redirect_path_for(@section_contact_person&.section)
+      end
+
+      def form_breadcrumbs
+        section = @section_contact_person.section
+        [
+          { name: t("adm.section_settings.sections.#{section}"), url: redirect_path_for(section), icon: "widgets" },
+          { name: t("adm.section_settings.contact_people.title") }
+        ]
       end
   end
 end

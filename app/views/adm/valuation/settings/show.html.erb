@@ -1,0 +1,7 @@
+<%= content_for :title, t("adm.valuation.menu.items.settings") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.valuation.menu.items.settings"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::SectionSettingsComponent.new(section: "valuation") %>
+</div>

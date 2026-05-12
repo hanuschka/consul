@@ -23,6 +23,7 @@ de:
           proposals: Vorschläge
           budget_investments: Vorschläge (Budget)
           comments: Kommentare
+          settings: Konfiguration
       users:
         index:
           title: Nutzer blockieren

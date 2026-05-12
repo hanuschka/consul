@@ -7,7 +7,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
 
     @section_setting = SectionSetting.for_section("moderation")
     @contact_persons = SectionContactPerson.for_section("moderation")
-    @activities = SectionActivity.for_section("moderation").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("moderation"), limit: 10, page_param: :activity_page)
 
     pending_count = Proposal.pending_flag_review.count +
                     Comment.pending_flag_review.count +
@@ -28,7 +28,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     ]
 
     @breadcrumbs = [
-      { name: t("adm.moderation.home.title"), icon: "home" }
+      { name: t("adm.moderation.menu.items.home"), icon: "home" }
     ]
   end
 end

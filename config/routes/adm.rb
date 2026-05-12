@@ -10,6 +10,10 @@ namespace :adm do
   resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
   end
+  resource :overview_pages, only: [], controller: "overview_pages" do
+    get :projekt
+    get :others
+  end
 
   resources :settings, only: [] do
     get :metadata, on: :collection
@@ -40,8 +44,11 @@ namespace :adm do
   end
   # application
 
-  # modules
-  resource :modules, controller: "modules", only: [:show, :update]
+  resources :section_settings, only: [:update]
+
+  resources :section_contact_people, only: [:new, :create, :edit, :update, :destroy] do
+    post :search, on: :collection
+  end
 
   # profiles
   resource :role_assignment, only: [] do
@@ -67,9 +74,6 @@ namespace :adm do
     patch :verify, on: :member
     patch :unverify, on: :member
     get :csv_download, on: :collection
-  end
-  resources :section_contact_people do
-    post :search, on: :collection
   end
   # profiles
 
@@ -132,4 +136,9 @@ namespace :adm do
       get :status
     end
   end
+
+  # Redirects from the former projekts/overview_page and projekts/overviews routes
+  get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
 end

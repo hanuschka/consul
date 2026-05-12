@@ -9,7 +9,7 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
 
     @section_setting = SectionSetting.for_section("valuation")
     @contact_persons = SectionContactPerson.for_section("valuation")
-    @activities = SectionActivity.for_section("valuation").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("valuation"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: Budget::Investment.count, label: t("adm.valuation.home.stats.total"), icon: "account_balance" },
@@ -23,7 +23,7 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
     ]
 
     @breadcrumbs = [
-      { name: t("adm.valuation.home.title"), icon: "home" }
+      { name: t("adm.valuation.menu.items.home"), icon: "home" }
     ]
   end
 end

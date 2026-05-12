@@ -1,27 +1,28 @@
 de:
   adm:
     valuation:
-      title: Gutachten
+      title: Budget-Begutachtung
       home:
-        title: Willkommen zur Bewertung
+        title: Willkommen zur Budget-Begutachtung
         stats:
           total: Investitionen gesamt
-          not_valued: Noch nicht bewertet
-          in_valuation: In Bewertung
+          not_valued: Noch nicht begutachtet
+          in_valuation: In Begutachtung
           valued: Abgeschlossen
         quick_links:
           all: Alle Investitionen
-          not_valued: Nicht bewertete
+          not_valued: Nicht begutachtete
       menu:
-        aria_label: Gutachten Navigation
+        aria_label: Budget-Begutachtung Navigation
         items:
           home: Home
           valuators: Team
           investments: Vorschläge
+          settings: Konfiguration
       investments:
         index:
-          title: Gutachten
-          page_hint: Hier sehen Sie alle Bürgerhaushaltsvorschläge, die Ihnen zur Bewertung zugewiesen wurden. Als Gutachter prüfen Sie die Machbarkeit und schätzen die Kosten der Vorschläge ein. Klicken Sie auf Bearbeiten, um das Bewertungsformular zu öffnen. Nach Abschluss Ihrer Bewertung kann der Vorschlag vom Autor nicht mehr bearbeitet werden.
+          title: Budget-Begutachtung
+          page_hint: Hier sehen Sie alle Bürgerhaushaltsvorschläge, die Ihnen zur Begutachtung zugewiesen wurden. Als Gutachter prüfen Sie die Machbarkeit und schätzen die Kosten der Vorschläge ein. Klicken Sie auf Bearbeiten, um das Begutachtungsformular zu öffnen. Nach Abschluss Ihrer Begutachtung kann der Vorschlag vom Autor nicht mehr bearbeitet werden.
           table:
             id: ID
             title: Titel
@@ -29,8 +30,8 @@ de:
             valuator: Gutachter
             edit: Bearbeiten
           no_investments: Noch keine Vorschläge vorhanden.
-          no_items_title: Keine Vorschläge zur Bewertung vorhanden
-          no_items_description: Sobald Ihnen Vorschläge zur Bewertung zugewiesen werden, werden diese hier angezeigt.
+          no_items_title: Keine Vorschläge zur Begutachtung vorhanden
+          no_items_description: Sobald Ihnen Vorschläge zur Begutachtung zugewiesen werden, werden diese hier angezeigt.
         details:
           details: Weitere Infos
           author: Autor
@@ -45,9 +46,9 @@ de:
           user_cost_estimate: "Preisliche Einschätzung des Nutzers (€)"
           valuation_finished: Begutachtung abgeschlossen
           assigned_valuators: Zugewiesene Gutachter
-          undefined: Noch nicht bewertet
+          undefined: Noch nicht begutachtet
         form:
           feasibility_title: Prüfung auf Kriterienerfüllung
-          feasibility_hint: Prüfen Sie, ob der Vorschlag den Kriterien entspricht. Nach Abschluss des Gutachtens kann der Vorschlag vom Autor nicht mehr bearbeitet werden.
+          feasibility_hint: Prüfen Sie, ob der Vorschlag den Kriterien entspricht. Nach Abschluss der Begutachtung kann der Vorschlag vom Autor nicht mehr bearbeitet werden.
         notice:
           updated: Dossier aktualisiert

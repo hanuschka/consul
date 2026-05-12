@@ -7,10 +7,7 @@ namespace :adm do
       patch :toggle_manage_all_projekts, on: :member
     end
 
-    resource :overview_page, only: [], controller: "overview_page" do
-      get :navigation
-      get :footer
-    end
+    resource :settings, only: [:show], controller: "settings"
 
     resources :milestone_statuses, except: %i[show]
 

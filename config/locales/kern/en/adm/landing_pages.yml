@@ -17,6 +17,7 @@ en:
           home: Home
           landing_pages: Topic pages
           managers: Team
+          settings: Configuration
       landing_pages:
         index:
           title: Topic pages
@@ -56,7 +57,7 @@ en:
           success: The value was updated successfully.
       managers:
         index:
-          title: Team
+          title: Topic-page managers
           page_hint: Here you manage topic-page managers. Managers can edit their assigned topic pages and maintain their content. Users with the Manage all option have access to all topic pages. Add new managers by searching for registered users via the Create button and assigning them.
           new_link: Add new topic-page manager
           manage_all_landing_pages: Manage all

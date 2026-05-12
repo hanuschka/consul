@@ -8,7 +8,7 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
 
     @section_setting = SectionSetting.for_section("landing_pages")
     @contact_persons = SectionContactPerson.for_section("landing_pages")
-    @activities = SectionActivity.for_section("landing_pages").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("landing_pages"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: ::SiteCustomization::Page.count, label: t("adm.landing_pages.home.stats.total"), icon: "web" },
@@ -22,7 +22,7 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     ]
 
     @breadcrumbs = [
-      { name: t("adm.landing_pages.home.title"), icon: "home" }
+      { name: t("adm.landing_pages.menu.items.home"), icon: "home" }
     ]
   end
 end

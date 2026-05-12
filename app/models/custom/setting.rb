@@ -229,7 +229,6 @@ class Setting < ApplicationRecord
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
 
-        "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
         "ideas.officers_can_edit_assigned_reports": false,

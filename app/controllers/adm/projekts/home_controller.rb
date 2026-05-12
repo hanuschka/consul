@@ -14,9 +14,12 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @section_setting = SectionSetting.for_section("projekts")
     @contact_persons = SectionContactPerson.for_section("projekts")
     visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
-    @activities = SectionActivity.for_section("projekts")
-      .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids)
-      .limit(10)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("projekts")
+        .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids),
+      limit: 10,
+      page_param: :activity_page
+    )
 
     @stats = [
       { value: Projekt.regular.count, label: t("adm.projekts.home.stats.total"), icon: "folder" },
@@ -35,7 +38,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     ].compact
 
     @breadcrumbs = [
-      { name: t("adm.projekts.home.title"), icon: "home" }
+      { name: t("adm.projekts.menu.items.home"), icon: "home" }
     ]
   end
 

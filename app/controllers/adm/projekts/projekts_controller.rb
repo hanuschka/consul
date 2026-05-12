@@ -1,11 +1,11 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
   end
@@ -24,7 +24,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def details
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
     ]
@@ -34,7 +33,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -50,7 +48,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -59,7 +56,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def map
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -74,7 +70,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -85,7 +80,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @evaluation = @projekt.projekt_evaluation
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -110,7 +104,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     end
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -175,7 +168,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, Projekt], :create?
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
 
@@ -276,6 +268,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    def set_back_button_url
+      @back_button_url = adm_projekts_root_path
     end
 
     def projekt_params

@@ -133,7 +133,7 @@ de:
     extended_option:
       general:
         city_name: Name der Stadt/Gemeinde
-        city_name_description: "Wird bei der BundID-Verifizierung verwendet, um den Wohnort der Nutzer abzufragen."
+        city_name_description: "Der hier hinterlegte Name der Stadt oder Gemeinde wird bei der BundID-Verifizierung herangezogen, um den im Melderegister hinterlegten Wohnort der Nutzer abzugleichen. So wird sichergestellt, dass nur Personen mit gemeldetem Wohnsitz in Ihrer Kommune an Beteiligungsverfahren teilnehmen können. Bitte tragen Sie den offiziellen Namen exakt so ein, wie er im Melderegister geführt wird."
         title: Titel der Anwendung
         title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
@@ -183,26 +183,33 @@ de:
         consider_underway: Projekt als aktive Beteiligung führen
         consider_underway_description: Stellt sicher, dass das Projekt in der Übersicht stets als aktive Beteiligung aufgeführt wird – auch dann, wenn aktuell keine reguläre Beteiligungsphase läuft. Geeignet z. B. für dauerhaft beworbene Projekte oder solche zwischen zwei Phasen, die für Nutzer weiterhin als aktive Beteiligungsmöglichkeit sichtbar bleiben sollen.
     ideas:
-      show_in_main_menu: Ideen in der Navigation
-      show_in_main_menu_description: Zeigt den Menüpunkt Ideen in der Hauptnavigation an
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
-      admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter zu
+      admins_must_assign_officer_description: >
+        Wenn aktiviert, müssen Administratoren jede neue Idee manuell einem zuständigen Sachbearbeiter zuweisen. Ohne Zuweisung kann die Idee nicht bearbeitet werden. Dies stellt sicher, dass jede Idee eine verantwortliche Person erhält und keine Einreichung ohne klare Zuständigkeit bleibt.
       officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Ideen
-      officers_can_administer_assigned_reports_description: Sachbearbeiter haben die volle Administrationskontrolle über ihnen zugewiesene Ideen
+      officers_can_administer_assigned_reports_description: >
+        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Ideen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Ideen nur einsehen, aber nicht verwalten oder strukturell anpassen.
       officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Ideen
-      officers_can_edit_assigned_reports_description: Sachbearbeiter haben die volle Kontrolle über ihnen zugewiesene Ideen
+      officers_can_edit_assigned_reports_description: >
+        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Ideen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Ideen unvollständig oder fehlerhaft sind und vor der weiteren Bearbeitung redaktionell angepasst werden müssen.
       enable_comments: Kommentarfunktion
-      enable_comments_description: Nutzer können unterhalb einer Idee kommentieren
+      enable_comments_description: >
+        Wenn aktiviert, können Nutzer unterhalb einer Idee Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, weiterführende Anregungen oder ergänzende Hinweise zur eingereichten Idee. Kommentare können von Administratoren moderiert werden.
       intro_text: Einleitungstext für Ideen
-      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+      intro_text_description: >
+        Zeigt einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite an. Nutzen Sie diesen Text, um Bürgern den Zweck des Ideenbereichs zu erklären, Hinweise zur Nutzung zu geben oder auf wichtige Rahmenbedingungen hinzuweisen — z.B. welche Arten von Ideen eingereicht werden können und wie der Bearbeitungsprozess abläuft.
       enable_geoman_controls_in_maps: Kartenzeichnung durch Nutzer
-      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
+      enable_geoman_controls_in_maps_description: >
+        Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn eine Idee nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine Grünfläche, einen Platz oder einen ganzen Straßenzug. Die Zeichnung wird zusammen mit der Idee gespeichert.
       admin_acceptance_required: Administrator-Freigabe
-      admin_acceptance_required_description: Administratoren müssen neue Ideen vor der Veröffentlichung zunächst bestätigen.
+      admin_acceptance_required_description: >
+        Wenn aktiviert, müssen Administratoren neue Ideen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Ideen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene, unvollständige oder doppelte Einreichungen ungeprüft auf der Plattform veröffentlicht werden.
       document_upload: Zusätzliche Dokumente
-      document_upload_description: Ermöglicht es den Nutzer Dokumente den Ideen anzuhängen
+      document_upload_description: >
+        Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Ideen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Konzepte, Skizzen, Studien oder detaillierte Beschreibungen, die über die Möglichkeiten eines einfachen Textfeldes hinausgehen.
       external_video: Externes Video einbinden
-      external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
+      external_video_description: >
+        Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
     deficiency_reports:
       show_in_main_menu: Mängelmelder in der Navigation
       show_in_main_menu_description: >

@@ -2,6 +2,8 @@ namespace :adm do
   namespace :moderation do
     root to: "home#show"
 
+    resource :settings, only: [:show], controller: "settings"
+
     resources :users, only: :index do
       member do
         put :hide

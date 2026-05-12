@@ -7,7 +7,7 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
 
     @section_setting = SectionSetting.for_section("ideas")
     @contact_persons = SectionContactPerson.for_section("ideas")
-    @activities = SectionActivity.for_section("ideas").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("ideas"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: Idea.count, label: t("adm.ideas.home.stats.total"), icon: "lightbulb" },
@@ -21,7 +21,7 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
     ]
 
     @breadcrumbs = [
-      { name: t("adm.ideas.home.title"), icon: "home" }
+      { name: t("adm.ideas.menu.items.home"), icon: "home" }
     ]
   end
 end

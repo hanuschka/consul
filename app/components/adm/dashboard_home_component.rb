@@ -4,12 +4,12 @@ class Adm::DashboardHomeComponent < ApplicationComponent
   attr_reader :team_members, :team_url, :recent_items, :recent_items_url, :recent_item_columns,
               :recent_item_partial, :recent_item_headers, :recent_item_as,
               :intro_text, :quick_links, :stats, :contact_persons, :notice,
-              :activities, :section_settings_path
+              :activities, :activity_pagy, :section_settings_path
 
   def initialize(team_members:, team_url:, recent_items:, recent_items_url:, recent_item_columns: [],
                  recent_item_partial: nil, recent_item_headers: [], recent_item_as: nil,
                  intro_text: nil, quick_links: [], stats: [], contact_persons: [],
-                 notice: nil, activities: [], section_settings_path: nil)
+                 notice: nil, activities: [], activity_pagy: nil, section_settings_path: nil)
     @team_members = team_members
     @team_url = team_url
     @recent_items = recent_items
@@ -24,6 +24,7 @@ class Adm::DashboardHomeComponent < ApplicationComponent
     @contact_persons = contact_persons
     @notice = notice
     @activities = activities
+    @activity_pagy = activity_pagy
     @section_settings_path = section_settings_path
   end
 

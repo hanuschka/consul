@@ -1,4 +1,5 @@
-<%= form_with model: [:adm, @section_contact_person] do |f| %>
+<%= form_with model: @section_contact_person,
+      url: @section_contact_person.new_record? ? adm_section_contact_people_path : adm_section_contact_person_path(@section_contact_person) do |f| %>
   <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user"), stacked: true) do %>
     <div data-controller="adm-user-select" data-adm-user-select-url-value="<%= search_adm_section_contact_people_path %>">
       <%= f.hidden_field :user_id, data: { adm_user_select_target: "hiddenField" } %>
@@ -33,7 +34,7 @@
 
   <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:section), hint: t(".hints.section")) do %>
     <%= f.select :section,
-      SectionContactPerson::SECTIONS.map { |s| [t("adm.section_contact_people.index.sections.#{s}"), s] },
+      SectionContactPerson::SECTIONS.map { |s| [t("adm.section_settings.sections.#{s}"), s] },
       { include_blank: t(".select_section") },
       { label: false, class: "kern-form-select__select" } %>
   <% end %>

@@ -1,6 +1,8 @@
 namespace :adm do
   scope :officing, module: :officing, as: :officing do
-    root to: "dashboard#index"
+    root to: "home#show"
+
+    resource :settings, only: [:show], controller: "settings"
 
     resources :proposal_phases, only: [] do
       member do

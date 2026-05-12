@@ -4,7 +4,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @team_members = scoped_team_members
 
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
     @pagy, @projekts = pagy(base_scope, limit: 10)
 
     @name_header_options = { sort: true, search: true }

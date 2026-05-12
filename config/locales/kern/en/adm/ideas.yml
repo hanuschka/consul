@@ -19,7 +19,7 @@ en:
           officers: Team
           ideas: Ideas
           categories: Categories
-          settings: Features
+          settings: Configuration
           districts: Areas
       ideas:
         index:
@@ -120,7 +120,12 @@ en:
           no_officer: "-- No officer --"
           submit: Save
         settings:
-          title: Features
+          title: Configuration
+          tabs:
+            features: Features
+            dashboard: Dashboard settings
+        settings_dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public ideas platform dashboard."
         audits:
           title: Change log
           audits_title: Changes

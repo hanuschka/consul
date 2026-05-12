@@ -19,7 +19,7 @@ de:
           officers: Team
           ideas: Ideen
           categories: Kategorien
-          settings: Funktionen
+          settings: Konfiguration
           districts: Gebiete
       ideas:
         index:
@@ -121,7 +121,12 @@ de:
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
         settings:
-          title: Funktionen
+          title: Konfiguration
+          tabs:
+            features: Funktionen
+            dashboard: Dashboard-Einstellungen
+        settings_dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
         audits:
           title: Änderungslog
           audits_title: Änderungen

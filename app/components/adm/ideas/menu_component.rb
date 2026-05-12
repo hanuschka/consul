@@ -16,7 +16,7 @@ class Adm::Ideas::MenuComponent < Adm::BaseMenuComponent
          { label: t("adm.ideas.menu.items.categories"), icon: "category", path: adm_ideas_categories_path }
        end),
       (if Adm::Ideas::IdeaPolicy.new(current_user, nil).settings?
-         { label: t("adm.ideas.menu.items.settings"), icon: "settings", path: adm_ideas_settings_path }
+         { label: t("adm.ideas.menu.items.settings"), icon: "settings", path: adm_ideas_settings_path, active_pattern: %r{/adm/ideas/settings(/dashboard)?\z} }
        end),
       (if Adm::Ideas::DistrictPolicy.new(current_user, nil).index?
          { label: t("adm.ideas.menu.items.districts"), icon: "location_city", path: adm_ideas_districts_path }

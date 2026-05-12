@@ -1,0 +1,29 @@
+<%= content_for :title, t("adm.ideas.ideas.settings.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.ideas.ideas.settings.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.ideas.ideas.settings.tabs.features"),
+    url: adm_ideas_settings_path
+  },
+  {
+    label: t("adm.ideas.ideas.settings.tabs.dashboard"),
+    url: adm_ideas_settings_dashboard_path,
+    current: true
+  }
+]) %>
+
+<div class="kern-container my-5">
+  <p class="adm-hint__text mb-3">
+    <%= t("adm.ideas.ideas.settings_dashboard.intro") %>
+  </p>
+
+  <%= render Adm::SectionSettingsComponent.new(
+    section: "ideas",
+    module_setting_keys: []
+  ) %>
+</div>

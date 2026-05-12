@@ -15,6 +15,7 @@ namespace :adm do
 
     resources :districts, only: [:index, :edit, :update]
     get :settings, to: "ideas#settings", as: :settings
+    get "settings/dashboard", to: "ideas#settings_dashboard", as: :settings_dashboard
 
     resources :memos, only: [:create, :destroy] do
       member do

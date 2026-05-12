@@ -30,7 +30,12 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
 
   def settings
     authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings"), icon: "settings" }]
+    @breadcrumbs = [{ name: t("adm.ideas.ideas.settings.title"), icon: "settings" }]
+  end
+
+  def settings_dashboard
+    authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
+    @breadcrumbs = [{ name: t("adm.ideas.ideas.settings.title"), icon: "settings" }]
   end
 
   def show

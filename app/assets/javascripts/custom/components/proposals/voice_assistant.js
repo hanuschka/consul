@@ -26,6 +26,7 @@
       const element = document.querySelector(".js-voice-assistant");
 
       if (!element) { return; }
+      if (element.dataset.version && element.dataset.version !== "v1") { return; }
 
       this.element = element;
       this.status = "not_initialized";

@@ -91,9 +91,15 @@
           <% end %>
         <% end %>
 
-        <div class="resource-page--description new-card">
-          <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
-        </div>
+        <% if @investment.masterportal_pin.present? %>
+          <%= render Shared::MasterportalPinPropertiesComponent.new(
+            masterportal_pin: @investment.masterportal_pin
+          ) %>
+        <% else %>
+          <div class="resource-page--description new-card">
+            <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
+          </div>
+        <% end %>
 
         <% if @investment.map_location.present? %>
           <div class="margin-bottom not-print">

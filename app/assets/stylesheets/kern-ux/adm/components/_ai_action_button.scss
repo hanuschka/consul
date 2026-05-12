@@ -1,0 +1,94 @@
+.adm-ai-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adm-ai-action-button--button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  &.-loading {
+    opacity: 0.85;
+    cursor: progress;
+  }
+}
+
+.adm-ai-action-button--inline-spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 0.4rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: adm-ai-action-button-spin 800ms linear infinite;
+}
+
+.adm-ai-action-button--button.-loading .adm-ai-action-button--inline-spinner {
+  display: inline-block;
+}
+
+.adm-ai-action-button--progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.95rem;
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 999px;
+  color: #5b21b6;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.adm-ai-action-button--progress-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: adm-ai-action-button-spin 800ms linear infinite;
+}
+
+.adm-ai-action-button--progress-bar {
+  position: relative;
+  display: inline-block;
+  width: 96px;
+  height: 4px;
+  background: #ddd6fe;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.adm-ai-action-button--progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: #7c3aed;
+  border-radius: 999px;
+  animation: adm-ai-action-button-bar 1400ms ease-in-out infinite;
+}
+
+.adm-ai-action-button--progress-message {
+  white-space: nowrap;
+}
+
+@keyframes adm-ai-action-button-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes adm-ai-action-button-bar {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}

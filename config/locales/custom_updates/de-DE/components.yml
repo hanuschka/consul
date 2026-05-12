@@ -7,3 +7,6 @@ de:
         success: "Heruntergeladen"
       image_with_lightbox_component:
         download_original: "Original herunterladen"
+    images:
+      direct_upload_component:
+        generating_image: "Bild wird erstellt, bitte warten…"

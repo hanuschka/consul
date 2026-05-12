@@ -7,6 +7,14 @@ class Adm::ImagePolicy < ApplicationPolicy
     @user&.administrator? || projekt_manager_for_imageable?
   end
 
+  def create?
+    @user&.administrator?
+  end
+
+  def destroy?
+    @user&.administrator?
+  end
+
   private
 
   def projekt_manager_for_imageable?

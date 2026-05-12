@@ -14,7 +14,8 @@
     "documentable_type",
     "sort",
     "type",
-    "page"
+    "page",
+    "projekt_id"
   ];
 
   const FORM_INPUTS = [

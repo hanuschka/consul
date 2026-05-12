@@ -20,8 +20,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     document: ''
   },
   uploadEndpoints: {
-    picture: '/ckeditor/pictures',
-    document: '/ckeditor/documents'
+    picture: '/file_manager/images',
+    document: '/file_manager/documents'
+  },
+  listEndpoints: {
+    picture: '/file_manager/images',
+    document: '/file_manager/documents'
   },
   fileTypeIcons: {
     'application/pdf': 'fa-file-pdf',
@@ -52,6 +56,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     if (contentType.startsWith('audio/')) return 'fa-file-audio';
 
     return 'fa-file';
+  },
+
+  currentProjektId() {
+    if (typeof ProjektStudio === "undefined") return null;
+    if (typeof ProjektStudio.isProjektPage !== "function") return null;
+    if (!ProjektStudio.isProjektPage()) return null;
+
+    return ProjektStudio.getCurrentProjektId();
   },
 
   initialize() {
@@ -410,10 +422,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
         .style.backgroundImage = `url('${imageData.in_memory_preview_url}')`;
     }
 
-    $imageItem
-      .find('.file-upload-manager-dialog--item-title')
+    var $itemTitle = $imageItem.find('.file-upload-manager-dialog--item-title')
+    $itemTitle
       .text(imageData.title)
       .attr("title", imageData.title)
+      .foundation()
 
     $imageItem
       .find('.file-upload-manager-dialog--item-alt')
@@ -507,7 +520,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   async fetchImageData(extraParams = {}) {
     const { type, page, filters } = this.state;
     const filterParams = Object.assign({}, filters, { type, page });
-    let url = window.FilesFilterSerializer.urlForParams("/ckeditor/assets", filterParams);
+    const projektId = this.currentProjektId();
+
+    if (projektId) {
+      filterParams.projekt_id = projektId;
+    }
+
+    const baseUrl = this.listEndpoints[type] || this.listEndpoints.picture;
+    let url = window.FilesFilterSerializer.urlForParams(baseUrl, filterParams);
 
     Object.keys(extraParams).forEach((key) => {
       const separator = url.indexOf("?") >= 0 ? "&" : "?";
@@ -536,6 +556,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   async uploadNewFile(file, uploadItemId) {
     const formData = new FormData();
     formData.append('upload', file);
+
+    const projektId = this.currentProjektId();
+    if (projektId) {
+      formData.append('projekt_id', projektId);
+    }
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -621,15 +646,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     editModal.classList.add("-opened");
 
     const titleInput = editModal.querySelector(".js-file-upload-manager-edit-title");
-    const descInput = editModal.querySelector(".js-file-upload-manager-edit-description");
-    const altInput = editModal.querySelector(".js-file-upload-manager-edit-alt");
-    const altField = editModal.querySelector(".js-file-upload-manager-edit-alt-field");
-
-    altField.style.display = this.state.type === 'document' ? 'none' : '';
 
     titleInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '').trim();
-    descInput.value = (this.state.selectedImage.dataset.description || '').trim();
-    altInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '').trim();
   },
 
   closeEditModal(e) {
@@ -641,17 +659,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
 
     const modal = this.q(".js-file-upload-manager-edit-modal");
     const titleInput = modal.querySelector(".js-file-upload-manager-edit-title");
-    const descInput = modal.querySelector(".js-file-upload-manager-edit-description");
-    const altInput = modal.querySelector(".js-file-upload-manager-edit-alt");
 
     const formData = new FormData();
     const type = this.state.type
-    formData.append(`${type}[title]`, titleInput.value);
-    formData.append(`${type}[description]`, descInput.value);
-
-    if (type === 'picture') {
-      formData.append(`${type}[alt_text]`, altInput.value);
-    }
+    const modelKey = type === 'picture' ? 'image' : 'document';
+    formData.append(`${modelKey}[title]`, titleInput.value);
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 

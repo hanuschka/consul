@@ -8,7 +8,16 @@
   data-filename="<%= filename %>"
 >
   <div class="files-asset-card--thumb">
-    <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
+    <% if previewable? %>
+      <img
+        src="<%= preview_url %>"
+        alt="<%= display_title %>"
+        class="files-asset-card--thumb-image"
+        loading="lazy"
+      >
+    <% else %>
+      <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
+    <% end %>
 
     <div class="files-asset-card--actions">
       <button

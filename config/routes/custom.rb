@@ -45,6 +45,11 @@ namespace :files do
   end
 end
 
+namespace :file_manager do
+  resources :images, only: [:index, :create, :update, :destroy]
+  resources :documents, only: [:index, :create, :update, :destroy]
+end
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 

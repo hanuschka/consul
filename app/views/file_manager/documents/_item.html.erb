@@ -1,0 +1,21 @@
+<div
+  class="file-upload-manager-dialog--item"
+  data-id="<%= document.id %>"
+  data-content-type="<%= document.attachment_content_type %>"
+  data-description=""
+  data-url="<%= url_for(document.attachment) %>"
+  data-custom-thumb-url=""
+>
+  <div class="file-upload-manager-dialog--item-thumb">
+    <i class="fa <%= FileTypeIcons.for(document.attachment_content_type) %> files-asset-card--thumb-icon"></i>
+  </div>
+  <div class="file-upload-manager-dialog--item-meta">
+    <p
+      class="file-upload-manager-dialog--item-title"
+      title="<%= document.title.presence || document.attachment_file_name %>"
+    >
+      <%= document.title.presence || document.attachment_file_name %>
+    </p>
+    <div class="file-upload-manager-dialog--item-alt"></div>
+  </div>
+</div>

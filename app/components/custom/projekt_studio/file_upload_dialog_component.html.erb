@@ -20,7 +20,7 @@
     <!-- Controls Bar -->
     <div class="file-upload-manager-dialog--toolbar">
       <div class="file-upload-manager-dialog--toolbar-left">
-        <%= render Files::FilterBarComponent.new %>
+        <%= render Files::FilterBarComponent.new(minimal: true) %>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">
@@ -61,7 +61,11 @@
          <i class="fa fa-file file-upload-manager-dialog--item-icon js-file-upload-manager-dialog_item-icon" style="display: none;"></i>
         </div>
         <div class="file-upload-manager-dialog--item-meta">
-          <p class="file-upload-manager-dialog--item-title" title=""></p>
+          <p
+            class="file-upload-manager-dialog--item-title"
+            data-tooltip
+            title=""
+          ></p>
           <div class="file-upload-manager-dialog--item-alt">Wird hochgeladen...</div>
         </div>
       </div>
@@ -93,14 +97,6 @@
         <div class="file-upload-manager-edit-modal__field">
           <label>Titel</label>
           <input type="text" class="js-file-upload-manager-edit-title" placeholder="Titel">
-        </div>
-        <div class="file-upload-manager-edit-modal__field">
-          <label>Beschreibung</label>
-          <textarea class="js-file-upload-manager-edit-description" placeholder="Beschreibung"></textarea>
-        </div>
-        <div class="file-upload-manager-edit-modal__field js-file-upload-manager-edit-alt-field">
-          <label>Alternativer Text</label>
-          <input type="text" class="js-file-upload-manager-edit-alt" placeholder="Alternativer Text (empfohlen)">
         </div>
       </div>
       <div class="file-upload-manager-edit-modal__footer">

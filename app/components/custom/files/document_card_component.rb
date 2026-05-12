@@ -65,6 +65,19 @@ class Files::DocumentCardComponent < ApplicationComponent
       helpers.url_for(document.attachment)
     end
 
+    def previewable?
+      return false if !document.attachment.attached?
+
+      document.attachment.blob.previewable?
+    end
+
+    def preview_url
+      helpers.rails_representation_url(
+        document.attachment.blob.preview(resize_to_limit: [600, 450]),
+        only_path: true
+      )
+    end
+
     def update_url
       helpers.files_document_path(document)
     end

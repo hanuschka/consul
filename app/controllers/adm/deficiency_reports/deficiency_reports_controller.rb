@@ -39,6 +39,13 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
       end
+
+      format.geojson do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params).preload(:category)
+        send_data GeoServices::MappablesGeojsonExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.geojson",
+          type: "application/geo+json"
+      end
     end
   end
 
@@ -61,7 +68,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         ]
 
         @image_url = @deficiency_report.image&.attachment&.variant(
-          resize_to_limit: [500, 500],
+          resize_to_limit: [580, nil],
           format: "jpeg"
         )
       end

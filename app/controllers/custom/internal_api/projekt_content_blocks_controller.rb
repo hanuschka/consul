@@ -18,16 +18,9 @@ class InternalApi::ProjektContentBlocksController < InternalApi::BaseController
     if @content_block.save
       if params[:previous_content_block_id].present?
         previous_content_block = @projekt.content_blocks.find(params[:previous_content_block_id])
-        new_content_block_position =
-          if params[:previous_content_block_id]
-            projekt_content_block.position + 1
-          else
-            0
-          end
-
-        @content_block.insert_at(new_content_block_position)
+        @content_block.insert_at(previous_content_block.position + 1)
       else
-        @content_block.move_to_top
+        @content_block.move_to_bottom
       end
 
       render json: { content_block: {id: @content_block.id}, status: { message: "Content block updated" }}

@@ -50,15 +50,15 @@ class Poll::Stats
   end
 
   def total_booth_valid
-    recounts.sum(:total_amount)
+    voters.where(origin: "booth").count + recounts.booth.sum(:total_amount)
   end
 
   def total_booth_white
-    recounts.sum(:white_amount)
+    recounts.booth.sum(:white_amount)
   end
 
   def total_booth_null
-    recounts.sum(:null_amount)
+    recounts.booth.sum(:null_amount)
   end
 
   def total_letter_valid

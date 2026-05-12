@@ -1,8 +1,9 @@
 .custom-new-design {
   &.home-page {
     header {
-      .top-bar-background-wrapper {
-        // background-color: transparent;
+      .top-bar-wrapper {
+        background-color: transparent;
+        box-shadow: none;
       }
     }
 

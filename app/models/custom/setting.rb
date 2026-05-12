@@ -1,11 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
@@ -111,7 +115,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,

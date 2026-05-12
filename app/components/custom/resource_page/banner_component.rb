@@ -11,23 +11,29 @@ class ResourcePage::BannerComponent < ApplicationComponent
   end
 
   def image_url
-    # resource.image&.variant(:large)
+    return nil unless resource.image&.attached?
+
     polymorphic_path(resource.image.attachment.variant(
       resize_to_limit: [500, 500],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"
     ))
+  rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError
+    nil
   end
 
   def big_image_url
-    # resource.image&.variant(:large)
+    return nil unless resource.image&.attached?
+
     polymorphic_path(resource.image.attachment.variant(
       resize_to_limit: [1750, 900],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"
     ))
+  rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError
+    nil
   end
 
   def resource_class

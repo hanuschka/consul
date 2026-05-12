@@ -1,4 +1,4 @@
-<%= form_with model: [:adm, @map_layer] do |f| %>
+<%= form_with model: @map_layer, url: @form_url do |f| %>
   <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:name), hint: t(".hints.name")) do %>
     <%= f.text_field :name, label: false, placeholder: MapLayer.human_attribute_name(:name) %>
   <% end %>

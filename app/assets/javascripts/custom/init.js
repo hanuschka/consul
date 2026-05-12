@@ -19,12 +19,16 @@
       App.NewSortable.initialize();
       App.DropdownMenuComponent.initialize();
       App.SidebarFilterComponent.initialize();
+      App.SliderThumbsSync.initialize();
+      App.SliderPeek.initialize();
+      App.SliderFullwidth.initialize();
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
       App.KlaroAccessibility.initialize();
       App.VoiceAssistant.initialize();
+      App.VoiceAssistantV2.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
@@ -35,6 +39,7 @@
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
       App.AdminTopbarViewMode.initialize();
+      App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
       App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
@@ -42,6 +47,9 @@
       App.Studio.SiteContentBlockEditor.initialize();
       App.FlashMessages.initialize();
       App.SessionTimeoutWarning.initialize();
+      App.MobileFixedBottomActionComponentCustom.initialize();
+      App.NotifyReviewers.initialize();
+      App.LoaderSpinner.initialize();
     }
   };
 }).call(this);

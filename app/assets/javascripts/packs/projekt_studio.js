@@ -32,7 +32,7 @@
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/ListEdit
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/ImageEdit
-//= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/ImageGalleryDialog
+//= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog
 //= require ../projekt_studio/modules/ContentBlock/CKEditorMode
 //= require ../projekt_studio/modules/SavedContentBlocks
 //= require ../projekt_studio/modules/FileImport

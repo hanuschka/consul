@@ -1,4 +1,4 @@
-<div class="map proposals-map not-print">
+<div class="map proposals-map not-print map-legend-wrapper">
   <% if @projekt_phase %>
     <%= render Shared::MapComponent.new(
       map_location: @projekt_phase.map_location,
@@ -15,6 +15,9 @@
     ) %>
 
   <% end %>
+  <%= render Kern::MapLegendComponent.new(
+    show_imported: @projekt_phase&.masterportal_pins&.exists?
+  ) %>
 </div>
 <div class='expand-overview-map-wrapper'>
   <div class='expand-overview-map small js-expand-overview-map not-print wide'>

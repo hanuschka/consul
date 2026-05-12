@@ -2,7 +2,7 @@ class Api::ProjektPhasesController < Api::BaseController
   include Translatable
 
   before_action :find_projekt, only: %i[index new create]
-  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting]
+  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting, :update_settings]
 
   def index
     check_read_access!
@@ -92,6 +92,30 @@ class Api::ProjektPhasesController < Api::BaseController
     else
       render json: { error: { messages: setting.errors.full_messages } }, status: 422
     end
+  end
+
+  def update_settings
+    check_admin_access!
+    settings_hash = params[:settings]
+
+    if settings_hash.blank?
+      return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
+    end
+
+    updated = []
+    errors = {}
+
+    settings_hash.each do |key, value|
+      setting = @projekt_phase.settings.find_or_initialize_by(key: key)
+
+      if setting.update(value: value.to_s)
+        updated << key
+      else
+        errors[key] = setting.errors.full_messages
+      end
+    end
+
+    render json: { data: { updated: updated, errors: errors } }
   end
 
   private

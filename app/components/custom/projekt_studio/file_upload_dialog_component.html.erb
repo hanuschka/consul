@@ -1,11 +1,16 @@
 <input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
 
-<!-- Image Management Dialog -->
-<dialog class="file-upload-manager-dialog js-file-upload-manager-dialog">
+<!-- File Management Dialog -->
+<dialog
+  class="file-upload-manager-dialog js-file-upload-manager-dialog"
+  data-type="<%= type %>"
+>
   <div class="file-upload-manager-dialog--overlay js-file-upload-manager-dialog-close"></div>
   <div class="file-upload-manager-dialog--content">
     <div class="file-upload-manager-dialog--header">
-      <h3>Datei Verwaltung</h3>
+      <h3 class="file-upload-manager-dialog--title">
+        <%= mode_config[:title_text] %>
+      </h3>
       <button class="close-button round-icon-button js-file-upload-manager-dialog-close" data-close="" aria-label="Close Accessible Modal" type="button">
         <i class="fa fa-xmark">
         </i>
@@ -23,25 +28,6 @@
           <span class="file-upload-manager-dialog--search-icon"></span>
         </div>
 
-        <div class="file-upload-manager-dialog--filter-wrapper">
-          <span>Filter:</span>
-          <button
-            type="button"
-            class="button js-file-upload-manager-filter active"
-            data-type="picture"
-          >
-            <i class="fa fa-image"></i>
-            Bilder
-          </button>
-          <button
-            type="button"
-            class="button js-file-upload-manager-filter"
-            data-type="document"
-          >
-            <i class="fa fa-file"></i>
-            Dokumente
-          </button>
-        </div>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">
@@ -51,7 +37,7 @@
         </button>
         <button type="button" class="button js-file-upload-manager-upload">
           <i class="fa fa-upload"></i>
-          Neue Datei hochladen
+          <%= mode_config[:upload_text] %>
         </button>
       </div>
     </div>
@@ -70,7 +56,7 @@
     </div>
 
     <!-- Template for temporary uploading images -->
-    <template id="file-upload-manager-uploading-template">
+    <template class="js-file-upload-manager-uploading-template">
       <div class="file-upload-manager-dialog--item -uploading" data-id="">
         <div class="file-upload-manager-dialog--item-thumb">
           <div class="file-upload-manager-dialog--item-uploading">

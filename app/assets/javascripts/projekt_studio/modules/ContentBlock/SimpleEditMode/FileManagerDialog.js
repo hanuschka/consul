@@ -8,6 +8,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     uploadingCount: 0,
     removedItemsStack: []
   },
+  activeDialog: null,
   onSelectCallback: null,
   onCancelCallback: null,
   selectionConfirmed: false,
@@ -75,7 +76,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     $document.on("keydown", ".js-file-upload-manager-search", this.handleSearchKeydown.bind(this));
     $document.on("click", ".js-file-upload-manager-search-clear", this.clearSearch.bind(this));
 
-    $document.on("click", ".js-file-upload-manager-filter", this.handleFilterClick.bind(this));
     $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
     $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
 
@@ -89,17 +89,27 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     $document.on("click", ".js-file-upload-manager-pagination .pagination a", this.handleKaminariPaginationClick.bind(this));
   },
 
-  getDialogElement() {
-    return document.querySelector(".js-file-upload-manager-dialog");
+  getDialogElement(type) {
+    return document.querySelector(`.js-file-upload-manager-dialog[data-type="${type}"]`);
   },
 
-  async openDialog(
-    onSelectCallback,
-    contentBlockId = null,
-    contentBlockWrapper = null,
-    initialType = 'picture',
-    onCancelCallback = null
-  ) {
+  q(sel) {
+    return this.activeDialog.querySelector(sel);
+  },
+
+  $q(sel) {
+    return $(this.activeDialog).find(sel);
+  },
+
+  openForImages(onSelectCallback, contentBlockId = null, contentBlockWrapper = null, onCancelCallback = null) {
+    this.openDialog('picture', onSelectCallback, contentBlockId, contentBlockWrapper, onCancelCallback);
+  },
+
+  openForDocuments(onSelectCallback, contentBlockId = null, contentBlockWrapper = null, onCancelCallback = null) {
+    this.openDialog('document', onSelectCallback, contentBlockId, contentBlockWrapper, onCancelCallback);
+  },
+
+  openDialog(type, onSelectCallback, contentBlockId, contentBlockWrapper, onCancelCallback) {
     this.onSelectCallback = onSelectCallback;
     this.onCancelCallback = onCancelCallback;
     this.selectionConfirmed = false;
@@ -108,7 +118,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     this.contentBlockWrapper = contentBlockWrapper;
 
     this.state = {
-      type: initialType,
+      type: type,
       page: 1,
       search: '',
       selectedImage: null,
@@ -117,11 +127,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
       removedItemsStack: []
     };
 
-    const dialog = this.getDialogElement();
-    if (dialog && !dialog.open) {
-      dialog.showModal();
+    this.activeDialog = this.getDialogElement(type);
+
+    if (this.activeDialog && !this.activeDialog.open) {
+      this.activeDialog.showModal();
     }
-    $(".js-file-upload-manager-search").val("")
+    this.$q(".js-file-upload-manager-search").val("")
 
     this.updateEditButtonVisibility();
     this.updateSelectButtonState();
@@ -133,9 +144,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   requestDialogClose() {
-    const dialog = this.getDialogElement();
-    if (dialog && dialog.open) {
-      dialog.close();
+    if (this.activeDialog && this.activeDialog.open) {
+      this.activeDialog.close();
     } else {
       this.handleDialogClosed();
     }
@@ -147,7 +157,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   handleDialogClosed() {
-    $(".js-file-upload-manager-grid, .js-file-upload-manager-pagination").empty()
+    if (this.activeDialog) {
+      this.$q(".js-file-upload-manager-grid, .js-file-upload-manager-pagination").empty();
+    }
 
     if (!this.selectionConfirmed && this.onCancelCallback) {
       this.onCancelCallback();
@@ -161,7 +173,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     this.contentBlockWrapper = null;
 
     this.updateSelectButtonState();
-    this.resetSelectedImageItems()
+    this.resetSelectedImageItems();
+    this.activeDialog = null;
   },
 
   incrementUploadingCount() {
@@ -176,15 +189,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
 
   updateUploadingState() {
     const isUploading = this.state.uploadingCount > 0;
-    const searchInput = document.querySelector('.js-file-upload-manager-search');
-    const pagination = document.querySelector('.js-file-upload-manager-pagination');
+    const searchInput = this.q('.js-file-upload-manager-search');
+    const pagination = this.q('.js-file-upload-manager-pagination');
 
     searchInput.disabled = isUploading;
 
     if (pagination) {
       pagination.classList.toggle('-disabled', isUploading);
-      $(".js-file-upload-manager-page-btn").prop("disabled", isUploading)
-      $(`.js-file-upload-manager-page-btn[data-page=${this.state.page}]`).prop("disabled", true)
+      this.$q(".js-file-upload-manager-page-btn").prop("disabled", isUploading);
+      this.$q(`.js-file-upload-manager-page-btn[data-page=${this.state.page}]`).prop("disabled", true);
     }
   },
 
@@ -208,34 +221,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   clearSearch(e) {
-    const searchInput = document.querySelector(".js-file-upload-manager-search");
-    if (searchInput) {
-      searchInput.value = '';
-    }
+    const searchInput = this.q(".js-file-upload-manager-search");
+    searchInput.value = '';
     this.state.search = '';
     this.performSearch();
   },
 
-  handleFilterClick(e) {
-    const type = e.currentTarget.dataset.type;
-
-    if (type === this.state.type) return;
-
-    this.state.type = type;
-    this.state.page = 1;
-
-    document.querySelectorAll(".js-file-upload-manager-filter").forEach(btn => {
-      btn.classList.remove("active");
-    });
-    e.currentTarget.classList.add("active");
-
-    this.fetchImageItems();
-  },
-
   async navigateToPage(pageNumber) {
     if (pageNumber && pageNumber !== this.state.page) {
-      $(".js-file-upload-manager-page-btn.-active").removeClass("-active").prop("disabled", false)
-      $(`.js-file-upload-manager-page-btn[data-page=${pageNumber}]`).addClass("-active").prop("disabled", true)
+      this.$q(".js-file-upload-manager-page-btn.-active").removeClass("-active").prop("disabled", false);
+      this.$q(`.js-file-upload-manager-page-btn[data-page=${pageNumber}]`).addClass("-active").prop("disabled", true);
 
       this.state.page = pageNumber;
       await this.fetchImageItems();
@@ -243,7 +238,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   handleUploadButtonClick(_e) {
-    const fileInput = document.querySelector('.js-file-upload-manager-file-input');
+    const fileInput = this.q('.js-file-upload-manager-file-input');
     fileInput.value = '';
     fileInput.accept = this.fileAccept[this.state.type];
     fileInput.click();
@@ -281,7 +276,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   removeLastItemIfNeeded() {
-    const grid = document.querySelector('.js-file-upload-manager-grid');
+    const grid = this.q('.js-file-upload-manager-grid');
     const items = grid.querySelectorAll('.file-upload-manager-dialog--item');
 
     if (items.length >= this.paginationSize) {
@@ -295,9 +290,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     if (this.state.removedItemsStack.length > 0) {
       const removedItem = this.state.removedItemsStack.pop();
 
-      document
-        .querySelector('.js-file-upload-manager-grid')
-        .appendChild(removedItem);
+      this.q('.js-file-upload-manager-grid').appendChild(removedItem);
     }
   },
 
@@ -312,7 +305,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   renderUploadingItem(tempImageData) {
-    const template = document.getElementById('file-upload-manager-uploading-template');
+    const template = this.q('.js-file-upload-manager-uploading-template');
     const documentFramgment = template.content.cloneNode(true);
     const itemElement = documentFramgment.querySelector('.file-upload-manager-dialog--item');
 
@@ -333,7 +326,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
       }
     }
 
-    const grid = document.querySelector('.js-file-upload-manager-grid');
+    const grid = this.q('.js-file-upload-manager-grid');
     if (!grid) return
 
     grid.insertBefore(documentFramgment, grid.firstChild);
@@ -342,7 +335,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   updateUploadItemWithData(uploadItemId, imageData) {
-    const uploadItemElement = document.querySelector(`[data-id="${uploadItemId}"]`);
+    const uploadItemElement = this.q(`[data-id="${uploadItemId}"]`);
 
     if (!uploadItemElement) {
       this.fetchImageItems();
@@ -414,7 +407,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   resetSelectedImageItems() {
-    $(".file-upload-manager-dialog--item.-selected").removeClass("-selected")
+    if (this.activeDialog) {
+      this.$q(".file-upload-manager-dialog--item.-selected").removeClass("-selected");
+    }
   },
 
   handleImageSelected() {
@@ -449,7 +444,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
       try {
         const response = await this.fetchImageData();
         const html = await response.text();
-        const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
+        const dialogBody = this.q('.js-file-upload-manager-dialog--body');
         dialogBody.innerHTML = html;
       } catch (error) {
         console.error('Error fetching files:', error);
@@ -464,7 +459,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   showLoadingOverlay() {
-    const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
+    const overlay = this.q('.js-file-upload-manager-loading-overlay');
 
     if (overlay) {
       overlay.style.display = 'flex';
@@ -472,7 +467,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   hideLoadingOverlay() {
-    const overlay = document.querySelector('.js-file-upload-manager-loading-overlay');
+    const overlay = this.q('.js-file-upload-manager-loading-overlay');
 
     if (overlay) {
       overlay.style.display = 'none';
@@ -495,7 +490,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   handleUploadError(uploadItemId, errorMessage) {
     alert(errorMessage);
 
-    const uploadingItem = document.querySelector(`[data-id="${uploadItemId}"]`);
+    const uploadingItem = this.q(`[data-id="${uploadItemId}"]`);
     uploadingItem.remove();
 
     this.restoreRemovedItem();
@@ -552,7 +547,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   async fetchAndUpdatePagination() {
     const response = await this.fetchImageData({ pagination_only: "true"});
     const html = await response.text();
-    $(".js-file-upload-manager-pagination").replaceWith(html);
+    this.$q(".js-file-upload-manager-pagination").replaceWith(html);
   },
 
   async handleKaminariPaginationClick(e) {
@@ -566,14 +561,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   updateEditButtonVisibility() {
-    const editBtn = document.querySelector(".js-file-upload-manager-edit");
+    const editBtn = this.q(".js-file-upload-manager-edit");
     if (editBtn) {
       editBtn.style.display = this.state.selectedImage ? 'block' : 'none';
     }
   },
 
   updateSelectButtonState() {
-    const selectBtn = document.querySelector(".js-file-upload-manager-select");
+    const selectBtn = this.q(".js-file-upload-manager-select");
     if (selectBtn) {
       const hasSelection = this.state.selectedImage !== null;
       const isChosenUploading = this.state.selectedImage && this.state.selectedImage.classList.contains('-uploading');
@@ -585,7 +580,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   openEditModal(e) {
     if (!this.state.selectedImage) return;
 
-    const editModal = document.querySelector(".js-file-upload-manager-edit-modal");
+    const editModal = this.q(".js-file-upload-manager-edit-modal");
     editModal.classList.add("-opened");
 
     const titleInput = editModal.querySelector(".js-file-upload-manager-edit-title");
@@ -601,13 +596,13 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   },
 
   closeEditModal(e) {
-    $(".js-file-upload-manager-edit-modal").removeClass("-opened")
+    this.$q(".js-file-upload-manager-edit-modal").removeClass("-opened");
   },
 
   async updateImage(e) {
     if (!this.state.selectedImage) return;
 
-    const modal = document.querySelector(".js-file-upload-manager-edit-modal");
+    const modal = this.q(".js-file-upload-manager-edit-modal");
     const titleInput = modal.querySelector(".js-file-upload-manager-edit-title");
     const descInput = modal.querySelector(".js-file-upload-manager-edit-description");
     const altInput = modal.querySelector(".js-file-upload-manager-edit-alt");

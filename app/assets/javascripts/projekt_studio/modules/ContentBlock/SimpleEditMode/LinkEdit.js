@@ -253,7 +253,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     this.currentLinkWrapper = linkWrapper;
 
-    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
         this.createNewLinkWithWrapper(
           this.currentLinkWrapper,
@@ -265,20 +265,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       },
       null,
       null,
-      'document',
       this.handleFileManagerCancel.bind(this)
     );
   },
 
   openFileManagerFromPopup() {
-    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
         $(".js-content-block-link-popup .js-content-block-url-input").val(selectedFile.url);
         $(".js-content-block-url-black-checkbox").prop("checked", true);
-      },
-      null,
-      null,
-      'document'
+      }
     );
   },
 

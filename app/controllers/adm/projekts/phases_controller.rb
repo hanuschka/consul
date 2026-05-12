@@ -133,17 +133,31 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def proposals
     authorize_phase(:moderate?)
-    base_scope = @projekt_phase.proposals.with_hidden
-    @pagy, @proposals = pagy(ProposalsQuery.call(base_scope, params))
+    base_scope = ProposalsQuery.call(@projekt_phase.proposals.with_hidden, params)
 
-    @moderation_header_options = { filter_options: moderation_filter_options }
+    respond_to do |format|
+      format.html do
+        @pagy, @proposals = pagy(base_scope)
 
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+        @moderation_header_options = { filter_options: moderation_filter_options }
+
+        @breadcrumbs = [
+          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::ProposalsExporter.call(base_scope),
+                  filename: "proposals-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:sentiment, :projekt_labels)),
+                  filename: "proposals-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
+    end
   end
 
   def comments
@@ -288,6 +302,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         send_data CsvServices::BudgetInvestmentsExporter.call(base_scope, request.host),
                   filename: "budget_investments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
       end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:sentiment, :projekt_labels)),
+                  filename: "budget_investments-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
     end
   end
 
@@ -413,14 +432,25 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_pins
     authorize_phase(:update?)
-    @pagy, @pins = pagy(@projekt_phase.projekt_point_of_interest_pins.ordered)
+    base_scope = @projekt_phase.projekt_point_of_interest_pins.ordered
 
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+    respond_to do |format|
+      format.html do
+        @pagy, @pins = pagy(base_scope)
+
+        @breadcrumbs = [
+          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope),
+                  filename: "projekt_point_of_interest_pins-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
+    end
   end
 
   def map_resources_overview

@@ -26,7 +26,7 @@ class Image < ApplicationRecord
   validates :imageable_id, presence: true,         if: -> { persisted? && !admin? }
   validates :imageable_type, presence: true,       if: -> { persisted? && !admin? }
 
-  scope :for_file_manager, ->(projekt) {
+  scope :for_studio_file_manager, ->(projekt) {
     if projekt
       where(imageable_type: "Projekt", imageable_id: projekt.id)
     else

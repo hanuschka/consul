@@ -11,7 +11,7 @@ class Document < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
 
-  scope :for_file_manager, ->(projekt) {
+  scope :for_studio_file_manager, ->(projekt) {
     if projekt
       where(admin: true, documentable_type: "Projekt", documentable_id: projekt.id)
     else

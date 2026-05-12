@@ -5,7 +5,7 @@ class FileManager::ImagesController < FileManager::BaseController
 
     @images =
       Image
-        .for_file_manager(current_projekt)
+        .for_studio_file_manager(current_projekt)
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)

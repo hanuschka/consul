@@ -20,7 +20,13 @@
     <!-- Controls Bar -->
     <div class="file-upload-manager-dialog--toolbar">
       <div class="file-upload-manager-dialog--toolbar-left">
-        <%= render Files::FilterBarComponent.new(minimal: true) %>
+        <div class="file-upload-manager-dialog--search-wrapper js-fm-filter-bar">
+          <input
+            type="search"
+            class="file-upload-manager-dialog--search-input js-fm-filter-search"
+            placeholder="Suchen..."
+          >
+        </div>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">

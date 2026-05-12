@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
+ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   state: {
     type: 'picture',
     page: 1,
@@ -9,9 +9,43 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     removedItemsStack: []
   },
   onSelectCallback: null,
+  onCancelCallback: null,
+  selectionConfirmed: false,
   contentBlockId: null,
   contentBlockWrapper: null,
   paginationSize: 15,
+  fileAccept: {
+    picture: 'image/*',
+    document: ''
+  },
+  uploadEndpoints: {
+    picture: '/ckeditor/pictures',
+    document: '/ckeditor/documents'
+  },
+  fileTypeIcons: {
+    'application/pdf': 'fa-file-pdf',
+    'application/msword': 'fa-file-word',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'fa-file-word',
+    'application/vnd.ms-excel': 'fa-file-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'fa-file-excel',
+    'application/vnd.ms-powerpoint': 'fa-file-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'fa-file-powerpoint',
+    'application/zip': 'fa-file-zipper',
+    'application/x-rar-compressed': 'fa-file-zipper',
+    'application/x-7z-compressed': 'fa-file-zipper',
+    'application/json': 'fa-file-code',
+    'application/xml': 'fa-file-code'
+  },
+
+  getFileTypeIcon(contentType) {
+    if (!contentType) return 'fa-file';
+    if (contentType.startsWith('image/')) return 'fa-file-image';
+    if (contentType.startsWith('text/')) return 'fa-file-lines';
+    if (contentType.startsWith('video/')) return 'fa-file-video';
+    if (contentType.startsWith('audio/')) return 'fa-file-audio';
+
+    return this.fileTypeIcons[contentType] || 'fa-file';
+  },
 
   initialize() {
     this.initEventListeners()
@@ -35,7 +69,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     $document.on("keydown", ".js-file-upload-manager-search", this.handleSearchKeydown.bind(this));
     $document.on("click", ".js-file-upload-manager-search-clear", this.clearSearch.bind(this));
 
-    // $document.on("click", ".js-file-upload-manager-filter", this.handleFilterClick.bind(this));
+    $document.on("click", ".js-file-upload-manager-filter", this.handleFilterClick.bind(this));
     $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
     $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
 
@@ -53,13 +87,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     return document.querySelector(".js-file-upload-manager-dialog");
   },
 
-  async openDialog(onSelectCallback, contentBlockId = null, contentBlockWrapper = null) {
+  async openDialog(
+    onSelectCallback,
+    contentBlockId = null,
+    contentBlockWrapper = null,
+    initialType = 'picture',
+    onCancelCallback = null
+  ) {
     this.onSelectCallback = onSelectCallback;
+    this.onCancelCallback = onCancelCallback;
+    this.selectionConfirmed = false;
+
     this.contentBlockId = contentBlockId;
     this.contentBlockWrapper = contentBlockWrapper;
 
     this.state = {
-      type: 'picture',
+      type: initialType,
       page: 1,
       search: '',
       selectedImage: null,
@@ -98,12 +141,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   },
 
   handleDialogClosed() {
-    const dialog = this.getDialogElement();
-
     $(".js-file-upload-manager-grid, .js-file-upload-manager-pagination").empty()
+
+    if (!this.selectionConfirmed && this.onCancelCallback) {
+      this.onCancelCallback();
+    }
 
     this.state.selectedImage = null;
     this.onSelectCallback = null;
+    this.onCancelCallback = null;
+    this.selectionConfirmed = false;
     this.contentBlockId = null;
     this.contentBlockWrapper = null;
 
@@ -163,21 +210,21 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     this.performSearch();
   },
 
-  // handleFilterClick(e) {
-  //   const type = e.currentTarget.dataset.type;
+  handleFilterClick(e) {
+    const type = e.currentTarget.dataset.type;
 
-  //   if (type !== this.state.type) {
-  //     this.state.type = type;
-  //     this.state.page = 1;
+    if (type === this.state.type) return;
 
-  //     document.querySelectorAll(".js-file-upload-manager-filter").forEach(btn => {
-  //       btn.classList.remove("active");
-  //     });
-  //     e.currentTarget.classList.add("active");
+    this.state.type = type;
+    this.state.page = 1;
 
-  //     this.fetchImageItems();
-  //   }
-  // },
+    document.querySelectorAll(".js-file-upload-manager-filter").forEach(btn => {
+      btn.classList.remove("active");
+    });
+    e.currentTarget.classList.add("active");
+
+    this.fetchImageItems();
+  },
 
   async navigateToPage(pageNumber) {
     if (pageNumber && pageNumber !== this.state.page) {
@@ -192,7 +239,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   handleUploadButtonClick(_e) {
     const fileInput = document.querySelector('.js-file-upload-manager-file-input');
     fileInput.value = '';
-
+    fileInput.accept = this.fileAccept[this.state.type];
     fileInput.click();
   },
 
@@ -201,16 +248,20 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     if (this._fetchPromise) await this._fetchPromise;
 
     const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-    if (files && files.length > 0) {
-      const file = files[0];
+    const file = files[0];
 
+    if (file.type.startsWith('image/')) {
       this.genImageInMemoryPreview(file, (previewUrl) => {
-        const uploadingItem = this.buildImageUploadingItem(file, previewUrl)
-
+        const uploadingItem = this.buildImageUploadingItem(file, previewUrl);
         this.renderUploadingItem(uploadingItem);
-        this.uploadNewImage(file, uploadingItem.id);
-      })
+        this.uploadNewFile(file, uploadingItem.id);
+      });
+    } else {
+      const uploadingItem = this.buildImageUploadingItem(file, null);
+      this.renderUploadingItem(uploadingItem);
+      this.uploadNewFile(file, uploadingItem.id);
     }
   },
 
@@ -259,7 +310,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     const documentFramgment = template.content.cloneNode(true);
     const itemElement = documentFramgment.querySelector('.file-upload-manager-dialog--item');
 
-    this.updateImageItem(itemElement, tempImageData)
+    this.updateImageItem(itemElement, tempImageData);
+    itemElement.dataset.contentType = tempImageData.data_content_type;
+
+    const isImage = tempImageData.data_content_type
+      && tempImageData.data_content_type.startsWith('image/');
+
+    if (!isImage) {
+      const img = itemElement.querySelector('.js-file-upload-manager-dialog_item-image');
+      if (img) img.style.display = 'none';
+
+      const icon = itemElement.querySelector('.js-file-upload-manager-dialog_item-icon');
+      if (icon) {
+        icon.classList.add(this.getFileTypeIcon(tempImageData.data_content_type));
+        icon.style.display = '';
+      }
+    }
 
     const grid = document.querySelector('.js-file-upload-manager-grid');
     if (!grid) return
@@ -277,13 +343,24 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
       return
     }
 
-    const image = new Image()
-    image.src = imageData.gallery_thumb_url
-
-    image.onload = () => {
-      this.updateImageItem(uploadItemElement, imageData)
+    const finalize = () => {
+      this.updateImageItem(uploadItemElement, imageData);
       uploadItemElement.classList.remove('-uploading');
-      uploadItemElement.querySelector(".file-upload-manager-dialog--item-uploading").remove()
+      uploadItemElement.querySelector(".file-upload-manager-dialog--item-uploading").remove();
+    };
+
+    if (imageData.gallery_thumb_url) {
+      const img = uploadItemElement.querySelector('.js-file-upload-manager-dialog_item-image');
+      const icon = uploadItemElement.querySelector('.js-file-upload-manager-dialog_item-icon');
+
+      if (img) img.style.display = '';
+      if (icon) icon.style.display = 'none';
+
+      const image = new Image();
+      image.src = imageData.gallery_thumb_url;
+      image.onload = finalize;
+    } else {
+      finalize();
     }
   },
 
@@ -338,7 +415,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     if (!this.state.selectedImage) return
 
     if (this.onSelectCallback && typeof this.onSelectCallback === 'function') {
+      this.selectionConfirmed = true;
       const selectedImage = this.state.selectedImage;
+      const imgEl = selectedImage.querySelector('img');
 
       const imageData = {
         id: selectedImage.dataset.id,
@@ -346,7 +425,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         alt_text: selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '',
         description: selectedImage.dataset.description || '',
         url: selectedImage.dataset.url || '',
-        gallery_thumb_url: selectedImage.querySelector("img").src,
+        gallery_thumb_url: imgEl ? imgEl.src : '',
         custom_thumb_url: selectedImage.dataset.customThumbUrl
       };
       this.onSelectCallback(imageData);
@@ -366,8 +445,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         const dialogBody = document.querySelector('.js-file-upload-manager-dialog--body');
         dialogBody.innerHTML = html;
       } catch (error) {
-        console.error('Error fetching images:', error);
-        alert('Fehler beim Laden der Bilder');
+        console.error('Error fetching files:', error);
+        alert('Fehler beim Laden der Dateien');
       } finally {
         this.state.isLoading = false;
         this.hideLoadingOverlay();
@@ -415,7 +494,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     this.restoreRemovedItem();
   },
 
-  async uploadNewImage(file, uploadItemId) {
+  async uploadNewFile(file, uploadItemId) {
     const formData = new FormData();
     formData.append('upload', file);
 
@@ -428,7 +507,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
       ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
-    fetch('/ckeditor/pictures', {
+    fetch(this.uploadEndpoints[this.state.type], {
       method: 'POST',
       headers: {
         'X-CSRF-TOKEN': csrfToken,
@@ -446,8 +525,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         }
       })
       .catch(error => {
-        console.error('Error uploading image:', error);
-        this.handleUploadError(uploadItemId, 'Fehler beim Hochladen des Bildes');
+        console.error('Error uploading file:', error);
+        this.handleUploadError(uploadItemId, 'Fehler beim Hochladen der Datei');
       })
       .finally(() => {
         this.decrementUploadingCount();
@@ -505,6 +584,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     const titleInput = editModal.querySelector(".js-file-upload-manager-edit-title");
     const descInput = editModal.querySelector(".js-file-upload-manager-edit-description");
     const altInput = editModal.querySelector(".js-file-upload-manager-edit-alt");
+    const altField = editModal.querySelector(".js-file-upload-manager-edit-alt-field");
+
+    altField.style.display = this.state.type === 'document' ? 'none' : '';
 
     titleInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '').trim();
     descInput.value = (this.state.selectedImage.dataset.description || '').trim();
@@ -527,12 +609,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     const type = this.state.type
     formData.append(`${type}[title]`, titleInput.value);
     formData.append(`${type}[description]`, descInput.value);
-    formData.append(`${type}[alt_text]`, altInput.value);
+
+    if (type === 'picture') {
+      formData.append(`${type}[alt_text]`, altInput.value);
+    }
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     try {
-      const response = await fetch(`/ckeditor/pictures/${this.state.selectedImage.dataset.id}`, {
+      const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${this.state.selectedImage.dataset.id}`, {
         method: 'PATCH',
         headers: {
           'X-CSRF-TOKEN': csrfToken,
@@ -548,15 +633,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         await this.fetchImageItems();
       }
     } catch (error) {
-      console.error('Error updating image:', error);
-      alert('Fehler beim Aktualisieren des Bildes');
+      console.error('Error updating file:', error);
+      alert('Fehler beim Aktualisieren der Datei');
     }
   },
 
   async deleteImage(e) {
     if (!this.state.selectedImage) return;
 
-    if (!confirm('Möchten Sie dieses Bild wirklich löschen?')) {
+    if (!confirm('Möchten Sie diese Datei wirklich löschen?')) {
       return;
     }
 
@@ -564,7 +649,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     try {
-      const response = await fetch(`/ckeditor/pictures/${chosenId}`, {
+      const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${chosenId}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-TOKEN': csrfToken,
@@ -581,8 +666,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
         await this.fetchImageItems();
       }
     } catch (error) {
-      console.error('Error deleting image:', error);
-      alert('Fehler beim Löschen des Bildes');
+      console.error('Error deleting file:', error);
+      alert('Fehler beim Löschen der Datei');
     }
   }
 }

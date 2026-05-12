@@ -546,3 +546,53 @@
   right: 0;
   margin: auto;
 }
+
+.file-upload-manager-dialog--item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 56px;
+  color: $medium-gray-3;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-pdf {
+  color: #c43e1c;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-word {
+  color: #2b579a;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-excel {
+  color: #217346;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-powerpoint {
+  color: #d24726;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-zipper {
+  color: #8a7034;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-image {
+  color: #6b3fa0;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-video {
+  color: #5b6bbf;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-audio {
+  color: #b07a3a;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-code {
+  color: #4a4a4a;
+}
+
+.file-upload-manager-dialog--item-icon.fa-file-lines {
+  color: #5a6068;
+}

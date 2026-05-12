@@ -16,6 +16,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
     const $document = $(document);
 
     $document.on("click", ".js-content-block-add-link", this.addLink.bind(this));
+    $document.on("click", ".js-content-block-insert-file-link", this.openFileManagerForLink.bind(this));
     $document.on("selectionchange", this.handleTextSelectionChange.bind(this))
     $document.on("click", ".js-content-block-accept-link-edit", this.acceptLinkEdit.bind(this));
     $document.on("click", ".js-content-block-cancel-link-edit", this.cancelLinkEdit.bind(this));
@@ -129,6 +130,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
     if (!contentBlockWrapper) return
 
     const button = contentBlockWrapper.querySelector(".js-content-block-add-link")
+    const insertFileLinkButton = contentBlockWrapper.querySelector(".js-content-block-insert-file-link")
     const hasText = selection.toString().trim().length > 0;
 
     const surroundingContentBlock = container.closest(".js-projekt-content-block")
@@ -138,13 +140,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
         button.disabled = true
       }
 
+      if (insertFileLinkButton) {
+        insertFileLinkButton.disabled = true
+      }
+
       return
     }
 
     $(".js-content-block-add-link").prop("disabled", true);
+    $(".js-content-block-insert-file-link").prop("disabled", true);
 
     if (contentBlockWrapper) {
       button.disabled = !hasText
+
+      if (insertFileLinkButton) {
+        insertFileLinkButton.disabled = !hasText
+      }
     }
   },
 
@@ -208,6 +219,56 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     this.currentLinkWrapper = linkWrapper
     this.showEditLinkPopup(linkWrapper);
+  },
+
+  openFileManagerForLink(e) {
+    this.resetLinkEditState();
+
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer.nodeType === 1
+      ? range.commonAncestorContainer
+      : range.commonAncestorContainer.parentNode;
+
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container);
+    if (!contentBlockWrapper) return;
+
+    const surroundingContentBlock = container.closest(".js-projekt-content-block");
+    if (!surroundingContentBlock) return;
+
+    this.saveSelection();
+    this.currentContentBlockWrapper = contentBlockWrapper;
+
+    const linkWrapper = this.buildLinkWrapper();
+    linkWrapper.classList.add("-js-draft-link");
+
+    const linkContentElement = document.createElement("span");
+    linkContentElement.classList.add("js-link-wrapper-content");
+    linkContentElement.appendChild(range.extractContents());
+    linkWrapper.appendChild(linkContentElement);
+    range.insertNode(linkWrapper);
+
+    this.currentLinkWrapper = linkWrapper;
+
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openDialog(
+      (selectedFile) => {
+        this.createNewLinkWithWrapper(this.currentLinkWrapper, selectedFile.url, true);
+        this.resetLinkEditState();
+      },
+      null,
+      null,
+      'document',
+      this.handleFileManagerCancel.bind(this)
+    );
+  },
+
+  handleFileManagerCancel() {
+    if (this.currentLinkWrapper && this.currentLinkWrapper.classList.contains("-js-draft-link")) {
+      this.removeLinkControls(this.currentLinkWrapper);
+    }
+    this.resetLinkEditState();
   },
 
   showEditLinkPopup(linkWrapper) {
@@ -356,6 +417,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
     if (this.currentContentBlockWrapper) {
       const addLinkButton = this.currentContentBlockWrapper.querySelector(".js-content-block-add-link")
       addLinkButton.disabled = true
+
+      const insertFileLinkButton = this.currentContentBlockWrapper.querySelector(".js-content-block-insert-file-link")
+      if (insertFileLinkButton) {
+        insertFileLinkButton.disabled = true
+      }
     }
 
     $(".js-content-block-link-popup .js-content-block-text-input")

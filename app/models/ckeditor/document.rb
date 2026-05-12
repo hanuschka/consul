@@ -17,11 +17,23 @@ class Ckeditor::Document < Ckeditor::Asset
   end
 
   def custom_thumb_url(width: 890, height: 890)
-    ""
+    blob = storage_data.blob
+    return "" unless blob&.previewable?
+
+    rails_representation_url(
+      blob.preview(resize_to_limit: [width, height]),
+      only_path: true
+    )
   end
 
   def gallery_thumb_url
-    ""
+    blob = storage_data.blob
+    return "" unless blob&.previewable?
+
+    rails_representation_url(
+      blob.preview(resize_to_limit: [464, 380]),
+      only_path: true
+    )
   end
 
   def type

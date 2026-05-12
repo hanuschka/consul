@@ -154,6 +154,17 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 >
                   <i class="fas fa-link"></i>
                 </button>
+                <button
+                  type="button"
+                  disabled
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Datei-Link einfügen"
+                  class="studio-icon-button js-content-block-insert-file-link"
+                >
+                  <i class="fas fa-paperclip"></i>
+                </button>
               </div>
             </div>
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-projekt-content-block-edit-main-controlls">

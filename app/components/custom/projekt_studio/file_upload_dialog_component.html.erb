@@ -5,7 +5,7 @@
   <div class="file-upload-manager-dialog--overlay js-file-upload-manager-dialog-close"></div>
   <div class="file-upload-manager-dialog--content">
     <div class="file-upload-manager-dialog--header">
-      <h3>Bildergalerie</h3>
+      <h3>Datei Verwaltung</h3>
       <button class="close-button round-icon-button js-file-upload-manager-dialog-close" data-close="" aria-label="Close Accessible Modal" type="button">
         <i class="fa fa-xmark">
         </i>
@@ -17,24 +17,42 @@
       <div class="file-upload-manager-dialog--toolbar-left">
         <div class="file-upload-manager-dialog--search-wrapper">
           <input type="text" class="file-upload-manager-dialog--search-input js-file-upload-manager-search" placeholder="Suchen...">
-          <button type="button" class="file-upload-manager-dialog--search-clear js-file-upload-manager-search-clear" style="display: none;">×</button>
+          <button type="button" class="file-upload-manager-dialog--search-clear js-file-upload-manager-search-clear" style="display: none;" aria-label="Suche zurücksetzen">
+            <i class="fa fa-xmark"></i>
+          </button>
           <span class="file-upload-manager-dialog--search-icon"></span>
         </div>
 
-        <%# <div class="file-upload-manager-dialog--filter-wrapper"> %>
-          <%#   <span>Filter:</span> %>
-          <%#   <button type="button" class="button js-file-upload-manager-filter active" data-type="picture"> %>
-            <%#     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> %>
-              <%#       <path d="M21.75 3.75H2.25C1.83516 3.75 1.5 4.08516 1.5 4.5V19.5C1.5 19.9148 1.83516 20.25 2.25 20.25H21.75C22.1648 20.25 22.5 19.9148 22.5 19.5V4.5C22.5 4.08516 22.1648 3.75 21.75 3.75Z" fill="currentColor"/> %>
-              <%#     </svg> %>
-            <%#     Bilder %>
-            <%#   </button> %>
-          <%# </div> %>
+        <div class="file-upload-manager-dialog--filter-wrapper">
+          <span>Filter:</span>
+          <button
+            type="button"
+            class="button js-file-upload-manager-filter active"
+            data-type="picture"
+          >
+            <i class="fa fa-image"></i>
+            Bilder
+          </button>
+          <button
+            type="button"
+            class="button js-file-upload-manager-filter"
+            data-type="document"
+          >
+            <i class="fa fa-file"></i>
+            Dokumente
+          </button>
+        </div>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">
-        <button type="button" class="button js-file-upload-manager-edit" style="display: none;">Bild editieren</button>
-        <button type="button" class="button js-file-upload-manager-upload">Neues Bild hochladen</button>
+        <button type="button" class="button js-file-upload-manager-edit" style="display: none;">
+          <i class="fa fa-pen"></i>
+          Datei editieren
+        </button>
+        <button type="button" class="button js-file-upload-manager-upload">
+          <i class="fa fa-upload"></i>
+          Neue Datei hochladen
+        </button>
       </div>
     </div>
 
@@ -61,6 +79,7 @@
             <div class="loading-spinner-inline"></div>
           </div>
          <img class="js-file-upload-manager-dialog_item-image" src="" alt="">
+         <i class="fa fa-file file-upload-manager-dialog--item-icon js-file-upload-manager-dialog_item-icon" style="display: none;"></i>
         </div>
         <div class="file-upload-manager-dialog--item-meta">
           <p class="file-upload-manager-dialog--item-title" title=""></p>
@@ -71,12 +90,13 @@
 
     <div class="file-upload-manager-dialog--footer">
       <button type="button" class="button image-upload-gallery--select-image-btn js-file-upload-manager-select">
+        <i class="fa fa-check"></i>
         Wählen
       </button>
     </div>
 
     <!-- Hidden file input for uploads -->
-    <input type="file" class="js-file-upload-manager-file-input" accept="image/*" style="display: none;">
+    <input type="file" class="js-file-upload-manager-file-input" style="display: none;">
   </div>
 
   <!-- Edit Modal -->
@@ -99,7 +119,7 @@
           <label>Beschreibung</label>
           <textarea class="js-file-upload-manager-edit-description" placeholder="Beschreibung"></textarea>
         </div>
-        <div class="file-upload-manager-edit-modal__field">
+        <div class="file-upload-manager-edit-modal__field js-file-upload-manager-edit-alt-field">
           <label>Alternativer Text</label>
           <input type="text" class="js-file-upload-manager-edit-alt" placeholder="Alternativer Text (empfohlen)">
         </div>

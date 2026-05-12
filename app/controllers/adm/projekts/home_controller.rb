@@ -3,13 +3,20 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
 
     @team_members = scoped_team_members
-    @recent_items = policy_scope([:adm, :projekts, Projekt])
-                      .includes(:parent, :landing_page, images_attachments: :blob, page: :translations)
-                      .order(updated_at: :desc).limit(10)
+
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]), params)
+    @pagy, @projekts = pagy(base_scope, limit: 10)
+
+    @name_header_options = { sort: true, search: true }
+    @start_date_header_options = { sort: true }
+    @end_date_header_options = { sort: true }
 
     @section_setting = SectionSetting.for_section("projekts")
     @contact_persons = SectionContactPerson.for_section("projekts")
-    @activities = SectionActivity.for_section("projekts").limit(10)
+    visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
+    @activities = SectionActivity.for_section("projekts")
+      .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids)
+      .limit(10)
 
     @stats = [
       { value: Projekt.regular.count, label: t("adm.projekts.home.stats.total"), icon: "folder" },
@@ -22,7 +29,9 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
       (if policy([:adm, :projekts, Projekt]).create?
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
        end),
-      { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path }
+      (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
+         { label: t("adm.projekts.home.quick_links.import_projekt"), path: import_projekt_adm_projekts_projekts_path }
+       end)
     ].compact
 
     @breadcrumbs = [

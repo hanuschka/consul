@@ -1,11 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
@@ -80,7 +84,7 @@ class Setting < ApplicationRecord
         "advanced_newsletter": false,
         # newsletter
 
-        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+        "extended_option.general.city_name": "Consul",
 
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
@@ -110,7 +114,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -243,8 +247,6 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
-        "extended_feature.general.enable_polls_overview": false,
-        "extended_feature.general.enable_proposals_overview": false,
         "extended_feature.general.enable_google_translate": false,
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,

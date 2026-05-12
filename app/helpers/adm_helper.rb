@@ -51,8 +51,10 @@ module AdmHelper
     "email_templates" => "mail"
   }.freeze
 
+  PHASE_MODERATION_ACTIONS = %w[proposals comments budget_investments].freeze
+
   def projekt_phase_table_actions(projekt_phase)
-    projekt_phase.admin_nav_bar_items.map do |action|
+    visible_phase_actions(projekt_phase).map do |action|
       {
         label: I18n.t("adm.projekts.phases.projekt_phase.#{action}"),
         url: send("#{action}_adm_projekts_phase_path", projekt_phase),
@@ -64,13 +66,20 @@ module AdmHelper
   def projekt_phase_tabs(projekt_phase, current_action: nil)
     current_action ||= action_name
 
-    projekt_phase.admin_nav_bar_items.map do |action|
+    visible_phase_actions(projekt_phase).map do |action|
       {
         label: I18n.t("adm.projekts.phases.projekt_phase.#{action}"),
         url: send("#{action}_adm_projekts_phase_path", projekt_phase),
         current: current_action == action
       }
     end
+  end
+
+  def visible_phase_actions(projekt_phase)
+    actions = projekt_phase.admin_nav_bar_items
+    return actions if policy([:adm, :projekts, projekt_phase.projekt]).update?
+
+    actions & PHASE_MODERATION_ACTIONS
   end
 
   def idea_tabs(idea, current_action: nil)
@@ -83,6 +92,21 @@ module AdmHelper
         current: current_action == action
       }
     end
+  end
+
+  def projekt_event_tabs(projekt_phase, projekt_event)
+    [
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.show"),
+        url: adm_projekts_phase_projekt_event_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_events" && action_name.in?(%w[show edit update])
+      },
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.registrations"),
+        url: adm_projekts_phase_projekt_event_registrations_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_event_registrations"
+      }
+    ]
   end
 
   def deficiency_report_tabs(deficiency_report, current_action: nil)
@@ -162,7 +186,7 @@ module AdmHelper
       }
     ]
 
-    %w[details visibility projekt_managers map phases].each do |action|
+    %w[details visibility projekt_managers map phases evaluation].each do |action|
       tabs << {
         label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
         url: send("#{action}_adm_projekts_projekt_path", projekt),
@@ -203,4 +227,5 @@ module AdmHelper
       t("shared.moderation_statuses.flagged")
     end
   end
+
 end

@@ -1,9 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 import Sortable from "sortablejs"
 
+const EDITABLE_FIELDS = ["name", "description", "ai_instruction"]
+
 export default class extends Controller {
-  static targets = ["list", "input", "template"]
+  static targets = ["list", "inputName", "inputAiInstruction", "template", "count", "empty"]
   static values = {
+    kind: String,
     createUrl: String,
     reorderUrl: String,
     updateUrlTemplate: String,
@@ -12,7 +15,8 @@ export default class extends Controller {
 
   connect() {
     this.initSortable()
-    this.initInlineEdit()
+    this.bindFieldEdits()
+    this.refreshCountAndEmpty()
   }
 
   initSortable() {
@@ -30,95 +34,120 @@ export default class extends Controller {
     fetch(this.reorderUrlValue, {
       method: "PATCH",
       headers: this.headers(),
-      body: JSON.stringify({ order })
+      body: JSON.stringify({ order, kind: this.kindValue })
     })
   }
 
-  initInlineEdit() {
-    this.element.addEventListener("click", (e) => {
-      const textEl = e.target.closest("[data-criteria-text]")
-      if (!textEl) return
-
-      const currentText = textEl.textContent.trim()
-      const input = document.createElement("input")
-      input.type = "text"
-      input.value = currentText
-      input.className = "kern-form-input__input"
-
-      input.addEventListener("blur", () => this.saveInlineEdit(input))
-      input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault()
-          input.blur()
-        }
-      })
-
-      textEl.replaceWith(input)
-      input.focus()
-    })
+  bindFieldEdits() {
+    this.listTarget.addEventListener("change", (e) => this.handleFieldChange(e))
+    this.listTarget.addEventListener("blur", (e) => this.handleFieldChange(e), true)
   }
 
-  saveInlineEdit(input) {
-    const item = input.closest("[data-criterion-id]")
-    const url = this.updateUrlTemplate(item.dataset.criterionId)
-    const text = input.value.trim()
+  handleFieldChange(e) {
+    const field = e.target.dataset.criteriaField
 
-    fetch(url, {
+    if (!EDITABLE_FIELDS.includes(field)) return
+
+    const item = e.target.closest("[data-criterion-id]")
+
+    if (!item) return
+
+    const id = item.dataset.criterionId
+    const payload = { user_resource_criterion: {} }
+    payload.user_resource_criterion[field] = e.target.value
+
+    fetch(this.buildUpdateUrl(id), {
       method: "PATCH",
       headers: this.headers(),
-      body: JSON.stringify({ user_resource_criterion: { text } })
-    }).then(() => {
-      const span = document.createElement("span")
-      span.setAttribute("data-criteria-text", "")
-      span.className = "kern-criteria-list__text"
-      span.textContent = text
-      input.replaceWith(span)
+      body: JSON.stringify(payload)
     })
   }
 
   addCriterion(e) {
     e.preventDefault()
-    const text = this.inputTarget.value.trim()
+    const name = this.inputNameTarget.value.trim()
+    const aiInstruction = this.inputAiInstructionTarget.value.trim()
 
-    if (!text) return
+    if (!name || !aiInstruction) return
 
     fetch(this.createUrlValue, {
       method: "POST",
       headers: this.headers(),
-      body: JSON.stringify({ user_resource_criterion: { text } })
+      body: JSON.stringify({
+        kind: this.kindValue,
+        user_resource_criterion: { name, ai_instruction: aiInstruction }
+      })
     })
       .then((response) => response.json())
-      .then((data) => {
-        this.appendCriterion(data)
-        this.inputTarget.value = ""
-      })
+      .then((data) => this.handleCreated(data))
+  }
+
+  handleCreated(data) {
+    this.appendCriterion(data)
+    this.inputNameTarget.value = ""
+    this.inputAiInstructionTarget.value = ""
+    this.refreshCountAndEmpty()
   }
 
   deleteCriterion(e) {
     e.preventDefault()
     const item = e.target.closest("[data-criterion-id]")
-    const url = this.deleteUrlTemplate(item.dataset.criterionId)
 
-    fetch(url, {
+    fetch(this.buildDeleteUrl(item.dataset.criterionId), {
       method: "DELETE",
       headers: this.headers()
-    }).then(() => item.remove())
+    }).then(() => {
+      item.remove()
+      this.refreshCountAndEmpty()
+    })
+  }
+
+  refreshCountAndEmpty() {
+    const count = this.listTarget.querySelectorAll("[data-criterion-id]").length
+
+    if (this.hasCountTarget) {
+      this.countTarget.textContent = this.formatCount(count)
+    }
+
+    if (this.hasEmptyTarget) {
+      this.emptyTarget.hidden = count > 0
+    }
+  }
+
+  formatCount(count) {
+    if (count === 0) return this.countTarget.dataset.zeroLabel || "0"
+    if (count === 1) return this.countTarget.dataset.oneLabel || "1"
+
+    const otherTpl = this.countTarget.dataset.otherLabel
+
+    if (otherTpl) return otherTpl.replace("%{count}", count)
+
+    return String(count)
   }
 
   appendCriterion(data) {
     const template = this.templateTarget.innerHTML
     const html = template
-      .replace(/\{\{ id \}\}/g, data.id)
-      .replace(/\{\{ text \}\}/g, data.text)
+      .replace(/\{\{\s*id\s*\}\}/g, data.id)
+      .replace(/\{\{\s*name\s*\}\}/g, this.escape(data.name))
+      .replace(/\{\{\s*description\s*\}\}/g, this.escape(data.description || ""))
+      .replace(/\{\{\s*ai_instruction\s*\}\}/g, this.escape(data.ai_instruction || ""))
 
     this.listTarget.insertAdjacentHTML("beforeend", html)
   }
 
-  updateUrlTemplate(id) {
+  escape(value) {
+    const div = document.createElement("div")
+    div.textContent = value
+
+    return div.innerHTML
+  }
+
+  buildUpdateUrl(id) {
     return this.updateUrlTemplateValue.replace("CRITERION_ID", id)
   }
 
-  deleteUrlTemplate(id) {
+  buildDeleteUrl(id) {
     return this.deleteUrlTemplateValue.replace("CRITERION_ID", id)
   }
 

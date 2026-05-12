@@ -1,0 +1,30 @@
+en:
+  adm:
+    external_api_keys:
+      flash:
+        updated: API key updated successfully
+      index:
+        title: External API keys
+        intro: >
+          Here you manage API keys for external services integrated into your platform — e.g. for web analytics, map display, email sending, or AI features. Each service needs its own key, which you obtain from the respective provider. As long as no custom key is stored, the system uses a default key from demokratie.today. Caution: changes to API keys require technical knowledge. Incorrect entries can cause services to stop working. When in doubt, contact demokratie.today.
+        service: Service
+        name: Key name
+        value: Value
+        value_set: Set
+        value_empty: Not set
+        empty_api_keys: No API keys have been created yet
+      show:
+        key: Name
+        api_value: Key value
+        add_key: Add API key
+        default_key_note_title: Default API key
+        default_key_note_description: >
+          No custom API key is stored — the default key from demokratie.today is being used. Enter your own key to replace it.
+      edit:
+        title: Edit API key
+        value: API key
+        value_hint: >
+          Enter the API key you received from the respective service provider here. The key is stored encrypted in the database and is only visible to administrators. As long as no custom key is stored, the system automatically uses a default key from demokratie.today. Entering your own key replaces the default key.
+        value_placeholder: Paste API key here
+        name_hint: >
+          The key name is assigned automatically by the system and cannot be changed. It serves as a technical identifier that uniquely ties the key to its service. If you're unsure which key is needed here, check the service provider's documentation or contact demokratie.today.

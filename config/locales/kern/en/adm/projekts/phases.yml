@@ -1,0 +1,552 @@
+en:
+  adm:
+    projekts:
+      phases:
+        index:
+          intro_title: About participation phases
+          intro_text_p1: "In the table below you manage the individual participation phases of a project. Each phase is assigned to its own tab in the project footer and can be individually shown or hidden. Three central toggles help control the behavior and visibility of phases:"
+          intro_text_standard_title: Default
+          intro_text_standard_description: Only one phase can be marked as the default at a time. This phase is automatically opened for incoming users and shown in the foreground when the project page is opened.
+          intro_text_active_title: Active
+          intro_text_active_description: When this toggle is enabled, the respective participation phase is technically active and directly accessible to users on the frontend.
+          intro_text_visible_title: Visibility in the project
+          intro_text_visible_description: Controls whether the phase is shown in the project footer (tab bar). When disabled, the phase remains technically active and can be accessed directly via a URL but is not advertised via a visible tab. This is useful for special formats like contests after a vote.
+          intro_text_p2: The combination of these three settings enables flexible control of flow, visibility, and user guidance within a participation project.
+          title: Participation phases
+          new_phase: Create new phase
+          table:
+            phase_tab_name: Participation phases
+            start_date: Start
+            end_date: End
+            restriction: Restriction
+            default: Default
+            active: Active
+            visible: Visible
+            actions: Actions
+            delete: Delete
+            confirm_delete: "Are you sure? This deletes the phase \"%{name}\" and all its content."
+        new:
+          title: Create new participation phase
+          intro_title: Choose participation module
+          intro_text: Choose a participation module to create a new phase for this project. Each module offers different functions for citizen participation.
+          phase_type_label: Participation module
+          phase_type_hint: Each participation module offers different functions — e.g. votes, proposals, polls, or events. Choose the module that best fits the goal of this participation phase. After creation, you can continue to configure the phase, e.g. with durations, restrictions, and display options.
+          phases_overview_title: Overview of participation modules
+          phases_overview:
+            comment:
+              name: Comments
+              description: "Open discussion forum where users can post and reply to existing comments. Suitable for general exchange of opinions on a topic or project. Comments can be moderated and hidden. Ideal as a low-threshold entry into participation to capture moods and opinions."
+            proposal:
+              name: Proposals
+              description: "Users can submit improvement proposals, which can be supported and commented on by other participants. Proposals can be located on a map and tagged with labels. Administrators can moderate proposals and track their status. Suitable for idea collection, citizen requests, and participatory planning processes."
+            point_of_interest:
+              name: Points of interest
+              description: "Map-based participation phase in which users can mark locations on an interactive map and tag them with categories. Each entry can be described and commented on. Administrators define the categories and limit the number of pins per user. Suitable for deficiency reports or spatial surveys."
+            question:
+              name: Quick poll
+              description: "Simple question-and-answer formats for quick feedback on concrete questions. Users choose from predefined answer options; results are shown in real time. Administrators can create multiple questions and configure the display. Ideal for opinion polls, mood snapshots, or prioritizing topics."
+            voting:
+              name: Vote
+              description: "Structured votes with various question types like single and multiple choice, rating scales, or yes/no decisions. Questions can be bundled into topic groups. Supports online and offline voting with separate capture. Suitable for binding decision processes and citizen votes."
+            iframe:
+              name: Iframe
+              description: "Embed external content via an iframe directly into the project page. This seamlessly integrates interactive maps, external survey tools, 3D models, or third-party web apps. Configuration is limited to providing the URL. No further content is managed or stored within the platform."
+            budget:
+              name: Budget
+              description: "Multi-stage participatory budget from submission through feasibility review to voting. Users submit proposals with cost estimates that are reviewed by the administration. In the voting phase, citizens decide how the budget is distributed. Supports offline voting and automatic winner determination."
+            legislation:
+              name: Text editing
+              description: "Collaborative text work with versioning for jointly developing documents. Users can read drafts, comment on paragraphs, and submit change proposals. Administrators manage draft versions and map comments to passages. Suitable for statutes, guidelines, or regulations that are publicly discussed."
+            formular:
+              name: Form
+              description: "Custom forms with configurable required and follow-up fields for structured input. Administrators design the form with various field types and can send follow-up emails. Responses can be reviewed and exported as CSV. Suitable for applications, submissions, or any kind of standardized data collection."
+            event:
+              name: Events
+              description: "Announcement and management of dates like workshops, town hall meetings, or site visits. Each event contains date, time, location, and description. Participants can be notified by email about new dates. Ideal for integrating in-person formats into the digital participation process and communicating dates centrally."
+            milestone:
+              name: Milestones
+              description: "Display of project progress via milestones and progress bars. Administrators define important stages with date and description as well as progress bars for visual display. Users see at a glance which steps are completed and what comes next. Creates transparency about the project timeline."
+            projekt_notification:
+              name: Notifications
+              description: "Sending of announcements and messages to the users of a project. Administrators create notifications with title and content, which are shown in the project and optionally sent by email. Suitable for status updates, intermediate results, or date changes — wherever active information of participants is needed."
+            livestream:
+              name: Livestream
+              description: "Embed live videos via YouTube or Vimeo directly into the project page. Users can follow the broadcast and submit questions via an integrated question feature. Participants can be notified in advance by email about the date. Suitable for broadcasting council sessions, town hall meetings, or information events."
+            argument:
+              name: Voices
+              description: "Display of pro and contra arguments on a topic, e.g. from experts or interest groups. Each argument can be supplemented with an author image, name, and reasoning. Administrators assign arguments to the pro and contra sides. Suitable for the structured weighing of controversial topics and different perspectives."
+            newsfeed:
+              name: Newsfeed
+              description: "Display of project news and status messages in chronological order. Works like a news feed, through which administrators can continuously report on developments and decisions. Suitable for longer-term projects in which participants should be regularly informed about the current status."
+          select_phase_type: Please choose...
+          create_phase: Create phase
+        create:
+          success: The participation phase was created successfully.
+        update:
+          success: The participation phase was updated successfully.
+        destroy:
+          success: The participation phase and all its content have been deleted.
+        duration:
+          title: Duration
+          dates_label: Phase duration
+          dates_description: Defines the period during which this participation phase is active. Within this period, users can participate in the phase. Outside the period, the phase is shown as completed or not yet started. The duration is configurable independently of the overall project duration.
+        naming:
+          title: Naming
+        restrictions:
+          title: Participation restriction
+          intro_title: About participation restrictions
+          intro_text: |
+            <p>Extended participation restrictions, such as restriction by geographic area or age group, are available only for registered and verified users. Guest user status does not allow such restrictions.</p>
+            <p>To apply these extended restrictions, the corresponding data, such as place of residence or date of birth, must be available. This data can either be collected during registration or queried later during participation in the respective phase. Users who haven't yet provided the required data will be asked to provide it before participating. Only when the stored information matches the restriction criteria will participation be unlocked.</p>
+          user_status_label: Participation by user status
+          user_status_hint: "Defines the minimum verification status users must have to participate in this phase. There are three levels: guest users (without registration), registered users (with a platform account), and verified users (e.g. via registration-office comparison). Higher levels require corresponding proofs at registration."
+          geozone_label: Area restriction for participation
+          geozone_hint: "Restricts participation to users whose registered address lies in a specific geographic area. A CSV file with the relevant addresses must first be provided to demokratie.today. After import, the desired areas can be enabled here and the restriction assigned to this phase."
+          age_label: Age restriction for participation
+          age_hint: "Restricts participation to users whose age lies within a defined age group. Age groups are managed centrally by an administrator under Settings > Age groups and must be created there beforehand. Users without a stored date of birth will be asked to provide it before participating."
+          individual_groups_label: Restriction to strong groups
+          individual_groups_hint: "Restricts participation to members of specific user groups previously created under Settings > Strong groups — e.g. youth councils, administration staff, or project teams. Only users assigned to one of the selected groups can participate in this participation phase."
+          extended_geozone_label: Extended area restriction
+          extended_geozone_hint: "Enables finer area restriction based on registered address groupings such as electoral districts, quarters, or school districts. Unlike the simple area restriction, multiple groupings can be combined here. The available groupings are based on imported address data and enable precise control of participation eligibility."
+          user_status:
+            guest: Guests (no registration required)
+            registered: Registered users
+            verified: Verified users
+          geozone:
+            no_restriction: No restriction
+            only_citizens: Citizens only
+            only_geozones: Specific areas only
+            only_streets: Specific streets only
+            search_street: Search street...
+          extended_geozone:
+            no_restriction: No restriction
+          age:
+            no_restriction: No restriction
+        general_settings:
+          title: Features
+        form_author:
+          title: Form author
+        user_functions:
+          title: User functions
+        proposals:
+          title: Proposals
+          columns: Columns
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
+          no_proposals_title: No proposals available
+          no_proposals_description: As soon as users submit proposals in this participation phase, they are listed here and can be moderated. You can approve proposals, hide them, or review flagged contributions. The table shows title, author, and moderation status of each individual proposal.
+          table:
+            id: ID
+            admin_accepted: Approved
+            title: Title
+            moderation: Moderation
+            author: Author
+            actions: Actions
+            view: View
+            hide: Hide
+            unhide: Restore
+            ignore_flag: Ignore flag
+            confirm_hide: "Are you sure? This hides the proposal \"%{name}\"."
+        comments:
+          title: Comments
+          no_comments_title: No comments available
+          no_comments_description: As soon as users post comments in this participation phase, they are listed here and can be moderated. You can hide individual comments, restore them, or review flagged contributions. The table shows author, content, and moderation status of each comment.
+          table:
+            body: Comment
+            author: Author
+            moderation: Moderation
+            hide: Hide
+            unhide: Restore
+            ignore_flag: Ignore flag
+            confirm_hide: "Are you sure? This hides the comment."
+        projekt_labels:
+          title: Labels
+          create_button: Create new label
+          no_labels_title: No labels available
+          no_labels_description: Create labels to thematically categorize proposals and improve clarity on the frontend. Labels are shown as icons on proposals and let users filter by specific topics. Each label can be given its own icon to make visual attribution easier.
+          table:
+            icon: Icon
+            name: Name
+            actions: Actions
+        sentiments:
+          title: Sentiments
+          create_button: Create new sentiment
+          no_sentiments_title: No sentiments available
+          no_sentiments_description: Create sentiments to enable users to emotionally categorize proposals. Sentiments are shown on the frontend as colored markers and provide quick visual orientation about the mood. Each sentiment can be configured with a name and an individual color.
+          table:
+            color: Color
+            name: Name
+            actions: Actions
+        map:
+          title: Map
+        masterportal_pins:
+          title: Imported Masterportal pins
+        officing_managers:
+          title: Polling officers
+          lock_on: Lock date
+          lock_on_hint: From this date, no more offline votes can be cast.
+          select_managers: Assign polling officers
+          select_managers_hint: "Select the polling officers from the list who are authorized to record offline votes in this phase. Only selected officers can cast votes on behalf of citizens via the Officing module. The assignment can be changed at any time. Polling officers must first be created in the system by an administrator."
+          no_managers_title: No polling officers available
+          no_managers_description: No polling officers are registered in the system yet. Polling officers can be created by an administrator under "Settings". After registration, you can assign them to this phase here so they are authorized to record offline votes on behalf of citizens via the Officing module.
+        poll_questions:
+          title: Questions
+          create_question: Create normal question
+          create_bundle_question: Create question bundle
+          intro_text_p1: >
+            Here you manage the questions of this voting phase. There are two question types:
+          intro_question_types:
+            normal:
+              title: Normal question
+              description: "A standalone question with its own answer options and a selectable voting mode such as single vote, multiple choice, or rating scale. Each question is shown to users on the frontend as an individual voting step. Normal questions are suitable for targeted single queries on concrete topics within a voting phase."
+            bundle:
+              title: Question bundle
+              description: "Groups several thematically related sub-questions under a common heading. On the frontend the bundle is shown as a connected section. Each sub-question can have its own voting mode and answer options. Question bundles are suitable when a topic should be illuminated from multiple perspectives."
+          bundle_intro_text_p1: >
+            A question bundle groups several thematically related questions under a common
+            heading. On the frontend the bundle is shown as a connected section,
+            in which users answer the contained sub-questions one after another. Question bundles
+            are especially suitable when a topic should be illuminated from multiple perspectives.
+          bundle_intro_text_p2: >
+            After creating the question bundle, you can add individual sub-questions via the
+            detail view. Each sub-question can have its own question, answer options, and
+            voting mode. The order of sub-questions within the bundle can be adjusted
+            by drag & drop.
+          intro_vote_types_title: Answer options at a glance
+          intro_vote_types:
+            unique:
+              title: Single vote
+              description: "Each user can choose exactly one answer per question. This is the simplest and most common voting form — ideal for clear yes/no decisions or choosing a preferred option from several alternatives. Results transparently show which option received the most support, enabling an unambiguous analysis."
+            multiple:
+              title: Multiple choice
+              description: "Users can distribute their votes evenly across multiple answers. Suitable when participants may support several options at once. The maximum number of selectable answers is defined when creating the question. This mode is suitable when a broad mood snapshot is to be captured or multiple priorities are queried."
+            multiple_with_weight:
+              title: Weighted multiple choice
+              description: "Users distribute a fixed vote budget across multiple answers, weighting them differently. Especially suitable for prioritization questions, e.g. in participatory budgets where funds should be distributed across different proposals. The result shows not only the popularity of an option but also its relative importance."
+            rating_scale:
+              title: Rating scale
+              description: "Users rate each answer option on a scale (e.g. 1–5). Suitable for differentiated feedback, where not only a choice but a gradation of approval or disapproval is to be captured. The results show averages and distributions per option, enabling a differentiated analysis of opinions."
+          intro_text_p2: >
+            The order of questions in the table matches the display order on the frontend.
+            Use the drag handles on the right to change the order.
+          no_questions: No questions are assigned to this vote.
+          no_questions_title: No questions available
+          no_questions_description: Create individual questions or question bundles to shape the content of the vote. Each question is shown on the frontend as a standalone voting step. Various voting modes are available, including single vote, multiple choice, weighted selection, and rating scale.
+          table:
+            title: Questions
+            type: Voting mode
+            contextualized_by: "Contextualized by:"
+            bundle_question: Question bundle
+            edit_answers: Answer list
+            edit_questions: Question list
+            edit_question: Edit question
+            actions: Actions
+        officing_manager_audits:
+          title: Polling officer change log
+          no_audits: No entries available.
+          no_audits_title: No changes available
+          no_audits_description: As soon as polling officers record offline votes or make other changes in this participation phase, all activities are logged here chronologically. The change log documents which officer performed which action and when, providing full transparency over the entire offline voting process.
+          table:
+            id: ID
+            changes: Changes
+            created_at: Recorded on
+        projekt_point_of_interest_categories:
+          title: Categories
+          create_button: Create new category
+          no_categories: No categories available.
+          no_categories_title: No categories available
+          no_categories_description: Create categories to thematically group points of interest and provide them as filter options on the frontend. Each category can be given its own icon and a color to make visual distinction on the map easier. Categories help users search specifically for particular topics.
+          table:
+            name: Name
+            icon: Icon
+            color: Color
+            actions: Actions
+        projekt_point_of_interest_pins:
+          title: Pins
+          download_geojson: Download GeoJSON
+          no_pins: No pins available.
+          no_pins_title: No pins available
+          no_pins_description: As soon as users mark points of interest on the map on the frontend, the created pins are listed here and can be managed. Each pin contains an address, a category, and the associated author. Via the table you can view, edit, or remove pins as needed, and thus control the map content.
+          table:
+            id: ID
+            address: Address
+            author: Author
+            category: Category
+            created_at: Created on
+        map_resources_overview:
+          title: Map overview
+          not_yet_implemented: This feature will be implemented soon.
+        projekt_questions:
+          title: Quick polls
+          create_button: Create new question
+          send_notifications_button: Send notifications
+          send_notifications_confirm: Are you sure you want to send notifications to all users?
+          no_questions: No quick polls available.
+          no_questions_title: No quick polls available
+          no_questions_description: Create quick polls to gather quick feedback from users on concrete questions. Each question can contain multiple answer options and is shown on the frontend in the participation phase. Via the notification feature, all registered users can be informed about new polls.
+          table:
+            title: Title
+            question_options: Answers
+            comments_count: Comments
+            actions: Actions
+        projekt_events:
+          title: Events
+          create_button: Create new event
+          no_events_title: No events available
+          no_events_description: Create events to announce dates like town hall meetings, workshops, or information evenings for this participation phase. Events are shown on the frontend with date, time, location, and description. Participants can optionally be notified by email about new events.
+          table:
+            title: Title
+            location: Event location
+            datetime: Date
+            actions: Actions
+            open_ended: Open end
+            show: Overview
+            registrations_count: "Registrations (%{count})"
+            send_notifications: Send notifications
+            send_notifications_confirm: Are you sure you want to send notifications to all users?
+        milestones:
+          title: Milestones
+          create_button: Create new milestone
+          no_milestones_title: No milestones available
+          no_milestones_description: Create milestones to transparently display the progress of this participation phase. Milestones are shown on the frontend chronologically and inform participants about important stages, achieved goals, and upcoming steps. Each milestone can be given a date, a description, and an image.
+          table:
+            description: Description
+            publication_date: Publication
+            status: Status
+            image: Image
+            show_image: Show image
+            actions: Actions
+        progress_bars:
+          title: Progress bars
+          create_button: Create new progress bar
+          no_progress_bars_title: No progress bars available
+          no_progress_bars_description: Create progress bars to visually display the implementation status of this participation phase. Progress bars are shown on the frontend as a percentage indicator and give participants a quick overview of the current state. Primary and secondary bars can be created.
+          table:
+            title: Title
+            kind: Type
+            percentage: Progress
+            actions: Actions
+            primary: Primary
+            secondary: Secondary
+        projekt_arguments:
+          title: Voices
+          create_button: Create new voice
+          send_notifications_button: Send notifications
+          send_notifications_confirm: Are you sure you want to send notifications to all users?
+          pro: Pro
+          contra: Contra
+          no_pro_arguments_title: No pro voices available
+          no_pro_arguments_description: Create pro voices to present supporting positions on this topic. Each voice can be supplemented with an author image, name, party, and detailed reasoning. Pro voices are shown on the frontend next to the contra voices and let participants see different viewpoints at a glance.
+          no_contra_arguments_title: No contra voices available
+          no_contra_arguments_description: Create contra voices to present opposing or critical positions on this topic. Each voice can be supplemented with an author image, name, party, and detailed reasoning. Contra voices are shown on the frontend next to the pro voices and enable participants to weigh the topic in a balanced way.
+          table:
+            name: Name
+            party: Party
+            position: Position
+            image: Image
+            show_image: Show image
+            actions: Actions
+        projekt_livestreams:
+          title: Livestreams
+          create_button: Create new livestream
+          no_livestreams_title: No livestreams available
+          no_livestreams_description: Create livestreams to broadcast events or information formats of this participation phase live. Livestreams are shown on the frontend with title, start time, and embedded video player. Embedding is done via YouTube or Vimeo. Participants can be notified in advance by email about the date.
+          table:
+            title: Title
+            url: URL
+            platform: Platform
+            starts_at: Start time
+            actions: Actions
+            show: Show
+            send_notifications: Send notifications
+            send_notifications_confirm: Are you sure you want to send notifications to all users?
+        projekt_notifications:
+          title: Notifications
+          create_button: Create new notification
+          no_notifications_title: No notifications available
+          no_notifications_description: Create notifications to inform registered users about news in this participation phase. Notifications are shown to users in their inbox on the platform and can optionally be sent by email. This lets you communicate important dates, intermediate results, or status changes specifically.
+          table:
+            title: Title
+            body: Message
+            created_at: Created on
+            actions: Actions
+        user_resource_criteria:
+          title: AI evaluation criteria
+          empty_title: AI evaluation criteria not available
+          empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative to activate AI-supported evaluation criteria. After activation, you can define criteria here, by which submitted contributions are automatically evaluated and categorized.
+        email_templates:
+          title: System emails
+        ai_settings:
+          title: AI voice assistant
+          empty_title: AI voice assistant not available
+          empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative to activate the AI voice assistant. After activation, you can configure the settings for automatic voice analysis and summarization of contributions here.
+        legislation_process_draft_versions:
+          title: Drafts
+          create_button: Create new draft
+          no_draft_versions_title: No drafts available
+          no_draft_versions_description: Create a draft that is made available on the frontend for commenting and discussion. Users can comment on individual paragraphs and submit change proposals. Multiple draft versions can exist in parallel, so the development of a document can be transparently tracked and compared.
+          table:
+            title: Title
+            created_at: Created on
+            status: Status
+            comments: Comments
+            final_version: Final version
+            actions: Actions
+        formular:
+          title: Form fields
+          hint_text_p1: >
+            Here you configure the fields of the form shown to users on the frontend for input.
+            There are two categories of fields:
+          hint_types:
+            primary:
+              title: Primary fields
+              description: "Are shown in the main form and captured at first submission. Typical examples are text fields for name or concern, selection fields for categories, or checkboxes for consent. Primary fields form the core of the form and are visible to all users. They cover the essential information needed for processing."
+            follow_up:
+              title: Follow-up fields
+              description: "Are shown after the form is submitted in a second step. Suitable for supplementary information that doesn't apply to all users — e.g. contact details for follow-up questions or detailed descriptions. Follow-up fields enable stepwise capture without overloading the main form and unnecessarily raising the entry barrier."
+          hint_text_p2: >
+            The order of fields in the table matches the display order on the frontend.
+            Use the drag handles to change the order. Via the field type you define
+            whether a text, selection, file, or checkbox field is created.
+          create_button: Create new field
+          primary_fields_title: Primary fields
+          follow_up_fields_title: Follow-up fields
+          no_fields_title: No primary fields available
+          no_fields_description: Create form fields shown to users on the frontend when filling in the form. Available field types include text fields, selection fields, file uploads, checkboxes, and date fields. The order of fields can be adjusted by drag-and-drop and determines the display order on the frontend.
+          no_follow_up_fields_title: No follow-up fields available
+          no_follow_up_fields_description: Follow-up fields are shown in a second step after the main form is submitted and allow capturing additional information. Typical use cases are supplementary contact details, detailed descriptions, or follow-up questions that don't apply to all participants. Create new follow-up fields for the form here.
+          table:
+            name: Name
+            kind: Type
+            required: Required field
+            actions: Actions
+          kinds:
+            string: Text field
+            textarea: Text area
+            email: Email
+            date: Date
+            dropdown: Dropdown
+            image: Image
+            document: Document
+            description: Description
+        formular_answers:
+          title: Submissions
+          download_csv: Download CSV
+          no_answers_title: No submissions available
+          no_answers_description: As soon as users fill in and submit the form in this participation phase, their submissions are listed here chronologically. You can view individual answers, filter by submitter, and export all submissions as a CSV file to process them externally or analyze them statistically.
+          table:
+            submitter: Submitter ID
+            email: Email
+            submitted_at: Submitted on
+        formular_follow_up_emails:
+          title: Follow-up emails
+          create_new: New follow-up email
+          no_emails_title: No follow-up emails available
+          no_emails_description: Create follow-up emails to specifically contact participants after their form submission — e.g. for follow-up questions, results, or a follow-up survey. Each email can be formulated individually and sent to selected recipients. Drafts can be saved and revised before sending.
+          letters_table:
+            subject: Subject
+            recipients: Recipients
+            status: Status
+            actions: Actions
+            no_subject: "(No subject)"
+            draft: Draft
+            sent_at: "Sent on %{date}"
+            send_emails: Send emails
+            send_confirm: Are you sure you want to send the emails?
+            delete_confirm: Are you sure you want to delete this draft?
+        budget_phases:
+          title: Phases
+          table:
+            name: Phase
+            starts_at: Start
+            ends_at: End
+            enabled: Enabled
+            current: Current phase
+            actions: Actions
+        budget_edit:
+          title: Edit
+          administrators: Administrators
+          administrators_hint: "Defines which administrators have access to managing this participatory budget. Assigned administrators can review submitted proposals, change their status, and publish results. Remove the selection if an administrator should no longer have access to this budget and its proposals."
+          valuators: Valuators
+          valuators_hint: "Defines which valuators are responsible for the content and technical evaluation of submitted proposals. Assigned valuators can assess the feasibility, costs, and criteria of proposals. They get access to the assigned proposals and can record their assessment directly. Remove the selection as needed."
+        budget_investments:
+          title: Proposals
+          calculate_winners: Determine winners
+          calculate_winners_confirm: The top-rated proposals will be determined in the background. Continue?
+          recalculate_winners: Recalculate winners
+          recalculate_winners_confirm: Winners will be recalculated immediately. Continue?
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
+          columns: Columns
+          no_investments_title: No proposals available
+          no_investments_description: As soon as users submit investment proposals in this participation phase, they are listed here and can be evaluated by valuators, checked for feasibility, and moderated as needed. Via the table you have access to all relevant details like cost, status, and valuation results of each individual proposal.
+          table:
+            id: ID
+            created_at: Submitted
+            title: Title
+            feasibility: Criteria
+            valuation_finished: Valuation finished
+            total_votes: Support
+            preselected: Pre-selected
+            selected: Selected
+            price: Price
+            balloters: Voter count
+            total_ballot_votes: Vote count
+            district: District
+            winner: Winner
+            admin: Administrator
+            author: Author
+            valuator: Valuator
+            moderation: Moderation
+            pdf_link: PDF
+            view: View
+            manage: Manage
+            people: Valuators & administrators
+            milestones: Milestones
+            progress_bars: Progress bars
+            audits: Change log
+            hide: Hide
+            unhide: Restore
+            ignore_flag: Mark as read
+            confirm_hide: "Are you sure? This hides the proposal \"%{name}\"."
+            actions: Actions
+        age_ranges_for_stats:
+          title: Age groups for statistics
+          hint: "Choose the age groups used for the statistical analysis of this participation phase. The analysis shows how participation is distributed across the selected groups. Age groups are managed centrally under Settings and must be created there beforehand."
+        projekt_phase:
+          duration: Duration
+          naming: Naming
+          restrictions: Participation restriction
+          general_settings: Features
+          form_author: Form author
+          user_functions: User functions
+          proposals: Proposals
+          budget_phases: Phases
+          budget_edit: Edit
+          budget_investments: Proposals
+          age_ranges_for_stats: Age cohorts
+          projekt_labels: Labels
+          sentiments: Sentiments
+          map: Map
+          officing_managers: Polling officers
+          officing_manager_audits: Change log
+          poll_questions: Questions
+          projekt_questions: Quick polls
+          ai_settings: AI voice assistant
+          projekt_point_of_interest_categories: Categories
+          projekt_point_of_interest_pins: Pins
+          map_resources_overview: Map overview
+          legislation_process_draft_versions: Drafts
+          formular: Form fields
+          formular_answers: Submissions
+          formular_follow_up_emails: Follow-up emails
+          projekt_arguments: Voices
+          projekt_notifications: Notifications
+          projekt_livestreams: Livestreams
+          projekt_events: Events
+          milestones: Milestones
+          progress_bars: Progress bars
+          settings: Settings
+          user_resource_criteria: AI evaluation criteria
+          comments: Comments
+          email_templates: System emails

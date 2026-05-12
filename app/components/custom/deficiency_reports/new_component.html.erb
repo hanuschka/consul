@@ -1,7 +1,7 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
-    <% if Setting["deficiency_reports.voice_assistant"].present?  %>
+    <% if Setting["deficiency_reports.voice_assistant"].present? && Ai::Settings.ai_available? %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "deficiency_report_voice_assistant",
         custom_data: {
@@ -32,12 +32,9 @@
       <div class="flex-layout">
         <div class="main-column">
           <%= f.translatable_fields do |translations_form| %>
-            <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
-
             <div class="user-resources-form--banner-editor -deficiency-report">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
-                  data: suggest_data(deficiency_report),
                   label: false,
                   class: "user-resources-form--banner-editor-title js-user-resource-form-title",
                   placeholder: t("custom.deficiency_reports.form.title_placeholder"),

@@ -2,6 +2,22 @@ de:
   adm:
     projekts:
       projekt_events:
+        tabs:
+          show: Übersicht
+          edit: Bearbeiten
+          registrations: Anmeldungen
+        show:
+          title: Übersicht
+          registrations_button: "Anmeldungen (%{count})"
+          registration_disabled: Anmeldung deaktiviert
+          confirmed_count: Bestätigte Anmeldungen
+          waitlisted_count: Warteliste
+          no_accessibility_flags: Keine Barrierefreiheitsmerkmale angegeben.
+          sections:
+            general: Allgemein
+            schedule: Termin & Ort
+            registration: Anmeldung
+            accessibility: Barrierefreiheit
         new:
           title: Veranstaltung erstellen
         create:
@@ -35,6 +51,14 @@ de:
           language_hint: "Geben Sie die Sprache an, in der die Veranstaltung durchgeführt wird – z. B. 'Deutsch', 'Englisch' oder 'Deutsch / Türkisch' bei mehrsprachigen Formaten. Diese Information hilft Teilnehmern einzuschätzen, ob sie der Veranstaltung sprachlich folgen können."
           accessibility_legend: Barrierefreiheit
           accessibility_hint: "Geben Sie an, welche Barrierefreiheitsmerkmale am Veranstaltungsort vorhanden sind. Diese Informationen werden im Frontend angezeigt und helfen Menschen mit Behinderungen bei der Entscheidung, ob sie teilnehmen können. Aktivieren Sie alle zutreffenden Optionen."
+          max_attendees_label: Maximale Teilnehmerzahl
+          max_attendees_hint: "Maximale Anzahl bestätigter Teilnehmer. Weitere Anmeldungen kommen automatisch auf eine Warteliste. Leer lassen oder 0 eingeben, um die Anmeldung zu deaktivieren."
+          admin_emails_label: Sammelanmeldungs-E-Mail-Adressen
+          admin_emails_hint: "Komma-getrennte Liste vertrauenswürdiger E-Mail-Adressen, die mehrere Teilnehmer für diese Veranstaltung anmelden dürfen. Diese Adressen müssen die Anmeldung nicht per E-Mail bestätigen. Optional."
+          confirmation_email_text_label: Text der Bestätigungs-E-Mail
+          confirmation_email_text_hint: "Optionaler Text, der an Teilnehmer gesendet wird, wenn ihre Anmeldung bestätigt wurde. Erlaubte HTML-Tags: <a>, <br>. Leer lassen, um keine Bestätigungs-E-Mail zu versenden."
+          waitlist_email_text_label: Text der Warteliste-E-Mail
+          waitlist_email_text_hint: "Optionaler Text, der an Teilnehmer gesendet wird, wenn sie auf die Warteliste gesetzt wurden. Erlaubte HTML-Tags: <a>, <br>. Leer lassen, um keine Warteliste-E-Mail zu versenden."
           description_label: Beschreibung
           description_hint: "Ausführliche Beschreibung der Veranstaltung, die im Frontend unterhalb des Titels angezeigt wird. Erläutern Sie Ablauf, Inhalte und Ziele der Veranstaltung. Geben Sie ggf. Hinweise zur Anmeldung, Anfahrt oder besonderen Vorbereitungen. Der Text unterstützt Rich-Text-Formatierung mit Links und Hervorhebungen."
           image_label: Titelbild

@@ -9,7 +9,7 @@ de:
         map_location_label: Karte
         map_location_instructions: "Wo soll Ihr Beitrag umgesetzt werden? Platzieren Sie einen „Pin“, um andere ins Bild zu setzen."
         map_location_instructions_mandatory: "Bitte setzen Sie einen Eintrag auf die Karte (Pflichtfeld)."
-        map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte (optional)."
+        map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte."
       image_upload:
         top_line_default: Wählen Sie ein passendes Bild für Ihren Beitrag. Beiträge mit Bild erhalten meistens mehr Unterstützung.
         title_default: Bild hinzufügen (optional)
@@ -17,3 +17,5 @@ de:
         max_image_size: Die maximale Bildgröße beträgt %{size} MB.
         supported_formats: "Dateiformat: %{formats}"
         credits_field_placeholder: Hier klicken, um Copyright des Bildes hinzuzufügen
+        generating_title: "KI erstellt ein Bild …"
+        generating_subtitle: "Das kann bis zu 25 Sekunden dauern. Sie können stattdessen auch ein eigenes Bild hochladen."

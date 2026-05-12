@@ -4,7 +4,7 @@ class DeficiencyReports::NewComponent < ApplicationComponent
   include Header
 
   attr_reader :deficiency_report
-  delegate :back_link_to, :render_custom_block, :ck_editor_class, :current_user, :suggest_data, :auto_link_already_sanitized_html, :wysiwyg, to: :helpers
+  delegate :back_link_to, :render_custom_block, :ck_editor_class, :current_user, :auto_link_already_sanitized_html, :wysiwyg, to: :helpers
 
   def initialize(deficiency_report)
     @deficiency_report = deficiency_report

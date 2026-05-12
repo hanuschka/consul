@@ -35,6 +35,17 @@
       <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
           {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
     <% end %>
+
+    <div data-map-target="mapboxStyleField" class="<%= 'd-none' unless map_location.mapbox? %>">
+      <%= render Kern::FormFieldComponent.new(
+        label: t('components.kern.map_component.mapbox_style_id_label'),
+        hint: t('components.kern.map_component.mapbox_style_id_description')
+      ) do %>
+        <%= form.text_field :mapbox_style_id,
+            class: "kern-input",
+            placeholder: "mapbox://styles/..." %>
+      <% end %>
+    </div>
   <% end %>
 
   <%= content %>

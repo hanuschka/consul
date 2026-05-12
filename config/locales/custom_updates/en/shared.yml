@@ -56,6 +56,7 @@ en:
         retention_hint: "Download answers for offline access or archiving."
         no_resources: "No proposals found to analyze."
         error: "An error occurred while generating the answer. Please try again."
+        status_failed: "Failed"
         pdf_title: "AI Question Analysis"
         pdf_all_questions_title: "AI Question Analysis - All Questions"
         pdf_projekt: "Project"

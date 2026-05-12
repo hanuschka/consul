@@ -30,20 +30,36 @@ de:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
+          columns: Spalten
+          export: Exportieren
+          export_geojson: GeoJSON
           no_deficiency_reports: Keine Mängelmelder vorhanden
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Meldungen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Meldungen zu sehen.
           table:
             id: ID
             admin_accepted: Sichtbarkeit
             created_at: Erstellungsdatum
+            updated_at: Änderungsdatum
+            status_changed_at: Statusänderung
             title: Titel
             author: Autor
             status: Status
             location: Standort
+            address: Adresse
             district: Bezirk
             category: Kategorie
             responsible: Sachbearbeiter
+            archived_state: Archiv
+            hidden_state: Herausmoderiert
+          archived_state:
+            active: Aktiv
+            archived: Archiviert
+          hidden_state:
+            visible: Sichtbar
+            hidden: Herausmoderiert
         tabs:
           show: Verwalten
           administer: Administrieren

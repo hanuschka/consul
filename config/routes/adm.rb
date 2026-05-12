@@ -7,7 +7,7 @@ namespace :adm do
   resource :homepage, controller: "homepage", only: [:show]
   resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
-  resources :navbar_items, only: [:new, :create, :destroy] do
+  resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
   end
 
@@ -98,6 +98,7 @@ namespace :adm do
   resources :global_email_templates, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
+  resource :matomo, controller: "matomo", only: [:show]
   resource :apps, controller: "apps", only: [:show]
   resource :connection, controller: "connection", only: [:show]
   get "connect", to: "connection#show"
@@ -119,6 +120,13 @@ namespace :adm do
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
+    end
+  end
+
+  resources :masterportal_imports, only: [:create] do
+    collection do
+      get :collections
+      get :status
     end
   end
 end

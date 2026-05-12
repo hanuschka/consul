@@ -1,0 +1,54 @@
+<%
+  answers = question["answers"] || []
+  negative = answers.find { |a| a["title"].to_s.match?(/negativ/i) }
+  positive = answers.find { |a| a["title"].to_s.match?(/positiv/i) }
+  neutral  = answers.find { |a| a["title"].to_s.match?(/neutral/i) }
+
+  segments = [
+    { answer: negative, color: "#DC2626" },
+    { answer: positive, color: "#059669" },
+    { answer: neutral, color: "#D97706" }
+  ].select { |s| s[:answer].present? }
+
+  offset = 0
+%>
+
+<div class="card poll-question-card--full">
+  <div class="card-title"><%= question["title"] %></div>
+  <div class="card-subtitle">n = <%= question["total_responses"].to_i %></div>
+
+  <div class="donut-container">
+    <div class="donut-svg-wrap">
+      <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)">
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#F1F5F9" stroke-width="4.5"/>
+        <% segments.each do |seg| %>
+          <% pct = seg[:answer]["percentage"].to_f %>
+          <% dash = pct.round(2) %>
+          <% next if dash.zero? %>
+          <circle cx="18" cy="18" r="14" fill="none"
+            stroke="<%= seg[:color] %>"
+            stroke-width="4.5"
+            stroke-dasharray="<%= dash %> 100"
+            stroke-dashoffset="<%= -offset.round(2) %>"
+            stroke-linecap="butt"/>
+          <% offset += dash %>
+        <% end %>
+      </svg>
+      <div class="donut-center-label">
+        <strong>n=<%= question["total_responses"].to_i %></strong>
+        <%= t("adm.projekts.projekts.evaluation.votes_label") %>
+      </div>
+    </div>
+    <div class="donut-legend">
+      <% segments.each do |seg| %>
+        <div class="donut-legend-item">
+          <div class="donut-legend-color" style="background:<%= seg[:color] %>"></div>
+          <span class="donut-legend-text"><%= seg[:answer]["title"] %></span>
+          <span class="donut-legend-val">
+            <%= seg[:answer]["count"].to_i %> (<%= seg[:answer]["percentage"] %>%)
+          </span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

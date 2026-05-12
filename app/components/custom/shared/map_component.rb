@@ -44,6 +44,9 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:features] = @features
 
+      options[:masterportal_pins_layer_label] =
+        I18n.t("components.shared.map_component.layers.masterportal_pins")
+
       options[:admin_features] = admin_features
 
       options[:editable] = @editable
@@ -54,7 +57,7 @@ class Shared::MapComponent < ApplicationComponent
 
       if rendering_library == "mapbox"
         options[:mapbox_public_token] = ExternalApiKey.mapbox_public_token
-        options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
+        options[:mapbox_style_id] = map_location.mapbox_style_id.presence || Rails.application.secrets.dig(:mapbox, :style_id)
       elsif rendering_library == "virtualcity"
         options[:map_center_altitude] = map_location&.altitude
         options[:vc_map_module_url] = Rails.application.secrets.vc_map_module
@@ -80,7 +83,8 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def rendering_library
-      @rendering_library ||= map_location&.rendering_library || "leaflet"
+      lib = map_location&.rendering_library || "leaflet"
+      @rendering_library ||= lib == "leaflet_plus_masterportal" ? "leaflet" : lib
     end
 
     def admin_features
@@ -95,11 +99,36 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def layers
-      return @mappable.map_layers if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
+      base = if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
+               @mappable.map_layers
+             else
+               @mappable.try(:projekt_phase)&.map_layers ||
+                 @mappable.try(:projekt)&.map_layers ||
+                 MapLayer.default
+             end
 
-      @mappable.try(:projekt_phase)&.map_layers ||
-        @mappable.try(:projekt)&.map_layers ||
-        MapLayer.default
+      base.as_json + masterportal_wms_layer_injection
+    end
+
+    def masterportal_wms_layer_injection
+      return [] if map_location&.rendering_library != "leaflet_plus_masterportal"
+
+      wms_url = Rails.application.secrets.dig(:masterportal, :wms_url)
+      wms_layers = Rails.application.secrets.dig(:masterportal, :wms_layers)
+
+      return [] if wms_url.blank? || wms_layers.blank?
+
+      [{
+        "name" => I18n.t("components.shared.map_component.layers.masterportal_wms_layer_name",
+                         default: "Masterportal (Regensburg)"),
+        "provider" => wms_url,
+        "layer_names" => wms_layers.to_s,
+        "protocol" => "wms",
+        "transparent" => true,
+        "opacity" => 0.8,
+        "show_by_default" => true,
+        "base" => false
+      }]
     end
 
     def admin_editor?

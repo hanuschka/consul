@@ -15,4 +15,15 @@ class DtApi::Resources::VoiceAssistant
       }
     )
   end
+
+  def create_session_v2(codename:, consul_projekt_phase_id:, data:)
+    @client.post(
+      BASE_PATH + "/create_session_v2",
+      body: {
+        codename:,
+        consul_projekt_phase_id:,
+        data:
+      }
+    )
+  end
 end

@@ -1,0 +1,66 @@
+en:
+  activerecord:
+    models:
+      projekt: Project
+    attributes:
+      site_customization/content_card/translation:
+        title: Title
+      navbar_item:
+        external_url: Custom URL
+      map_location:
+        rendering_library: Rendering library
+        show_admin_shape: Show map center as a pin on the projects overview
+        rendering_libraries:
+          leaflet: Leaflet
+          mapbox: Mapbox
+          virtualcity: Virtual City Map
+          leaflet_plus_masterportal: Leaflet + Masterportal
+      map_layer:
+        provider: Map provider URL
+        attribution: Map attribution
+        layer_names: Layer name (WMS)
+        base: Use as base map
+        show_by_default: Show by default when the map loads
+        transparent: Layer is transparent
+        opacity: Opacity
+      projekt:
+        show_start_date_in_frontend: Show start date in project sidebar
+        show_end_date_in_frontend: Show end date in project sidebar
+      budget/investment:
+        feasibility_undecided: Not evaluated
+        feasibility_feasible: Meets criteria
+        feasibility_unfeasible: Does not meet criteria
+      tag:
+        name: Tag name
+      poll/question:
+        intro: Introduction
+        title: Question
+        description: Description
+        answer_mandatory: Required question
+        show_images: Show images on answer options
+        contextualize_by_poll_question_id: Contextualization
+      votation_type:
+        vote_type: Voting mode
+        max_votes: Maximum votes
+        max_votes_per_answer: Maximum votes per answer
+        show_hint_callout: Show hint box on the frontend
+        min_rating_scale_label: Left label (minimum)
+        max_rating_scale_label: Right label (maximum)
+      poll/question/answer:
+        title: Title
+        description: Description
+        open_answer: Open answer
+        more_info_link: More information (link)
+        more_info_iframe: More information (iframe)
+        next_question_id: Next question
+        terminates_poll: Ends the vote
+      poll/question/answer/video:
+        title: Title
+        url: External video
+      votation_type/vote_type:
+        unique: Single vote
+        multiple: Multiple votes
+        multiple_with_weight: Multiple weighted votes
+        rating_scale: Rating scale
+      individual_group:
+        visible: Visible

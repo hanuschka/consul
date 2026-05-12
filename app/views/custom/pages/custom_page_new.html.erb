@@ -1,6 +1,48 @@
-<% content_for :wrapper_class, "has-custom-fixed-tabs" %>
-
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
+  <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) && native_projekt_studio?(@projekt) %>
+    <% content_for :admin_topbar_display_settings do %>
+      <button
+        type="button"
+        class="projekt-page--admin-topbar-toggle js-toggle-content-background"
+        role="switch"
+        aria-checked="<%= @custom_page.projekt.show_content_background %>"
+        data-projekt-id="<%= @custom_page.projekt.id %>"
+        data-show-background="<%= @custom_page.projekt.show_content_background %>"
+        data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
+        title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
+        data-tooltip
+        data-hover-delay="500"
+      >
+        <span class="projekt-page--admin-topbar-toggle--track" aria-hidden="true">
+          <span class="projekt-page--admin-topbar-toggle--thumb"></span>
+        </span>
+        <span class="projekt-page--admin-topbar-toggle--label">
+          <%= t('custom.projekts.page.toggle_background_label') %>
+        </span>
+      </button>
+
+      <%= render "pages/topbar/admin_topbar_color_picker", projekt: @custom_page.projekt %>
+
+      <% unless @custom_page.projekt.new_content_block_mode? %>
+        <%= button_to convert_to_new_content_block_mode_adm_projekts_projekt_path(@custom_page.projekt),
+              method: :patch,
+              form: { class: "projekt-studio--convert-to-blocks-form" },
+              class: "projekt-page--admin-topbar-button projekt-studio--convert-to-blocks-button",
+              title: t("custom.projekts.page.convert_to_content_blocks.tooltip"),
+              data: {
+                tooltip: true,
+                "hover-delay": 300,
+                confirm: t("custom.projekts.page.convert_to_content_blocks.confirm")
+              } do %>
+          <i class="fas fa-cubes projekt-studio--convert-to-blocks-button--icon" aria-hidden="true"></i>
+          <span class="projekt-studio--convert-to-blocks-button--label">
+            <%= t("custom.projekts.page.convert_to_content_blocks.button") %>
+          </span>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% content_for :admin_topbar_actions do %>
     <% if @custom_page.landing? %>
       <% if current_user&.administrator? %>
@@ -30,9 +72,7 @@
   <%= render "pages/landing_page_content" %>
 <% else %>
   <% landing_page = @custom_page&.projekt&.landing_page %>
-  <% if landing_page.present? %>
-    <%= render "pages/brand_color_styles", page: landing_page %>
-  <% end %>
+  <%= render "pages/brand_color_styles", projekt: @custom_page&.projekt, page: landing_page %>
 
   <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
@@ -69,55 +109,9 @@
     data-projekt-id="<%= @custom_page.projekt&.id %>"
     data-default-margin-bottom="<%= SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>"
   >
-    <% if @custom_page.projekt.present? %>
-      <div class="custom-fixed-tabs margin-bottom">
-        <div class="custom-fixed-tabs--content">
-          <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
-            Inhalt
-          </div>
-          <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
-            Info
-          </div>
-          <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? %>
-            <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
-              Beteiligung
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
     <% if @custom_page.projekt.present? %>
-      <% if native_projekt_studio?(@projekt) %>
-        <div
-          class="js-studio-hide-on-preview"
-          style="position: relative; height: 1px;"
-        >
-          <div
-            class="projekt-studio--toggle-background-wrapper"
-          >
-            <button
-              type="button"
-              class="js-toggle-content-background"
-              role="switch"
-              aria-pressed="<%= @custom_page.projekt.show_content_background %>"
-              data-projekt-id="<%= @custom_page.projekt.id %>"
-              data-show-background="<%= @custom_page.projekt.show_content_background %>"
-              data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
-            ></button>
-            <span
-              class="projekt-studio--toggle-background-label"
-              title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
-              data-tooltip
-              data-hover-delay="500"
-            >
-              <%= t('custom.projekts.page.toggle_background_label') %>
-            </span>
-          </div>
-        </div>
-      <% end %>
       <div class="flex-layout">
         <div class="main-column">
           <div class="js-anchor-navigation-content" id="projekt-body">
@@ -145,13 +139,14 @@
 
     <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_admin_controls_for_projekt?(@custom_page.projekt)) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
-        <div class="projekt-footer-anchor" id="projekt-footer"> </div>
-        <div class="projekt-footer flex-layout">
+        <div class="projekt-footer flex-layout" id="projekt-footer">
           <div class="full-width-column">
             <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase, namespace: @namespace) %>
             <% if @default_projekt_phase.present? %>
               <div id="footer-content" class="js-projekt-footer-content">
-                <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+                <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+                  <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+                <% end %>
               </div>
             <% end %>
           </div>

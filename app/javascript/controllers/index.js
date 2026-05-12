@@ -13,14 +13,20 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
+application.register("adm--ai-question-form", AdmAiQuestionFormController)
+
+import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
+application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
+
+import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
+application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
 import ComponentsAdmAttributeEditorController from "./components/adm/attribute_editor_controller"
 application.register("components-adm-attribute-editor", ComponentsAdmAttributeEditorController)
-
-import ComponentsAdmPageTitleSyncController from "./components/adm/page_title_sync_controller"
-application.register("components-adm-page-title-sync", ComponentsAdmPageTitleSyncController)
 
 import ComponentsAdmNewNavbarItemController from "./components/adm/new_navbar_item_controller"
 application.register("components-adm-new-navbar-item", ComponentsAdmNewNavbarItemController)
@@ -77,6 +83,12 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
+import PdfDownloadController from "./pdf_download_controller"
+application.register("pdf-download", PdfDownloadController)
+
+import GlightboxController from "./glightbox_controller"
+application.register("glightbox", GlightboxController)
+
 import AdmNestedFieldsController from "./adm/nested_fields_controller"
 application.register("adm-nested-fields", AdmNestedFieldsController)
 
@@ -93,14 +105,35 @@ application.register("formular-fields--kind", FormularFieldsKindController)
 import KernFormImageController from "./kern/form/image_controller"
 application.register("kern--form--image", KernFormImageController)
 
+import KernFormVideoController from "./kern/form/video_controller"
+application.register("kern--form--video", KernFormVideoController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
+
+import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
+application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
 
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
 
+import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
+application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
+
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
+
+import SharedAdminIframeController from "./shared/admin_iframe_controller"
+application.register("shared--admin-iframe", SharedAdminIframeController)
+
+import AdmProjektImportController from "./adm/projekt_import_controller"
+application.register("adm-projekt-import", AdmProjektImportController)
+
+import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
+application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
+
+import AdmDeleteCollectionController from "./adm/delete_collection_controller"
+application.register("adm--delete-collection", AdmDeleteCollectionController)
 
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)

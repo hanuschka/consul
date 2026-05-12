@@ -1,13 +1,71 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    ai_required_note: This feature is only available when AI is enabled.
+    masterportal_imports:
+      collections:
+        root_label: "Masterportal"
+      errors:
+        upstream: "Could not reach Masterportal."
+        host_not_allowlisted: "Endpoint host is not allowed."
+        invalid_url: "Invalid endpoint URL."
+    deficiency_reports:
+      deficiency_reports:
+        show:
+          download_original: Download original
+        index:
+          table:
+            image: Image
+    navbar_items:
+      deleted_projekt: "[Deleted project]"
+      edit:
+        title: Edit navbar item
+      form:
+        custom_title_label: Display name (optional)
+        custom_title_placeholder: Leave blank to use the default title
+        update: Save changes
     projekts:
+      projekt_point_of_interest_categories:
+        form:
+          icon_image_label: Category icon
+          icon_image_hint: "SVG, PNG or JPEG. Max 512 KB."
+          icon_image_remove: Remove icon
+      projekts:
+        update_image:
+          success: Image updated successfully.
+        delete_image:
+          success: Image removed successfully.
       phases:
         ai_user_flow:
           title: AI flow assistant
           criteria_title: Evaluation criteria
           add_criterion: Add criterion
           text_placeholder: "Describe the criterion …"
+          hard_criteria_title: Hard criteria (pass / fail)
+          hard_criteria_hint: "A proposal must pass every hard criterion. If any fails, the citizen sees only that blocking issue."
+          soft_criteria_title: Soft criteria (0–25 points)
+          soft_criteria_hint: "Scored qualitatively. Only evaluated when all hard criteria pass."
+          add_hard_criterion: Add hard criterion
+          add_soft_criterion: Add soft criterion
+          delete_criterion: Delete criterion
+          field_name: Name
+          field_description: Description (shown to citizens)
+          field_ai_instruction: AI instruction (prompt for the model)
+          name_placeholder: "Short name of the criterion"
+          description_placeholder: "Optional: explanation for citizens — what does this criterion mean?"
+          ai_instruction_placeholder: "Instruction the AI should use when evaluating this criterion"
+          drag_to_reorder: "Drag to reorder"
+          kind_label:
+            hard: "Required"
+            soft: "Quality"
+          criteria_count:
+            zero: "No criteria"
+            one: "1 criterion"
+            other: "%{count} criteria"
+          empty_hard:
+            "No hard criteria defined yet. Add the mandatory rules every proposal must meet below."
+          empty_soft:
+            "No soft criteria defined yet. These are used for qualitative scoring of proposals."
         ai_settings:
           title: Voice assistant
           empty_title: Voice assistant not available
@@ -20,6 +78,33 @@ en:
         projekt_phase:
           ai_user_flow: AI flow assistant
           ai_settings: Voice assistant
+        masterportal_pins:
+          delete_all_button: Delete all pins and associated resources
+          delete_all_confirm: This will permanently delete all imported Masterportal pins on this phase together with their associated proposals, budget investments or points of interest. Continue?
+          deleting: Deleting Masterportal pins…
+          deleting_hint: This may take a moment for large datasets. Please don't close this tab.
+          filter:
+            label: Filter by collection
+            all: All collections
+          search:
+            label: Search pins
+            placeholder: Search by title, description, ID or any property…
+            submit: Search
+            clear: Clear
+            no_results: 'No pins match "%{query}".'
+          tabs:
+            list: List view
+            map: Map view
+          empty:
+            title: No Masterportal pins yet
+            description: This phase doesn't have any imported Masterportal pins. Run an import from the map configuration to add some.
+            link: Go to map configuration
+        destroy_all_masterportal_pins:
+          success: All Masterportal pins and their associated resources have been deleted.
+        destroy_masterportal_pin:
+          success: Pin and any linked resource have been deleted.
+        masterportal_pins_summary:
+          loading: Loading map…
   projekt_phase_setting:
     proposal_phase:
       feature:

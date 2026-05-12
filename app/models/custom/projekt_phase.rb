@@ -102,6 +102,7 @@ class ProjektPhase < ApplicationRecord
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
+  has_many :masterportal_pins, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -117,6 +118,13 @@ class ProjektPhase < ApplicationRecord
     completed: "completed",
     failed: "failed"
   }, _prefix: :ai_stats_refresh
+
+  enum masterportal_import_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_import
 
   validates :projekt, presence: true
   validate :type_must_be_valid
@@ -220,8 +228,11 @@ class ProjektPhase < ApplicationRecord
       return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
       return :phase_not_active if not_active?
-      return :phase_expired if expired?
-      return :phase_not_current if not_current?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
 
       return :guest_not_logged_in if user_status == "guest" && !user
       return if user_status == "guest"

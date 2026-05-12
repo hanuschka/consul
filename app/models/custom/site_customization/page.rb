@@ -21,10 +21,25 @@ class SiteCustomization::Page < ApplicationRecord
   has_one_attached :landing_desktop_header_image
   has_one_attached :landing_mobile_header_image
 
+  has_one_attached :landing_desktop_header_video
+  has_one_attached :landing_mobile_header_video
+
   has_one_attached :landing_site_logo_for_transparent_background
   has_one_attached :landing_site_logo_for_white_background
 
-  before_save :sanitize_title_and_subtitle
+  LANDING_VIDEO_FORMATS = ["video/mp4", "video/webm"].freeze
+  LANDING_VIDEO_MAX_SIZE = 50.megabytes
+
+  validates :landing_desktop_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_desktop_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_desktop_header_video.attached? }}
+  validates :landing_mobile_header_video,
+            file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_mobile_header_video.attached? }},
+            file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_mobile_header_video.attached? }}
+
+  before_save :sanitize_title
+  before_validation :normalize_subtitle
+  validate :subtitle_within_limits
   before_save :capture_old_title
   before_save :set_published_at
   after_update :sync_projekt_name
@@ -68,18 +83,34 @@ class SiteCustomization::Page < ApplicationRecord
     end
   end
 
-  def sanitize_title_and_subtitle
-    if title.present?
-      # strip_tags could be imporant, since we have issue with copied text with rich html
-      self.title = CGI.unescapeHTML(
-        strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
-      )
+  def sanitize_title
+    return if title.blank?
+
+    # strip_tags could be imporant, since we have issue with copied text with rich html
+    self.title = CGI.unescapeHTML(
+      strip_tags(title).strip.gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
+    )
+  end
+
+  def normalize_subtitle
+    return if subtitle.blank?
+
+    self.subtitle = sanitize(
+      MultilineSubtitleNormalizer.normalize(subtitle),
+      tags: ["br"],
+      attributes: []
+    )
+  end
+
+  def subtitle_within_limits
+    return if subtitle.blank?
+
+    if MultilineSubtitleNormalizer.visible_length(subtitle) > MultilineSubtitleNormalizer::MAX_VISIBLE_LENGTH
+      errors.add(:subtitle, :too_long, count: MultilineSubtitleNormalizer::MAX_VISIBLE_LENGTH)
     end
 
-    if subtitle.present?
-      self.subtitle = CGI.unescapeHTML(
-        sanitize(subtitle, tags: ["br"]).gsub(/\A[[:space:]]+|[[:space:]]+\z/, '')
-      )
+    if MultilineSubtitleNormalizer.line_break_count(subtitle) > MultilineSubtitleNormalizer::MAX_LINE_BREAKS
+      errors.add(:subtitle, :too_many_lines, count: MultilineSubtitleNormalizer::MAX_LINE_BREAKS + 1)
     end
   end
 
@@ -119,15 +150,6 @@ class SiteCustomization::Page < ApplicationRecord
   end
 
   def sync_projekt_for_global_overview
-    return unless projekt.present?
-
-    changed_set = saved_changes.except('created_at', 'updated_at')
-    return if changed_set.empty?
-
-    if projekt.should_be_exported_for_global_overview?
-      if projekt.hidden_at.blank?
-        Projekts::OverviewProjektUpdatedJob.perform_later(projekt)
-      end
-    end
+    projekt&.sync_for_global_overview_from_page_changes(saved_changes)
   end
 end

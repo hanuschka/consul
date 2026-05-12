@@ -1,32 +1,32 @@
-proposals:
-  navigation:
-    back: "back"
-    next: "next proposal"
-  show:
-    previous: "Previous proposal"
-    next: "Next proposal"
-    exit_quiz_mode: "Back to proposals list"
-
-budgets:
-  investments:
-    show:
+en:
+  proposals:
+    navigation:
       back: "back"
-      next: "Next proposal"
+      next: "next proposal"
+    show:
       previous: "Previous proposal"
       next: "Next proposal"
       exit_quiz_mode: "Back to proposals list"
-
-projekt:
-  file_import:
-    button_text: "Import document (PDF, DOCX, ODT)"
-    processing: "Processing document..."
-    success: "Document imported successfully"
-    errors:
-      no_file: "No file uploaded"
-      too_large: "File is too large (max. 10MB)"
-      invalid_format: "Invalid file format"
-      extraction_failed: "Could not extract text"
-      processing_failed: "Processing failed"
-      network_error: "Network error during upload"
-    fallback:
-      confirm: "Would you like to create the raw text as a single content block?"
+    notice:
+      pending_acceptance: "Thank you! Your proposal has been submitted and is awaiting admin review before publication."
+  budgets:
+    investments:
+      show:
+        back: "back"
+        next: "Next proposal"
+        previous: "Previous proposal"
+        exit_quiz_mode: "Back to proposals list"
+  projekt:
+    file_import:
+      button_text: "Import document (PDF, DOCX, ODT)"
+      processing: "Processing document..."
+      success: "Document imported successfully"
+      errors:
+        no_file: "No file uploaded"
+        too_large: "File is too large (max. 10MB)"
+        invalid_format: "Invalid file format"
+        extraction_failed: "Could not extract text"
+        processing_failed: "Processing failed"
+        network_error: "Network error during upload"
+      fallback:
+        confirm: "Would you like to create the raw text as a single content block?"

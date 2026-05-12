@@ -8,6 +8,7 @@ de:
       aria_label: Administrationsmenü
       items:
         home: Home
+        team: Team
         projekts: Projekte
         application: Applikation
         modules: Module
@@ -32,7 +33,6 @@ de:
           impressum: Impressum
         profiles: Profile
         profiles_subitems:
-          administrators: Administratoren
           deficiency_report_managers: Mängel-Administratoren
           idea_managers: Ideen-Administratoren
           section_contact_people: Ansprechpartner
@@ -45,6 +45,9 @@ de:
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
         apps: Apps
         developer: Bereich für Entwickler
         developer_subitems:

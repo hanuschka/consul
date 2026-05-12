@@ -11,19 +11,34 @@
 @use "adm/components/flash_component";
 @use "adm/components/empty_state";
 @use "adm/components/detail_page";
+@use "adm/components/pdf_download";
+@use "adm/components/image_with_lightbox";
 @use "adm/components/home_dashboard";
 @use "adm/components/statistics";
 @use "adm/components/markdown_editor";
 @use "adm/components/apps";
 @use "adm/components/connection";
+@use "adm/components/matomo";
 @use "adm/components/criteria_list";
 @use "adm/components/memos";
 @use "adm/components/column_selector";
 @use "adm/components/icon_rail";
 @use "adm/components/table";
 @use "adm/components/email_template_component";
+@use "adm/components/filter_pills";
 @use "components/map";
+@use "components/shared_admin_iframe";
 @use "components/subnavigation_konto_component";
+@use "adm/components/admin_projekt_import";
+@use "adm/components/evaluation_report";
+@use "adm/components/evaluation_ai_questions";
+@use "adm/components/masterportal_import_panel";
+@use "adm/components/masterportal_pins_list";
+@use "adm/components/masterportal_pins_summary";
+@use "adm/components/masterportal_integration";
+@use "adm/components/delete_collection";
+@use "adm/components/turbo_frame_placeholder";
+@use "adm/components/ai_action_button";
 
 @use "adm/partials/navbar_items";
 

@@ -59,7 +59,7 @@ User.class_eval do
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
@@ -112,6 +112,32 @@ User.class_eval do
 
     def administrators_ids
       joins(:administrator).ids
+    end
+
+    def masterportal
+      @masterportal_user ||= find_or_create_masterportal_user
+    end
+
+    def find_or_create_masterportal_user
+      user = User.find_by(username: "masterportal")
+
+      if user.present?
+        return user
+      end
+
+      create_masterportal_user
+    end
+
+    def create_masterportal_user
+      user = User.new(
+        username: "masterportal",
+        email: "masterportal@system.consul",
+        password: SecureRandom.hex(32)
+      )
+
+      user.skip_confirmation!
+      user.save!(validate: false)
+      user
     end
   end
 

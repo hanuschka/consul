@@ -53,6 +53,7 @@ de:
           save: Speichern
           cancel: Abbrechen
           remove_link: Link entfernen
+          attach_file: Datei anhängen
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:

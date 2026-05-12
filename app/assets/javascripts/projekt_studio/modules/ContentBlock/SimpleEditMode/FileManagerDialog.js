@@ -44,12 +44,13 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
 
   getFileTypeIcon(contentType) {
     if (!contentType) return 'fa-file';
+    if (this.fileTypeIcons[contentType]) return this.fileTypeIcons[contentType];
     if (contentType.startsWith('image/')) return 'fa-file-image';
     if (contentType.startsWith('text/')) return 'fa-file-lines';
     if (contentType.startsWith('video/')) return 'fa-file-video';
     if (contentType.startsWith('audio/')) return 'fa-file-audio';
 
-    return this.fileTypeIcons[contentType] || 'fa-file';
+    return 'fa-file';
   },
 
   initialize() {
@@ -430,6 +431,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
         alt_text: selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '',
         description: selectedImage.dataset.description || '',
         url: selectedImage.dataset.url || '',
+        content_type: selectedImage.dataset.contentType || '',
         gallery_thumb_url: imgEl ? imgEl.src : '',
         custom_thumb_url: selectedImage.dataset.customThumbUrl
       };

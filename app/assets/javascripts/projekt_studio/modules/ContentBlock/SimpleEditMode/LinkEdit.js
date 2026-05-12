@@ -17,6 +17,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     $document.on("click", ".js-content-block-add-link", this.addLink.bind(this));
     $document.on("click", ".js-content-block-insert-file-link", this.openFileManagerForLink.bind(this));
+    $document.on("click", ".js-content-block-link-popup-pick-file", this.openFileManagerFromPopup.bind(this));
     $document.on("selectionchange", this.handleTextSelectionChange.bind(this))
     $document.on("click", ".js-content-block-accept-link-edit", this.acceptLinkEdit.bind(this));
     $document.on("click", ".js-content-block-cancel-link-edit", this.cancelLinkEdit.bind(this));
@@ -254,13 +255,30 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openDialog(
       (selectedFile) => {
-        this.createNewLinkWithWrapper(this.currentLinkWrapper, selectedFile.url, true);
+        this.createNewLinkWithWrapper(
+          this.currentLinkWrapper,
+          selectedFile.url,
+          true,
+          selectedFile.content_type
+        );
         this.resetLinkEditState();
       },
       null,
       null,
       'document',
       this.handleFileManagerCancel.bind(this)
+    );
+  },
+
+  openFileManagerFromPopup() {
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openDialog(
+      (selectedFile) => {
+        $(".js-content-block-link-popup .js-content-block-url-input").val(selectedFile.url);
+        $(".js-content-block-url-black-checkbox").prop("checked", true);
+      },
+      null,
+      null,
+      'document'
     );
   },
 
@@ -367,13 +385,17 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
     blankCheckbox.checked = true;
   },
 
-  createNewLinkWithWrapper(linkWrapper, url, targetBlank = true) {
+  createNewLinkWithWrapper(linkWrapper, url, targetBlank = true, contentType = null) {
     const a = document.createElement("a");
     a.href = url;
     a.classList.add("js-content-block-disable-link-click", "js-content-block-inline-link")
 
     if (targetBlank) {
       a.target = "_blank";
+    }
+
+    if (contentType) {
+      this.prependFileTypeIcon(a, contentType);
     }
 
     const html = this.currentLinkWrapper.querySelector(".js-link-wrapper-content").innerHTML;
@@ -383,6 +405,16 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
     linkWrapper.remove()
 
     return this.wrapLinkWithControls(a)
+  },
+
+  prependFileTypeIcon(linkEl, contentType) {
+    const iconClass = ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.getFileTypeIcon(contentType);
+
+    const icon = document.createElement("i");
+    icon.className = `fa ${iconClass} content-block-link-file-icon`;
+
+    linkEl.appendChild(icon);
+    linkEl.appendChild(document.createTextNode(" "));
   },
 
   cancelLinkEdit() {

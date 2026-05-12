@@ -162,6 +162,29 @@
       });
     }
 
+    whenIdle() {
+      const instance = this;
+
+      return new Promise((resolve) => {
+        if (!instance.map) {
+          resolve();
+          return;
+        }
+
+        const waitForIdle = () => {
+          if (instance.map.loaded()) {
+            instance.map.once('idle', resolve);
+          } else {
+            instance.map.once('load', () => {
+              instance.map.once('idle', resolve);
+            });
+          }
+        };
+
+        waitForIdle();
+      });
+    }
+
     setupExpandControl() {
       this.map.addControl(new ExpandControl(this), 'top-right');
     }

@@ -36,6 +36,7 @@
       this.dataChannel = null;
       this.audioEl = null;
       this.wave = null;
+      this.greetingResponseId = null;
       this.urlParams = new URLSearchParams(window.location.search);
 
       this.getCollapseButton().addEventListener("click", this.collapseAssistant.bind(this));
@@ -171,7 +172,13 @@
     },
 
     startAudioRecordingAndAttachToRtcConnection: async function(rtcPeerConnection) {
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
       this.currentMicrophoneTrack = this.mediaStream.getTracks()[0];
       rtcPeerConnection.addTrack(this.currentMicrophoneTrack);
     },
@@ -240,23 +247,30 @@
     handleTabClose: function() {},
 
     sendGreeting: function() {
-      const language = this.element.dataset.language;
-      const greetingText =
-        language === "en" ? "Hi" : "Hallo";
+      this.greetingResponseId = null;
 
-      const greetingMessage = {
-        type: "response.create",
-        response: {
-          modalities: ["text", "audio"],
-          instructions: greetingText
+      this.dataChannel.send(JSON.stringify({
+        type: "session.update",
+        session: { turn_detection: null }
+      }));
+
+      this.dataChannel.send(JSON.stringify({ type: "response.create" }));
+    },
+
+    enableServerVad: function() {
+      if (!this.dataChannel || this.dataChannel.readyState !== "open") { return; }
+
+      this.dataChannel.send(JSON.stringify({
+        type: "session.update",
+        session: {
+          turn_detection: {
+            type: "server_vad",
+            threshold: 0.5,
+            prefix_padding_ms: 300,
+            silence_duration_ms: 500
+          }
         }
-      };
-
-      const greetingDelay = parseInt(this.urlParams.get("greeting_delay")) || 350;
-
-      setTimeout(function() {
-        App.VoiceAssistant.dataChannel.send(JSON.stringify(greetingMessage));
-      }, greetingDelay);
+      }));
     },
 
     handleRtcPeerConnectionTrack: function(e) {
@@ -299,6 +313,17 @@
     handleRtcDataChannelMessage: function(e) {
       try {
         const message = JSON.parse(e.data);
+
+        if (message.type === "response.created" && !this.greetingResponseId) {
+          this.greetingResponseId = message.response && message.response.id;
+        }
+
+        if (message.type === "response.audio.done"
+            && this.greetingResponseId
+            && message.response_id === this.greetingResponseId) {
+          this.greetingResponseId = null;
+          this.enableServerVad();
+        }
 
         if (message.response && message.response.status === "failed") {
           console.error("Error in connection:", message.response.status_details.error);

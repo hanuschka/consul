@@ -65,6 +65,8 @@ module Budgets
     end
 
     def show
+      auto_sign_in_guest_for(@investment.projekt_phase)
+
       @commentable = @investment
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)

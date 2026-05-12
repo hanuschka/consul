@@ -112,6 +112,45 @@
       });
     }
 
+    whenIdle() {
+      const instance = this;
+
+      return new Promise((resolve) => {
+        if (!instance.map) {
+          resolve();
+          return;
+        }
+
+        instance.map.whenReady(() => {
+          const tileLayers = [];
+          instance.map.eachLayer((layer) => {
+            if (layer instanceof L.TileLayer) {
+              tileLayers.push(layer);
+            }
+          });
+
+          if (tileLayers.length === 0) {
+            resolve();
+            return;
+          }
+
+          let pending = tileLayers.length;
+          tileLayers.forEach((layer) => {
+            if (layer._loading === false) {
+              pending -= 1;
+              if (pending === 0) resolve();
+              return;
+            }
+
+            layer.once('load', () => {
+              pending -= 1;
+              if (pending === 0) resolve();
+            });
+          });
+        });
+      });
+    }
+
     setupEventListenersForNewFeatures() {
       const instance = this;
 

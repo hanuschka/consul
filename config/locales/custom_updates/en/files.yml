@@ -13,6 +13,9 @@ en:
     documents:
       index:
         title: Documents
+    search_form:
+      placeholder: Search…
+      button_title: Search
     filter_bar:
       search_placeholder: Search…
       extension: File type

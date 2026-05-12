@@ -36,12 +36,14 @@ namespace :ckeditor do
   resources :documents, only: [:create, :update, :destroy]
 end
 
-namespace :files do
-  resources :images, only: [:index, :update] do
-    get :imageable_type_filter, on: :collection
-  end
-  resources :documents, only: [:index, :update] do
-    get :documentable_type_filter, on: :collection
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index, :update] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :documents, only: [:index, :update] do
+      get :documentable_type_filter, on: :collection
+    end
   end
 end
 

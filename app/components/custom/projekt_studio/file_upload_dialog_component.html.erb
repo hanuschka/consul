@@ -21,11 +21,13 @@
     <div class="file-upload-manager-dialog--toolbar">
       <div class="file-upload-manager-dialog--toolbar-left">
         <div class="file-upload-manager-dialog--search-wrapper js-fm-filter-bar">
-          <input
-            type="search"
-            class="file-upload-manager-dialog--search-input js-fm-filter-search"
-            placeholder="Suchen..."
-          >
+          <%= render Shared::TextSearchFormComponent.new(
+            i18n_namespace: "files.search_form",
+            standalone: true,
+            disable_reset_button_submit: true,
+            input_extra_class: "js-fm-filter-search",
+            input_id: "file_manager_search_text_#{type}"
+          ) %>
         </div>
       </div>
 

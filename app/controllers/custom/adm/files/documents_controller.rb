@@ -1,4 +1,4 @@
-class Files::DocumentsController < Files::BaseController
+class Adm::Files::DocumentsController < Adm::Files::BaseController
   def index
     authorize [:adm, :document]
     skip_policy_scope

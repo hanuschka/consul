@@ -10,7 +10,7 @@
       <option value=""><%= t("files.filter_bar.documentable_type_any") %></option>
       <% @documentable_types.each do |documentable_type| %>
         <option value="<%= documentable_type %>" <%= "selected" if documentable_type == @selected %>>
-          <%= documentable_type %>
+          <%= documentable_type.safe_constantize&.model_name&.human || documentable_type %>
         </option>
       <% end %>
     </select>

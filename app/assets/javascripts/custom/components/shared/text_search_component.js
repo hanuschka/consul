@@ -20,12 +20,12 @@
       }
     },
 
-    searchInput: function() {
-      return document.querySelector('.js-text-search-form-search-input');
+    searchInput: function(rootElement) {
+      return rootElement.querySelector('.js-text-search-form-search-input');
     },
 
-    resetButton: function() {
-      return document.querySelector('.js-text-search-form-reset-button');
+    resetButton: function(rootElement) {
+      return rootElement.querySelector('.js-text-search-form-reset-button');
     },
 
     setupEventListeners: function() {
@@ -67,6 +67,7 @@
       searchInput.value = '';
       this.updateButtonVisibility(rootElement);
       searchInput.focus();
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 
       if (rootElement.dataset.disableResetButtonSubmit !== "true") {
         rootElement.requestSubmit()

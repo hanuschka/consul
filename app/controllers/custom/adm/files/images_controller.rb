@@ -1,4 +1,4 @@
-class Files::ImagesController < Files::BaseController
+class Adm::Files::ImagesController < Adm::Files::BaseController
   def index
     authorize [:adm, :image]
     skip_policy_scope

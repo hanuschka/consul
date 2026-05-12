@@ -36,8 +36,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def files_subitems
       [
-        { label: t("adm.menu.items.files_subitems.images"),    path: files_images_path },
-        { label: t("adm.menu.items.files_subitems.documents"), path: files_documents_path }
+        { label: t("adm.menu.items.files_subitems.images"),    path: adm_files_images_path },
+        { label: t("adm.menu.items.files_subitems.documents"), path: adm_files_documents_path }
       ]
     end
 

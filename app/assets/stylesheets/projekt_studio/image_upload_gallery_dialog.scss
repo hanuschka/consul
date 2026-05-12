@@ -124,57 +124,6 @@
   max-width: 300px;
 }
 
-.file-upload-manager-dialog--search-input {
-  width: 100%;
-  padding: 8px 30px 8px 12px;
-  border: 1px solid #d9d9d9;
-  font-size: 16px;
-  margin-bottom: 0;
-}
-
-.file-upload-manager-dialog--search-clear {
-  position: absolute;
-  right: 11px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #665;
-  padding: 0;
-  width: 21px;
-  height: 21px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    color: #000;
-  }
-}
-
-.file-upload-manager-dialog--search-icon {
-  position: absolute;
-  right: 11px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 21px;
-  height: 21px;
-  background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22 fill=%22none%22%3E%3Cpath d=%22M11.4359 10.6826L7.88535 7.13203C8.43633 6.41973 8.73438 5.54883 8.73438 4.63281C8.73438 3.53633 8.30645 2.5082 7.53262 1.73301C6.75879 0.957812 5.72793 0.53125 4.63281 0.53125C3.5377 0.53125 2.50684 0.95918 1.73301 1.73301C0.957812 2.50684 0.53125 3.53633 0.53125 4.63281C0.53125 5.72793 0.95918 6.75879 1.73301 7.53262C2.50684 8.30781 3.53633 8.73438 4.63281 8.73438C5.54883 8.73438 6.41836 8.43633 7.13066 7.88672L10.6813 11.4359C10.6917 11.4464 10.704 11.4546 10.7176 11.4603C10.7312 11.4659 10.7458 11.4688 10.7605 11.4688C10.7753 11.4688 10.7899 11.4659 10.8035 11.4603C10.8171 11.4546 10.8294 11.4464 10.8398 11.4359L11.4359 10.8412C11.4464 10.8308 11.4546 10.8184 11.4603 10.8048C11.4659 10.7912 11.4688 10.7766 11.4688 10.7619C11.4688 10.7472 11.4659 10.7326 11.4603 10.719C11.4546 10.7054 11.4464 10.693 11.4359 10.6826ZM6.79844 6.79844C6.21875 7.37676 5.45039 7.69531 4.63281 7.69531C3.81523 7.69531 3.04688 7.37676 2.46719 6.79844C1.88887 6.21875 1.57031 5.45039 1.57031 4.63281C1.57031 3.81523 1.88887 3.04551 2.46719 2.46719C3.04688 1.88887 3.81523 1.57031 4.63281 1.57031C5.45039 1.57031 6.22012 1.8875 6.79844 2.46719C7.37676 3.04688 7.69531 3.81523 7.69531 4.63281C7.69531 5.45039 7.37676 6.22012 6.79844 6.79844Z%22 fill=%22black%22 fill-opacity=%220.45%22/%3E%3C/svg%3E');
-  background-repeat: no-repeat;
-  background-size: contain;
-  pointer-events: none;
-}
-
-.file-upload-manager-dialog--search-input:not(:placeholder-shown) ~ .file-upload-manager-dialog--search-icon {
-  display: none;
-}
-
-.file-upload-manager-dialog--search-input:not(:placeholder-shown) ~ .file-upload-manager-dialog--search-clear {
-  display: flex !important;
-}
-
 .file-upload-manager-dialog--grid {
   position: relative;
   flex: 1;

@@ -79,6 +79,6 @@ class Files::DocumentCardComponent < ApplicationComponent
     end
 
     def update_url
-      helpers.files_document_path(document)
+      helpers.adm_files_document_path(document)
     end
 end

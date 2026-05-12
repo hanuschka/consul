@@ -343,6 +343,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
       title: file.name,
       data_file_name: file.name,
       data_content_type: file.type,
+      file_size: file.size,
     };
   },
 
@@ -431,6 +432,23 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     $imageItem
       .find('.file-upload-manager-dialog--item-alt')
       .text(imageData.alt_text || '')
+
+    var $sizeBadge = $imageItem.find('.js-file-manager-badge-size')
+    if (imageData.file_size) {
+      $sizeBadge.text(this.formatFileSize(imageData.file_size)).show()
+    }
+
+    var $dimBadge = $imageItem.find('.js-file-manager-badge-dimensions')
+    if (imageData.dimensions && imageData.dimensions.width && imageData.dimensions.height) {
+      $dimBadge.text(imageData.dimensions.width + ' × ' + imageData.dimensions.height).show()
+    }
+  },
+
+  formatFileSize(bytes) {
+    if (!bytes) return ''
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
   },
 
   handleItemClick(e) {

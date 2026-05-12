@@ -8,6 +8,9 @@
 >
   <div class="file-upload-manager-dialog--item-thumb">
     <i class="fa <%= FileTypeIcons.for(document.attachment_content_type) %> files-asset-card--thumb-icon"></i>
+    <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
+      <%= number_to_human_size(document.attachment_file_size, precision: 1) %>
+    </span>
   </div>
   <div class="file-upload-manager-dialog--item-meta">
     <p

@@ -55,13 +55,16 @@ class FileManager::ImagesController < FileManager::BaseController
     end
 
     def image_response(image)
+      meta = image.attachment.metadata
       {
         id: image.id,
         title: image.title,
         content_type: image.attachment_content_type,
         url: image_variant_url(image, resize_to_limit: [1500, 2000]),
         gallery_thumb_url: image_variant_url(image, resize_to_limit: [600, 600]),
-        custom_thumb_url: image_variant_url(image, resize_to_limit: [925, 925])
+        custom_thumb_url: image_variant_url(image, resize_to_limit: [925, 925]),
+        file_size: image.attachment_file_size,
+        dimensions: meta[:width] && meta[:height] ? { width: meta[:width], height: meta[:height] } : nil
       }
     end
 

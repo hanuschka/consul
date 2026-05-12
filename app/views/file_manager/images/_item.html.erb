@@ -11,6 +11,15 @@
       src="<%= url_for(image.attachment.variant(resize_to_limit: [600, 600])) %>"
       alt="<%= image.title.presence || image.attachment_file_name %>"
     >
+    <% width = image.attachment.metadata[:width]; height = image.attachment.metadata[:height] %>
+    <% if width.present? && height.present? %>
+      <span class="file-upload-manager-dialog--item-badge -dimensions js-file-manager-badge-dimensions">
+        <%= width %> × <%= height %>
+      </span>
+    <% end %>
+    <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
+      <%= number_to_human_size(image.attachment_file_size, precision: 1) %>
+    </span>
   </div>
   <div class="file-upload-manager-dialog--item-meta">
     <p

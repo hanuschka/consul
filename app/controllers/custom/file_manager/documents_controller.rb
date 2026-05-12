@@ -59,7 +59,8 @@ class FileManager::DocumentsController < FileManager::BaseController
         id: document.id,
         title: document.title,
         content_type: document.attachment_content_type,
-        url: Rails.application.routes.url_helpers.url_for(document.attachment)
+        url: Rails.application.routes.url_helpers.url_for(document.attachment),
+        file_size: document.attachment_file_size
       }
     end
 end

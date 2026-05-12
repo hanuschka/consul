@@ -281,6 +281,32 @@
   bottom: 0;
 }
 
+.file-upload-manager-dialog--item-badge {
+  position: absolute;
+  top: 5px;
+  z-index: 2;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(10px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  white-space: nowrap;
+
+  &.-dimensions {
+    left: 6px;
+  }
+
+  &.-size {
+    right: 6px;
+  }
+}
+
 .file-upload-manager-dialog--item-meta {
   padding: 3px 8px;
   display: flex;
@@ -290,7 +316,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #00000091;
+  background: rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .file-upload-manager-dialog--item-title {

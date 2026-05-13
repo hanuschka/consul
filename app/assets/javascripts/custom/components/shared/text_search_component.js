@@ -48,6 +48,23 @@
           this.handleReset(rootElement)
         }.bind(this)
       )
+
+      $(document).on(
+        'click',
+        ".js-search-button",
+        function(e) {
+          var rootElement = e.target.closest('.js-text-search-form')
+
+          if (!rootElement) return
+          if (rootElement.tagName !== "FORM") {
+            e.preventDefault()
+            var input = this.searchInput(rootElement)
+            if (input) {
+              input.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+          }
+        }.bind(this)
+      )
     },
 
     updateButtonVisibility: function(rootElement) {

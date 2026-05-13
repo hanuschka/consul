@@ -52,7 +52,8 @@ class Files::DocumentCardComponent < ApplicationComponent
     end
 
     def documentable_type_label
-      document.documentable_type.to_s
+      type_string = document.documentable_type.to_s
+      type_string.safe_constantize&.model_name&.human || type_string
     end
 
     def icon_class

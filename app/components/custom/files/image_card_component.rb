@@ -90,7 +90,8 @@ class Files::ImageCardComponent < ApplicationComponent
     end
 
     def imageable_type_label
-      image.imageable_type.to_s
+      type_string = image.imageable_type.to_s
+      type_string.safe_constantize&.model_name&.human || type_string
     end
 
     def update_url

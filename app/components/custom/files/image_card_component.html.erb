@@ -19,6 +19,13 @@
       <i class="fa fa-image files-asset-card--thumb-icon"></i>
     <% end %>
 
+    <% if admin_upload? %>
+      <span class="files-asset-card--admin-badge">
+        <i class="fa fa-shield-alt"></i>
+        <%= t("files.card.admin_badge") %>
+      </span>
+    <% end %>
+
     <div class="files-asset-card--actions">
       <button
         type="button"
@@ -55,8 +62,21 @@
     <dl class="files-asset-card--details">
       <% if imageable_type_label.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.imageable_type") %></dt>
+          <dt><%= t("files.card.resource_type") %></dt>
           <dd><%= imageable_type_label %></dd>
+        </div>
+      <% end %>
+
+      <% if imageable_name.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.imageable_type") %></dt>
+          <dd>
+            <% if imageable_url.present? %>
+              <%= link_to imageable_name, imageable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+            <% else %>
+              <%= imageable_name %>
+            <% end %>
+          </dd>
         </div>
       <% end %>
 

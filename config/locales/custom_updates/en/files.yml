@@ -52,6 +52,7 @@ en:
       list: List view
     list:
       title: Title
+      resource_type: Resource type
       assigned_to: Assigned to
       size: Size
       modified: Modified
@@ -68,6 +69,8 @@ en:
       modified: Modified
       imageable_type: Assigned to
       documentable_type: Assigned to
+      resource_type: Resource type
+      admin_badge: Admin upload
     edit_modal:
       title: Edit file
       title_label: Title

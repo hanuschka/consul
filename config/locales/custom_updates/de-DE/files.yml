@@ -52,6 +52,7 @@ de:
       list: Listenansicht
     list:
       title: Titel
+      resource_type: Ressourcentyp
       assigned_to: Zugewiesen an
       size: Größe
       modified: Geändert
@@ -68,6 +69,8 @@ de:
       modified: Geändert
       imageable_type: Zugewiesen an
       documentable_type: Zugewiesen an
+      resource_type: Ressourcentyp
+      admin_badge: Admin-Upload
     edit_modal:
       title: Datei bearbeiten
       title_label: Titel

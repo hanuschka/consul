@@ -81,6 +81,43 @@
   gap: 6px;
 }
 
+.files-asset-card--admin-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  color: #ffffff;
+  background: rgba(28, 25, 23, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+
+  .fa {
+    font-size: 12px;
+  }
+}
+
+.files-asset-card--resource-link {
+  color: #005fcc;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms ease-out;
+
+  &:hover {
+    border-bottom-color: currentColor;
+  }
+}
+
 .files-asset-card--icon-button {
   display: inline-flex;
   align-items: center;

@@ -1,6 +1,10 @@
 <%= javascript_include_tag "lib/files/filter_serializer" %>
 
 <span hidden data-files-delete-failed-message="<%= t("files.delete_failed") %>"></span>
+<span hidden data-files-delete-success-template="<%= t("files.delete_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-delete-failed-template="<%= t("files.delete_failed_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-upload-success-template="<%= t("files.upload_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-upload-failed-template="<%= t("files.upload_failed_with_name", filename: "__FILENAME__") %>"></span>
 
 <%= content_for :title, t("files.documents.index.title") %>
 
@@ -9,27 +13,25 @@
   breadcrumbs: @breadcrumbs
 ) do |header| %>
   <% header.with_actions do %>
-    <div
-      class="files-page-actions"
-      data-controller="files--upload"
-      data-files--upload-endpoint-value="/file_manager/documents"
-    >
-      <button
-        type="button"
-        class="files-page-actions--upload-button"
-        data-action="click->files--upload#triggerPicker"
-      >
-        <i class="fa fa-upload"></i>
-        <%= t("files.card.upload") %>
-      </button>
-      <input
-        type="file"
-        class="js-files-upload-input"
-        data-files--upload-target="input"
-        data-action="change->files--upload#fileChanged"
-        hidden
-      >
-      <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+    <div class="ml-auto">
+      <%= render Adm::ButtonWithProgressComponent.new(
+        label: t("files.card.upload"),
+        loading_label: t("files.upload_loading"),
+        success_label: t("files.upload_success"),
+        icon: "upload",
+        button_data: { action: "click->files--upload#triggerPicker" },
+        extra_controllers: ["files--upload"],
+        extra_root_data: { "files--upload-endpoint-value": "/file_manager/documents" }
+      ) do %>
+        <input
+          type="file"
+          class="js-files-upload-input"
+          data-files--upload-target="input"
+          data-action="change->files--upload#fileChanged"
+          hidden
+        >
+        <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+      <% end %>
     </div>
   <% end %>
 <% end %>

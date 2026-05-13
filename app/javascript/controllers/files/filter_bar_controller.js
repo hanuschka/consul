@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { addFlashMessage } from "../../utils/adm_flash"
 
 const SEARCH_DEBOUNCE_MS = 200
 
@@ -125,7 +126,7 @@ export default class extends Controller {
     event.stopPropagation()
 
     const button = event.currentTarget
-    const card = button.closest(".files-asset-card")
+    const card = button.closest(".files-asset-card") || button.closest(".files-asset-row")
 
     if (!card) return
 
@@ -134,6 +135,8 @@ export default class extends Controller {
 
     const url = button.dataset.deleteUrl
     if (!url) return
+
+    const filename = card.dataset.filename || ""
 
     try {
       const response = await fetch(url, {
@@ -147,16 +150,32 @@ export default class extends Controller {
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
       card.remove()
+      addFlashMessage(this.deleteSuccessMessage(filename), "success")
     } catch (error) {
       console.error("Files delete failed", error)
-      alert(this.deleteFailedMessage())
+      addFlashMessage(this.deleteFailedMessage(filename), "danger")
     }
   }
 
-  deleteFailedMessage() {
-    const el = document.querySelector("[data-files-delete-failed-message]")
+  deleteSuccessMessage(filename) {
+    return this.applyTemplate("data-files-delete-success-template", filename) ||
+      `Deleted ${filename}`
+  }
 
-    return el ? el.getAttribute("data-files-delete-failed-message") : "Delete failed"
+  deleteFailedMessage(filename) {
+    const templated = this.applyTemplate("data-files-delete-failed-template", filename)
+    if (templated) return templated
+
+    const fallback = document.querySelector("[data-files-delete-failed-message]")
+
+    return fallback ? fallback.getAttribute("data-files-delete-failed-message") : "Delete failed"
+  }
+
+  applyTemplate(attribute, filename) {
+    const el = document.querySelector(`[${attribute}]`)
+    if (!el) return null
+
+    return el.getAttribute(attribute).replace("__FILENAME__", filename)
   }
 
   editClicked(event) {

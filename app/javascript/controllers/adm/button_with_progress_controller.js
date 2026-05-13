@@ -1,25 +1,34 @@
 import { Controller } from "@hotwired/stimulus"
 
-const SUCCESS_AFTER_NAV_MS = 800
-const FALLBACK_SUCCESS_MS = 8000
+const BEGIN_EVENT = "adm-button-with-progress:begin"
+const COMPLETE_EVENT = "adm-button-with-progress:complete"
+const RESTORE_EVENT = "adm-button-with-progress:restore"
 const SUCCESS_VISIBLE_MS = 1800
-const COMPLETE_EVENT = "pdf-download:complete"
 
 export default class extends Controller {
   static targets = ["trigger", "loading", "success"]
+  static values = {
+    fallbackDelay: { type: Number, default: 0 }
+  }
 
   connect() {
-    this.handleComplete = () => this.showSuccess()
+    this.handleBegin = () => this.begin()
+    this.handleComplete = () => this.succeed()
+    this.handleRestore = () => this.restore()
+    this.element.addEventListener(BEGIN_EVENT, this.handleBegin)
     this.element.addEventListener(COMPLETE_EVENT, this.handleComplete)
+    this.element.addEventListener(RESTORE_EVENT, this.handleRestore)
   }
 
   disconnect() {
+    this.element.removeEventListener(BEGIN_EVENT, this.handleBegin)
     this.element.removeEventListener(COMPLETE_EVENT, this.handleComplete)
-    this.clearSuccessTimer()
+    this.element.removeEventListener(RESTORE_EVENT, this.handleRestore)
+    this.clearFallbackTimer()
     this.clearRestoreTimer()
   }
 
-  begin(event) {
+  begin() {
     if (!this.hasTriggerTarget || !this.hasLoadingTarget) return
 
     this.triggerTarget.setAttribute("aria-disabled", "true")
@@ -32,16 +41,17 @@ export default class extends Controller {
       this.successTarget.setAttribute("aria-hidden", "true")
     }
 
-    const delay = this.expectsAsyncCapture(event) ? FALLBACK_SUCCESS_MS : SUCCESS_AFTER_NAV_MS
+    this.clearFallbackTimer()
 
-    this.clearSuccessTimer()
-    this.successTimer = setTimeout(() => this.showSuccess(), delay)
+    if (this.fallbackDelayValue > 0) {
+      this.fallbackTimer = setTimeout(() => this.succeed(), this.fallbackDelayValue)
+    }
   }
 
-  showSuccess() {
+  succeed() {
     if (!this.hasTriggerTarget || !this.hasLoadingTarget) return
 
-    this.clearSuccessTimer()
+    this.clearFallbackTimer()
     this.loadingTarget.classList.remove("-active")
     this.loadingTarget.setAttribute("aria-hidden", "true")
 
@@ -67,21 +77,14 @@ export default class extends Controller {
       this.successTarget.setAttribute("aria-hidden", "true")
     }
 
-    this.clearSuccessTimer()
+    this.clearFallbackTimer()
     this.clearRestoreTimer()
   }
 
-  expectsAsyncCapture(event) {
-    const link = event && event.currentTarget
-    if (!link || !link.dataset || !link.dataset.action) return false
-
-    return link.dataset.action.includes("map-screenshot#capture")
-  }
-
-  clearSuccessTimer() {
-    if (this.successTimer) {
-      clearTimeout(this.successTimer)
-      this.successTimer = null
+  clearFallbackTimer() {
+    if (this.fallbackTimer) {
+      clearTimeout(this.fallbackTimer)
+      this.fallbackTimer = null
     }
   }
 

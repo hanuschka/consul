@@ -4,49 +4,6 @@
   margin: 0 auto;
 }
 
-.files-page-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.files-page-actions--upload-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 18px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  color: #ffffff;
-  background: #005fcc;
-  border: 1px solid #005fcc;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-
-  i {
-    font-size: 14px;
-  }
-
-  &:hover {
-    background: #00489c;
-    border-color: #00489c;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #005fcc;
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
 .files-index--filter-bar {
   margin-bottom: 24px;
 }

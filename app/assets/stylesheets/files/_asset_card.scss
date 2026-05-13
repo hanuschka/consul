@@ -248,6 +248,27 @@
   }
 }
 
+.files-asset-card[data-type="document"] .files-asset-card--icon-button,
+.files-asset-card[data-type="document"] .files-asset-card--glass-button {
+  color: #222222;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    color: #005fcc;
+    background: #ffffff;
+    border-color: #005fcc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
 .files-asset-card--footer-button.-danger {
   color: #c43e1c;
   border-color: #e5b5aa;

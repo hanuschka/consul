@@ -47,6 +47,14 @@ en:
         size_desc: Largest first
     upload_failed: Upload failed
     delete_failed: Delete failed
+    view_mode:
+      cards: Card view
+      list: List view
+    list:
+      title: Title
+      assigned_to: Assigned to
+      size: Size
+      modified: Modified
     card:
       edit: Edit
       delete: Delete

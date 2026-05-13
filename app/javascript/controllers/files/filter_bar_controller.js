@@ -11,7 +11,10 @@ export default class extends Controller {
   static targets = [
     "form",
     "grid",
+    "list",
     "pagination",
+    "viewModeCardsButton",
+    "viewModeListButton",
     "editModal",
     "editForm",
     "editTitle",
@@ -29,9 +32,56 @@ export default class extends Controller {
     this.onPopState = this.onPopState.bind(this)
 
     this.hydrateFromUrl()
+    this.restoreViewMode()
 
     this.paginationTarget.addEventListener("click", this.onPaginationClick)
     window.addEventListener("popstate", this.onPopState)
+  }
+
+  viewModeCardsClicked() {
+    this.setViewMode("cards")
+  }
+
+  viewModeListClicked() {
+    this.setViewMode("list")
+  }
+
+  setViewMode(mode) {
+    const normalized = mode === "list" ? "list" : "cards"
+
+    this.element.classList.toggle("-view-list", normalized === "list")
+    this.element.classList.toggle("-view-cards", normalized === "cards")
+
+    if (this.hasViewModeCardsButtonTarget) {
+      this.viewModeCardsButtonTarget.classList.toggle("-active", normalized === "cards")
+    }
+    if (this.hasViewModeListButtonTarget) {
+      this.viewModeListButtonTarget.classList.toggle("-active", normalized === "list")
+    }
+
+    try {
+      localStorage.setItem(this.viewModeStorageKey(), normalized)
+    } catch (_error) {
+      // localStorage unavailable; ignore
+    }
+  }
+
+  restoreViewMode() {
+    if (!this.hasViewModeCardsButtonTarget && !this.hasViewModeListButtonTarget) return
+
+    let stored = "cards"
+
+    try {
+      stored = localStorage.getItem(this.viewModeStorageKey()) || "cards"
+    } catch (_error) {
+      stored = "cards"
+    }
+
+    this.setViewMode(stored)
+  }
+
+  viewModeStorageKey() {
+    return `files-${this.typeValue}-view-mode`
   }
 
   disconnect() {
@@ -278,9 +328,11 @@ export default class extends Controller {
   replaceContent(html) {
     const doc = new DOMParser().parseFromString(html, "text/html")
     const newGrid = doc.querySelector(".files-index--grid")
+    const newListBody = doc.querySelector(".files-index--list tbody")
     const newPagination = doc.querySelector(".files-index--pagination")
 
     if (newGrid) this.gridTarget.innerHTML = newGrid.innerHTML
+    if (newListBody && this.hasListTarget) this.listTarget.innerHTML = newListBody.innerHTML
     if (newPagination) this.paginationTarget.innerHTML = newPagination.innerHTML
   }
 

@@ -47,6 +47,14 @@ de:
         size_desc: Größte zuerst
     upload_failed: Hochladen fehlgeschlagen
     delete_failed: Löschen fehlgeschlagen
+    view_mode:
+      cards: Kartenansicht
+      list: Listenansicht
+    list:
+      title: Titel
+      assigned_to: Zugewiesen an
+      size: Größe
+      modified: Geändert
     card:
       edit: Bearbeiten
       delete: Löschen

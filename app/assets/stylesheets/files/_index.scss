@@ -51,6 +51,112 @@
   margin-bottom: 24px;
 }
 
+.files-index--view-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.files-index--view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: #535252;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+
+  &:hover {
+    color: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &.-active {
+    color: #ffffff;
+    background: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.files-index.-view-list .files-index--grid {
+  display: none;
+}
+
+.files-index:not(.-view-list) .files-index--list {
+  display: none;
+}
+
+.files-asset-row--icon-cell {
+  width: 48px;
+  text-align: center;
+}
+
+.files-asset-row--icon {
+  font-size: 22px;
+}
+
+.files-asset-row--title-cell {
+  word-break: break-word;
+}
+
+.files-asset-row--actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.files-asset-row--action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0 0 0 4px;
+  font-size: 13px;
+  line-height: 1;
+  color: #535252;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out, background 150ms ease-out;
+
+  &:hover {
+    color: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &.-danger {
+    color: #c43e1c;
+    border-color: #e5b5aa;
+
+    &:hover {
+      color: #ffffff;
+      background: #c43e1c;
+      border-color: #c43e1c;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
 .files-index--grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

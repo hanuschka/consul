@@ -95,7 +95,7 @@
         const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/map_locations/" + mapLocationId + "/update_screenshot", true);
+        xhr.open("POST", "/adm/map_locations/" + mapLocationId + "/update_screenshot", true);
         xhr.setRequestHeader("X-CSRF-Token", csrfToken);
 
         xhr.onload = function() {

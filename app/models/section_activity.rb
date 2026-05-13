@@ -1,5 +1,5 @@
 class SectionActivity < ApplicationRecord
-  VALID_SECTIONS = SectionSetting::SECTIONS
+  VALID_SECTIONS = Adm::Section::NAMES
 
   belongs_to :user, optional: true
   belongs_to :trackable, polymorphic: true, optional: true

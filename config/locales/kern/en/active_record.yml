@@ -14,6 +14,7 @@ en:
           leaflet: Leaflet
           mapbox: Mapbox
           virtualcity: Virtual City Map
+          leaflet_plus_masterportal: Masterportal
       map_layer:
         provider: Map provider URL
         attribution: Map attribution

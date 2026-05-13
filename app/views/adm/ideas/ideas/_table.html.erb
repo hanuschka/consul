@@ -1,0 +1,37 @@
+<% if @ideas.any? %>
+  <div class="d-flex align-items-center justify-content-end mb-3">
+    <a href="<%= url_for(request.query_parameters.merge(format: :geojson)) %>" class="adm-text-link" data-turbo="false">
+      <span class="material-symbols-outlined" aria-hidden="true">map</span>
+      <%= t("adm.ideas.ideas.index.download_geojson") %>
+    </a>
+  </div>
+
+  <div class="kern-table-responsive" tabindex="0">
+    <table class="kern-table">
+      <thead class="kern-table__head">
+        <tr class="kern-table__row">
+          <%= render Kern::Table::HeaderComponent.new(:title, t("adm.ideas.ideas.index.table.title"), **@title_header_options) %>
+          <th scope="col" class="kern-table__header"><%= t("adm.ideas.ideas.index.table.admin_accepted") %></th>
+          <%= render Kern::Table::HeaderComponent.new(:created_at, t("adm.ideas.ideas.index.table.created_at"), **@created_at_header_options) %>
+          <th scope="col" class="kern-table__header"><%= t("adm.ideas.ideas.index.table.author") %></th>
+          <th scope="col" class="kern-table__header"><%= t("adm.ideas.ideas.index.table.status") %></th>
+          <%= render Kern::Table::HeaderComponent.new(:idea_category_id, t("adm.ideas.ideas.index.table.category"), **@category_header_options) %>
+          <%= render Kern::Table::HeaderComponent.new(:idea_officer_id, t("adm.ideas.ideas.index.table.officer"), **@officer_header_options) %>
+          <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+        </tr>
+      </thead>
+
+      <tbody class="kern-table__body">
+        <% @ideas.each do |idea| %>
+          <%= render "adm/ideas/ideas/idea_row", idea: idea %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="my-5">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+<% else %>
+  <%= empty_state(title: t("adm.ideas.ideas.index.no_items_title"), description: t("adm.ideas.ideas.index.no_items_description"), icon: "lightbulb") %>
+<% end %>

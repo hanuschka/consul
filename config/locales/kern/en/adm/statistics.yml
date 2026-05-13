@@ -12,7 +12,7 @@ en:
         users:
           total:
             label: "Total (active)"
-            tip: "Registered, active user accounts. Deleted and deactivated accounts are not included."
+            tip: "Active user accounts with confirmed email address. Guest accounts and deleted accounts are not included."
           new_week:
             label: New this week
             tip: "Users newly registered in the last 7 days. The trend compares this with the previous 7-day period."

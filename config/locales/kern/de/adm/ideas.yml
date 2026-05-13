@@ -19,11 +19,12 @@ de:
           officers: Team
           ideas: Ideen
           categories: Kategorien
-          settings: Funktionen
+          settings: Konfiguration
           districts: Gebiete
       ideas:
         index:
           title: Ideen
+          download_geojson: GeoJSON herunterladen
           page_hint: "Hier sehen Sie alle eingereichten Ideen. Die Tabelle zeigt Titel, Sichtbarkeit, Kategorie, Sachbearbeiter und Status jeder Idee. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Idee, um Details einzusehen, den Sachbearbeiter zuzuweisen, eine offizielle Antwort zu verfassen oder die Idee zu bearbeiten."
           no_ideas: Keine Ideen vorhanden
           no_items_title: Keine Ideen vorhanden
@@ -119,8 +120,6 @@ de:
           officer_hint: Der Sachbearbeiter ist die zuständige Person für die Bearbeitung und Beantwortung dieser Idee. Er erhält Benachrichtigungen über neue Kommentare und Statusänderungen und kann eine offizielle Antwort verfassen. Wird kein Sachbearbeiter zugewiesen, greift der Standard-Sachbearbeiter der jeweiligen Kategorie oder des Gebiets.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
-        settings:
-          title: Funktionen
         audits:
           title: Änderungslog
           audits_title: Änderungen
@@ -132,6 +131,14 @@ de:
             new_value: Neuer Wert
             edited_at: Geändert am
             edited_by: Geändert von
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
       categories:
         index:
           title: Kategorien
@@ -170,7 +177,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Team
+          title: Sachbearbeiter
           page_hint: "Hier verwalten Sie die Sachbearbeiter für Ideen. Sachbearbeiter können eingereichte Ideen bearbeiten, deren Umsetzbarkeit bewerten und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Sachbearbeiter können Kategorien und Gebieten als Standardverantwortliche zugeordnet werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Ideen hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Ideen, bewerten deren Umsetzbarkeit und kommunizieren mit den Einreichern.

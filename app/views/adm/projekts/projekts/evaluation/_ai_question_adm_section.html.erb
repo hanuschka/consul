@@ -1,0 +1,135 @@
+<%
+  can_ask_questions = can?(:refresh_stats, projekt_phase)
+  ai_disabled = !Ai::Settings.ai_available?
+  stat_questions = projekt_phase.stat_questions.by_newest.limit(20)
+  pending_questions = stat_questions.select { |q| q.pending? || q.processing? }
+  answered_questions = stat_questions.select { |q| q.completed? || q.failed? }
+  pending_list_dom_id = "adm-ai-questions-pending-list-#{projekt_phase.id}"
+  pending_section_dom_id = "adm-ai-questions-pending-#{projekt_phase.id}"
+  history_dom_id = "adm-ai-questions-history-#{projekt_phase.id}"
+  history_list_dom_id = "adm-ai-questions-history-list-#{projekt_phase.id}"
+%>
+
+<% if can_ask_questions %>
+  <div
+    class="participation-stats-ai-question <%= 'ai-feature-disabled' if ai_disabled %>"
+    data-controller="adm--ai-question-form"
+    data-adm--ai-question-form-pending-list-selector-value="#<%= pending_list_dom_id %>"
+    data-adm--ai-question-form-history-list-selector-value="#<%= history_list_dom_id %>"
+    <% if ai_disabled %>
+    data-tooltip
+    title="<%= t('ai.disabled_tooltip') %>"
+    <% end %>
+  >
+    <details class="kern-accordion ai-stats-card" open>
+      <summary class="kern-accordion__header">
+        <span class="kern-title ai-stats-card--heading">
+          <span class="ai-stats-card--title">
+            <%= t("custom.participation_stats.ai_question.title") %>
+          </span>
+          <span class="ai-question-section--subtitle">
+            <%= t("custom.participation_stats.ai_question.subtitle") %>
+          </span>
+        </span>
+      </summary>
+
+      <div class="kern-accordion__body ai-stats-card--body">
+        <div class="ai-question-section--form">
+          <%= form_with url: create_stat_question_projekt_phase_path(projekt_phase),
+            method: :post,
+            data: { turbo: "true", adm__ai_question_form_target: "form" },
+            class: "ai-question-form" do |f| %>
+            <%= f.text_area :question,
+              placeholder: t("custom.participation_stats.ai_question.placeholder"),
+              class: "ai-question-form--input",
+              required: true,
+              disabled: ai_disabled,
+              data: { adm__ai_question_form_target: "input" } %>
+
+            <div class="ai-question-form--actions">
+              <span
+                class="ai-question-form--loading hidden"
+                data-adm--ai-question-form-target="loading"
+              >
+                <%= render Shared::SpinnerComponent.new(size: :small) %>
+                <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
+              </span>
+
+              <button
+                type="submit"
+                class="kern-btn kern-btn--primary kern-btn--compact ai-question-form--submit"
+                <%= "disabled" if ai_disabled %>
+                data-adm--ai-question-form-target="submit"
+              >
+                <span class="kern-label material-symbols-outlined" aria-hidden="true">send</span>
+                <span class="kern-label">
+                  <%= t("custom.participation_stats.ai_question.submit") %>
+                </span>
+              </button>
+            </div>
+          <% end %>
+        </div>
+
+        <div
+          id="<%= pending_section_dom_id %>"
+          class="ai-question-section--pending<%= ' hidden' if pending_questions.empty? %>"
+          data-adm--ai-question-form-target="pendingSection"
+        >
+          <h4><%= t("custom.participation_stats.ai_question.in_progress") %></h4>
+          <div id="<%= pending_list_dom_id %>">
+            <% pending_questions.each do |stat_question| %>
+              <%= render partial: "adm/projekts/projekts/evaluation/ai_question_pending_item",
+                locals: { stat_question: stat_question, projekt_phase: projekt_phase } %>
+            <% end %>
+          </div>
+        </div>
+
+        <div
+          id="<%= history_dom_id %>"
+          class="ai-question-section--history"
+        >
+          <div id="<%= history_list_dom_id %>">
+            <% answered_questions.each do |stat_question| %>
+              <%= render partial: "adm/projekts/projekts/evaluation/ai_question_completed_item",
+                locals: { stat_question: stat_question, projekt_phase: projekt_phase } %>
+            <% end %>
+          </div>
+
+          <div
+            class="ai-question-section--download-all<%= ' hidden' if answered_questions.empty? %>"
+            data-adm--ai-question-form-target="downloadAll"
+          >
+            <%= kern_link_button(
+              download_all_stat_answers_projekt_phase_path(projekt_phase, format: "pdf"),
+              text: t("custom.participation_stats.ai_question.download_all_pdf"),
+              icon: "picture_as_pdf",
+              style: :secondary,
+              class: "kern-btn--compact kern-btn--xs"
+            ) %>
+            <%= kern_link_button(
+              download_all_stat_answers_projekt_phase_path(projekt_phase, format: "docx"),
+              text: t("custom.participation_stats.ai_question.download_all_docx"),
+              icon: "description",
+              style: :secondary,
+              class: "kern-btn--compact kern-btn--xs"
+            ) %>
+            <%= kern_link_button(
+              download_all_stat_answers_projekt_phase_path(projekt_phase, format: "odt"),
+              text: t("custom.participation_stats.ai_question.download_all_odt"),
+              icon: "article",
+              style: :secondary,
+              class: "kern-btn--compact kern-btn--xs"
+            ) %>
+            <%= kern_link_button(
+              download_all_stat_answers_projekt_phase_path(projekt_phase, format: "txt"),
+              text: t("custom.participation_stats.ai_question.download_all_txt"),
+              icon: "subject",
+              style: :secondary,
+              class: "kern-btn--compact kern-btn--xs"
+            ) %>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+<% end %>

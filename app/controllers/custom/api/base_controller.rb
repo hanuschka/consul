@@ -8,7 +8,7 @@ class Api::BaseController < ActionController::API
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
 
-  before_action :authenticate_http_basic, if: :http_basic_auth_site?
+  before_action :authenticate_http_basic, if: :require_http_basic_auth?
   before_action :authenticate_api_client!
   after_action :log_api_request
 
@@ -29,14 +29,30 @@ class Api::BaseController < ActionController::API
       Rails.application.secrets.http_basic_auth
     end
 
+    def require_http_basic_auth?
+      http_basic_auth_site? && !bearer_token_provided?
+    end
+
+    def bearer_token_provided?
+      request.authorization.to_s.match?(/\ABearer /i)
+    end
+
     def authenticate_api_client!
       token = request.headers["Authorization"]&.split(" ")&.last
       client = ApiClient.find_by(access_token: token)
 
       if client.present?
         @current_client = client
+        @internal_api_client = false
       else
-        raise UnauthorizedError, "Invalid or missing API token."
+        internal_client = InternalApiClient.find_by(auth_token: token)
+
+        if internal_client.present?
+          @current_client = internal_client
+          @internal_api_client = true
+        else
+          raise UnauthorizedError, "Invalid or missing API token."
+        end
       end
     end
 
@@ -44,13 +60,21 @@ class Api::BaseController < ActionController::API
       @current_client
     end
 
+    def internal_api_client?
+      @internal_api_client == true
+    end
+
     def check_read_access!
+      return if internal_api_client?
+
       unless current_client&.can_read_public_data?
         raise ForbiddenError, "You do not have permission to read this resource."
       end
     end
 
     def check_admin_access!
+      return if internal_api_client?
+
       unless current_client&.admin?
         raise ForbiddenError, "You do not have permission to perform this action. Admin access required."
       end

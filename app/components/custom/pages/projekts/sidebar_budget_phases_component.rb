@@ -7,5 +7,14 @@ class Pages::Projekts::SidebarBudgetPhasesComponent < ApplicationComponent
     @phases = budget.published_phases.includes(:translations)
   end
 
-  private
+  def phase_status_class(phase)
+    return "-completed" if budget_phase_expired?(phase)
+    return "-current" if phase.current?
+
+    "-upcoming"
+  end
+
+  def budget_phase_expired?(phase)
+    phase.ends_at.present? && phase.ends_at < Time.zone.now
+  end
 end

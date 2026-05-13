@@ -19,10 +19,16 @@ ProjektStudio.ToggleBackground = {
     const newState = !currentState;
 
     button.dataset.showBackground = newState;
-    button.setAttribute("aria-pressed", newState);
+    button.setAttribute("aria-checked", newState);
 
     const mainContentCard = document.querySelector(".main-content-card");
     mainContentCard.classList.toggle("-hide-background", !newState);
+
+    const tooltipInstance = $(button).data("zf.tooltip");
+    if (tooltipInstance && typeof tooltipInstance.hide === "function") {
+      tooltipInstance.hide();
+    }
+    button.blur();
 
     App.Ajax.request({
       url: url,

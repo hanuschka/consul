@@ -7,6 +7,7 @@ class ProjektPointOfInterestPin < ApplicationRecord
   belongs_to :projekt_phase
   belongs_to :author, class_name: "User"
   belongs_to :projekt_point_of_interest_category, optional: true
+  belongs_to :masterportal_pin, optional: true
 
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_categories, -> (category_ids) {
@@ -14,11 +15,17 @@ class ProjektPointOfInterestPin < ApplicationRecord
 
     where(projekt_point_of_interest_category_id: category_ids)
   }
+  scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
+  scope :user_created, -> { where(masterportal_pin_id: nil) }
 
   validates :author, presence: true
-  validate :validate_max_point_of_interest_pins_per_user
+  validate :validate_max_point_of_interest_pins_per_user, if: :require_user_pin_limit?
 
   private
+
+  def require_user_pin_limit?
+    masterportal_pin_id.blank?
+  end
 
   def validate_max_point_of_interest_pins_per_user
     max_pins_per_user_value = projekt_phase.settings.find_by(key: "option.general.max_number_of_pins_per_user")&.value

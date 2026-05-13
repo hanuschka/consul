@@ -6,8 +6,11 @@ class Kern::MapComponent < ApplicationComponent
     admin_editor: false,
     height: 400,
     width: nil,
+    latitude: nil,
+    longitude: nil,
     zoom: nil,
-    resources: nil
+    resources: nil,
+    feature_collection: nil
   )
     @map_location = map_location
     @form = form
@@ -15,8 +18,11 @@ class Kern::MapComponent < ApplicationComponent
     @admin_editor = admin_editor
     @height = height
     @width = width
+    @latitude = latitude
+    @longitude = longitude
     @zoom = zoom
     @resources = resources
+    @feature_collection = feature_collection
   end
 
   attr_reader :map_location, :form, :editable, :admin_editor, :height, :width
@@ -28,7 +34,8 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   def container_id
-    map_location.default? ? "default_map" : dom_id(mappable, "map")
+    base = map_location.default? ? "default_map" : dom_id(mappable, "map")
+    @feature_collection.present? ? "#{base}_collection_#{object_id}" : base
   end
 
   def mappable
@@ -46,8 +53,8 @@ class Kern::MapComponent < ApplicationComponent
     {
       controller: "map",
       map_rendering_library_value: rendering_library,
-      map_latitude_value: map_location.latitude,
-      map_longitude_value: map_location.longitude,
+      map_latitude_value: @latitude || map_location.latitude,
+      map_longitude_value: @longitude || map_location.longitude,
       map_zoom_value: @zoom || map_location.zoom,
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,
@@ -69,7 +76,9 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def features_json
-      if @resources.present?
+      if @feature_collection.present?
+        @feature_collection.is_a?(String) ? @feature_collection : @feature_collection.to_json
+      elsif @resources.present?
         items = MapLocation.where(mappable: @resources).flat_map do |ml|
           parsed = ml.features.is_a?(String) ? JSON.parse(ml.features) : ml.features
           parsed&.dig("features") || []
@@ -110,7 +119,24 @@ class Kern::MapComponent < ApplicationComponent
                    mappable.try(:projekt)&.map_layers ||
                    MapLayer.default
                end
-      layers.to_json
+
+      (layers.as_json + masterportal_wms_layer_injection).to_json
+    end
+
+    def masterportal_wms_layer_injection
+      return [] if map_location.rendering_library != "leaflet_plus_masterportal"
+
+      [{
+        "name" => I18n.t("components.kern.map_component.masterportal_wms_layer_name",
+                         default: "Masterportal (Regensburg)"),
+        "provider" => Rails.application.secrets.dig(:masterportal, :wms_url),
+        "layer_names" => Rails.application.secrets.dig(:masterportal, :wms_layers).to_s,
+        "protocol" => "wms",
+        "transparent" => true,
+        "opacity" => 0.8,
+        "show_by_default" => true,
+        "base" => false
+      }]
     end
 
     def mapbox_public_token

@@ -4,8 +4,12 @@ de:
       index:
         title: Nutzer verwalten
         columns: Spalten
-        csv_export_button: CSV Export
+        download_csv: CSV herunterladen
         csv_export_notice: Der Export wird vorbereitet. Sie erhalten eine E-Mail mit einem Download-Link.
+        total_label:
+          one: aktiver Nutzer
+          other: aktive Nutzer
+        total_hint: Bestätigte Accounts ohne Gäste und gelöschte Nutzer.
         table:
           email: E-Mail
           first_name: Vorname

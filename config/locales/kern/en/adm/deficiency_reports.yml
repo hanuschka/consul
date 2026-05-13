@@ -20,7 +20,7 @@ en:
           deficiency_reports: Reports
           categories: Categories
           statuses: Statuses
-          settings: Features
+          settings: Configuration
           official_answer_templates: Response templates
           districts: Areas
           officer_groups: Officer groups
@@ -31,7 +31,8 @@ en:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
           columns: Columns
-          export: Export
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
           no_deficiency_reports: No deficiency reports available
           no_items_title: No reports available
           no_items_description: Reports will be shown here as soon as they are submitted.
@@ -140,8 +141,6 @@ en:
           title: Feedback form
           created_at: Created on
           for_report: For
-        settings:
-          title: Features
       categories:
         index:
           title: Categories
@@ -224,7 +223,7 @@ en:
           submit: Save
       officers:
         index:
-          title: Team
+          title: Officers
           page_hint: "Here you manage the officers for the deficiency reporter. Officers can edit submitted reports, update the status, and write official responses. Use the search field to find registered users and assign them the officer role. Only already-registered users can be added as officers."
           search_label: Search users
           search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for the deficiency reporter. Officers process submitted reports, communicate with citizens, and update the processing status.
@@ -323,6 +322,14 @@ en:
           no_officers_title: No officers available
           no_officers_description: First create officers under "Officers" before you can assign them to a group.
           submit: Save
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+        dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
       stats:
         show:
           title: Statistics

@@ -5,20 +5,26 @@
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
   team_url: new_adm_landing_pages_manager_path,
-  recent_items: @recent_items,
-  recent_items_url: adm_landing_pages_landing_pages_list_path,
-  recent_item_partial: "adm/landing_pages/landing_pages/landing_page",
-  recent_item_headers: [
-    t("adm.landing_pages.landing_pages.index.table.header.name"),
-    t("adm.landing_pages.landing_pages.index.table.header.url"),
-    t("adm.landing_pages.landing_pages.index.table.header.status"),
-    ""
-  ],
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
-  activities: @activities,
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "landing_pages") : nil
+  section: "landing_pages",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
+  activities: [],
+  section_settings_path: policy([:adm, Setting]).update? ? adm_landing_pages_settings_path : nil
 ) %>
+
+<div class="kern-container">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">web</span>
+      <h3><%= t("adm.landing_pages.menu.items.landing_pages") %></h3>
+    </div>
+
+    <%= render "adm/landing_pages/landing_pages/table" %>
+  </div>
+
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+</div>

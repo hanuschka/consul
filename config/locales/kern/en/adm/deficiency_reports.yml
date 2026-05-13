@@ -141,13 +141,6 @@ en:
           title: Feedback form
           created_at: Created on
           for_report: For
-        settings:
-          title: Configuration
-          tabs:
-            features: Features
-            dashboard: Dashboard settings
-        settings_dashboard:
-          intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
       categories:
         index:
           title: Categories
@@ -329,6 +322,13 @@ en:
           no_officers_title: No officers available
           no_officers_description: First create officers under "Officers" before you can assign them to a group.
           submit: Save
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+        dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
       stats:
         show:
           title: Statistics

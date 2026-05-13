@@ -1,17 +1,17 @@
-<%= content_for :title, t("adm.ideas.ideas.settings.title") %>
+<%= content_for :title, t("adm.ideas.settings.title") %>
 
 <%= render Adm::HeaderComponent.new(
-  title: t("adm.ideas.ideas.settings.title"),
+  title: t("adm.ideas.settings.title"),
   breadcrumbs: @breadcrumbs
 ) %>
 
 <%= render Adm::TabsComponent.new(tabs: [
   {
-    label: t("adm.ideas.ideas.settings.tabs.features"),
+    label: t("adm.ideas.settings.tabs.features"),
     url: adm_ideas_settings_path
   },
   {
-    label: t("adm.ideas.ideas.settings.tabs.dashboard"),
+    label: t("adm.ideas.settings.tabs.dashboard"),
     url: dashboard_adm_ideas_settings_path,
     current: true
   }
@@ -19,7 +19,7 @@
 
 <div class="kern-container my-5">
   <p class="adm-hint__text mb-3">
-    <%= t("adm.ideas.ideas.settings_dashboard.intro") %>
+    <%= t("adm.ideas.settings.dashboard.intro") %>
   </p>
 
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.ideas.intro_text"), :value, :text) %>

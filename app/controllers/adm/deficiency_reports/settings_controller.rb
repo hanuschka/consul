@@ -14,6 +14,6 @@ class Adm::DeficiencyReports::SettingsController < Adm::DeficiencyReports::BaseC
     end
 
     def load_breadcrumbs
-      @breadcrumbs = [{ name: t("adm.deficiency_reports.deficiency_reports.settings.title"), icon: "settings" }]
+      @breadcrumbs = [{ name: t("adm.deficiency_reports.settings.title"), icon: "settings" }]
     end
 end

@@ -119,13 +119,6 @@ en:
           officer_hint: The officer is the person responsible for processing and responding to this idea. They receive notifications about new comments and status changes and can write an official response. If no officer is assigned, the default officer of the respective category or area applies.
           no_officer: "-- No officer --"
           submit: Save
-        settings:
-          title: Configuration
-          tabs:
-            features: Features
-            dashboard: Dashboard settings
-        settings_dashboard:
-          intro: "Configure the welcome text, notice messages and contact persons that appear on the public ideas platform dashboard."
         audits:
           title: Change log
           audits_title: Changes
@@ -137,6 +130,13 @@ en:
             new_value: New value
             edited_at: Edited on
             edited_by: Edited by
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+        dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public ideas platform dashboard."
       categories:
         index:
           title: Categories

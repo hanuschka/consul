@@ -120,13 +120,6 @@ de:
           officer_hint: Der Sachbearbeiter ist die zuständige Person für die Bearbeitung und Beantwortung dieser Idee. Er erhält Benachrichtigungen über neue Kommentare und Statusänderungen und kann eine offizielle Antwort verfassen. Wird kein Sachbearbeiter zugewiesen, greift der Standard-Sachbearbeiter der jeweiligen Kategorie oder des Gebiets.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
-        settings:
-          title: Konfiguration
-          tabs:
-            features: Funktionen
-            dashboard: Dashboard-Einstellungen
-        settings_dashboard:
-          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
         audits:
           title: Änderungslog
           audits_title: Änderungen
@@ -138,6 +131,13 @@ de:
             new_value: Neuer Wert
             edited_at: Geändert am
             edited_by: Geändert von
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
       categories:
         index:
           title: Kategorien

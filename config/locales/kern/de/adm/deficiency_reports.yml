@@ -141,13 +141,6 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
-        settings:
-          title: Konfiguration
-          tabs:
-            features: Funktionen
-            dashboard: Dashboard-Einstellungen
-        settings_dashboard:
-          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
       categories:
         index:
           title: Kategorien
@@ -329,6 +322,13 @@ de:
           no_officers_title: Keine Sachbearbeiter vorhanden
           no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
           submit: Speichern
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
       stats:
         show:
           title: Statistiken

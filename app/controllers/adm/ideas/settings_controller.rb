@@ -14,6 +14,6 @@ class Adm::Ideas::SettingsController < Adm::Ideas::BaseController
     end
 
     def load_breadcrumbs
-      @breadcrumbs = [{ name: t("adm.ideas.ideas.settings.title"), icon: "settings" }]
+      @breadcrumbs = [{ name: t("adm.ideas.settings.title"), icon: "settings" }]
     end
 end

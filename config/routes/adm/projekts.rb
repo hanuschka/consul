@@ -1,6 +1,7 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "home#show"
+    get "list", to: "projekts#list", as: :projekts_list
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection

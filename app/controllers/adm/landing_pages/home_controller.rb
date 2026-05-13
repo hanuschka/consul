@@ -3,8 +3,8 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     authorize ::SiteCustomization::Page, :index?, policy_class: Adm::LandingPages::LandingPagePolicy
 
     @team_members = LandingPageManager.includes(user: :image).order(:id)
-    @recent_items = policy_scope(::SiteCustomization::Page, policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope)
-                      .order(updated_at: :desc).limit(10)
+    @landing_pages = policy_scope(::SiteCustomization::Page,
+                                  policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope).order(:landing_nav_position)
 
     @intro_text = Setting["adm.landing_pages.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.landing_pages", default: nil)
@@ -20,8 +20,7 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.landing_pages.home.quick_links.new"), path: new_adm_landing_pages_landing_page_path, primary: true },
-      { label: t("adm.landing_pages.home.quick_links.all"), path: adm_landing_pages_landing_pages_list_path }
+      { label: t("adm.landing_pages.home.quick_links.new"), path: new_adm_landing_pages_landing_page_path, primary: true }
     ]
 
     @breadcrumbs = [

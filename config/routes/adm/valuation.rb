@@ -13,6 +13,6 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :investments, only: [:index, :edit, :update]
+    resources :investments, only: [:edit, :update]
   end
 end

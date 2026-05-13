@@ -5,10 +5,8 @@
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
   team_url: (Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).create? ? new_adm_projekts_manager_path : nil),
-  recent_items: nil,
-  recent_items_url: nil,
   intro_text: @intro_text,
-  quick_links: [],
+  quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
   section: "projekts",
@@ -25,44 +23,7 @@
       <h3><%= t("adm.projekts.title") %></h3>
     </div>
 
-    <% if @quick_links.any? %>
-      <div class="adm-dashboard__section-actions">
-        <% @quick_links.each do |link| %>
-          <%= kern_link_button link[:path],
-              text: link[:label],
-              style: link[:primary] ? :primary : :secondary %>
-        <% end %>
-      </div>
-    <% end %>
-
-  <%= turbo_frame_tag "projekts_table" do %>
-    <% if @projekts.any? %>
-      <div class="kern-table-responsive" tabindex="0">
-        <table class="kern-table">
-          <thead class="kern-table__head">
-            <tr class="kern-table__row">
-              <%= render Kern::Table::HeaderComponent.new(:name, Projekt.model_name.human, **@name_header_options) %>
-              <%= render Kern::Table::HeaderComponent.new(:total_duration_start, Projekt.human_attribute_name("total_duration_start"), **@start_date_header_options) %>
-              <%= render Kern::Table::HeaderComponent.new(:total_duration_end, Projekt.human_attribute_name("total_duration_end"), **@end_date_header_options) %>
-              <th scope="col" class="kern-table__header"><%= t("adm.projekts.projekts.index.table.status") %></th>
-              <th scope="col" class="kern-table__header"><%= t("adm.projekts.projekts.index.table.actions") %></th>
-            </tr>
-          </thead>
-          <tbody class="kern-table__body">
-            <% @projekts.each do |projekt| %>
-              <%= render "adm/projekts/projekts/projekt", projekt: projekt %>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="my-5">
-        <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-      </div>
-    <% else %>
-      <%= empty_state(title: t("adm.projekts.projekts.index.no_projekts_title"), description: t("adm.projekts.projekts.index.no_projekts_description"), icon: "folder_open") %>
-    <% end %>
-  <% end %>
+    <%= turbo_frame_tag "projekts_table", src: adm_projekts_projekts_list_path, loading: :eager %>
   </div>
 
   <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>

@@ -4,13 +4,6 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @team_members = scoped_team_members
 
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
-    @pagy, @projekts = pagy(base_scope, limit: 10)
-
-    @name_header_options = { sort: true, search: true }
-    @start_date_header_options = { sort: true }
-    @end_date_header_options = { sort: true }
-
     @intro_text = Setting["adm.projekts.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.projekts", default: nil)
     @notice_active = Setting["adm.projekts.notice_active"].present?

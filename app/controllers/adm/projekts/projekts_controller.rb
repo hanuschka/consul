@@ -2,6 +2,17 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation]
 
+  def list
+    authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
+
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
+    @pagy, @projekts = pagy(base_scope, limit: 10)
+
+    @name_header_options = { sort: true, search: true }
+    @start_date_header_options = { sort: true }
+    @end_date_header_options = { sort: true }
+  end
+
   def new
     authorize [:adm, :projekts, Projekt], :create?
 

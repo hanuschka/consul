@@ -1,0 +1,17 @@
+<% if @landing_pages.any? %>
+  <table class="kern-table content-cards-table" id="content-cards-table">
+    <thead class="kern-table__head">
+      <tr class="kern-table__row">
+        <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.name") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.url") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.status") %></th>
+        <th scope="col" class="kern-table__header"></th>
+      </tr>
+    </thead>
+    <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_landing_pages_landing_pages_path %>">
+      <%= render partial: "adm/landing_pages/landing_pages/landing_page", collection: @landing_pages %>
+    </tbody>
+  </table>
+<% else %>
+  <%= empty_state(title: t("adm.landing_pages.landing_pages.index.no_items_title"), description: t("adm.landing_pages.landing_pages.index.no_items_description"), icon: "web") %>
+<% end %>

@@ -3,7 +3,6 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     authorize [:adm, :moderation, User]
 
     @team_members = Moderator.includes(user: :image).order(:id)
-    @recent_items = Activity.includes(:user).order(created_at: :desc).limit(10)
 
     @intro_text = Setting["adm.moderation.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.moderation", default: nil)
@@ -26,9 +25,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
       { value: moderated_count, label: t("adm.moderation.home.stats.moderated_total"), icon: "verified_user" }
     ]
 
-    @quick_links = [
-      { label: t("adm.moderation.home.quick_links.all"), path: adm_moderation_proposals_path }
-    ]
+    @quick_links = []
 
     @breadcrumbs = [
       { name: t("adm.moderation.menu.items.home"), icon: "home" }

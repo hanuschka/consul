@@ -11,8 +11,7 @@ class Adm::LandingPages::MenuComponent < Adm::BaseMenuComponent
        end),
       (if current_user&.administrator? || current_user&.landing_page_manager?
          { label: t("adm.landing_pages.menu.items.settings"), icon: "settings", path: adm_landing_pages_settings_path }
-       end),
-      { label: t("adm.landing_pages.menu.items.landing_pages"), icon: "web", path: adm_landing_pages_landing_pages_list_path, active_pattern: %r{/adm/landing_pages/(list|new|\d+)} }
+       end)
     ].compact
   end
 end

@@ -5,8 +5,6 @@
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
   team_url: current_user&.administrator? ? adm_officing_managers_path : nil,
-  recent_items: nil,
-  recent_items_url: nil,
   intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,

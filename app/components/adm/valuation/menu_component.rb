@@ -11,8 +11,7 @@ class Adm::Valuation::MenuComponent < Adm::BaseMenuComponent
        end),
       (if current_user&.administrator? || current_user&.valuator?
          { label: t("adm.valuation.menu.items.settings"), icon: "settings", path: adm_valuation_settings_path }
-       end),
-      { label: t("adm.valuation.menu.items.investments"), icon: "account_balance_wallet", path: adm_valuation_investments_path, active_prefix: "/adm/valuation/investments" }
+       end)
     ].compact
   end
 end

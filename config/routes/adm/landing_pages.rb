@@ -1,7 +1,6 @@
 namespace :adm do
   scope :landing_pages, module: :landing_pages, as: :landing_pages do
     root to: "home#show"
-    get "list", to: "landing_pages#index", as: :landing_pages_list
 
     resources :managers, only: [:index, :new, :edit, :update, :destroy] do
       post :search, on: :collection

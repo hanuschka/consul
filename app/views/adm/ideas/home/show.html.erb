@@ -5,20 +5,6 @@
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
   team_url: adm_ideas_officers_path,
-  recent_items: @recent_items,
-  recent_items_url: adm_ideas_ideas_list_path,
-  recent_item_partial: "adm/ideas/ideas/idea_row",
-  recent_item_as: :idea,
-  recent_item_headers: [
-    t("adm.ideas.ideas.index.table.title"),
-    t("adm.ideas.ideas.index.table.admin_accepted"),
-    t("adm.ideas.ideas.index.table.created_at"),
-    t("adm.ideas.ideas.index.table.author"),
-    t("adm.ideas.ideas.index.table.status"),
-    t("adm.ideas.ideas.index.table.category"),
-    t("adm.ideas.ideas.index.table.officer"),
-    t("shared.table.actions")
-  ],
   intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
@@ -26,7 +12,19 @@
   section: "ideas",
   notice_active: @notice_active,
   notice_message: @notice_message,
-  activities: @activities,
-  activity_pagy: @pagy_activities,
+  activities: [],
   section_settings_path: policy([:adm, Setting]).update? ? adm_ideas_settings_path : nil
 ) %>
+
+<div class="kern-container">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <h3><%= t("adm.ideas.menu.items.ideas") %></h3>
+    </div>
+
+    <%= render "adm/ideas/ideas/table" %>
+  </div>
+
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+</div>

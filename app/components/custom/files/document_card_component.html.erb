@@ -30,6 +30,19 @@
         <i class="fa fa-pen"></i>
       </button>
     </div>
+
+    <% if document.attachment.attached? %>
+      <a
+        href="<%= attachment_url %>"
+        target="_blank"
+        rel="noopener"
+        class="files-asset-card--glass-button"
+        title="<%= t("files.card.open_in_new_tab") %>"
+        aria-label="<%= t("files.card.open_in_new_tab") %>"
+      >
+        <i class="fa fa-arrow-up-right-from-square"></i>
+      </a>
+    <% end %>
   </div>
 
   <div class="files-asset-card--meta">
@@ -66,18 +79,8 @@
       </div>
     </dl>
 
-    <% if document.attachment.attached? %>
-      <div class="files-asset-card--footer">
-        <a
-          href="<%= attachment_url %>"
-          target="_blank"
-          rel="noopener"
-          class="files-asset-card--footer-button"
-        >
-          <i class="fa fa-arrow-up-right-from-square"></i>
-          <%= t("files.card.open_in_new_tab") %>
-        </a>
-
+    <div class="files-asset-card--footer">
+      <% if document.attachment.attached? %>
         <a
           href="<%= attachment_url %>"
           download="<%= filename %>"
@@ -86,7 +89,18 @@
           <i class="fa fa-download"></i>
           <%= t("files.card.download") %>
         </a>
-      </div>
-    <% end %>
+      <% end %>
+
+      <button
+        type="button"
+        class="files-asset-card--footer-button -danger js-files-delete-asset"
+        data-action="click->files--filter-bar#deleteClicked"
+        data-confirm-message="<%= t("files.card.delete_confirm") %>"
+        data-delete-url="<%= helpers.adm_files_document_path(document) %>"
+      >
+        <i class="fa fa-trash"></i>
+        <%= t("files.card.delete") %>
+      </button>
+    </div>
   </div>
 </article>

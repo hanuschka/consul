@@ -1,5 +1,7 @@
 <%= javascript_include_tag "lib/files/filter_serializer" %>
 
+<span hidden data-files-delete-failed-message="<%= t("files.delete_failed") %>"></span>
+
 <%= content_for :title, t("files.documents.index.title") %>
 
 <%= render Adm::HeaderComponent.new(

@@ -41,7 +41,7 @@ namespace :adm do
     resources :images, only: [:index, :update] do
       get :imageable_type_filter, on: :collection
     end
-    resources :documents, only: [:index, :update] do
+    resources :documents, only: [:index, :update, :destroy] do
       get :documentable_type_filter, on: :collection
     end
   end

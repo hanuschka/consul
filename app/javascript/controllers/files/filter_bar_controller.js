@@ -70,6 +70,45 @@ export default class extends Controller {
     this.refresh()
   }
 
+  async deleteClicked(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const button = event.currentTarget
+    const card = button.closest(".files-asset-card")
+
+    if (!card) return
+
+    const confirmMessage = button.dataset.confirmMessage || "Delete?"
+    if (!window.confirm(confirmMessage)) return
+
+    const url = button.dataset.deleteUrl
+    if (!url) return
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": this.csrfToken(),
+          "Accept": "application/json"
+        }
+      })
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      card.remove()
+    } catch (error) {
+      console.error("Files delete failed", error)
+      alert(this.deleteFailedMessage())
+    }
+  }
+
+  deleteFailedMessage() {
+    const el = document.querySelector("[data-files-delete-failed-message]")
+
+    return el ? el.getAttribute("data-files-delete-failed-message") : "Delete failed"
+  }
+
   editClicked(event) {
     event.preventDefault()
     event.stopPropagation()

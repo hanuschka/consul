@@ -26,6 +26,14 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
     render json: document.attributes.slice("id", "title")
   end
 
+  def destroy
+    document = Document.find(params[:id])
+    authorize [:adm, document]
+    document.destroy!
+
+    render json: { status: "no_content" }
+  end
+
   def documentable_type_filter
     authorize [:adm, :document], :index?
 

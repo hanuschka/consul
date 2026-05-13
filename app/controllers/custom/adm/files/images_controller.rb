@@ -41,7 +41,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
       params.permit(
         :search, :extension, :size_min_mb, :size_max_mb,
         :created_from, :created_to, :updated_from, :updated_to,
-        :imageable_type, :sort
+        :imageable_type, :admin_flag, :sort
       )
     end
 

@@ -30,6 +30,10 @@ en:
       imageable_type_any: All
       documentable_type: Assigned to
       documentable_type_any: All
+      admin_flag: Source
+      admin_flag_any: All sources
+      admin_flag_true: Admin uploads
+      admin_flag_false: Regular uploads
       sort_default: Sort
       reset: Reset
       sort:

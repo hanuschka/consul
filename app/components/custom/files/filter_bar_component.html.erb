@@ -61,6 +61,22 @@
     <% end %>
   <% end %>
 
+  <% if !minimal? %>
+    <div class="files-filter-bar--field">
+      <label class="files-filter-bar--label">
+        <%= t("files.filter_bar.admin_flag") %>
+      </label>
+      <select
+        class="files-filter-bar--input js-fm-filter-admin-flag"
+        data-action="change->files--filter-bar#filterChanged"
+      >
+        <option value=""><%= t("files.filter_bar.admin_flag_any") %></option>
+        <option value="true"><%= t("files.filter_bar.admin_flag_true") %></option>
+        <option value="false"><%= t("files.filter_bar.admin_flag_false") %></option>
+      </select>
+    </div>
+  <% end %>
+
   <div class="files-filter-bar--field">
     <label class="files-filter-bar--label">
       <%= t("files.filter_bar.sort_default") %>

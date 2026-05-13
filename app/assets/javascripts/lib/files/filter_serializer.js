@@ -12,6 +12,7 @@
     "updated_to",
     "imageable_type",
     "documentable_type",
+    "admin_flag",
     "sort",
     "type",
     "page",
@@ -29,6 +30,7 @@
     { key: "updated_to", selector: ".js-fm-filter-updated-to" },
     { key: "imageable_type", selector: ".js-fm-filter-imageable-type" },
     { key: "documentable_type", selector: ".js-fm-filter-documentable-type" },
+    { key: "admin_flag", selector: ".js-fm-filter-admin-flag" },
     { key: "sort", selector: ".js-fm-filter-sort" }
   ];
 

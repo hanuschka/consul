@@ -73,39 +73,43 @@
 
 .files-asset-card--actions {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 999px;
+  gap: 6px;
 }
 
 .files-asset-card--icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   padding: 0;
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1;
-  color: #222222;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 999px;
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
   cursor: pointer;
   text-decoration: none;
-  transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+  transition: background 150ms ease-out, color 150ms ease-out;
 
   &:hover {
-    color: #005fcc;
-    background: #ffffff;
-    border-color: #005fcc;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 }
 

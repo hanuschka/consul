@@ -257,6 +257,7 @@ export default class extends Controller {
       ".js-fm-filter-updated-to",
       ".js-fm-filter-imageable-type",
       ".js-fm-filter-documentable-type",
+      ".js-fm-filter-admin-flag",
       ".js-fm-filter-sort"
     ]
 

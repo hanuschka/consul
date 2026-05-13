@@ -12,7 +12,7 @@
   },
   {
     label: t("adm.ideas.ideas.settings.tabs.dashboard"),
-    url: adm_ideas_settings_dashboard_path,
+    url: dashboard_adm_ideas_settings_path,
     current: true
   }
 ]) %>
@@ -22,8 +22,9 @@
     <%= t("adm.ideas.ideas.settings_dashboard.intro") %>
   </p>
 
-  <%= render Adm::SectionSettingsComponent.new(
-    section: "ideas",
-    module_setting_keys: []
-  ) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.ideas.intro_text"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.ideas.notice_message"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.ideas.notice_active"), :value, :boolean) %>
+
+  <%= render "adm/section_contact_people/section_block", section: "ideas" %>
 </div>

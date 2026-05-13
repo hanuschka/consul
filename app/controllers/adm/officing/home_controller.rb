@@ -20,7 +20,10 @@ class Adm::Officing::HomeController < Adm::Officing::BaseController
       @voting_phases = ProjektPhase::VotingPhase.none
     end
 
-    @section_setting = SectionSetting.for_section("officing")
+    @intro_text = Setting["adm.officing.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.officing", default: nil)
+    @notice_active = Setting["adm.officing.notice_active"].present?
+    @notice_message = Setting["adm.officing.notice_message"]
     @contact_persons = SectionContactPerson.for_section("officing")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("officing"), limit: 10, page_param: :activity_page)
 

@@ -4,7 +4,10 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
 
     @team_members = DeficiencyReport::Officer.includes(user: :image).order(:id)
 
-    @section_setting = SectionSetting.for_section("deficiency_reports")
+    @intro_text = Setting["adm.deficiency_reports.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.deficiency_reports", default: nil)
+    @notice_active = Setting["adm.deficiency_reports.notice_active"].present?
+    @notice_message = Setting["adm.deficiency_reports.notice_message"]
     @contact_persons = SectionContactPerson.for_section("deficiency_reports")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("deficiency_reports"), limit: 10, page_param: :activity_page)
 

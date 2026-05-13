@@ -2,9 +2,9 @@
 
   <%# ── 1. Notice / Info box ──────────────────────────────────────────────── %>
   <% if show_notice? %>
-    <div class="adm-dashboard__notice" data-section="<%= notice.section %>">
+    <div class="adm-dashboard__notice" data-section="<%= section %>">
       <span class="material-symbols-outlined adm-dashboard__notice-icon" aria-hidden="true">info</span>
-      <div class="adm-dashboard__notice-text"><%= notice.notice_message %></div>
+      <div class="adm-dashboard__notice-text"><%= notice_message %></div>
       <button type="button" class="adm-dashboard__notice-close" aria-label="<%= t(".notice_dismiss") %>">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>

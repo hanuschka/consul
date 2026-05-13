@@ -7,7 +7,10 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
                       .includes(:budget, :translations)
                       .order(updated_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("valuation")
+    @intro_text = Setting["adm.valuation.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.valuation", default: nil)
+    @notice_active = Setting["adm.valuation.notice_active"].present?
+    @notice_message = Setting["adm.valuation.notice_message"]
     @contact_persons = SectionContactPerson.for_section("valuation")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("valuation"), limit: 10, page_param: :activity_page)
 

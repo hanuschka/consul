@@ -3,5 +3,9 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.officing.menu.items.settings"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container my-5">
-  <%= render Adm::SectionSettingsComponent.new(section: "officing") %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.officing.intro_text"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.officing.notice_message"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.officing.notice_active"), :value, :boolean) %>
+
+  <%= render "adm/section_contact_people/section_block", section: "officing" %>
 </div>

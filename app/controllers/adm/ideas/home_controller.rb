@@ -5,7 +5,10 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
     @team_members = Idea::Officer.includes(user: :image).order(:id)
     @recent_items = scoped_ideas.includes(:translations, :author, :category, :officer).order(updated_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("ideas")
+    @intro_text = Setting["adm.ideas.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.ideas", default: nil)
+    @notice_active = Setting["adm.ideas.notice_active"].present?
+    @notice_message = Setting["adm.ideas.notice_message"]
     @contact_persons = SectionContactPerson.for_section("ideas")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("ideas"), limit: 10, page_param: :activity_page)
 

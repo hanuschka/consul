@@ -10,11 +10,13 @@
   recent_item_columns: [
     { label: t("shared.table.title"), value: ->(item) { item.title } }
   ],
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
+  section: "valuation",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
   activities: @activities,
   activity_pagy: @pagy_activities,
   section_settings_path: policy([:adm, Setting]).update? ? adm_valuation_settings_path : nil

@@ -24,11 +24,11 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
       (if Adm::DeficiencyReports::OfficialAnswerTemplatePolicy.new(current_user, nil).index?
          { label: t("adm.deficiency_reports.menu.items.official_answer_templates"), icon: "description", path: adm_deficiency_reports_official_answer_templates_path }
        end),
-      (if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).settings?
+      (if Adm::DeficiencyReports::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.deficiency_reports.menu.items.settings"), icon: "settings", path: adm_deficiency_reports_settings_path, active_pattern: %r{/adm/deficiency_reports/settings(/dashboard)?\z} }
        end),
       { label: t("adm.deficiency_reports.menu.items.stats"), icon: "bar_chart", path: adm_deficiency_reports_stats_path },
-      (if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).settings?
+      (if Adm::DeficiencyReports::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.deficiency_reports.menu.items.ai_settings"), icon: "smart_toy", path: adm_deficiency_reports_ai_settings_path }
        end)
     ].compact

@@ -11,7 +11,10 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @start_date_header_options = { sort: true }
     @end_date_header_options = { sort: true }
 
-    @section_setting = SectionSetting.for_section("projekts")
+    @intro_text = Setting["adm.projekts.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.projekts", default: nil)
+    @notice_active = Setting["adm.projekts.notice_active"].present?
+    @notice_message = Setting["adm.projekts.notice_message"]
     @contact_persons = SectionContactPerson.for_section("projekts")
     visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
     @pagy_activities, @activities = pagy(

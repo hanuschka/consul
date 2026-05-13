@@ -26,8 +26,9 @@ namespace :adm do
 
     resource :stats, only: :show
     resource :ai_settings, only: [:show, :update]
-    get :settings, to: "deficiency_reports#settings", as: :settings
-    get "settings/dashboard", to: "deficiency_reports#settings_dashboard", as: :settings_dashboard
+    resource :settings, only: [:show], controller: "settings" do
+      get :dashboard, on: :member
+    end
 
     resources :deficiency_reports, only: [:show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "deficiency_report_audits"

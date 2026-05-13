@@ -5,7 +5,10 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     @team_members = Moderator.includes(user: :image).order(:id)
     @recent_items = Activity.includes(:user).order(created_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("moderation")
+    @intro_text = Setting["adm.moderation.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.moderation", default: nil)
+    @notice_active = Setting["adm.moderation.notice_active"].present?
+    @notice_message = Setting["adm.moderation.notice_message"]
     @contact_persons = SectionContactPerson.for_section("moderation")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("moderation"), limit: 10, page_param: :activity_page)
 

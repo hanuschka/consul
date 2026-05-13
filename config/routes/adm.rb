@@ -44,8 +44,6 @@ namespace :adm do
   end
   # application
 
-  resources :section_settings, only: [:update]
-
   resources :section_contact_people, only: [:new, :create, :edit, :update, :destroy] do
     post :search, on: :collection
   end

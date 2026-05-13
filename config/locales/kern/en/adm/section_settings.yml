@@ -1,9 +1,6 @@
 en:
   adm:
     section_settings:
-      title: Section settings
-      flash:
-        updated: Settings saved successfully.
       sections:
         ideas: Ideas
         deficiency_reports: "Deficiency reports"
@@ -12,16 +9,6 @@ en:
         valuation: Budget Assessment
         landing_pages: Topic pages
         officing: Officing
-      edit:
-        title: "Edit %{section}"
-        intro_text: "Introduction text for %{section}"
-        intro_text_hint: "This text is shown on the landing page of the „%{section}“ section and serves as a short orientation for your team. Describe in a few sentences what this section is responsible for. The text should give new team members a quick overview (max. 350 characters)."
-        intro_text_placeholder: "Enter introduction text for „%{section}“..."
-        notice_message: "Notice message for %{section}"
-        notice_message_hint: "The notice message is shown as a yellow info box at the very top of the „%{section}“ section's landing page. Use it for current information, deadlines, or processing notes for your team. Users can dismiss the message for the current session by clicking the X; it reappears on the next visit."
-        notice_message_placeholder: "Enter notice message for „%{section}“..."
-        notice_active: "Notice for %{section} active"
-        notice_active_hint: "Controls whether the notice message entered above is shown on the „%{section}“ section's landing page as a yellow info box. Disable this option to temporarily hide the message without deleting the text — e.g. for seasonal deadlines or project-specific instructions."
       intro_text_defaults:
         projekts: "Here you manage all your participation projects in one central place. Create new projects, configure phases and settings, assign project managers, and keep a clear overview of ongoing, scheduled, and completed participation processes. The quick links above take you directly to the most important actions."
         deficiency_reports: "Here you manage incoming deficiency reports from citizens in one central place and keep track of all submitted cases. Assign reports to the right caseworkers, follow the processing status, document responses, and coordinate the timely resolution of reported issues across the municipality."

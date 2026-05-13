@@ -280,6 +280,57 @@ de:
       ideas_description: >
         Aktiviert die Ideenplattform, auf der Bürger Ideen und Anregungen für die Stadtentwicklung einreichen können. Ideen können von anderen Nutzern bewertet und kommentiert werden. Das Modul eignet sich für offene Ideensammlungen ohne formalen Abstimmungsprozess.
 
+    adm:
+      ideas:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      deficiency_reports:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      projekts:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      moderation:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      valuation:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      landing_pages:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      officing:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
     header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."

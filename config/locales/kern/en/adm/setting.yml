@@ -277,6 +277,57 @@ en:
       ideas_description: >
         Enables the ideas platform, on which citizens can submit ideas and suggestions for urban development. Ideas can be rated and commented on by other users. The module is suitable for open idea collection without a formal voting process.
 
+    adm:
+      ideas:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      deficiency_reports:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      projekts:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      moderation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      valuation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      landing_pages:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      officing:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+
   site_customization/image:
     header_image: "Background image for desktop"
     header_image_description: "This image is shown at the top of the homepage on desktop devices. Please use a high-resolution landscape image. It should fit thematically with the participation project.<br>Required format: 1920 × 760 pixels."

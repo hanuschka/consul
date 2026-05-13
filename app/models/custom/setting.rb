@@ -304,7 +304,31 @@ class Setting < ApplicationRecord
 
         "extra_fields.verification.check_documents": false,
         "extra_fields.verification.show_data_completeness_status": true,
-        "extra_fields.verification.show_verification_status": true
+        "extra_fields.verification.show_verification_status": true,
+
+        # Per-section admin intro text, notice, and notice toggle.
+        # Read on each section's adm home; edited under each section's "Einstellungen" tab.
+        "adm.ideas.intro_text": nil,
+        "adm.ideas.notice_message": nil,
+        "adm.ideas.notice_active": nil,
+        "adm.deficiency_reports.intro_text": nil,
+        "adm.deficiency_reports.notice_message": nil,
+        "adm.deficiency_reports.notice_active": nil,
+        "adm.projekts.intro_text": nil,
+        "adm.projekts.notice_message": nil,
+        "adm.projekts.notice_active": nil,
+        "adm.moderation.intro_text": nil,
+        "adm.moderation.notice_message": nil,
+        "adm.moderation.notice_active": nil,
+        "adm.valuation.intro_text": nil,
+        "adm.valuation.notice_message": nil,
+        "adm.valuation.notice_active": nil,
+        "adm.landing_pages.intro_text": nil,
+        "adm.landing_pages.notice_message": nil,
+        "adm.landing_pages.notice_active": nil,
+        "adm.officing.intro_text": nil,
+        "adm.officing.notice_message": nil,
+        "adm.officing.notice_active": nil
       }
     end
 

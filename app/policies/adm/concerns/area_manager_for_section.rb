@@ -14,7 +14,7 @@ module Adm::Concerns::AreaManagerForSection
   private
 
     # Returns true when the current @user is the area-level manager
-    # for the given section name (one of SectionSetting::SECTIONS).
+    # for the given section name (one of Adm::Section::NAMES).
     # Unknown sections / blank section / no user → false.
     def area_manager_for?(section)
       return false unless @user

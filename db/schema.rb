@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_06_100029) do
+ActiveRecord::Schema.define(version: 2026_05_13_101828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2756,18 +2756,6 @@ ActiveRecord::Schema.define(version: 2026_05_06_100029) do
     t.index ["user_id"], name: "index_section_contact_people_on_user_id"
   end
 
-  create_table "section_settings", force: :cascade do |t|
-    t.string "section", null: false
-    t.string "intro_text"
-    t.text "notice_message"
-    t.boolean "notice_active", default: false, null: false
-    t.bigint "author_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["author_id"], name: "index_section_settings_on_author_id"
-    t.index ["section"], name: "index_section_settings_on_section", unique: true
-  end
-
   create_table "sentiment_translations", force: :cascade do |t|
     t.bigint "sentiment_id", null: false
     t.string "locale", null: false
@@ -3404,7 +3392,6 @@ ActiveRecord::Schema.define(version: 2026_05_06_100029) do
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "section_activities", "users"
   add_foreign_key "section_contact_people", "users"
-  add_foreign_key "section_settings", "users", column: "author_id"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

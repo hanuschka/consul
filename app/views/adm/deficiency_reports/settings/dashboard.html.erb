@@ -12,7 +12,7 @@
   },
   {
     label: t("adm.deficiency_reports.deficiency_reports.settings.tabs.dashboard"),
-    url: adm_deficiency_reports_settings_dashboard_path,
+    url: dashboard_adm_deficiency_reports_settings_path,
     current: true
   }
 ]) %>
@@ -22,8 +22,9 @@
     <%= t("adm.deficiency_reports.deficiency_reports.settings_dashboard.intro") %>
   </p>
 
-  <%= render Adm::SectionSettingsComponent.new(
-    section: "deficiency_reports",
-    module_setting_keys: []
-  ) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.intro_text"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_message"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_active"), :value, :boolean) %>
+
+  <%= render "adm/section_contact_people/section_block", section: "deficiency_reports" %>
 </div>

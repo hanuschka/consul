@@ -14,11 +14,13 @@
     t("adm.landing_pages.landing_pages.index.table.header.status"),
     ""
   ],
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
+  section: "landing_pages",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
   activities: @activities,
   activity_pagy: @pagy_activities,
   section_settings_path: policy([:adm, Setting]).update? ? adm_landing_pages_settings_path : nil

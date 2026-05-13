@@ -7,11 +7,13 @@
   team_url: adm_deficiency_reports_officers_path,
   recent_items: nil,
   recent_items_url: nil,
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
+  section: "deficiency_reports",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
   activities: [],
   section_settings_path: policy([:adm, Setting]).update? ? adm_deficiency_reports_settings_path : nil
 ) %>

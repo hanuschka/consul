@@ -1,9 +1,6 @@
 de:
   adm:
     section_settings:
-      title: Sektions-Einstellungen
-      flash:
-        updated: Einstellungen wurden erfolgreich gespeichert.
       sections:
         ideas: Ideen
         deficiency_reports: "M\u00E4ngelmelder"
@@ -12,16 +9,6 @@ de:
         valuation: Budget-Begutachtung
         landing_pages: Themenseiten
         officing: Abstimmungen
-      edit:
-        title: "%{section} bearbeiten"
-        intro_text: "Einleitungstext für %{section}"
-        intro_text_hint: "Dieser Text wird auf der Startseite des Bereichs „%{section}“ angezeigt und dient als kurze Orientierung für Ihr Team. Beschreiben Sie in wenigen Sätzen, wofür dieser Bereich zuständig ist. Der Text sollte neuen Teammitgliedern einen schnellen Überblick geben (max. 350 Zeichen)."
-        intro_text_placeholder: "Einleitungstext für „%{section}“ eingeben..."
-        notice_message: "Hinweismeldung für %{section}"
-        notice_message_hint: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs „%{section}“ eingeblendet. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise an Ihr Team. Die Meldung kann von jedem Nutzer per Klick auf das X für die aktuelle Sitzung ausgeblendet werden und erscheint beim nächsten Besuch erneut."
-        notice_message_placeholder: "Hinweismeldung für „%{section}“ eingeben..."
-        notice_active: "Hinweis für %{section} aktiv"
-        notice_active_hint: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite des Bereichs „%{section}“ als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text löschen zu müssen — etwa für saisonale Fristen oder projektbezogene Anweisungen."
       intro_text_defaults:
         projekts: "Hier verwalten Sie Ihre Beteiligungsprojekte zentral an einem Ort. Erstellen Sie neue Projekte, konfigurieren Sie Phasen und Einstellungen, weisen Sie Projektmanager zu und behalten Sie den Überblick über laufende, geplante und abgeschlossene Beteiligungsverfahren. Über die Schnellzugriffe gelangen Sie direkt zu den wichtigsten Aktionen."
         deficiency_reports: "Hier verwalten Sie eingehende Mängelmeldungen Ihrer Bürger zentral und behalten den Überblick über alle gemeldeten Vorgänge. Weisen Sie Meldungen passenden Sachbearbeitern zu, verfolgen Sie den Bearbeitungsstatus, dokumentieren Sie Rückmeldungen und koordinieren Sie die zügige Behebung gemeldeter Probleme im Stadtgebiet."

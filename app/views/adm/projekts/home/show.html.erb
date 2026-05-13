@@ -7,11 +7,13 @@
   team_url: (Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).create? ? new_adm_projekts_manager_path : nil),
   recent_items: nil,
   recent_items_url: nil,
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: [],
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
+  section: "projekts",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
   activities: [],
   section_settings_path: policy([:adm, Setting]).update? ? adm_projekts_settings_path : nil
 ) %>

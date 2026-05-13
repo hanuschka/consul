@@ -74,6 +74,10 @@ class Adm::BaseController < ActionController::Base
         Adm::NewsletterPolicy
       when "Image"
         Adm::ImagePolicy
+      when "Document"
+        Adm::DocumentPolicy
+      when "Ckeditor::Asset"
+        Adm::CkeditorAssetPolicy
       when "Poll"
         Adm::Projekts::PollPolicy
       else

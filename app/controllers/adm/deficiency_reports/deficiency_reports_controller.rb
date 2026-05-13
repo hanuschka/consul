@@ -39,6 +39,13 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
       end
+
+      format.geojson do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params).preload(:category)
+        send_data GeoServices::MappablesGeojsonExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.geojson",
+          type: "application/geo+json"
+      end
     end
   end
 

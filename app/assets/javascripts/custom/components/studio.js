@@ -21,7 +21,7 @@
       ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize();
+      ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.initialize();
       ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize();
       ProjektStudio.ContentBlock.AiEditMode.initialize();
       ProjektStudio.ContentBlock.CodeEditMode.initialize();

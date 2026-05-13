@@ -36,6 +36,22 @@ namespace :ckeditor do
   resources :documents, only: [:create, :update, :destroy]
 end
 
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index, :update] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :documents, only: [:index, :update, :destroy] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+end
+
+namespace :file_manager do
+  resources :images, only: [:index, :create, :update, :destroy]
+  resources :documents, only: [:index, :create, :update, :destroy]
+end
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 
@@ -99,6 +115,7 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id",
 post "iframe_sessions", to: "iframe_sessions#create"
 
 post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
+post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
 resources :projekt_content_block_templates, only: [:index]

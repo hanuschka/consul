@@ -50,6 +50,8 @@
   align-items: center;
   gap: 0.5rem;
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
   pointer-events: none;
   backdrop-filter: saturate(1.2) brightness(0.96);

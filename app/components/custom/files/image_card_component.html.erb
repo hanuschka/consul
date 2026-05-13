@@ -1,0 +1,88 @@
+<article
+  class="files-asset-card"
+  data-id="<%= image.id %>"
+  data-type="image"
+  data-only-title="true"
+  data-update-url="<%= update_url %>"
+  data-title="<%= image.title %>"
+  data-filename="<%= filename %>"
+>
+  <div class="files-asset-card--thumb">
+    <% if image.attachment.attached? %>
+      <%= render Shared::ImageWithLightboxComponent.new(
+        image_url: thumb_url,
+        original_url: original_url,
+        alt: display_title,
+        gallery: "files-images"
+      ) %>
+    <% else %>
+      <i class="fa fa-image files-asset-card--thumb-icon"></i>
+    <% end %>
+
+    <div class="files-asset-card--actions">
+      <button
+        type="button"
+        class="files-asset-card--icon-button js-files-edit-asset"
+        data-action="click->files--filter-bar#editClicked"
+        title="<%= t("files.card.edit") %>"
+        aria-label="<%= t("files.card.edit") %>"
+      >
+        <i class="fa fa-pen"></i>
+      </button>
+    </div>
+
+    <% if attached? %>
+      <a
+        href="<%= original_url %>"
+        download="<%= filename %>"
+        class="files-asset-card--glass-button"
+        title="<%= t("files.card.download") %>"
+        aria-label="<%= t("files.card.download") %>"
+      >
+        <i class="fa fa-download"></i>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="files-asset-card--meta">
+    <p
+      class="files-asset-card--filename"
+      title="<%= display_title %>"
+    >
+      <%= display_title %>
+    </p>
+
+    <dl class="files-asset-card--details">
+      <% if imageable_type_label.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.imageable_type") %></dt>
+          <dd><%= imageable_type_label %></dd>
+        </div>
+      <% end %>
+
+      <% if humanized_size.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.size") %></dt>
+          <dd><%= humanized_size %></dd>
+        </div>
+      <% end %>
+
+      <% if dimensions.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.dimensions") %></dt>
+          <dd><%= dimensions %></dd>
+        </div>
+      <% end %>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.created") %></dt>
+        <dd><%= created_at_formatted %></dd>
+      </div>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.modified") %></dt>
+        <dd><%= updated_at_formatted %></dd>
+      </div>
+    </dl>
+  </div>
+</article>

@@ -94,6 +94,8 @@ en:
           projekt_managers: Project managers
           map: Map
           phases: Participation phases
+          images: Images
+          documents: Documents
         details:
           title: Project details
           hint_title: About project details

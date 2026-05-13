@@ -1,0 +1,106 @@
+<article
+  class="files-asset-card"
+  data-id="<%= document.id %>"
+  data-type="document"
+  data-only-title="true"
+  data-update-url="<%= update_url %>"
+  data-title="<%= document.title %>"
+  data-filename="<%= filename %>"
+>
+  <div class="files-asset-card--thumb">
+    <% if previewable? %>
+      <img
+        src="<%= preview_url %>"
+        alt="<%= display_title %>"
+        class="files-asset-card--thumb-image"
+        loading="lazy"
+      >
+    <% else %>
+      <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
+    <% end %>
+
+    <div class="files-asset-card--actions">
+      <button
+        type="button"
+        class="files-asset-card--icon-button js-files-edit-asset"
+        data-action="click->files--filter-bar#editClicked"
+        title="<%= t("files.card.edit") %>"
+        aria-label="<%= t("files.card.edit") %>"
+      >
+        <i class="fa fa-pen"></i>
+      </button>
+    </div>
+
+    <% if document.attachment.attached? %>
+      <a
+        href="<%= attachment_url %>"
+        target="_blank"
+        rel="noopener"
+        class="files-asset-card--glass-button"
+        title="<%= t("files.card.open_in_new_tab") %>"
+        aria-label="<%= t("files.card.open_in_new_tab") %>"
+      >
+        <i class="fa fa-external-link-alt"></i>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="files-asset-card--meta">
+    <p
+      class="files-asset-card--filename"
+      title="<%= display_title %>"
+    >
+      <%= display_title %>
+    </p>
+
+    <dl class="files-asset-card--details">
+      <% if documentable_type_label.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.documentable_type") %></dt>
+          <dd><%= documentable_type_label %></dd>
+        </div>
+      <% end %>
+
+      <% if humanized_size.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.size") %></dt>
+          <dd><%= humanized_size %></dd>
+        </div>
+      <% end %>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.created") %></dt>
+        <dd><%= created_at_formatted %></dd>
+      </div>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.modified") %></dt>
+        <dd><%= updated_at_formatted %></dd>
+      </div>
+    </dl>
+
+    <div class="files-asset-card--footer">
+      <% if document.attachment.attached? %>
+        <a
+          href="<%= attachment_url %>"
+          download="<%= filename %>"
+          class="files-asset-card--footer-button"
+        >
+          <i class="fa fa-download"></i>
+          <%= t("files.card.download") %>
+        </a>
+      <% end %>
+
+      <button
+        type="button"
+        class="files-asset-card--footer-button -danger js-files-delete-asset"
+        data-action="click->files--filter-bar#deleteClicked"
+        data-confirm-message="<%= t("files.card.delete_confirm") %>"
+        data-delete-url="<%= helpers.adm_files_document_path(document) %>"
+      >
+        <i class="fa fa-trash"></i>
+        <%= t("files.card.delete") %>
+      </button>
+    </div>
+  </div>
+</article>

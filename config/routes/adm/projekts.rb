@@ -196,6 +196,8 @@ namespace :adm do
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :images, on: :member
+      get :documents, on: :member
       get :evaluation, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_pdf_options, on: :member

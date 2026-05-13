@@ -7,14 +7,25 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   def index
     base_scope = policy_scope(Idea, policy_scope_class: Adm::Ideas::IdeaPolicy::Scope)
     base_scope = filter_assigned_ideas_only(base_scope)
-    @pagy, @ideas = pagy(Adm::IdeasQuery.call(base_scope, params))
+    scope = Adm::IdeasQuery.call(base_scope, params)
 
-    @title_header_options = { search: true }
-    @created_at_header_options = { sort: true }
-    @category_header_options = { filter_options: category_filter_options }
-    @officer_header_options = { filter_options: officer_filter_options }
+    respond_to do |format|
+      format.html do
+        @pagy, @ideas = pagy(scope)
 
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas"), icon: "lightbulb" }]
+        @title_header_options = { search: true }
+        @created_at_header_options = { sort: true }
+        @category_header_options = { filter_options: category_filter_options }
+        @officer_header_options = { filter_options: officer_filter_options }
+
+        @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas"), icon: "lightbulb" }]
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(scope.preload(:category)),
+                  filename: "ideas-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
+    end
   end
 
   def settings

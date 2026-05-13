@@ -221,43 +221,12 @@
   backdrop-filter: blur(10px) saturate(1.1);
 }
 
-.projekt-banner-upload-progress--ring {
+.projekt-banner-upload-progress--spinner {
   position: relative;
-  width: 88px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background:
-    conic-gradient(
-      #ffffff 0%,
-      #ffffff calc(var(--upload-progress, 0) * 1%),
-      rgba(255, 255, 255, 0.28) calc(var(--upload-progress, 0) * 1%),
-      rgba(255, 255, 255, 0.28) 100%
-    );
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
-  transition: background 180ms ease-out;
-}
-
-.projekt-banner-upload-progress--ring-inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index: 1;
   width: 70px;
   height: 70px;
-  border-radius: 50%;
-  background-color: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(4px);
-}
-
-.projekt-banner-upload-progress--percent {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
-  color: #ffffff;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
+  border-width: 6px;
 }
 
 .projekt-banner-upload-progress--message {

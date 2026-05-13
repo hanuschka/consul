@@ -12,10 +12,10 @@ module Adm
 
       # Verwaltungsbereiche — same source of truth as the left icon rail.
       # We drop the "administration" entry (self-link onto this very page).
-      sections = Adm::NavigationSections.for(user: current_user, url_helpers: helpers)
-      @adm_sections = sections.reject { |s| s[:key] == "administration" }.map do |section|
-        section.merge(metric: section_metric(section[:key]))
-      end
+      sections = helpers.adm_sections
+      @adm_sections = Adm::SectionVisibility.visible_keys_for(current_user)
+        .reject { |key| key == "administration" }
+        .map { |key| sections[key].merge(key: key, metric: section_metric(key)) }
     end
 
     private

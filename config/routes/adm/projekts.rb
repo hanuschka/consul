@@ -7,7 +7,16 @@ namespace :adm do
       patch :toggle_manage_all_projekts, on: :member
     end
 
-    resource :settings, only: [:show], controller: "settings"
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "projekts" } do
+      post :search, on: :collection
+    end
 
     resources :milestone_statuses, except: %i[show]
 

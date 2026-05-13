@@ -327,6 +327,7 @@ en:
         tabs:
           features: Features
           dashboard: Dashboard settings
+          contact_persons: Contact persons
         dashboard:
           intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
       stats:

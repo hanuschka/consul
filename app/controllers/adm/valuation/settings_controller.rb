@@ -1,9 +1,19 @@
 class Adm::Valuation::SettingsController < Adm::Valuation::BaseController
-  def show
-    authorize [:adm, :valuation, :setting], :show?
+  before_action :authorize_settings, :load_breadcrumbs
 
-    @breadcrumbs = [
-      { name: t("adm.valuation.menu.items.settings"), icon: "settings" }
-    ]
+  def show
   end
+
+  def contact_persons
+  end
+
+  private
+
+    def authorize_settings
+      authorize [:adm, :valuation, :setting], :show?
+    end
+
+    def load_breadcrumbs
+      @breadcrumbs = [{ name: t("adm.valuation.menu.items.settings"), icon: "settings" }]
+    end
 end

@@ -24,6 +24,10 @@ en:
           budget_investments: Proposals (budget)
           comments: Comments
           settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       users:
         index:
           title: Block users

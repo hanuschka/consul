@@ -7,6 +7,9 @@ class Adm::DeficiencyReports::SettingsController < Adm::DeficiencyReports::BaseC
   def dashboard
   end
 
+  def contact_persons
+  end
+
   private
 
     def authorize_settings

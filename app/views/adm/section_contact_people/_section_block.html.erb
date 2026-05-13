@@ -1,10 +1,11 @@
 <% if policy([:adm, SectionContactPerson.new(section: section)]).create? %>
   <% contact_persons = SectionContactPerson.for_section(section) %>
+  <% new_path = send("new_adm_#{section}_contact_person_path") %>
 
   <div class="mt-5">
     <h2 class="kern-heading fs-4 mb-3"><%= t("adm.section_settings.contact_people.title") %></h2>
 
-    <%= new_resource_link(new_adm_section_contact_person_path(section: section), t("adm.section_settings.contact_people.new_link")) %>
+    <%= new_resource_link(new_path, t("adm.section_settings.contact_people.new_link")) %>
 
     <% if contact_persons.any? %>
       <div class="kern-table-responsive" tabindex="0">
@@ -27,10 +28,10 @@
                 <td class="kern-table__cell"><%= contact_person.phone %></td>
                 <td class="kern-table__cell">
                   <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                    <% actions.with_action(label: t("adm.section_settings.contact_people.table.edit"), url: edit_adm_section_contact_person_path(contact_person), icon: "edit", style: :edit) %>
+                    <% actions.with_action(label: t("adm.section_settings.contact_people.table.edit"), url: send("edit_adm_#{section}_contact_person_path", contact_person), icon: "edit", style: :edit) %>
                     <% actions.with_action(
                       label: t("adm.section_settings.contact_people.table.delete"),
-                      url: adm_section_contact_person_path(contact_person),
+                      url: send("adm_#{section}_contact_person_path", contact_person),
                       icon: "delete", style: :delete,
                       data: { turbo_method: :delete, turbo_confirm: t("adm.section_settings.contact_people.table.delete_confirm") }
                     ) %>
@@ -46,7 +47,7 @@
         title: t("adm.section_settings.contact_people.empty_title"),
         description: t("adm.section_settings.contact_people.empty_description"),
         icon: "contact_phone",
-        link_url: new_adm_section_contact_person_path(section: section),
+        link_url: new_path,
         link_text: t("adm.section_settings.contact_people.new_link")
       ) %>
     <% end %>

@@ -18,6 +18,10 @@ en:
           landing_pages: Topic pages
           managers: Team
           settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       landing_pages:
         index:
           title: Topic pages

@@ -8,6 +8,10 @@ de:
           home: Home
           officing_managers: Team
           settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       home:
         title: Willkommen im Bereich für Abstimmungshelfer
         budgets: Budgets zur Abstimmung

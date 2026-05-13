@@ -19,6 +19,10 @@ en:
           valuators: Team
           investments: Proposals
           settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       investments:
         index:
           title: Budget Assessment

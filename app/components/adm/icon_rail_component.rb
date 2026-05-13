@@ -5,23 +5,6 @@ class Adm::IconRailComponent < ApplicationComponent
 
   private
 
-    SECTION_NAMESPACES = {
-      "administration"     => "Adm",
-      "projekts"           => "Adm::Projekts",
-      "landing_pages"      => "Adm::LandingPages",
-      "moderation"         => "Adm::Moderation",
-      "deficiency_reports" => "Adm::DeficiencyReports",
-      "ideas"              => "Adm::Ideas",
-      "valuation"          => "Adm::Valuation",
-      "officing"           => "Adm::Officing"
-    }.freeze
-
-    CONTROLLER_SECTION_MAP = {
-      "Adm::ModeratorsController" => "Adm::Moderation",
-      "Adm::ValuatorsController" => "Adm::Valuation",
-      "Adm::OfficingManagersController" => "Adm::Officing"
-    }.freeze
-
     def items
       sections = helpers.adm_sections
       Adm::SectionVisibility.visible_keys_for(@current_user).map do |key|
@@ -30,8 +13,8 @@ class Adm::IconRailComponent < ApplicationComponent
     end
 
     def active?(item)
-      target_namespace = SECTION_NAMESPACES[item[:key]]
-      section = resolved_section
+      target_namespace = namespace_for_key(item[:key])
+      section = helpers.current_adm_section_namespace
       if target_namespace == "Adm"
         section == "Adm"
       else
@@ -39,7 +22,7 @@ class Adm::IconRailComponent < ApplicationComponent
       end
     end
 
-    def resolved_section
-      CONTROLLER_SECTION_MAP[controller.class.name] || controller.class.module_parent_name || "Adm"
+    def namespace_for_key(key)
+      key == "administration" ? "Adm" : "Adm::#{key.camelize}"
     end
 end

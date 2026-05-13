@@ -19,6 +19,10 @@ de:
           valuators: Team
           investments: Vorschläge
           settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       investments:
         index:
           title: Budget-Begutachtung

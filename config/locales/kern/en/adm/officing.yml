@@ -8,6 +8,10 @@ en:
           home: Home
           officing_managers: Team
           settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       home:
         title: Welcome to the polling officials area
         budgets: Budgets to vote on

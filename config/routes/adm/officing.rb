@@ -2,7 +2,16 @@ namespace :adm do
   scope :officing, module: :officing, as: :officing do
     root to: "home#show"
 
-    resource :settings, only: [:show], controller: "settings"
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "officing" } do
+      post :search, on: :collection
+    end
 
     resources :proposal_phases, only: [] do
       member do

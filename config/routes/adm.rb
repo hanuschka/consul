@@ -44,10 +44,6 @@ namespace :adm do
   end
   # application
 
-  resources :section_contact_people, only: [:new, :create, :edit, :update, :destroy] do
-    post :search, on: :collection
-  end
-
   # profiles
   resource :role_assignment, only: [] do
     post :create

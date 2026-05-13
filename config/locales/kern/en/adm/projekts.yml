@@ -22,6 +22,10 @@ en:
           managers: Team
           landing_pages: Topic pages
           settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       landing_pages:
         index:
           title: Topic pages

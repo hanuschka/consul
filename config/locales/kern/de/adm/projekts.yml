@@ -22,6 +22,10 @@ de:
           managers: Team
           landing_pages: Themenseiten
           settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       landing_pages:
         index:
           title: Themenseiten

@@ -63,14 +63,6 @@ class Adm::Officing::BaseController < Adm::BaseController
 
   private
 
-    def adm_menu_component
-      Adm::Officing::MenuComponent.new
-    end
-
-    def adm_header_title
-      I18n.t("adm.officing.title")
-    end
-
     def load_budget
       @budget = Budget.find(params[:budget_id])
     end

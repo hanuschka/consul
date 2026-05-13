@@ -136,6 +136,7 @@ de:
         tabs:
           features: Funktionen
           dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
         dashboard:
           intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
       categories:

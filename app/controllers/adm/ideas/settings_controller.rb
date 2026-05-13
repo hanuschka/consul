@@ -7,6 +7,9 @@ class Adm::Ideas::SettingsController < Adm::Ideas::BaseController
   def dashboard
   end
 
+  def contact_persons
+  end
+
   private
 
     def authorize_settings

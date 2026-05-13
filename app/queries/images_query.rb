@@ -28,6 +28,7 @@ class ImagesQuery
     scope = filter_created(scope)
     scope = filter_updated(scope)
     scope = filter_imageable_type(scope)
+    scope = filter_imageable_id(scope)
     scope = filter_admin(scope)
     apply_sort(scope)
   end
@@ -89,6 +90,13 @@ class ImagesQuery
       return scope if value.blank?
 
       scope.where(imageable_type: value)
+    end
+
+    def filter_imageable_id(scope)
+      value = read_param(:imageable_id)
+      return scope if value.blank?
+
+      scope.where(imageable_id: value)
     end
 
     def filter_admin(scope)

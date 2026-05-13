@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
@@ -78,6 +78,44 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
+  end
+
+  def images
+    authorize [:adm, :projekts, @projekt], :show?
+
+    @assets =
+      ImagesQuery
+        .new(images_query_params)
+        .call
+        .page(params[:page])
+        .per(24)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+
+    render layout: !request.xhr?
+  end
+
+  def documents
+    authorize [:adm, :projekts, @projekt], :show?
+
+    @assets =
+      DocumentsQuery
+        .new(documents_query_params)
+        .call
+        .page(params[:page])
+        .per(24)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+
+    render layout: !request.xhr?
   end
 
   def evaluation
@@ -276,6 +314,22 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    def images_query_params
+      params.permit(
+        :search, :extension, :size_min_mb, :size_max_mb,
+        :created_from, :created_to, :updated_from, :updated_to,
+        :sort
+      ).merge(imageable_type: "Projekt", imageable_id: @projekt.id)
+    end
+
+    def documents_query_params
+      params.permit(
+        :search, :extension, :size_min_mb, :size_max_mb,
+        :created_from, :created_to, :updated_from, :updated_to,
+        :sort
+      ).merge(documentable_type: "Projekt", documentable_id: @projekt.id)
     end
 
     def projekt_params

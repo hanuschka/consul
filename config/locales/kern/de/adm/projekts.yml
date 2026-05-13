@@ -95,6 +95,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
         details:
           title: Projektdetails
           hint_title: Hinweis zu den Projektdetails

@@ -12,6 +12,10 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
       items << { label: t("adm.officing.menu.items.officing_managers"), icon: "badge", path: adm_officing_managers_path, active_prefix: "/adm/officing_managers" }
     end
 
+    if Adm::Officing::SettingPolicy.new(current_user, nil).show?
+      items << { label: t("adm.officing.menu.items.settings"), icon: "settings", path: adm_officing_settings_path }
+    end
+
     officing_manager = helpers.current_user.officing_manager
 
     if officing_manager
@@ -38,10 +42,6 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
           path: verify_user_adm_officing_voting_phase_path(voting_phase)
         }
       end
-    end
-
-    if Adm::Officing::SettingPolicy.new(current_user, nil).show?
-      items << { label: t("adm.officing.menu.items.settings"), icon: "settings", path: adm_officing_settings_path }
     end
 
     items

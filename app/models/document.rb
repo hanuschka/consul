@@ -36,11 +36,19 @@ class Document < ApplicationRecord
   end
 
   def max_file_size
-    documentable_class&.max_file_size || self.class.max_file_size
+    if documentable_class.respond_to?(:max_file_size)
+      documentable_class.max_file_size
+    else
+      self.class.max_file_size
+    end
   end
 
   def accepted_content_types
-    documentable_class&.accepted_content_types || self.class.accepted_content_types
+    if documentable_class.respond_to?(:accepted_content_types)
+      documentable_class.accepted_content_types
+    else
+      self.class.accepted_content_types
+    end
   end
 
   private

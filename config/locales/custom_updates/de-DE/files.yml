@@ -46,12 +46,19 @@ de:
         size_asc: Kleinste zuerst
         size_desc: Größte zuerst
     upload_failed: Hochladen fehlgeschlagen
+    upload_loading: Datei wird hochgeladen…
+    upload_success: Hochgeladen
+    upload_success_with_name: 'Datei "%{filename}" wurde hochgeladen.'
+    upload_failed_with_name: 'Datei "%{filename}" konnte nicht hochgeladen werden.'
     delete_failed: Löschen fehlgeschlagen
+    delete_success_with_name: 'Datei "%{filename}" wurde gelöscht.'
+    delete_failed_with_name: 'Datei "%{filename}" konnte nicht gelöscht werden.'
     view_mode:
       cards: Kartenansicht
       list: Listenansicht
     list:
       title: Titel
+      resource_type: Ressourcentyp
       assigned_to: Zugewiesen an
       size: Größe
       modified: Geändert
@@ -68,6 +75,8 @@ de:
       modified: Geändert
       imageable_type: Zugewiesen an
       documentable_type: Zugewiesen an
+      resource_type: Ressourcentyp
+      admin_badge: Admin-Upload
     edit_modal:
       title: Datei bearbeiten
       title_label: Titel

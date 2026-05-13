@@ -46,12 +46,19 @@ en:
         size_asc: Smallest first
         size_desc: Largest first
     upload_failed: Upload failed
+    upload_loading: Uploading file…
+    upload_success: Uploaded
+    upload_success_with_name: 'File "%{filename}" uploaded.'
+    upload_failed_with_name: 'File "%{filename}" could not be uploaded.'
     delete_failed: Delete failed
+    delete_success_with_name: 'File "%{filename}" deleted.'
+    delete_failed_with_name: 'File "%{filename}" could not be deleted.'
     view_mode:
       cards: Card view
       list: List view
     list:
       title: Title
+      resource_type: Resource type
       assigned_to: Assigned to
       size: Size
       modified: Modified
@@ -68,6 +75,8 @@ en:
       modified: Modified
       imageable_type: Assigned to
       documentable_type: Assigned to
+      resource_type: Resource type
+      admin_badge: Admin upload
     edit_modal:
       title: Edit file
       title_label: Title

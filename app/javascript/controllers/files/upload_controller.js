@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { addFlashMessage, queueFlashMessage } from "../../utils/adm_flash"
 
 export default class extends Controller {
   static values = {
@@ -24,6 +25,8 @@ export default class extends Controller {
 
     formData.append("upload", file)
 
+    this.dispatchProgress("begin")
+
     try {
       const response = await fetch(this.endpointValue, {
         method: "POST",
@@ -39,13 +42,22 @@ export default class extends Controller {
         throw new Error(data.error ? data.error.message : `HTTP ${response.status}`)
       }
 
+      this.dispatchProgress("complete")
+      queueFlashMessage(this.successMessage(file.name), "success")
       window.location.reload()
     } catch (error) {
       console.error("Files upload failed", error)
-      alert(this.failedMessage())
+      this.dispatchProgress("restore")
+      addFlashMessage(this.failedMessage(file.name), "danger")
     } finally {
       event.target.value = ""
     }
+  }
+
+  dispatchProgress(name) {
+    this.element.dispatchEvent(
+      new CustomEvent(`adm-button-with-progress:${name}`, { bubbles: true })
+    )
   }
 
   csrfToken() {
@@ -54,9 +66,24 @@ export default class extends Controller {
     return meta ? meta.getAttribute("content") : ""
   }
 
-  failedMessage() {
-    const el = document.querySelector("[data-files-upload-failed-message]")
+  successMessage(filename) {
+    return this.applyTemplate("data-files-upload-success-template", filename) ||
+      `Uploaded ${filename}`
+  }
 
-    return el ? el.getAttribute("data-files-upload-failed-message") : "Upload failed"
+  failedMessage(filename) {
+    const templated = this.applyTemplate("data-files-upload-failed-template", filename)
+    if (templated) return templated
+
+    const fallback = document.querySelector("[data-files-upload-failed-message]")
+
+    return fallback ? fallback.getAttribute("data-files-upload-failed-message") : "Upload failed"
+  }
+
+  applyTemplate(attribute, filename) {
+    const el = document.querySelector(`[${attribute}]`)
+    if (!el) return null
+
+    return el.getAttribute(attribute).replace("__FILENAME__", filename)
   }
 }

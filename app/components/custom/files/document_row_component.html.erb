@@ -8,7 +8,18 @@
   data-filename="<%= filename %>"
 >
   <th scope="row" class="kern-table__header files-asset-row--icon-cell">
-    <i class="fa <%= icon_class %> files-asset-card--thumb-icon files-asset-row--icon"></i>
+    <span class="files-asset-row--icon-wrapper">
+      <i class="fa <%= icon_class %> files-asset-card--thumb-icon files-asset-row--icon"></i>
+      <% if admin_upload? %>
+        <span
+          class="files-asset-row--admin-badge"
+          title="<%= t("files.card.admin_badge") %>"
+          aria-label="<%= t("files.card.admin_badge") %>"
+        >
+          <i class="fa fa-shield-alt"></i>
+        </span>
+      <% end %>
+    </span>
   </th>
 
   <td class="kern-table__cell files-asset-row--title-cell">
@@ -16,6 +27,14 @@
   </td>
 
   <td class="kern-table__cell"><%= documentable_type_label %></td>
+
+  <td class="kern-table__cell">
+    <% if documentable_name.present? && documentable_url.present? %>
+      <%= link_to documentable_name, documentable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+    <% elsif documentable_name.present? %>
+      <%= documentable_name %>
+    <% end %>
+  </td>
 
   <td class="kern-table__cell"><%= humanized_size %></td>
 

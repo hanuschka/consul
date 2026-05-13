@@ -83,8 +83,8 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
-import PdfDownloadController from "./pdf_download_controller"
-application.register("pdf-download", PdfDownloadController)
+import AdmButtonWithProgressController from "./adm/button_with_progress_controller"
+application.register("adm--button-with-progress", AdmButtonWithProgressController)
 
 import GlightboxController from "./glightbox_controller"
 application.register("glightbox", GlightboxController)

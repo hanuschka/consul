@@ -24,11 +24,18 @@ de:
       ideas:
         index:
           title: Ideen
+          download_csv: CSV herunterladen
           download_geojson: GeoJSON herunterladen
           page_hint: "Hier sehen Sie alle eingereichten Ideen. Die Tabelle zeigt Titel, Sichtbarkeit, Kategorie, Sachbearbeiter und Status jeder Idee. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Idee, um Details einzusehen, den Sachbearbeiter zuzuweisen, eine offizielle Antwort zu verfassen oder die Idee zu bearbeiten."
           no_ideas: Keine Ideen vorhanden
           no_items_title: Keine Ideen vorhanden
           no_items_description: Sobald Ideen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Ideen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Ideen zu sehen.
+          total_label:
+            one: Idee
+            other: Ideen
+          total_hint: Anzahl der Ideen in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
             admin_accepted: Sichtbarkeit

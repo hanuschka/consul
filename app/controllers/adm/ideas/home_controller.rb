@@ -9,6 +9,7 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
     respond_to do |format|
       format.html do
         @pagy, @ideas = pagy(scope)
+        @id_header_options         = { sort: true, search: true }
         @title_header_options      = { search: true }
         @created_at_header_options = { sort: true }
         @category_header_options   = { filter_options: category_filter_options }
@@ -38,6 +39,12 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
         send_data GeoServices::MappablesGeojsonExporter.call(scope.preload(:category)),
                   filename: "ideas-#{Time.zone.today}.geojson",
                   type: "application/geo+json"
+      end
+
+      format.csv do
+        send_data CsvServices::IdeasExporter.call(scope),
+                  filename: "ideas-#{Time.zone.today}.csv",
+                  type: "text/csv"
       end
     end
   end

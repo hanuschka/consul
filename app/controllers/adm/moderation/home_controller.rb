@@ -27,6 +27,39 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
 
     @quick_links = []
 
+    @tiles_title = t("adm.moderation.home.tiles.title")
+    @tiles_hint  = t("adm.moderation.home.tiles.hint")
+    @tiles = [
+      {
+        path: adm_moderation_proposals_path,
+        icon: "lightbulb",
+        title: t("adm.moderation.home.tiles.proposals.title"),
+        metric_text: t("adm.moderation.home.tiles.proposals.metric",
+                       count: Proposal.pending_flag_review.count)
+      },
+      {
+        path: adm_moderation_comments_path,
+        icon: "forum",
+        title: t("adm.moderation.home.tiles.comments.title"),
+        metric_text: t("adm.moderation.home.tiles.comments.metric",
+                       count: Comment.pending_flag_review.count)
+      },
+      {
+        path: adm_moderation_budget_investments_path,
+        icon: "savings",
+        title: t("adm.moderation.home.tiles.budget_investments.title"),
+        metric_text: t("adm.moderation.home.tiles.budget_investments.metric",
+                       count: Budget::Investment.pending_flag_review.count)
+      },
+      {
+        path: adm_moderation_users_path,
+        icon: "person_off",
+        title: t("adm.moderation.home.tiles.users.title"),
+        metric_text: t("adm.moderation.home.tiles.users.metric",
+                       count: User.only_deleted.count)
+      }
+    ]
+
     @breadcrumbs = [
       { name: t("adm.moderation.menu.items.home"), icon: "home" }
     ]

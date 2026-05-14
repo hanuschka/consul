@@ -42,27 +42,18 @@
           section_label = t("components.adm.icon_rail_component.#{section[:key]}")
           metric        = section[:metric]
           card_title    = t("adm.home.show.adm_sections.card_title", section: section_label)
+          metric_text   = metric.present? ?
+            t("adm.home.show.adm_sections.metrics.#{metric[:key]}", count: metric[:count]) :
+            nil
         %>
-        <%= link_to section[:path],
-              class: "adm-module-bento__card",
-              title: card_title,
-              aria: { label: card_title } do %>
-          <div class="adm-module-bento__card-top">
-            <span class="adm-module-bento__icon-tile" aria-hidden="true">
-              <span class="material-symbols-outlined"><%= section[:icon] %></span>
-            </span>
-          </div>
-          <h4 class="adm-module-bento__title"><%= section_label %></h4>
-          <% if metric.present? %>
-            <p class="adm-module-bento__metric">
-              <%= t("adm.home.show.adm_sections.metrics.#{metric[:key]}", count: metric[:count]) %>
-            </p>
-          <% end %>
-          <span class="adm-module-bento__cta">
-            <%= t("adm.home.show.adm_sections.go_to_dashboard") %>
-            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-          </span>
-        <% end %>
+        <%= render Adm::ModuleBentoCardComponent.new(
+              path: section[:path],
+              icon: section[:icon],
+              title: section_label,
+              metric_text: metric_text,
+              cta_text: t("adm.home.show.adm_sections.go_to_dashboard"),
+              card_title: card_title
+            ) %>
       <% end %>
     </div>
   </div>

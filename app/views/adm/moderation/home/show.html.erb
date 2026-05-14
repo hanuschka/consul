@@ -14,5 +14,9 @@
   notice_message: @notice_message,
   activities: @activities,
   activity_pagy: @pagy_activities,
-  section_settings_path: policy([:adm, Setting]).update? ? adm_moderation_settings_path : nil
+  section_settings_path: policy([:adm, Setting]).update? ? adm_moderation_settings_path : nil,
+  tiles_title: @tiles_title,
+  tiles_hint: @tiles_hint,
+  tiles_icon: "dashboard",
+  tiles: @tiles
 ) %>

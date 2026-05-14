@@ -13,6 +13,29 @@ de:
           pending: Ausstehende Moderationen
           comments: Kommentare
           users: Nutzer
+        tiles:
+          title: Moderationsbereiche
+          hint: Springe direkt zu den zu moderierenden Inhalten.
+          proposals:
+            title: Vorschläge
+            metric:
+              one: "%{count} gemeldeter Vorschlag"
+              other: "%{count} gemeldete Vorschläge"
+          comments:
+            title: Kommentare
+            metric:
+              one: "%{count} gemeldeter Kommentar"
+              other: "%{count} gemeldete Kommentare"
+          budget_investments:
+            title: Vorschläge (Budget)
+            metric:
+              one: "%{count} gemeldeter Vorschlag"
+              other: "%{count} gemeldete Vorschläge"
+          users:
+            title: Nutzer
+            metric:
+              one: "%{count} blockierter Nutzer"
+              other: "%{count} blockierte Nutzer"
       menu:
         aria_label: Moderationsmenü
         title: Moderation

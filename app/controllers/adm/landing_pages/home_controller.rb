@@ -8,8 +8,9 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
 
     @intro_text = Setting["adm.landing_pages.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.landing_pages", default: nil)
-    @notice_active = Setting["adm.landing_pages.notice_active"].present?
-    @notice_message = Setting["adm.landing_pages.notice_message"]
+    @notice = if Setting["adm.landing_pages.notice_active"].present?
+                Setting["adm.landing_pages.notice_message"]
+              end
     @contact_persons = SectionContactPerson.for_section("landing_pages")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("landing_pages"), limit: 10, page_param: :activity_page)
 

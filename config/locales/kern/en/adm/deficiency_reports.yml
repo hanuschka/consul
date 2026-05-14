@@ -30,10 +30,8 @@ en:
         index:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
-          columns: Columns
           download_csv: Download CSV
           download_geojson: Download GeoJSON
-          no_deficiency_reports: No deficiency reports available
           no_items_title: No reports available
           no_items_description: Reports will be shown here as soon as they are submitted.
           no_results_filtered_title: No reports match the current filters

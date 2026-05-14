@@ -18,8 +18,6 @@ class Adm::Projekts::ProjektEventRegistrationsController < Adm::Projekts::BaseCo
     respond_to do |format|
       format.html do
         @pagy, @registrations = pagy(filtered_scope)
-        @confirmed_count = scope.where(status: "confirmed").count
-        @non_cancelled_count = scope.where.not(status: "cancelled").count
         @status_header_options = { filter_options: status_filter_options }
 
         @breadcrumbs = breadcrumbs_for_action(t(".title"))

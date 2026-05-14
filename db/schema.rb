@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_13_101828) do
+ActiveRecord::Schema.define(version: 2026_05_14_111127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2439,7 +2439,7 @@ ActiveRecord::Schema.define(version: 2026_05_13_101828) do
     t.tsvector "tsv"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
-    t.boolean "on_global_overview", default: false
+    t.boolean "on_dt_global_overview", default: false
     t.boolean "from_dt", default: false
     t.string "import_file_status"
     t.jsonb "import_file_data"
@@ -2447,7 +2447,7 @@ ActiveRecord::Schema.define(version: 2026_05_13_101828) do
     t.bigint "landing_page_id"
     t.datetime "published_at"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
-    t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
+    t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin

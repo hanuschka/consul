@@ -70,7 +70,7 @@
   flex-shrink: 0;
 }
 
-.adm-users-total {
+.adm-table-count {
   display: inline-flex;
   align-items: baseline;
   gap: 0.4rem;
@@ -79,12 +79,12 @@
   cursor: help;
 }
 
-.adm-users-total__value {
+.adm-table-count__value {
   font-weight: 600;
   font-size: 1rem;
   color: var(--kern-color-layout-text-default);
 }
 
-.adm-users-total__label {
+.adm-table-count__label {
   color: var(--kern-grey-600);
 }

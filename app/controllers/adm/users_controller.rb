@@ -8,7 +8,6 @@ module Adm
       respond_to do |format|
         format.html do
           @pagy, @users = pagy(base_scope)
-          @users_total = policy_scope([:adm, User]).count
 
           @username_header_options = { sort: true, search: true }
           @email_header_options = { search: true }

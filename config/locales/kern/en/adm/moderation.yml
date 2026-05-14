@@ -55,6 +55,8 @@ en:
           flags_count: Flags
           no_items_title: No proposals available
           no_items_description: Proposals will be shown here as soon as they are flagged.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags
@@ -77,6 +79,8 @@ en:
           flags_count: Flags
           no_items_title: No proposals available
           no_items_description: Proposals will be shown here as soon as they are flagged.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags
@@ -100,6 +104,8 @@ en:
           flags_count: Flags
           no_items_title: No comments available
           no_items_description: Comments will be shown here as soon as they are flagged.
+          no_results_filtered_title: No comments match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more comments.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags

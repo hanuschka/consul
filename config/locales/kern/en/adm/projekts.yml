@@ -57,6 +57,8 @@ en:
           import_projekt: Import project from file
           no_projekts_title: No projects available
           no_projekts_description: Create a new project to start configuring participation phases and settings.
+          no_results_filtered_title: No projects match the current search
+          no_results_filtered_description: Adjust or remove the search to see more projects.
           table:
             status: Status
             actions: Actions

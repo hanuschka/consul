@@ -55,6 +55,8 @@ de:
           flags_count: Meldungen
           no_items_title: Keine Vorschläge vorhanden
           no_items_description: Sobald Vorschläge gemeldet werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen
@@ -77,6 +79,8 @@ de:
           flags_count: Meldungen
           no_items_title: Keine Vorschläge vorhanden
           no_items_description: Sobald Vorschläge gemeldet werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen
@@ -100,6 +104,8 @@ de:
           flags_count: Meldungen
           no_items_title: Keine Kommentare vorhanden
           no_items_description: Sobald Kommentare gemeldet werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Kommentare für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Kommentare zu sehen.
           tabs:
             pending_flag_review: Gemeldet
             with_ignored_flag: Ignorierte Meldungen

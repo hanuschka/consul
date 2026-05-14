@@ -4,8 +4,12 @@ en:
       index:
         title: Manage users
         columns: Columns
-        csv_export_button: CSV export
+        download_csv: Download CSV
         csv_export_notice: The export is being prepared. You will receive an email with a download link.
+        total_label:
+          one: active user
+          other: active users
+        total_hint: Confirmed accounts, excluding guests and deleted users.
         table:
           email: Email
           first_name: First name

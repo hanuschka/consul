@@ -185,6 +185,7 @@ class Projekt < ApplicationRecord
     activated
       .with_published_custom_page
       .show_in_overview_page
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_underway, ->() {
@@ -193,6 +194,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases, :projekt_settings)
+      .order("projekts.created_at DESC")
       .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
@@ -202,6 +204,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
+      .order("projekts.created_at DESC")
       .select do |p|
         p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
       end
@@ -213,6 +216,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
@@ -220,6 +224,7 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
@@ -227,10 +232,12 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_drafts, -> {
     not_activated
+      .order("projekts.created_at DESC")
   }
 
   scope :not_in_individual_list, -> {

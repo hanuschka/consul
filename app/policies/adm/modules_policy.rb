@@ -1,9 +1,0 @@
-class Adm::ModulesPolicy < ApplicationPolicy
-  def show?
-    @user&.administrator?
-  end
-
-  def update?
-    @user&.administrator?
-  end
-end

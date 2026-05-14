@@ -4,7 +4,7 @@ en:
       projekt_event_registrations:
         index:
           title: Registrations
-          export_csv: Export CSV
+          download_csv: Download CSV
           no_items_title: No registrations yet
           no_items_description: Once people register for this event, they'll appear here.
           no_results_filtered_title: No registrations match the filter

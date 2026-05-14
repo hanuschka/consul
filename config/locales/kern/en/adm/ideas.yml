@@ -19,7 +19,7 @@ en:
           officers: Team
           ideas: Ideas
           categories: Categories
-          settings: Features
+          settings: Configuration
           districts: Areas
       ideas:
         index:
@@ -119,8 +119,6 @@ en:
           officer_hint: The officer is the person responsible for processing and responding to this idea. They receive notifications about new comments and status changes and can write an official response. If no officer is assigned, the default officer of the respective category or area applies.
           no_officer: "-- No officer --"
           submit: Save
-        settings:
-          title: Features
         audits:
           title: Change log
           audits_title: Changes
@@ -132,6 +130,14 @@ en:
             new_value: New value
             edited_at: Edited on
             edited_by: Edited by
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+        dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public ideas platform dashboard."
       categories:
         index:
           title: Categories
@@ -170,7 +176,7 @@ en:
           submit: Save
       officers:
         index:
-          title: Team
+          title: Officers
           page_hint: "Here you manage the officers for ideas. Officers can edit submitted ideas, assess their feasibility, and write official responses. Use the search field to find registered users and assign them the officer role. Officers can be assigned to categories and areas as default responsible users."
           search_label: Search users
           search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for ideas. Officers administer submitted ideas, assess their feasibility, and communicate with submitters.

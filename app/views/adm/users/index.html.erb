@@ -8,20 +8,31 @@
        data-adm-column-selector-defaults-value="username,email"
        data-action="click@window->adm-column-selector#close">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <div class="adm-column-selector">
-        <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
-          <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
-          <%= t(".columns") %>
-        </button>
-        <div class="adm-column-selector__menu" data-adm-column-selector-target="menu">
-          <div data-adm-column-selector-target="list"></div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="adm-column-selector">
+          <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
+            <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
+            <%= t(".columns") %>
+          </button>
+          <div class="adm-column-selector__menu" data-adm-column-selector-target="menu">
+            <div data-adm-column-selector-target="list"></div>
+          </div>
         </div>
+        <span class="adm-users-total" title="<%= t(".total_hint") %>">
+          <span class="adm-users-total__value"><%= number_with_delimiter(@users_total) %></span>
+          <span class="adm-users-total__label"><%= t(".total_label", count: @users_total) %></span>
+        </span>
       </div>
-      <%= kern_link_button adm_users_path(params.permit(
-        :sort_by, :sort_direction,
-        :username__search, :email__search, :first_name__search, :last_name__search,
-        gender: [], reverify: [], document_type: []
-      ).merge(format: :csv)), text: t(".csv_export_button"), icon: "download" %>
+      <div class="d-flex align-items-center gap-3">
+        <a href="<%= adm_users_path(params.permit(
+                       :sort_by, :sort_direction,
+                       :username__search, :email__search, :first_name__search, :last_name__search,
+                       gender: [], reverify: [], document_type: []
+                     ).merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          <%= t(".download_csv") %>
+        </a>
+      </div>
     </div>
 
     <div class="kern-table-responsive" tabindex="0">

@@ -1,0 +1,130 @@
+<%= content_for :title, t("adm.officing.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.officing.home.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::DashboardHomeComponent.new(
+  team_members: @team_members,
+  team_url: current_user&.administrator? ? adm_officing_managers_path : nil,
+  intro_text: @intro_text,
+  quick_links: @quick_links,
+  stats: @stats,
+  contact_persons: @contact_persons,
+  section: "officing",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
+  activities: @activities,
+  activity_pagy: @pagy_activities,
+  section_settings_path: Adm::Officing::SettingPolicy.new(current_user, nil).show? ? adm_officing_settings_path : nil
+) %>
+
+<div class="kern-container">
+  <% if @budgets.any? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+        <h3><%= t("adm.officing.home.budgets") %></h3>
+      </div>
+
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t("adm.officing.home.table.name") %></th>
+              <th scope="col" class="kern-table__header" style="width: 12rem;"><%= t("adm.officing.home.table.phase") %></th>
+              <th scope="col" class="kern-table__header" style="width: 5rem;"><%= t("shared.table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% @budgets.each do |budget| %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell"><%= budget.projekt.name %></td>
+                <td class="kern-table__cell"><%= budget.current_phase.name %></td>
+                <td class="kern-table__cell">
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t("adm.officing.home.table.open"), url: verify_user_adm_officing_budget_path(budget), icon: "open_in_new") %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @proposal_phases.any? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">how_to_vote</span>
+        <h3><%= t("adm.officing.home.proposals") %></h3>
+      </div>
+
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t("adm.officing.home.table.name") %></th>
+              <th scope="col" class="kern-table__header" style="width: 10rem;"><%= t("shared.table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% @proposal_phases.each do |proposal_phase| %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell"><%= proposal_phase.projekt.name %></td>
+                <td class="kern-table__cell">
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t("adm.officing.home.table.vote"), url: verify_user_adm_officing_proposal_phase_path(proposal_phase), icon: "how_to_vote") %>
+                    <% actions.with_action(label: t("adm.officing.home.table.bulk_votes"), url: bulk_votes_adm_officing_proposal_phase_path(proposal_phase), icon: "ballot") %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @voting_phases.any? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">ballot</span>
+        <h3><%= t("adm.officing.home.polls") %></h3>
+      </div>
+
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t("adm.officing.home.table.name") %></th>
+              <th scope="col" class="kern-table__header" style="width: 10rem;"><%= t("shared.table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% @voting_phases.each do |voting_phase| %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell"><%= voting_phase.projekt.name %></td>
+                <td class="kern-table__cell">
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t("adm.officing.home.table.vote"), url: verify_user_adm_officing_voting_phase_path(voting_phase), icon: "how_to_vote") %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @budgets.empty? && @proposal_phases.empty? && @voting_phases.empty? %>
+    <%= empty_state(
+      title: t("adm.officing.home.no_assignments_title"),
+      description: t("adm.officing.home.no_assignments_description"),
+      icon: "how_to_vote"
+    ) %>
+  <% end %>
+</div>

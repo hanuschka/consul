@@ -27,12 +27,10 @@
       <%= render pills_component %>
     </div>
 
-    <%= link_to url_for(request.query_parameters.merge(format: :csv)),
-          class: "adm-column-selector__toggle",
-          data: { turbo: false } do %>
+    <a href="<%= url_for(request.query_parameters.merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
       <span class="material-symbols-outlined" aria-hidden="true">download</span>
-      <%= t(".export_csv") %>
-    <% end %>
+      <%= t(".download_csv") %>
+    </a>
   </div>
 
   <div class="kern-table-responsive" tabindex="0">

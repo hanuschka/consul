@@ -35,21 +35,6 @@
          data-adm-column-selector-defaults-value="id,image,title,created_at,status,responsible,archived_state,hidden_state"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center gap-3 mb-3">
-        <div class="flex-grow-1">
-          <%= render pills_component %>
-        </div>
-        <%= link_to url_for(request.query_parameters.merge(format: :csv)),
-              class: "adm-column-selector__toggle",
-              data: { turbo: false } do %>
-          <span class="material-symbols-outlined" aria-hidden="true">download</span>
-          <%= t(".export") %>
-        <% end %>
-        <%= link_to url_for(request.query_parameters.merge(format: :geojson)),
-              class: "adm-column-selector__toggle",
-              data: { turbo: false } do %>
-          <span class="material-symbols-outlined" aria-hidden="true">map</span>
-          <%= t(".export_geojson") %>
-        <% end %>
         <div class="adm-column-selector">
           <button type="button" class="adm-column-selector__toggle" data-action="adm-column-selector#toggle">
             <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
@@ -59,6 +44,17 @@
             <div data-adm-column-selector-target="list"></div>
           </div>
         </div>
+        <div class="flex-grow-1">
+          <%= render pills_component %>
+        </div>
+        <a href="<%= url_for(request.query_parameters.merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          <%= t(".download_csv") %>
+        </a>
+        <a href="<%= url_for(request.query_parameters.merge(format: :geojson)) %>" class="adm-text-link" data-turbo="false">
+          <span class="material-symbols-outlined" aria-hidden="true">map</span>
+          <%= t(".download_geojson") %>
+        </a>
       </div>
 
       <div class="kern-table-responsive" tabindex="0">

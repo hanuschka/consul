@@ -5,19 +5,19 @@
 <%= render Adm::DashboardHomeComponent.new(
   team_members: @team_members,
   team_url: adm_deficiency_reports_officers_path,
-  recent_items: nil,
-  recent_items_url: nil,
-  intro_text: @section_setting&.intro_text_with_fallback,
+  intro_text: @intro_text,
   quick_links: @quick_links,
   stats: @stats,
   contact_persons: @contact_persons,
-  notice: @section_setting,
+  section: "deficiency_reports",
+  notice_active: @notice_active,
+  notice_message: @notice_message,
   activities: [],
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "deficiency_reports") : nil
+  section_settings_path: policy([:adm, Setting]).update? ? adm_deficiency_reports_settings_path : nil
 ) %>
 
 <div class="kern-container">
-  <div class="adm-dashboard__section">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
     <div class="adm-dashboard__section-header">
       <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
       <h3><%= t("adm.deficiency_reports.menu.items.deficiency_reports") %></h3>
@@ -26,5 +26,5 @@
     <%= turbo_frame_tag "deficiency_reports_table", src: adm_deficiency_reports_deficiency_reports_list_path, loading: :eager %>
   </div>
 
-  <%= render Adm::ActivityFeedComponent.new(activities: @activities) %>
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
 </div>

@@ -3,11 +3,13 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
     authorize [:adm, :moderation, User]
 
     @team_members = Moderator.includes(user: :image).order(:id)
-    @recent_items = Activity.includes(:user).order(created_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("moderation")
+    @intro_text = Setting["adm.moderation.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.moderation", default: nil)
+    @notice_active = Setting["adm.moderation.notice_active"].present?
+    @notice_message = Setting["adm.moderation.notice_message"]
     @contact_persons = SectionContactPerson.for_section("moderation")
-    @activities = SectionActivity.for_section("moderation").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("moderation"), limit: 10, page_param: :activity_page)
 
     pending_count = Proposal.pending_flag_review.count +
                     Comment.pending_flag_review.count +
@@ -23,12 +25,10 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
       { value: moderated_count, label: t("adm.moderation.home.stats.moderated_total"), icon: "verified_user" }
     ]
 
-    @quick_links = [
-      { label: t("adm.moderation.home.quick_links.all"), path: adm_moderation_proposals_path }
-    ]
+    @quick_links = []
 
     @breadcrumbs = [
-      { name: t("adm.moderation.home.title"), icon: "home" }
+      { name: t("adm.moderation.menu.items.home"), icon: "home" }
     ]
   end
 end

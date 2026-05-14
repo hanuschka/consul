@@ -23,6 +23,11 @@ de:
           proposals: Vorschläge
           budget_investments: Vorschläge (Budget)
           comments: Kommentare
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       users:
         index:
           title: Nutzer blockieren

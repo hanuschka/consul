@@ -33,10 +33,6 @@ class Adm::Ideas::IdeaPolicy < ApplicationPolicy
     idea_manager?
   end
 
-  def settings?
-    idea_manager?
-  end
-
   class Scope < Scope
     def resolve
       scope.all

@@ -9,8 +9,7 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
 
     @intro_text = Setting["adm.valuation.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.valuation", default: nil)
-    @notice_active = Setting["adm.valuation.notice_active"].present?
-    @notice_message = Setting["adm.valuation.notice_message"]
+    @notice = Setting["adm.valuation.notice_active"].present? ? Setting["adm.valuation.notice_message"] : nil
     @contact_persons = SectionContactPerson.for_section("valuation")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("valuation"), limit: 10, page_param: :activity_page)
 
@@ -20,8 +19,6 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
       { value: Budget::Investment.valuating.count, label: t("adm.valuation.home.stats.in_valuation"), icon: "rate_review" },
       { value: Budget::Investment.valuation_finished.count, label: t("adm.valuation.home.stats.valued"), icon: "check_circle" }
     ]
-
-    @quick_links = []
 
     @breadcrumbs = [
       { name: t("adm.valuation.menu.items.home"), icon: "home" }

@@ -6,8 +6,9 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
 
     @intro_text = Setting["adm.deficiency_reports.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.deficiency_reports", default: nil)
-    @notice_active = Setting["adm.deficiency_reports.notice_active"].present?
-    @notice_message = Setting["adm.deficiency_reports.notice_message"]
+    @notice = if Setting["adm.deficiency_reports.notice_active"].present?
+                Setting["adm.deficiency_reports.notice_message"]
+              end
     @contact_persons = SectionContactPerson.for_section("deficiency_reports")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("deficiency_reports"), limit: 10, page_param: :activity_page)
 
@@ -17,8 +18,6 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
       { value: DeficiencyReport.not_closed.count, label: t("adm.deficiency_reports.home.stats.open"), icon: "error" },
       { value: DeficiencyReport.closed.count, label: t("adm.deficiency_reports.home.stats.closed"), icon: "check_circle" }
     ]
-
-    @quick_links = []
 
     @breadcrumbs = [
       { name: t("adm.deficiency_reports.menu.items.home"), icon: "home" }

@@ -6,8 +6,7 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
 
     @intro_text = Setting["adm.moderation.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.moderation", default: nil)
-    @notice_active = Setting["adm.moderation.notice_active"].present?
-    @notice_message = Setting["adm.moderation.notice_message"]
+    @notice = Setting["adm.moderation.notice_active"].present? ? Setting["adm.moderation.notice_message"] : nil
     @contact_persons = SectionContactPerson.for_section("moderation")
     @pagy_activities, @activities = pagy(SectionActivity.for_section("moderation"), limit: 10, page_param: :activity_page)
 
@@ -24,8 +23,6 @@ class Adm::Moderation::HomeController < Adm::Moderation::BaseController
       { value: blocked_count, label: t("adm.moderation.home.stats.blocked_users"), icon: "block" },
       { value: moderated_count, label: t("adm.moderation.home.stats.moderated_total"), icon: "verified_user" }
     ]
-
-    @quick_links = []
 
     @tiles_title = t("adm.moderation.home.tiles.title")
     @tiles_hint  = t("adm.moderation.home.tiles.hint")

@@ -2,21 +2,11 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.moderation.home.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::DashboardHomeComponent.new(
-  team_members: @team_members,
-  team_url: new_adm_moderator_path,
-  intro_text: @intro_text,
-  quick_links: @quick_links,
-  stats: @stats,
-  contact_persons: @contact_persons,
-  section: "moderation",
-  notice_active: @notice_active,
-  notice_message: @notice_message,
-  activities: @activities,
-  activity_pagy: @pagy_activities,
-  section_settings_path: policy([:adm, Setting]).update? ? adm_moderation_settings_path : nil,
-  tiles_title: @tiles_title,
-  tiles_hint: @tiles_hint,
-  tiles_icon: "dashboard",
-  tiles: @tiles
-) %>
+<%= render Adm::DashboardHomeComponent.new do |d| %>
+  <% d.with_notice(message: @notice) if @notice.present? %>
+  <% d.with_header_row(intro: @intro_text, stats: @stats) %>
+  <% d.with_tiles(title: @tiles_title, hint: @tiles_hint, tiles: @tiles) if @tiles.present? && @tiles.any? %>
+  <% d.with_team(members: @team_members, add_url: new_adm_moderator_path) %>
+  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
+  <% d.with_activity_feed(activities: @activities, pagy: @pagy_activities) %>
+<% end %>

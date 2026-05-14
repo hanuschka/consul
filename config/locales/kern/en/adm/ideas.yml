@@ -38,6 +38,7 @@ en:
           total_hint: Ideas in the current view (including active filters).
           table:
             id: ID
+            image: Image
             admin_accepted: Visibility
             admin_accepted_at: Publication
             created_at: Created on

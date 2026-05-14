@@ -38,6 +38,7 @@ de:
           total_hint: Anzahl der Ideen in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             admin_accepted: Sichtbarkeit
             admin_accepted_at: Veröffentlichung
             created_at: Erstellungsdatum

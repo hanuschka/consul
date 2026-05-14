@@ -13,10 +13,10 @@
       records: @ideas,
       pagy: @pagy,
       headers: headers,
-      column_count: 9,
+      column_count: 10,
       column_selector: {
         storage_key: "adm-ideas-columns-v2",
-        defaults: "id,title,admin_accepted,created_at,status,category,officer,actions"
+        defaults: "id,image,title,admin_accepted,created_at,status,category,officer,actions"
       },
       empty_state: {
         title: t("adm.ideas.ideas.index.no_items_title"),
@@ -52,6 +52,7 @@
 
   <% c.with_header_row do %>
     <%= render headers[:id] %>
+    <th scope="col" class="kern-table__header" data-field="image"><%= t("adm.ideas.ideas.index.table.image") %></th>
     <%= render headers[:title] %>
     <th scope="col" class="kern-table__header" data-field="admin_accepted"><%= t("adm.ideas.ideas.index.table.admin_accepted") %></th>
     <%= render headers[:created_at] %>

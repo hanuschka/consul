@@ -13,6 +13,7 @@
 <div class="phase-block">
   <% if show_section.call("kpis") %>
   <section
+    class="phase-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
     data-phase-id="<%= phase["phase_id"] %>"
     data-section="kpis"
@@ -56,6 +57,7 @@
 
   <% if show_section.call("questions") %>
   <section
+    class="phase-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:questions"
     data-phase-id="<%= phase["phase_id"] %>"
     data-section="questions"
@@ -105,6 +107,7 @@
           open_by_default = pdf_mode_local || entries.size <= 6
         %>
         <section
+          class="phase-section"
           data-pdf-chunk="phase:<%= phase["phase_id"] %>:open_responses"
           data-phase-id="<%= phase["phase_id"] %>"
           data-section="open_responses"
@@ -158,6 +161,7 @@
 
   <% if show_section.call("key_findings") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="key_findings"
@@ -175,6 +179,7 @@
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ai_questions"

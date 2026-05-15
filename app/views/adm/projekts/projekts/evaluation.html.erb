@@ -6,7 +6,7 @@
   frontend_url: projekt_path(@projekt)
 ) %>
 
-<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
 <div class="kern-container mb-5">
   <% if @evaluation.blank? || @evaluation.pending? %>
@@ -24,10 +24,19 @@
     </div>
 
   <% elsif @evaluation.processing? %>
-    <div class="adm-empty-state">
+    <div
+      class="adm-empty-state"
+      data-controller="shared--polling"
+      data-shared--polling-url-value="<%= evaluation_status_adm_projekts_projekt_path(@projekt) %>"
+      data-shared--polling-interval-value="4000"
+      data-shared--polling-terminal-states-value="completed failed"
+    >
       <h3><%= t(".processing_title") %></h3>
       <p><%= t(".processing_description") %></p>
-      <i class="fa fa-spinner fa-spin fa-2x"></i>
+      <span
+        class="material-symbols-outlined adm-spinner adm-spinner--lg"
+        aria-hidden="true"
+      >progress_activity</span>
     </div>
 
   <% elsif @evaluation.failed? %>

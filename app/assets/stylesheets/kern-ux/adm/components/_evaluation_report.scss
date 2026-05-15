@@ -735,6 +735,176 @@ $er-max-tabs: 8;
   line-height: 1.6;
 }
 
+.phase-section {
+  margin-bottom: 1rem;
+}
+
+.adm-spinner {
+  display: inline-block;
+  color: var(--er-primary, #1e40af);
+  animation: adm-spinner-rotate 1s linear infinite;
+}
+
+.adm-spinner--lg {
+  font-size: 3rem;
+}
+
+@keyframes adm-spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.phase-key-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.phase-key-metrics-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius);
+}
+
+.phase-key-metrics-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+.phase-key-metrics-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.phase-key-metrics-card__value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--er-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-key-metrics-card__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--er-text-secondary);
+}
+
+.phase-summary-card {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--er-bg);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+}
+
+.phase-summary-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+.phase-summary-card__content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.phase-summary-card__label {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--er-text-secondary);
+}
+
+.phase-summary-card__body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--er-text);
+}
+
+.phase-tone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.phase-tone-pill {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+}
+
+.phase-tone-pill__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+.phase-tone-pill__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.phase-tone-pill__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--er-text-secondary);
+}
+
+.phase-tone-pill__value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: lowercase;
+  color: var(--er-text);
+}
+
 .er-section {
   background: var(--er-surface);
   border: 1px solid var(--er-border);
@@ -1747,7 +1917,7 @@ $er-max-tabs: 8;
 .report-summary--phase-card {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.05rem;
   padding: 1.2rem 1.55rem;
   background: var(--er-surface);
   border: 1px solid var(--er-border);

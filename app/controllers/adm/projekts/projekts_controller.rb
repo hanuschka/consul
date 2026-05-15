@@ -143,6 +143,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     redirect_to evaluation_adm_projekts_projekt_path(@projekt)
   end
 
+  def evaluation_status
+    authorize [:adm, :projekts, @projekt], :show?
+    evaluation = @projekt.projekt_evaluation
+
+    render json: {
+      status: evaluation&.status || "pending",
+      generated_at: evaluation&.generated_at&.iso8601
+    }
+  end
+
   def evaluation_pdf_options
     authorize [:adm, :projekts, @projekt], :show?
     @evaluation = @projekt.projekt_evaluation

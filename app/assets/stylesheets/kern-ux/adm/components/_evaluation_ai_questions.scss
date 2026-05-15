@@ -41,10 +41,19 @@
   }
 
   .ai-stats-card--title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.0625rem;
     font-weight: 700;
     color: var(--er-text, #0f172a);
     letter-spacing: -0.01em;
+  }
+
+  .ai-stats-card--title-icon {
+    flex-shrink: 0;
+    color: var(--kern-color-action-default, #1A3DA5);
+    font-size: 1.375rem;
   }
 
   .ai-question-section--subtitle {

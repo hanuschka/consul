@@ -65,12 +65,17 @@ de:
             include_report: Bericht einbeziehen (Projektzusammenfassung, Einstellungen, Phasen-Zusammenfassungen)
             sections:
               kpis: Kennzahlen
+              key_metrics: Detailkennzahlen
               ranking: Ranking-Diagramm
               proposals: Vorschlagskarten
               questions: Fragen und Diagramme
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
+              phase_summary: Zusammenfassung der Phase
+              tone: Tonanalyse
               key_findings: Zentrale Erkenntnisse
+              topic_clustering: Themengruppen
+              semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
             ai_formatting:
               processing: PDF wird mit KI für besseren Seitenumbruch aufbereitet…

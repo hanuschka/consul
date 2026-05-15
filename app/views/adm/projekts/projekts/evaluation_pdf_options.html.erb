@@ -6,7 +6,7 @@
   frontend_url: projekt_path(@projekt)
 ) %>
 
-<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
 <div
   class="kern-container mb-5"

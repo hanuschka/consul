@@ -25,9 +25,12 @@
   }
 %>
 
+<% phase_ai_stats = phase["ai_stats"] || {} %>
+
 <div class="phase-block">
   <% if show_section.call("kpis") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="kpis"
@@ -62,8 +65,46 @@
     </section>
   <% end %>
 
+  <% if show_section.call("key_metrics") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_metrics"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="key_metrics"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_key_metrics",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% if phase_ai_stats["summary"].present? && show_section.call("phase_summary") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:phase_summary"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="phase_summary"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_summary",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% has_tone = phase_ai_stats["tone_of_participation"].present? || phase_ai_stats["tone_of_comments"].present? %>
+  <% if has_tone && show_section.call("tone") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:tone"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="tone"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_tone",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
   <% if top_proposals.any? && show_section.call("ranking") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ranking"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ranking"
@@ -102,6 +143,7 @@
 
   <% if top_proposals.any? && show_section.call("proposals") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:proposals"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="proposals"
@@ -137,6 +179,7 @@
   <% eval_summary = phase["evaluation_summary"] || {} %>
   <% if eval_summary["body"].present? && show_section.call("ai_summary") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_summary"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ai_summary"
@@ -151,6 +194,7 @@
 
   <% if show_section.call("key_findings") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="key_findings"
@@ -165,9 +209,46 @@
     </section>
   <% end %>
 
+  <% if show_section.call("topic_clustering") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:topic_clustering"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="topic_clustering"
+      style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
+    >
+      <div data-controller="shared--collapse">
+        <%= render AiStats::CategoriesClusteringComponent.new(
+          clustering_data: phase_ai_stats["topic_clustering"] || {},
+          title_key: "custom.ai_stats.topic_clustering",
+          resource_class: Proposal
+        ) %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if show_section.call("semantic_clustering") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:semantic_clustering"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="semantic_clustering"
+      style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
+    >
+      <div data-controller="shared--collapse">
+        <%= render AiStats::CategoriesClusteringComponent.new(
+          clustering_data: phase_ai_stats["semantic_clustering"] || {},
+          title_key: "custom.ai_stats.semantic_clustering",
+          resource_class: Proposal
+        ) %>
+      </div>
+    </section>
+  <% end %>
+
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ai_questions"

@@ -12,6 +12,7 @@
 <div class="phase-block">
   <% if show_section.call("kpis") %>
   <section
+    class="phase-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
     data-phase-id="<%= phase["phase_id"] %>"
     data-section="kpis"
@@ -41,8 +42,36 @@
   </section>
   <% end %>
 
+  <% phase_ai_stats = phase["ai_stats"] || {} %>
+
+  <% if phase_ai_stats["summary"].present? && show_section.call("phase_summary") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:phase_summary"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="phase_summary"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_summary",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% has_tone = phase_ai_stats["tone_of_participation"].present? %>
+  <% if has_tone && show_section.call("tone") %>
+    <section
+      class="phase-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:tone"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="tone"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_tone",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
   <% if show_section.call("key_findings") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="key_findings"
@@ -60,6 +89,7 @@
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
     <section
+      class="phase-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ai_questions"

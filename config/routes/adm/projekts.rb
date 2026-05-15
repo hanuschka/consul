@@ -207,6 +207,7 @@ namespace :adm do
       get :documents, on: :member
       get :evaluation, on: :member
       post :generate_evaluation, on: :member
+      get :evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member
       post :prepare_evaluation_pdf, on: :member

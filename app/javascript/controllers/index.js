@@ -129,6 +129,9 @@ application.register("clipboard", ClipboardController)
 import SharedAdminIframeController from "./shared/admin_iframe_controller"
 application.register("shared--admin-iframe", SharedAdminIframeController)
 
+import SharedCollapseController from "./shared/collapse_controller"
+application.register("shared--collapse", SharedCollapseController)
+
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
 
@@ -165,3 +168,8 @@ application.register("files--filter-bar", FilesFilterBarController)
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
 
+import AdmAiActionButtonController from "./adm/ai_action_button_controller"
+application.register("adm--ai-action-button", AdmAiActionButtonController)
+
+import SharedPollingController from "./shared/polling_controller"
+application.register("shared--polling", SharedPollingController)

@@ -65,12 +65,17 @@ en:
             include_report: Include report (project summary, settings, phase summaries)
             sections:
               kpis: KPIs
+              key_metrics: Detailed metrics
               ranking: Ranking chart
               proposals: Proposal cards
               questions: Questions and charts
               open_responses: Open contributions
               ai_summary: AI summary
+              phase_summary: Phase summary
+              tone: Tone analysis
               key_findings: Key findings
+              topic_clustering: Topic groups
+              semantic_clustering: Sentiment analysis
               ai_questions: AI questions
             ai_formatting:
               processing: Preparing PDF layout with AI…

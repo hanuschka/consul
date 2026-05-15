@@ -61,6 +61,10 @@ class Evaluations::AggregateStatistics < ApplicationService
       hidden_at: nil
     )
 
+    online_votes = supports.count
+    offline_votes = proposals.sum(:officing_bulk_votes)
+    total_votes = online_votes + offline_votes
+
     top_proposals = proposals
       .order(cached_votes_up: :desc)
       .limit(20)
@@ -77,13 +81,14 @@ class Evaluations::AggregateStatistics < ApplicationService
 
     {
       proposals_count: proposals.count,
-      supports_count: supports.count + proposals.sum(:officing_bulk_votes),
+      proposal_authors_count: proposals.select(:author_id).distinct.count,
+      supports_count: total_votes,
+      online_votes_count: online_votes,
+      offline_votes_count: offline_votes,
+      unique_supporters_count: supports.select(:voter_id).distinct.count,
       comments_count: comments.count,
       unique_participants: count_proposal_participants(proposals, supports, comments),
-      avg_supports_per_proposal: safe_average(
-        supports.count + proposals.sum(:officing_bulk_votes),
-        proposals.count
-      ),
+      avg_supports_per_proposal: safe_average(total_votes, proposals.count),
       top_proposals: top_proposals
     }
   end

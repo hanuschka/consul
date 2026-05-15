@@ -65,9 +65,16 @@
 
   .ai-clustering--item-card {
     padding: 1rem 1.25rem;
-    background: var(--er-bg);
-    border: 1px solid var(--er-border-light);
-    border-left: 3px solid var(--item-color, var(--er-primary));
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--er-primary)) 10%,
+      #ffffff
+    );
+    border: 1px solid color-mix(
+      in srgb,
+      var(--item-color, var(--er-border)) 55%,
+      #ffffff
+    );
     border-radius: var(--er-radius);
   }
 
@@ -125,13 +132,21 @@
     align-items: center;
     width: 100%;
     padding: 1rem 1rem;
-    background: transparent;
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--er-primary)) 23%,
+      #ffffff
+    );
     border: 0;
     cursor: pointer;
     transition: background-color 0.15s ease;
 
     &:hover {
-      background-color: var(--er-border-light);
+      background-color: color-mix(
+        in srgb,
+        var(--item-color, var(--er-primary)) 24%,
+        #ffffff
+      );
     }
 
     &:focus-visible {
@@ -196,10 +211,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
+    min-width: 36px;
     height: 24px;
     padding: 0 0.625rem;
-    font-size: 0.875rem;
+    font-size: 0.975rem;
     font-weight: 600;
     line-height: 1;
     color: #ffffff;

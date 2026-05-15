@@ -209,6 +209,57 @@ $er-max-tabs: 8;
   }
 }
 
+.pdf-options-ai-status {
+  max-width: 720px;
+}
+
+.pdf-options-ai-status__panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+}
+
+.pdf-options-ai-status__panel--processing {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.pdf-options-ai-status__panel--ready {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.pdf-options-ai-status__panel--failed {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #7f1d1d;
+
+  .kern-btn {
+    margin-left: auto;
+  }
+}
+
+.pdf-options-ai-status__panel--ai-disabled {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #78350f;
+}
+
+.pdf-options-ai-status__error {
+  font-size: 0.85rem;
+  color: #b91c1c;
+  margin-top: 0.25rem;
+  word-break: break-word;
+}
+
 .adm-projekt-evaluation-report {
   --er-primary: #1e40af;
   --er-primary-light: #3b82f6;
@@ -1553,7 +1604,7 @@ $er-max-tabs: 8;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  padding: 1.5rem 1.6rem;
+  padding: 1em 1.5rem;
   background: var(--card-tint, var(--er-surface));
   border: 1px solid var(--card-border, #e8ecf2);
   border-radius: 14px;
@@ -1697,7 +1748,7 @@ $er-max-tabs: 8;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  padding: 1.5rem 1.75rem;
+  padding: 1.2rem 1.55rem;
   background: var(--er-surface);
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius-lg);
@@ -1707,8 +1758,6 @@ $er-max-tabs: 8;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid var(--er-border-light);
 }
 
 .report-summary--phase-icon {

@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :prepare_evaluation_pdf, :evaluation_pdf_status, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
 
   def list
@@ -169,15 +169,25 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     selection = PdfServices::EvaluationPdfSelection.from_params(@evaluation, params[:pdf_options])
 
-    html = render_to_string(
-      template: "adm/projekts/projekts/evaluation/pdf",
-      layout: "pdf_evaluation",
-      locals: {
-        projekt: @projekt,
-        evaluation: @evaluation,
-        selection: selection
-      }
-    )
+    html =
+      if @evaluation.pdf_formatting_ready?
+        filtered_body = PdfServices::FilterFormattedHtml.call(@evaluation.pdf_formatted_html, selection)
+        render_to_string(layout: "pdf_evaluation", inline: filtered_body)
+      else
+        Rails.logger.info(
+          "[Evaluation] evaluation_pdf falling back to raw render for ##{@evaluation.id} " \
+          "(ai_ready=#{@evaluation.pdf_formatting_ready?})"
+        )
+        render_to_string(
+          template: "adm/projekts/projekts/evaluation/pdf",
+          layout: "pdf_evaluation",
+          locals: {
+            projekt: @projekt,
+            evaluation: @evaluation,
+            selection: selection
+          }
+        )
+      end
 
     pdf = Grover.new(html, display_url: request.base_url).to_pdf
 
@@ -185,6 +195,48 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       filename: "evaluation_#{@projekt.id}_#{Time.current.strftime('%Y%m%d')}.pdf",
       type: "application/pdf",
       disposition: "attachment"
+  end
+
+  def prepare_evaluation_pdf
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank? || !@evaluation.completed?
+      render json: { status: "missing_evaluation", ai_disabled: !Ai::Settings.ai_available? }, status: :unprocessable_entity
+      return
+    end
+
+    if !Ai::Settings.ai_available? || @evaluation.pdf_formatting_ready?
+      render json: { status: "ready", ai_disabled: !Ai::Settings.ai_available? }
+      return
+    end
+
+    if !@evaluation.pdf_formatting_in_progress?
+      @evaluation.update!(pdf_formatted_status: "processing", pdf_formatted_error: nil)
+      Evaluations::FormatPdfHtmlJob.perform_later(@evaluation.id)
+    end
+
+    render json: { status: "processing", ai_disabled: false }
+  end
+
+  def evaluation_pdf_status
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank?
+      render json: { status: "missing_evaluation", ready: false, ai_disabled: !Ai::Settings.ai_available? }, status: :unprocessable_entity
+      return
+    end
+
+    ai_disabled = !Ai::Settings.ai_available?
+
+    render json: {
+      pdf_formatted_status: @evaluation.pdf_formatted_status,
+      pdf_formatted_at: @evaluation.pdf_formatted_at,
+      pdf_formatted_error: @evaluation.pdf_formatted_error,
+      ready: @evaluation.pdf_formatting_ready? || ai_disabled,
+      ai_disabled: ai_disabled
+    }
   end
 
   def update

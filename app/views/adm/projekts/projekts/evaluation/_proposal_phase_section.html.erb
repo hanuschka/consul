@@ -27,6 +27,11 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="kpis"
+    >
     <div class="phase-header">
       <div class="phase-icon-title">
         <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
@@ -54,9 +59,15 @@
         </div>
       </div>
     </div>
+    </section>
   <% end %>
 
   <% if top_proposals.any? && show_section.call("ranking") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ranking"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ranking"
+    >
     <div class="card" style="margin-bottom:1rem">
       <div class="card-title"><%= t("adm.projekts.projekts.evaluation.ranking_by_supports") %></div>
       <div class="card-subtitle">
@@ -86,9 +97,15 @@
         </div>
       <% end %>
     </div>
+    </section>
   <% end %>
 
   <% if top_proposals.any? && show_section.call("proposals") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:proposals"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="proposals"
+    >
     <div class="proposal-grid">
       <% top_proposals.each do |proposal| %>
         <%
@@ -114,18 +131,30 @@
         </div>
       <% end %>
     </div>
+    </section>
   <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
   <% if eval_summary["body"].present? && show_section.call("ai_summary") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_summary"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ai_summary"
+    >
     <div class="ai-summary" style="background:<%= accent_light %>;border:1px solid <%= shades[3] %>">
       <div class="ai-summary-stripe" style="background:<%= accent %>"></div>
       <div class="ai-summary-title"><%= eval_summary["title"] %></div>
       <div class="ai-summary-body"><%= sanitize(eval_summary["body"], tags: %w[strong em b i]) %></div>
     </div>
+    </section>
   <% end %>
 
   <% if show_section.call("key_findings") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="key_findings"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
       locals: {
         phase: phase,
@@ -133,10 +162,16 @@
         accent_light: accent_light,
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
+    </section>
   <% end %>
 
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
+    <section
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ai_questions"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_ai_questions",
       locals: {
         phase: phase,
@@ -144,5 +179,6 @@
         accent_light: accent_light,
         pdf_mode: pdf_mode_local
       } %>
+    </section>
   <% end %>
 </div>

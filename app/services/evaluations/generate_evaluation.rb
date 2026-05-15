@@ -26,7 +26,12 @@ class Evaluations::GenerateEvaluation < ApplicationService
         report_settings: collect_report_settings,
         selected_questions: selected_questions
       },
-      selected_question_ids: @selected_question_ids
+      selected_question_ids: @selected_question_ids,
+      pdf_formatted_html: nil,
+      pdf_formatted_status: nil,
+      pdf_formatted_at: nil,
+      pdf_formatted_data_fingerprint: nil,
+      pdf_formatted_error: nil
     )
 
     evaluation

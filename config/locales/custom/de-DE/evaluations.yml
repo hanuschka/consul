@@ -72,6 +72,12 @@ de:
               ai_summary: KI-Zusammenfassung
               key_findings: Zentrale Erkenntnisse
               ai_questions: KI-Fragen
+            ai_formatting:
+              processing: PDF wird mit KI für besseren Seitenumbruch aufbereitet…
+              ready: Bereit zum Download.
+              failed: KI-Aufbereitung fehlgeschlagen. Das PDF wird ohne KI-Optimierung erzeugt.
+              retry: Erneut versuchen
+              ai_disabled: KI-Aufbereitung deaktiviert. PDF wird direkt erzeugt.
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen

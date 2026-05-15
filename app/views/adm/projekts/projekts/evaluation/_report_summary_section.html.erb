@@ -33,7 +33,10 @@
     end
 %>
 
-<div class="report-summary">
+<section
+  class="report-summary"
+  data-pdf-chunk="report"
+>
   <% if pdf_mode && qr_svg.present? %>
     <div class="report-summary--qr">
       <div class="report-summary--qr-img"><%= raw(qr_svg) %></div>
@@ -247,4 +250,4 @@
       </div>
     <% end %>
   </section>
-</div>
+</section>

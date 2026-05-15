@@ -72,6 +72,12 @@ en:
               ai_summary: AI summary
               key_findings: Key findings
               ai_questions: AI questions
+            ai_formatting:
+              processing: Preparing PDF layout with AI…
+              ready: Ready to download.
+              failed: AI formatting failed. The PDF will be rendered without AI optimization.
+              retry: Retry
+              ai_disabled: AI formatting disabled. PDF will be generated directly.
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           open_responses_show: Show responses

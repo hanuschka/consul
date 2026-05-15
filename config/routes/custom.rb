@@ -60,10 +60,6 @@ resources :map_locations, only: [] do
   collection do
     get :get_coordinates
   end
-
-  member do
-    post :update_screenshot
-  end
 end
 
 get "admin/connection", to: "admin/connection#index"

@@ -18,8 +18,6 @@ class Adm::Projekts::ProjektEventRegistrationsController < Adm::Projekts::BaseCo
     respond_to do |format|
       format.html do
         @pagy, @registrations = pagy(filtered_scope)
-        @confirmed_count = scope.where(status: "confirmed").count
-        @non_cancelled_count = scope.where.not(status: "cancelled").count
         @status_header_options = { filter_options: status_filter_options }
 
         @breadcrumbs = breadcrumbs_for_action(t(".title"))
@@ -78,7 +76,6 @@ class Adm::Projekts::ProjektEventRegistrationsController < Adm::Projekts::BaseCo
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.projekt_events.title"), url: projekt_events_adm_projekts_phase_path(@projekt_phase) },

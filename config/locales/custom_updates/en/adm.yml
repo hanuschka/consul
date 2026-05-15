@@ -110,11 +110,11 @@ en:
       feature:
         resource:
           create_proposal_with_ai: Create proposal with AI
-          create_proposal_with_ai_description: Shows the "Create proposal with AI" button
+          create_proposal_with_ai_description: Enables the "Create proposal with AI" button in the frontend. Users can then have an AI assistant help them formulate proposals by describing their concern in their own words. The AI suggests a title, summary, and description text. The resulting draft remains fully editable before the user submits it.
     budget_phase:
       feature:
         resource:
           create_proposal_with_ai: Create proposal with AI
-          create_proposal_with_ai_description: Shows the "Create proposal with AI" button
+          create_proposal_with_ai_description: Enables the "Create proposal with AI" button in the frontend. Users can then have an AI assistant help them formulate proposals by describing their concern in their own words. The AI suggests a title, summary, and description text. The resulting draft remains fully editable before the user submits it.
           create_investment_with_ai: Create investment proposal with AI
-          create_investment_with_ai_description: Shows the "Create investment proposal with AI" button
+          create_investment_with_ai_description: Enables the "Create investment proposal with AI" button in the frontend. Users can have an AI assistant help them formulate an investment proposal by describing their concern in their own words. The AI suggests a title, summary, and description. The resulting draft remains fully editable before submission.

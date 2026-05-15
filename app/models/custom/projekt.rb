@@ -126,7 +126,7 @@ class Projekt < ApplicationRecord
     end
 
     InternalApiClient.active_dt? && (
-      on_global_overview? || acceptable_to_be_exported_for_global_overview?
+      on_dt_global_overview? || acceptable_to_be_exported_for_global_overview?
     )
   end
 
@@ -750,9 +750,7 @@ class Projekt < ApplicationRecord
       if hidden_at.present?
         sync_destroy_for_global_overview
       else
-        Projekts::OverviewProjektUpdatedJob.perform_later(
-          self
-        )
+        Projekts::OverviewProjektUpdatedJob.perform_later(self)
       end
     end
   end
@@ -874,8 +872,9 @@ class Projekt < ApplicationRecord
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported_for_global_overview?
-        Projekts::OverviewProjektDestroyedJob.perform_later(id)
-      end
+      return unless on_dt_global_overview?
+
+      Projekts::OverviewProjektDestroyedJob.perform_later(id)
+      update_column(:on_dt_global_overview, false) unless destroyed?
     end
 end

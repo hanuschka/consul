@@ -1,0 +1,31 @@
+de:
+  adm:
+    overview_pages:
+      title: Übersichtsseiten
+      hint_text: >
+        Konfigurieren Sie hier die öffentlichen Übersichtsseiten Ihrer Plattform.
+        Im Tab "Projektübersicht" aktivieren Sie die Projektübersichtsseite und
+        steuern, welche Projektlisten in Navigation und Fußzeile angezeigt werden.
+        Unter "Weitere Übersichtsseiten" verwalten Sie die übrigen Übersichten
+        (Veranstaltungen, Beteiligungshaushalt, Abstimmungen, Vorschläge).
+        Deaktivierte Übersichten sind im Frontend nicht erreichbar — bestehende
+        Inhalte bleiben erhalten. Nur aktive Übersichtsseiten lassen sich zudem
+        als Menüpunkte in die Navigation aufnehmen.
+      tabs:
+        projekt: Projektübersicht
+        others: Weitere Übersichtsseiten
+      projekt:
+        navigation_heading: Anzeige in der Navigationsleiste
+        navigation_description: >
+          Steuern Sie, welche Projektlisten als Tabs in der oberen Filterleiste der
+          Projektübersichtsseite erscheinen. Jeder aktivierte Tab dient Bürgern als
+          Filter-Option für einen bestimmten Projektstatus, etwa laufende, abgeschlossene
+          oder bald startende Projekte. Deaktivierte Tabs sind für Bürger nicht sichtbar —
+          die Projekte selbst bleiben über andere Filter und direkte Links erreichbar.
+        footer_heading: Anzeige in der Fußzeile
+        footer_description: >
+          Zusätzlich zur Filterleiste am oberen Rand können Projektlisten als verlinkte
+          Übersichten im unteren Bereich der Projektübersichtsseite eingeblendet werden.
+          Diese Fußzeilen-Links bieten Bürgern eine alternative Navigation zu einzelnen
+          Projektkategorien und eignen sich besonders, um häufig genutzte Filter
+          dauerhaft prominent zugänglich zu machen.

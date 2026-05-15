@@ -1,15 +1,22 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "home#show"
+    get "list", to: "projekts#list", as: :projekts_list
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
       patch :toggle_manage_all_projekts, on: :member
     end
 
-    resource :overview_page, only: [], controller: "overview_page" do
-      get :navigation
-      get :footer
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "projekts" } do
+      post :search, on: :collection
     end
 
     resources :milestone_statuses, except: %i[show]

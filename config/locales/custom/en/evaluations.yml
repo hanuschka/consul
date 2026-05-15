@@ -51,6 +51,14 @@ en:
           ranking_subtitle: "%{proposals} proposals · %{supports} supports total"
           rank_first: Rank 1
           ai_summary: AI evaluation
+          timeline_title: Timeline
+          timeline_submissions: Submissions over time
+          timeline_comments: Comments over time
+          label_sentiment_title: Label and sentiment
+          labels_distribution: Label distribution
+          sentiments_distribution: Sentiment distribution
+          user_segments_title: User segments
+          geozone_distribution: City districts / zones
           key_findings: Key findings
           ai_questions_heading: Ask AI about this phase
           sources_label:
@@ -73,6 +81,9 @@ en:
               ai_summary: AI summary
               phase_summary: Phase summary
               tone: Tone analysis
+              timeline: Timeline
+              label_sentiment: Label and sentiment
+              user_segments: User segments
               key_findings: Key findings
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis

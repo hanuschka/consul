@@ -34,7 +34,7 @@
     width: 40px;
     height: 40px;
     font-family: "Material Symbols Outlined";
-    font-size: 1.25rem;
+    font-size: 2.00rem;
     font-weight: 400;
     line-height: 1;
     color: var(--cluster-accent, var(--er-primary));
@@ -115,6 +115,7 @@
 
   .ai-clustering--subitem .custom-collapse.-opened > .custom-collapse--body {
     display: block;
+    padding-top: 20px;
   }
 
   .ai-clustering--subitem .custom-collapse--head {
@@ -123,7 +124,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0.625rem 1rem;
+    padding: 1rem 1rem;
     background: transparent;
     border: 0;
     cursor: pointer;
@@ -181,7 +182,7 @@
     flex-grow: 1;
     padding-right: 1rem;
     overflow: hidden;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1.4;
     color: var(--er-text);
@@ -232,9 +233,10 @@
   .ai-clustering--resource-link {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 0.95rem;
     color: var(--er-text);
     text-decoration: none;
+    min-height: 55px;
 
     &:hover .ai-clustering--resource-title {
       color: var(--er-primary);
@@ -308,8 +310,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 55px;
+    height: 55px;
     font-size: 1.25rem;
     color: var(--er-text-muted);
     background-color: var(--er-border-light);

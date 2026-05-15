@@ -8,9 +8,12 @@ class Evaluations::GenerateEvaluation < ApplicationService
     evaluation = find_or_create_evaluation
     evaluation.update!(status: :processing)
 
+    refresh_phase_ai_stats_in_band
+
     stats = Evaluations::AggregateStatistics.call(@projekt)
 
     ai_data = collect_ai_data
+    full_phase_stats = collect_full_phase_stats
     ai_summary = generate_ai_summary(stats)
     project_content_summary = generate_project_content_summary
     selected_questions = collect_selected_questions
@@ -20,7 +23,7 @@ class Evaluations::GenerateEvaluation < ApplicationService
       generated_at: Time.current,
       data: {
         totals: stats[:totals],
-        phases: merge_phase_data(stats[:phases], ai_data),
+        phases: merge_phase_data(stats[:phases], ai_data, full_phase_stats),
         ai_project_summary: ai_summary,
         project_content_summary: project_content_summary,
         report_settings: collect_report_settings,
@@ -55,12 +58,30 @@ class Evaluations::GenerateEvaluation < ApplicationService
     @projekt.create_projekt_evaluation!(status: :pending)
   end
 
+  def refresh_phase_ai_stats_in_band
+    @projekt.projekt_phases.active.each do |phase|
+      next unless ProjektPhaseStats::FullStatsCollector::SUPPORTED_PHASES.any? { |k| phase.is_a?(k) }
+
+      AiAnalytics::ProjektPhaseStatsRefresh.perform_now(phase.id)
+    rescue StandardError => e
+      Rails.logger.warn("[Evaluation] ai_stats refresh failed for phase ##{phase.id}: #{e.message}")
+    end
+
+    @projekt.projekt_phases.reload
+  end
+
   def collect_ai_data
     @projekt.projekt_phases.active.each_with_object({}) do |phase, hash|
       hash[phase.id] = {
         ai_stats: phase.ai_stats,
         ai_stats_refreshed_at: phase.ai_stats_refreshed_at&.iso8601
       }
+    end
+  end
+
+  def collect_full_phase_stats
+    @projekt.projekt_phases.active.each_with_object({}) do |phase, hash|
+      hash[phase.id] = ProjektPhaseStats::FullStatsCollector.call(phase)
     end
   end
 
@@ -116,14 +137,16 @@ class Evaluations::GenerateEvaluation < ApplicationService
       end
   end
 
-  def merge_phase_data(phases_stats, ai_data)
+  def merge_phase_data(phases_stats, ai_data, full_phase_stats)
     phases_stats.map do |phase|
       phase_ai = ai_data[phase[:phase_id]] || {}
+      phase_full = full_phase_stats[phase[:phase_id]] || {}
 
       phase.merge(
         stats: enrich_phase_stats(phase),
         ai_stats: phase_ai[:ai_stats],
         ai_stats_refreshed_at: phase_ai[:ai_stats_refreshed_at],
+        full_stats: phase_full,
         evaluation_summary: generate_phase_evaluation_summary(phase),
         short_summary: generate_phase_short_summary(phase),
         key_findings: generate_phase_key_findings(phase)

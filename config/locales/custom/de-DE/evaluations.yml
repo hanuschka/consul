@@ -51,6 +51,14 @@ de:
           ranking_subtitle: "%{proposals} Vorschläge · %{supports} Unterstützungen gesamt"
           rank_first: Platz 1
           ai_summary: KI-Bewertung
+          timeline_title: Zeitverlauf
+          timeline_submissions: Einreichungen im Zeitverlauf
+          timeline_comments: Kommentare im Zeitverlauf
+          label_sentiment_title: Label und Sentiment
+          labels_distribution: Labels-Verteilung
+          sentiments_distribution: Sentiment-Verteilung
+          user_segments_title: Nutzersegmente
+          geozone_distribution: Stadtteile / Bezirke
           key_findings: Zentrale Erkenntnisse
           ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
@@ -73,6 +81,9 @@ de:
               ai_summary: KI-Zusammenfassung
               phase_summary: Zusammenfassung der Phase
               tone: Tonanalyse
+              timeline: Zeitverlauf
+              label_sentiment: Label- und Sentiment-Verteilung
+              user_segments: Nutzersegmente
               key_findings: Zentrale Erkenntnisse
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse

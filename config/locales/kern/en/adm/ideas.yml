@@ -24,12 +24,21 @@ en:
       ideas:
         index:
           title: Ideas
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
           page_hint: "Here you see all submitted ideas. The table shows title, visibility, category, officer, and status of each idea. Use the column headers to sort the list. Click on an idea to view details, assign an officer, write an official response, or edit the idea."
           no_ideas: No ideas available
           no_items_title: No ideas available
           no_items_description: Ideas will be shown here as soon as they are submitted.
+          no_results_filtered_title: No ideas match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more ideas.
+          total_label:
+            one: idea
+            other: ideas
+          total_hint: Ideas in the current view (including active filters).
           table:
             id: ID
+            image: Image
             admin_accepted: Visibility
             admin_accepted_at: Publication
             created_at: Created on

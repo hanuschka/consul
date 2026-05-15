@@ -29,6 +29,7 @@ en:
           page_hint: Here you see all participatory-budget proposals assigned to you for assessment. As a valuator you review feasibility and estimate the cost of proposals. Click Edit to open the assessment form. After you finish your assessment, the author can no longer edit the proposal.
           table:
             id: ID
+            image: Image
             title: Title
             budget: Budget
             valuator: Valuator

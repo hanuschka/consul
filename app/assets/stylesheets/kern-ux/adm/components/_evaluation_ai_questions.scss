@@ -21,11 +21,11 @@
 
   .ai-stats-card > .kern-accordion__header {
     padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #faf5ff 0%, #eff6ff 100%);
+    background: #e3ecf9;
     transition: background 0.2s ease;
 
     &:hover {
-      background: linear-gradient(135deg, #f3e8ff 0%, #dbeafe 100%);
+      background: #cfdcf2;
     }
   }
 

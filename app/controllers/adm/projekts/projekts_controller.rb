@@ -208,7 +208,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     selection = PdfServices::EvaluationPdfSelection.from_params(@evaluation, params[:pdf_options])
 
-    ai_format_enabled = false
+    ai_format_enabled = true
 
     html =
       if ai_format_enabled && @evaluation.pdf_formatting_ready?

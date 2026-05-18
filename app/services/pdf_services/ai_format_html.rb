@@ -1,5 +1,5 @@
 class PdfServices::AiFormatHtml < ApplicationService
-  DEFAULT_PDF_FORMAT_MODEL = "gpt-5.4-mini"
+  DEFAULT_PDF_FORMAT_MODEL = "gpt-5.4-nano"
   TEXT_LOSS_THRESHOLD = 0.10
 
   def initialize(html, context: {})

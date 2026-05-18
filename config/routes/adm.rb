@@ -117,6 +117,7 @@ namespace :adm do
 
   namespace :site_customization do
     get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug
+    patch "pages/:slug", to: "pages#update", as: :update_page_by_slug
 
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member

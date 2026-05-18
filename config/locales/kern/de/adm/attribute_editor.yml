@@ -32,6 +32,8 @@ de:
         comment_form_button_label: Button-Text des Kommentarformulars
         comment_form_button_description: Bestimmt den Text des Buttons, mit dem Nutzer ihren Kommentar absenden. Wählen Sie eine klare, handlungsorientierte Formulierung wie „Kommentar absenden", „Beitrag veröffentlichen" oder „Absenden". Der Button-Text sollte eindeutig vermitteln, dass der Kommentar damit veröffentlicht wird.
       poll:
+        name_label: Name
+        name_description: Legt den Namen der Abstimmung fest. Wählen Sie eine prägnante, verständliche Bezeichnung, die den Inhalt klar beschreibt, z. B. „Bürgerbefragung zur Stadtentwicklung" oder „Abstimmung über den Haushaltsplan". Der Name hilft Nutzern, die Abstimmung schnell zu identifizieren.
         closing_note_label: Text der Abschlussseite
         closing_note_description: Wird im Frontend auf der Abschlussseite angezeigt, nachdem Nutzer ihre Stimme abgegeben haben. Nutzen Sie dieses Feld für eine Danksagung, Informationen zum weiteren Verlauf oder einen Hinweis auf nächste Schritte – z. B. wann die Ergebnisse veröffentlicht werden. Der Text unterstützt Rich-Text-Formatierung und kann Links enthalten.
       projekt:

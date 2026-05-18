@@ -124,6 +124,14 @@ de:
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
+        enable_google_translate: Google Translate aktivieren
+        enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Zeige Gast-Login an
+        show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+        users_overview_page: Übersicht aller Nutzer*innen
+        users_overview_page_description: Aktiviert eine Übersichtsseite für alle Nutzer*innen
+        use_white_top_navigation_text: Weiße Schrift in der Top-Navigation
+        use_white_top_navigation_text_description: "Aktivieren, wenn das Hintergrundbild der Startseite dunkel ist – schaltet die Top-Navigation auf weiße Schrift, damit sie lesbar bleibt. Sobald Nutzer scrollen und die Navigation auf weißen Hintergrund wechselt, gilt die Einstellung nicht mehr."
         enable_projekt_events_page: Veranstaltungskalender
         enable_projekt_events_page_description: >
           Aktiviert eine zentrale Übersichtsseite für alle öffentlichen Veranstaltungen aus den Beteiligungsprojekten. Bürger können dort kommende Workshops, Bürgerversammlungen und Informationsveranstaltungen einsehen. Die Seite kann über die Navigation erreichbar gemacht werden.

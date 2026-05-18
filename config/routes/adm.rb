@@ -20,6 +20,7 @@ namespace :adm do
     get :gdpr, on: :collection
     get :registration, on: :collection
   end
+  resource :features, controller: "features", only: [:show]
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection

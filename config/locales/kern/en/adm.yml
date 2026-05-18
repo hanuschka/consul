@@ -27,6 +27,7 @@ en:
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
+          features: Features
         pages: Pages
         pages_subitems:
           privacy: Privacy policy

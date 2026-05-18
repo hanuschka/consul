@@ -23,6 +23,7 @@ module Adm
       @overview_settings = [
         Setting.find_by(key: "extended_feature.general.enable_projekt_events_page"),
         Setting.find_by(key: "extended_feature.general.enable_investments_overview"),
+        Setting.find_by(key: "extended_feature.general.users_overview_page"),
         Setting.find_by(key: "process.polls"),
         Setting.find_by(key: "process.proposals")
       ].compact

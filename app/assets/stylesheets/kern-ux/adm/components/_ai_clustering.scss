@@ -8,21 +8,10 @@
     position: relative;
     padding: 1.75rem;
     margin-bottom: 1.5rem;
-    background-image: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 5%, var(--er-surface)) 0%,
-      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 1.5%, var(--er-surface)) 38%,
-      var(--er-surface) 100%
-    );
-    border: 1px solid color-mix(
-      in srgb,
-      var(--cluster-accent, var(--er-border)) 18%,
-      var(--er-border)
-    );
-    border-radius: var(--er-radius-lg);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.7) inset,
-      var(--er-shadow-md);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .ai-clustering .ai-stats-card--title {
@@ -148,6 +137,11 @@
   .ai-clustering--subitem .custom-collapse > .custom-collapse--body {
     display: none;
     overflow: hidden;
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--er-primary)) 7%,
+      #ffffff
+    );
   }
 
   .ai-clustering--subitem .custom-collapse.-opened > .custom-collapse--body {
@@ -362,8 +356,21 @@
     width: 55px;
     height: 55px;
     font-size: 1.25rem;
-    color: var(--er-text-muted);
-    background-color: var(--er-border-light);
+    color: color-mix(
+      in srgb,
+      var(--item-color, var(--er-text-muted)) 75%,
+      #000000
+    );
+    background-color: color-mix(
+      in srgb,
+      var(--item-color, var(--er-border-light)) 20%,
+      #ffffff
+    );
+    border: 1px solid color-mix(
+      in srgb,
+      var(--item-color, var(--er-border-light)) 30%,
+      #ffffff
+    );
     border-radius: var(--er-radius);
   }
 }

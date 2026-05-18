@@ -191,6 +191,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       return
     end
 
+    @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
+
     @breadcrumbs = [
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }

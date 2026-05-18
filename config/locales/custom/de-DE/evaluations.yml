@@ -131,6 +131,9 @@ de:
           report_tab:
             title: Bericht
             kpi_label: Übersicht
+          phase_tab:
+            generated_at: "Stand %{date}"
+            generated_at_unknown: Noch nicht generiert
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

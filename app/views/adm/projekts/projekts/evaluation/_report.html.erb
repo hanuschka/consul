@@ -206,6 +206,13 @@
               kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
               kpi_label = t(config[:kpi_label_key])
               input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+              generated_at_text =
+                if row.generated_at.present?
+                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
+                    date: l(row.generated_at, format: :long))
+                else
+                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
+                end
             %>
             <label
               for="<%= input_id %>"
@@ -221,6 +228,9 @@
                 <span class="evaluation-phase-tab__meta">
                   <strong><%= kpi_value %></strong>
                   <span><%= kpi_label %></span>
+                </span>
+                <span class="evaluation-phase-tab__generated-at">
+                  <%= generated_at_text %>
                 </span>
               </span>
             </label>

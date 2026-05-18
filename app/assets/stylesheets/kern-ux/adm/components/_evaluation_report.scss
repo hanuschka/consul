@@ -665,6 +665,15 @@ $er-max-tabs: 8;
   }
 }
 
+.evaluation-phase-tab__generated-at {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--er-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 .evaluation-phase-panel {
   display: none;
 }

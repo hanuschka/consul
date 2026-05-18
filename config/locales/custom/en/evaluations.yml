@@ -131,6 +131,9 @@ en:
           report_tab:
             title: Report
             kpi_label: Overview
+          phase_tab:
+            generated_at: "As of %{date}"
+            generated_at_unknown: Not generated yet
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle

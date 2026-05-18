@@ -5,12 +5,24 @@
 
 .adm-projekt-evaluation-report {
   .ai-stats-card.ai-clustering {
-    padding: 1.5rem;
+    position: relative;
+    padding: 1.75rem;
     margin-bottom: 1.5rem;
-    background: var(--er-surface);
-    border: 1px solid var(--er-border);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 5%, var(--er-surface)) 0%,
+      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 1.5%, var(--er-surface)) 38%,
+      var(--er-surface) 100%
+    );
+    border: 1px solid color-mix(
+      in srgb,
+      var(--cluster-accent, var(--er-border)) 18%,
+      var(--er-border)
+    );
     border-radius: var(--er-radius-lg);
-    box-shadow: var(--er-shadow-md);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      var(--er-shadow-md);
   }
 
   .ai-clustering .ai-stats-card--title {
@@ -31,15 +43,23 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     font-family: "Material Symbols Outlined";
-    font-size: 2.00rem;
+    font-size: 2rem;
     font-weight: 400;
     line-height: 1;
     color: var(--cluster-accent, var(--er-primary));
-    background: var(--cluster-accent-light, var(--er-primary-lighter));
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 8%, #ffffff) 0%,
+      var(--cluster-accent-light, var(--er-primary-lighter)) 60%,
+      color-mix(in srgb, var(--cluster-accent, var(--er-primary)) 28%, #ffffff) 100%
+    );
     border-radius: 50%;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 1px 2px color-mix(in srgb, var(--cluster-accent, #000) 14%, transparent);
   }
 
   [data-section="topic_clustering"] .ai-clustering .ai-stats-card--title::before {
@@ -64,18 +84,23 @@
   }
 
   .ai-clustering--item-card {
-    padding: 1rem 1.25rem;
-    background: color-mix(
-      in srgb,
-      var(--item-color, var(--er-primary)) 10%,
-      #ffffff
+    position: relative;
+    padding: 1.125rem 1.375rem 1.25rem;
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 5%, #ffffff) 0%,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 12%, #ffffff) 55%,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 22%, #ffffff) 100%
     );
     border: 1px solid color-mix(
       in srgb,
-      var(--item-color, var(--er-border)) 55%,
+      var(--item-color, var(--er-border)) 40%,
       #ffffff
     );
-    border-radius: var(--er-radius);
+    border-radius: var(--er-radius-lg);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.75) inset,
+      0 1px 2px rgba(17, 24, 39, 0.04);
   }
 
   .ai-clustering--item-header {
@@ -106,9 +131,14 @@
 
   .ai-clustering--subitem {
     background: var(--er-surface);
-    border: 1px solid var(--er-border-light);
+    border: 1px solid color-mix(
+      in srgb,
+      var(--item-color, var(--er-border-light)) 22%,
+      #ffffff
+    );
     border-radius: var(--er-radius);
     overflow: hidden;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.035);
   }
 
   .ai-clustering--subitem .custom-collapse {
@@ -131,22 +161,19 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1rem 1rem;
-    background: color-mix(
-      in srgb,
-      var(--item-color, var(--er-primary)) 23%,
-      #ffffff
+    padding: 0.875rem 1rem;
+    background-image: linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 14%, #ffffff) 0%,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 22%, #ffffff) 55%,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 32%, #ffffff) 100%
     );
     border: 0;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: filter 0.15s ease;
 
     &:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--item-color, var(--er-primary)) 24%,
-        #ffffff
-      );
+      filter: brightness(0.97) saturate(1.05);
     }
 
     &:focus-visible {
@@ -211,20 +238,27 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 36px;
-    height: 24px;
-    padding: 0 0.625rem;
-    font-size: 0.975rem;
-    font-weight: 600;
+    min-width: 38px;
+    height: 26px;
+    padding: 0 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
     line-height: 1;
     color: #ffffff;
-    background: var(--item-color, var(--er-primary));
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 92%, #ffffff) 0%,
+      var(--item-color, var(--er-primary)) 50%,
+      color-mix(in srgb, var(--item-color, var(--er-primary)) 82%, #000000) 100%
+    );
     border-radius: 999px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.35) inset,
+      0 1px 2px color-mix(in srgb, var(--item-color, #000) 35%, transparent);
   }
 
   .ai-clustering--subitem-body {
     padding: 0 1rem 1rem 1rem;
-    background: var(--er-surface);
   }
 
   .ai-clustering--resources-list {

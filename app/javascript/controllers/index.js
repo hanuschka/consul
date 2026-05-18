@@ -173,3 +173,6 @@ application.register("adm--ai-action-button", AdmAiActionButtonController)
 
 import SharedPollingController from "./shared/polling_controller"
 application.register("shared--polling", SharedPollingController)
+
+import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
+application.register("adm--phase-regenerate", AdmPhaseRegenerateController)

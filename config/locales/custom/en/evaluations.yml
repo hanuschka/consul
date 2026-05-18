@@ -27,6 +27,17 @@ en:
             An error occurred while generating the evaluation.
             Please try again.
           regenerate_button: Regenerate
+          regenerate_phase_button: Regenerate phase
+          open_in_admin: Open in admin
+          configure_visibility_button: Visibility
+          phase_processing_title: Phase is being regenerated
+          phase_processing_description: >
+            This phase is being regenerated. This may take a few minutes.
+          phase_failed_title: Phase generation failed
+          phase_failed_description: >
+            An error occurred while generating this phase.
+            Please try again.
+          phase_retry_button: Retry
           download_pdf: Download PDF
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.
@@ -88,6 +99,15 @@ en:
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis
               ai_questions: AI questions
+            progress:
+              heading: Preparing your PDF
+              description: >
+                The PDF is being assembled. Each section is processed individually —
+                you can watch progress below.
+              summary_heading: Selected for export
+              steps_heading: Processing steps
+              report_chunk_label: Report summary
+              placeholder_step: Preparing…
             ai_formatting:
               processing: Preparing PDF layout with AI…
               ready: Ready to download.

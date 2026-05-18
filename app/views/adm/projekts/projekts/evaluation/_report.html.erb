@@ -1,7 +1,7 @@
 <%
   data = evaluation.data || {}
   totals = data["totals"] || {}
-  phases = data["phases"] || []
+  phases = evaluation.phases_data
   ai_project_summary = data["ai_project_summary"]
 
   phase_palette = [
@@ -140,6 +140,14 @@
         report_input_id = "evaluation-phase-radio-#{evaluation.id}-report"
         report_accent = "#7C3AED"
         report_accent_light = "#EDE9FE"
+
+        renderable_rows = evaluation.phase_rows.select do |row|
+          data = row.data || {}
+          next false unless phase_type_partial.key?(data["phase_type"])
+          next true if selection.nil?
+
+          selection.include_phase?(data["phase_id"])
+        end
       %>
 
       <div
@@ -155,8 +163,9 @@
           data-phase-id="report"
           checked
         >
-        <% renderable_phases.each do |phase| %>
+        <% renderable_rows.each do |row| %>
           <%
+            phase = row.data || {}
             input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
           %>
           <input
@@ -189,8 +198,9 @@
             </span>
           </label>
 
-          <% renderable_phases.each_with_index do |phase, idx| %>
+          <% renderable_rows.each_with_index do |row, idx| %>
             <%
+              phase = row.data || {}
               color = phase_palette[idx % phase_palette.size]
               config = phase_tab_config[phase["phase_type"]]
               kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
@@ -227,20 +237,20 @@
               pdf_mode: false %>
           </div>
 
-          <% renderable_phases.each_with_index do |phase, idx| %>
+          <% renderable_rows.each_with_index do |row, idx| %>
             <%
+              phase = row.data || {}
               color = phase_palette[idx % phase_palette.size]
               partial = phase_type_partial[phase["phase_type"]]
             %>
-            <div role="tabpanel" class="evaluation-phase-panel">
-              <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
-                locals: {
-                  phase: phase,
-                  accent_color: color[:accent],
-                  accent_light_color: color[:accent_light],
-                  accent_shades: color[:shades]
-                } %>
-            </div>
+            <%= render "adm/projekts/projekts/evaluation/phase_panel",
+              projekt: projekt,
+              row: row,
+              phase: phase,
+              partial_name: partial,
+              accent_color: color[:accent],
+              accent_light_color: color[:accent_light],
+              accent_shades: color[:shades] %>
           <% end %>
         </div>
       </div>

@@ -1,0 +1,61 @@
+<div
+  class="pdf-progress-region"
+  data-adm--evaluation-pdf-prepare-target="progressRegion"
+  hidden
+>
+  <h2 class="h3 mb-4"><%= t("adm.projekts.projekts.evaluation.pdf_options.progress.heading") %></h2>
+  <p class="text-muted mb-4"><%= t("adm.projekts.projekts.evaluation.pdf_options.progress.description") %></p>
+
+  <div class="pdf-progress-region__summary">
+    <h3 class="h5 mb-3"><%= t("adm.projekts.projekts.evaluation.pdf_options.progress.summary_heading") %></h3>
+    <div
+      class="pdf-progress-region__summary-body"
+      data-adm--evaluation-pdf-prepare-target="summaryBody"
+    >
+    </div>
+  </div>
+
+  <div class="pdf-progress-region__steps">
+    <div class="pdf-progress-region__steps-header">
+      <h3 class="h5"><%= t("adm.projekts.projekts.evaluation.pdf_options.progress.steps_heading") %></h3>
+      <div
+        class="pdf-progress-region__progress-meta"
+        data-adm--evaluation-pdf-prepare-target="progressMeta"
+      >
+      </div>
+    </div>
+
+    <div
+      class="pdf-progress-region__bar"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      data-adm--evaluation-pdf-prepare-target="progressBar"
+    >
+      <div
+        class="pdf-progress-region__bar-fill"
+        data-adm--evaluation-pdf-prepare-target="progressBarFill"
+      ></div>
+    </div>
+
+    <ol
+      class="pdf-progress-region__steps-list"
+      data-adm--evaluation-pdf-prepare-target="stepsList"
+    >
+    </ol>
+  </div>
+
+  <template
+    data-adm--evaluation-pdf-prepare-target="stepTemplate"
+    data-placeholder-label="<%= t("adm.projekts.projekts.evaluation.pdf_options.progress.placeholder_step") %>"
+  >
+    <li class="pdf-progress-region__step">
+      <span class="pdf-progress-region__step-icon" aria-hidden="true">
+        <span class="material-symbols-outlined pdf-progress-region__step-icon-pending">schedule</span>
+        <span class="material-symbols-outlined pdf-progress-region__step-icon-processing">progress_activity</span>
+        <span class="material-symbols-outlined pdf-progress-region__step-icon-completed">check_circle</span>
+      </span>
+      <span class="pdf-progress-region__step-label"></span>
+    </li>
+  </template>
+</div>

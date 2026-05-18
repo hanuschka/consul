@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_14_164651) do
+ActiveRecord::Schema.define(version: 2026_05_18_073404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2069,6 +2069,7 @@ ActiveRecord::Schema.define(version: 2026_05_14_164651) do
     t.datetime "pdf_formatted_at"
     t.string "pdf_formatted_data_fingerprint"
     t.string "pdf_formatted_error"
+    t.jsonb "pdf_format_progress", default: {}
     t.index ["projekt_id", "pdf_formatted_status"], name: "index_projekt_evaluations_on_projekt_id_and_pdf_status"
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
     t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
@@ -2193,6 +2194,48 @@ ActiveRecord::Schema.define(version: 2026_05_14_164651) do
     t.bigint "projekt_phase_id"
     t.index ["projekt_id"], name: "index_projekt_notifications_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_projekt_notifications_on_projekt_phase_id"
+  end
+
+  create_table "projekt_phase_evaluation_visibilities", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.boolean "show_kpis", default: false, null: false
+    t.boolean "show_key_metrics", default: false, null: false
+    t.boolean "show_phase_summary", default: false, null: false
+    t.boolean "show_tone", default: false, null: false
+    t.boolean "show_ranking", default: false, null: false
+    t.boolean "show_proposals", default: false, null: false
+    t.boolean "show_ai_summary", default: false, null: false
+    t.boolean "show_timeline", default: false, null: false
+    t.boolean "show_label_sentiment", default: false, null: false
+    t.boolean "show_user_segments", default: false, null: false
+    t.boolean "show_key_findings", default: false, null: false
+    t.boolean "show_topic_clustering", default: false, null: false
+    t.boolean "show_semantic_clustering", default: false, null: false
+    t.boolean "show_ai_questions", default: false, null: false
+    t.boolean "show_questions", default: false, null: false
+    t.boolean "show_open_responses", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
+  end
+
+  create_table "projekt_phase_evaluations", force: :cascade do |t|
+    t.bigint "projekt_evaluation_id", null: false
+    t.bigint "projekt_phase_id", null: false
+    t.jsonb "data", default: {}
+    t.string "status", default: "pending", null: false
+    t.datetime "generated_at"
+    t.text "pdf_formatted_html"
+    t.string "pdf_formatted_status"
+    t.datetime "pdf_formatted_at"
+    t.string "pdf_formatted_data_fingerprint"
+    t.string "pdf_formatted_error"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_evaluation_id", "projekt_phase_id"], name: "index_projekt_phase_evaluations_on_eval_and_phase", unique: true
+    t.index ["projekt_evaluation_id"], name: "index_projekt_phase_evaluations_on_projekt_evaluation_id"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluations_on_projekt_phase_id"
+    t.index ["status"], name: "index_projekt_phase_evaluations_on_status"
   end
 
   create_table "projekt_phase_geozones", force: :cascade do |t|

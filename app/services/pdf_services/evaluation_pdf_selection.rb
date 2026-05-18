@@ -11,7 +11,7 @@ class PdfServices::EvaluationPdfSelection
   attr_reader :phase_ids, :sections_by_phase, :include_report
 
   def self.all(evaluation)
-    phases = evaluation.data["phases"] || []
+    phases = evaluation.phases_data
     phase_ids = phases.map { |p| p["phase_id"].to_i }
     sections_by_phase = phases.each_with_object({}) do |phase, hash|
       hash[phase["phase_id"].to_i] = available_sections(phase["phase_type"])

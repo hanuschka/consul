@@ -1,6 +1,6 @@
 <%
   data = evaluation.data || {}
-  phases = data["phases"] || []
+  phases = evaluation.phases_data
   project_content_summary = data["project_content_summary"]
   report_settings = data["report_settings"] || {}
   pdf_mode = local_assigns.fetch(:pdf_mode, false)

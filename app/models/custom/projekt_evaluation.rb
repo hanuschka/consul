@@ -1,5 +1,6 @@
 class ProjektEvaluation < ApplicationRecord
   belongs_to :projekt
+  has_many :projekt_phase_evaluations, dependent: :destroy
 
   enum status: {
     pending: "pending",
@@ -24,11 +25,16 @@ class ProjektEvaluation < ApplicationRecord
     update!(share_token: SecureRandom.urlsafe_base64(16))
   end
 
-  def phase_data_for(projekt_phase)
-    return {} if data.blank?
+  def phases_data
+    phase_rows.pluck(:data)
+  end
 
-    phases = data["phases"] || []
-    phases.find { |p| p["phase_id"] == projekt_phase.id } || {}
+  def phase_rows
+    projekt_phase_evaluations
+      .joins(:projekt_phase)
+      .includes(:projekt_phase)
+      .where("data->>'phase_type' IS NOT NULL")
+      .order(Arel.sql("projekt_phases.given_order ASC NULLS LAST, projekt_phases.id ASC"))
   end
 
   def pdf_formatting_in_progress?
@@ -42,7 +48,10 @@ class ProjektEvaluation < ApplicationRecord
   end
 
   def pdf_formatting_stale?
-    pdf_formatted_data_fingerprint != current_data_fingerprint
+    return true if pdf_formatted_data_fingerprint != current_data_fingerprint
+    return true if phase_rows.any?(&:pdf_formatting_stale?)
+
+    false
   end
 
   def current_data_fingerprint

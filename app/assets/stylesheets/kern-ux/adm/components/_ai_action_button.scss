@@ -13,6 +13,10 @@
     opacity: 0.85;
     cursor: progress;
   }
+
+  &[hidden] {
+    display: none;
+  }
 }
 
 .adm-ai-action-button--inline-spinner {
@@ -48,6 +52,12 @@
   }
 }
 
+.adm-ai-action-button--progress-body {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
 .adm-ai-action-button--progress-spinner {
   display: inline-block;
   width: 14px;
@@ -62,7 +72,7 @@
 .adm-ai-action-button--progress-bar {
   position: relative;
   display: inline-block;
-  width: 96px;
+  width: 100%;
   height: 4px;
   background: #ddd6fe;
   border-radius: 999px;

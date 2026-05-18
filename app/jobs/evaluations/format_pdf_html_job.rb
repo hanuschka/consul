@@ -4,21 +4,21 @@ class Evaluations::FormatPdfHtmlJob < ApplicationJob
   def perform(evaluation_id)
     evaluation = ProjektEvaluation.find(evaluation_id)
 
-    if evaluation.pdf_formatted_html.present? && !evaluation.pdf_formatting_stale?
-      return
-    end
+    return if evaluation.pdf_formatting_ready?
 
     starting_fingerprint = evaluation.current_data_fingerprint
 
     evaluation.update!(
       pdf_formatted_status: "processing",
-      pdf_formatted_error: nil
+      pdf_formatted_error: nil,
+      pdf_format_progress: { "stage" => "rendering", "steps" => [] }
     )
 
     if !Ai::Settings.ai_available?
       evaluation.update!(
         pdf_formatted_status: "failed",
-        pdf_formatted_error: "ai_disabled"
+        pdf_formatted_error: "ai_disabled",
+        pdf_format_progress: {}
       )
       return
     end
@@ -37,12 +37,30 @@ class Evaluations::FormatPdfHtmlJob < ApplicationJob
     )
 
     chunks = Evaluations::ChunkPdfHtml.call(html)
-    chunks_with_ai_html = chunks.map do |chunk|
-      ai_html = format_chunk(chunk)
+    phase_rows_by_id = evaluation.projekt_phase_evaluations.index_by { |r| r.projekt_phase_id.to_s }
+    phase_title_by_id = phase_rows_by_id.transform_values { |row| row.data["phase_title"] }
+    new_phase_chunks = Hash.new { |h, k| h[k] = {} }
+
+    steps = build_steps(chunks, phase_title_by_id)
+    update_progress(evaluation, "formatting", steps)
+
+    chunks_with_ai_html = chunks.each_with_index.map do |chunk, idx|
+      mark_step(steps, idx, "processing")
+      update_progress(evaluation, "formatting", steps)
+
+      ai_html = resolve_chunk_html(chunk, phase_rows_by_id, new_phase_chunks)
+
+      mark_step(steps, idx, "completed")
+      update_progress(evaluation, "formatting", steps)
+
       chunk.merge(ai_html: ai_html)
     end
 
+    update_progress(evaluation, "stitching", steps)
+
     stitched = Evaluations::ChunkPdfHtml.stitch(chunks_with_ai_html)
+
+    persist_phase_caches(phase_rows_by_id, new_phase_chunks)
 
     evaluation.reload
     if evaluation.current_data_fingerprint != starting_fingerprint
@@ -58,19 +76,103 @@ class Evaluations::FormatPdfHtmlJob < ApplicationJob
       pdf_formatted_status: "completed",
       pdf_formatted_at: Time.current,
       pdf_formatted_data_fingerprint: starting_fingerprint,
-      pdf_formatted_error: nil
+      pdf_formatted_error: nil,
+      pdf_format_progress: { "stage" => "completed", "steps" => steps }
     )
   rescue StandardError => e
     Rails.logger.error("[Evaluation] FormatPdfHtmlJob failed for ##{evaluation_id}: #{e.message}")
     evaluation&.update(
       pdf_formatted_status: "failed",
-      pdf_formatted_error: e.message.to_s.truncate(500)
+      pdf_formatted_error: e.message.to_s.truncate(500),
+      pdf_format_progress: { "stage" => "failed" }
     )
 
     raise
   end
 
   private
+
+    def build_steps(chunks, phase_title_by_id)
+      chunks.map do |chunk|
+        {
+          "key" => chunk[:key],
+          "label" => chunk_label(chunk, phase_title_by_id),
+          "phase_id" => chunk[:phase_id].to_s,
+          "section" => chunk[:section].to_s,
+          "status" => "pending"
+        }
+      end
+    end
+
+    def mark_step(steps, index, status)
+      steps[index]["status"] = status
+    end
+
+    def update_progress(evaluation, stage, steps)
+      evaluation.update_columns(
+        pdf_format_progress: {
+          "stage" => stage,
+          "steps" => steps,
+          "total" => steps.size,
+          "completed" => steps.count { |s| s["status"] == "completed" }
+        }
+      )
+    end
+
+    def chunk_label(chunk, phase_title_by_id)
+      if chunk[:phase_id].blank?
+        return I18n.t(
+          "adm.projekts.projekts.evaluation.pdf_options.progress.report_chunk_label",
+          default: "Report"
+        )
+      end
+
+      phase_title = phase_title_by_id[chunk[:phase_id].to_s].presence || chunk[:phase_id].to_s
+      section_label = I18n.t(
+        "adm.projekts.projekts.evaluation.pdf_options.sections.#{chunk[:section]}",
+        default: chunk[:section].to_s.humanize
+      )
+
+      "#{phase_title} — #{section_label}"
+    end
+
+    def resolve_chunk_html(chunk, phase_rows_by_id, new_phase_chunks)
+      phase_id = chunk[:phase_id].presence
+      row = phase_id ? phase_rows_by_id[phase_id.to_s] : nil
+
+      if row && !row.pdf_formatting_stale?
+        cached = row.cached_chunk_html(chunk[:key])
+        return cached if cached.present?
+      end
+
+      ai_html = format_chunk(chunk)
+
+      if phase_id.present? && row.present? && ai_html != chunk[:html]
+        new_phase_chunks[phase_id.to_s][chunk[:key]] = ai_html
+      end
+
+      ai_html
+    end
+
+    def persist_phase_caches(phase_rows_by_id, new_phase_chunks)
+      new_phase_chunks.each do |phase_id, chunks_by_key|
+        row = phase_rows_by_id[phase_id.to_s]
+        next if row.blank?
+
+        existing = parse_existing_cache(row)
+        merged = existing.merge(chunks_by_key)
+        row.write_chunk_cache!(merged)
+      end
+    end
+
+    def parse_existing_cache(row)
+      return {} if row.pdf_formatted_html.blank?
+      return {} if row.pdf_formatting_stale?
+
+      JSON.parse(row.pdf_formatted_html)
+    rescue JSON::ParserError
+      {}
+    end
 
     def format_chunk(chunk)
       Rails.logger.info(

@@ -20,6 +20,10 @@ class Evaluations::AggregateStatistics < ApplicationService
     }
   end
 
+  def call_for_phase(phase)
+    collect_phase_data(phase)
+  end
+
   private
 
   def collect_all_phases

@@ -702,6 +702,31 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def evaluation_visibility
+    authorize_phase(:update?)
+    @visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    @breadcrumbs = [
+      { name: @projekt_phase.projekt.page.title },
+      { name: t(".title") }
+    ]
+  end
+
+  def update_evaluation_visibility
+    authorize_phase(:update?)
+    visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    if visibility.update(evaluation_visibility_params)
+      flash[:notice] = t(".success")
+      redirect_to evaluation_adm_projekts_projekt_path(@projekt_phase.projekt)
+    else
+      flash[:error] = visibility.errors.full_messages.join(", ")
+      redirect_to evaluation_visibility_adm_projekts_phase_path(@projekt_phase)
+    end
+  end
+
   private
 
     def moderation_filter_options
@@ -738,6 +763,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       else
         @projekt_phase = ProjektPhase.find(params[:id])
       end
+    end
+
+    def evaluation_visibility_params
+      params.require(:projekt_phase_evaluation_visibility).permit(
+        *ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
+      )
     end
 
     def projekt_phase_params

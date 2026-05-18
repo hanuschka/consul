@@ -27,6 +27,17 @@ de:
             Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
           regenerate_button: Neu generieren
+          regenerate_phase_button: Phase neu generieren
+          open_in_admin: Im Admin öffnen
+          configure_visibility_button: Sichtbarkeit
+          phase_processing_title: Phase wird neu generiert
+          phase_processing_description: >
+            Diese Phase wird neu generiert. Dies kann einige Minuten dauern.
+          phase_failed_title: Phasen-Generierung fehlgeschlagen
+          phase_failed_description: >
+            Bei der Generierung dieser Phase ist ein Fehler aufgetreten.
+            Bitte versuchen Sie es erneut.
+          phase_retry_button: Erneut versuchen
           download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
@@ -88,6 +99,15 @@ de:
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
+            progress:
+              heading: PDF wird vorbereitet
+              description: >
+                Das PDF wird zusammengestellt. Jeder Abschnitt wird einzeln
+                verarbeitet — den Fortschritt sehen Sie unten.
+              summary_heading: Für den Export ausgewählt
+              steps_heading: Verarbeitungsschritte
+              report_chunk_label: Berichtszusammenfassung
+              placeholder_step: Wird vorbereitet…
             ai_formatting:
               processing: PDF wird mit KI für besseren Seitenumbruch aufbereitet…
               ready: Bereit zum Download.

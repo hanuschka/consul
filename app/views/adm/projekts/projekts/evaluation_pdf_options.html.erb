@@ -13,144 +13,136 @@
   data-controller="adm--evaluation-pdf-prepare"
   data-adm--evaluation-pdf-prepare-prepare-url-value="<%= prepare_evaluation_pdf_adm_projekts_projekt_path(@projekt) %>"
   data-adm--evaluation-pdf-prepare-status-url-value="<%= evaluation_pdf_status_adm_projekts_projekt_path(@projekt) %>"
+  data-adm--evaluation-pdf-prepare-back-url-value="<%= evaluation_adm_projekts_projekt_path(@projekt) %>"
 >
-  <h2 class="h3 mb-4"><%= t(".heading") %></h2>
-  <p class="text-muted mb-4"><%= t(".description") %></p>
+  <div
+    class="pdf-options-form-region"
+    data-adm--evaluation-pdf-prepare-target="formRegion"
+  >
+    <h2 class="h3 mb-4"><%= t(".heading") %></h2>
+    <p class="text-muted mb-4"><%= t(".description") %></p>
 
-  <%= form_with(
-    url: evaluation_pdf_adm_projekts_projekt_path(@projekt),
-    method: :get,
-    local: true,
-    html: {
-      target: "_blank",
-      data: {
-        turbolinks: false,
-        turbo: false,
-        "adm--evaluation-pdf-prepare-target": "form",
-        action: "submit->adm--evaluation-pdf-prepare#handleSubmit"
-      }
-    },
-    class: "pdf-options-form"
-  ) do |form| %>
+    <%= form_with(
+      url: evaluation_pdf_adm_projekts_projekt_path(@projekt),
+      method: :get,
+      local: true,
+      html: {
+        target: "_blank",
+        data: {
+          turbolinks: false,
+          turbo: false,
+          "adm--evaluation-pdf-prepare-target": "form",
+          action: "submit->adm--evaluation-pdf-prepare#handleSubmit"
+        }
+      },
+      class: "pdf-options-form"
+    ) do |form| %>
 
-    <div class="pdf-options-phase">
-      <label class="pdf-options-phase__toggle">
-        <%= check_box_tag(
-          "pdf_options[include_report]",
-          "1",
-          true,
-          id: "pdf_options_include_report"
-        ) %>
-        <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
-        <span class="pdf-options-phase__type">
-          <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
-        </span>
-      </label>
-    </div>
-
-    <% phases = @evaluation.data["phases"] || [] %>
-    <% phases.each do |phase| %>
-      <%
-        phase_id = phase["phase_id"].to_i
-        available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
-      %>
       <div class="pdf-options-phase">
         <label class="pdf-options-phase__toggle">
           <%= check_box_tag(
-            "pdf_options[phase_ids][]",
-            phase_id,
+            "pdf_options[include_report]",
+            "1",
             true,
-            id: "pdf_options_phase_#{phase_id}"
+            id: "pdf_options_include_report"
           ) %>
-          <strong><%= phase["phase_title"] %></strong>
+          <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
           <span class="pdf-options-phase__type">
-            <%= t("adm.projekts.projekts.evaluation.#{phase["phase_type"].to_s.split("::").last.underscore}",
-              default: phase["phase_type"].to_s.split("::").last) %>
+            <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
           </span>
         </label>
+      </div>
 
-        <div class="pdf-options-sections">
-          <% available_sections.each do |section_key| %>
-            <label class="pdf-options-section">
-              <%= check_box_tag(
-                "pdf_options[sections][#{phase_id}][]",
-                section_key,
-                true,
-                id: "pdf_options_section_#{phase_id}_#{section_key}"
-              ) %>
-              <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
-            </label>
-          <% end %>
+      <% phases = @evaluation.phases_data %>
+      <% phases.each do |phase| %>
+        <%
+          phase_id = phase["phase_id"].to_i
+          available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
+        %>
+        <div class="pdf-options-phase">
+          <label class="pdf-options-phase__toggle">
+            <%= check_box_tag(
+              "pdf_options[phase_ids][]",
+              phase_id,
+              true,
+              id: "pdf_options_phase_#{phase_id}"
+            ) %>
+            <strong><%= phase["phase_title"] %></strong>
+            <span class="pdf-options-phase__type">
+              <%= t("adm.projekts.projekts.evaluation.#{phase["phase_type"].to_s.split("::").last.underscore}",
+                default: phase["phase_type"].to_s.split("::").last) %>
+            </span>
+          </label>
+
+          <div class="pdf-options-sections">
+            <% available_sections.each do |section_key| %>
+              <label class="pdf-options-section">
+                <%= check_box_tag(
+                  "pdf_options[sections][#{phase_id}][]",
+                  section_key,
+                  true,
+                  id: "pdf_options_section_#{phase_id}_#{section_key}"
+                ) %>
+                <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="d-flex gap-2 mt-4 align-items-center">
+        <%= kern_link_button(
+          evaluation_adm_projekts_projekt_path(@projekt),
+          text: t(".cancel"),
+          icon: "arrow_back",
+          style: :secondary
+        ) %>
+        <%= button_tag(
+          type: "submit",
+          class: "kern-btn kern-btn--primary",
+          data: { "adm--evaluation-pdf-prepare-target": "submitButton" }
+        ) do %>
+          <span class="kern-label material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
+          <span class="kern-label"><%= t(".download") %></span>
+        <% end %>
+      </div>
+
+      <div class="pdf-options-ai-status mt-4">
+        <div
+          class="pdf-options-ai-status__panel pdf-options-ai-status__panel--failed"
+          data-adm--evaluation-pdf-prepare-target="failedPanel"
+          hidden
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">error</span>
+          <div>
+            <div><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.failed") %></div>
+            <div
+              class="pdf-options-ai-status__error"
+              data-adm--evaluation-pdf-prepare-target="errorMessage"
+            ></div>
+          </div>
+          <button
+            type="button"
+            class="kern-btn kern-btn--secondary"
+            data-action="click->adm--evaluation-pdf-prepare#retry"
+          >
+            <%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.retry") %>
+          </button>
+        </div>
+
+        <div
+          class="pdf-options-ai-status__panel pdf-options-ai-status__panel--ai-disabled"
+          data-adm--evaluation-pdf-prepare-target="aiDisabledPanel"
+          hidden
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">info</span>
+          <span><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.ai_disabled") %></span>
         </div>
       </div>
     <% end %>
+  </div>
 
-    <div class="d-flex gap-2 mt-4">
-      <%= kern_link_button(
-        evaluation_adm_projekts_projekt_path(@projekt),
-        text: t(".cancel"),
-        icon: "arrow_back",
-        style: :secondary
-      ) %>
-      <%= button_tag(
-        type: "submit",
-        class: "kern-btn kern-btn--primary",
-        data: { "adm--evaluation-pdf-prepare-target": "submitButton" }
-      ) do %>
-        <span class="kern-label material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
-        <span class="kern-label"><%= t(".download") %></span>
-      <% end %>
-    </div>
-
-    <div class="pdf-options-ai-status mt-4">
-      <div
-        class="pdf-options-ai-status__panel pdf-options-ai-status__panel--processing"
-        data-adm--evaluation-pdf-prepare-target="processingPanel"
-        hidden
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-        <span><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.processing") %></span>
-      </div>
-
-      <div
-        class="pdf-options-ai-status__panel pdf-options-ai-status__panel--ready"
-        data-adm--evaluation-pdf-prepare-target="readyPanel"
-        hidden
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
-        <span><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.ready") %></span>
-      </div>
-
-      <div
-        class="pdf-options-ai-status__panel pdf-options-ai-status__panel--failed"
-        data-adm--evaluation-pdf-prepare-target="failedPanel"
-        hidden
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">error</span>
-        <div>
-          <div><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.failed") %></div>
-          <div
-            class="pdf-options-ai-status__error"
-            data-adm--evaluation-pdf-prepare-target="errorMessage"
-          ></div>
-        </div>
-        <button
-          type="button"
-          class="kern-btn kern-btn--secondary"
-          data-action="click->adm--evaluation-pdf-prepare#retry"
-        >
-          <%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.retry") %>
-        </button>
-      </div>
-
-      <div
-        class="pdf-options-ai-status__panel pdf-options-ai-status__panel--ai-disabled"
-        data-adm--evaluation-pdf-prepare-target="aiDisabledPanel"
-        hidden
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">info</span>
-        <span><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.ai_disabled") %></span>
-      </div>
-    </div>
-  <% end %>
+  <%= render "adm/projekts/projekts/evaluation/pdf_progress_region",
+    projekt: @projekt,
+    evaluation: @evaluation %>
 </div>

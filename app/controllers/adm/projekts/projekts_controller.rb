@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :prepare_evaluation_pdf, :evaluation_pdf_status, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :prepare_evaluation_pdf, :evaluation_pdf_status, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
 
   def list
@@ -153,6 +153,35 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     }
   end
 
+  def regenerate_phase_evaluation
+    authorize [:adm, :projekts, @projekt], :update?
+
+    evaluation = @projekt.projekt_evaluation || @projekt.create_projekt_evaluation!(status: :pending)
+    projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+
+    row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
+    row.update!(status: :processing)
+
+    Evaluations::GeneratePhaseEvaluationJob.perform_later(row.id)
+
+    render json: {
+      status: row.status,
+      projekt_phase_evaluation_id: row.id
+    }
+  end
+
+  def phase_evaluation_status
+    authorize [:adm, :projekts, @projekt], :show?
+    evaluation = @projekt.projekt_evaluation
+    row = evaluation&.projekt_phase_evaluations&.find_by(projekt_phase_id: params[:phase_id])
+
+    render json: {
+      status: row&.status || "pending",
+      generated_at: row&.generated_at&.iso8601,
+      error: row&.status == "failed"
+    }
+  end
+
   def evaluation_pdf_options
     authorize [:adm, :projekts, @projekt], :show?
     @evaluation = @projekt.projekt_evaluation
@@ -245,7 +274,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       pdf_formatted_at: @evaluation.pdf_formatted_at,
       pdf_formatted_error: @evaluation.pdf_formatted_error,
       ready: @evaluation.pdf_formatting_ready? || ai_disabled,
-      ai_disabled: ai_disabled
+      ai_disabled: ai_disabled,
+      progress: @evaluation.pdf_format_progress || {}
     }
   end
 

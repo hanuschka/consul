@@ -78,6 +78,17 @@ en:
         projekt_phase:
           ai_user_flow: AI flow assistant
           ai_settings: Voice assistant
+          evaluation_visibility: Evaluation visibility
+        evaluation_visibility:
+          title: Evaluation visibility
+          heading: Configure visibility for regular users
+          description: >
+            Choose which evaluation sections regular users can see for this phase
+            in the projekt footer. Admins and projekt managers always see everything.
+          save: Save
+          cancel: Cancel
+        update_evaluation_visibility:
+          success: Visibility settings saved.
         masterportal_pins:
           delete_all_button: Delete all pins and associated resources
           delete_all_confirm: This will permanently delete all imported Masterportal pins on this phase together with their associated proposals, budget investments or points of interest. Continue?

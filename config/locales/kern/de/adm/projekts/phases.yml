@@ -93,7 +93,7 @@ de:
         naming:
           title: Benennung
           poll_image_label: Bild der Abstimmung
-          poll_image_description: Wird in der Übersicht der Abstimmungen als Vorschaubild neben dem Titel angezeigt und unterstützt die schnelle visuelle Wiedererkennung. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zur Abstimmung passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG.
+          poll_image_description: "Wird in der Übersicht der Abstimmungen als Vorschaubild neben dem Titel angezeigt und unterstützt die schnelle visuelle Wiedererkennung. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zur Abstimmung passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG."
         restrictions:
           title: Beteiligungsbeschränkung
           intro_title: Hinweis zur Beteiligungsbeschränkung

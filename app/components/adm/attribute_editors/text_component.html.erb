@@ -1,0 +1,28 @@
+<%= form_with model: @record, url: path do |form| %>
+  <%= hidden_field_tag :kind, "text" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :wide, true if @options[:wide] %>
+  <%= hidden_field_tag :divider, @options[:divider] if @options.key?(:divider) %>
+
+  <% input_options = {
+        label: false,
+        placeholder: label,
+        class: "kern-form-input__input",
+        rows: @options[:rows] || 4,
+        disabled: disabled?,
+        data: {"components-adm-attribute-editor-target": "input" },
+        aria: aria_attributes
+      } %>
+
+  <%= form.text_area @attribute, **input_options %>
+
+  <div class="mt-3">
+    <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
+  </div>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-controller="auto-remove">
+    <%= flash[:success] %>
+  </div>
+<% end %>

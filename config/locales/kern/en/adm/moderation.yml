@@ -13,6 +13,29 @@ en:
           pending: Pending moderations
           comments: Comments
           users: Users
+        tiles:
+          title: Moderation areas
+          hint: Jump directly to the content awaiting moderation.
+          proposals:
+            title: Proposals
+            metric:
+              one: "%{count} flagged proposal"
+              other: "%{count} flagged proposals"
+          comments:
+            title: Comments
+            metric:
+              one: "%{count} flagged comment"
+              other: "%{count} flagged comments"
+          budget_investments:
+            title: Proposals (budget)
+            metric:
+              one: "%{count} flagged item"
+              other: "%{count} flagged items"
+          users:
+            title: Users
+            metric:
+              one: "%{count} blocked user"
+              other: "%{count} blocked users"
       menu:
         aria_label: Moderation menu
         title: Moderation
@@ -23,6 +46,11 @@ en:
           proposals: Proposals
           budget_investments: Proposals (budget)
           comments: Comments
+          settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
       users:
         index:
           title: Block users
@@ -50,6 +78,8 @@ en:
           flags_count: Flags
           no_items_title: No proposals available
           no_items_description: Proposals will be shown here as soon as they are flagged.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags
@@ -72,6 +102,8 @@ en:
           flags_count: Flags
           no_items_title: No proposals available
           no_items_description: Proposals will be shown here as soon as they are flagged.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags
@@ -95,6 +127,8 @@ en:
           flags_count: Flags
           no_items_title: No comments available
           no_items_description: Comments will be shown here as soon as they are flagged.
+          no_results_filtered_title: No comments match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more comments.
           tabs:
             pending_flag_review: Flagged
             with_ignored_flag: Ignored flags

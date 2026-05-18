@@ -79,7 +79,7 @@
                 <% end %>
 
                 <% if @tags[2].present? %>
-                  <%= link_to(path_for_resource_with_params(@resource, tags: @tags), class: 'resource-item--tag') do %>
+                  <%= link_to(path_for_resource_with_params(@resource, tags: @tags.map(&:name).join(",")), class: 'resource-item--tag') do %>
                     <% remaining_tags_count = @tags.count - 2 %>
                     <%= t("custom.tags.remaining_count", count: remaining_tags_count) %>
                   <% end %>

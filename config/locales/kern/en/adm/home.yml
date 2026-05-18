@@ -13,17 +13,24 @@ en:
           title: Users
           total: "Total (active)"
           new_this_week: New this week
-        deficiency_reports:
-          title: Deficiency reports
-          total: Total
-          open: Open
-          unassigned: Unassigned
-        projects:
-          title: Projects
-          total: Total
-          active: Active
-          expired: Expired
-        detailed_statistics: Detailed statistics
+        adm_sections:
+          title: "Administration sections"
+          hint: "Direct access to the dashboards of every section you have permissions for. Sections that don't appear here are not enabled for your role."
+          go_to_dashboard: "Open dashboard"
+          card_title: "%{section} — open dashboard"
+          metrics:
+            projekts:
+              one: "%{count} active project"
+              other: "%{count} active projects"
+            deficiency_reports:
+              one: "%{count} open report"
+              other: "%{count} open reports"
+            ideas:
+              one: "%{count} active idea"
+              other: "%{count} active ideas"
+            officing:
+              one: "%{count} ongoing poll"
+              other: "%{count} ongoing polls"
         dt:
           ticket_system: Ticket system
           meetup: Monthly Consul meetup

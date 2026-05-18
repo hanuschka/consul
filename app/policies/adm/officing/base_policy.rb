@@ -1,4 +1,11 @@
 class Adm::Officing::BasePolicy < ApplicationPolicy
+  # Sichtbarkeit der Section (IconRail / Admin-Home-Bento) auch fuer Administratoren.
+  # Mutating Actions (verify_user, vote-related, bulk_votes, ...) bleiben bewusst
+  # officing_manager-only: sie greifen im Controller auf current_user.officing_manager
+  # zu (Vote-Zuordnung in poll_answers.officing_manager_id, Phasen-Assignments). Ohne
+  # OfficingManager-Datensatz wuerden diese Routes mit NoMethodError fehlschlagen und
+  # Audit-Spuren der Wahlbearbeitung wuerden geschwaecht. Stimmen-Integritaet hat
+  # hier Vorrang vor Symmetrie zu anderen Adm-Bereichen.
   def officing_desk?
     officing_manager?
   end
@@ -12,11 +19,11 @@ class Adm::Officing::BasePolicy < ApplicationPolicy
   end
 
   def show?
-    officing_manager?
+    administrator? || officing_manager?
   end
 
   def index?
-    officing_manager?
+    administrator? || officing_manager?
   end
 
   def create?
@@ -40,6 +47,10 @@ class Adm::Officing::BasePolicy < ApplicationPolicy
   end
 
   private
+
+    def administrator?
+      @user&.administrator?
+    end
 
     def officing_manager?
       @user&.officing_manager?

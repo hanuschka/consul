@@ -1,0 +1,22 @@
+en:
+  components:
+    adm:
+      masterportal_pins_list_component:
+        title: Imported pins
+        total:
+          one: "%{count} pin total"
+          other: "%{count} pins total"
+        columns:
+          title: Title
+          collection: Dataset
+          linked_resource: Linked resource
+          imported_at: Imported
+        show_properties:
+          one: Show %{count} property
+          other: Show %{count} properties
+        linked_resource:
+          proposal: Open proposal
+          budget_investment: Open budget investment
+          point_of_interest_pin: Point of interest
+        delete: Delete
+        delete_confirm: 'Delete pin "%{title}" and any linked proposal/investment/point of interest? This cannot be undone.'

@@ -25,8 +25,7 @@ module Adm
           @document_type_header_options = { filter_options: document_type_options }
 
           @breadcrumbs = [
-            { name: t("adm.menu.items.profiles"), icon: "3p" },
-            { name: t("adm.menu.items.profiles_subitems.users") }
+            { name: t("adm.menu.items.users"), icon: "3p" }
           ]
         end
 
@@ -117,8 +116,7 @@ module Adm
 
       def edit_breadcrumbs
         [
-          { name: t("adm.menu.items.profiles"), icon: "3p" },
-          { name: t("adm.menu.items.profiles_subitems.users"), url: adm_users_path },
+          { name: t("adm.menu.items.users"), icon: "3p", url: adm_users_path },
           { name: @user.name.presence || @user.email }
         ]
       end

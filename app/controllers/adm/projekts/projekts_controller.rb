@@ -1,11 +1,22 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation, :generate_evaluation, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :evaluation]
+
+  def list
+    authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
+
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
+    @pagy, @projekts = pagy(base_scope, limit: 10)
+
+    @name_header_options = { sort: true, search: true }
+    @start_date_header_options = { sort: true }
+    @end_date_header_options = { sort: true }
+  end
 
   def new
     authorize [:adm, :projekts, Projekt], :create?
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: t(".title") }
     ]
   end
@@ -24,7 +35,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def details
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
     ]
@@ -34,7 +44,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -50,7 +59,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -59,7 +67,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def map
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
@@ -74,10 +81,72 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
+  end
+
+  def evaluation
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    @breadcrumbs = [
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+  end
+
+  def generate_evaluation
+    authorize [:adm, :projekts, @projekt], :update?
+    Evaluations::GenerateEvaluationJob.perform_later(@projekt.id)
+
+    flash[:notice] = I18n.t("adm.projekts.projekts.generate_evaluation.started")
+
+    redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+  end
+
+  def evaluation_pdf_options
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank? || !@evaluation.completed?
+      redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+      return
+    end
+
+    @breadcrumbs = [
+      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+  end
+
+  def evaluation_pdf
+    authorize [:adm, :projekts, @projekt], :show?
+    @evaluation = @projekt.projekt_evaluation
+
+    if @evaluation.blank? || !@evaluation.completed?
+      redirect_to evaluation_adm_projekts_projekt_path(@projekt)
+      return
+    end
+
+    selection = PdfServices::EvaluationPdfSelection.from_params(@evaluation, params[:pdf_options])
+
+    html = render_to_string(
+      template: "adm/projekts/projekts/evaluation/pdf",
+      layout: "pdf_evaluation",
+      locals: {
+        projekt: @projekt,
+        evaluation: @evaluation,
+        selection: selection
+      }
+    )
+
+    pdf = Grover.new(html, display_url: request.base_url).to_pdf
+
+    send_data pdf,
+      filename: "evaluation_#{@projekt.id}_#{Time.current.strftime('%Y%m%d')}.pdf",
+      type: "application/pdf",
+      disposition: "attachment"
   end
 
   def update
@@ -104,6 +173,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.destroy!
 
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
+  end
+
+  def import_projekt
+    authorize [:adm, :projekts, Projekt], :create?
+
+    @breadcrumbs = [
+      { name: t(".title") }
+    ]
+
+    @dt_import_url = build_dt_import_url
   end
 
   def notify_reviewers
@@ -202,6 +281,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       @projekt = Projekt.find(params[:id])
     end
 
+    def set_back_button_url
+      @back_button_url = adm_projekts_root_path
+    end
+
     def projekt_params
       params.require(:projekt).permit(
         :name, :total_duration_start, :total_duration_end,
@@ -216,5 +299,9 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def create_params
       params.require(:projekt).permit(:name)
+    end
+
+    def build_dt_import_url
+      Dt.file_import_url(user_id: current_user.id)
     end
 end

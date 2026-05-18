@@ -1,0 +1,123 @@
+de:
+  public:
+    evaluations:
+      generated_at: "Erstellt am %{time}"
+  adm:
+    ai_action_button:
+      processing: KI arbeitet…
+
+    projekts:
+      projekts:
+        projekt:
+          evaluation: Auswertung
+        tabs:
+          evaluation: Auswertung
+        evaluation:
+          title: Auswertung
+          not_generated_title: Auswertung noch nicht generiert
+          not_generated_description: >
+            Es wurde noch keine Auswertung für dieses Projekt erstellt.
+            Klicken Sie auf den Button, um die Auswertung zu generieren.
+          generate_button: Auswertung generieren
+          processing_title: Auswertung wird generiert
+          processing_description: >
+            Die Auswertung wird gerade erstellt. Dies kann einige Minuten dauern.
+          failed_title: Auswertung fehlgeschlagen
+          failed_description: >
+            Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
+            Bitte versuchen Sie es erneut.
+          regenerate_button: Neu generieren
+          download_pdf: PDF herunterladen
+          generated_at: "Erstellt am %{time}"
+          report_placeholder: Auswertungsbericht wird hier angezeigt.
+          header_badge: Beteiligungsergebnis
+          header_sub: "Auswertung — %{phases} Projektphasen, %{date}"
+          project_summary: Projekt-Zusammenfassung
+          participants: Teilnehmende
+          contributions: Beiträge
+          supports: Unterstützungen
+          proposals: Vorschläge
+          investments: Investitionen
+          comments: Kommentare
+          commenters: Kommentierende
+          questions: Fragen
+          polls: Abstimmungen
+          poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
+          scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
+          multiple_subtitle: "Mehrfachantworten · %{mentions} Nennungen"
+          open_contributions: Offene Beiträge
+          avg_per_proposal: "Ø pro Vorschlag"
+          ranking_by_supports: Ranking nach Unterstützungen
+          ranking_subtitle: "%{proposals} Vorschläge · %{supports} Unterstützungen gesamt"
+          rank_first: Platz 1
+          ai_summary: KI-Bewertung
+          key_findings: Zentrale Erkenntnisse
+          ai_questions_heading: KI-Fragen an diese Phase
+          sources_label:
+            one: "1 Quelle"
+            other: "%{count} Quellen"
+          ref_type:
+            comment: Kommentar
+            question: Frage
+            proposal: Vorschlag
+            investment: Investition
+          pdf_options:
+            include_report: Bericht einbeziehen (Projektzusammenfassung, Einstellungen, Phasen-Zusammenfassungen)
+            sections:
+              kpis: Kennzahlen
+              ranking: Ranking-Diagramm
+              proposals: Vorschlagskarten
+              questions: Fragen und Diagramme
+              open_responses: Offene Beiträge
+              ai_summary: KI-Zusammenfassung
+              key_findings: Zentrale Erkenntnisse
+              ai_questions: KI-Fragen
+          votes_label: Stimmen
+          open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
+          open_responses_show: Beiträge anzeigen
+          open_responses_hide: Beiträge ausblenden
+          verdict:
+            clear_yes: Klar dafür
+            majority_yes: Mehrheit dafür
+            slight_no: Knapp dagegen
+            majority_no: Abgelehnt
+            clear_no: Klar abgelehnt
+          proposal_phase: Projektphase Vorschläge
+          voting_phase: Abstimmungsphase
+          budget_phase: Bürgerhaushaltsphase
+          comment_phase: Kommentarphase
+          report_tab:
+            title: Bericht
+            kpi_label: Übersicht
+          report:
+            project_summary_label: Projektseite
+            project_summary_subtitle: Untertitel
+            project_summary_no_subtitle: Kein Untertitel
+            project_summary_no_image: Kein Projektbild
+            project_summary_ai_label: KI-Zusammenfassung des Projektinhalts
+            project_summary_ai_empty: Keine Inhalte für die KI-Zusammenfassung verfügbar.
+            settings_label: Projekteinstellungen
+            settings_open_phases:
+              one: "Aktuell offene Phase"
+              other: "Aktuell offene Phasen"
+            settings_open_phases_none: Keine offene Phase
+            settings_polls:
+              one: "Abstimmung"
+              other: "Abstimmungen"
+            settings_polls_none: Keine Abstimmungen
+            settings_tags: Schlagwörter
+            settings_tags_none: Keine Schlagwörter
+            settings_sdgs: Nachhaltigkeitsziele
+            settings_sdgs_none: Keine SDGs
+            phases_label: Phasen-Zusammenfassungen
+            phases_empty: Es liegen noch keine KI-Phasen-Zusammenfassungen vor.
+            phase_short_summary_empty: Für diese Phase liegen noch keine Daten vor.
+            qr_code_label: Projektseite öffnen
+        generate_evaluation:
+          started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.
+        evaluation_pdf_options:
+          title: PDF-Export
+          heading: PDF-Export konfigurieren
+          description: Wählen Sie, welche Phasen und Abschnitte im PDF enthalten sein sollen.
+          cancel: Abbrechen
+          download: PDF herunterladen

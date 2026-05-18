@@ -93,7 +93,7 @@ en:
         naming:
           title: Naming
           poll_image_label: Poll image
-          poll_image_description: Shown as a thumbnail next to the title in the polls overview to aid quick visual recognition. Use a landscape image with a clear subject that fits the topic of the poll. Recommended format: at least 600 pixels wide, JPG or PNG.
+          poll_image_description: "Shown as a thumbnail next to the title in the polls overview to aid quick visual recognition. Use a landscape image with a clear subject that fits the topic of the poll. Recommended format: at least 600 pixels wide, JPG or PNG."
         restrictions:
           title: Participation restriction
           intro_title: About participation restrictions

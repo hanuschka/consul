@@ -208,14 +208,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     selection = PdfServices::EvaluationPdfSelection.from_params(@evaluation, params[:pdf_options])
 
+    ai_format_enabled = false
+
     html =
-      if @evaluation.pdf_formatting_ready?
+      if ai_format_enabled && @evaluation.pdf_formatting_ready?
         filtered_body = PdfServices::FilterFormattedHtml.call(@evaluation.pdf_formatted_html, selection)
         render_to_string(layout: "pdf_evaluation", inline: filtered_body)
       else
         Rails.logger.info(
-          "[Evaluation] evaluation_pdf falling back to raw render for ##{@evaluation.id} " \
-          "(ai_ready=#{@evaluation.pdf_formatting_ready?})"
+          "[Evaluation] evaluation_pdf using raw render for ##{@evaluation.id} " \
+          "(ai_format_enabled=#{ai_format_enabled} ai_ready=#{@evaluation.pdf_formatting_ready?})"
         )
         render_to_string(
           template: "adm/projekts/projekts/evaluation/pdf",

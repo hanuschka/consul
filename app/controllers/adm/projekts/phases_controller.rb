@@ -720,9 +720,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     if visibility.update(evaluation_visibility_params)
       flash[:notice] = t(".success")
-      redirect_to evaluation_adm_projekts_projekt_path(@projekt_phase.projekt)
+
+      redirect_to evaluation_adm_projekts_projekt_path(
+        @projekt_phase.projekt,
+        anchor: "phase-#{@projekt_phase.id}"
+      )
     else
       flash[:error] = visibility.errors.full_messages.join(", ")
+
       redirect_to evaluation_visibility_adm_projekts_phase_path(@projekt_phase)
     end
   end

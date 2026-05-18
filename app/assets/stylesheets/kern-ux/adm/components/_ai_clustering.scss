@@ -79,7 +79,10 @@
     border: 1px solid var(--er-border-light);
     border-top: 4px solid var(--item-color, var(--er-primary));
     border-radius: var(--er-radius-lg);
-    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+    box-shadow:
+      0 1px 1px rgba(17, 24, 39, 0.025),
+      0 3px 8px rgba(17, 24, 39, 0.025),
+      0 8px 20px rgba(17, 24, 39, 0.025);
   }
 
   .ai-clustering--item-header {
@@ -110,10 +113,17 @@
 
   .ai-clustering--subitem {
     background: var(--er-surface);
-    border: 1px solid var(--er-border-light);
+    border: 1px solid color-mix(
+      in srgb,
+      var(--item-color, var(--er-primary)) 22%,
+      #ffffff
+    );
     border-radius: var(--er-radius);
     overflow: hidden;
-    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.035);
+    box-shadow:
+      0 1px 1px rgba(17, 24, 39, 0.02),
+      0 2px 4px rgba(17, 24, 39, 0.02),
+      0 4px 10px rgba(17, 24, 39, 0.02);
   }
 
   .ai-clustering--subitem .custom-collapse {

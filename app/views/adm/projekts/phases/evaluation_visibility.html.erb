@@ -50,9 +50,12 @@
       </div>
     </div>
 
-    <div class="d-flex gap-2 mt-4">
+    <div class="d-flex justify-content-between gap-2 mt-4">
       <%= kern_link_button(
-        evaluation_adm_projekts_projekt_path(@projekt_phase.projekt),
+        evaluation_adm_projekts_projekt_path(
+          @projekt_phase.projekt,
+          anchor: "phase-#{@projekt_phase.id}"
+        ),
         text: t(".cancel"),
         icon: "arrow_back",
         style: :secondary

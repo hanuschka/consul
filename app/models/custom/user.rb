@@ -16,6 +16,12 @@ User.class_eval do
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
+  def self.timeout_in
+    minutes = Setting["extended_option.gdpr.devise_timeout_min"].to_i
+    minutes = 30 if minutes < 1
+    minutes.minutes
+  end
+
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
   delegate :district, to: :registered_address, allow_nil: true

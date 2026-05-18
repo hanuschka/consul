@@ -13,6 +13,7 @@ class Adm::HeaderComponent < ApplicationComponent
 
   def before_render
     @frontend_url, @frontend_label = resolve_frontend_url_and_label
+    @back_button_url ||= controller.instance_variable_get(:@back_button_url)
   end
 
   def breadcrumb_item(breadcrumb, is_last)

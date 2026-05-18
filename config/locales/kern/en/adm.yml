@@ -17,6 +17,7 @@ en:
           documents: Documents
           pages: System pages
           navbar: Navigation
+          overview_pages: Overview pages
           metadata_settings: Metadata
           gdpr_settings: GDPR
           registration_settings: Account & access
@@ -31,12 +32,7 @@ en:
           privacy: Privacy policy
           conditions: Terms of use
           impressum: Legal notice
-        profiles: Profiles
-        profiles_subitems:
-          deficiency_report_managers: Deficiency managers
-          idea_managers: Idea managers
-          section_contact_people: Contact persons
-          users: Users
+        users: Users
         notifications: Notifications
         notifications_subitems:
           modal_notifications: Modal notifications

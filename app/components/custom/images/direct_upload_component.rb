@@ -1,5 +1,6 @@
 class Images::DirectUploadComponent < ApplicationComponent
   renders_one :placeholder
+  renders_one :confirmation_step
   renders_one :custom_edit_button
 
   attr_reader :f, :resource_type, :resource_id, :relation_name, :preview_variant

@@ -1,6 +1,6 @@
-<%= content_for :title, [@content_card.title, t("adm.projekts.index.title")].join(" | ") %>
+<%= content_for :title, @content_card.title %>
 
-<%= render Adm::HeaderComponent.new(title: @content_card.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @content_card.title, breadcrumbs: @breadcrumbs, back_button_url: @back_button_url) %>
 
 <div class="kern-container">
   <%= form_with model: @content_card, url: [:adm, @content_card], data: { turbo: false } do |f| %>

@@ -144,6 +144,9 @@ application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
 
+import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
+application.register("adm-dashboard-notice", AdmDashboardNoticeController)
+
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
 

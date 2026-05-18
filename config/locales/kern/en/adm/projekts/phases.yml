@@ -92,6 +92,8 @@ en:
           dates_description: Defines the period during which this participation phase is active. Within this period, users can participate in the phase. Outside the period, the phase is shown as completed or not yet started. The duration is configurable independently of the overall project duration.
         naming:
           title: Naming
+          poll_image_label: Poll image
+          poll_image_description: Shown as a thumbnail next to the title in the polls overview to aid quick visual recognition. Use a landscape image with a clear subject that fits the topic of the poll. Recommended format: at least 600 pixels wide, JPG or PNG.
         restrictions:
           title: Participation restriction
           intro_title: About participation restrictions

@@ -75,21 +75,11 @@
   .ai-clustering--item-card {
     position: relative;
     padding: 1.125rem 1.375rem 1.25rem;
-    background-image: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 5%, #ffffff) 0%,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 12%, #ffffff) 55%,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 22%, #ffffff) 100%
-    );
-    border: 1px solid color-mix(
-      in srgb,
-      var(--item-color, var(--er-border)) 40%,
-      #ffffff
-    );
+    background: var(--er-surface);
+    border: 1px solid var(--er-border-light);
+    border-top: 4px solid var(--item-color, var(--er-primary));
     border-radius: var(--er-radius-lg);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.75) inset,
-      0 1px 2px rgba(17, 24, 39, 0.04);
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
   }
 
   .ai-clustering--item-header {
@@ -120,11 +110,7 @@
 
   .ai-clustering--subitem {
     background: var(--er-surface);
-    border: 1px solid color-mix(
-      in srgb,
-      var(--item-color, var(--er-border-light)) 22%,
-      #ffffff
-    );
+    border: 1px solid var(--er-border-light);
     border-radius: var(--er-radius);
     overflow: hidden;
     box-shadow: 0 1px 2px rgba(17, 24, 39, 0.035);
@@ -137,11 +123,7 @@
   .ai-clustering--subitem .custom-collapse > .custom-collapse--body {
     display: none;
     overflow: hidden;
-    background: color-mix(
-      in srgb,
-      var(--item-color, var(--er-primary)) 7%,
-      #ffffff
-    );
+    background: var(--er-surface);
   }
 
   .ai-clustering--subitem .custom-collapse.-opened > .custom-collapse--body {
@@ -156,18 +138,21 @@
     align-items: center;
     width: 100%;
     padding: 0.875rem 1rem;
-    background-image: linear-gradient(
-      100deg,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 14%, #ffffff) 0%,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 22%, #ffffff) 55%,
-      color-mix(in srgb, var(--item-color, var(--er-primary)) 32%, #ffffff) 100%
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--er-primary)) 5%,
+      var(--er-surface)
     );
     border: 0;
     cursor: pointer;
-    transition: filter 0.15s ease;
+    transition: background-color 0.15s ease;
 
     &:hover {
-      filter: brightness(0.97) saturate(1.05);
+      background: color-mix(
+        in srgb,
+        var(--item-color, var(--er-primary)) 10%,
+        var(--er-surface)
+      );
     }
 
     &:focus-visible {
@@ -219,9 +204,13 @@
     padding-right: 1rem;
     overflow: hidden;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.4;
-    color: var(--er-text);
+    color: color-mix(
+      in srgb,
+      var(--item-color, var(--er-text)) 70%,
+      #000000
+    );
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -356,21 +345,8 @@
     width: 55px;
     height: 55px;
     font-size: 1.25rem;
-    color: color-mix(
-      in srgb,
-      var(--item-color, var(--er-text-muted)) 75%,
-      #000000
-    );
-    background-color: color-mix(
-      in srgb,
-      var(--item-color, var(--er-border-light)) 20%,
-      #ffffff
-    );
-    border: 1px solid color-mix(
-      in srgb,
-      var(--item-color, var(--er-border-light)) 30%,
-      #ffffff
-    );
+    color: var(--er-text-muted);
+    background-color: var(--er-border-light);
     border-radius: var(--er-radius);
   }
 }

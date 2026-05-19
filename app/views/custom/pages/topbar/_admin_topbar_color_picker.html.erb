@@ -1,0 +1,52 @@
+<%
+  current_color = projekt.color.to_s
+  fallback_color = Setting["brand_color"].to_s.presence || "#000000"
+  default_color = current_color.presence || fallback_color
+%>
+<div
+  class="projekt-page--admin-topbar-color-picker js-admin-topbar-color-picker"
+  data-projekt-id="<%= projekt.id %>"
+  data-url="<%= update_color_adm_projekts_projekt_path(projekt) %>"
+  data-current-color="<%= current_color %>"
+  data-fallback-color="<%= fallback_color %>"
+  data-i18n-saving="<%= t('custom.projekts.page.color_picker.status.saving') %>"
+  data-i18n-saved="<%= t('custom.projekts.page.color_picker.status.saved') %>"
+  data-i18n-error="<%= t('custom.projekts.page.color_picker.status.error') %>"
+>
+  <label
+    class="projekt-page--admin-topbar-color-picker--label"
+    for="admin-topbar-color-picker-<%= projekt.id %>"
+    title="<%= t('custom.projekts.page.color_picker.tooltip') %>"
+    data-tooltip
+    data-hover-delay="500"
+  >
+    <i class="fas fa-palette projekt-page--admin-topbar-color-picker--label-icon" aria-hidden="true"></i>
+    <span class="projekt-page--admin-topbar-color-picker--label-text">
+      <%= t('custom.projekts.page.color_picker.label') %>
+    </span>
+  </label>
+
+  <input
+    type="color"
+    id="admin-topbar-color-picker-<%= projekt.id %>"
+    class="projekt-page--admin-topbar-color-picker--input js-admin-topbar-color-picker-input"
+    value="<%= default_color %>"
+    aria-label="<%= t('custom.projekts.page.color_picker.label') %>"
+  >
+
+  <button
+    type="button"
+    class="projekt-page--admin-topbar-color-picker--reset js-admin-topbar-color-picker-reset"
+    title="<%= t('custom.projekts.page.color_picker.reset') %>"
+    aria-label="<%= t('custom.projekts.page.color_picker.reset') %>"
+    data-tooltip
+    data-hover-delay="500"
+  >
+    <i class="fas fa-undo" aria-hidden="true"></i>
+  </button>
+
+  <span
+    class="projekt-page--admin-topbar-color-picker--status js-admin-topbar-color-picker-status"
+    aria-live="polite"
+  ></span>
+</div>

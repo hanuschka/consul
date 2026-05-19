@@ -35,10 +35,10 @@ en:
     welcomepage:
       usage_stats: User overview
       usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
-      newsletter_subscription: Platform statistics
-      newsletter_subscription_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
-      platform_activity: Newsletter signup
-      platform_activity_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
+      newsletter_subscription: Newsletter signup
+      newsletter_subscription_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
+      platform_activity: Platform statistics
+      platform_activity_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
       projekt_search: Project search
       projekt_search_description: "When enabled, a search bar appears on the homepage, letting users search specifically for projects. This option and the homepage button are mutually exclusive. Project search is especially suitable for platforms with many ongoing or planned projects."
     extended_feature:
@@ -122,6 +122,14 @@ en:
         two_click_iframe_solution: "Two-click solution for iframes"
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
+        enable_google_translate: Enable Google Translate
+        enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Show guest login
+        show_guest_login_links_description: Shows the guest-login link in the footer
+        users_overview_page: Overview of all users
+        users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
+        use_white_top_navigation_text: Use white text in top navigation
+        use_white_top_navigation_text_description: "Enable when the homepage background image is dark — switches the top navigation text to white so it stays readable. Once the user scrolls and the navigation switches to a white background, the setting no longer applies."
         enable_projekt_events_page: Events calendar
         enable_projekt_events_page_description: >
           Enables a central overview page for all public events from the participation projects. Citizens can view upcoming workshops, town-hall meetings, and information events there. The page can be made reachable via the navigation.
@@ -131,7 +139,7 @@ en:
     extended_option:
       general:
         city_name: Name of the city/municipality
-        city_name_description: "Used during BundID verification to query users' place of residence."
+        city_name_description: "The name of the city or municipality entered here is used during BundID verification to match against the user's registered place of residence. This ensures that only people who are officially registered as residents of your municipality can take part in participation procedures. Please enter the official name exactly as it appears in the population register."
         title: Application title
         title_description: "This title is shown in large format inside the background image at the top of the homepage. It serves as the first content anchor for visitors. The text should be short and punchy — ideally one to five words. If the field is empty, no title is shown."
         subtitle: Application subtitle
@@ -177,27 +185,36 @@ en:
         show_in_individual_list_description: Shows the project on the projects overview page in a standalone, individual list — separate from automatically generated lists like "Ongoing projects" or "Completed projects". This option is suitable for highlighted or permanently visible projects.
         allow_indexing: Search-engine indexing
         allow_indexing_description: Allows search engines like Google to index the project page and show it in search results. If this option is disabled, a "noindex" tag is set, so the page remains reachable via the platform but cannot be found through external search engines.
+        consider_underway: List project as active participation
+        consider_underway_description: Ensures the project is always listed as active participation on the overview — even when no regular participation phase is currently running. Useful for permanently featured projects or for projects between phases that should remain visible to users as an active participation option.
     ideas:
-      show_in_main_menu: Ideas in navigation
-      show_in_main_menu_description: Shows the Ideas menu item in the main navigation.
       admins_must_assign_officer: Required assignment to officer
-      admins_must_assign_officer_description: Administrators assign ideas to officers.
+      admins_must_assign_officer_description: >
+        When enabled, administrators must manually assign every new idea to a responsible officer. Without assignment, the idea cannot be processed. This ensures that every idea has a responsible person and no submission remains without clear ownership.
       officers_can_administer_assigned_reports: Officer administration for ideas
-      officers_can_administer_assigned_reports_description: Officers have full administrative control over ideas assigned to them.
+      officers_can_administer_assigned_reports_description: >
+        Gives officers full administrative control over the ideas assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view ideas, not manage them or make structural adjustments.
       officers_can_edit_assigned_reports: Officer editing for ideas
-      officers_can_edit_assigned_reports_description: Officers have full control over ideas assigned to them.
+      officers_can_edit_assigned_reports_description: >
+        Lets officers edit the content of assigned ideas directly — e.g. correct the title, description, or location. This is useful when submitted ideas are incomplete or contain errors and need to be adjusted editorially before further processing.
       enable_comments: Comments
-      enable_comments_description: Users can comment below an idea.
+      enable_comments_description: >
+        When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.
       intro_text: Introduction text for ideas
-      intro_text_description: Enable a custom introduction text above the ideas overview page.
+      intro_text_description: >
+        Shows a custom introduction text above the ideas overview page. Use this text to explain the purpose of the ideas area to citizens, give usage hints, or point out important conditions — e.g. what kinds of ideas can be submitted and how the processing workflow works.
       enable_geoman_controls_in_maps: User-drawn maps
-      enable_geoman_controls_in_maps_description: Allows users to draw rectangles, circles, etc.
+      enable_geoman_controls_in_maps_description: >
+        Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when an idea affects not just a single point but an area — e.g. a green space, a public square, or an entire street section. The drawing is saved together with the idea.
       admin_acceptance_required: Administrator approval
-      admin_acceptance_required_description: Administrators must confirm new ideas before they are published.
+      admin_acceptance_required_description: >
+        When enabled, administrators must review and approve new ideas before they become publicly visible. Unconfirmed ideas are visible only to administrators. This prevents inappropriate, incomplete, or duplicate submissions from being published on the platform without review.
       document_upload: Additional documents
-      document_upload_description: Allows users to attach documents to ideas.
+      document_upload_description: >
+        Allows users to upload documents like PDFs, text files, or other attachments to their ideas. This is helpful when supplementary materials are needed — e.g. concepts, sketches, studies, or detailed descriptions that go beyond what a simple text field can convey.
       external_video: Embed external video
-      external_video_description: Allows users to embed external videos via YouTube and Vimeo.
+      external_video_description: >
+        Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
     deficiency_reports:
       show_in_main_menu: Deficiency reports in navigation
       show_in_main_menu_description: >
@@ -246,12 +263,12 @@ en:
         Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
 
     process:
-      proposals: Proposals
+      proposals: Proposals overview
       proposals_description: >
-        Allows citizens to submit their own improvement proposals, which can be supported and commented on by other users. Proposals can be tagged with locations, labels, and sentiment indicators. With enough support, they can be advanced to voting.
-      polls: Votes
+        Enables a central overview page for all submitted proposals from the participation projects. Citizens can browse, comment on, rate, and support proposals there. The page can be made reachable via the navigation.
+      polls: Polls overview
       polls_description: >
-        Enables the voting module, with which citizens can make direct decisions on concrete questions. Votes support various question types like single- and multiple-choice. Both online and offline voting are possible.
+        Enables a central overview page for all active and completed polls from the participation projects. Citizens can open active polls, cast their vote, and view results of completed polls there. The page can be made reachable via the navigation.
       budgets: Participatory budget
       budgets_description: >
         Enables the participatory budget, in which citizens submit investment proposals and vote on the allocation of a set budget. The process covers multiple phases: submission, feasibility review by the administration, and final citizen vote.
@@ -267,6 +284,57 @@ en:
       ideas: Ideas platform
       ideas_description: >
         Enables the ideas platform, on which citizens can submit ideas and suggestions for urban development. Ideas can be rated and commented on by other users. The module is suitable for open idea collection without a formal voting process.
+
+    adm:
+      ideas:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      deficiency_reports:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      projekts:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      moderation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      valuation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      landing_pages:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      officing:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
 
   site_customization/image:
     header_image: "Background image for desktop"

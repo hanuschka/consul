@@ -1,0 +1,31 @@
+en:
+  adm:
+    overview_pages:
+      title: Overview pages
+      hint_text: >
+        Configure the public overview pages of your platform here.
+        Under "Projects overview" you enable the projects overview page and
+        control which project lists are shown in its navigation and footer.
+        Under "Other overview pages" you manage the remaining overviews
+        (events, participatory budgeting, polls, proposals).
+        Disabled overviews are not reachable in the frontend — existing content
+        is preserved. Only enabled overview pages can be added as items in the
+        navigation.
+      tabs:
+        projekt: Projects overview
+        others: Other overview pages
+      projekt:
+        navigation_heading: Display in the navigation bar
+        navigation_description: >
+          Control which project lists appear as tabs in the upper filter bar of the
+          projects overview page. Each enabled tab serves citizens as a filter option
+          for a specific project status, such as active, completed or upcoming projects.
+          Disabled tabs are hidden from citizens — the projects themselves remain
+          reachable through other filters and direct links.
+        footer_heading: Display in the footer
+        footer_description: >
+          In addition to the filter bar at the top, project lists can be shown as
+          linked overviews in the lower section of the projects overview page.
+          These footer links give citizens an alternative way to navigate to specific
+          project categories and are particularly useful for keeping frequently used
+          filters permanently accessible.

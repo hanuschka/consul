@@ -41,7 +41,9 @@ module Adm
 
       if @pending.save
         Mailer.pending_role_invite(@pending).deliver_later
-        flash[:notice] = t("adm.pending_role_assignments.created", email: @pending.email)
+        flash[:notice] = t("adm.pending_role_assignments.created",
+                           email: @pending.email,
+                           role: t("adm.pending_role_assignments.role_name.#{params[:role]}"))
       else
         flash[:alert] = @pending.errors.full_messages.join(", ")
       end

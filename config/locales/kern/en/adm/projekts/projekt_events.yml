@@ -2,6 +2,22 @@ en:
   adm:
     projekts:
       projekt_events:
+        tabs:
+          show: Overview
+          edit: Edit
+          registrations: Registrations
+        show:
+          title: Overview
+          registrations_button: "Registrations (%{count})"
+          registration_disabled: Registration disabled
+          confirmed_count: Confirmed registrations
+          waitlisted_count: Waitlisted
+          no_accessibility_flags: No accessibility features specified.
+          sections:
+            general: General
+            schedule: Schedule & location
+            registration: Registration
+            accessibility: Accessibility
         new:
           title: Create event
         create:
@@ -35,6 +51,14 @@ en:
           language_hint: "Enter the language in which the event will be held — e.g. 'German', 'English', or 'German / Turkish' for multilingual formats. This information helps participants assess whether they can follow the event linguistically."
           accessibility_legend: Accessibility
           accessibility_hint: "Indicate which accessibility features are available at the event location. This information is shown on the frontend and helps people with disabilities decide whether they can attend. Enable all applicable options."
+          max_attendees_label: Maximum attendees
+          max_attendees_hint: "Maximum number of confirmed attendees. Additional registrations are automatically placed on a waiting list. Leave blank or set to 0 to disable registration."
+          admin_emails_label: Bulk-registration email addresses
+          admin_emails_hint: "Comma-separated list of trusted email addresses that may register multiple attendees for this event. These addresses skip the email confirmation step. Optional."
+          confirmation_email_text_label: Confirmation email text
+          confirmation_email_text_hint: "Optional text sent to participants when their registration is confirmed. Allowed HTML tags: <a>, <br>. Leave blank to skip sending a confirmation email."
+          waitlist_email_text_label: Waitlist email text
+          waitlist_email_text_hint: "Optional text sent to participants when they are placed on the waitlist. Allowed HTML tags: <a>, <br>. Leave blank to skip sending a waitlist email."
           description_label: Description
           description_hint: "Detailed description of the event, shown below the title on the frontend. Explain the agenda, content, and goals of the event. Where appropriate, give hints about registration, directions, or special preparations. The text supports rich-text formatting with links and highlights."
           image_label: Cover image

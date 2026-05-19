@@ -5,6 +5,8 @@ module Consul
     config.i18n.default_locale = :en
     config.i18n.available_locales = [:en, :de]
 
+    config.active_model.i18n_customize_full_message = true
+
     config.middleware.insert_before(0, DowncaseRoute)
   end
 end

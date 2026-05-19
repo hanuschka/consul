@@ -1,7 +1,9 @@
 module Budgets
   module Ballot
     class LinesController < ApplicationController
-      before_action :authenticate_user!
+      include GuestUsers
+
+      before_action :authenticate_user_or_guest!
       before_action :load_budget
       before_action :load_ballot
       before_action :load_tag_cloud
@@ -73,6 +75,7 @@ module Budgets
         def load_map
           @investments ||= []
           @investments_map_coordinates = MapLocation.where(mappable: @investments).map(&:features_json_data)
+          @investments_map_coordinates += MasterportalPin.standalone_features_for_phase(@heading.budget.projekt_phase)
           @map_location = @heading.budget.projekt_phase.map_location
         end
     end

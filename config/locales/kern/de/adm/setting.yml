@@ -35,10 +35,10 @@ de:
     welcomepage:
       usage_stats: Nutzerübersicht
       usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."
-      newsletter_subscription: Plattformstatistik
-      newsletter_subscription_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
-      platform_activity: Newsletter-Anmeldung
-      platform_activity_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      newsletter_subscription: Newsletter-Anmeldung
+      newsletter_subscription_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
+      platform_activity: Plattformstatistik
+      platform_activity_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
       projekt_search: Projektsuche
       projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus. Die Projektsuche eignet sich besonders bei Plattformen mit vielen laufenden oder geplanten Projekten."
     extended_feature:
@@ -124,6 +124,14 @@ de:
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
+        enable_google_translate: Google Translate aktivieren
+        enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Zeige Gast-Login an
+        show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+        users_overview_page: Übersicht aller Nutzer*innen
+        users_overview_page_description: "Aktiviert eine öffentliche Übersichtsseite mit allen aktiven Nutzer*innen, die ihrer Anzeige zugestimmt haben. Besucher können Profile durchsuchen und die Beteiligungsaktivität anderer Nutzer*innen einsehen, etwa eingereichte Vorschläge, Kommentare und Abstimmungsteilnahmen."
+        use_white_top_navigation_text: Weiße Schrift in der Top-Navigation
+        use_white_top_navigation_text_description: "Aktivieren, wenn das Hintergrundbild der Startseite dunkel ist – schaltet die Top-Navigation auf weiße Schrift, damit sie lesbar bleibt. Sobald Nutzer scrollen und die Navigation auf weißen Hintergrund wechselt, gilt die Einstellung nicht mehr."
         enable_projekt_events_page: Veranstaltungskalender
         enable_projekt_events_page_description: >
           Aktiviert eine zentrale Übersichtsseite für alle öffentlichen Veranstaltungen aus den Beteiligungsprojekten. Bürger können dort kommende Workshops, Bürgerversammlungen und Informationsveranstaltungen einsehen. Die Seite kann über die Navigation erreichbar gemacht werden.
@@ -133,7 +141,7 @@ de:
     extended_option:
       general:
         city_name: Name der Stadt/Gemeinde
-        city_name_description: "Wird bei der BundID-Verifizierung verwendet, um den Wohnort der Nutzer abzufragen."
+        city_name_description: "Der hier hinterlegte Name der Stadt oder Gemeinde wird bei der BundID-Verifizierung herangezogen, um den im Melderegister hinterlegten Wohnort der Nutzer abzugleichen. So wird sichergestellt, dass nur Personen mit gemeldetem Wohnsitz in Ihrer Kommune an Beteiligungsverfahren teilnehmen können. Bitte tragen Sie den offiziellen Namen exakt so ein, wie er im Melderegister geführt wird."
         title: Titel der Anwendung
         title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
@@ -180,27 +188,36 @@ de:
         show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer eigenständigen, individuellen Liste an – getrennt von den automatisch generierten Listen wie „Laufende Projekte” oder „Abgeschlossene Projekte”. Diese Option eignet sich z. B. für hervorgehobene oder dauerhaft sichtbare Projekte.
         allow_indexing: Suchmaschinen-Indexierung
         allow_indexing_description: Erlaubt Suchmaschinen wie Google, die Projektseite zu indexieren und in Suchergebnissen anzuzeigen. Ist diese Option deaktiviert, wird ein „noindex”-Tag gesetzt, sodass die Seite zwar über die Plattform erreichbar bleibt, aber nicht über externe Suchmaschinen gefunden werden kann.
+        consider_underway: Projekt als aktive Beteiligung führen
+        consider_underway_description: Stellt sicher, dass das Projekt in der Übersicht stets als aktive Beteiligung aufgeführt wird – auch dann, wenn aktuell keine reguläre Beteiligungsphase läuft. Geeignet z. B. für dauerhaft beworbene Projekte oder solche zwischen zwei Phasen, die für Nutzer weiterhin als aktive Beteiligungsmöglichkeit sichtbar bleiben sollen.
     ideas:
-      show_in_main_menu: Ideen in der Navigation
-      show_in_main_menu_description: Zeigt den Menüpunkt Ideen in der Hauptnavigation an
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
-      admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter zu
+      admins_must_assign_officer_description: >
+        Wenn aktiviert, müssen Administratoren jede neue Idee manuell einem zuständigen Sachbearbeiter zuweisen. Ohne Zuweisung kann die Idee nicht bearbeitet werden. Dies stellt sicher, dass jede Idee eine verantwortliche Person erhält und keine Einreichung ohne klare Zuständigkeit bleibt.
       officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Ideen
-      officers_can_administer_assigned_reports_description: Sachbearbeiter haben die volle Administrationskontrolle über ihnen zugewiesene Ideen
+      officers_can_administer_assigned_reports_description: >
+        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Ideen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Ideen nur einsehen, aber nicht verwalten oder strukturell anpassen.
       officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Ideen
-      officers_can_edit_assigned_reports_description: Sachbearbeiter haben die volle Kontrolle über ihnen zugewiesene Ideen
+      officers_can_edit_assigned_reports_description: >
+        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Ideen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Ideen unvollständig oder fehlerhaft sind und vor der weiteren Bearbeitung redaktionell angepasst werden müssen.
       enable_comments: Kommentarfunktion
-      enable_comments_description: Nutzer können unterhalb einer Idee kommentieren
+      enable_comments_description: >
+        Wenn aktiviert, können Nutzer unterhalb einer Idee Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, weiterführende Anregungen oder ergänzende Hinweise zur eingereichten Idee. Kommentare können von Administratoren moderiert werden.
       intro_text: Einleitungstext für Ideen
-      intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+      intro_text_description: >
+        Zeigt einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite an. Nutzen Sie diesen Text, um Bürgern den Zweck des Ideenbereichs zu erklären, Hinweise zur Nutzung zu geben oder auf wichtige Rahmenbedingungen hinzuweisen — z.B. welche Arten von Ideen eingereicht werden können und wie der Bearbeitungsprozess abläuft.
       enable_geoman_controls_in_maps: Kartenzeichnung durch Nutzer
-      enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer Rechtecke, Kreise etc. einzuzeichnen.
+      enable_geoman_controls_in_maps_description: >
+        Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn eine Idee nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine Grünfläche, einen Platz oder einen ganzen Straßenzug. Die Zeichnung wird zusammen mit der Idee gespeichert.
       admin_acceptance_required: Administrator-Freigabe
-      admin_acceptance_required_description: Administratoren müssen neue Ideen vor der Veröffentlichung zunächst bestätigen.
+      admin_acceptance_required_description: >
+        Wenn aktiviert, müssen Administratoren neue Ideen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Ideen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene, unvollständige oder doppelte Einreichungen ungeprüft auf der Plattform veröffentlicht werden.
       document_upload: Zusätzliche Dokumente
-      document_upload_description: Ermöglicht es den Nutzer Dokumente den Ideen anzuhängen
+      document_upload_description: >
+        Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Ideen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Konzepte, Skizzen, Studien oder detaillierte Beschreibungen, die über die Möglichkeiten eines einfachen Textfeldes hinausgehen.
       external_video: Externes Video einbinden
-      external_video_description: Ermöglicht es den Nutzer externe Videos über YouTube und Vimeo einzubinden
+      external_video_description: >
+        Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
     deficiency_reports:
       show_in_main_menu: Mängelmelder in der Navigation
       show_in_main_menu_description: >
@@ -249,12 +266,12 @@ de:
         Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
 
     process:
-      proposals: Vorschläge
+      proposals: Vorschlagsübersicht
       proposals_description: >
-        Ermöglicht es Bürgern, eigene Verbesserungsvorschläge einzureichen, die von anderen Nutzern unterstützt und kommentiert werden können. Vorschläge können mit Standorten, Labels und Stimmungsbildern versehen werden. Bei ausreichender Unterstützung können sie zur Abstimmung weitergeleitet werden.
-      polls: Abstimmungen
+        Aktiviert eine zentrale Übersichtsseite für alle eingereichten Vorschläge aus den Beteiligungsprojekten. Bürger können dort Vorschläge durchsuchen, kommentieren, bewerten und unterstützen. Die Seite kann über die Navigation erreichbar gemacht werden.
+      polls: Abstimmungsübersicht
       polls_description: >
-        Aktiviert das Abstimmungsmodul, mit dem Bürger direkte Entscheidungen zu konkreten Fragestellungen treffen können. Abstimmungen unterstützen verschiedene Fragetypen wie Einfach- und Mehrfachauswahl. Sowohl Online- als auch Offline-Abstimmungen sind möglich.
+        Aktiviert eine zentrale Übersichtsseite für alle aktiven und abgeschlossenen Abstimmungen aus den Beteiligungsprojekten. Bürger können dort laufende Abstimmungen aufrufen, ihre Stimme abgeben und Ergebnisse abgeschlossener Abstimmungen einsehen. Die Seite kann über die Navigation erreichbar gemacht werden.
       budgets: Bürgerhaushalt
       budgets_description: >
         Aktiviert den Bürgerhaushalt, bei dem Bürger Investitionsvorschläge einreichen und über die Verteilung eines festgelegten Budgets abstimmen können. Der Prozess umfasst mehrere Phasen: Einreichung, Machbarkeitsprüfung durch die Verwaltung und finale Bürgerabstimmung.
@@ -270,6 +287,57 @@ de:
       ideas: Ideenplattform
       ideas_description: >
         Aktiviert die Ideenplattform, auf der Bürger Ideen und Anregungen für die Stadtentwicklung einreichen können. Ideen können von anderen Nutzern bewertet und kommentiert werden. Das Modul eignet sich für offene Ideensammlungen ohne formalen Abstimmungsprozess.
+
+    adm:
+      ideas:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      deficiency_reports:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      projekts:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      moderation:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      valuation:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      landing_pages:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      officing:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
 
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"

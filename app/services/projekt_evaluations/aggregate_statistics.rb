@@ -1,4 +1,4 @@
-class Evaluations::AggregateStatistics < ApplicationService
+class ProjektEvaluations::AggregateStatistics < ApplicationService
   PHASE_COLLECTORS = {
     "ProjektPhase::ProposalPhase" => :collect_proposal_stats,
     "ProjektPhase::BudgetPhase" => :collect_budget_stats,

@@ -1,4 +1,4 @@
-class Evaluations::GenerateVotingPhaseSummary < ApplicationService
+class ProjektEvaluations::GenerateVotingPhaseSummary < ApplicationService
   def initialize(phase_stats)
     @phase_stats = phase_stats
   end

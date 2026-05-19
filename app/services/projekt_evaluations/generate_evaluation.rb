@@ -1,4 +1,4 @@
-class Evaluations::GenerateEvaluation < ApplicationService
+class ProjektEvaluations::GenerateEvaluation < ApplicationService
   def initialize(projekt, selected_question_ids: [])
     @projekt = projekt
     @selected_question_ids = selected_question_ids
@@ -12,14 +12,14 @@ class Evaluations::GenerateEvaluation < ApplicationService
     evaluation.projekt_phase_evaluations.includes(:projekt_phase).each do |row|
       next if row.projekt_phase.blank?
 
-      Evaluations::GeneratePhaseEvaluation.call(row)
+      ProjektEvaluations::GeneratePhaseEvaluation.call(row)
     rescue StandardError => e
       Rails.logger.warn(
         "[Evaluation] Phase generation failed for row ##{row.id}: #{e.message}"
       )
     end
 
-    stats = Evaluations::AggregateStatistics.call(@projekt)
+    stats = ProjektEvaluations::AggregateStatistics.call(@projekt)
     ai_summary = generate_ai_summary(stats)
     project_content_summary = generate_project_content_summary
     selected_questions = collect_selected_questions
@@ -63,7 +63,7 @@ class Evaluations::GenerateEvaluation < ApplicationService
     phase_ids = @projekt
       .projekt_phases
       .active
-      .where(type: Evaluations::AggregateStatistics::PHASE_COLLECTORS.keys)
+      .where(type: ProjektEvaluations::AggregateStatistics::PHASE_COLLECTORS.keys)
       .pluck(:id)
     return if phase_ids.blank?
 
@@ -74,26 +74,22 @@ class Evaluations::GenerateEvaluation < ApplicationService
   end
 
   def generate_ai_summary(stats)
-    Evaluations::GenerateAiProjectSummary.call(@projekt, stats)
-  rescue StandardError => e
-    Rails.logger.warn("[Evaluation] AI summary generation failed: #{e.message}")
-    nil
+    safe_generate("AI summary") { ProjektEvaluations::GenerateAiProjectSummary.call(@projekt, stats) }
   end
 
   def generate_project_content_summary
-    Evaluations::GenerateProjectContentSummary.call(@projekt)
+    safe_generate("Project content summary") { ProjektEvaluations::GenerateProjectContentSummary.call(@projekt) }
+  end
+
+  def safe_generate(label)
+    yield
   rescue StandardError => e
-    Rails.logger.warn("[Evaluation] Project content summary generation failed: #{e.message}")
+    Rails.logger.warn("[Evaluation] #{label} generation failed: #{e.message}")
     nil
   end
 
   def collect_report_settings
-    open_phase_titles = @projekt
-      .projekt_phases
-      .active
-      .select(&:current?)
-      .map(&:title)
-      .compact_blank
+    open_phase_titles = @projekt.projekt_phases.current.pluck(:title).compact_blank
 
     polls_count = @projekt
       .polls

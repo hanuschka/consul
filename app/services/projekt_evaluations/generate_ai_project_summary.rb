@@ -1,4 +1,4 @@
-class Evaluations::GenerateAiProjectSummary < ApplicationService
+class ProjektEvaluations::GenerateAiProjectSummary < ApplicationService
   def initialize(projekt, stats)
     @projekt = projekt
     @stats = stats

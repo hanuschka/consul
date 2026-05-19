@@ -136,7 +136,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
   def generate_evaluation
     authorize [:adm, :projekts, @projekt], :update?
-    Evaluations::GenerateEvaluationJob.perform_later(@projekt.id)
+    ProjektEvaluations::GenerateEvaluationJob.perform_later(@projekt.id)
 
     flash[:notice] = I18n.t("adm.projekts.projekts.generate_evaluation.started")
 
@@ -162,7 +162,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
     row.update!(status: :processing)
 
-    Evaluations::GeneratePhaseEvaluationJob.perform_later(row.id)
+    ProjektEvaluations::GeneratePhaseEvaluationJob.perform_later(row.id)
 
     render json: {
       status: row.status,

@@ -126,6 +126,9 @@ application.register("clipboard", ClipboardController)
 import SharedAdminIframeController from "./shared/admin_iframe_controller"
 application.register("shared--admin-iframe", SharedAdminIframeController)
 
+import SharedCollapseController from "./shared/collapse_controller"
+application.register("shared--collapse", SharedCollapseController)
+
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
 
@@ -144,6 +147,9 @@ application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
 
+import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
+application.register("adm-dashboard-notice", AdmDashboardNoticeController)
+
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
 
@@ -159,3 +165,14 @@ application.register("files--filter-bar", FilesFilterBarController)
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
 
+import AdmAiActionButtonController from "./adm/ai_action_button_controller"
+application.register("adm--ai-action-button", AdmAiActionButtonController)
+
+import SharedPollingController from "./shared/polling_controller"
+application.register("shared--polling", SharedPollingController)
+
+import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
+application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
+
+import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
+application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)

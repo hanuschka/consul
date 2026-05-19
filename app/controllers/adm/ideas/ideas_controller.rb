@@ -4,35 +4,6 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   include ImageAttributes
   include DocumentAttributes
 
-  def index
-    base_scope = policy_scope(Idea, policy_scope_class: Adm::Ideas::IdeaPolicy::Scope)
-    base_scope = filter_assigned_ideas_only(base_scope)
-    scope = Adm::IdeasQuery.call(base_scope, params)
-
-    respond_to do |format|
-      format.html do
-        @pagy, @ideas = pagy(scope)
-
-        @title_header_options = { search: true }
-        @created_at_header_options = { sort: true }
-        @category_header_options = { filter_options: category_filter_options }
-        @officer_header_options = { filter_options: officer_filter_options }
-
-        @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas"), icon: "lightbulb" }]
-      end
-      format.geojson do
-        send_data GeoServices::MappablesGeojsonExporter.call(scope.preload(:category)),
-                  filename: "ideas-#{Time.zone.today}.geojson",
-                  type: "application/geo+json"
-      end
-    end
-  end
-
-  def settings
-    authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings"), icon: "settings" }]
-  end
-
   def show
     @idea = Idea.find(params[:id])
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy
@@ -169,14 +140,6 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
       raise Pundit::NotAuthorizedError unless current_user.idea_officer?
 
       scope.where(officer: current_user.idea_officer)
-    end
-
-    def category_filter_options
-      Idea::Category.all.map { |c| [c.id, c.name] }
-    end
-
-    def officer_filter_options
-      Idea::Officer.all.map { |o| [o.id, o.name] }
     end
 
     def notify_new_officer(idea)

@@ -65,6 +65,8 @@ class ProjektPhase < ApplicationRecord
     dependent: :destroy, inverse_of: :projekt_phase
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
+  has_one :projekt_phase_evaluation_visibility, dependent: :destroy
+  has_one :projekt_phase_evaluation, dependent: :destroy
 
   has_many :age_range_projekt_phases_for_stats, -> {
  where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy

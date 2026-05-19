@@ -21,6 +21,11 @@ export default class extends Controller {
   }
 
   swapToProgress() {
+    const buttonWidth = this.buttonTarget.offsetWidth
+    if (buttonWidth > 0) {
+      this.progressTarget.style.minWidth = `${buttonWidth}px`
+    }
+
     this.buttonTarget.hidden = true
     this.progressTarget.hidden = false
   }

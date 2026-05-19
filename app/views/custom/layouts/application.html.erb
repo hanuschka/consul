@@ -76,7 +76,7 @@
     <% end %>
     <% if user_signed_in? %>
       <%
-        timeout_minutes = (Devise.timeout_in / 60).to_i
+        timeout_minutes = (User.timeout_in / 60).to_i
         warning_minutes = [5, timeout_minutes - 1].min
       %>
       <div

@@ -1,6 +1,6 @@
 <%
   data = evaluation.data || {}
-  phases = data["phases"] || []
+  phases = evaluation.phases_data
   project_content_summary = data["project_content_summary"]
   report_settings = data["report_settings"] || {}
   pdf_mode = local_assigns.fetch(:pdf_mode, false)
@@ -33,7 +33,10 @@
     end
 %>
 
-<div class="report-summary">
+<section
+  class="report-summary"
+  data-pdf-chunk="report"
+>
   <% if pdf_mode && qr_svg.present? %>
     <div class="report-summary--qr">
       <div class="report-summary--qr-img"><%= raw(qr_svg) %></div>
@@ -247,4 +250,4 @@
       </div>
     <% end %>
   </section>
-</div>
+</section>

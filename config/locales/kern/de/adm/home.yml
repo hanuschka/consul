@@ -13,17 +13,24 @@ de:
           title: Nutzer
           total: "Gesamt (aktiv)"
           new_this_week: Neu diese Woche
-        deficiency_reports:
-          title: Mängelanzeigen
-          total: Gesamt
-          open: Offen
-          unassigned: Nicht zugewiesen
-        projects:
-          title: Projekte
-          total: Gesamt
-          active: Aktiv
-          expired: Abgelaufen
-        detailed_statistics: Detaillierte Statistiken
+        adm_sections:
+          title: "Verwaltungsbereiche"
+          hint: "Direktzugriff auf die Dashboards aller Bereiche, für die Sie Berechtigungen haben. Bereiche, die hier nicht erscheinen, sind für Ihre Rolle nicht freigeschaltet."
+          go_to_dashboard: "Zum Dashboard"
+          card_title: "%{section} — Dashboard öffnen"
+          metrics:
+            projekts:
+              one: "%{count} aktives Projekt"
+              other: "%{count} aktive Projekte"
+            deficiency_reports:
+              one: "%{count} offene Meldung"
+              other: "%{count} offene Meldungen"
+            ideas:
+              one: "%{count} aktive Idee"
+              other: "%{count} aktive Ideen"
+            officing:
+              one: "%{count} laufende Abstimmung"
+              other: "%{count} laufende Abstimmungen"
         dt:
           ticket_system: Ticketsystem
           meetup: Monatliches Consul-Meetup

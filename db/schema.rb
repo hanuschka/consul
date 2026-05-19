@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_12_112705) do
+ActiveRecord::Schema.define(version: 2026_05_18_144804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2189,6 +2189,43 @@ ActiveRecord::Schema.define(version: 2026_05_12_112705) do
     t.index ["projekt_phase_id"], name: "index_projekt_notifications_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_evaluation_visibilities", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.boolean "show_kpis", default: false, null: false
+    t.boolean "show_key_metrics", default: false, null: false
+    t.boolean "show_phase_summary", default: false, null: false
+    t.boolean "show_tone", default: false, null: false
+    t.boolean "show_ranking", default: false, null: false
+    t.boolean "show_proposals", default: false, null: false
+    t.boolean "show_ai_summary", default: false, null: false
+    t.boolean "show_timeline", default: false, null: false
+    t.boolean "show_label_sentiment", default: false, null: false
+    t.boolean "show_user_segments", default: false, null: false
+    t.boolean "show_key_findings", default: false, null: false
+    t.boolean "show_topic_clustering", default: false, null: false
+    t.boolean "show_semantic_clustering", default: false, null: false
+    t.boolean "show_ai_questions", default: false, null: false
+    t.boolean "show_questions", default: false, null: false
+    t.boolean "show_open_responses", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
+  end
+
+  create_table "projekt_phase_evaluations", force: :cascade do |t|
+    t.bigint "projekt_evaluation_id", null: false
+    t.bigint "projekt_phase_id", null: false
+    t.jsonb "data", default: {}
+    t.string "status", default: "pending", null: false
+    t.datetime "generated_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_evaluation_id", "projekt_phase_id"], name: "index_projekt_phase_evaluations_on_eval_and_phase", unique: true
+    t.index ["projekt_evaluation_id"], name: "index_projekt_phase_evaluations_on_projekt_evaluation_id"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluations_on_projekt_phase_id"
+    t.index ["status"], name: "index_projekt_phase_evaluations_on_status"
+  end
+
   create_table "projekt_phase_geozones", force: :cascade do |t|
     t.bigint "projekt_phase_id"
     t.bigint "geozone_id"
@@ -2439,7 +2476,7 @@ ActiveRecord::Schema.define(version: 2026_05_12_112705) do
     t.tsvector "tsv"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
-    t.boolean "on_global_overview", default: false
+    t.boolean "on_dt_global_overview", default: false
     t.boolean "from_dt", default: false
     t.string "import_file_status"
     t.jsonb "import_file_data"
@@ -2447,7 +2484,7 @@ ActiveRecord::Schema.define(version: 2026_05_12_112705) do
     t.bigint "landing_page_id"
     t.datetime "published_at"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
-    t.index ["on_global_overview"], name: "index_projekts_on_on_global_overview"
+    t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2791,18 +2828,6 @@ ActiveRecord::Schema.define(version: 2026_05_12_112705) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["section", "position"], name: "index_section_contact_people_on_section_and_position"
     t.index ["user_id"], name: "index_section_contact_people_on_user_id"
-  end
-
-  create_table "section_settings", force: :cascade do |t|
-    t.string "section", null: false
-    t.string "intro_text"
-    t.text "notice_message"
-    t.boolean "notice_active", default: false, null: false
-    t.bigint "author_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["author_id"], name: "index_section_settings_on_author_id"
-    t.index ["section"], name: "index_section_settings_on_section", unique: true
   end
 
   create_table "sentiment_translations", force: :cascade do |t|
@@ -3435,7 +3460,6 @@ ActiveRecord::Schema.define(version: 2026_05_12_112705) do
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "section_activities", "users"
   add_foreign_key "section_contact_people", "users"
-  add_foreign_key "section_settings", "users", column: "author_id"
   add_foreign_key "sentiments", "projekt_phases"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"

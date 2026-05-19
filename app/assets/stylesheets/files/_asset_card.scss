@@ -198,6 +198,13 @@
   }
 }
 
+.files-asset-card--glass-button.-top-left {
+  top: 10px;
+  left: 10px;
+  right: auto;
+  bottom: auto;
+}
+
 .files-asset-card--meta {
   display: flex;
   flex-direction: column;

@@ -1,13 +1,6 @@
 class Adm::Valuation::InvestmentsController < Adm::Valuation::BaseController
   before_action :load_investment, only: [:edit, :update]
 
-  def index
-    investments = policy_scope(Budget::Investment, policy_scope_class: Adm::Valuation::BudgetInvestmentPolicy::Scope)
-    @pagy, @investments = pagy(investments.includes(:budget, :valuators).order(id: :desc))
-
-    @breadcrumbs = [{ name: I18n.t("adm.valuation.menu.items.investments"), icon: "account_balance_wallet" }]
-  end
-
   def edit
     authorize @investment, policy_class: Adm::Valuation::BudgetInvestmentPolicy
   end

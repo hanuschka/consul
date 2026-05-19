@@ -2,14 +2,15 @@ en:
   adm:
     valuators:
       index:
-        title: Team
-        empty_title: "No budget administrators available"
-        empty_description: "Use the button above to add a new budget administrator."
-        new_link: Add new budget administrator
-        no_valuators: No budget administrators available.
+        title: Budget valuators
+        breadcrumb: Team
+        empty_title: "No budget valuators available"
+        empty_description: "Use the button above to add a new budget valuator."
+        new_link: Add new budget valuator
+        no_valuators: No budget valuators available.
       new:
-        title: Add new team member
+        title: Add new budget valuator
         search_label: Search users
-        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as budget administrators. Budget administrators evaluate budget proposals and review their feasibility and cost.
+        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as budget valuators. Budget valuators evaluate budget proposals and review their feasibility and cost.
       search:
         no_results: No users found matching these criteria.

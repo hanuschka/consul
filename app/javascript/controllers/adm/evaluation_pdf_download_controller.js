@@ -6,7 +6,6 @@ const RESTORE_EVENT = "adm-button-with-progress:restore"
 
 export default class extends Controller {
   static targets = ["form", "buttonWrapper"]
-  static values = { url: String }
 
   connect() {
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -23,11 +22,6 @@ export default class extends Controller {
   }
 
   handleSubmit(event) {
-    event.preventDefault()
-    this.startDownload()
-  }
-
-  start(event) {
     event.preventDefault()
     this.startDownload()
   }
@@ -56,16 +50,12 @@ export default class extends Controller {
   }
 
   buildUrl() {
-    if (this.hasFormTarget) {
-      const form = this.formTarget
-      const action = form.getAttribute("action") || form.action
-      const params = new URLSearchParams(new FormData(form))
-      const separator = action.includes("?") ? "&" : "?"
+    const form = this.formTarget
+    const action = form.getAttribute("action") || form.action
+    const params = new URLSearchParams(new FormData(form))
+    const separator = action.includes("?") ? "&" : "?"
 
-      return `${action}${separator}${params.toString()}`
-    }
-
-    return this.urlValue
+    return `${action}${separator}${params.toString()}`
   }
 
   extractFilename(response) {

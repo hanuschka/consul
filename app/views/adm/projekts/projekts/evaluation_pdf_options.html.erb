@@ -35,7 +35,7 @@
           <%= check_box_tag(
             "pdf_options[include_report]",
             "1",
-            true,
+            @selection_defaults.include_report?,
             id: "pdf_options_include_report"
           ) %>
           <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
@@ -56,7 +56,7 @@
             <%= check_box_tag(
               "pdf_options[phase_ids][]",
               phase_id,
-              true,
+              @selection_defaults.include_phase?(phase_id),
               id: "pdf_options_phase_#{phase_id}"
             ) %>
             <strong><%= phase["phase_title"] %></strong>
@@ -72,7 +72,7 @@
                 <%= check_box_tag(
                   "pdf_options[sections][#{phase_id}][]",
                   section_key,
-                  true,
+                  @selection_defaults.include_section?(phase_id, section_key),
                   id: "pdf_options_section_#{phase_id}_#{section_key}"
                 ) %>
                 <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
@@ -82,9 +82,17 @@
         </div>
       <% end %>
 
+      <%
+        cancel_url =
+          if @originating_phase_id.present?
+            evaluation_adm_projekts_projekt_path(@projekt, anchor: "phase-#{@originating_phase_id}")
+          else
+            evaluation_adm_projekts_projekt_path(@projekt)
+          end
+      %>
       <div class="d-flex gap-2 mt-4 align-items-center justify-content-between">
         <%= kern_link_button(
-          evaluation_adm_projekts_projekt_path(@projekt),
+          cancel_url,
           text: t(".cancel"),
           icon: "arrow_back",
           style: :secondary

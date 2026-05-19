@@ -20,6 +20,29 @@ class PdfServices::EvaluationPdfSelection
     new(phase_ids: phase_ids, sections_by_phase: sections_by_phase, include_report: true)
   end
 
+  def self.defaults_for(evaluation:, phase_id:)
+    return all(evaluation) if phase_id.blank?
+
+    phase = evaluation.phases_data.find { |p| p["phase_id"].to_i == phase_id.to_i }
+    return all(evaluation) if phase.nil?
+
+    available = available_sections(phase["phase_type"])
+    visible = visible_section_keys_for(phase_id, available)
+
+    new(
+      phase_ids: [phase_id.to_i],
+      sections_by_phase: { phase_id.to_i => visible },
+      include_report: false
+    )
+  end
+
+  def self.visible_section_keys_for(phase_id, available_keys)
+    visibility = ProjektPhaseEvaluationVisibility.find_by(projekt_phase_id: phase_id)
+    return available_keys if visibility.nil?
+
+    available_keys & visibility.visible_sections
+  end
+
   def self.from_params(evaluation, raw_params)
     return all(evaluation) if raw_params.blank?
 

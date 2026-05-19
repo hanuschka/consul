@@ -67,22 +67,15 @@
             <span class="kern-label material-symbols-outlined" aria-hidden="true">auto_awesome</span>
             <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_phase_button") %></span>
           </a>
-          <span
-            data-controller="adm--evaluation-pdf-download"
-            data-adm--evaluation-pdf-download-url-value="<%= evaluation_pdf_adm_projekts_projekt_path(projekt, pdf_options: { phase_ids: [phase_id] }) %>"
-          >
-            <%= render Adm::ButtonWithProgressComponent.new(
-              label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
-              loading_label: t("adm.projekts.projekts.evaluation.pdf_options.downloading"),
-              success_label: t("adm.projekts.projekts.evaluation.pdf_options.ready"),
-              icon: "picture_as_pdf",
-              success_icon: "check_circle",
-              style: :secondary,
-              button_type: "button",
-              button_data: { action: "click->adm--evaluation-pdf-download#start" },
-              extra_root_data: { "adm--evaluation-pdf-download-target": "buttonWrapper" }
-            ) %>
-          </span>
+          <%= render Adm::ButtonWithProgressComponent.new(
+            label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
+            loading_label: t("adm.projekts.projekts.evaluation.pdf_options.downloading"),
+            success_label: t("adm.projekts.projekts.evaluation.pdf_options.ready"),
+            icon: "picture_as_pdf",
+            success_icon: "check_circle",
+            style: :secondary,
+            url: evaluation_pdf_options_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+          ) %>
         </div>
       </div>
 

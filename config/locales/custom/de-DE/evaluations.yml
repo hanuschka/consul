@@ -28,7 +28,7 @@ de:
             Bitte versuchen Sie es erneut.
           regenerate_button: Neu generieren
           regenerate_phase_button: Phase neu generieren
-          phase_download_pdf_button: PDF herunterladen
+          phase_download_pdf_button: PDF exportieren…
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit
           phase_processing_title: Phase wird neu generiert

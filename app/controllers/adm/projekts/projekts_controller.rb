@@ -191,7 +191,18 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       return
     end
 
-    @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
+    @originating_phase_id = resolve_originating_phase_id(@evaluation, params[:phase_id])
+    @selection_defaults = PdfServices::EvaluationPdfSelection.defaults_for(
+      evaluation: @evaluation,
+      phase_id: @originating_phase_id
+    )
+
+    @back_button_url =
+      if @originating_phase_id.present?
+        evaluation_adm_projekts_projekt_path(@projekt, anchor: "phase-#{@originating_phase_id}")
+      else
+        evaluation_adm_projekts_projekt_path(@projekt)
+      end
 
     @breadcrumbs = [
       { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
@@ -378,6 +389,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def set_back_button_url
       @back_button_url = adm_projekts_root_path
+    end
+
+    def resolve_originating_phase_id(evaluation, raw_phase_id)
+      return nil if raw_phase_id.blank?
+
+      candidate = raw_phase_id.to_i
+      match = evaluation.phases_data.find { |p| p["phase_id"].to_i == candidate }
+      match ? candidate : nil
     end
 
     def projekt_params

@@ -28,7 +28,7 @@ en:
             Please try again.
           regenerate_button: Regenerate
           regenerate_phase_button: Regenerate phase
-          phase_download_pdf_button: Download PDF
+          phase_download_pdf_button: Export PDF…
           open_in_admin: Open in admin
           configure_visibility_button: Visibility
           phase_processing_title: Phase is being regenerated

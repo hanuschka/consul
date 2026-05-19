@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_18_073404) do
+ActiveRecord::Schema.define(version: 2026_05_18_144804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2064,13 +2064,6 @@ ActiveRecord::Schema.define(version: 2026_05_18_073404) do
     t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "pdf_formatted_html"
-    t.string "pdf_formatted_status"
-    t.datetime "pdf_formatted_at"
-    t.string "pdf_formatted_data_fingerprint"
-    t.string "pdf_formatted_error"
-    t.jsonb "pdf_format_progress", default: {}
-    t.index ["projekt_id", "pdf_formatted_status"], name: "index_projekt_evaluations_on_projekt_id_and_pdf_status"
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
     t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
     t.index ["status"], name: "index_projekt_evaluations_on_status"
@@ -2225,11 +2218,6 @@ ActiveRecord::Schema.define(version: 2026_05_18_073404) do
     t.jsonb "data", default: {}
     t.string "status", default: "pending", null: false
     t.datetime "generated_at"
-    t.text "pdf_formatted_html"
-    t.string "pdf_formatted_status"
-    t.datetime "pdf_formatted_at"
-    t.string "pdf_formatted_data_fingerprint"
-    t.string "pdf_formatted_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_evaluation_id", "projekt_phase_id"], name: "index_projekt_phase_evaluations_on_eval_and_phase", unique: true

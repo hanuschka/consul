@@ -87,6 +87,15 @@ $er-max-tabs: 8;
     break-after: avoid;
     page-break-after: avoid;
   }
+
+  .custom-collapse--body {
+    display: block !important;
+    padding-top: 20px;
+  }
+
+  .custom-collapse--head .icon-chevron-down {
+    display: none;
+  }
 }
 
 .phase-ai-questions {
@@ -207,228 +216,6 @@ $er-max-tabs: 8;
     width: 16px;
     height: 16px;
   }
-}
-
-.pdf-options-ai-status {
-  max-width: 720px;
-}
-
-.pdf-options-ai-status__panel {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  color: #0f172a;
-
-  &[hidden] {
-    display: none;
-  }
-}
-
-.pdf-progress-region {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  max-width: 720px;
-
-  &[hidden] {
-    display: none;
-  }
-}
-
-.pdf-progress-region__summary {
-  padding: 1.25rem 1.5rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-}
-
-.pdf-progress-region__summary-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.pdf-progress-region__summary-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.pdf-progress-region__summary-title {
-  font-weight: 700;
-  color: #0f172a;
-  font-size: 0.95rem;
-}
-
-.pdf-progress-region__summary-items {
-  margin: 0;
-  padding-left: 1.25rem;
-  font-size: 0.9rem;
-  color: #475569;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-  list-style: disc;
-}
-
-.pdf-progress-region__steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-}
-
-.pdf-progress-region__steps-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.pdf-progress-region__progress-meta {
-  font-size: 0.85rem;
-  color: #64748b;
-  font-weight: 600;
-}
-
-.pdf-progress-region__bar {
-  position: relative;
-  width: 100%;
-  height: 6px;
-  background: #e2e8f0;
-  border-radius: 999px;
-  overflow: hidden;
-  margin: 0.25rem 0 0.75rem;
-}
-
-.pdf-progress-region__bar-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0;
-  background: #7c3aed;
-  border-radius: 999px;
-  transition: width 250ms ease-out;
-}
-
-.pdf-progress-region__steps-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.pdf-progress-region__step {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 0.85rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #475569;
-}
-
-.pdf-progress-region__step[data-step-status="processing"] {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
-  font-weight: 600;
-}
-
-.pdf-progress-region__step[data-step-status="completed"] {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-  color: #065f46;
-}
-
-.pdf-progress-region__step-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.pdf-progress-region__step-icon-pending,
-.pdf-progress-region__step-icon-processing,
-.pdf-progress-region__step-icon-completed {
-  display: none;
-  font-size: 20px;
-}
-
-.pdf-progress-region__step[data-step-status="pending"] .pdf-progress-region__step-icon-pending {
-  display: inline-block;
-  color: #94a3b8;
-}
-
-.pdf-progress-region__step[data-step-status="processing"] .pdf-progress-region__step-icon-processing {
-  display: inline-block;
-  color: #2563eb;
-  animation: pdf-progress-region-spin 1.2s linear infinite;
-}
-
-.pdf-progress-region__step[data-step-status="completed"] .pdf-progress-region__step-icon-completed {
-  display: inline-block;
-  color: #059669;
-}
-
-.pdf-progress-region__step-label {
-  flex: 1;
-}
-
-@keyframes pdf-progress-region-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.pdf-options-ai-status__panel--processing {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
-}
-
-.pdf-options-ai-status__panel--ready {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-  color: #065f46;
-}
-
-.pdf-options-ai-status__panel--failed {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #7f1d1d;
-
-  .kern-btn {
-    margin-left: auto;
-  }
-}
-
-.pdf-options-ai-status__panel--ai-disabled {
-  background: #fffbeb;
-  border-color: #fde68a;
-  color: #78350f;
-}
-
-.pdf-options-ai-status__error {
-  font-size: 0.85rem;
-  color: #b91c1c;
-  margin-top: 0.25rem;
-  word-break: break-word;
 }
 
 .adm-projekt-evaluation-report {
@@ -605,7 +392,7 @@ $er-max-tabs: 8;
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 0.95rem;
   cursor: pointer;
   color: var(--er-text-secondary);
   transition: color 150ms ease, background 150ms ease, border-color 150ms ease;

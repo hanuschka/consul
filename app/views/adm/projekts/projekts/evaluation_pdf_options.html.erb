@@ -8,17 +8,8 @@
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
-<div
-  class="kern-container mb-5"
-  data-controller="adm--evaluation-pdf-prepare"
-  data-adm--evaluation-pdf-prepare-prepare-url-value="<%= prepare_evaluation_pdf_adm_projekts_projekt_path(@projekt) %>"
-  data-adm--evaluation-pdf-prepare-status-url-value="<%= evaluation_pdf_status_adm_projekts_projekt_path(@projekt) %>"
-  data-adm--evaluation-pdf-prepare-back-url-value="<%= evaluation_adm_projekts_projekt_path(@projekt) %>"
->
-  <div
-    class="pdf-options-form-region"
-    data-adm--evaluation-pdf-prepare-target="formRegion"
-  >
+<div class="kern-container mb-5">
+  <div class="pdf-options-form-region">
     <h2 class="h3 mb-4"><%= t(".heading") %></h2>
     <p class="text-muted mb-4"><%= t(".description") %></p>
 
@@ -28,12 +19,7 @@
       local: true,
       html: {
         target: "_blank",
-        data: {
-          turbolinks: false,
-          turbo: false,
-          "adm--evaluation-pdf-prepare-target": "form",
-          action: "submit->adm--evaluation-pdf-prepare#handleSubmit"
-        }
+        data: { turbolinks: false, turbo: false }
       },
       class: "pdf-options-form"
     ) do |form| %>
@@ -99,50 +85,12 @@
         ) %>
         <%= button_tag(
           type: "submit",
-          class: "kern-btn kern-btn--primary",
-          data: { "adm--evaluation-pdf-prepare-target": "submitButton" }
+          class: "kern-btn kern-btn--primary"
         ) do %>
           <span class="kern-label material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
           <span class="kern-label"><%= t(".download") %></span>
         <% end %>
       </div>
-
-      <div class="pdf-options-ai-status mt-4">
-        <div
-          class="pdf-options-ai-status__panel pdf-options-ai-status__panel--failed"
-          data-adm--evaluation-pdf-prepare-target="failedPanel"
-          hidden
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">error</span>
-          <div>
-            <div><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.failed") %></div>
-            <div
-              class="pdf-options-ai-status__error"
-              data-adm--evaluation-pdf-prepare-target="errorMessage"
-            ></div>
-          </div>
-          <button
-            type="button"
-            class="kern-btn kern-btn--secondary"
-            data-action="click->adm--evaluation-pdf-prepare#retry"
-          >
-            <%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.retry") %>
-          </button>
-        </div>
-
-        <div
-          class="pdf-options-ai-status__panel pdf-options-ai-status__panel--ai-disabled"
-          data-adm--evaluation-pdf-prepare-target="aiDisabledPanel"
-          hidden
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">info</span>
-          <span><%= t("adm.projekts.projekts.evaluation.pdf_options.ai_formatting.ai_disabled") %></span>
-        </div>
-      </div>
     <% end %>
   </div>
-
-  <%= render "adm/projekts/projekts/evaluation/pdf_progress_region",
-    projekt: @projekt,
-    evaluation: @evaluation %>
 </div>

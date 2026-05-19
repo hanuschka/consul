@@ -3,6 +3,15 @@ import { Chart, registerables } from "chart.js"
 
 Chart.register(...registerables)
 
+const isPdfMode = () =>
+  typeof document !== "undefined" &&
+  document.body !== null &&
+  document.body.classList.contains("evaluation-pdf-body")
+
+if (isPdfMode()) {
+  Chart.defaults.animation = false
+}
+
 export default class extends Controller {
   connect() {
     this.element.querySelectorAll("[data-area-chart]").forEach(el => this.initAreaChart(el))

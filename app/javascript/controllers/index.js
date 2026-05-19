@@ -22,9 +22,6 @@ application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
 import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
 application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
 
-import AdmEvaluationPdfPrepareController from "./adm/evaluation_pdf_prepare_controller"
-application.register("adm--evaluation-pdf-prepare", AdmEvaluationPdfPrepareController)
-
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 

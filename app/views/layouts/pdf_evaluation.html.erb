@@ -4,13 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= yield(:title).presence || "Evaluation" %></title>
-  <%
-    pdf_css_path = Rails.root.join("app/assets/builds/application.adm.css")
-    pdf_inline_css = File.exist?(pdf_css_path) ? File.read(pdf_css_path) : ""
-  %>
-  <style><%= pdf_inline_css.html_safe %></style>
+  <style><%= PdfServices::InlineCss.call.html_safe %></style>
 </head>
 <body class="evaluation-pdf-body">
   <%= yield %>
+  <script><%= PdfServices::InlineJs.call.html_safe %></script>
 </body>
 </html>

@@ -99,21 +99,6 @@ en:
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis
               ai_questions: AI questions
-            progress:
-              heading: Preparing your PDF
-              description: >
-                The PDF is being assembled. Each section is processed individually —
-                you can watch progress below.
-              summary_heading: Selected for export
-              steps_heading: Processing steps
-              report_chunk_label: Report summary
-              placeholder_step: Preparing…
-            ai_formatting:
-              processing: Preparing PDF layout with AI…
-              ready: Ready to download.
-              failed: AI formatting failed. The PDF will be rendered without AI optimization.
-              retry: Retry
-              ai_disabled: AI formatting disabled. PDF will be generated directly.
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           open_responses_show: Show responses

@@ -99,21 +99,6 @@ de:
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
-            progress:
-              heading: PDF wird vorbereitet
-              description: >
-                Das PDF wird zusammengestellt. Jeder Abschnitt wird einzeln
-                verarbeitet — den Fortschritt sehen Sie unten.
-              summary_heading: Für den Export ausgewählt
-              steps_heading: Verarbeitungsschritte
-              report_chunk_label: Berichtszusammenfassung
-              placeholder_step: Wird vorbereitet…
-            ai_formatting:
-              processing: PDF wird mit KI für besseren Seitenumbruch aufbereitet…
-              ready: Bereit zum Download.
-              failed: KI-Aufbereitung fehlgeschlagen. Das PDF wird ohne KI-Optimierung erzeugt.
-              retry: Erneut versuchen
-              ai_disabled: KI-Aufbereitung deaktiviert. PDF wird direkt erzeugt.
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen

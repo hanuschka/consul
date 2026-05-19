@@ -8,7 +8,10 @@
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
-<div class="kern-container mb-5">
+<div
+  class="kern-container mb-5"
+  data-controller="adm--evaluation-pdf-download"
+>
   <div class="pdf-options-form-region">
     <h2 class="h3 mb-4"><%= t(".heading") %></h2>
     <p class="text-muted mb-4"><%= t(".description") %></p>
@@ -18,8 +21,11 @@
       method: :get,
       local: true,
       html: {
-        target: "_blank",
-        data: { turbolinks: false, turbo: false }
+        data: {
+          turbolinks: false,
+          turbo: false,
+          "adm--evaluation-pdf-download-target": "form"
+        }
       },
       class: "pdf-options-form"
     ) do |form| %>
@@ -83,13 +89,16 @@
           icon: "arrow_back",
           style: :secondary
         ) %>
-        <%= button_tag(
-          type: "submit",
-          class: "kern-btn kern-btn--primary"
-        ) do %>
-          <span class="kern-label material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
-          <span class="kern-label"><%= t(".download") %></span>
-        <% end %>
+        <%= render Adm::ButtonWithProgressComponent.new(
+          label: t(".download"),
+          loading_label: t(".downloading"),
+          success_label: t(".ready"),
+          icon: "picture_as_pdf",
+          success_icon: "check_circle",
+          style: :primary,
+          button_type: "submit",
+          extra_root_data: { "adm--evaluation-pdf-download-target": "buttonWrapper" }
+        ) %>
       </div>
     <% end %>
   </div>

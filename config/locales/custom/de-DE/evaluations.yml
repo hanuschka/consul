@@ -28,6 +28,7 @@ de:
             Bitte versuchen Sie es erneut.
           regenerate_button: Neu generieren
           regenerate_phase_button: Phase neu generieren
+          phase_download_pdf_button: PDF herunterladen
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit
           phase_processing_title: Phase wird neu generiert
@@ -151,3 +152,5 @@ de:
           description: Wählen Sie, welche Phasen und Abschnitte im PDF enthalten sein sollen.
           cancel: Abbrechen
           download: PDF herunterladen
+          downloading: PDF wird vorbereitet…
+          ready: Bereit

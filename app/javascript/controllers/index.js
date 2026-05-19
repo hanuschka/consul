@@ -173,3 +173,6 @@ application.register("shared--polling", SharedPollingController)
 
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
+
+import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
+application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)

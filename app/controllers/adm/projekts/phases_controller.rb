@@ -707,8 +707,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
       @projekt_phase.build_projekt_phase_evaluation_visibility
 
+    phase_evaluation_url = evaluation_adm_projekts_projekt_path(
+      @projekt_phase.projekt,
+      anchor: "phase-#{@projekt_phase.id}"
+    )
+
+    @back_button_url = phase_evaluation_url
+
     @breadcrumbs = [
-      { name: @projekt_phase.projekt.page.title },
+      {
+        name: @projekt_phase.projekt.page.title,
+        url: details_adm_projekts_projekt_path(@projekt_phase.projekt)
+      },
+      { name: @projekt_phase.title, url: phase_evaluation_url },
       { name: t(".title") }
     ]
   end

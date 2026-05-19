@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div class="d-flex justify-content-between gap-2 mt-4">
+    <div class="d-flex align-items-center justify-content-between gap-2 mt-4">
       <%= kern_link_button(
         evaluation_adm_projekts_projekt_path(
           @projekt_phase.projekt,
@@ -60,7 +60,10 @@
         icon: "arrow_back",
         style: :secondary
       ) %>
-      <%= form_submit_button(text: t(".save"), icon: "save", style: :primary) %>
+      <%= button_tag type: "submit", class: "kern-btn kern-btn--primary" do %>
+        <span class="kern-label material-symbols-outlined" aria-hidden="true">save</span>
+        <span class="kern-label"><%= t(".save") %></span>
+      <% end %>
     </div>
   <% end %>
 </div>

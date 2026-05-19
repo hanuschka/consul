@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $adm-connection-badge-success-color: #007a2f;
 $adm-connection-badge-warning-color: #d7a518;
 $adm-connection-badge-error-color: #a33a29;
@@ -27,27 +29,27 @@ $adm-connection-badge-gray-color: #6b7280;
 
   &.-success {
     color: $adm-connection-badge-success-color;
-    background-color: mix($adm-connection-badge-success-color, white, 25%);
+    background-color: color.mix($adm-connection-badge-success-color, white, 25%);
   }
 
   &.-warning {
     color: $adm-connection-badge-warning-color;
-    background-color: mix($adm-connection-badge-warning-color, white, 30%);
+    background-color: color.mix($adm-connection-badge-warning-color, white, 30%);
   }
 
   &.-error {
     color: $adm-connection-badge-error-color;
-    background-color: mix($adm-connection-badge-error-color, white, 22%);
+    background-color: color.mix($adm-connection-badge-error-color, white, 22%);
   }
 
   &.-blue {
     color: $adm-connection-badge-blue-color;
-    background-color: mix($adm-connection-badge-blue-color, white, 18%);
+    background-color: color.mix($adm-connection-badge-blue-color, white, 18%);
   }
 
   &.-gray {
     color: $adm-connection-badge-gray-color;
-    background-color: mix($adm-connection-badge-gray-color, white, 15%);
+    background-color: color.mix($adm-connection-badge-gray-color, white, 15%);
   }
 }
 
@@ -74,23 +76,23 @@ $adm-connection-badge-gray-color: #6b7280;
   line-height: 1.5;
 
   .adm-connection-checks--badge.-success & {
-    color: mix($adm-connection-badge-success-color, black, 50%);
+    color: color.mix($adm-connection-badge-success-color, black, 50%);
   }
 
   .adm-connection-checks--badge.-warning & {
-    color: mix($adm-connection-badge-warning-color, black, 50%);
+    color: color.mix($adm-connection-badge-warning-color, black, 50%);
   }
 
   .adm-connection-checks--badge.-error & {
-    color: mix($adm-connection-badge-error-color, black, 50%);
+    color: color.mix($adm-connection-badge-error-color, black, 50%);
   }
 
   .adm-connection-checks--badge.-blue & {
-    color: mix($adm-connection-badge-blue-color, black, 50%);
+    color: color.mix($adm-connection-badge-blue-color, black, 50%);
   }
 
   .adm-connection-checks--badge.-gray & {
-    color: mix($adm-connection-badge-gray-color, black, 50%);
+    color: color.mix($adm-connection-badge-gray-color, black, 50%);
   }
 }
 
@@ -101,23 +103,23 @@ $adm-connection-badge-gray-color: #6b7280;
   line-height: 1.4;
 
   .adm-connection-checks--badge.-success & {
-    color: mix($adm-connection-badge-success-color, gray, 40%);
+    color: color.mix($adm-connection-badge-success-color, gray, 40%);
   }
 
   .adm-connection-checks--badge.-warning & {
-    color: mix($adm-connection-badge-warning-color, gray, 40%);
+    color: color.mix($adm-connection-badge-warning-color, gray, 40%);
   }
 
   .adm-connection-checks--badge.-error & {
-    color: mix($adm-connection-badge-error-color, gray, 40%);
+    color: color.mix($adm-connection-badge-error-color, gray, 40%);
   }
 
   .adm-connection-checks--badge.-blue & {
-    color: mix($adm-connection-badge-blue-color, gray, 40%);
+    color: color.mix($adm-connection-badge-blue-color, gray, 40%);
   }
 
   .adm-connection-checks--badge.-gray & {
-    color: mix($adm-connection-badge-gray-color, gray, 40%);
+    color: color.mix($adm-connection-badge-gray-color, gray, 40%);
   }
 }
 

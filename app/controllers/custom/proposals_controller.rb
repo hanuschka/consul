@@ -184,7 +184,7 @@ class ProposalsController
     end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
-      head :not_found, content_type: "text/html" and return
+      redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
     # @notifications = @proposal.notifications

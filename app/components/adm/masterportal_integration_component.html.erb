@@ -1,0 +1,61 @@
+<section
+  class="masterportal-integration"
+  data-controller="adm--masterportal-import-panel"
+  data-adm--masterportal-import-panel-endpoints-value="<%= endpoints_data.to_json %>"
+  data-adm--masterportal-import-panel-initial-status-value="<%= initial_status.to_json %>"
+  data-adm--masterportal-import-panel-progress-count-template-value="<%= progress_count_template %>"
+  data-adm--masterportal-import-panel-progress-count-token-value="<%= Adm::MasterportalIntegrationComponent::PROGRESS_COUNT_TOKEN %>"
+  aria-labelledby="masterportal-integration-title"
+>
+  <div class="masterportal-integration--header masterportal-import-panel--header">
+    <div class="masterportal-import-panel--header-left">
+      <div class="masterportal-import-panel--logo" aria-hidden="true">
+        <%= image_tag "services/masterportal_logo.svg", alt: "" %>
+      </div>
+
+      <div class="masterportal-import-panel--header-text">
+        <h3
+          id="masterportal-integration-title"
+          class="masterportal-import-panel--title"
+        >
+          <%= t("components.adm.masterportal_import_panel_component.title") %>
+        </h3>
+
+        <p class="masterportal-import-panel--subtitle">
+          <span class="material-symbols-outlined" aria-hidden="true">tag</span>
+          <%= projekt_phase_title %>
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="masterportal-import-panel--status"
+      data-adm--masterportal-import-panel-target="statusBadge"
+      data-status="<%= initial_status[:status] %>"
+    >
+      <span class="material-symbols-outlined masterportal-import-panel--status-icon" aria-hidden="true">
+        <%= status_icon %>
+      </span>
+      <span class="masterportal-import-panel--status-text">
+        <%= status_summary %>
+      </span>
+    </div>
+  </div>
+
+  <div class="masterportal-integration--body">
+    <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: projekt_phase, embedded: true) %>
+
+    <% if has_pins? %>
+      <div class="masterportal-integration--subsection">
+        <%= turbo_frame_tag(summary_frame_id, src: summary_frame_src) do %>
+          <%= render Adm::TurboFramePlaceholderComponent.new(
+            text: summary_loading_label,
+            min_height: 520,
+            logo_path: "services/masterportal_logo.svg",
+            logo_alt: "Masterportal"
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>

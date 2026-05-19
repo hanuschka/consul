@@ -2,6 +2,10 @@ module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.4"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
+  def self.voice_assistant_allowed?
+    Rails.application.secrets.dig(:ai, :enabled) == true
+  end
+
   def self.ai_available?
     return false unless Rails.application.secrets.dig(:ai, :enabled) == true
 

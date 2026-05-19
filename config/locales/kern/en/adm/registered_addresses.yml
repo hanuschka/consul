@@ -17,6 +17,12 @@ en:
           Contact demokratie.today if you want to update or extend address data.
         empty_title: "No addresses imported yet"
         empty_description: "Please provide demokratie.today with a CSV file of the address data to set up the import."
+        no_results_filtered_title: No addresses match the current filters
+        no_results_filtered_description: Adjust or remove the filters to see more addresses.
+        total_label:
+          one: address
+          other: addresses
+        total_hint: Addresses in the current view (including active filters).
         table:
           city: City
           plz: Postal code

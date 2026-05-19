@@ -161,16 +161,40 @@ module AdmHelper
     end
   end
 
-  def overview_page_tabs(current_action: nil)
+  def overview_pages_tabs(current_action: nil)
     current_action ||= action_name
 
-    %w[navigation footer].map do |action|
+    %w[projekt others].map do |action|
       {
-        label: I18n.t("adm.projekts.overview_page.tabs.#{action}"),
-        url: send("#{action}_adm_projekts_overview_page_path"),
+        label: I18n.t("adm.overview_pages.tabs.#{action}"),
+        url: send("#{action}_adm_overview_pages_path"),
         current: current_action == action
       }
     end
+  end
+
+  def projekt_tabs(projekt, current_action: nil)
+    current_action ||= action_name
+
+    tabs = [
+      {
+        label: I18n.t("adm.projekts.projekts.tabs.frontend_page"),
+        url: projekt_path(projekt),
+        icon: "open_in_new",
+        data: { turbo: false },
+        current: false
+      }
+    ]
+
+    %w[details visibility projekt_managers map phases evaluation].each do |action|
+      tabs << {
+        label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
+        url: send("#{action}_adm_projekts_projekt_path", projekt),
+        current: current_action == action
+      }
+    end
+
+    tabs
   end
 
   def relative_time(datetime)

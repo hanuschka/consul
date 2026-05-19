@@ -71,11 +71,12 @@
     <% if current_user&.administrator? || current_user&.projekt_manager? %>
       <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
       <%= render Projekts::ContentBlockEditPopupsComponent.new %>
-      <%= render ProjektStudio::FileUploadDialogComponent.new %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new(type: "picture") %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new(type: "document") %>
     <% end %>
     <% if user_signed_in? %>
       <%
-        timeout_minutes = (Devise.timeout_in / 60).to_i
+        timeout_minutes = (User.timeout_in / 60).to_i
         warning_minutes = [5, timeout_minutes - 1].min
       %>
       <div

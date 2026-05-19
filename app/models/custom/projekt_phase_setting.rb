@@ -1,12 +1,12 @@
 class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
-  PRO_SETTINGS = [
-    "feature.form.voice_assistant"
-  ]
-
   SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
+
+  AI_GATED_KEYS = %w[
+    feature.form.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
@@ -16,6 +16,10 @@ class ProjektPhaseSetting < ApplicationRecord
   validates :key, uniqueness: { scope: :projekt_phase_id }
 
   default_scope { order(id: :asc) }
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def kind_prefix
     key.split(".").first

@@ -1,0 +1,14 @@
+<div class="adm-dashboard__section">
+  <div class="adm-dashboard__section-header">
+    <span class="material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+    <h3><%= title %></h3>
+  </div>
+  <% if hint.present? %>
+    <p class="adm-dashboard__hint"><%= hint %></p>
+  <% end %>
+  <div class="adm-module-bento">
+    <% tiles.each do |tile| %>
+      <%= render Adm::ModuleBentoCardComponent.new(**tile) %>
+    <% end %>
+  </div>
+</div>

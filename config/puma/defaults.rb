@@ -13,8 +13,8 @@ stdout_redirect "#{rails_root}/log/puma_access.log", "#{rails_root}/log/puma_err
 
 bind "unix://#{rails_root}/tmp/sockets/puma.sock"
 
-threads 0, 16
-workers 2
+threads 5, 5
+workers 6
 preload_app!
 
 plugin :tmp_restart

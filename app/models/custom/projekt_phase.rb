@@ -42,6 +42,27 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::NewsfeedPhase"
   ].freeze
 
+  PHASE_MATERIAL_ICONS = {
+    "ProjektPhase::CommentPhase" => "chat_bubble",
+    "ProjektPhase::ProposalPhase" => "lightbulb",
+    "ProjektPhase::PointOfInterestPhase" => "location_on",
+    "ProjektPhase::QuestionPhase" => "quiz",
+    "ProjektPhase::VotingPhase" => "how_to_vote",
+    "ProjektPhase::IframePhase" => "web",
+    "ProjektPhase::BudgetPhase" => "euro_symbol",
+    "ProjektPhase::LegislationPhase" => "gavel",
+    "ProjektPhase::FormularPhase" => "description",
+    "ProjektPhase::EventPhase" => "event",
+    "ProjektPhase::MilestonePhase" => "flag",
+    "ProjektPhase::ProjektNotificationPhase" => "notifications",
+    "ProjektPhase::LivestreamPhase" => "live_tv",
+    "ProjektPhase::ArgumentPhase" => "forum",
+    "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::DebatePhase" => "forum"
+  }.freeze
+
+  DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
+
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
@@ -139,6 +160,14 @@ class ProjektPhase < ApplicationRecord
     end
   rescue NameError
     self
+  end
+
+  def self.material_icon_for(type)
+    PHASE_MATERIAL_ICONS[type.to_s] || DEFAULT_PHASE_MATERIAL_ICON
+  end
+
+  def material_icon
+    self.class.material_icon_for(type)
   end
 
   default_scope { order(:given_order, :id) }

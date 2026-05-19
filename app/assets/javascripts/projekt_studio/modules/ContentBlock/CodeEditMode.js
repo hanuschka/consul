@@ -42,8 +42,8 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   getEditorContainer(contentBlockWrapper) {
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    const searchContainer = relativeContainer || contentBlockWrapper;
+    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-code-editor-container');
   },
 
@@ -71,14 +71,14 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     textarea.className = 'code-editor-textarea';
     editorContainer.appendChild(textarea);
 
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    if (!relativeContainer) return;
+    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const insertionContainer = innerContainer || contentBlockWrapper;
 
-    const toolsetsBorder = relativeContainer.querySelector('.js-projekt-content-block--toolbar');
-    if (toolsetsBorder) {
-      toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
+    const toolbarAnchor = insertionContainer.querySelector('.js-projekt-content-block--toolbar-anchor');
+    if (toolbarAnchor) {
+      toolbarAnchor.insertAdjacentElement('afterend', editorContainer);
     } else {
-      relativeContainer.appendChild(editorContainer);
+      insertionContainer.appendChild(editorContainer);
     }
 
     const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML);

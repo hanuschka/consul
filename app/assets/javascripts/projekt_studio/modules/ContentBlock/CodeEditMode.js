@@ -28,9 +28,10 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   switchToCodeEditMode(contentBlockWrapper) {
+    const targetHeight = contentBlockWrapper.offsetHeight;
     contentBlockWrapper.dataset.editMode = 'code';
     this.showCodeEditModeControls(contentBlockWrapper);
-    this.createAndShowEditor(contentBlockWrapper);
+    this.createAndShowEditor(contentBlockWrapper, targetHeight);
   },
 
   showCodeEditModeControls(contentBlockWrapper) {
@@ -53,7 +54,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     return `code-editor-${contentBlockId || draftIndex || 'new'}`;
   },
 
-  createAndShowEditor(contentBlockWrapper) {
+  createAndShowEditor(contentBlockWrapper, targetHeight) {
     this.removeEditor(contentBlockWrapper);
 
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
@@ -81,7 +82,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       insertionContainer.appendChild(editorContainer);
     }
 
-    const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML);
+    const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML, targetHeight);
 
     setTimeout(() => { editor.focus(); }, 100);
   },
@@ -118,7 +119,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }, 100);
   },
 
-  setupAceEditor(contentBlockWrapper, textarea, currentHTML = '') {
+  setupAceEditor(contentBlockWrapper, textarea, currentHTML = '', targetHeight = null) {
     const editorName = this.getEditorName(contentBlockWrapper);
     let editor = this.aceInstances[editorName];
 
@@ -131,16 +132,28 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       editor.setTheme("ace/theme/textmate");
       editor.session.setUseWrapMode(true);
 
-      editor.session.on('change', () => {
-        this.resizeEditorOnContentChange(editor);
-      });
+      if (!targetHeight) {
+        editor.session.on('change', () => {
+          this.resizeEditorOnContentChange(editor);
+        });
+      }
     }
 
     const formattedHTML = ProjektStudio.utils.formatHTML(currentHTML);
     editor.setValue(formattedHTML, -1); // -1 moves cursor to start
-    this.resizeEditorOnContentChange(editor);
+
+    if (targetHeight) {
+      this.setEditorHeight(editor, targetHeight);
+    } else {
+      this.resizeEditorOnContentChange(editor);
+    }
 
     return editor;
+  },
+
+  setEditorHeight(editor, height) {
+    editor.container.style.height = height + "px";
+    editor.resize();
   },
 
   resizeEditorOnContentChange(editor) {

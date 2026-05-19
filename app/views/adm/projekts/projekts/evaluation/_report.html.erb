@@ -36,22 +36,18 @@
 
   phase_tab_config = {
     "ProjektPhase::ProposalPhase" => {
-      material_icon: "lightbulb",
       kpi_key: "proposals_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
     },
     "ProjektPhase::VotingPhase" => {
-      material_icon: "how_to_vote",
       kpi_key: "participants_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.participants"
     },
     "ProjektPhase::BudgetPhase" => {
-      material_icon: "euro_symbol",
       kpi_key: "investments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.investments"
     },
     "ProjektPhase::CommentPhase" => {
-      material_icon: "chat_bubble",
       kpi_key: "comments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.comments"
     }
@@ -113,7 +109,6 @@
       evaluation: evaluation,
       projekt: projekt,
       phase_palette: phase_palette,
-      phase_tab_config: phase_tab_config,
       pdf_mode: true %>
   <% end %>
 
@@ -233,7 +228,7 @@
               style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
             >
               <span class="evaluation-phase-tab__icon">
-                <span class="material-symbols-outlined" aria-hidden="true"><%= config[:material_icon] %></span>
+                <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
               </span>
               <span class="evaluation-phase-tab__body">
                 <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
@@ -255,7 +250,6 @@
               evaluation: evaluation,
               projekt: projekt,
               phase_palette: phase_palette,
-              phase_tab_config: phase_tab_config,
               pdf_mode: false %>
           </div>
 
@@ -282,7 +276,6 @@
       evaluation: evaluation,
       projekt: projekt,
       phase_palette: phase_palette,
-      phase_tab_config: phase_tab_config,
       pdf_mode: false %>
   <% end %>
 

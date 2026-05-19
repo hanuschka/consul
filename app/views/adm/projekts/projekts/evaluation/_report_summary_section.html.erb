@@ -208,7 +208,6 @@
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
             color = phase_palette[idx % phase_palette.size]
-            tab_config = phase_tab_config[phase["phase_type"]]
             short_summary = phase["short_summary"]
           %>
           <div
@@ -218,7 +217,7 @@
             <div class="report-summary--phase-head">
               <span class="report-summary--phase-icon">
                 <span class="material-symbols-outlined" aria-hidden="true">
-                  <%= tab_config&.dig(:material_icon) || "flag" %>
+                  <%= ProjektPhase.material_icon_for(phase["phase_type"]) %>
                 </span>
               </span>
               <div class="report-summary--phase-meta">

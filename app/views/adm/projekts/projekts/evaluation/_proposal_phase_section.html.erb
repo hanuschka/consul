@@ -38,7 +38,7 @@
     <div class="phase-header">
       <div class="phase-icon-title">
         <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V9a3 3 0 016 0v2M9 11h6"/></svg>
+          <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
         </div>
         <div>
           <div class="phase-title"><%= phase["phase_title"] %></div>

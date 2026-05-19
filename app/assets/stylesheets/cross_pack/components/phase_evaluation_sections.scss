@@ -110,6 +110,11 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  .material-symbols-outlined {
+    font-size: 26px;
+    line-height: 1;
+  }
 }
 
 .phase-title {

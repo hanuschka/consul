@@ -1,0 +1,13 @@
+de:
+  components:
+    adm:
+      icon_rail_component:
+        aria_label: "Globale Navigation"
+        administration: "Administration"
+        projekts: "Projekte"
+        landing_pages: "Themenseiten"
+        moderation: "Moderation"
+        deficiency_reports: "Mängelmelder"
+        ideas: "Ideen"
+        valuation: "Budget-Begutachtung"
+        officing: "Abstimmungshelfer"

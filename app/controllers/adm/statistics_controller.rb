@@ -2,7 +2,10 @@ module Adm
   class StatisticsController < Adm::BaseController
     def show
       authorize [:adm, :statistics]
-      @breadcrumbs = [{ name: t("adm.statistics.show.title"), icon: "bar_chart_4_bars" }]
+      @breadcrumbs = [
+        { name: t("adm.menu.items.stats"), icon: "bar_chart_4_bars" },
+        { name: t("adm.menu.items.stats_subitems.overview") }
+      ]
 
       load_user_stats
       load_projekt_stats
@@ -15,20 +18,22 @@ module Adm
     private
 
       def load_user_stats
-        @users_total        = User.active.count
-        @users_new_week     = User.active.where("users.created_at >= ?", 7.days.ago).count
-        @users_new_month    = User.active.where("users.created_at >= ?", 1.month.ago).count
-        @users_verified_l1  = User.active.where.not(verified_at: nil).count
-        @users_verified_l2  = User.active.where.not(level_two_verified_at: nil).count
+        # "aktiv" = nicht gelöscht, kein Gast, bestätigter Account (User.actual).
+        # Gäste und gelöschte Nutzer werden separat gezählt.
+        @users_total        = User.actual.count
+        @users_new_week     = User.actual.where("users.created_at >= ?", 7.days.ago).count
+        @users_new_month    = User.actual.where("users.created_at >= ?", 1.month.ago).count
+        @users_verified_l1  = User.actual.where.not(verified_at: nil).count
+        @users_verified_l2  = User.actual.where.not(level_two_verified_at: nil).count
         @users_deleted      = User.where.not(erased_at: nil).count
         @users_guest        = User.active.where(guest: true).count
 
-        prev_week  = User.active.where("users.created_at >= ? AND users.created_at < ?", 14.days.ago, 7.days.ago).count
-        prev_month = User.active.where("users.created_at >= ? AND users.created_at < ?", 2.months.ago, 1.month.ago).count
+        prev_week  = User.actual.where("users.created_at >= ? AND users.created_at < ?", 14.days.ago, 7.days.ago).count
+        prev_month = User.actual.where("users.created_at >= ? AND users.created_at < ?", 2.months.ago, 1.month.ago).count
         @trend_users_week  = trend_delta(@users_new_week, prev_week)
         @trend_users_month = trend_delta(@users_new_month, prev_month)
 
-        @users_newsletter      = User.active.newsletter.count
+        @users_newsletter      = User.actual.newsletter.count
 
         @users_verified_l1_pct  = ratio_pct(@users_verified_l1, @users_total)
         @users_verified_l2_pct  = ratio_pct(@users_verified_l2, @users_total)
@@ -69,8 +74,8 @@ module Adm
       end
 
       def load_demographics
-        @gender_stats  = User.active.where.not(gender: nil).group(:gender).count
-        @geozone_stats = User.active
+        @gender_stats  = User.actual.where.not(gender: nil).group(:gender).count
+        @geozone_stats = User.actual
                              .where.not(geozone_id: nil)
                              .joins(:geozone)
                              .group("geozones.name")
@@ -80,7 +85,7 @@ module Adm
       end
 
       def load_charts
-        @chart_users     = monthly_chart_data(User.active, "users.created_at")
+        @chart_users     = monthly_chart_data(User.actual, "users.created_at")
         @chart_comments  = monthly_chart_data(Comment.where(hidden_at: nil), "comments.created_at")
         @chart_proposals = monthly_chart_data(
           Proposal.not_archived.not_retired.where(draft: false).where.not(published_at: nil),

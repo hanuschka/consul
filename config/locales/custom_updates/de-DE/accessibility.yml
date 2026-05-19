@@ -33,6 +33,9 @@ de:
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
         glightbox-image-alt: "%{resource_type}: %{title}. Vergrößerte Ansicht."
+        delete-aria-label: "Bild löschen"
+        delete-confirm: "Möchten Sie dieses Bild wirklich löschen?"
+        upload-progress-label: "Bannerbild wird hochgeladen"
       share-links:
         whatsapp: "Auf WhatsApp teilen"
         facebook: "Auf Facebook teilen"

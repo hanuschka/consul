@@ -1,0 +1,18 @@
+en:
+  adm:
+    administrators:
+      index:
+        title: Administrators
+        empty_title: "No administrators available"
+        empty_description: "Use the button above to add a new administrator."
+        new_link: Add new administrator
+        no_administrators: No administrators available.
+        hint: Here you manage the platform administrators. They have full access to settings, content and administrative areas of this platform as well as all sub-dashboards such as projects, deficiency reports or the ideas platform. Use "Add new administrator" to promote registered users; revoke rights again via the actions menu.
+      new:
+        title: New administrator
+        search_label: Search users
+        search_description: "Search by email or username for registered users listed under <a href=\"/adm/users\" target=\"_blank\">Users</a>. Only already-registered users can be added as administrators. Administrators receive full access to all settings and administrative areas of the platform."
+      search:
+        no_results: No users found matching these criteria.
+      administrator:
+        cannot_delete_self: Cannot delete

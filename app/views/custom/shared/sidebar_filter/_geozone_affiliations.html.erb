@@ -38,17 +38,30 @@
       <% end %>
     </li>
 
-    <ul id='affiliated_districts' class="geozones-list">
-      <% @districts.each do |district| %>
-        <%= render partial: "shared/sidebar_filter/districts_sidebar_option", locals: { district: district, filter_block: 'affiliation', selected_districts: selected_affiliated_districts } %>
-      <% end  %>
+    <% if @districts.any? %>
+      <ul id='affiliated_districts' class="geozones-list">
+        <% @districts.each do |district| %>
+          <%= render partial: "shared/sidebar_filter/districts_sidebar_option", locals: { district: district, filter_block: 'affiliation', selected_districts: selected_affiliated_districts } %>
+        <% end  %>
 
-      <% if @affiliated_districts.any? && @affiliated_districts.size != @districts.size %>
-        <small <%= "class=hide" unless @affiliated_districts.any?  %>>
-          <%= link_to t('custom.geozones.sidebar_filter.affiliations.show_more'), '#', class: 'js-show-all-geozones'  %>
-        </small>
-      <% end  %>
+        <% if @affiliated_districts.any? && @affiliated_districts.size != @districts.size %>
+          <small <%= "class=hide" unless @affiliated_districts.any?  %>>
+            <%= link_to t('custom.geozones.sidebar_filter.affiliations.show_more'), '#', class: 'js-show-all-geozones'  %>
+          </small>
+        <% end  %>
+      </ul>
+    <% elsif @geozones&.any? %>
+      <ul id='affiliated_geozones' class="geozones-list">
+        <% @geozones.each do |geozone| %>
+          <%= render partial: "shared/sidebar_filter/geozones_sidebar_option", locals: { geozone: geozone, filter_block: 'affiliation', selected_geozones: @affiliated_geozones } %>
+        <% end %>
 
-    </ul>
+        <% if @affiliated_geozones.any? && @affiliated_geozones.size != @geozones.size %>
+          <small <%= "class=hide" unless @affiliated_geozones.any?  %>>
+            <%= link_to t('custom.geozones.sidebar_filter.affiliations.show_more'), '#', class: 'js-show-all-geozones'  %>
+          </small>
+        <% end %>
+      </ul>
+    <% end %>
   </ul>
 </div>

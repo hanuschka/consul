@@ -1,6 +1,6 @@
 class Adm::Valuation::BudgetInvestmentPolicy < ApplicationPolicy
   def index?
-    valuator_or_admin?
+    budgets_enabled? && valuator_or_admin?
   end
 
   def edit?
@@ -37,6 +37,10 @@ class Adm::Valuation::BudgetInvestmentPolicy < ApplicationPolicy
 
     def valuator_or_admin?
       @user&.valuator? || @user&.administrator?
+    end
+
+    def budgets_enabled?
+      Setting["feature.budgets"].present? || Setting["process.budgets"].present?
     end
 
     def assigned?

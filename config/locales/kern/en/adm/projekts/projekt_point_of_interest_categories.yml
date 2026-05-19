@@ -1,0 +1,23 @@
+en:
+  adm:
+    projekts:
+      projekt_point_of_interest_categories:
+        new:
+          title: Create new category
+        edit:
+          title: Edit category
+        create:
+          success: Category created successfully.
+        update:
+          success: Category updated successfully.
+        destroy:
+          success: Category deleted successfully.
+          has_pins: Category cannot be deleted because pins are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: "The category name is shown on the frontend as a filter option and as a label on the associated pins. Choose a short, understandable term that clearly describes the type of place — e.g. 'Playground', 'School', or 'Green space'. The name should be immediately understandable to citizens."
+          color_label: Color
+          color_hint: "The color is shown on the frontend as a visual marker of the category on the map and in the filter list. Choose a color that distinguishes itself well from other categories and remains recognizable on the map background. Avoid similar shades for different categories to ensure clear attribution."
+          icon_label: Icon
+          icon_hint: "The icon is shown on the frontend on the map as a pin icon and in the filter list next to the category name. Choose an icon that intuitively conveys the type of place — e.g. a tree for green spaces or a book for educational facilities. A suitable icon helps users quickly orient themselves on the map."
+          submit: Save

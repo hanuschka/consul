@@ -1,11 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
@@ -80,7 +84,7 @@ class Setting < ApplicationRecord
         "advanced_newsletter": false,
         # newsletter
 
-        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+        "extended_option.general.city_name": "Consul",
 
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
@@ -110,7 +114,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -225,7 +229,6 @@ class Setting < ApplicationRecord
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
 
-        "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
         "ideas.officers_can_edit_assigned_reports": false,
@@ -243,8 +246,6 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
-        "extended_feature.general.enable_polls_overview": false,
-        "extended_feature.general.enable_proposals_overview": false,
         "extended_feature.general.enable_google_translate": false,
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,
@@ -303,7 +304,31 @@ class Setting < ApplicationRecord
 
         "extra_fields.verification.check_documents": false,
         "extra_fields.verification.show_data_completeness_status": true,
-        "extra_fields.verification.show_verification_status": true
+        "extra_fields.verification.show_verification_status": true,
+
+        # Per-section admin intro text, notice, and notice toggle.
+        # Read on each section's adm home; edited under each section's "Einstellungen" tab.
+        "adm.ideas.intro_text": nil,
+        "adm.ideas.notice_message": nil,
+        "adm.ideas.notice_active": nil,
+        "adm.deficiency_reports.intro_text": nil,
+        "adm.deficiency_reports.notice_message": nil,
+        "adm.deficiency_reports.notice_active": nil,
+        "adm.projekts.intro_text": nil,
+        "adm.projekts.notice_message": nil,
+        "adm.projekts.notice_active": nil,
+        "adm.moderation.intro_text": nil,
+        "adm.moderation.notice_message": nil,
+        "adm.moderation.notice_active": nil,
+        "adm.valuation.intro_text": nil,
+        "adm.valuation.notice_message": nil,
+        "adm.valuation.notice_active": nil,
+        "adm.landing_pages.intro_text": nil,
+        "adm.landing_pages.notice_message": nil,
+        "adm.landing_pages.notice_active": nil,
+        "adm.officing.intro_text": nil,
+        "adm.officing.notice_message": nil,
+        "adm.officing.notice_active": nil
       }
     end
 

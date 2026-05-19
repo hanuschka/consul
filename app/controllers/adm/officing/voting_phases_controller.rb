@@ -10,7 +10,7 @@ class Adm::Officing::VotingPhasesController < Adm::Officing::BaseController
     @offline_user = User.find(params[:offline_user_id])
     @poll = @voting_phase.poll
 
-    @permission_problem = @voting_phase.permission_problem(@offline_user)
+    @permission_problem = @voting_phase.permission_problem(@offline_user, location: :officing)
 
     if @permission_problem.present?
       render "adm/officing/shared/permission_problem" and return

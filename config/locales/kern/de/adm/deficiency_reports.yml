@@ -1,24 +1,63 @@
 de:
   adm:
     deficiency_reports:
+      home:
+        title: Willkommen im Mängelmelder
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          open: Offen
+          closed: Geschlossen
+        quick_links:
+          all: Alle Meldungen
+          open: Offene Meldungen
+          closed: Geschlossene Meldungen
+      menu:
+        aria_label: Mängelmelder Navigation
+        items:
+          home: Home
+          officers: Team
+          deficiency_reports: Meldungen
+          categories: Kategorien
+          statuses: Status
+          settings: Konfiguration
+          official_answer_templates: Antwortvorlagen
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
+          ai_settings: KI-Einstellungen
       deficiency_reports:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
-          no_deficiency_reports: Keine Mängelmelder vorhanden
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Meldungen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Meldungen zu sehen.
           table:
             id: ID
             admin_accepted: Sichtbarkeit
             created_at: Erstellungsdatum
+            updated_at: Änderungsdatum
+            status_changed_at: Statusänderung
             title: Titel
             author: Autor
             status: Status
             location: Standort
+            address: Adresse
             district: Bezirk
             category: Kategorie
             responsible: Sachbearbeiter
+            archived_state: Archiv
+            hidden_state: Herausmoderiert
+          archived_state:
+            active: Aktiv
+            archived: Archiviert
+          hidden_state:
+            visible: Sichtbar
+            hidden: Herausmoderiert
         tabs:
           show: Verwalten
           administer: Administrieren
@@ -100,8 +139,6 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
-        settings:
-          title: Funktionen
       categories:
         index:
           title: Kategorien
@@ -194,7 +231,8 @@ de:
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:
@@ -282,6 +320,14 @@ de:
           no_officers_title: Keine Sachbearbeiter vorhanden
           no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
           submit: Speichern
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
       stats:
         show:
           title: Statistiken

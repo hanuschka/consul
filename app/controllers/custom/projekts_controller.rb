@@ -48,8 +48,10 @@ class ProjektsController < ApplicationController
     convert_back_to_relation if @projekts.is_a?(Array)
 
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
+    @geozones = @districts.empty? ? Geozone.order(:name).to_a : []
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
     @categories = @projekts.flat_map { |p| p.tags.category.to_a }.uniq.compact.sort
@@ -168,10 +170,18 @@ class ProjektsController < ApplicationController
       @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
       @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
-      if @affiliated_districts.present?
-        @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
+      if @districts.any?
+        if @affiliated_districts.present?
+          @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
+        else
+          @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
+        end
       else
-        @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
+        if @affiliated_geozones.present?
+          @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
+        else
+          @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
+        end
       end
     end
   end
@@ -188,7 +198,7 @@ class ProjektsController < ApplicationController
   end
 
   def raise_flag_feature_disabled
-    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting["extended_feature.projekts_overview_page_navigation.show_in_navigation"]
+    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting["process.projekts"].present?
   end
 
   def set_variables_for_footer_comments

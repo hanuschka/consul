@@ -1,0 +1,65 @@
+en:
+  adm:
+    not_authorized: You are not authorized to perform this action.
+    title: Administration
+    sidebar:
+      toggle: Toggle sidebar
+    menu:
+      aria_label: Administration menu
+      items:
+        home: Home
+        team: Team
+        projekts: Projects
+        application: Application
+        modules: Modules
+        application_subitems:
+          homepage: Homepage
+          documents: Documents
+          pages: System pages
+          navbar: Navigation
+          overview_pages: Overview pages
+          metadata_settings: Metadata
+          gdpr_settings: GDPR
+          registration_settings: Account & access
+          registered_addresses: Addresses
+          default_map_location: Default map
+          tags: Tags
+          individual_groups: User groups
+          age_ranges: Age groups
+          email_templates: System emails
+          features: Features
+        pages: Pages
+        pages_subitems:
+          privacy: Privacy policy
+          conditions: Terms of use
+          impressum: Legal notice
+        users: Users
+        notifications: Notifications
+        notifications_subitems:
+          modal_notifications: Modal notifications
+          newsletters: Newsletters
+          email_templates: System emails
+          recipient_groups: Recipient groups
+          unregistered_newsletter_subscribers: Unregistered subscribers
+        stats: Statistics
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
+        apps: Apps
+        developer: Developer area
+        developer_subitems:
+          connection: DT connection
+          ai_settings: AI settings
+          external_api_keys: API keys
+          api_clients: API clients
+          api_request_logs: API request logs
+    email_templates:
+      send_test:
+        success: "Test email sent to %{email}."
+    global_email_templates:
+      index:
+        title: System emails
+    deficiency_reports:
+      title: Deficiency reports
+    ideas:
+      title: Ideas

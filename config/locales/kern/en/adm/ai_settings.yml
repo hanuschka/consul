@@ -1,0 +1,14 @@
+en:
+  adm:
+    ai_settings:
+      flash:
+        updated: AI setting updated successfully
+      index:
+        title: AI settings
+        intro: >
+          Here you configure the connection to an AI provider. The platform uses AI features for, among other things, proposal generation, vote analysis, automatic content generation, and semantic analysis. Choose a provider and a model, and enter your API key to enable these features. Caution: changes to these settings require technical knowledge. Incorrect configurations can cause AI features to stop working correctly. When in doubt, contact demokratie.today.
+        setting_name: Setting
+        value: Value
+        update: Update
+        no_settings: No AI settings available
+        enter_api_key: Enter API key here

@@ -1,0 +1,43 @@
+en:
+  shared:
+    "true": "Yes"
+    "false": "No"
+    back: "Back"
+    submit: "Save"
+    create: "Create"
+    edit: "Edit"
+    cancel: "Cancel"
+    delete: "Delete"
+    remove: "Remove"
+    confirm_delete: "Are you sure you want to delete this?"
+    confirm_remove: "Are you sure you want to remove this?"
+    toggle_submenu: "Toggle submenu for %{title}"
+    navbar_more: "More"
+    moderation_statuses:
+      flagged: Flagged
+      ignored: Flag ignored
+      hidden: Hidden by moderator
+    table:
+      id: "ID"
+      title: "Title"
+      username: "Username"
+      user: "User"
+      email: "Email"
+      actions: "Actions"
+      filter:
+        search_placeholder: "Search %{column_label}..."
+        apply: "Apply filter"
+        close: "Close"
+        remove_filter: "Remove %{filter}"
+        date_range:
+          from_label: "From"
+          to_label: "To"
+          from_only: "from %{date}"
+          to_only: "until %{date}"
+      sort:
+        action_label: "Sort by %{column_label}, %{direction}"
+        status_text_sorted: "Sorted by %{column_label} in %{direction} order"
+        status_text_unsorted: "Not sorted"
+        directions:
+          asc: "ascending"
+          desc: "descending"

@@ -66,7 +66,9 @@ class SiteCustomization::Image < ApplicationRecord
       width = image.metadata[:width]
       height = image.metadata[:height]
 
-      if name.in?(%w[logo_header logo_header_for_transparent])
+      if name.in?(%w[header_image mobile_header_image])
+        return
+      elsif name.in?(%w[logo_header logo_header_for_transparent])
         errors.add(:image, :max_image_height, max_height: required_height) unless height <= required_height
       else
         wrong_width = width != required_width

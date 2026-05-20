@@ -2,4 +2,128 @@ de:
   adm:
     statistics:
       show:
-        title: Statistiken
+        sections:
+          users: Nutzer
+          projects: Projekte
+          phases: Beteiligungsphasen
+          deficiency_reports: Mängelanzeigen
+          demographics: Demografie der Nutzer
+          activity: Aktivität (letzte 12 Monate)
+        users:
+          total:
+            label: "Gesamt (aktiv)"
+            tip: "Aktive Nutzerkonten mit bestätigter E-Mail-Adresse. Gastkonten und gelöschte Konten sind nicht enthalten."
+          new_week:
+            label: Neu diese Woche
+            tip: "Neu registrierte Nutzer in den letzten 7 Tagen. Der Trend zeigt den Vergleich mit der vorherigen 7-Tage-Periode."
+          new_month:
+            label: Neu diesen Monat
+            tip: "Neu registrierte Nutzer in den letzten 30 Tagen. Der Trend zeigt den Vergleich mit den vorherigen 30 Tagen."
+          verified_l1:
+            label: Registriert
+            tip: "Nutzer mit bestätigter E-Mail-Adresse. Berechtigt zur Basisteilnahme."
+          verified_l2:
+            label: Verifiziert
+            tip: "Nutzer mit vollständiger Identitätsprüfung, z.B. über BundID oder BayernID. Berechtigt zur eingeschränkten Teilnahme."
+          guest:
+            label: Gastkonten
+            tip: "Temporäre Gastkonten ohne vollständige Registrierung. Diese Nutzer haben eingeschränkte Rechte."
+          newsletter:
+            label: Newsletter-Abonnenten
+            tip: "Aktive Nutzer, die dem Newsletter-Versand zugestimmt haben."
+          deleted:
+            label: Gelöscht
+            tip: "Nutzerkonten, die gelöscht wurden (durch den Nutzer selbst oder durch Admins). Persönliche Daten wurden anonymisiert."
+          ratio: "%{percent} % aller Nutzer"
+        projects:
+          total:
+            label: Gesamt
+            tip: "Alle regulären Beteiligungsprojekte (ohne Systemprojekte und Unterprojekte)."
+          active:
+            label: Aktiv
+            tip: "Projekte mit aktuell laufendem Beteiligungszeitraum (Startdatum erreicht, Enddatum noch nicht überschritten)."
+          expired:
+            label: Abgelaufen
+            tip: "Projekte, deren Beteiligungszeitraum abgelaufen ist. Sie sind nicht mehr aktiv."
+          subscriptions:
+            label: Abonnements
+            tip: "Aktive Projektabonnements: Nutzer, die Benachrichtigungen für mindestens ein Projekt aktiviert haben."
+          ratio: "%{percent} % aller Projekte"
+        phases:
+          comment:
+            label: Kommentarphase
+            tip: "Wie oft die Kommentarphase eingesetzt wurde / eingegangene Kommentare."
+            submission_label: Kommentare
+          proposal:
+            label: Vorschlagsphase
+            tip: "Wie oft die Vorschlagsphase eingesetzt wurde / eingegangene Vorschläge und Kommentare."
+            submission_label: Vorschläge
+            submission_label2: Kommentare
+          question:
+            label: Kurzumfragen
+            tip: "Wie oft Kurzumfragen eingesetzt wurden / eingegangene Antworten."
+            submission_label: Antworten
+          voting:
+            label: Abstimmungen
+            tip: "Wie oft Abstimmungsphasen eingesetzt wurden / abgegebene Stimmen."
+            submission_label: Stimmen
+          budget:
+            label: Bürgerbudget
+            tip: "Wie oft Bürgerbudgetphasen eingesetzt wurden / eingereichte Projektideen und Kommentare."
+            submission_label: Projektideen
+            submission_label2: Kommentare
+          formular:
+            label: Formulare
+            tip: "Wie oft Formularphasen eingesetzt wurden / eingegangene Einreichungen."
+            submission_label: Einreichungen
+          legislation:
+            label: Kollaborative Texterstellung
+            tip: "Wie oft Gesetzgebungsphasen eingesetzt wurden / eingegangene Anmerkungen."
+            submission_label: Anmerkungen
+          argument:
+            label: Stimmen der Stadt
+            tip: "Wie oft Argumentationsphasen eingesetzt wurden / enthaltene Argumente."
+            submission_label: Argumente
+          point_of_interest:
+            label: Orte von Interesse
+            tip: "Wie oft Kartenphasen eingesetzt wurden / eingetragene Orte."
+            submission_label: Orte
+          event:
+            label: Veranstaltungen
+            tip: "Wie oft Veranstaltungsphasen eingesetzt wurden / enthaltene Veranstaltungen."
+            submission_label: Veranstaltungen
+          newsfeed:
+            label: Newsfeed
+            tip: "Wie oft Newsfeed-Phasen in Projekten eingesetzt wurden."
+          milestone:
+            label: Meilensteine
+            tip: "Wie oft Meilensteinphasen eingesetzt wurden / enthaltene Meilensteine."
+            submission_label: Meilensteine
+          projekt_notification:
+            label: Benachrichtigungen
+            tip: "Wie oft Benachrichtigungsphasen in Projekten eingesetzt wurden."
+          livestream:
+            label: Livestreams
+            tip: "Wie oft Livestream-Phasen eingesetzt wurden / enthaltene Livestreams."
+            submission_label: Livestreams
+          iframe:
+            label: Iframe-Integration
+            tip: "Wie oft Einbettungsphasen in Projekten eingesetzt wurden."
+        deficiency_reports:
+          total:
+            label: Gesamt
+            tip: "Alle eingereichten Mängelanzeigen (nicht archivierte), unabhängig vom Status."
+          open:
+            label: Offen
+            tip: "Mängelanzeigen, die noch nicht abgeschlossen oder archiviert wurden."
+          unassigned:
+            label: Nicht zugewiesen
+            tip: "Offene Mängelanzeigen, denen noch kein Bearbeiter zugewiesen wurde. Handlungsbedarf!"
+          ratio: "%{percent} % aller Anzeigen"
+        demographics:
+          gender: Geschlecht
+          areas: Gebiete (Top 10)
+        charts:
+          users_new: Neue Registrierungen
+          comments: Kommentare
+          proposals: Neue Vorschläge

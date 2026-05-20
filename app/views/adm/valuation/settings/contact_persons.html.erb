@@ -1,0 +1,19 @@
+<%= content_for :title, t("adm.valuation.menu.items.settings") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.valuation.menu.items.settings"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.valuation.settings.tabs.dashboard"),
+    url: adm_valuation_settings_path
+  },
+  {
+    label: t("adm.valuation.settings.tabs.contact_persons"),
+    url: contact_persons_adm_valuation_settings_path,
+    current: true
+  }
+]) %>
+
+<div class="kern-container my-5">
+  <%= render "adm/section_contact_people/section_block", section: "valuation" %>
+</div>

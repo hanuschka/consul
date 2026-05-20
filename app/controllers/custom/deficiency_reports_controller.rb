@@ -117,11 +117,6 @@ class DeficiencyReportsController < ApplicationController
     set_deficiency_report_votes(@deficiency_report)
   end
 
-  def suggest
-    @limit = 5
-    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
-  end
-
   def notify_officer_about_new_comments
     return unless @deficiency_report.officer.present?
 

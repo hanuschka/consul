@@ -2,11 +2,26 @@ de:
   adm:
     landing_pages:
       title: Themenseiten
+      home:
+        title: Willkommen bei den Themenseiten
+        stats:
+          total: Gesamt
+          published: Veröffentlicht
+          draft: Entwurf
+        quick_links:
+          new: Neue Themenseite
+          all: Alle Themenseiten
       menu:
         aria_label: Themenseiten Navigation
         items:
+          home: Home
           landing_pages: Themenseiten
-          managers: Manager
+          managers: Team
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       landing_pages:
         index:
           title: Themenseiten
@@ -54,6 +69,6 @@ de:
           no_items_title: Keine Themenseiten Manager vorhanden
           no_items_description: Sobald Themenseiten Manager hinzugefügt werden, werden diese hier angezeigt.
         new:
-          title: Themenseiten Manager hinzufügen
+          title: Neues Teammitglied hinzufügen
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Themenseiten Manager hinzugefügt werden. Manager können Inhalte ihrer zugewiesenen Themenseiten bearbeiten und verwalten.

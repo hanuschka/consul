@@ -4,14 +4,31 @@
     initialize: function() {
       this.setMissingHrefs()
       this.setupGlighbox()
+      this.bindScrollbarWidthCapture()
     },
 
-    getStickyHeader() {
-      return document.querySelector(".top-bar-wrapper")
+    getFixedElement() {
+      return document.querySelector(".topbar-header")
     },
 
-    getScrollbarWidth: function() {
+    measureScrollbarWidth() {
       return window.innerWidth - document.documentElement.clientWidth;
+    },
+
+    bindScrollbarWidthCapture() {
+      this.cachedScrollbarWidth = this.measureScrollbarWidth();
+
+      window.addEventListener("resize", () => {
+        if (!document.documentElement.classList.contains("glightbox-open")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        if (event.target.closest(".glightbox")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      }, true);
     },
 
     initializeFor(element) {
@@ -23,8 +40,6 @@
         this.lightbox.destroy();
       }
 
-      this.scrollbarWidth = this.getScrollbarWidth();
-
       var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
                                   <div class="gloader visible"></div>
                                   <div class="goverlay"></div>
@@ -33,7 +48,6 @@
                                     <button class="gnext gbtn" tabindex="0" aria-label="Nächste">{nextSVG}</button>
                                     <button class="gprev gbtn" tabindex="0" aria-label="Vorherige">{prevSVG}</button>
                                     <button class="gclose gbtn" tabindex="0" aria-label="Schließen (ESC)">{closeSVG}</button>
-                                    <div class="glightbox-esc-hint" aria-live="polite">ESC = Schließen</div>
                                   </div>
                                 </div>`;
 
@@ -54,10 +68,18 @@
       this.lightbox.on('open', () => {
         this.triggerElement = document.activeElement;
 
-        var stickyHeader = this.getStickyHeader();
+        var scrollbarWidth = this.cachedScrollbarWidth;
 
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
+        if (scrollbarWidth > 0) {
+          document.body.style.paddingRight = scrollbarWidth + "px";
+
+          var fixedElement = this.getFixedElement();
+
+          if (fixedElement) {
+            var currentPaddingRight = parseFloat(getComputedStyle(fixedElement).paddingRight) || 0;
+            fixedElement.dataset.lightboxOriginalPaddingRight = fixedElement.style.paddingRight;
+            fixedElement.style.paddingRight = (currentPaddingRight + scrollbarWidth) + "px";
+          }
         }
 
         setTimeout(() => {
@@ -69,10 +91,13 @@
         }, 100);
       });
       this.lightbox.on('close', () => {
-        var stickyHeader = this.getStickyHeader();
+        document.body.style.paddingRight = "";
 
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = "0";
+        var fixedElement = this.getFixedElement();
+
+        if (fixedElement) {
+          fixedElement.style.paddingRight = fixedElement.dataset.lightboxOriginalPaddingRight || "";
+          delete fixedElement.dataset.lightboxOriginalPaddingRight;
         }
 
         if (this.triggerElement) {

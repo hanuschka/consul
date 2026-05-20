@@ -1,0 +1,23 @@
+<%= content_for :title, t("adm.ideas.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.ideas.home.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::DashboardHomeComponent.new do |d| %>
+  <% d.with_notice(message: @notice) if @notice.present? %>
+  <% d.with_header_row(intro: @intro_text, stats: @stats) %>
+  <% d.with_team(members: @team_members, add_url: adm_ideas_officers_path) %>
+  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
+<% end %>
+
+<div class="kern-container">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <h3><%= t("adm.ideas.menu.items.ideas") %></h3>
+    </div>
+
+    <%= render "adm/ideas/ideas/table" %>
+  </div>
+
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+</div>

@@ -56,7 +56,7 @@ en:
         gender:
           male: male
           female: female
-          other: third #custom
+          other_gen: non-binary #custom
         document_type:
           card: ID card
           pass: Passport
@@ -126,6 +126,8 @@ en:
         projekt_events_link: Events
         projekt_management: Project manager
         landing_pages: Landing pages
+        deficiency_report_management: Deficiency reports
+        idea_management: Ideas
         notification_item:
           no_notifications: No notifications
         title_html: Public Participation

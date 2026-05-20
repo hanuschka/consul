@@ -1,0 +1,6 @@
+en:
+  components:
+    adm:
+      dashboard:
+        notice_component:
+          dismiss: "Dismiss notice"

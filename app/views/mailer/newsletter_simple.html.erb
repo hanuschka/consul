@@ -1,0 +1,5 @@
+<td style="padding: 20px 0;">
+  <div style="<%= css_for_mailer_text %>;font-size: 15px;">
+    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 660)) %>
+  </div>
+</td>

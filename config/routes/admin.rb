@@ -103,8 +103,6 @@ as: :destroy_user_resource_criterion
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
-      patch :update_page
-      patch :update_title_image
       patch :update_map
       post :notify_reviewers
       patch :toggle_hide_content_background

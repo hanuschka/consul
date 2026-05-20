@@ -42,7 +42,7 @@
 
             <div class="adm-app-card__footer">
               <% if app[:status] == "inactive" %>
-                <a href="mailto:hello@demokratie.today?subject=App-Anfrage:%20<%= CGI.escape(app[:name]) %>"
+                <a href="mailto:hello@demokratie.today?subject=<%= CGI.escape(t("adm.apps.show.request_subject", app_name: app[:name])) %>"
                    class="adm-app-card__cta">
                   <span class="material-symbols-outlined">mail</span>
                   <%= t("adm.apps.show.request") %>

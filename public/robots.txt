@@ -6,6 +6,8 @@
 User-agent: Googlebot
 Disallow: /users/
 Disallow: /comments/
+Disallow: /ahoy/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -13,11 +15,14 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
 
 User-agent: Bingbot
 Disallow: /users/
 Disallow: /comments/
+Disallow: /ahoy/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -25,11 +30,14 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
 
 User-agent: facebookexternalhit
 Disallow: /users/
 Disallow: /comments/
+Disallow: /ahoy/
+Disallow: /polls/*/results
 
 Disallow: /*?*locale
 Disallow: /*?*order
@@ -37,7 +45,11 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
+Disallow: /*?*page_a
 Disallow: user_id
+
+User-agent: meta-webindexer
+Disallow: /
 
 # Block AI training crawlers
 User-agent: GPTBot
@@ -55,6 +67,50 @@ Disallow: /
 User-agent: ByteSpider
 Disallow: /
 
+# Apple — explicit stanzas required; Apple does not fall back to User-agent: *
+User-agent: Applebot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+# Other major AI / search crawlers
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
 # Block SEO tool crawlers
 User-agent: SemrushBot
 Disallow: /
@@ -67,6 +123,17 @@ Disallow: /
 
 User-agent: PetalBot
 Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: SiteimproveBot
+Disallow: /users/
+Disallow: /comments/
+Disallow: /ahoy/
 
 # Block everything else
 User-agent: *

@@ -1,0 +1,8 @@
+en:
+  components:
+    kern:
+      form:
+        galleryable_images_component:
+          hint: "Accepted formats: %{accepted_types}. Maximum file size: %{max_size} MB."
+          add: Add new image
+          remove: Remove

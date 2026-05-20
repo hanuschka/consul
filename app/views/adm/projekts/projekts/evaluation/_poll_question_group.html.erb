@@ -1,0 +1,40 @@
+<%
+  chart_partial = {
+    "stacked" => "poll_question_stacked",
+    "default" => "poll_question_default",
+    "scale" => "poll_question_default",
+    "multi" => "poll_question_default",
+    "bars" => "poll_question_default"
+  }
+
+  full_width_types = %w[donut preference]
+  full_width_questions = questions.select { |q| full_width_types.include?(q["chart_type"]) }
+  measure_questions = questions.select { |q| q["chart_type"] == "measure" }
+  flow_questions = questions.reject do |q|
+    full_width_types.include?(q["chart_type"]) || q["chart_type"] == "measure"
+  end
+%>
+
+<% full_width_questions.each do |question| %>
+  <%= render partial: "adm/projekts/projekts/evaluation/poll_question_#{question["chart_type"]}",
+    locals: { question: question, accent: accent, accent_light: accent_light } %>
+<% end %>
+
+<% if flow_questions.any? %>
+  <div class="poll-question-flow-grid">
+    <% flow_questions.each do |question| %>
+      <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
+      <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
+        locals: { question: question, accent: accent, accent_light: accent_light } %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if measure_questions.any? %>
+  <div class="measure-grid">
+    <% measure_questions.each do |question| %>
+      <%= render partial: "adm/projekts/projekts/evaluation/poll_question_measure",
+        locals: { question: question, accent: accent, accent_light: accent_light } %>
+    <% end %>
+  </div>
+<% end %>

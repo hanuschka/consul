@@ -44,6 +44,9 @@ de:
       content_block_templates_selector:
         loading: "Inhaltsblockvorlagen werden geladen..."
         fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
+        visibility:
+          hidden: Versteckt
+          hidden_until: "Versteckt bis %{date}"
         tabs:
           internal_content_blocks: Interne Inhaltsblöcke
           own_content_blocks: Eigene Inhaltsblöcke

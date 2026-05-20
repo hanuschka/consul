@@ -169,10 +169,17 @@ button {
   }
 
   .new-resource-cta {
-    width: 420px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    width: auto;
 
     .button {
+      // width: auto;
+      max-width: 330px;
       font-size: 20px;
+      flex: 0 0 auto;
     }
   }
 

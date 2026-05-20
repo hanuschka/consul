@@ -1,6 +1,6 @@
 <%= content_for :title, @individual_group_value.name %>
 
-<%= render Adm::HeaderComponent.new(title: @individual_group_value.name, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @individual_group_value.name, breadcrumbs: @breadcrumbs, back_button_url: adm_individual_group_path(@individual_group)) %>
 
 <div class="kern-container my-5">
 
@@ -12,6 +12,12 @@
       </div>
     <% end %>
   </div>
+
+  <%= render Adm::UserSearchComponent.new(
+    url: search_user_adm_individual_group_value_path(@individual_group, @individual_group_value),
+    label: t(".search_label"),
+    description: t(".search_description")
+  ) %>
 
   <% if @related_users.any? %>
     <h2 class="kern-title kern-title--small mb-3">

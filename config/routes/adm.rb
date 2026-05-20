@@ -5,10 +5,13 @@ namespace :adm do
 
   # application
   resource :homepage, controller: "homepage", only: [:show]
-  resources :documents, only: [:index, :new, :create, :destroy]
   resource :navbar, controller: "navbar", only: [:show]
-  resources :navbar_items, only: [:new, :create, :destroy] do
+  resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
+  end
+  resource :overview_pages, only: [], controller: "overview_pages" do
+    get :projekt
+    get :others
   end
 
   resources :settings, only: [] do
@@ -16,11 +19,15 @@ namespace :adm do
     get :gdpr, on: :collection
     get :registration, on: :collection
   end
+  resource :features, controller: "features", only: [:show]
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection
   end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
+  resources :map_locations, only: [] do
+    post :update_screenshot, on: :member
+  end
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :individual_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
@@ -46,15 +53,6 @@ namespace :adm do
   end
 
   resources :administrators, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
-  resources :deficiency_report_managers, only: [:index, :new, :destroy] do
-    post :search, on: :collection
-  end
-  resources :deficiency_report_officers, only: [:index, :new, :create, :destroy] do
-    post :search, on: :collection
-  end
-  resources :idea_managers, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
   resources :moderators, only: [:index, :new, :destroy] do
@@ -101,7 +99,10 @@ namespace :adm do
   resources :global_email_templates, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
+  resource :matomo, controller: "matomo", only: [:show]
   resource :apps, controller: "apps", only: [:show]
+  resource :connection, controller: "connection", only: [:show]
+  get "connect", to: "connection#show"
 
   resources :ai_settings, only: [:index, :update] do
     patch :update_api_key, on: :collection
@@ -116,10 +117,23 @@ namespace :adm do
 
   namespace :site_customization do
     get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug
+    patch "pages/:slug", to: "pages#update", as: :update_page_by_slug
 
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
     end
   end
+
+  resources :masterportal_imports, only: [:create] do
+    collection do
+      get :collections
+      get :status
+    end
+  end
+
+  # Redirects from the former projekts/overview_page and projekts/overviews routes
+  get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
 end

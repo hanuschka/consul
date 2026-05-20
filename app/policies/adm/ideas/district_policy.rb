@@ -1,4 +1,6 @@
 class Adm::Ideas::DistrictPolicy < ApplicationPolicy
+  include Adm::Ideas::Concerns::IdeaManageable
+
   def index?
     idea_manager?
   end
@@ -16,10 +18,4 @@ class Adm::Ideas::DistrictPolicy < ApplicationPolicy
       scope.all
     end
   end
-
-  private
-
-    def idea_manager?
-      @user&.administrator? || @user&.idea_manager?
-    end
 end

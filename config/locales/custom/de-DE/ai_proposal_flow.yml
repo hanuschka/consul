@@ -1,0 +1,63 @@
+de:
+  ai_proposal_flow:
+    header:
+      title: "Idee einreichen"
+      subtitle: "Gestalten Sie Ihre Stadt mit – Ihr Vorschlag wird geprüft und der Gemeinschaft präsentiert."
+    generate_error: "KI-Entwurf konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    evaluate_error: "KI-Bewertung fehlgeschlagen. Bitte versuchen Sie es erneut."
+    entry_button: "KI-Entwurf erstellen"
+    steps:
+      idea: "Idee"
+      ai_draft: "KI-Entwurf"
+      evaluation: "Bewertung"
+      submitted: "Eingereicht"
+    loader:
+      generating_message: "KI generiert Ihren Entwurf …"
+      generating_submessage: "Titel und Beschreibung werden erstellt."
+      evaluating_message: "KI analysiert Ihren Vorschlag …"
+      evaluating_submessage: "Bewertung anhand der Kriterien läuft."
+    step1:
+      criteria_heading: "Kriterien zum Einreichen Ihrer Idee"
+      idea_heading: "Ihre Idee"
+      textarea_label: "Was möchten Sie verbessern? Beschreiben Sie kurz Problem, Ort und Lösungsidee."
+      placeholder: "z.B. »Ich möchte einen Trinkbrunnen im Stadtpark nahe dem Spielplatz.«\noder: »Der Belag der Ahornstraße ist sehr uneben und muss erneuert werden.«\noder: »Wir brauchen einen sicheren Überweg nahe dem Schuleingang in der Eichenstraße.«"
+      submit_button: "Vorschlag einreichen"
+      chars_label: "Zeichen"
+    criteria:
+      hard_title: "Pflichtkriterien"
+      hard_hint: "Diese Kriterien müssen erfüllt sein, damit Ihr Vorschlag eingereicht werden kann."
+      hard_badge: "Pflicht"
+      soft_title: "Bewertungskriterien"
+      soft_hint: "Diese Kriterien fließen in die Qualitätsbewertung Ihres Vorschlags ein."
+      soft_badge: "Bewertet"
+    evaluation:
+      total_score: "Gesamtpunktzahl"
+      passed: "Ihr Vorschlag erfüllt die Kriterien!"
+      failed: "Ihr Vorschlag bedarf noch Verbesserungen."
+      hard_failed_eyebrow: "Anpassung erforderlich"
+      hard_failed_title: "Ihr Vorschlag muss angepasst werden, bevor er eingereicht werden kann."
+      feedback_label: "Hinweis der KI"
+      error_title: "Bewertung konnte nicht abgeschlossen werden."
+      error_description: "Bei der Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es in einem Moment erneut."
+    step4:
+      heading: "Herzlichen Dank für Ihren Vorschlag!"
+      subheading: "Ihr Beitrag wurde erfolgreich eingereicht und wird nun von der Stadtverwaltung geprüft."
+      reference_label: "IHRE REFERENZNUMMER"
+      proposal_label: "IHR VORSCHLAG"
+      submitted_badge: "Eingereicht"
+      view_proposal: "Vorschlag ansehen"
+      new_idea: "Weitere Idee einreichen"
+    nav:
+      back: "Zurück"
+      back_edit: "Vorschlag editieren"
+      next_evaluation: "Weiter zur Bewertung"
+      submit: "Vorschlag einreichen"
+      back_to_projekt_phase: "Zurück zum Projekt"
+  admin:
+    projekt_phases:
+      user_resource_criteria:
+        title: "KI Textassistent"
+        add_criterion: "Kriterium hinzufügen"
+        text_placeholder: "Kriterium beschreiben …"
+        save: "Speichern"
+        delete: "Löschen"

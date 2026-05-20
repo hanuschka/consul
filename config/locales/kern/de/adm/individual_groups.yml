@@ -1,0 +1,119 @@
+de:
+  adm:
+    individual_groups:
+      index:
+        title: Nutzergruppen
+        intro_title: Hinweis zu Nutzergruppen
+        intro_text_p1: >
+          Mit Nutzergruppen lassen sich Nutzer in benutzerdefinierte Segmente einteilen, die über die
+          standardmäßige Unterscheidung nach Verifikationsstatus hinausgehen. Nutzergruppen wirken auf
+          zwei Ebenen: Auf Projektebene steuern sie die Sichtbarkeit — nur Mitglieder der zugewiesenen
+          Gruppe sehen das Projekt. Auf Beteiligungsphasenebene regeln sie die Teilnahme — nur
+          Gruppenmitglieder können aktiv an der jeweiligen Phase teilnehmen.
+        intro_text_p2: >
+          Gruppen vom Typ „Stark" schließen nicht zugeordnete Nutzer explizit von Sichtbarkeit und
+          Teilnahme aus. Gruppen vom Typ „Schwach" dienen als weichere Filter ohne harte Ausschlüsse.
+          Nutzergruppen eignen sich besonders für verwaltungsinterne Projekte, bei denen nur ein
+          definierter Personenkreis Zugang erhalten soll — etwa für Mitarbeiterbeteiligungen oder
+          fachbereichsbezogene Abstimmungen.
+        new_individual_group: Neue Gruppe erstellen
+        empty_title: Keine Nutzergruppen vorhanden
+        empty_description: Erstellen Sie eine neue Gruppe, um Nutzer in benutzerdefinierte Segmente einzuteilen.
+        table:
+          name: Name der Gruppe
+          kind: Gruppentyp
+          visible: Sichtbarkeit
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          "yes": Ja
+          "no": Nein
+          delete_confirm: Sind Sie sicher, dass Sie diese Gruppe löschen möchten?
+          kinds:
+            hard: Stark
+            soft: Schwach
+      show:
+        new_value: Neuen Wert erstellen
+        table:
+          name: Name
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Wert löschen möchten?
+      new:
+        title: Neue Nutzergruppe erstellen
+      edit:
+        title: Nutzergruppe bearbeiten
+      create:
+        success: Gruppe erfolgreich erstellt.
+      update:
+        success: Gruppe erfolgreich aktualisiert.
+      destroy:
+        success: Gruppe erfolgreich gelöscht.
+      form:
+        submit: Speichern
+        kinds:
+          hard: Stark
+          soft: Schwach
+        hints:
+          name: >
+            Geben Sie einen aussagekräftigen Namen für die Nutzergruppe ein, z. B. „Fachbereich Stadtplanung"
+            oder „Mitarbeiter Bauamt". Dieser Name wird Administratoren bei der Zuweisung von Projekten und
+            Beteiligungsphasen angezeigt. Wählen Sie eine Bezeichnung, die den Personenkreis eindeutig
+            identifiziert und eine schnelle Zuordnung ermöglicht.
+          kind: >
+            Wählen Sie den Typ der Gruppe. Gruppen vom Typ „Stark" schließen alle Nutzer, die nicht
+            Mitglied der Gruppe sind, explizit von Sichtbarkeit und Teilnahme aus. Gruppen vom Typ „Schwach"
+            dienen als weichere Empfehlung ohne harte Ausschlüsse — nicht zugeordnete Nutzer können weiterhin
+            auf Projekte und Beteiligungsphasen zugreifen.
+          visible: >
+            Steuert, ob diese Nutzergruppe in der Benutzeroberfläche sichtbar ist. Deaktivieren Sie diese
+            Option, wenn die Gruppe ausschließlich für die interne Steuerung von Sichtbarkeit und
+            Teilnahmeberechtigungen verwendet werden soll, ohne dass Nutzer die Gruppenzugehörigkeit
+            selbst einsehen können.
+    individual_group_values:
+      show:
+        csv_hint_html: >
+          Sie können mit Hilfe des CSV-Uploaders mehrere Einträge auf einmal hinzufügen.
+          Die CSV benötigt lediglich eine Spalte mit den gewünschten E-Mail-Adressen.
+          Der Spaltenname muss "Email" lauten.
+          Sie können sich zunächst die <a href="%{sample_url}">Beispieldatei</a> ansehen.
+        import_button: CSV importieren
+        search_label: Nutzer suchen
+        search_description: Suchen Sie nach Benutzernamen oder E-Mail-Adresse, um einzelne Nutzer zur Gruppe hinzuzufügen.
+        related_users_heading:
+          one: "%{count} zugeordneter Nutzer"
+          other: "%{count} zugeordnete Nutzer"
+        auto_join_emails_heading:
+          one: "Konto noch nicht erstellt (%{count})"
+          other: "Konto noch nicht erstellt (%{count})"
+        table:
+          name: Name
+          email: E-Mail
+          actions: Aktionen
+          remove_user: Entfernen
+          remove_user_confirm: Sind Sie sicher, dass Sie diesen Nutzer entfernen möchten?
+          remove_email: Entfernen
+          remove_email_confirm: Sind Sie sicher, dass Sie diese E-Mail entfernen möchten?
+      search_user:
+        add_user: Hinzufügen
+        already_assigned: Bereits zugeordnet
+        not_found: Keine Nutzer gefunden.
+      new:
+        title: Neuen Wert erstellen
+      edit:
+        title: Wert bearbeiten
+      create:
+        success: Wert erfolgreich erstellt.
+      update:
+        success: Wert erfolgreich aktualisiert.
+      destroy:
+        success: Wert erfolgreich gelöscht.
+      add_from_csv:
+        no_file: Bitte wählen Sie eine Datei aus.
+        invalid_format: Bitte wählen Sie eine CSV-Datei aus.
+        success: Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt.
+      form:
+        submit: Speichern
+        hints:
+          email_pattern: "E-Mail-Muster für automatische Zuordnung (z.B. @beispiel.de)"

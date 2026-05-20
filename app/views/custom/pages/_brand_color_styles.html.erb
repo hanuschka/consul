@@ -1,50 +1,19 @@
-<% if page.brand_color.present? %>
-  <%= content_for :additional_styles do %>
-    <style data-turbolinks-track="reload">
-      :root {
-        --page-brand-color: <%= page.brand_color %>;
-        --page-brand-color-lighter: rgb(from var(--page-brand-color) r g b / 0.1);
-        --brand-color: <%= page.brand_color %>;
-      }
+<%
+  # Projekt-Color hat Vorrang vor Landing-Page-Brand-Color.
+  # Locals: `projekt` (optional) und `page` (optional).
+  effective_color = local_assigns[:projekt]&.color.presence ||
+                    local_assigns[:page]&.brand_color.presence
+%>
+<% if effective_color.present? %>
+  <style id="js-brand-color-styles">
+    :root {
+      --brand-color: <%= effective_color %>;
+      --page-brand-color: <%= effective_color %>;
+      --page-brand-color-lighter: rgb(from var(--page-brand-color) r g b / 0.1);
+    }
 
-      *::selection {
-        background-color: var(--page-brand-color);
-      }
-
-      .custom-new-design .custom-page--banner {
-        background-color: rgb(from var(--page-brand-color) r g b / 0.1);
-        /* background-color: color-mix(in srgb, var(--page-brand-color) 20%, white 80%); */
-      }
-
-      .custom-new-design .custom-page--banner-breadcrumbs .custom-breadcrumbs .breadcrumbs-item, .custom-new-design .custom-page--banner-breadcrumbs .custom-breadcrumbs .breadcrumbs-divider {
-        color: var(--page-brand-color);
-      }
-
-      .custom-new-design .homepage-image-header--title,
-      .custom-new-design .button.hollow {
-        color: <%= page.brand_color %>;
-      }
-
-      .custom-new-design .button.hollow:hover {
-        background: var(--page-brand-color-lighter);
-      }
-
-      .custom-new-design .resource-item--header,
-      .custom-new-design .button {
-        background-color: <%= page.brand_color %>;
-      }
-
-      .custom-new-design .button:hover {
-        background-color: color-mix(in srgb, var(--page-brand-color) 94%, white 6%);
-      }
-
-      .custom-new-design .button:focus {
-        background-color: color-mix(in srgb, var(--page-brand-color) 90%, white 10%);
-      }
-
-      .custom-new-design .button.hollow {
-        border-color: <%= page.brand_color %>;
-      }
-    </style>
-  <% end %>
+    *::selection {
+      background-color: var(--page-brand-color);
+    }
+  </style>
 <% end %>

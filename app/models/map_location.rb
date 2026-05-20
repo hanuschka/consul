@@ -11,7 +11,10 @@ class MapLocation < ApplicationRecord
     "RegisteredAddress::District": "district"
   }.freeze
 
-  enum rendering_library: { leaflet: 0, mapbox: 1, virtualcity: 2 }
+  enum rendering_library: { leaflet: 0, mapbox: 1, virtualcity: 2,
+                            leaflet_plus_masterportal: 3 }
+
+  attr_accessor :skip_masterportal_geocoding
 
   belongs_to :mappable, polymorphic: true, touch: true
   belongs_to :district, class_name: "RegisteredAddress::District",
@@ -40,13 +43,18 @@ class MapLocation < ApplicationRecord
   }
 
   scope :with_proposal_associations, -> {
-    includes(mappable: :projekt_labels)
+    includes(mappable: [:projekt_labels, :masterportal_pin])
       .where(mappable_type: "Proposal")
   }
 
   scope :with_investment_associations, -> {
-    includes(mappable: [:sentiment, :projekt_labels])
+    includes(mappable: [:sentiment, :projekt_labels, :masterportal_pin])
       .where(mappable_type: "Budget::Investment")
+  }
+
+  scope :with_point_of_interest_pin_associations, -> {
+    includes(mappable: :masterportal_pin)
+      .where(mappable_type: "ProjektPointOfInterestPin")
   }
 
   audited associated_with: :deficiency_report,
@@ -63,6 +71,22 @@ class MapLocation < ApplicationRecord
 
   def available?
     latitude.present? && longitude.present? && zoom.present?
+  end
+
+  def map_layers
+    if mappable.respond_to?(:map_layers)
+      mappable.map_layers
+    else
+      MapLayer.default
+    end
+  end
+
+  def pin_coordinates
+    feature = to_geo_json["features"].first
+    coords = feature&.dig("geometry", "coordinates")
+    return nil if coords.blank?
+
+    { latitude: coords[1], longitude: coords[0] }
   end
 
   def to_geo_json
@@ -106,6 +130,8 @@ class MapLocation < ApplicationRecord
       "feature_icon_unicode" => get_feature_icon_unicode
     }.reject { |_k, v| v.in?([nil, ""]) }
 
+    extra_properties.merge!(masterportal_feature_properties)
+
     enriched_geojson = to_geo_json
 
     enriched_geojson["features"].each do |feature|
@@ -113,6 +139,19 @@ class MapLocation < ApplicationRecord
     end
 
     enriched_geojson
+  end
+
+  def masterportal_feature_properties
+    return {} if !imported_from_masterportal?
+
+    pin = mappable.masterportal_pin
+    return {} if pin.blank?
+
+    {
+      "resource_type" => "masterportal_pin",
+      "id" => pin.id,
+      "feature_icon_url" => pin.feature_icon_url
+    }
   end
 
   def get_district_id
@@ -132,6 +171,8 @@ class MapLocation < ApplicationRecord
     geom2 =  RGeo::GeoJSON.decode(other_map_location.to_geo_json, json_parser: :json, geo_factory: factory).map(&:geometry)
 
     geom1.any? { |g1| geom2.any? { |g2| g1.intersects?(g2) } }
+  rescue RGeo::Error::InvalidGeometry
+    false
   end
 
   private
@@ -203,9 +244,9 @@ class MapLocation < ApplicationRecord
       sentiment ||= mappable.sentiment if mappable.respond_to?(:sentiment)
       category ||= mappable.category if mappable.respond_to?(:category)
 
-      if (mappable_type == "DeficiencyReport" || mappable.is_a?(Budget::Investment)) && sentiment.present?
+      if sentiment.present? && (mappable.is_a?(Budget::Investment) || mappable.is_a?(Proposal))
         sentiment.color
-      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && category.present?
+      elsif category.present? && (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea))
         category.color
       end
     end
@@ -231,6 +272,8 @@ class MapLocation < ApplicationRecord
     end
 
     def update_geocoder_data
+      return if skip_masterportal_geocoding
+      return if imported_from_masterportal?
       return if to_geo_json["features"].first.blank?
 
       lat = to_geo_json["features"].first["geometry"]["coordinates"][1]
@@ -241,6 +284,10 @@ class MapLocation < ApplicationRecord
     rescue StandardError => e
       Sentry.capture_exception(e)
       update_column(:geocoder_data, {}) unless geocoder_data.present?
+    end
+
+    def imported_from_masterportal?
+      mappable.respond_to?(:masterportal_pin_id) && mappable.masterportal_pin_id.present?
     end
 
     def audit_changes?
@@ -261,6 +308,8 @@ class MapLocation < ApplicationRecord
     end
 
     def update_district
+      return if skip_masterportal_geocoding
+      return if imported_from_masterportal?
       return if mappable.is_a?(RegisteredAddress::District)
 
       district_id = get_district_id

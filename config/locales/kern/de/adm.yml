@@ -1,0 +1,64 @@
+de:
+  adm:
+    not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
+    title: Administration
+    sidebar:
+      toggle: Seitenleiste umschalten
+    menu:
+      aria_label: Administrationsmenü
+      items:
+        home: Home
+        team: Team
+        projekts: Projekte
+        application: Applikation
+        modules: Module
+        application_subitems:
+          homepage: Startseite
+          pages: Systemseiten
+          navbar: Navigation
+          overview_pages: Übersichtsseiten
+          metadata_settings: Metadaten
+          gdpr_settings: DSGVO
+          registration_settings: Registrierung & Verifizierung
+          registered_addresses: Adressen
+          default_map_location: Standardkarte
+          tags: Tags
+          individual_groups: Nutzergruppen
+          age_ranges: Altersgruppen
+          email_templates: System-E-Mails
+          features: Funktionen
+        pages: Seiten
+        pages_subitems:
+          privacy: Datenschutzbestimmungen
+          conditions: Nutzungsbedingungen
+          impressum: Impressum
+        users: Nutzer
+        notifications: Benachrichtigungen
+        notifications_subitems:
+          modal_notifications: Popup-Benachrichtigungen
+          newsletters: Newsletter
+          email_templates: System-E-Mails
+          recipient_groups: Empfängergruppen
+          unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
+        stats: Statistiken
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
+        apps: Apps
+        developer: Bereich für Entwickler
+        developer_subitems:
+          connection: DT-Verbindung
+          ai_settings: KI-Einstellungen
+          external_api_keys: API-Schlüssel
+          api_clients: API-Clients
+          api_request_logs: API-Anfragen-Logs
+    email_templates:
+      send_test:
+        success: "Test-E-Mail wurde an %{email} gesendet."
+    global_email_templates:
+      index:
+        title: System-E-Mails
+    deficiency_reports:
+      title: Mängelmelder
+    ideas:
+      title: Ideen

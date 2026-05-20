@@ -1,0 +1,53 @@
+<div class="projekt-page--admin-topbar">
+  <div class="projekt-page--admin-topbar--inner">
+    <div class="projekt-page--admin-topbar-left hide-on-medium-tablet">
+      <button
+        class="button hollow -selected js-admin-view-button js-studio-preview-mode-button"
+        data-view-mode="admin"
+        type="button"
+      >
+        <i class="fas fa-user-shield"></i>
+        <span><%= t('custom.projekts.page.topbar.admin_view') %></span>
+      </button>
+
+      <button
+        class="button hollow js-user-view-button js-studio-preview-mode-button"
+        data-view-mode="user"
+        type="button"
+      >
+        <i class="fas fa-user"></i>
+        <span><%= t('custom.projekts.page.topbar.user_view') %></span>
+      </button>
+    </div>
+
+    <div class="projekt-page--admin-topbar-right">
+      <% if current_user&.email.in?(@partner_emails) %>
+        <%= link_to "#", class: "button hollow projekt-page--admin-topbar-button js-copy-source-button", data: { target: "page-content" } do %>
+          <i class="fas fa-code"></i>
+          <span><%= t("custom.projekts.page.topbar.copy_code") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.administrator? %>
+        <%= link_to new_adm_newsletter_path(projekt_id: @projekt), class: "button hollow projekt-page--admin-topbar-button hide-on-small-tablet", target: "_blank" do %>
+          <i class="fas fa-envelope"></i>
+          <span><%= t("custom.projekts.page.topbar.create_newsletter_draft") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+        <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt), role: "button", class: "button hollow projekt-page--admin-topbar-button hide-on-mobile js-notify-reviewers" do %>
+          <i class="fas fa-bell js-notify-reviewers-icon"></i>
+          <span class="js-notify-reviewers-label"><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+        <% end %>
+      <% end %>
+
+      <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+        <%= link_to details_adm_projekts_projekt_path(@projekt), class: "button hollow projekt-page--admin-topbar-button", target: "_blank" do %>
+          <i class="fas fa-cog"></i>
+          <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

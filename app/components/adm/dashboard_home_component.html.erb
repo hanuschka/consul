@@ -1,0 +1,14 @@
+<div class="kern-container">
+  <%= notice if notice? %>
+  <%= header_row if header_row? %>
+  <%= tiles if tiles? %>
+
+  <% if team? || contacts? %>
+    <div class="adm-dashboard__people-row">
+      <%= team %>
+      <%= contacts %>
+    </div>
+  <% end %>
+
+  <%= activity_feed if activity_feed? %>
+</div>

@@ -1,0 +1,5 @@
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
+<%= render Budgets::Investments::NewComponent.new(@budget, @investment) %>

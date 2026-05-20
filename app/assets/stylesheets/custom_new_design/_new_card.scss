@@ -1,7 +1,7 @@
 .custom-new-design {
   .new-card, .main-content-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid $border-color;
     margin-bottom: 15px;
     color: $main-text-color;
@@ -39,6 +39,12 @@
     h1 {
       margin-top: 0;
     }
+
+    &.-hide-background {
+      background: transparent;
+      padding: 0;
+      border: 0;
+    }
   }
 
   .new-card--heading {
@@ -49,7 +55,7 @@
   }
 
   .new-card--heading-icon {
-    color: $brand;
+    color: var(--brand-color);
     margin-right: 5px;
   }
 }

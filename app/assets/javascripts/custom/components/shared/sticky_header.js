@@ -34,7 +34,7 @@
       if (this.header()) {
         if (window.pageYOffset > this.initialHeaderOffsetY) {
           this.header().classList.add("sticky-header");
-        } else if (window.pageXOffset === this.initialHeaderOffsetY) {
+        } else if (window.pageYOffset <= this.initialHeaderOffsetY) {
           this.header().classList.remove("sticky-header");
         }
       }

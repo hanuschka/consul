@@ -1,0 +1,88 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<%
+  headers = {
+    username:      Kern::Table::HeaderComponent.new(:username, User.human_attribute_name(:username), **@username_header_options.merge(data_field: "username")),
+    email:         Kern::Table::HeaderComponent.new(:email, User.human_attribute_name(:email), **@email_header_options.merge(data_field: "email")),
+    first_name:    Kern::Table::HeaderComponent.new(:first_name, User.human_attribute_name(:first_name), **@first_name_header_options.merge(data_field: "first_name")),
+    last_name:     Kern::Table::HeaderComponent.new(:last_name, User.human_attribute_name(:last_name), **@last_name_header_options.merge(data_field: "last_name")),
+    city_name:     Kern::Table::HeaderComponent.new(:city_name, t(".table.city_name"), **@city_name_header_options.merge(data_field: "city_name")),
+    document_type: Kern::Table::HeaderComponent.new(:document_type, t(".table.document_type"), **@document_type_header_options.merge(data_field: "document_type")),
+    gender:        Kern::Table::HeaderComponent.new(:gender, User.human_attribute_name(:gender), **@gender_header_options.merge(data_field: "gender")),
+    created_at:    Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
+    verified_at:   Kern::Table::HeaderComponent.new(:verified_at, t(".table.verified_at"), **@verified_at_header_options.merge(data_field: "verified_at")),
+    reverify:      Kern::Table::HeaderComponent.new(:reverify, User.human_attribute_name(:reverify), **@reverify_header_options.merge(data_field: "reverify"))
+  }
+%>
+
+<div class="kern-container mb-5">
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "users_table",
+        records: @users,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 19,
+        column_selector: {
+          storage_key: "adm-users-columns",
+          defaults: "username,email"
+        },
+        empty_state: {
+          title: t(".no_users_title"),
+          description: t(".no_users_description"),
+          icon: "group"
+        },
+        empty_state_filtered: {
+          title: t(".no_results_filtered_title"),
+          description: t(".no_results_filtered_description"),
+          icon: "filter_alt_off"
+        }
+      ) do |c| %>
+    <% c.with_toolbar_meta do %>
+      <span class="adm-table-count" title="<%= t(".total_hint") %>">
+        <span class="adm-table-count__value"><%= number_with_delimiter(@pagy.count) %></span>
+        <span class="adm-table-count__label"><%= t(".total_label", count: @pagy.count) %></span>
+      </span>
+    <% end %>
+
+    <% c.with_toolbar_action do %>
+      <a href="<%= adm_users_path(params.permit(
+                     :sort_by, :sort_direction,
+                     :username__search, :email__search, :first_name__search, :last_name__search,
+                     gender: [], reverify: [], document_type: []
+                   ).merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t(".download_csv") %>
+      </a>
+    <% end %>
+
+    <% c.with_header_row do %>
+      <%= render headers[:username] %>
+      <%= render headers[:email] %>
+      <%= render headers[:first_name] %>
+      <%= render headers[:last_name] %>
+      <%= render headers[:city_name] %>
+      <th scope="col" class="kern-table__header" data-field="street_address"><%= t(".table.street_address") %></th>
+      <th scope="col" class="kern-table__header" data-field="plz"><%= t(".table.plz") %></th>
+      <th scope="col" class="kern-table__header" data-field="district"><%= t(".table.district") %></th>
+      <%= render headers[:document_type] %>
+      <th scope="col" class="kern-table__header" data-field="document_last_digits"><%= t(".table.document_last_digits") %></th>
+      <%= render headers[:gender] %>
+      <th scope="col" class="kern-table__header" data-field="date_of_birth"><%= t(".table.date_of_birth") %></th>
+      <th scope="col" class="kern-table__header" data-field="roles"><%= t(".table.roles") %></th>
+      <th scope="col" class="kern-table__header" data-field="unique_stamp"><%= t(".table.unique_stamp") %></th>
+      <%= render headers[:created_at] %>
+      <th scope="col" class="kern-table__header" data-field="last_sign_in"><%= t(".table.last_sign_in") %></th>
+      <%= render headers[:verified_at] %>
+      <%= render headers[:reverify] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @users.each do |user| %>
+        <%= render "adm/users/user", user: user %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

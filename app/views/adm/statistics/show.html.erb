@@ -1,0 +1,425 @@
+<%= content_for :title, t("adm.menu.items.stats_subitems.overview") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.menu.items.stats_subitems.overview"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container" data-controller="adm-charts">
+
+  <%# ── Users ──────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">group</span>
+      <h3><%= t("adm.statistics.show.sections.users") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">group</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.total.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_total) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.total.label") %></div>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">person_add</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.new_week.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_new_week) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.new_week.label") %></div>
+        <% if @trend_users_week %>
+          <% trend = @trend_users_week %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__trend adm-stat-card__trend--<%= trend[:delta] > 0 ? 'up' : trend[:delta] < 0 ? 'down' : 'neutral' %>">
+              <%= trend[:delta] > 0 ? "▲ +#{trend[:delta]}" : trend[:delta] < 0 ? "▼ #{trend[:delta]}" : "= 0" %>
+              <% if trend[:pct] %> (<%= trend[:pct] > 0 ? '+' : '' %><%= trend[:pct] %> %)<% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">calendar_month</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.new_month.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_new_month) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.new_month.label") %></div>
+        <% if @trend_users_month %>
+          <% trend = @trend_users_month %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__trend adm-stat-card__trend--<%= trend[:delta] > 0 ? 'up' : trend[:delta] < 0 ? 'down' : 'neutral' %>">
+              <%= trend[:delta] > 0 ? "▲ +#{trend[:delta]}" : trend[:delta] < 0 ? "▼ #{trend[:delta]}" : "= 0" %>
+              <% if trend[:pct] %> (<%= trend[:pct] > 0 ? '+' : '' %><%= trend[:pct] %> %)<% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">verified</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.verified_l1.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_verified_l1) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.verified_l1.label") %></div>
+        <% if @users_verified_l1_pct %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__ratio"><%= t("adm.statistics.show.users.ratio", percent: @users_verified_l1_pct) %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">shield_person</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.verified_l2.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_verified_l2) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.verified_l2.label") %></div>
+        <% if @users_verified_l2_pct %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__ratio"><%= t("adm.statistics.show.users.ratio", percent: @users_verified_l2_pct) %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">person_off</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.guest.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_guest) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.guest.label") %></div>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">mail</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.newsletter.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_newsletter) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.newsletter.label") %></div>
+        <% if @users_newsletter_pct %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__ratio"><%= t("adm.statistics.show.users.ratio", percent: @users_newsletter_pct) %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card adm-stat-card--warning">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">delete</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.users.deleted.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@users_deleted) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.users.deleted.label") %></div>
+      </div>
+
+    </div>
+
+    <% if @chart_users[:values].any?(&:positive?) %>
+      <div class="adm-stats-charts adm-stats-charts--single">
+        <div class="adm-chart-card">
+          <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
+          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:values].sum) %></div>
+          <div class="adm-chart-card__canvas-wrapper"
+               data-area-chart
+               data-chart-labels="<%= @chart_users[:labels].to_json %>"
+               data-chart-values="<%= @chart_users[:values].to_json %>"
+               data-chart-color="#6BA3D6">
+            <canvas></canvas>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Projects ────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+      <h3><%= t("adm.statistics.show.sections.projects") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">folder</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.projects.total.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@projects_total) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.projects.total.label") %></div>
+      </div>
+
+      <div class="adm-stat-card adm-stat-card--accent">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">folder_open</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.projects.active.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@projects_current) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.projects.active.label") %></div>
+        <% if @projects_active_pct %>
+          <div class="adm-stat-card__meta">
+            <span class="adm-stat-card__ratio"><%= t("adm.statistics.show.projects.ratio", percent: @projects_active_pct) %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">folder_off</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.projects.expired.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@projects_expired) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.projects.expired.label") %></div>
+      </div>
+
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__header">
+          <span class="material-symbols-outlined adm-stat-card__icon">notifications_active</span>
+          <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                data-tiptext="<%= t("adm.statistics.show.projects.subscriptions.tip") %>">
+            <span class="material-symbols-outlined">info</span>
+          </span>
+        </div>
+        <%= stat_value(@projects_subscriptions) %>
+        <div class="adm-stat-card__label"><%= t("adm.statistics.show.projects.subscriptions.label") %></div>
+      </div>
+
+    </div>
+  </div>
+
+  <%# ── Participation phases ────────────────────────────── %>
+  <%
+    phase_config = [
+      { type: "ProjektPhase::CommentPhase",              icon: "comment",                key: "comment",              submission_count: @stat_comments },
+      { type: "ProjektPhase::ProposalPhase",             icon: "lightbulb",              key: "proposal",             submission_count: @stat_proposals,        submission_count2: @stat_proposal_comments },
+      { type: "ProjektPhase::QuestionPhase",             icon: "poll",                   key: "question",             submission_count: @stat_question_answers },
+      { type: "ProjektPhase::VotingPhase",               icon: "how_to_vote",            key: "voting",               submission_count: @stat_poll_answers },
+      { type: "ProjektPhase::BudgetPhase",               icon: "account_balance_wallet", key: "budget",               submission_count: @stat_budget_investments, submission_count2: @stat_budget_comments },
+      { type: "ProjektPhase::FormularPhase",             icon: "assignment",             key: "formular",             submission_count: @stat_formular_answers },
+      { type: "ProjektPhase::LegislationPhase",          icon: "gavel",                  key: "legislation",          submission_count: @stat_legislation_annotations },
+      { type: "ProjektPhase::ArgumentPhase",             icon: "forum",                  key: "argument",             submission_count: @stat_projekt_arguments },
+      { type: "ProjektPhase::PointOfInterestPhase",      icon: "location_on",            key: "point_of_interest",    submission_count: @stat_points_of_interest },
+      { type: "ProjektPhase::EventPhase",                icon: "event",                  key: "event",                submission_count: @stat_projekt_events },
+      { type: "ProjektPhase::NewsfeedPhase",             icon: "newspaper",              key: "newsfeed" },
+      { type: "ProjektPhase::MilestonePhase",            icon: "flag",                   key: "milestone",            submission_count: @stat_milestones },
+      { type: "ProjektPhase::ProjektNotificationPhase",  icon: "notifications",          key: "projekt_notification" },
+      { type: "ProjektPhase::LivestreamPhase",           icon: "live_tv",                key: "livestream",           submission_count: @stat_livestreams },
+      { type: "ProjektPhase::IframePhase",               icon: "web",                    key: "iframe" }
+    ]
+  %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">how_to_vote</span>
+      <h3><%= t("adm.statistics.show.sections.phases") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+
+      <% phase_config.each do |cfg| %>
+        <% count  = @phase_counts[cfg[:type]] || 0 %>
+        <% triple = cfg.key?(:submission_count2) %>
+        <% split  = !triple && cfg.key?(:submission_count) %>
+        <% card_class = triple ? "adm-stat-card adm-stat-card--triple" : split ? "adm-stat-card adm-stat-card--split" : "adm-stat-card" %>
+        <div class="<%= card_class %>">
+          <div class="adm-stat-card__header">
+            <span class="material-symbols-outlined adm-stat-card__icon"><%= cfg[:icon] %></span>
+            <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                  data-tiptext="<%= t("adm.statistics.show.phases.#{cfg[:key]}.tip") %>">
+              <span class="material-symbols-outlined">info</span>
+            </span>
+          </div>
+          <% if triple || split %>
+            <div class="adm-stat-card__body">
+              <div class="adm-stat-card__metric">
+                <%= stat_value(count) %>
+                <div class="adm-stat-card__label"><%= t("adm.statistics.show.phases.#{cfg[:key]}.label") %></div>
+              </div>
+              <div class="adm-stat-card__metric">
+                <%= stat_value(cfg[:submission_count]) %>
+                <div class="adm-stat-card__label"><%= t("adm.statistics.show.phases.#{cfg[:key]}.submission_label") %></div>
+              </div>
+              <% if triple %>
+                <div class="adm-stat-card__metric">
+                  <%= stat_value(cfg[:submission_count2]) %>
+                  <div class="adm-stat-card__label"><%= t("adm.statistics.show.phases.#{cfg[:key]}.submission_label2") %></div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <%= stat_value(count) %>
+            <div class="adm-stat-card__label"><%= t("adm.statistics.show.phases.#{cfg[:key]}.label") %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+
+  <%# ── Deficiency reports ──────────────────────────────── %>
+  <% if feature?(:deficiency_reports) %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">report</span>
+        <h3><%= t("adm.statistics.show.sections.deficiency_reports") %></h3>
+      </div>
+      <div class="adm-dashboard__stats">
+
+        <div class="adm-stat-card">
+          <div class="adm-stat-card__header">
+            <span class="material-symbols-outlined adm-stat-card__icon">report</span>
+            <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                  data-tiptext="<%= t("adm.statistics.show.deficiency_reports.total.tip") %>">
+              <span class="material-symbols-outlined">info</span>
+            </span>
+          </div>
+          <%= stat_value(@reports_total) %>
+          <div class="adm-stat-card__label"><%= t("adm.statistics.show.deficiency_reports.total.label") %></div>
+        </div>
+
+        <div class="adm-stat-card adm-stat-card--accent">
+          <div class="adm-stat-card__header">
+            <span class="material-symbols-outlined adm-stat-card__icon">pending</span>
+            <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                  data-tiptext="<%= t("adm.statistics.show.deficiency_reports.open.tip") %>">
+              <span class="material-symbols-outlined">info</span>
+            </span>
+          </div>
+          <%= stat_value(@reports_open) %>
+          <div class="adm-stat-card__label"><%= t("adm.statistics.show.deficiency_reports.open.label") %></div>
+          <% if @reports_open_pct %>
+            <div class="adm-stat-card__meta">
+              <span class="adm-stat-card__ratio"><%= t("adm.statistics.show.deficiency_reports.ratio", percent: @reports_open_pct) %></span>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="adm-stat-card adm-stat-card--warning">
+          <div class="adm-stat-card__header">
+            <span class="material-symbols-outlined adm-stat-card__icon">person_search</span>
+            <span class="adm-stat-card__info has-tip" data-tooltip aria-haspopup="true" tabindex="0"
+                  data-tiptext="<%= t("adm.statistics.show.deficiency_reports.unassigned.tip") %>">
+              <span class="material-symbols-outlined">info</span>
+            </span>
+          </div>
+          <%= stat_value(@reports_unassigned) %>
+          <div class="adm-stat-card__label"><%= t("adm.statistics.show.deficiency_reports.unassigned.label") %></div>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Demographics ───────────────────────────────────── %>
+  <% if @gender_stats.any? || @geozone_stats.any? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">demographics</span>
+        <h3><%= t("adm.statistics.show.sections.demographics") %></h3>
+      </div>
+      <div class="adm-stats-demographics">
+
+        <% if @gender_stats.any? %>
+          <div class="adm-stats-demographics__group">
+            <h4><%= t("adm.statistics.show.demographics.gender") %></h4>
+            <div data-bar-chart
+                 data-chart-labels="<%= @gender_stats.keys.map { |g| t("stats.gender.#{g}", default: g.to_s.humanize) }.to_json %>"
+                 data-chart-values="<%= @gender_stats.values.to_json %>"
+                 data-chart-orientation="horizontal">
+              <canvas></canvas>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @geozone_stats.any? %>
+          <div class="adm-stats-demographics__group">
+            <h4><%= t("adm.statistics.show.demographics.areas") %></h4>
+            <div data-bar-chart
+                 data-chart-labels="<%= @geozone_stats.keys.to_json %>"
+                 data-chart-values="<%= @geozone_stats.values.to_json %>"
+                 data-chart-orientation="horizontal">
+              <canvas></canvas>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Time-series charts ─────────────────────────────── %>
+  <% charts_with_data = [@chart_comments, @chart_proposals].select { |c| c[:values].any?(&:positive?) } %>
+  <% if charts_with_data.any? %>
+    <div class="adm-dashboard__section">
+      <div class="adm-dashboard__section-header">
+        <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+        <h3><%= t("adm.statistics.show.sections.activity") %></h3>
+      </div>
+      <div class="adm-stats-charts">
+        <% if @chart_comments[:values].any?(&:positive?) %>
+          <div class="adm-chart-card">
+            <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.comments") %></div>
+            <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_comments[:values].sum) %></div>
+            <div class="adm-chart-card__canvas-wrapper"
+                 data-area-chart
+                 data-chart-labels="<%= @chart_comments[:labels].to_json %>"
+                 data-chart-values="<%= @chart_comments[:values].to_json %>"
+                 data-chart-color="#5BAD82">
+              <canvas></canvas>
+            </div>
+          </div>
+        <% end %>
+        <% if @chart_proposals[:values].any?(&:positive?) %>
+          <div class="adm-chart-card">
+            <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.proposals") %></div>
+            <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_proposals[:values].sum) %></div>
+            <div class="adm-chart-card__canvas-wrapper"
+                 data-area-chart
+                 data-chart-labels="<%= @chart_proposals[:labels].to_json %>"
+                 data-chart-values="<%= @chart_proposals[:values].to_json %>"
+                 data-chart-color="#E8953A">
+              <canvas></canvas>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+
+</div>

@@ -1,0 +1,44 @@
+<%= render Adm::HeaderComponent.new(
+  title: @proposal_phase.projekt.name,
+  back_button_url: adm_officing_root_path,
+  breadcrumbs: [
+    { name: t("adm.officing.title"), url: adm_officing_root_path },
+    { name: @proposal_phase.projekt.name }
+  ]
+) %>
+
+<div class="kern-container my-5">
+  <div class="kern-alert kern-alert--info mb-5" role="status">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+      <span class="kern-title"><%= t("adm.officing.proposal_phases.officing_desk.voting_for", user: @offline_user.id) %></span>
+    </div>
+  </div>
+
+  <% if @proposals.any? %>
+    <% @proposals.each do |proposal| %>
+      <%= render "adm/officing/proposal_phases/proposal_vote",
+        proposal: proposal,
+        proposal_phase: @proposal_phase,
+        offline_user: @offline_user,
+        vote: @votes_by_proposal_id[proposal.id] %>
+    <% end %>
+  <% else %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t("adm.officing.proposal_phases.officing_desk.no_proposals") %></span>
+      </div>
+    </div>
+  <% end %>
+
+  <%== pagy_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+
+  <div class="mt-5">
+    <%= kern_link_button(
+      verify_user_adm_officing_proposal_phase_path(@proposal_phase),
+      text: t("adm.officing.proposal_phases.officing_desk.next_voter"),
+      style: :secondary
+    ) %>
+  </div>
+</div>

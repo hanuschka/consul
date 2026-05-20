@@ -1,0 +1,72 @@
+<div data-controller="kern--form--nested-entries"
+     data-kern--form--nested-entries-max-value="<%= max_documents_allowed %>">
+
+  <% if @show_hint %>
+    <p class="kern-body kern-body--small mb-3">
+      <%= t(".hint",
+            max_documents: max_documents_allowed,
+            accepted_types: accepted_content_types_humanized,
+            max_size: max_file_size) %>
+    </p>
+  <% end %>
+
+  <div data-kern--form--nested-entries-target="entries">
+    <% documents.each do |document| %>
+      <% @form.fields_for :documents, document do |df| %>
+        <div class="d-flex align-items-center justify-content-between mb-2"
+               data-kern--form--nested-entries-target="entry">
+          <div>
+            <span class="material-symbols-outlined" aria-hidden="true">description</span>
+            <%= document.title %>
+            <span class="kern-body kern-body--small">(<%= document.humanized_content_type %>, <%= number_to_human_size(document.attachment_file_size) %>)</span>
+          </div>
+          <div>
+            <%= df.hidden_field :id %>
+            <%= df.hidden_field :_destroy, value: false, data: { kern__form__nested_entries_target: "destroy" } %>
+            <%= df.hidden_field :user_id, value: document.user_id %>
+            <button type="button"
+                    class="kern-btn kern-btn--secondary kern-btn--small"
+                    data-action="kern--form--nested-entries#remove">
+              <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
+              <span class="kern-label"><%= t(".remove") %></span>
+            </button>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <template data-kern--form--nested-entries-target="template">
+    <% @form.fields_for :documents, Document.new, child_index: "NEW_RECORD" do |df| %>
+      <div class="mb-2"
+           data-kern--form--nested-entries-target="entry">
+        <div class="kern-form-input mb-3">
+          <label class="kern-label"><%= t(".title_label") %></label>
+          <input type="text" class="kern-form-input__input"
+                 name="<%= df.object_name %>[title]" required>
+        </div>
+
+        <div class="kern-form-input mb-3">
+          <label class="kern-label"><%= t(".file_label") %></label>
+          <input type="file" class="kern-form-input__input"
+                 name="<%= df.object_name %>[attachment]"
+                 accept="<%= accepted_content_types.join(",") %>" required>
+        </div>
+
+        <input type="hidden" name="<%= df.object_name %>[user_id]"
+               value="<%= helpers.current_user&.id %>">
+
+        <button type="button"
+                class="kern-btn kern-btn--secondary kern-btn--small"
+                data-action="kern--form--nested-entries#remove">
+          <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
+          <span class="kern-label"><%= t(".remove") %></span>
+        </button>
+      </div>
+    <% end %>
+  </template>
+
+  <%= kern_button(text: t(".add"), icon: "add", style: :secondary, size: :small, class: "mt-2",
+        data: { kern__form__nested_entries_target: "addButton",
+                action: "kern--form--nested-entries#add" }) %>
+</div>

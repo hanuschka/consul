@@ -1,0 +1,39 @@
+<%= form_with model: [:adm, @api_client] do |f| %>
+  <% if @api_client.errors.any? %>
+    <div class="kern-alert kern-alert--danger mb-4" role="alert">
+      <div class="kern-alert__body">
+        <ul class="mb-0">
+          <% @api_client.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: ApiClient.human_attribute_name(:name), hint: t("adm.api_clients.form.name_description")) do %>
+    <%= f.text_field :name, label: false, placeholder: ApiClient.human_attribute_name(:name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(
+    label: ApiClient.human_attribute_name(:access_level),
+    hint: t("adm.api_clients.form.access_level_description")
+  ) do %>
+    <%= f.select :access_level,
+      options_for_select(
+        ApiClient.access_levels.keys.map { |level| [t("adm.api_clients.access_level.#{level}"), level] },
+        @api_client.access_level
+      ),
+      {},
+      { label: false } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(
+    label: ApiClient.human_attribute_name(:service_user_email),
+    hint: t("adm.api_clients.form.service_user_email_description")
+  ) do %>
+    <%= f.email_field :service_user_email, label: false, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t("shared.submit")) %>
+<% end %>

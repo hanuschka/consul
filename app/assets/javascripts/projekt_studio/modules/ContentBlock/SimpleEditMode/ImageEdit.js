@@ -1,255 +1,389 @@
 ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   contentBlockImageLoadingState: {},
-  currentImg: null,
+  activeImg: null,
+  overlayEl: null,
+  isDragging: false,
+  dragState: null,
+  isActive: false,
 
   initialize() {
+    this.buildOverlay()
+    this.buildLoadingOverlay()
     this.initEventListeners()
   },
 
   initEventListeners() {
     const $document = $(document);
-    $document.on("click", ".js-content-block-image-change-button", this.openaImageGallery.bind(this));
-    $document.on("click", ".js-content-block-image-crop-button", this.toggleCropImage.bind(this));
-    $document.on("input", ".js-content-block-image-height-input", this.handleHeightInputChange.bind(this));
-    $document.on("click", ".js-content-block-image-height-decrease", this.decreaseHeight.bind(this));
-    $document.on("click", ".js-content-block-image-height-increase", this.increaseHeight.bind(this));
+
+    $document.on(
+      "mouseenter",
+      ".-simple-edit-mode .projekt-content-block img",
+      this.handleImageMouseEnter.bind(this)
+    )
+
+    this.overlayEl.addEventListener(
+      "mouseleave", this.handleOverlayMouseLeave.bind(this)
+    )
+
+    $document.on("click", ".js-img-overlay-change", this.handleChangeClick.bind(this))
+    $document.on("click", ".js-img-overlay-crop", this.handleCropClick.bind(this))
+
+    $document.on("mousedown", ".js-img-resize-handle", this.handleResizeStart.bind(this))
+    document.addEventListener("mousemove", this.handleResizeMove.bind(this))
+    document.addEventListener("mouseup", this.handleResizeEnd.bind(this))
+
+    $document.on("input", ".js-img-overlay-height-input", this.handleHeightInput.bind(this))
+    $document.on("click", ".js-img-overlay-height-decrease", this.handleHeightDecrease.bind(this))
+    $document.on("click", ".js-img-overlay-height-increase", this.handleHeightIncrease.bind(this))
   },
 
-  toggleImageControls(contentBlock, enabled) {
-    if (enabled) {
-      contentBlock
-        .querySelectorAll("img")
-        .forEach((img) => {
-          this.wrapImageWithControls(img)
-        })
-    } else {
-      contentBlock
-        .querySelectorAll(".js-content-block-image-wrapper")
-        .forEach((imgWrapper) => {
-          this.removeImageControls(imgWrapper)
-        })
+  buildOverlay() {
+    const overlay = document.createElement("div")
+    overlay.className = "js-image-edit-overlay image-edit-overlay js-studio-hide-on-preview"
+    overlay.style.display = "none"
+    overlay.innerHTML = `
+      <div class="image-edit-overlay--height-control">
+        <button type="button" class="js-img-overlay-height-decrease">
+          <i class="fa fas fa-minus"></i>
+        </button>
+        <input
+          type="number"
+          class="js-img-overlay-height-input"
+          min="30"
+        >
+        <button type="button" class="js-img-overlay-height-increase">
+          <i class="fa fas fa-plus"></i>
+        </button>
+      </div>
+
+      <div class="image-edit-overlay--handle -top-left js-img-resize-handle" data-corner="top-left"></div>
+      <div class="image-edit-overlay--handle -top-right js-img-resize-handle" data-corner="top-right"></div>
+      <div class="image-edit-overlay--handle -bottom-left js-img-resize-handle" data-corner="bottom-left"></div>
+      <div class="image-edit-overlay--handle -bottom-right js-img-resize-handle" data-corner="bottom-right"></div>
+
+      <div class="image-edit-overlay--actions">
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change">
+          <i class="fa fas fa-pencil-alt"></i>
+        </button>
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop">
+          <i class="fa fas fa-crop-alt"></i>
+        </button>
+      </div>
+    `
+
+    document.body.appendChild(overlay)
+    this.overlayEl = overlay
+  },
+
+  buildLoadingOverlay() {
+    const loading = document.createElement("div")
+    loading.className = "js-image-edit-loading-overlay image-edit-loading-overlay"
+    loading.style.display = "none"
+    loading.innerHTML = `
+      <div class="image-edit-loading-overlay--blur-backdrop"></div>
+      <div class="image-edit-loading-overlay--blur js-image-edit-loading-blur"></div>
+      <div class="loading-spinner-inline"></div>
+    `
+
+    document.body.appendChild(loading)
+    this.loadingOverlayEl = loading
+  },
+
+  toggleImageControls(_contentBlock, enabled) {
+    this.isActive = enabled
+
+    if (!enabled) {
+      this.deactivate()
     }
   },
 
+  handleImageMouseEnter(e) {
+    if (!this.isActive || this.isDragging) return
+
+    this.showOverlayForImage(e.currentTarget)
+  },
+
+  handleOverlayMouseLeave(_e) {
+    if (this.isDragging) return
+
+    this.hideOverlay()
+  },
+
+  showOverlayForImage(img) {
+    this.activeImg = img
+    const rect = img.getBoundingClientRect()
+
+    Object.assign(this.overlayEl.style, {
+      display: "",
+      left: `${rect.left + window.scrollX}px`,
+      top: `${rect.top + window.scrollY}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+    })
+
+    const heightInput = this.overlayEl.querySelector(".js-img-overlay-height-input")
+    heightInput.value = Math.round(rect.height)
+    heightInput.max = img.naturalHeight || Math.round(rect.height)
+
+    this.updateCropButtonState(img)
+  },
+
+  hideOverlay() {
+    this.overlayEl.style.display = "none"
+    this.activeImg = null
+  },
+
+  deactivate() {
+    this.hideOverlay()
+    this.hideLoadingOverlay()
+    this.isDragging = false
+    this.dragState = null
+  },
+
+  updateCropButtonState(img) {
+    const cropButton = this.overlayEl.querySelector(".js-img-overlay-crop")
+    const isCropped = getComputedStyle(img).objectFit === "cover"
+
+    if (isCropped) {
+      cropButton.classList.add("-active")
+    } else {
+      cropButton.classList.remove("-active")
+    }
+  },
+
+  // --- Action buttons ---
+
+  handleChangeClick(e) {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    const img = this.activeImg
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img)
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId
+
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForImages(
+      (selectedPicture) => {
+        this.replaceImage(img, selectedPicture)
+      },
+      contentBlockId,
+      contentBlockWrapper
+    )
+  },
+
+  handleCropClick(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    const img = this.activeImg
+    const isCropped = getComputedStyle(img).objectFit === "cover"
+
+    if (isCropped) {
+      img.style.objectFit = "contain"
+      img.style.margin = "auto"
+    } else {
+      img.dataset.previousHeight = img.style.height
+      img.style.objectFit = "cover"
+    }
+
+    this.updateCropButtonState(img)
+  },
+
+  // --- Drag resize ---
+
+  handleResizeStart(e) {
+    e.preventDefault()
+    if (!this.activeImg) return
+
+    this.isDragging = true
+    const rect = this.activeImg.getBoundingClientRect()
+
+    this.dragState = {
+      corner: e.currentTarget.dataset.corner,
+      startY: e.clientY,
+      originalHeight: rect.height,
+    }
+
+    document.body.style.cursor = this.getCursorForCorner(e.currentTarget.dataset.corner)
+    document.body.style.userSelect = "none"
+  },
+
+  handleResizeMove(e) {
+    if (!this.isDragging || !this.dragState || !this.activeImg) return
+
+    const { corner, startY, originalHeight } = this.dragState
+    const deltaY = e.clientY - startY
+    let newHeight
+
+    if (corner === "bottom-right" || corner === "bottom-left") {
+      newHeight = originalHeight + deltaY
+    } else {
+      newHeight = originalHeight - deltaY
+    }
+
+    newHeight = Math.max(30, Math.round(newHeight))
+
+    const maxHeight = this.activeImg.naturalHeight
+    if (maxHeight > 0) {
+      newHeight = Math.min(maxHeight, newHeight)
+    }
+
+    this.applyHeight(this.activeImg, newHeight)
+    this.showOverlayForImage(this.activeImg)
+  },
+
+  handleResizeEnd(_e) {
+    if (!this.isDragging) return
+
+    this.isDragging = false
+    this.dragState = null
+    document.body.style.cursor = ""
+    document.body.style.userSelect = ""
+  },
+
+  getCursorForCorner(corner) {
+    if (corner === "top-left" || corner === "bottom-right") return "nwse-resize"
+
+    return "nesw-resize"
+  },
+
+  // --- Height controls ---
+
+  handleHeightInput(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+
+    if (!this.activeImg) return
+
+    const newHeight = parseInt(e.currentTarget.value)
+    if (isNaN(newHeight)) return
+
+    this.applyHeight(this.activeImg, newHeight)
+    this.showOverlayForImage(this.activeImg)
+  },
+
+  handleHeightDecrease(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    const input = this.overlayEl.querySelector(".js-img-overlay-height-input")
+    const currentHeight = parseInt(input.value)
+    const newHeight = Math.max(30, currentHeight - 10)
+
+    this.applyHeight(this.activeImg, newHeight)
+    this.showOverlayForImage(this.activeImg)
+  },
+
+  handleHeightIncrease(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    const input = this.overlayEl.querySelector(".js-img-overlay-height-input")
+    const currentHeight = parseInt(input.value)
+    const maxHeight = this.activeImg.naturalHeight || currentHeight + 10
+    const newHeight = Math.min(maxHeight, currentHeight + 10)
+
+    this.applyHeight(this.activeImg, newHeight)
+    this.showOverlayForImage(this.activeImg)
+  },
+
+  applyHeight(img, height) {
+    img.style.height = `${height}px`
+    img.dataset.originalThumbHeight = height
+    img.height = height
+  },
+
+  // --- Image replacement ---
+
   incrementImageLoadingCount(contentBlockId) {
     if (!this.contentBlockImageLoadingState[contentBlockId]) {
-      this.contentBlockImageLoadingState[contentBlockId] = 0;
+      this.contentBlockImageLoadingState[contentBlockId] = 0
     }
 
     this.contentBlockImageLoadingState[contentBlockId] += 1
   },
 
   decrementImageLoadingCount(contentBlockId) {
-    if (!this.contentBlockImageLoadingState[contentBlockId]) {
-      return
-    }
+    if (!this.contentBlockImageLoadingState[contentBlockId]) return
 
     this.contentBlockImageLoadingState[contentBlockId] -= 1
   },
 
-  wrapImageWithControls(img) {
-    const imageWrapper = document.createElement("div")
-    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
+  async replaceImage(img, selectedPicture) {
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img)
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId
 
-    const smallButton = img.height < 120;
-    const computedStyle = getComputedStyle(img);
-    const borderRadius = computedStyle.borderRadius;
-
-    img.parentNode.insertBefore(imageWrapper, img);
-    imageWrapper.appendChild(img);
-
-    const cropButton = `
-      <button
-        type="button"
-        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
-          <i class="fa fas fa-crop-alt"></i>
-      </button>
-    `;
-
-    // const dimensionControls = img.dataset.studioResize === 'true' ? `
-    const dimensionControls = `
-      <div class="content-block-image-height-control">
-        <button type="button" class="js-content-block-image-height-decrease"><i class="fa fas fa-minus"></i></button>
-        <input
-          type="number"
-          class="js-content-block-image-height-input"
-          min="30"
-          max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
-          value="${img.clientHeight}"
-        >
-        <button type="button" class="js-content-block-image-height-increase"><i class="fa fas fa-plus"></i></button>
-      </div>
-    `
-
-    imageWrapper.insertAdjacentHTML(
-      "beforeend",
-      `
-        <div
-          style="border-radius: ${borderRadius}"
-          class="content-block-image-loading-overlay"
-        >
-          <div class="content-block-image-loading-overlay-blur-backdrop"></div>
-          <div class="content-block-image-loading-overlay-blur"></div>
-          <div class="loading-spinner-inline"></div>
-        </div>
-        ${dimensionControls}
-        <div class="content-block-image-control-buttons">
-          <button
-            type="button"
-            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
-          >
-            <i class="fa fas fa-pencil-alt"></i>
-          </button>
-          ${cropButton}
-        </div>
-      `
-    );
-  },
-
-  removeImageControls(imgWrapper) {
-    const img = imgWrapper.querySelector("img")
-
-    imgWrapper.parentNode.insertBefore(img, imgWrapper);
-    imgWrapper.remove();
-  },
-
-  openaImageGallery(e) {
-    e.stopPropagation()
-    e.stopImmediatePropagation()
-    e.preventDefault()
-
-    const wrapper = this.getImageWrapper(e.currentTarget);
-    this.currentImg = wrapper.querySelector("img")
-
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(this.currentImg);
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-
-    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.openDialog(
-      (selectedPicture) => {
-        this.replaceImage(selectedPicture);
-      },
-      contentBlockId,
-      contentBlockWrapper
-    );
-  },
-
-  toggleCropImage(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    const button = e.currentTarget;
-    const wrapper = this.getImageWrapper(button);
-    const img = wrapper.querySelector("img")
-
-    if (this.isImageCropped(img)) {
-      img.style.objectFit = "contain";
-      img.style.margin = "auto"
-    } else {
-      img.dataset.previousHeight = img.style.height
-      img.style.objectFit = "cover";
-    }
-
-    this.toggleCropImageButton(img, button)
-  },
-
-  toggleCropImageButton(img, button) {
-    if (this.isImageCropped(img)) {
-      button.classList.add("-active");
-    } else {
-      button.classList.remove("-active");
-    }
-  },
-
-  isImageCropped(img) {
-    console.log("isImageCropped", getComputedStyle(img).objectFit)
-    return getComputedStyle(img).objectFit === "cover"
-  },
-
-  async replaceImage(selectedPicture) {
-    const img = this.currentImg;
-    const imageWrapper = this.getImageWrapper(img)
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img);
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-
-    // Lock the content block and track loading state
-    this.incrementImageLoadingCount(contentBlockId);
+    this.incrementImageLoadingCount(contentBlockId)
     ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
 
-    // img.style.height = "auto"
-    imageWrapper.classList.add("-loading")
+    this.showLoadingOverlay(img, selectedPicture.gallery_thumb_url)
 
-    const blurOverlay = imageWrapper.querySelector('.content-block-image-loading-overlay-blur');
-    const previewUrl = selectedPicture.gallery_thumb_url;
-
-    blurOverlay.style.backgroundImage = `url(${previewUrl})`;
-
-    const thumbResponse = await this.fetchCustomThumbVersionOfPicture(
-      selectedPicture.id,
-      img.clientWidth
-    )
-    const customThumbUrl = thumbResponse['custom_thumb_url']
+    const customThumbUrl = selectedPicture.custom_thumb_url
 
     const onImageLoadComplete = () => {
-      if (blurOverlay) {
-        blurOverlay.style.backgroundImage = '';
-        imageWrapper.classList.remove("-loading")
-      }
+      this.hideLoadingOverlay()
+      this.finishImageLoading(img, contentBlockWrapper, contentBlockId)
 
-      this.finishImageLoading(img, imageWrapper, contentBlockWrapper, contentBlockId);
-
-      img.removeEventListener('load', onImageLoadComplete);
-      img.removeEventListener('error', onImageLoadComplete);
-    };
-
-    img.addEventListener('load', onImageLoadComplete);
-    img.addEventListener('error', onImageLoadComplete);
-
-    this.setImageSrc(
-      img,
-      selectedPicture,
-      customThumbUrl
-    );
-
-    this.currentImg = null;
-  },
-
-  async fetchCustomThumbVersionOfPicture(pictureId, width) {
-    const pad = Math.round(width * 0.2);
-
-    return await $.ajax({
-      url: `/ckeditor/pictures/${pictureId}/custom_thumb_url`,
-      method: "GET",
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      data: { width: width, pad: pad },
-      responseType: "json"
-    })
-  },
-
-  finishImageLoading(img, imageWrapper, contentBlockWrapper, contentBlockId) {
-    imageWrapper.classList.remove("-loading")
-    this.decrementImageLoadingCount(contentBlockId)
-
-    // const currentObjectFit = getComputedStyle(img).objectFit;
-    // if (currentObjectFit === "fill" || currentObjectFit === "contain") {
-      img.style.objectFit = "cover"
-      this.toggleCropImageButton(img, imageWrapper.querySelector(".js-content-block-image-crop-button"))
-    // }
-    // img.style.height = ""
-    img.height = img.clientHeight
-    img.dataset.originalThumbHeight = img.clientHeight;
-    img.style.height = `${img.clientHeight}px`
-
-    const heightInput = imageWrapper.querySelector(".js-content-block-image-height-input")
-
-    if (heightInput) {
-      heightInput.max = img.naturalHeight
-      heightInput.value = img.clientHeight
+      img.removeEventListener("load", onImageLoadComplete)
+      img.removeEventListener("error", onImageLoadComplete)
     }
 
-    // If all images in this content block are done loading, unlock the save/cancel buttons
+    img.addEventListener("load", onImageLoadComplete)
+    img.addEventListener("error", onImageLoadComplete)
+
+    this.setImageSrc(img, selectedPicture, customThumbUrl)
+  },
+
+  showLoadingOverlay(img, previewUrl) {
+    const rect = img.getBoundingClientRect()
+
+    Object.assign(this.loadingOverlayEl.style, {
+      display: "flex",
+      left: `${rect.left + window.scrollX}px`,
+      top: `${rect.top + window.scrollY}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+    })
+
+    const blurEl = this.loadingOverlayEl.querySelector(".js-image-edit-loading-blur")
+
+    if (previewUrl) {
+      blurEl.style.backgroundImage = `url(${previewUrl})`
+    }
+  },
+
+  hideLoadingOverlay() {
+    this.loadingOverlayEl.style.display = "none"
+
+    const blurEl = this.loadingOverlayEl.querySelector(".js-image-edit-loading-blur")
+    blurEl.style.backgroundImage = ""
+  },
+
+  finishImageLoading(img, contentBlockWrapper, contentBlockId) {
+    this.decrementImageLoadingCount(contentBlockId)
+
+    img.style.objectFit = "cover"
+
+    img.style.height = ""
+    img.removeAttribute("height")
+
+    const newHeight = img.clientHeight || img.naturalHeight
+
+    img.height = newHeight
+    img.dataset.originalThumbHeight = newHeight
+    img.style.height = `${newHeight}px`
+
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
       ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(
         contentBlockWrapper,
@@ -263,75 +397,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id
 
-    const glightboxItem = img.closest(".glightbox-disabled");
+    const glightboxItem = img.closest(".glightbox-disabled")
 
     if (glightboxItem) {
       glightboxItem.href = response.url
     }
   },
-
-  getImageWrapper(img) {
-    return img.parentElement;
-  },
-
-  handleHeightInputChange(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    const input = e.currentTarget;
-    const wrapper = input.closest(".js-content-block-image-wrapper");
-    const img = wrapper.querySelector("img");
-
-    const newHeight = parseInt(input.value);
-
-    img.style.height = `${newHeight}px`;
-    img.dataset.originalThumbHeight = newHeight
-    img.height = newHeight
-  },
-
-  decreaseHeight(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    const button = e.currentTarget;
-    const wrapper = button.closest(".js-content-block-image-wrapper");
-    const img = wrapper.querySelector("img");
-    const input = wrapper.querySelector(".js-content-block-image-height-input");
-
-    const currentHeight = parseInt(input.value);
-    const newHeight = currentHeight - 10;
-
-    input.value = newHeight;
-
-    img.style.height = `${newHeight}px`;
-    img.dataset.originalThumbHeight = newHeight
-    img.height = newHeight
-  },
-
-  increaseHeight(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    const button = e.currentTarget;
-    const wrapper = button.closest(".js-content-block-image-wrapper");
-    const img = wrapper.querySelector("img");
-    const input = wrapper.querySelector(".js-content-block-image-height-input");
-
-    const currentHeight = parseInt(input.value);
-    // const maxHeight = input.getAttribute("max")
-    const maxHeight = img.naturalHeight;
-    const newHeight = Math.min(maxHeight, currentHeight + 10);
-
-    input.value = newHeight;
-    img.style.height = `${newHeight}px`;
-    img.dataset.originalThumbHeight = newHeight
-    img.height = newHeight
-  },
-
-  getImageWrapper(element) {
-    return element.closest(".js-content-block-image-wrapper");
-  }
 }

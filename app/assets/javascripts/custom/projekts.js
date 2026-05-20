@@ -59,7 +59,7 @@
       var currentGeoZoneRestriction;
       var currentRestrictedGeoZoneIds;
       var currentGeoZoneAffiliation;
-      var currentAffiliatedGeoZoneIds;
+      var currentAffiliatedDistrictIds;
       var currentTags;
 
       if (!currentPageUrl.pathname.includes('projekts')) {
@@ -92,10 +92,10 @@
         currentGeoZoneAffiliation = '';
       }
 
-      if (currentPageUrl.searchParams.get('affiliated_geozones')) {
-        currentAffiliatedGeoZoneIds = currentPageUrl.searchParams.get('affiliated_geozones').split(',');
+      if (currentPageUrl.searchParams.get('affiliated_districts')) {
+        currentAffiliatedDistrictIds = currentPageUrl.searchParams.get('affiliated_districts').split(',');
       } else {
-        currentAffiliatedGeoZoneIds = [];
+        currentAffiliatedDistrictIds = [];
       }
 
       if (currentPageUrl.searchParams.get('tags')) {
@@ -113,7 +113,7 @@
       var newGeoZoneRestriction;
       var newRestrictedGeoZoneId;
       var newGeoZoneAffiliation;
-      var newAffiliatedGeoZoneId;
+      var newAffiliatedDistrictId;
       var newTag;
 
       if (clickedUrl.searchParams.get('projekts')) {
@@ -169,20 +169,20 @@
           currentPageUrl.searchParams.set('geozone_affiliation', newGeoZoneAffiliation)
         }
       }
-      if (clickedUrl.searchParams.get('affiliated_geozones')) {
-        newAffiliatedGeoZoneId = clickedUrl.searchParams.get('affiliated_geozones').split(',')[0];
+      if (clickedUrl.searchParams.get('affiliated_districts')) {
+        newAffiliatedDistrictId = clickedUrl.searchParams.get('affiliated_districts').split(',')[0];
 
-        if (currentAffiliatedGeoZoneIds.includes(newAffiliatedGeoZoneId)) {
-          var index = currentAffiliatedGeoZoneIds.indexOf(newAffiliatedGeoZoneId);
+        if (currentAffiliatedDistrictIds.includes(newAffiliatedDistrictId)) {
+          var index = currentAffiliatedDistrictIds.indexOf(newAffiliatedDistrictId);
           if (index > -1) {
-            currentAffiliatedGeoZoneIds.splice(index, 1);
+            currentAffiliatedDistrictIds.splice(index, 1);
           }
-          currentPageUrl.searchParams.set('affiliated_geozones', currentAffiliatedGeoZoneIds.join(','))
+          currentPageUrl.searchParams.set('affiliated_districts', currentAffiliatedDistrictIds.join(','))
           currentPageUrl.searchParams.set('geozone_affiliation', 'only_geozones')
         } else {
-          currentAffiliatedGeoZoneIds.push(newAffiliatedGeoZoneId)
-          currentAffiliatedGeoZoneIds = currentAffiliatedGeoZoneIds.filter( function(element) { return element !== '' } )
-          currentPageUrl.searchParams.set('affiliated_geozones', currentAffiliatedGeoZoneIds.join(','))
+          currentAffiliatedDistrictIds.push(newAffiliatedDistrictId)
+          currentAffiliatedDistrictIds = currentAffiliatedDistrictIds.filter( function(element) { return element !== '' } )
+          currentPageUrl.searchParams.set('affiliated_districts', currentAffiliatedDistrictIds.join(','))
           currentPageUrl.searchParams.set('geozone_affiliation', 'only_geozones')
         }
       }

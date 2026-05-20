@@ -1,55 +1,156 @@
 (function() {
   "use strict";
   App.PollsCustom = {
+    resizeDebounceTimer: null,
+    openAnswerAutosaveTimers: new WeakMap(),
+    openAnswerStatusTimers: new WeakMap(),
 
-    showOpenAnswers: function() {
-      $('.poll-results-open-answers').each( function() {
-        if ( sessionStorage.getItem($(this).attr('id')) !== 'true' ) {
-          $(this).addClass('hide-open-answers')
-        } else {
-          $(this).addClass('rotate-toggle-arrow')
-        }
-      })
-    },
+    initialize: function() {
+      this.destroy();
 
-    formatRatingScale: function(element) {
-      const $answersContainer = $(element).find('.rating-scale-answer-container');
-      const $parentContainer = $(element).parent();
+      App.PollsCustom.showOpenAnswers();
 
-      if ($answersContainer.width() > $parentContainer.width()) {
-        $(element).addClass('vertical-rating-scale-answers');
+      $("body").on("click.pollsCustom", ".js-show-open-answers", this.handleOpenAnswersToggle.bind(this));
+      $("body").on("input.pollsCustom", ".js-poll-open-answer-autosave textarea", this.handleOpenAnswerInput.bind(this));
+
+      this.formatVisibleRatingScales();
+
+      $("body").on(
+        "click.pollsCustom",
+        ".js-question-wizard-next, .js-question-wizard-prev, .js-question-wizard-go-to-start",
+        this.formatVisibleRatingScalesAfterRepaint.bind(this)
+      );
+
+      if ($(".js-rating-scale").length > 0) {
+        $(window).on("resize.pollsCustom", this.handleWindowResize);
       }
     },
 
-    initialize: function() {
-      App.PollsCustom.showOpenAnswers()
+    handleOpenAnswerInput: function(event) {
+      const form = event.currentTarget.closest("form");
+      if (!form) return;
 
-      $("body").on("click", ".js-show-open-answers", function() {
-        var $wrapper = $(this).closest('.poll-results-open-answers')
-        var $questionList = $(this).siblings('.poll-results-open-answers-list')
-        var currentSessionStorageWrapperValue = sessionStorage.getItem($wrapper.attr('id'))
+      clearTimeout(this.openAnswerAutosaveTimers.get(form));
+      this.openAnswerAutosaveTimers.set(form, setTimeout(() => {
+        this.submitOpenAnswerForm(form);
+      }, 500));
+    },
 
-        if ( currentSessionStorageWrapperValue === 'true' ) {
-          sessionStorage.setItem( $wrapper.attr('id'), 'false' );
-          $wrapper.removeClass('rotate-toggle-arrow')
-          $questionList.hide('fast');
-        } else {
-          sessionStorage.setItem( $wrapper.attr('id'), 'true' )
-          $wrapper.addClass('rotate-toggle-arrow')
-          $questionList.show('fast');
-        }
+    submitOpenAnswerForm: function(form) {
+      const textarea = form.querySelector("textarea");
+      if (!textarea) return;
 
-      });
+      const savingText = form.dataset.savingText;
+      const savedText = form.dataset.savedText;
+      const errorText = form.dataset.errorText;
 
-      $(".js-rating-scale:visible").each( function() {
-        App.PollsCustom.formatRatingScale(this)
-      });
+      // Capture textarea state for restore after the answers section is re-rendered.
+      const wasFocused = document.activeElement === textarea;
+      const selStart = textarea.selectionStart;
+      const selEnd = textarea.selectionEnd;
 
-      $("body").on("click", ".js-question-wizard-next", function() {
-        $(".js-rating-scale:visible").each( function() {
-          App.PollsCustom.formatRatingScale(this)
+      const status = form.querySelector(".js-poll-open-answer-status");
+      if (status) {
+        status.textContent = savingText || "";
+        status.className = "poll-open-answer-status js-poll-open-answer-status -saving";
+      }
+
+      const answersWrapper = form.closest('[id$="_answers"]');
+      if (answersWrapper) {
+        const observer = new MutationObserver(() => {
+          observer.disconnect();
+
+          const newForm = answersWrapper.querySelector(".js-poll-open-answer-autosave");
+          if (!newForm) return;
+
+          const newTextarea = newForm.querySelector("textarea");
+          if (newTextarea) {
+            if (wasFocused) newTextarea.focus();
+            try { newTextarea.setSelectionRange(selStart, selEnd); } catch (_) {}
+          }
+
+          const newStatus = newForm.querySelector(".js-poll-open-answer-status");
+          if (newStatus) {
+            newStatus.textContent = savedText || "";
+            newStatus.className = "poll-open-answer-status js-poll-open-answer-status -saved";
+            this.openAnswerStatusTimers.set(newForm, setTimeout(() => {
+              newStatus.textContent = "";
+              newStatus.className = "poll-open-answer-status js-poll-open-answer-status";
+            }, 2000));
+          }
         });
+        observer.observe(answersWrapper, { childList: true, subtree: true });
+      }
+
+      $(form).one("ajax:error", () => {
+        if (status) {
+          status.textContent = errorText || "";
+          status.className = "poll-open-answer-status js-poll-open-answer-status -error";
+        }
       });
+
+      $(form).submit();
+    },
+
+    // ".pollsCustom" is a jQuery event namespace — it tags bindings
+    // so .off(".pollsCustom") removes only this module's handlers
+    // without affecting other modules on the same elements.
+    destroy: function() {
+      $("body").off(".pollsCustom");
+      $(window).off(".pollsCustom");
+      clearTimeout(App.PollsCustom.resizeDebounceTimer);
+    },
+
+    showOpenAnswers: function() {
+      $('.poll-results-open-answers').each(function() {
+        const $element = $(this);
+        const isOpen = sessionStorage.getItem($element.attr('id')) === 'true';
+
+        $element.addClass(isOpen ? 'rotate-toggle-arrow' : 'hide-open-answers');
+      });
+    },
+
+    formatRatingScale: function(element) {
+      const $element = $(element);
+      const $answersContainer = $element.find('.rating-scale-answer-container');
+      const $parentContainer = $element.parent();
+
+      if ($answersContainer.width() > $parentContainer.width()) {
+        $element.addClass('vertical-rating-scale-answers');
+      } else {
+        $element.removeClass('vertical-rating-scale-answers');
+      }
+    },
+
+    formatVisibleRatingScales: function() {
+      $(".js-rating-scale:visible").each(function() {
+        App.PollsCustom.formatRatingScale(this);
+      });
+    },
+
+    formatVisibleRatingScalesAfterRepaint: function() {
+      requestAnimationFrame(function() {
+        App.PollsCustom.formatVisibleRatingScales();
+      });
+    },
+
+    handleOpenAnswersToggle: function(event) {
+      const $wrapper = $(event.currentTarget).closest('.poll-results-open-answers');
+      const $questionList = $(event.currentTarget).siblings('.poll-results-open-answers-list');
+      const wrapperId = $wrapper.attr('id');
+      const isOpen = sessionStorage.getItem(wrapperId) === 'true';
+
+      sessionStorage.setItem(wrapperId, String(!isOpen));
+      $wrapper.toggleClass('rotate-toggle-arrow', !isOpen);
+      isOpen ? $questionList.hide('fast') : $questionList.show('fast');
+    },
+
+    handleWindowResize: function() {
+      clearTimeout(App.PollsCustom.resizeDebounceTimer);
+
+      App.PollsCustom.resizeDebounceTimer = setTimeout(function() {
+        App.PollsCustom.formatVisibleRatingScales();
+      }, 200);
     }
-  }
+  };
 }).call(this);

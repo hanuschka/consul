@@ -4,7 +4,8 @@ en:
       form:
         title: "Create new %{label}"
         page_description: "The platform lives from your contributions! Tell us what moves you – and then share your ideas with others. There is no right or wrong, every contribution counts. Thank you for taking the time and getting involved!"
-        submit_button: Publish now
+        submit_button: Submit now
+        privacy_policy_heading: "Privacy Policy & Terms of Use"
         map_location_label: Map
         map_location_instructions: "Where should your contribution be implemented? Place a “pin” to bring others into the picture."
         map_location_instructions_mandatory: "Please place a pin on the map (mandatory)."
@@ -14,4 +15,11 @@ en:
         title_default: Add an image
         bottom_line_default: "An image with a format of 490 x 290 pixels would be best"
         max_image_size: Maximum image size is %{size} MB.
+        supported_formats: "File format: %{formats}"
         credits_field_placeholder: Click here to add image credits
+        generating_title: "AI is creating an image …"
+        generating_subtitle: "This can take up to 25 seconds. You can also upload your own image instead."
+        ownership_notice_title: "Copyright notice"
+        ownership_notice_body: "Please only upload images that you own the rights to, or for which you have explicit permission to publish."
+        ownership_notice_confirm: "Choose image"
+        ownership_notice_cancel: "Cancel"

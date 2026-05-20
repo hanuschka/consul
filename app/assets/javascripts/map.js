@@ -9,6 +9,35 @@
       });
     },
 
+    destroy: function() {
+      App.Map.maps.forEach(function(mapInstance) {
+        if (mapInstance.map) {
+          mapInstance.map.off();
+          mapInstance.map.remove();
+        }
+      });
+      App.Map.maps = [];
+    },
+
+    refreshMapsIn: function(container) {
+      var $container = $(container);
+
+      $container.find('[data-map]').each(function() {
+        App.Map.destroyMapForElementId(this.id);
+        App.Map.initializeMapForElementId(this.id);
+      });
+
+      var containerEl = $container[0];
+
+      setTimeout(function() {
+        App.Map.maps.forEach(function(mapInstance) {
+          if (containerEl.contains(mapInstance.element) && mapInstance.map && mapInstance.map.invalidateSize) {
+            mapInstance.map.invalidateSize();
+          }
+        });
+      }, 150);
+    },
+
     destroyMapForElementId: function(elementId) {
       var mapInstance = null;
 
@@ -80,6 +109,31 @@
     },
 
     // shared functions
+
+    splitMasterportalFeatures(input) {
+      const collection = App.Map.formattedFeatures(input);
+
+      const masterportal = {
+        type: "FeatureCollection",
+        id: "masterportal-pin-features",
+        features: []
+      };
+      const regular = {
+        type: "FeatureCollection",
+        id: "regular-features",
+        features: []
+      };
+
+      collection.features.forEach(function(feature) {
+        if (feature && feature.properties && feature.properties.resource_type === "masterportal_pin") {
+          masterportal.features.push(feature);
+        } else {
+          regular.features.push(feature);
+        }
+      });
+
+      return { regular: regular, masterportal: masterportal };
+    },
 
     formattedFeatures(input) {
       if (Array.isArray(input)) {

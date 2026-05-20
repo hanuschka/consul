@@ -15,10 +15,26 @@ class InternalApiClient < ApplicationRecord
     registered.find_by(name: "DT")
   end
 
-  def self.active_dt?
+  def self.dt_connected?
     client = dt
 
     client.present? && client.service_api_token.present?
+  end
+
+  def self.active_dt?
+    dt_connected?
+  end
+
+  def public_data?
+    false
+  end
+
+  def admin?
+    true
+  end
+
+  def can_read_public_data?
+    true
   end
 
   def mark_as_registered!(service_api_token)

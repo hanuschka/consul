@@ -10,11 +10,15 @@
     flex: 0 0 auto;
 
     &:hover {
-      background-color: $brand-hover;
+      // Lift above the content-block edit toolbar (z-index: 200) on hover so
+      // the tab can never be visually covered when a content block above is
+      // being edited.
+      z-index: 300;
+      background-color: var(--brand-color-hover);
     }
 
     @media screen and (min-width: $small-tablet-viewport-start) {
-      min-height: 124px;
+      min-height: 128px;
     }
 
     @media screen and (max-width: $small-tablet-viewport-start) {
@@ -22,7 +26,7 @@
     }
 
     h2 {
-      color: $brand;
+      color: var(--brand-color);
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 3px;
@@ -39,15 +43,20 @@
       }
     }
 
-    $phase-tab-color: mix($main-background-color, $brand, 90%);
-
     &.is-active {
-      /* background: $brand-lighter; */
-      background: $phase-tab-color;
+      background: color-mix(in srgb, var(--brand-color) 14%, white);
+      border-color: color-mix(in srgb, var(--brand-color) 35%, transparent);
+      // 3px Brand-Color-Akzent oben + zarter Lift-Shadow, ohne Layout-Shift
+      box-shadow: inset 0 3px 0 0 var(--brand-color),
+                  0 4px 12px rgba(0, 0, 0, 0.05);
+
+      h2 {
+        color: var(--brand-color);
+      }
     }
 
     &.ui-sortable-helper {
-      background: rgba($phase-tab-color, 0.7);
+      background: color-mix(in srgb, var(--brand-color) 7%, var(--main-background-color) 63%);
 
       .projekt-phase--actions {
         backdrop-filter: unset;
@@ -58,7 +67,8 @@
       /* width: 270px; */
       width: 100% !important;
       height: 100%;
-      padding-top: 17px;
+      // padding-top: 17px;
+      padding-top: 15px;
       padding-left: 22px;
       padding-bottom: 17px;
     }
@@ -70,7 +80,7 @@
       display: flex;
       align-items: center;
       position: absolute;
-      bottom: 0;
+      bottom: 3px;
       left: 0;
       right: 0;
       padding-left: 19px;
@@ -78,10 +88,10 @@
       transition: 50ms ease opacity;
       justify-content: space-between;
 
-      .projekt-frame-icon-button {
+      .studio-icon-button {
         &:hover {
           cursor: pointer;
-          background-color: rgba($brand, 0.1);
+          background-color: var(--brand-color-lighter);
         }
       }
     }
@@ -92,8 +102,8 @@
       }
     }
 
-    .projekt-frame-icon-button {
-      color: $brand;
+    .studio-icon-button {
+      color: var(--brand-color);
     }
   }
 }

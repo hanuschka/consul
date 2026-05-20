@@ -1,0 +1,34 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container my-5">
+  <% ai_flow_setting_key =
+    if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
+      "feature.resource.create_proposal_with_ai"
+    elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      "feature.resource.create_investment_with_ai"
+    end %>
+  <% if ai_flow_setting_key %>
+    <% setting = @projekt_phase.settings.find_by(key: ai_flow_setting_key) %>
+    <% if setting %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  <% end %>
+
+  <%= render(
+    "criteria_list",
+    projekt_phase: @projekt_phase,
+    kind: "hard",
+    criteria: @hard_criteria
+  ) %>
+
+  <%= render(
+    "criteria_list",
+    projekt_phase: @projekt_phase,
+    kind: "soft",
+    criteria: @soft_criteria
+  ) %>
+</div>

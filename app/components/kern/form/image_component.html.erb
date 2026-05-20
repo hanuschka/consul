@@ -1,0 +1,42 @@
+<div data-controller="kern--form--image"
+     data-kern--form--image-auto-submit-value="<%= @auto_submit %>">
+  <% if @form.object.is_a?(Image) %>
+    <%= @form.hidden_field :_destroy, value: false, data: { kern__form__image_target: "destroy" } %>
+  <% else %>
+    <%= hidden_field_tag :remove_attachment, "false", data: { kern__form__image_target: "destroy" } %>
+  <% end %>
+
+  <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"
+       data-kern--form--image-target="inputWrapper">
+    <%= @form.file_field @attribute,
+                         label: false,
+                         accept: Image.accepted_content_types.join(","),
+                         class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
+                         data: { kern__form__image_target: "input", action: "change->kern--form--image#change" } %>
+    <% if image_errors.any? %>
+      <p class="kern-error" role="alert">
+        <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+        <span class="kern-body"><%= image_errors.join(". ") %></span>
+      </p>
+    <% end %>
+  </div>
+
+  <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--image-target="preview">
+    <% if show_preview? %>
+      <%= image_tag(preview_attachment, alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" }) %>
+    <% else %>
+      <%= tag.img alt: @attribute.to_s.humanize, style: "max-width: 100%; height: auto;", data: { kern__form__image_target: "previewImage" } %>
+    <% end %>
+  </div>
+
+  <% if @show_actions %>
+    <%= tag.button type: "button",
+            class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
+            style: "float: right;",
+            data: { kern__form__image_target: "actions", action: "kern--form--image#remove" } do %>
+      <span class="kern-label">
+        <%= t("adm.components.attribute_editors.image_component.remove") %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

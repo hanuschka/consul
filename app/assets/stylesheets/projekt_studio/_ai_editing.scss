@@ -1,0 +1,232 @@
+.js-content-block-enter-simple-edit-mode-from-ai {
+  color: #004a83;
+  background-color: #d6e7f6;
+
+  &:hover {
+    background-color: #c3daee;
+  }
+}
+
+.ai-edit-mode--loader {
+  margin-right: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.ai-edit-success-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #00830e;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.ai-instructions-hint {
+  color: #999;
+  font-size: 12px;
+}
+
+.ai-button--lock-overlay {
+  display: none;
+}
+
+.ai-button-wrapper {
+  position: relative;
+
+  &.-inline-block {
+    display: inline-block;
+  }
+}
+
+.projekt-studio {
+  .ai-button-wrapper {
+    display: none;
+  }
+}
+
+.-embedded {
+  .ai-button-wrapper {
+    display: block;
+  }
+}
+
+body.-ai-functions-locked {
+  .ai-button-wrapper--inner {
+    filter: grayscale(0.1);
+    cursor: initial;
+    opacity: 0.3;
+  }
+  .ai-button--lock-overlay {
+    display: block;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+body:not(.-ai-enabled) {
+  .js-content-block-enter-ai-edit-mode,
+  .js-content-block-enter-ai-edit-mode-from-simple {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+}
+
+.content-block-ai-edit-popup {
+  z-index: 20;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 18px 20px;
+  display: none;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  &.-compact-position {
+    position: relative;
+    float: right;
+    clear: both;
+    max-width: 770px;
+    width: 100vw;
+  }
+
+  .content-block-ai-edit-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  // Layout: Checkboxes oben in einer Reihe, Textarea darunter.
+  // Eigene BEM-Klasse statt generischem `form > .u-flex` Override, damit
+  // andere u-flex-Container im Popup nicht versehentlich umgekippt werden.
+  .content-block-ai-edit-popup-form-row {
+    flex-direction: column-reverse;
+    gap: 4px;
+  }
+
+  .content-block-ai-edit-popup-content {
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    .ai-edit-form {
+      width: 100%;
+
+      .ai-default-context-hint {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.55);
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+
+      .ai-instructions-textarea {
+        width: 100%;
+        min-height: 72px;
+        padding: 12px 14px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 1.5;
+        color: rgba(0, 0, 0, 0.85);
+        background: #fff;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+        resize: vertical;
+
+        &:focus {
+          outline: none;
+          border-color: var(--brand-color);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-color) 18%, transparent);
+        }
+
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.35);
+        }
+
+        &:disabled {
+          border-color: transparent;
+          background-color: rgba(0, 0, 0, 0.025);
+          box-shadow: none;
+        }
+      }
+    }
+
+    .ai-edit-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .content-block-ai-edit-popup-checkboxes {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0 12px;
+      margin: 0;
+    }
+
+    .ai-context-checkbox-hint {
+      display: none;
+    }
+
+    .content-block-ai-edit-popup-checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: 3px 10px;
+      gap: 10px;
+      border-radius: 8px;
+      transition: background-color 150ms ease;
+      color: rgba(0, 0, 0, 0.78);
+      font-weight: 500;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+        color: rgba(0, 0, 0, 0.95);
+      }
+
+      input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        margin: 0;
+        accent-color: var(--brand-color);
+      }
+    }
+  }
+}
+
+.js-content-block-ai-edit--submit-prompt {
+  .js-cancel-state {
+    display: none;
+  }
+
+  &.-running {
+    .js-submit-state {
+      display: none;
+    }
+
+    .js-cancel-state {
+      display: block;
+    }
+  }
+}
+
+.content-block-ai-edit-popup-checkboxes {
+  margin-top: -2px;
+}

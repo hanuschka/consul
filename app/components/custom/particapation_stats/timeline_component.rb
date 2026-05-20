@@ -4,59 +4,28 @@ class ParticapationStats::TimelineComponent < ApplicationComponent
   end
 
   def render?
-    resources.exists?
+    query.total_submissions > 0
   end
 
   def submissions_chart_data
-    @submissions_data ||= build_timeline_data(resources, :created_at)
+    query.submissions_chart_data
   end
 
   def comments_chart_data
-    @comments_data ||= build_timeline_data(comments, :created_at)
+    query.comments_chart_data
   end
 
   def total_submissions
-    resources.count
+    query.total_submissions
   end
 
   def total_comments
-    comments.count
+    query.total_comments
   end
 
   private
 
-    def resources
-      @resources ||=
-        case @projekt_phase
-        when ProjektPhase::ProposalPhase
-          @projekt_phase.proposals.base_selection
-        when ProjektPhase::BudgetPhase
-          @projekt_phase.budget&.investments || Budget::Investment.none
-        else
-          Proposal.none
-        end
-    end
-
-    def comments
-      @comments ||=
-        case @projekt_phase
-        when ProjektPhase::ProposalPhase
-          Comment.where(commentable_type: "Proposal", commentable_id: resources.select(:id))
-        when ProjektPhase::BudgetPhase
-          Comment.where(commentable_type: "Budget::Investment", commentable_id: resources.select(:id))
-        else
-          Comment.none
-        end
-    end
-
-    def build_timeline_data(records, date_field)
-      return { labels: [], values: [] } unless records.exists?
-
-      grouped = records.group_by_day(date_field).count
-
-      {
-        labels: grouped.keys.map { |date| I18n.l(date, format: "%d %b") },
-        values: grouped.values
-      }
+    def query
+      @query ||= ProjektPhaseStats::TimelineQuery.new(@projekt_phase)
     end
 end

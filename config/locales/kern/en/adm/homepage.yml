@@ -1,0 +1,18 @@
+en:
+  adm:
+    homepage:
+      show:
+        title: Homepage
+        intro_title: About the homepage
+        intro_text_p1: >
+          Here you configure the look and content of your platform's homepage.
+          You can upload a background image for desktop and mobile devices, and set a title and subtitle
+          that appear in the top image area. Below that, you control which optional sections are shown —
+          for example the display of user counts, platform statistics, a newsletter signup, or a project search.
+        intro_text_p2: >
+          In the lower section you manage the content cards: these let you prominently feature thematic
+          sections such as current projects, popular proposals, or events on the homepage.
+          The order of the cards can be adjusted via drag & drop. Use the "Edit" button to customize
+          the title and number of items shown per card.
+        content_cards_title: Content cards
+        content_cards_description: Enable optional content cards for the homepage, e.g. "Current projects", "Popular proposals", or "Events". The cards appear in the homepage content area and can be sorted via drag & drop. Use the "Edit" button to adjust the title and number of items shown. A custom content block is automatically inserted between the cards.

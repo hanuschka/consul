@@ -1,6 +1,11 @@
 require_dependency Rails.root.join("app", "models", "legislation", "draft_version").to_s
 
 class Legislation::DraftVersion < ApplicationRecord
+  clear_validators!
+  translation_class.clear_validators!
+  validates_translation :title, presence: true
+  validates :status, presence: true, inclusion: { in: ->(*) { VALID_STATUSES } }
+
   delegate :projekt_phase, to: :process
   alias_attribute :legislation_phase, :projekt_phase
 

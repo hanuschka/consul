@@ -1,0 +1,101 @@
+<div data-controller="components-adm-new-navbar-item">
+  <%= form_with model: @navbar_item, url: @form_url do |f| %>
+    <%= f.hidden_field :landing_page_id if @landing_page.present? %>
+
+    <% if @available_kinds.one? %>
+      <%= f.hidden_field :kind, value: @available_kinds.first %>
+    <% else %>
+      <div class="mb-4">
+        <fieldset class="kern-fieldset">
+          <legend class="kern-label mb-3">
+            <%= t(".kind_label") %>
+          </legend>
+          <div class="kern-fieldset__body">
+            <%= f.collection_radio_buttons :kind, @available_kinds, :to_s, :to_s do |cb| %>
+              <div class="kern-form-check">
+                <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#kindChanged" }) %>
+                <%= cb.label(class: "kern-label") { t(".kinds.#{cb.text }") } %>
+              </div>
+            <% end %>
+          <div>
+        </fieldset>
+      </div>
+    <% end %>
+
+    <%
+      custom_fields_visible = f.object.persisted? ||
+                              f.object.preset.present? ||
+                              f.object.projekt_id.present? ||
+                              f.object.external_url.present?
+    %>
+
+    <div
+      class="mb-4"
+      style="display: <%= (@available_kinds.one? || f.object.kind == "presets") ? "block" : "none;" %>"
+      data-components-adm-new-navbar-item-target="presets"
+    >
+      <fieldset class="kern-fieldset">
+        <legend class="kern-label mb-3">
+          <%= t(".preset_label") %>
+        </legend>
+        <div class="kern-fieldset__body">
+          <%= f.collection_radio_buttons :preset, @available_presets, :first, :first do |cb| %>
+            <div class="kern-form-check">
+              <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
+              <%= cb.label(class: "kern-label") { t("navbar.presets.#{cb.text }") } %>
+            </div>
+          <% end %>
+        <div>
+      </fieldset>
+    </div>
+
+    <% if @available_kinds.include?("projekts") %>
+      <div class="mb-4" style="display: <%= f.object.kind == "projekts" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="projekts">
+        <% if @available_projekts.any? %>
+          <fieldset class="kern-fieldset">
+            <legend class="kern-label mb-3">
+              <%= t(".projekt_label") %>
+            </legend>
+            <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
+              <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
+                <div class="kern-form-check">
+                  <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
+                  <%= cb.label(class: "kern-label") %>
+                </div>
+              <% end %>
+            <div>
+          </fieldset>
+        <% else %>
+          <%= empty_state(
+            title: t(".no_projekts_title"),
+            description: t(".no_projekts_description"),
+            icon: "folder_off"
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @available_kinds.include?("external") %>
+      <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
+        <%= f.text_field :external_url, label: t(".external_label"), placeholder: t(".external.url_placeholder"), data: { action: "input->components-adm-new-navbar-item#selectionChanged" } %>
+      </div>
+    <% end %>
+
+    <div
+      style="display: <%= custom_fields_visible ? "block" : "none" %>"
+      data-components-adm-new-navbar-item-target="customFields"
+    >
+      <div class="mb-4">
+        <%= f.text_field :custom_title, label: t(".custom_title_label"), placeholder: t(".custom_title_placeholder") %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.check_box :open_in_new_tab, label: t(".open_in_new_tab_label") %>
+      </div>
+    </div>
+
+    <div>
+      <%= kern_button(text: f.object.persisted? ? t(".update") : t(".create"), autofocus: false, type: "submit") %>
+    </div>
+  <% end %>
+</div>

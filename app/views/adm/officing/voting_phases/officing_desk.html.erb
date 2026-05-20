@@ -1,0 +1,69 @@
+<%= render Adm::HeaderComponent.new(
+  title: @voting_phase.projekt.name,
+  back_button_url: adm_officing_root_path,
+  breadcrumbs: [
+    { name: t("adm.officing.title"), url: adm_officing_root_path },
+    { name: @voting_phase.projekt.name }
+  ]
+) %>
+
+<div class="kern-container my-5">
+  <div class="kern-alert kern-alert--info mb-5" role="status">
+    <div class="kern-alert__header">
+      <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+      <span class="kern-title"><%= t("adm.officing.voting_phases.officing_desk.voting_for", user: @offline_user.id) %></span>
+    </div>
+  </div>
+
+  <% if @current_question.present? %>
+    <p class="text-muted mb-3"><%= t("adm.officing.voting_phases.officing_desk.progress", current: @current_index + 1, total: @questions.size) %></p>
+
+    <%= render "adm/officing/voting_phases/poll_question",
+      question: @current_question,
+      voting_phase: @voting_phase,
+      offline_user: @offline_user,
+      user_answers: (@user_answers_by_question[@current_question.id] || []),
+      user_answers_by_question: @user_answers_by_question %>
+
+    <div class="d-flex align-items-center gap-3 mt-5">
+      <% if @prev_question %>
+        <%= kern_link_button(
+          officing_desk_adm_officing_voting_phase_path(@voting_phase, offline_user_id: @offline_user.id, question_id: @prev_question.id),
+          text: t("adm.officing.voting_phases.officing_desk.prev_question"),
+          icon: "arrow_back",
+          style: :secondary
+        ) %>
+      <% end %>
+
+      <% if @next_question %>
+        <%= kern_link_button(
+          officing_desk_adm_officing_voting_phase_path(@voting_phase, offline_user_id: @offline_user.id, question_id: @next_question.id),
+          text: t("adm.officing.voting_phases.officing_desk.next_question"),
+          icon: "arrow_forward",
+          style: :secondary
+        ) %>
+      <% else %>
+        <%= kern_link_button(
+          verify_user_adm_officing_voting_phase_path(@voting_phase),
+          text: t("adm.officing.voting_phases.officing_desk.next_voter"),
+          style: :primary
+        ) %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="kern-alert kern-alert--info" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t("adm.officing.voting_phases.officing_desk.no_questions") %></span>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <%= kern_link_button(
+        verify_user_adm_officing_voting_phase_path(@voting_phase),
+        text: t("adm.officing.voting_phases.officing_desk.next_voter"),
+        style: :secondary
+      ) %>
+    </div>
+  <% end %>
+</div>

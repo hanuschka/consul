@@ -56,12 +56,30 @@ a.glightbox, a.glightbox-disabled {
   }
 }
 
-.glightbox-open {
-  /* padding-right: 15px; */
-  /* overflow: auto; */
+body.gscrollbar-fixer {
+  margin-right: 0 !important;
 }
 
 
 .glightbox-button-hidden {
   display: none;
+}
+
+.glightbox-esc-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.glightbox-clean .gslide-description {
+  background: #000000;
+  color: white;
+  font-size: 20px;
 }

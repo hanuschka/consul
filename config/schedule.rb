@@ -34,6 +34,10 @@ every 2.hours do
   rake "-s stats:generate"
 end
 
+every 1.day, at: "4:00 am", roles: [:cron] do
+  rake "-s projekt_phase_stats:refresh"
+end
+
 # Temporally not send dashboard's notifications
 # every 1.day, at: "7:00 am" do
 #   rake "dashboards:send_notifications"
@@ -80,3 +84,8 @@ end
 every 1.day, at: "2:00 pm", roles: [:cron] do
   runner "NotificationServices::NewCommentsDeficiencyReportsNotification.call"
 end
+
+every 1.day, at: "4:30 am", roles: [:cron] do
+  rake "api_request_logs:cleanup"
+end
+

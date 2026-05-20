@@ -9,6 +9,8 @@ class Admin::ProposalsController < Admin::BaseController
   before_action :load_proposal, except: [:index, :comments]
   before_action :set_projekts_for_selector, only: [:update, :show]
 
+  EXPORT_SYNC_RECORD_LIMIT = 5000
+
   def index
     super
 
@@ -18,11 +20,12 @@ class Admin::ProposalsController < Admin::BaseController
         send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
           filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
+      format.geojson { send_geojson_export }
     end
   end
 
   def show
-    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
     @projekt_phase = @proposal.projekt_phase
   end
 
@@ -83,6 +86,21 @@ class Admin::ProposalsController < Admin::BaseController
   end
 
   private
+
+    def send_geojson_export
+      scope = @resources.limit(nil)
+      source_filter = params[:source_filter].presence || "all"
+
+      if scope.count > EXPORT_SYNC_RECORD_LIMIT
+        redirect_to admin_proposals_path,
+                    notice: t("admin.proposals.index.export_queued")
+        return
+      end
+
+      send_data GeoServices::GeoJsonExporter.call(scope, source_filter: source_filter),
+                filename: "proposals-#{Time.current.to_i}.geojson",
+                type: "application/geo+json"
+    end
 
     def resource_model
       Proposal

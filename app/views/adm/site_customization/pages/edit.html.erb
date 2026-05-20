@@ -1,0 +1,23 @@
+<%= content_for :title, @page.title %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.menu.items.application_subitems.pages"), breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::TabsComponent.new(tabs: pages_tabs) %>
+
+<div class="kern-container my-5">
+  <%= form_with model: @page,
+      url: adm_site_customization_update_page_by_slug_path(slug: @page.slug),
+      method: :patch do |f| %>
+    <div class="mb-4">
+      <%= f.collection_radio_buttons :status,
+            ::SiteCustomization::Page::VALID_STATUSES.map { |s| [s, t(".status_options.#{s}")] },
+            :first, :last,
+            legend: t(".status_legend") %>
+    </div>
+
+    <%= f.rich_text_area :content, label: t(".content_label") %>
+
+    <div class="d-flex justify-content-end mt-3">
+      <%= kern_button(text: t(".save"), icon: "save", type: :submit) %>
+    </div>
+  <% end %>
+</div>

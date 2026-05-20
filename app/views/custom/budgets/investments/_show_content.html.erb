@@ -23,7 +23,8 @@
     <div class="flex-layout">
       <div class="main-column" id="investment-content">
         <% unless in_projekt_footer %>
-          <%= resources_back_link(fallback_path: url_to_footer_tab) %>
+          <% fallback_path = @investment.projekt_phase.present? ? page_path(@investment.projekt_phase.projekt.page.slug, projekt_phase_id: @investment.projekt_phase.id, anchor: "filter-subnav") : budgets_path %>
+          <%= resources_back_link(fallback_path: fallback_path) %>
         <% end %>
 
         <div class="common-page-description">
@@ -90,9 +91,15 @@
           <% end %>
         <% end %>
 
-        <div class="resource-page--description new-card">
-          <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
-        </div>
+        <% if @investment.masterportal_pin.present? %>
+          <%= render Shared::MasterportalPinPropertiesComponent.new(
+            masterportal_pin: @investment.masterportal_pin
+          ) %>
+        <% else %>
+          <div class="resource-page--description new-card">
+            <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
+          </div>
+        <% end %>
 
         <% if @investment.map_location.present? %>
           <div class="margin-bottom not-print">
@@ -170,7 +177,7 @@
                     <div class="fix-on-mobile">
                       <div class="text-center">
                         <div id="<%= dom_id(@investment) %>_ballot">
-                          <%= render "ballot",
+                          <%= render "budgets/investments/ballot",
                             investment: @investment,
                             investment_ids: @investment_ids,
                             ballot: @ballot %>
@@ -279,9 +286,11 @@
         <% end %>
 
         <% if current_user&.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
-            <%= render "budgets/investments/actions", investment: @investment %>
-          <% end %>
+          <div class="js-studio-hide-on-preview">
+            <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+              <%= render "budgets/investments/actions", investment: @investment %>
+            <% end %>
+          </div>
         <% end %>
 
         <% if can?(:edit, @investment) %>

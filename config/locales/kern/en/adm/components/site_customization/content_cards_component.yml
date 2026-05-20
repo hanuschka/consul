@@ -1,0 +1,10 @@
+en:
+  components:
+    adm:
+      site_customization:
+        content_cards_component:
+          table:
+            headers:
+              title: "Title"
+              count: "Count"
+              status: "Status"

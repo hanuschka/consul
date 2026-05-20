@@ -4,7 +4,7 @@ $("li#filter-subnav-<%= @projekt_phase.id %>").addClass("is-active")
 $("li#filter-subnav-<%= @projekt_phase.id %>").attr("aria-selected", "true")
 $("#footer-content").removeClass("show-loader");
 <% footer_version = Setting.new_design_enabled? ? 'projekt_footer_new' : 'projekt_footer'  %>
-$("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
+$("#footer-content > .loader-spinner-wrapper > .loader-spinner-wrapper--content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();
@@ -13,6 +13,7 @@ App.IframeFilter.initialize();
 App.BarChartComponent.initialize();
 App.AreaChartComponent.initialize();
 App.HeatmapComponent.initialize();
+App.PieChartComponent.initialize();
 
 
 <% if @projekt_phase.is_a?(ProjektPhase::LegislationPhase) %>
@@ -31,7 +32,4 @@ $('#footer-content').foundation();
 
 $("html, body").animate({ scrollTop: $("#<%= params["scroll_to"] || "footer-content" %>").offset().top - 100 }, 500);
 
-$('#footer-content').find('.map').each(function() {
-  App.Map.destroyMapForElementId(this.id);
-  App.Map.initializeMapForElementId(this.id);
-});
+App.Map.refreshMapsIn('#footer-content');

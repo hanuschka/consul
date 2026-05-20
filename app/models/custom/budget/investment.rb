@@ -7,19 +7,26 @@ class Budget
     include Sentimentable
     include Memoable
 
-    DEFAULT_ORDERS = %w(
-      random total_votes ballot_line_weight newest comments_count
-    ).freeze
+    default_scope { where(draft: false) }
 
-    delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
+    DEFAULT_ORDERS = %w[
+      random total_votes ballot_line_weight newest comments_count
+    ].freeze
+
+    delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?,
+to: :budget
+
     delegate :approximated_address, to: :map_location, allow_nil: true
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
+    belongs_to :masterportal_pin, optional: true
 
     scope :seen, -> { where.not(ignored_flag_at: nil) }
     scope :unseen, -> { where(ignored_flag_at: nil) }
     scope :preselected, -> { where(preselected: true) }
     scope :not_preselected, -> { where(preselected: false) }
+    scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
+    scope :user_created, -> { where(masterportal_pin_id: nil) }
 
     enum implementation_performer: { city: 0, user: 1 }
 
@@ -42,7 +49,7 @@ class Budget
     end
 
     def register_selection(user, vote_weight = 1)
-      vote_by(voter: user, vote: "yes", vote_weight: vote_weight) if selectable_by?(user)
+      vote_by(voter: user, vote: "yes", vote_weight:) if selectable_by?(user)
     end
 
     def total_supporters

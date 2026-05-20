@@ -1,6 +1,10 @@
 (function() {
   "use strict";
 
+  // VC-side toggle for masterportal pins is intentionally NOT implemented in this iteration.
+  // VC layers are configured via the VCS module config and don't share the layer-control surface
+  // used by Leaflet/Mapbox. See C_PLANS/masterportal-pins-toggle-on-user-maps.md (C_STEP 7) for
+  // the deferred follow-up.
   class VirtualcityMapController {
     constructor(element) {
       this.element = element;
@@ -31,6 +35,7 @@
       /// this.baseLayers = {};
       /// this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -84,6 +89,23 @@
           zoomOutButton.addEventListener('click', function(event) { zoom(false); });
           zoomOutButton.innerHTML = '−';
           zoomControlContainer.appendChild(zoomOutButton);
+        }
+
+        function addResetViewControl() {
+          const container = document.createElement('div');
+          container.className = 'controls reset-view-control';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            setDefaultView(instance.map);
+          });
+
+          container.appendChild(button);
+          instance.element.appendChild(container);
         }
 
         function zoom(zoomIn) {
@@ -163,6 +185,7 @@
             instance.map = map;
             setDefaultView(map);
             addZoomControls();
+            addResetViewControl();
             instance.toggleControlVisibility();
             instance.setupExpandControl();
             instance.setupEditingControls();
@@ -221,15 +244,15 @@
       if (Array.isArray(instance.adminFeatures)) {
         instance.adminFeatures.forEach(function(featuresCollection) {
           featuresCollection.features.forEach(function(feature) {
-            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+            instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
           });
         });
       } else if (instance.adminFeatures.type === 'FeatureCollection') {
         instance.adminFeatures.features.forEach(function(feature) {
-          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#ff0000');
+          instance.drawPredefinedFeature(feature, '_adminFeaturesLayer', '#008000');
         });
       } else if (instance.adminFeatures.type === 'Feature') {
-        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#ff0000');
+        instance.drawPredefinedFeature(instance.adminFeatures, '_adminFeaturesLayer', '#008000');
       }
     }
 

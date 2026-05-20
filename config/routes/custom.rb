@@ -1,4 +1,31 @@
-get "blobs/:key",            to: "blobs#show", as: :blob_asset
+get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
+
+post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
+post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
+delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
+
+scope "proposals/generate", as: :generate_proposal do
+  get   ":projekt_phase_id/new",   to: "proposals/generate#new_flow",       as: :new
+  post  ":projekt_phase_id/draft", to: "proposals/generate#generate_draft", as: :draft
+  get   ":id/edit_draft",   to: "proposals/generate#edit_draft",     as: :edit_draft
+  patch ":id/update_draft", to: "proposals/generate#update_draft",   as: :update_draft
+  get   ":id/evaluation",   to: "proposals/generate#evaluation",     as: :evaluation
+  patch ":id/publish",      to: "proposals/generate#publish",        as: :publish
+  get   ":id/success",      to: "proposals/generate#success",        as: :success
+end
+
+scope "budget_investments/generate", as: :generate_budget_investment do
+  get   ":projekt_phase_id/new",   to: "budget_investments/generate#new_flow",       as: :new
+  post  ":projekt_phase_id/draft", to: "budget_investments/generate#generate_draft", as: :draft
+  get   ":id/edit_draft",   to: "budget_investments/generate#edit_draft",     as: :edit_draft
+  patch ":id/update_draft", to: "budget_investments/generate#update_draft",   as: :update_draft
+  get   ":id/evaluation",   to: "budget_investments/generate#evaluation",     as: :evaluation
+  patch ":id/publish",      to: "budget_investments/generate#publish",        as: :publish
+  get   ":id/success",      to: "budget_investments/generate#success",        as: :success
+end
+
+get "blobs/:key", to: "blobs#show", as: :blob_asset
+get "blobs/:key/variant", to: "blobs#variant", as: :blob_variant
 get "ckeditor/assets",      to: "ckeditor/assets#index"
 get "ckeditor/assets/:key", to: "blobs#show"
 
@@ -7,6 +34,22 @@ namespace :ckeditor do
     get :custom_thumb_url, on: :member
   end
   resources :documents, only: [:create, :update, :destroy]
+end
+
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index, :update] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :documents, only: [:index, :update, :destroy] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+end
+
+namespace :file_manager do
+  resources :images, only: [:index, :create, :update, :destroy]
+  resources :documents, only: [:index, :create, :update, :destroy]
 end
 
 resources :user_resources, only: [:index]
@@ -33,13 +76,9 @@ resources :map_locations, only: [] do
   collection do
     get :get_coordinates
   end
-
-  member do
-    post :update_screenshot
-  end
 end
 
-get "admin/matomo", to: "admin/matomo#index"
+get "admin/connection", to: "admin/connection#index"
 
 get "users", to: "users#index"
 
@@ -49,15 +88,38 @@ resources :projekt_point_of_interest_pins, only: [:new, :create] do
   end
 end
 
+resources :masterportal_pins, only: [] do
+  member do
+    get :json_data
+  end
+end
 
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
-get "/:landing_page_slug/projekts/:id", to: "pages#show", as: :landing_page_projekt_page
-get "/:landing_page_slug/polls/:id", to: "polls#show", as: :landing_page_poll
-get "/:landing_page_slug/proposals/:id", to: "proposals#show", as: :landing_page_proposal
-get "/:landing_page_slug/budgets/:budget_id/investments/:id", to: "budgets/investments#show", as: :landing_page_budget_investment
+get "/:landing_page_slug/events", to: "projekt_events#index", as: :landing_page_events
+get "/:landing_page_slug/proposals", to: "proposals#index", as: :landing_page_proposals
+get "/:landing_page_slug/polls", to: "polls#index", as: :landing_page_polls
+get "/:landing_page_slug/investments", to: "investments#index", as: :landing_page_investments
+get "/:landing_page_slug/projekts/:id",
+  to: redirect("/%{id}")
+get "/:landing_page_slug/polls/:id",
+  to: redirect("/polls/%{id}")
+get "/:landing_page_slug/proposals/:id",
+  to: redirect("/proposals/%{id}")
+get "/:landing_page_slug/budgets/:budget_id/investments/:id",
+  to: redirect("/budgets/%{budget_id}/investments/%{id}")
 
 post "iframe_sessions", to: "iframe_sessions#create"
 
-post "/voice_assistant/create_session", to: "voice_assistant#create_session"
+post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
+post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
+get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
 resources :projekt_content_block_templates, only: [:index]
+
+post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
+
+namespace :api do
+  namespace :masterportal do
+    resources :category_icons, only: [:create]
+  end
+end

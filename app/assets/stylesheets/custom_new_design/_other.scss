@@ -6,11 +6,18 @@
     color: #222;
   }
 
+  @media screen and (min-width: $small-tablet-viewport-start) {
+    .main-menu--translate-widget {
+      align-self: center;
+    }
+  }
+
   .translate-widget {
     align-self: center;
     margin-right: 10px;
     font-size: 1.6rem;
     cursor: pointer;
+    min-width: 140px;
 
     .translate-widget-toggler {
       color: #222;

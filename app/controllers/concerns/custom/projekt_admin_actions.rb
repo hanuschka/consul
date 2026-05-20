@@ -106,29 +106,6 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
-  def update_page
-    if @projekt.page.update(projekt_page_params)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
-    else
-      render json: { message: "Error updating projekt page" }
-    end
-  end
-
-  def update_title_image
-    image = Image.new(
-      attachment: params[:site_customization_page][:image],
-      user: current_user
-    )
-
-    @projekt.page.image = image
-
-    if @projekt.page.save
-      render json: { status: { message: "Projekt page title image updated" }}
-    else
-      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
-    end
-  end
-
   def notify_reviewers
     @projekt = Projekt.find(params[:id])
 
@@ -136,8 +113,21 @@ module ProjektAdminActions
 
     NotificationServices::NewProjektNotifier.call(@projekt)
 
-    redirect_to page_path(@projekt.page.slug),
-                notice: "Benachrichtigung erfolgreich gesendet"
+    respond_to do |format|
+      format.html do
+        redirect_to page_path(@projekt.page.slug),
+                    notice: "Benachrichtigung erfolgreich gesendet"
+      end
+      format.json { render json: { success: true, message: "Benachrichtigung erfolgreich gesendet" } }
+    end
+  end
+
+  def toggle_hide_content_background
+    authorize!(:edit, @projekt)
+
+    @projekt.update!(show_content_background: !@projekt.show_content_background)
+
+    render json: { show_content_background: @projekt.show_content_background }
   end
 
   private
@@ -146,7 +136,7 @@ module ProjektAdminActions
       attributes = [
         :name, :parent_id, :total_duration_start, :total_duration_end,
         :show_start_date_in_frontend, :show_end_date_in_frontend,
-        :geozone_affiliated, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
+        :geozone_affiliated, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], registered_address_district_affiliation_ids: [], sdg_goal_ids: [],
         individual_group_value_ids: [],
         map_location_attributes: map_location_attributes,
         image_attributes: image_attributes,
@@ -155,12 +145,6 @@ module ProjektAdminActions
         projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
       ]
       params.require(:projekt).permit(attributes, translation_params(Projekt))
-    end
-
-    def projekt_page_params
-      params.require(:site_customization_page).permit(
-        :title, :subtitle, :image
-      )
     end
 
     def process_tags

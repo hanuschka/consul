@@ -1,0 +1,75 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1_lead") %></p>
+    <ul class="adm-hint__list">
+      <li><%= t(".table.city") %></li>
+      <li><%= t(".table.plz") %></li>
+      <li><%= t(".table.street_name") %></li>
+      <li><%= t(".table.street_number") %></li>
+      <li><%= t(".intro_list.street_number_extension") %></li>
+      <li><%= t(".intro_list.district") %></li>
+    </ul>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p1_extra") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <%
+    headers = {
+      city:          Kern::Table::HeaderComponent.new(:registered_address_city_id, t(".table.city"), **@city_header_options.merge(data_field: "city")),
+      street_name:   Kern::Table::HeaderComponent.new(:street_name, t(".table.street_name"), **@street_name_header_options.merge(data_field: "street_name")),
+      street_number: Kern::Table::HeaderComponent.new(:street_number, t(".table.street_number"), **@street_number_header_options.merge(data_field: "street_number")),
+      district:      Kern::Table::HeaderComponent.new(:registered_address_district_id, t(".table.district"), **@district_header_options.merge(data_field: "district"))
+    }
+  %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "registered_addresses_table",
+        records: @registered_addresses,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 6,
+        empty_state: {
+          title: t(".empty_title"),
+          description: t(".empty_description"),
+          icon: "location_on"
+        },
+        empty_state_filtered: {
+          title: t(".no_results_filtered_title"),
+          description: t(".no_results_filtered_description"),
+          icon: "filter_alt_off"
+        }
+      ) do |c| %>
+    <% c.with_toolbar_meta do %>
+      <span class="adm-table-count" title="<%= t(".total_hint") %>">
+        <span class="adm-table-count__value"><%= number_with_delimiter(@pagy.count) %></span>
+        <span class="adm-table-count__label"><%= t(".total_label", count: @pagy.count) %></span>
+      </span>
+    <% end %>
+
+    <% c.with_header_row do %>
+      <%= render headers[:city] %>
+      <th scope="col" class="kern-table__header" data-field="plz"><%= t(".table.plz") %></th>
+      <%= render headers[:street_name] %>
+      <%= render headers[:street_number] %>
+      <%= render headers[:district] %>
+      <th scope="col" class="kern-table__header" data-field="groupings"><%= t(".table.groupings") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @registered_addresses.each do |registered_address| %>
+        <tr class="kern-table__row">
+          <th scope="row" class="kern-table__header" data-field="city"><%= registered_address.registered_address_city&.name %></th>
+          <td class="kern-table__cell" data-field="plz"><%= registered_address.registered_address_street&.plz %></td>
+          <td class="kern-table__cell" data-field="street_name"><%= registered_address.registered_address_street&.name %></td>
+          <td class="kern-table__cell" data-field="street_number"><%= "#{registered_address.street_number}#{registered_address.street_number_extension}" %></td>
+          <td class="kern-table__cell" data-field="district"><%= registered_address.district&.name %></td>
+          <td class="kern-table__cell" data-field="groupings"><%= registered_address.groupings&.map { |k, v| "#{k}: #{v}" }&.join(", ") %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

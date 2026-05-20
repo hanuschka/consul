@@ -3,7 +3,7 @@
     <% budget_subnav_items_for(budget).each do |item| %>
       <% if item[:disabled] %>
         <span
-          class="budget-subnav-item ai-feature-disabled"
+          class="budget-subnav-item ai-feature-disabled <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
           data-tooltip
           tabindex="0"
           title="<%= t('ai.disabled_tooltip') %>"
@@ -11,15 +11,8 @@
           <%= item[:text] %>
         </span>
       <% else %>
-        <%= link_to item[:text], item[:url], class: "budget-subnav-item #{'is-active' if item[:active] }", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
+        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item budget-subnav-item #{'is-active' if item[:active]} #{'js-studio-hide-on-preview' if item[:hide_on_preview]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
       <% end %>
-    <% end %>
-  </div>
-
-  <div class='budget-subnav--actions'>
-    <%= link_to stats_projekt_phase_path(projekt_phase), class: "button with-icon" do %>
-      <i class="fas fa-chart-bar"></i>
-      <%= t("custom.projekt_phases.subnav.full_stats") %>
     <% end %>
   </div>
 </div>

@@ -1,0 +1,56 @@
+.projekt-footer-phase-tab.-deactivated {
+  border-color: transparent;
+
+  .projekt-footer-phase-link {
+    opacity: 0.45;
+    filter: grayscale(1);
+  }
+}
+
+.projekt-footer-phase-tab--add-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  font-size: 16px !important;
+  color: #b4b4b4;
+  background: transparent !important;
+  border: 1.5px dashed #cfcece !important;
+  border-radius: 50% !important;
+  align-self: center;
+  margin-right: 14px;
+  margin-top: 0;
+  margin-bottom: 0;
+  flex-shrink: 0;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+
+  &:after {
+    display: none;
+  }
+
+  i {
+    color: #b4b4b4;
+    font-size: 16px;
+    transition: color 150ms ease;
+  }
+
+  &:hover {
+    text-decoration: none;
+    background-color: color-mix(in srgb, var(--brand-color) 6%, transparent) !important;
+    border-color: var(--brand-color) !important;
+    color: var(--brand-color);
+
+    i {
+      color: var(--brand-color);
+    }
+  }
+}
+
+.projekt-phase-move {
+  font-size: 18px;
+  width: 33px;
+  height: 33px;
+}

@@ -22,6 +22,13 @@ de:
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Diskussionen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
+      comments:
+        feature:
+          general:
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
       proposals:
         feature:
           general:
@@ -31,6 +38,10 @@ de:
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
             require_admin_acceptance: Adminfreigabe
             require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -55,6 +66,8 @@ de:
           resource:
             users_can_create_proposals: Vorschläge einreichen
             users_can_create_proposals_description: Nutzer können Vorschläge erstellen
+            create_proposal_with_ai: Vorschlag mit KI erstellen
+            create_proposal_with_ai_description: Aktiviert die Schaltfläche "Vorschlag mit KI erstellen" im Frontend. Nutzer können dann mithilfe eines KI-Assistenten Vorschläge formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der entstandene Entwurf bleibt vor dem Einreichen vollständig editierbar.
             allow_voting: Unterstützung
             allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
             enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
@@ -84,6 +97,10 @@ de:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
             votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+            minimum_supports_to_show: "Mindestanzahl Unterstützungen zur Sichtbarkeit"
+            minimum_supports_to_show_description: "Vorschläge werden erst ab dieser Anzahl von Unterstützungen angezeigt (0 = immer sichtbar)"
+            max_submissions_per_user: "Maximale Einreichungen pro Nutzer"
+            max_submissions_per_user_description: "Begrenzt die Anzahl der Vorschläge pro Nutzer (leer oder 0 = keine Begrenzung)"
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
@@ -113,10 +130,10 @@ de:
             intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
             stats_enabled: Statistiken
             stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
-            advanced_stats_enabled: Erweiterte Statistiken
-            advanced_stats_enabled_description: Zeit erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
-            evaluation_enabled: Report für Bürger anzeigen
-            evaluation_enabled_description: Zeigt eine automatisch erstellte, zusammenfassende Auswertung der Abstimmungsergebnisse für Bürger an.
+            report_visible_for_citizens: Report-Tab für Bürger sichtbar
+            report_visible_for_citizens_description: Macht den Report-Tab mit der KI-generierten Zusammenfassung der Abstimmungsergebnisse für Bürger sichtbar. Admins und Projektmanager sehen den Tab immer.
+            evaluation_enabled: Bewertung für Bürger anzeigen
+            evaluation_enabled_description: Zeigt den Bewertung-Tab mit der detaillierten Auswertung der Abstimmungsergebnisse für Bürger an.
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
             show_open_answer_author_name: Name veröffentlichen
@@ -128,6 +145,13 @@ de:
             browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
             browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
             browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
+          resource:
+            create_investment_with_ai: Investitionsvorschlag mit KI erstellen
+            create_investment_with_ai_description: Aktiviert die Schaltfläche "Investitionsvorschlag mit KI erstellen" im Frontend. Nutzer können mithilfe eines KI-Assistenten einen Investitionsvorschlag formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der Entwurf bleibt vor dem Einreichen vollständig editierbar.
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -179,6 +203,9 @@ de:
               newest: Neueste zuerst
               comments_count: Meist kommentiert
         option:
+          resource:
+            max_submissions_per_user: "Maximale Einreichungen pro Nutzer"
+            max_submissions_per_user_description: "Begrenzt die Anzahl der Investitionsvorschläge pro Nutzer (leer oder 0 = keine Begrenzung)"
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.

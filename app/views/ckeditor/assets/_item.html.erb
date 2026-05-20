@@ -1,9 +1,10 @@
 <div
   class="file-upload-manager-dialog--item"
   data-id="<%= asset.id %>"
+  data-content-type="<%= asset.data_content_type %>"
   data-description="<%= asset.description.presence || '' %>"
   data-url="<%= asset.url_content(editor_id: params[:editor_id]) %>"
-  data-custom-thumb-url="<%= asset.custom_thumb_url(width: 870) %>"
+  data-custom-thumb-url="<%= asset.custom_thumb_url(width: 925) %>"
 >
   <div class="file-upload-manager-dialog--item-thumb">
     <% if asset.data_content_type&.start_with?('image/') %>
@@ -11,6 +12,13 @@
        src="<%= asset.gallery_thumb_url %>"
        alt="<%= asset.alt_text.presence || asset.title.presence || 'Image' %>"
       >
+    <% elsif asset.gallery_thumb_url.present? %>
+      <img
+       src="<%= asset.gallery_thumb_url %>"
+       alt="<%= asset.title.presence || 'Preview' %>"
+      >
+    <% else %>
+      <i class="fa <%= FileTypeIcons.for(asset.data_content_type) %> file-upload-manager-dialog--item-icon"></i>
     <% end %>
   </div>
   <div class="file-upload-manager-dialog--item-meta">

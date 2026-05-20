@@ -1,0 +1,5 @@
+en:
+  components:
+    adm:
+      index_table_component:
+        columns: Columns

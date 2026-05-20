@@ -6,7 +6,7 @@
 
   .sidebar-resource-author--background-image {
     height: 85px;
-    background-color: $brand;
+    background-color: var(--brand-color);
     width: 100%;
     overflow: hidden;
   }
@@ -41,12 +41,14 @@
   .sidebar-resource-author--registration-date {
     font-weight: 500;
     font-size: 14px;
+    margin: 0;
   }
 
   .sidebar-resource-author--name {
     font-weight: bold;
     font-size: 18px;
     color: black;
+    text-align: center;
   }
 
   .sidebar-resource-author--resources {

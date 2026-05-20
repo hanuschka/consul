@@ -10,6 +10,7 @@
 
       this.createMap();
       this.setupExpandControl();
+      this.addResetViewControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
@@ -36,6 +37,7 @@
       this.baseLayers = {};
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -79,6 +81,8 @@
 
       this.map.addControl(zoomControl);
 
+      this.setupEscKeyHandler();
+
       this.map.pm.setGlobalOptions({
         markerStyle: {
           icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor),
@@ -97,6 +101,55 @@
       if (this.editableLayersLimit && this.editableLayersLimit > 1) {
         this.addHintAboutEditableLayersLimit();
       }
+    }
+
+    setupEscKeyHandler() {
+      const map = this.map;
+
+      $(this.element).on('keydown', function(event) {
+        if (event.which === 27) {
+          map.closePopup();
+        }
+      });
+    }
+
+    whenIdle() {
+      const instance = this;
+
+      return new Promise((resolve) => {
+        if (!instance.map) {
+          resolve();
+          return;
+        }
+
+        instance.map.whenReady(() => {
+          const tileLayers = [];
+          instance.map.eachLayer((layer) => {
+            if (layer instanceof L.TileLayer) {
+              tileLayers.push(layer);
+            }
+          });
+
+          if (tileLayers.length === 0) {
+            resolve();
+            return;
+          }
+
+          let pending = tileLayers.length;
+          tileLayers.forEach((layer) => {
+            if (layer._loading === false) {
+              pending -= 1;
+              if (pending === 0) resolve();
+              return;
+            }
+
+            layer.once('load', () => {
+              pending -= 1;
+              if (pending === 0) resolve();
+            });
+          });
+        });
+      });
     }
 
     setupEventListenersForNewFeatures() {
@@ -183,6 +236,39 @@
       this.map.addControl(expandControl);
     }
 
+    addResetViewControl() {
+      const instance = this;
+
+      L.Control.ResetView = L.Control.extend({
+        onAdd: function() {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-home"></i>';
+          button.title = 'Ansicht zurücksetzen';
+
+          container.appendChild(button);
+
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            instance.map.setView(instance.mapCenterLatLng, instance.zoom, { animate: true });
+          });
+
+          return container;
+        },
+
+        onRemove() {}
+      });
+
+      const resetControl = new L.Control.ResetView({ position: 'topright' });
+      this.map.addControl(resetControl);
+    }
+
     setupLayers() {
       if (this.adminFeatures && Object.keys(this.adminFeatures).length > 0) {
         this.addAdminFeaturesAsLayer();
@@ -204,8 +290,27 @@
         }
       }
 
+      // Set up the toggleable Masterportal pins overlay (only when pins exist)
+      this.setupMasterportalPinsOverlay();
+
       // Add layer control if needed
       this.addLayerControl();
+    }
+
+    setupMasterportalPinsOverlay() {
+      this.masterportalPinsClusterGroup = null;
+      this.hasMasterportalPins = false;
+
+      if (this.editable) return;
+
+      const split = App.Map.splitMasterportalFeatures(this.features);
+      if (split.masterportal.features.length === 0) return;
+
+      this.hasMasterportalPins = true;
+      this.masterportalPinsClusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
+      this.masterportalPinsClusterGroup.options.show_by_default = true;
+      this.masterportalPinsClusterGroup.addTo(this.map);
+      this.overlayLayers[this.masterportalPinsLayerLabel] = this.masterportalPinsClusterGroup;
     }
 
     createLayer(item) {
@@ -258,16 +363,16 @@
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-            icon: App.Utils.getLeafletMarkerHTML('#ff0000')
+            icon: App.Utils.getLeafletMarkerHTML('#008000', null, 'Verwaltungseintrag')
           });
         },
         style: {
-          color: '#ff0000',
+          color: '#008000',
           weight: 2,
           fillOpacity: 0.2
         },
         onEachFeature: (feature, layer) => {
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
           layer.pm.disable();
           layer.pm.setOptions({
             draggable: false,
@@ -297,7 +402,7 @@
     }
 
     renderAdminFeaturesNote() {
-      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+      const adminShapeExplainerText = 'Alle markierten Flächen und Pins in grün sind vom System vorgegeben';
       const adminShapeExplainer = L.control({
         position: 'bottomleft'
       });
@@ -306,7 +411,7 @@
         const container = L.DomUtil.create('div', 'my-attribution');
         container.innerHTML = adminShapeExplainerText;
         container.className += ' leaflet-control-attribution';
-        container.style.color = '#ff0000';
+        container.style.color = '#008000';
         return container;
       };
 
@@ -314,12 +419,18 @@
     }
 
     setupPlugins() {
-      L.control.locate({
+      var locateControl = L.control.locate({
         icon: 'fa fa-map-marker',
         strings: {
           title: 'Meine Position anzeigen'
         }
       }).addTo(this.map);
+
+      var locateButton = locateControl.getContainer().querySelector('a');
+      if (locateButton) {
+        locateButton.setAttribute('aria-label', 'Meine Position anzeigen');
+        locateButton.querySelector('.fa').setAttribute('aria-hidden', 'true');
+      }
 
       const searchControl = new GeoSearch.GeoSearchControl({
         provider: new GeoSearch.OpenStreetMapProvider(),
@@ -344,8 +455,10 @@
         minSize: 30,
         markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
+          var title = shape.feature.properties.feature_category_name || shape.feature.properties.title || "Kartenmarkierung";
+
           return {
-            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name ),
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name, title),
           }
         }
 
@@ -356,53 +469,75 @@
 
     renderFeatures() {
       if (this.features && Object.keys(this.features).length > 0) {
-        const self = this;
+        const split = App.Map.splitMasterportalFeatures(this.features);
 
-        L.geoJSON(this.features, {
-          pointToLayer: function(feature, latlng) {
-            return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
-            });
-          },
-          style: function (feature) {
-            return {
-              weight: 2,
-              color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            if (self.editable) {
-              self.setupEventListenersForEditableFeature(self.map, layer)
-              self.editableLayers.push(layer);
+        this.renderFeatureCollection(split.regular, this.clusterGroup);
 
-              layer.addTo(self.map);
-
-              layer.on('pm:edit', function(e) {
-                self.updateFeaturesInput(self.featuresInput, self.editableLayers);
-              });
-            } else {
-              if (feature.geometry.type === 'Point') {
-                self.clusterGroup.addLayer(layer);
-              } else {
-                self.deflateFeatures.addLayer(layer);
-              }
-
-              if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
-                layer.options.resource_type = feature.properties.resource_type || null;
-                layer.options.id = feature.properties.id || null;
-                layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
-                layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
-                layer.options.feature_category_name = feature.properties.feature_category_name || null;
-
-                layer.on("click", self.openMarkerPopup);
-              }
-            }
-          }
-        });
+        if (this.masterportalPinsClusterGroup) {
+          this.renderFeatureCollection(split.masterportal, this.masterportalPinsClusterGroup);
+        }
       }
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng);
       }
+    }
+
+    renderFeatureCollection(featureCollection, pointCluster) {
+      if (!featureCollection || featureCollection.features.length === 0) return;
+      const self = this;
+
+      L.geoJSON(featureCollection, {
+        pointToLayer: function(feature, latlng) {
+          var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
+          var icon;
+
+          if (feature.properties.feature_icon_url) {
+            icon = L.icon({
+              iconUrl: feature.properties.feature_icon_url,
+              iconSize: [36, 36],
+              iconAnchor: [18, 36]
+            });
+          } else {
+            icon = App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle);
+          }
+
+          return L.marker(latlng, { icon: icon });
+        },
+        style: function (feature) {
+          return {
+            weight: 2,
+            color: feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor
+          };
+        },
+        onEachFeature: function (feature, layer) {
+          if (self.editable) {
+            self.setupEventListenersForEditableFeature(self.map, layer)
+            self.editableLayers.push(layer);
+
+            layer.addTo(self.map);
+
+            layer.on('pm:edit', function(e) {
+              self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+            });
+          } else {
+            if (feature.geometry.type === 'Point') {
+              pointCluster.addLayer(layer);
+            } else {
+              self.deflateFeatures.addLayer(layer);
+            }
+
+            if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
+              layer.options.resource_type = feature.properties.resource_type || null;
+              layer.options.id = feature.properties.id || null;
+              layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
+              layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
+              layer.options.feature_category_name = feature.properties.feature_category_name || null;
+
+              layer.on("click", self.openMarkerPopup);
+            }
+          }
+        }
+      });
     }
 
     openMarkerPopup(e) {
@@ -416,9 +551,17 @@
         type: "GET",
         dataType: "json",
         success: (data) => {
+          const popupOptions = { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) };
+
+          if (resourceType === "masterportal_pin") {
+            popupOptions.className = "masterportal-popup-wrapper";
+            popupOptions.minWidth = 260;
+            popupOptions.maxWidth = 360;
+          }
+
           e.target.bindPopup(
             App.MapPopup.generatePopupContent(data, resourceType, properties),
-            { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) }
+            popupOptions
           ).openPopup();
         }
       });
@@ -564,7 +707,6 @@
       });
 
       this.map.on('pm:create', function(e) {
-        console.log("pm:create")
         if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
           self.map.removeLayer(self.editableLayers.pop());
         }

@@ -1,0 +1,32 @@
+de:
+  adm:
+    registered_addresses:
+      index:
+        title: Adressen
+        intro_text_p1_lead: >
+          Die Adressdaten müssen demokratie.today vorab als CSV-Datei bereitgestellt werden.
+          Jede Adresse enthält folgende Standardfelder:
+        intro_list:
+          street_number_extension: Hausnummerzusatz
+          district: Gebiet (z. B. Stadtteil)
+        intro_text_p1_extra: >
+          Zusätzliche Spalten für weitere geografische Einheiten (z. B. Wahlkreise, Wahlbezirke oder Quartiere) können jederzeit ergänzt werden.
+        intro_text_p2: >
+          Diese Zuordnungen stehen anschließend in den Beteiligungsbeschränkungen zur Auswahl
+          und dienen der automatisierten Zuordnung von Projekten zu Gebieten.
+          Wenden Sie sich an demokratie.today, wenn Sie Adressdaten aktualisieren oder erweitern möchten.
+        empty_title: "Noch keine Adressen importiert"
+        empty_description: "Bitte stellen Sie demokratie.today eine CSV-Datei mit den Adressdaten bereit, um den Import einzurichten."
+        no_results_filtered_title: Keine Adressen für die aktuellen Filter
+        no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Adressen zu sehen.
+        total_label:
+          one: Adresse
+          other: Adressen
+        total_hint: Anzahl der Adressen in der aktuellen Ansicht (inkl. aktiver Filter).
+        table:
+          city: Stadt
+          plz: PLZ
+          street_name: Straße
+          street_number: Hausnummer
+          district: Gebiet
+          groupings: Gruppierungen

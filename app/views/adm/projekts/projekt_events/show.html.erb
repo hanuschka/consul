@@ -1,0 +1,167 @@
+<%= content_for :title, [@projekt_event.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_event.title, breadcrumbs: @breadcrumbs, back_button_url: projekt_events_adm_projekts_phase_path(@projekt_phase)) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_event_tabs(@projekt_phase, @projekt_event)) %>
+
+<div class="kern-container">
+  <div class="d-flex align-items-center justify-content-end gap-3 mt-1 mb-4">
+    <span class="adm-detail-meta__item">
+      <%= link_to send_notifications_adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event),
+            data: { turbo_method: :post, turbo_confirm: t("adm.projekts.phases.projekt_events.table.send_notifications_confirm") } do %>
+        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">send</span>
+        <%= t("adm.projekts.phases.projekt_events.table.send_notifications") %>
+      <% end %>
+    </span>
+  </div>
+</div>
+
+<div class="kern-container mb-5">
+
+  <%# === Section: General === %>
+  <%= turbo_frame_tag "projekt_event_general" do %>
+    <section class="adm-detail-section">
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t(".sections.general") %></h2>
+        <%= kern_link_button(edit_adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event, section: "general"),
+              text: t("shared.edit"), icon: "edit", style: :secondary,
+              data: { turbo_frame: "projekt_event_general" }) %>
+      </div>
+
+      <div class="adm-content-card mb-4">
+        <div class="adm-content-card__body">
+          <h3 class="adm-detail-content-title mb-2"><%= @projekt_event.title %></h3>
+          <% if @projekt_event.description.present? %>
+            <div class="adm-detail-description">
+              <%= sanitize @projekt_event.description %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @projekt_event.image&.attachment&.attached? %>
+        <div class="adm-detail-media-grid mb-4">
+          <div class="adm-detail-media-card">
+            <div class="adm-detail-media-card__label">
+              <span class="material-symbols-outlined" aria-hidden="true">image</span>
+              <%= t("adm.projekts.projekt_events.form.image_label") %>
+            </div>
+            <%= image_tag @projekt_event.image.attachment %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @projekt_event.language.present? %>
+        <div class="mb-4">
+          <div class="adm-detail-table">
+            <div class="adm-detail-table__row">
+              <div class="adm-detail-table__label"><%= t("adm.projekts.projekt_events.form.language_label") %></div>
+              <div class="adm-detail-table__value"><%= @projekt_event.language %></div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <%# === Section: Schedule & Location === %>
+  <%
+    schedule_rows = []
+    schedule_rows << { label: t("adm.projekts.projekt_events.form.location_label"), value: @projekt_event.location } if @projekt_event.location.present?
+    schedule_rows << { label: t("adm.projekts.projekt_events.form.datetime_label"), value: l(@projekt_event.datetime, format: :long) }
+    if @projekt_event.end_datetime.present?
+      schedule_rows << { label: t("adm.projekts.projekt_events.form.end_datetime_label"), value: l(@projekt_event.end_datetime, format: :long) }
+    elsif @projekt_event.open_ended?
+      schedule_rows << { label: t("adm.projekts.projekt_events.form.open_ended_label"), value: human_boolean(true) }
+    end
+    if @projekt_event.weblink.present?
+      schedule_rows << { label: t("adm.projekts.projekt_events.form.weblink_label"), value: link_to(@projekt_event.weblink, @projekt_event.weblink, target: "_blank", rel: "noopener") }
+    end
+  %>
+
+  <%= turbo_frame_tag "projekt_event_schedule" do %>
+    <section class="adm-detail-section">
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t(".sections.schedule") %></h2>
+        <%= kern_link_button(edit_adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event, section: "schedule"),
+              text: t("shared.edit"), icon: "edit", style: :secondary,
+              data: { turbo_frame: "projekt_event_schedule" }) %>
+      </div>
+
+      <div class="mb-4">
+        <div class="adm-detail-table">
+          <% schedule_rows.each do |row| %>
+            <div class="adm-detail-table__row">
+              <div class="adm-detail-table__label"><%= row[:label] %></div>
+              <div class="adm-detail-table__value"><%= row[:value] %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+  <%# === Section: Registration === %>
+  <%
+    registration_rows = [
+      { label: t("adm.projekts.projekt_events.form.max_attendees_label"), value: @projekt_event.max_attendees.presence || t(".registration_disabled") },
+      { label: t(".confirmed_count"), value: @projekt_event.projekt_event_registrations.where(status: "confirmed").count },
+      { label: t(".waitlisted_count"), value: @projekt_event.projekt_event_registrations.where(status: "waitlisted").count }
+    ]
+    registration_rows << { label: t("adm.projekts.projekt_events.form.admin_emails_label"), value: @projekt_event.admin_emails } if @projekt_event.admin_emails.present?
+  %>
+
+  <%= turbo_frame_tag "projekt_event_registration" do %>
+    <section class="adm-detail-section">
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t(".sections.registration") %></h2>
+        <%= kern_link_button(edit_adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event, section: "registration"),
+              text: t("shared.edit"), icon: "edit", style: :secondary,
+              data: { turbo_frame: "projekt_event_registration" }) %>
+      </div>
+
+      <div class="mb-4">
+        <div class="adm-detail-table">
+          <% registration_rows.each do |row| %>
+            <div class="adm-detail-table__row">
+              <div class="adm-detail-table__label"><%= row[:label] %></div>
+              <div class="adm-detail-table__value"><%= row[:value] %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+  <%# === Section: Accessibility === %>
+  <% accessibility_flags = %i[
+    wheelchair_accessible accessible_toilet disabled_parking_nearby
+    tactile_guidance_systems induction_loop_available
+    assistance_dogs_welcome sign_language_interpreter
+  ] %>
+  <% active_flags = accessibility_flags.select { |flag| @projekt_event.send(flag) } %>
+
+  <%= turbo_frame_tag "projekt_event_accessibility" do %>
+    <section class="adm-detail-section">
+      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+        <h2 class="adm-detail-section-title m-0"><%= t(".sections.accessibility") %></h2>
+        <%= kern_link_button(edit_adm_projekts_phase_projekt_event_path(@projekt_phase, @projekt_event, section: "accessibility"),
+              text: t("shared.edit"), icon: "edit", style: :secondary,
+              data: { turbo_frame: "projekt_event_accessibility" }) %>
+      </div>
+
+      <% if active_flags.any? %>
+        <div class="d-flex flex-wrap gap-2">
+          <% active_flags.each do |flag| %>
+            <span class="adm-detail-pill">
+              <span class="material-symbols-outlined" aria-hidden="true">accessible</span>
+              <%= ProjektEvent.human_attribute_name(flag) %>
+            </span>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted m-0"><%= t(".no_accessibility_flags") %></p>
+      <% end %>
+    </section>
+  <% end %>
+</div>

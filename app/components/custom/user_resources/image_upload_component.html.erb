@@ -19,9 +19,32 @@
                   default: t("custom.user_resources.image_upload.bottom_line_default")) %>
           </div>
           <div class="user-resource-image-upload--hint">
-            <%= t("custom.user_resources.image_upload.max_image_size", size: Setting["uploads.images.max_size"]) %>
+            <%= t("custom.user_resources.image_upload.max_image_size", size: 10) %>
+          </div>
+          <div class="user-resource-image-upload--hint">
+            <%= t("custom.user_resources.image_upload.supported_formats",
+                  formats: Setting.accepted_content_types_for("images").join(", ")) %>
           </div>
         </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% c.with_confirmation_step do %>
+    <div class="user-resource-image-upload--placeholder">
+      <div class="user-resource-image-upload--placeholder-inner">
+        <div class="user-resource-image-upload--label-title">
+          <%= t("custom.user_resources.image_upload.ownership_notice_title") %>
+        </div>
+        <div class="user-resource-image-upload--text">
+          <%= t("custom.user_resources.image_upload.ownership_notice_body") %>
+        </div>
+        <button type="button" class="button js-direct-image-upload--confirm-button">
+          <%= t("custom.user_resources.image_upload.ownership_notice_confirm") %>
+        </button>
+        <a href="#" class="js-direct-image-upload--cancel-confirmation user-resource-image-upload--hint">
+          <%= t("custom.user_resources.image_upload.ownership_notice_cancel") %>
+        </a>
       </div>
     </div>
   <% end %>

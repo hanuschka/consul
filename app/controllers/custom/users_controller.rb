@@ -1,13 +1,13 @@
 require_dependency Rails.root.join("app", "controllers", "users_controller").to_s
 
 class UsersController < ApplicationController
+  include FeatureFlags
+
   skip_authorization_check
 
-  def index
-    unless Setting["extended_feature.general.users_overview_page"].present?
-      redirect_to root_path, alert: "Diese Funktion ist deaktiviert"
-    end
+  before_action :check_users_overview_enabled, only: :index
 
+  def index
     @users = User.active.where(show_in_users_overview: true, guest: false).order(created_at: :desc).page(params[:page])
   end
 
@@ -24,4 +24,10 @@ class UsersController < ApplicationController
       render :show
     end
   end
+
+  private
+
+    def check_users_overview_enabled
+      raise FeatureFlags::FeatureDisabled, :users_overview unless Setting["extended_feature.general.users_overview_page"].present?
+    end
 end

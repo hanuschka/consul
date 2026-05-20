@@ -1,0 +1,30 @@
+<tr id="<%= dom_id(comment, :moderation) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header" data-field="body"><%= truncate(comment.body, length: 100) %></th>
+  <td class="kern-table__cell" data-field="projekt"><%= comment.projekt&.name %></td>
+  <td class="kern-table__cell" data-field="author"><%= comment.author.username %></td>
+  <td class="kern-table__cell" data-field="flags_count"><%= comment.flags_count %></td>
+  <td class="kern-table__cell" data-field="actions">
+    <% if comment.hidden? %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.comments.index.actions.unhide"),
+                          url: unhide_adm_moderation_comment_path(comment),
+                          data: { turbo_method: :put } %>
+      <% end %>
+    <% elsif comment.ignored_flag? %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.comments.index.actions.hide"),
+                          url: hide_adm_moderation_comment_path(comment),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.comments.index.confirm_hide") } %>
+      <% end %>
+    <% else %>
+      <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <%= c.with_action label: t("adm.moderation.comments.index.actions.ignore_flag"),
+                          url: ignore_flag_adm_moderation_comment_path(comment),
+                          data: { turbo_method: :put } %>
+        <%= c.with_action label: t("adm.moderation.comments.index.actions.hide"),
+                          url: hide_adm_moderation_comment_path(comment),
+                          data: { turbo_method: :put, turbo_confirm: t("adm.moderation.comments.index.confirm_hide") } %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

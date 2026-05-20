@@ -19,13 +19,13 @@
 
 .proposal-new {
   input[name='save_draft'] {
-    background: $secondary;
-    color: $brand;
+    background: var(--brand-color-secondary);
+    color: var(--brand-color);
 
     &:hover,
     &:focus {
       color: $white;
-      background: $brand;
+      background: var(--brand-color);
     }
   }
 
@@ -77,11 +77,12 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
-    padding: 1rem 30px;
+    padding: 10px 30px;
     width: 100%;
     margin: auto;
     background: white;
     position: sticky;
+    border-radius: 10px;
     top: $topbar-height;
     z-index: 1000;
     border-bottom: 1px solid $border;
@@ -97,6 +98,19 @@
 
     .button {
       margin: 0;
+    }
+  }
+
+  body:has(.projekt-page--admin-topbar) & .proposal-navigation {
+    top: $topbar-height + $admin-topbar-height;
+
+    // Mirror the touch-viewport bump of --admin-topbar-height (48px -> 56px).
+    // The Sass var is compile-time, so we add the 8px delta below the
+    // $small-tablet-viewport-start breakpoint to stay in sync with
+    // _admin_topbar.scss (where :root --admin-topbar-height flips to 56px
+    // at the same breakpoint — touch-first approach).
+    @media(max-width: $small-tablet-viewport-start) {
+      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height + $admin-topbar-height + 8px;
     }
   }
 

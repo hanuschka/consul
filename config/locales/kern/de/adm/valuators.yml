@@ -1,0 +1,16 @@
+de:
+  adm:
+    valuators:
+      index:
+        title: Budget-Begutachter
+        breadcrumb: Team
+        empty_title: "Keine Budget-Begutachter vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Budget-Begutachter hinzu."
+        new_link: Neuen Budget-Begutachter hinzufügen
+        no_valuators: Keine Budget-Begutachter vorhanden.
+      new:
+        title: Neuen Budget-Begutachter hinzufügen
+        search_label: Nutzer durchsuchen
+        search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Budget-Begutachter hinzugefügt werden. Budget-Begutachter bewerten Budgetvorschläge und prüfen deren Umsetzbarkeit und Kosten.
+      search:
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.

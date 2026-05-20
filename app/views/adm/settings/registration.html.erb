@@ -1,0 +1,22 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.registration.extended"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.registration.check_documents"), :value, :boolean) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.verification.check_documents"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.verification.show_data_completeness_status"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.verification.show_verification_status"), :value, :boolean) %>
+
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.sessions", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("sign_in_hint", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.registrations", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("registration_form_hint", I18n.locale), :body, :rich_text, wide: true) %>
+</div>

@@ -1,0 +1,33 @@
+de:
+  adm:
+    section_settings:
+      sections:
+        ideas: Ideen
+        deficiency_reports: "M\u00E4ngelmelder"
+        projekts: Projekte
+        moderation: Moderation
+        valuation: Budget-Begutachtung
+        landing_pages: Themenseiten
+        officing: Abstimmungen
+      intro_text_defaults:
+        projekts: "Hier verwalten Sie Ihre Beteiligungsprojekte zentral an einem Ort. Erstellen Sie neue Projekte, konfigurieren Sie Phasen und Einstellungen, weisen Sie Projektmanager zu und behalten Sie den Überblick über laufende, geplante und abgeschlossene Beteiligungsverfahren. Über die Schnellzugriffe gelangen Sie direkt zu den wichtigsten Aktionen."
+        deficiency_reports: "Hier verwalten Sie eingehende Mängelmeldungen Ihrer Bürger zentral und behalten den Überblick über alle gemeldeten Vorgänge. Weisen Sie Meldungen passenden Sachbearbeitern zu, verfolgen Sie den Bearbeitungsstatus, dokumentieren Sie Rückmeldungen und koordinieren Sie die zügige Behebung gemeldeter Probleme im Stadtgebiet."
+        ideas: "Hier verwalten Sie die eingereichten Bürgerideen Ihrer Plattform an zentraler Stelle. Prüfen Sie neue Einreichungen, weisen Sie Vorschläge passenden Sachbearbeitern zu, kategorisieren Sie Themen und verfolgen Sie den Status jeder Idee von der Einreichung über die fachliche Prüfung bis hin zur Umsetzung oder offiziellen Antwort."
+        moderation: "Hier moderieren Sie die nutzergenerierten Inhalte Ihrer Plattform zentral. Prüfen Sie gemeldete Beiträge, Kommentare und Nutzerkonten, treffen Sie Entscheidungen über Sichtbarkeit und Sperrungen und sorgen Sie für einen respektvollen, konstruktiven Austausch. Die Übersicht hilft Ihnen, neue Meldungen schnell zu erkennen."
+        valuation: "Hier begutachten Sie die eingereichten Bürgerbudget-Vorschläge auf ihre Umsetzbarkeit. Prüfen Sie die technische und rechtliche Machbarkeit, schätzen Sie Kosten und Aufwand ein, dokumentieren Sie Ihre Ergebnisse nachvollziehbar und stellen Sie die Vorschläge für die weitere Bearbeitung oder Abstimmung bereit."
+        landing_pages: "Hier verwalten Sie die Themenseiten Ihrer Plattform an zentraler Stelle. Erstellen und bearbeiten Sie eigenständige Seiten zu Schwerpunktthemen wie Jugendbeteiligung oder Stadtentwicklung, veröffentlichen oder verbergen Sie Inhalte und gestalten Sie eine klare Informationsarchitektur mit eigenen Hintergrundbildern und Logos."
+        officing: "Als Abstimmungshelfer erfassen Sie offline eingegangene Stimmen — etwa von Bürgern, die vor Ort, schriftlich oder telefonisch abgestimmt haben. Sie prüfen die Wahlberechtigung per Melderegister und dokumentieren Stimmen für Budgets, Vorschläge und Umfragen — auch per Sammelabstimmung. Ihre zugewiesenen Phasen sehen Sie auf der Startseite."
+      contact_people:
+        title: Ansprechpartner
+        new_link: Neuen Ansprechpartner erstellen
+        empty_title: Keine Ansprechpartner vorhanden
+        empty_description: Erstellen Sie einen neuen Ansprechpartner, um Kontaktpersonen den einzelnen Administrationsbereichen zuzuordnen.
+        table:
+          name: Name
+          role: Rolle
+          email: E-Mail
+          phone: Telefon
+          actions: Aktionen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Sind Sie sicher, dass Sie diesen Ansprechpartner löschen möchten?

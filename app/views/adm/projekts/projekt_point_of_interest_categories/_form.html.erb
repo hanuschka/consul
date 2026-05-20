@@ -1,0 +1,45 @@
+<%= form_with model: @category, url: url, multipart: true do |f| %>
+
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
+    <div data-controller="adm-color-picker" data-adm-color-picker-target="container">
+      <div class="color-picker" data-adm-color-picker-target="picker"></div>
+      <%= f.hidden_field :color, value: @category.color.presence || "#3366CC", data: { "adm-color-picker-target": "colorInput" } %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_image_label"), hint: t(".icon_image_hint"), stacked: true) do %>
+    <% if f.object.icon_image.attached? %>
+      <div class="icon-image-preview">
+        <% if f.object.icon_image.blob.content_type == "image/svg+xml" %>
+          <%= image_tag f.object.icon_image, alt: "" %>
+        <% else %>
+          <%= image_tag f.object.icon_image.variant(resize_to_limit: [64, 64]), alt: "" %>
+        <% end %>
+        <label class="icon-image-remove">
+          <%= check_box_tag "projekt_point_of_interest_category[remove_icon_image]", "1", false %>
+          <%= t(".icon_image_remove") %>
+        </label>
+      </div>
+    <% end %>
+    <%= f.file_field :icon_image, accept: "image/svg+xml,image/png,image/jpeg" %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".icon_label"), hint: t(".icon_hint"), stacked: true) do %>
+    <div class="icon-selector">
+      <% Iconable::AVAILABLE_ICONS.each do |icon_array| %>
+        <% icon = icon_array.first %>
+        <label class="icon-option">
+          <%= f.radio_button :icon, icon, checked: @category.icon == icon %>
+          <i class="fas fa-<%= icon %>"></i>
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

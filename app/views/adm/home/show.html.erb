@@ -1,0 +1,89 @@
+<%= content_for :title, t("adm.home.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.home.show.title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+
+  <%# ── Intro ───────────────────────────────────────────── %>
+  <p class="adm-dashboard__intro">
+    <%= t("adm.home.show.intro_html",
+          org_name: Setting["org_name"],
+          ticket_link: link_to(t("adm.home.show.ticket_system"), Dt.ticket_system_url, target: "_blank", rel: "noopener")) %>
+  </p>
+
+  <%# ── Users ───────────────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">group</span>
+      <h3><%= t("adm.home.show.users.title") %></h3>
+    </div>
+    <div class="adm-dashboard__stats">
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_total %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.total") %></div>
+      </div>
+      <div class="adm-stat-card">
+        <div class="adm-stat-card__value"><%= @users_new_week %></div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.new_this_week") %></div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Verwaltungsbereiche ─────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+      <h3><%= t("adm.home.show.adm_sections.title") %></h3>
+    </div>
+    <p class="adm-dashboard__hint"><%= t("adm.home.show.adm_sections.hint") %></p>
+    <div class="adm-module-bento">
+      <% @adm_sections.each do |section| %>
+        <%
+          section_label = t("components.adm.icon_rail_component.#{section[:key]}")
+          metric        = section[:metric]
+          card_title    = t("adm.home.show.adm_sections.card_title", section: section_label)
+          metric_text   = metric.present? ?
+            t("adm.home.show.adm_sections.metrics.#{metric[:key]}", count: metric[:count]) :
+            nil
+        %>
+        <%= render Adm::ModuleBentoCardComponent.new(
+              path: section[:path],
+              icon: section[:icon],
+              title: section_label,
+              metric_text: metric_text,
+              cta_text: t("adm.home.show.adm_sections.go_to_dashboard"),
+              card_title: card_title
+            ) %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── demokratie.today ────────────────────────────────── %>
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">language</span>
+      <h3>demokratie.today</h3>
+    </div>
+    <div class="adm-dt-links">
+      <%= link_to Dt.ticket_system_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/ticket_system.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.ticket_system") %></span>
+      <% end %>
+      <%= link_to Dt.meetups_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/meetups.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.meetup") %></span>
+      <% end %>
+      <% if Dt.url.present? %>
+        <%= link_to Dt.url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+          <%= image_tag "dt/projekts_overview.jpg", alt: "" %>
+          <span><%= t("adm.home.show.dt.projekts_overview") %></span>
+        <% end %>
+      <% end %>
+      <%= link_to Dt.newsletter_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
+        <%= image_tag "dt/newsletter.jpg", alt: "" %>
+        <span><%= t("adm.home.show.dt.newsletter") %></span>
+      <% end %>
+    </div>
+  </div>
+
+</div>

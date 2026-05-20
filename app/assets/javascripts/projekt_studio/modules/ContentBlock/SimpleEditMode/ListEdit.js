@@ -17,10 +17,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       contentBlock
         .querySelectorAll("ul, ol")
         .forEach((ul) => {
+          if (this.isFollowerList(ul)) return;
+
           const foundationSlider = ul.closest(".orbit")
 
           if (foundationSlider) {
             this.addNewSliderItemButton(ul)
+          } else if (ul.hasAttribute("data-list-edit-add-outside")) {
+            this.addNewOutsideItemButton(ul)
           } else {
             this.addNewItemButton(ul)
           }
@@ -29,6 +33,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       contentBlock
         .querySelectorAll(`li:not(.${this.listControlClass})`)
         .forEach((li) => {
+          if (this.isInsideFollowerList(li)) return;
+
           this.addItemControlls(li)
         })
 
@@ -41,6 +47,15 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
       this.cleanupSortableForContentBlock(contentBlock)
     }
+  },
+
+  isFollowerList(ul) {
+    return ul.hasAttribute("data-list-edit-follower")
+  },
+
+  isInsideFollowerList(li) {
+    const parentList = li.closest("ul, ol");
+    return parentList && this.isFollowerList(parentList);
   },
 
   addItemControlls(li) {
@@ -59,7 +74,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
       const dragHandleHTML = `
         <button
-          class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle -drag"
+          class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle js-content-block-element-not-editable js-studio-hide-on-preview -drag"
           title="Element verschieben"
           contenteditable="false"
         >
@@ -72,7 +87,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     const deleteButtonHtml = `
         <button
-          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item -delete"
+          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item js-content-block-element-not-editable js-studio-hide-on-preview -delete"
           contenteditable="false"
         >
         <i class="fa fas fa-trash"></i>
@@ -85,14 +100,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
   addItem(e) {
     const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
+    const isOutsideList = wrapper.dataset.outsideList === "true";
     let ul = null;
-    let ulParent;
     let lastLi;
 
-    if (wrapper.dataset.outsideList === "true") {
-      ulParent = wrapper.previousElementSibling;
-      ul = ulParent.querySelector("ul, ol");
-      lastLi = ul.querySelector("li:last-child")
+    if (isOutsideList) {
+      const prev = wrapper.previousElementSibling;
+      ul = prev.matches("ul, ol") ? prev : prev.querySelector("ul, ol");
+      lastLi = ul.querySelector(`li:last-child:not(.${this.listControlClass})`)
     }
     else {
       ul = e.currentTarget.closest("ul, ol")
@@ -132,6 +147,9 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
       this.updateSliderItemAttributes(lastLi, clonedLi)
     }
+    else if (isOutsideList) {
+      newUl.appendChild(clonedLi);
+    }
     else {
       newUl.insertBefore(clonedLi, newUl.lastElementChild);
     }
@@ -146,6 +164,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     this.addItemControlls(clonedLi)
     this.cleanupSortableForContentBlock(newUl.parentElement)
     this.initSortableForContentBlock(newUl.parentElement)
+
+    this.mirrorAddToFollower(newUl, clonedLi)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {
@@ -167,7 +187,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     if (!deleteConfirmed) return;
 
-    console.log("e.currentTarget", e.currentTarget)
     const li = e.currentTarget.closest("li")
     if (!li) return;
 
@@ -186,7 +205,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       }
     }
 
+    const deletedIndex = this.getRealListItems(ul).indexOf(li);
+
     li.remove()
+
+    this.mirrorDeleteToFollower(ul, deletedIndex)
   },
 
   addBulletToSlider(ul, newSlideNumber) {
@@ -218,9 +241,19 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     foundationSlider.after(buttonWrapper);
   },
 
+  addNewOutsideItemButton(ul) {
+    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "div", copyStyles: false })
+    buttonWrapper.dataset.outsideList = true
+
+    const outsideOfSelector = ul.dataset.listEditAddOutsideOf;
+    const anchor = outsideOfSelector ? ul.closest(outsideOfSelector) : ul;
+
+    (anchor || ul).after(buttonWrapper);
+  },
+
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass}`;
+    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass} js-content-block-element-not-editable`;
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -235,13 +268,13 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     }
 
     buttonWrapper.innerHTML = `
-         <div class="content-block--item-action-wrapper--inner">
-            <button class="content-block--item-action js-projekt-content-block--add-item">
-              <i class="fa fas fa-plus"></i>
-              Weiteres Element hinzufügen
-            </button>
-          </div>
-        `
+      <div class="content-block--item-action-wrapper--inner js-studio-hide-on-preview">
+          <button class="content-block--item-action js-projekt-content-block--add-item js-content-block-element-not-editable">
+          <i class="fa fas fa-plus"></i>
+          Weiteres Element hinzufügen
+        </button>
+      </div>
+    `
 
     if (copyStyles) {
       if (lastLi) {
@@ -267,6 +300,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
         .forEach((ul) => {
           if (this.sortableInstances.has(ul)) return;
           if (ul.classList.contains("orbit-container")) return;
+          if (this.isFollowerList(ul)) return;
 
           const sortableInstance = new Sortable(ul, {
             handle: ".js-list-item-dnd-handle",
@@ -275,12 +309,19 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
             dragClass: "list-item-dnd-move",
             scrollSensitivity: 2,
             scrollSpeed: 3,
-            draggable: `li:not(.${this.listControlClass})`
+            draggable: `li:not(.${this.listControlClass})`,
+            onEnd: (evt) => this.handleSortableEnd(ul, evt)
           })
 
           this.sortableInstances.set(ul, sortableInstance)
         })
     }, 50)
+  },
+
+  handleSortableEnd(primaryUl, evt) {
+    if (evt.oldIndex === evt.newIndex) return;
+
+    this.mirrorReorderToFollower(primaryUl, evt.oldIndex, evt.newIndex)
   },
 
   cleanupSortableForContentBlock(contentBlock) {
@@ -293,5 +334,79 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
         this.sortableInstances.delete(ul)
       }
     })
+  },
+
+  getRealListItems(ul) {
+    return Array.from(ul.querySelectorAll(`:scope > li:not(.${this.listControlClass})`))
+  },
+
+  getPairedFollower(primaryUl) {
+    const selector = primaryUl.getAttribute("data-paired-list");
+    if (!selector) return null;
+
+    const contentBlock = primaryUl.closest(".js-projekt-content-block");
+    if (!contentBlock) return null;
+
+    return contentBlock.querySelector(selector);
+  },
+
+  mirrorAddToFollower(primaryUl, primaryClonedLi) {
+    const followerUl = this.getPairedFollower(primaryUl);
+    if (!followerUl) return;
+
+    const followerItems = this.getRealListItems(followerUl);
+    const followerLastLi = followerItems[followerItems.length - 1];
+    if (!followerLastLi) return;
+
+    const followerClone = followerLastLi.cloneNode(true);
+
+    ProjektStudio.utils.removeChildHtmlAttributes(
+      followerClone,
+      ["id", "aria-labelledby", "aria-controls", "aria-expanded", "data-slide"]
+    )
+
+    followerUl.appendChild(followerClone);
+
+    const index = this.getRealListItems(primaryUl).indexOf(primaryClonedLi);
+
+    this.dispatchPairedItemCloned(primaryClonedLi, followerClone, index)
+  },
+
+  mirrorDeleteToFollower(primaryUl, deletedIndex) {
+    const followerUl = this.getPairedFollower(primaryUl);
+    if (!followerUl) return;
+    if (deletedIndex < 0) return;
+
+    const followerItems = this.getRealListItems(followerUl);
+    const followerLi = followerItems[deletedIndex];
+
+    if (followerLi) followerLi.remove();
+  },
+
+  mirrorReorderToFollower(primaryUl, oldIndex, newIndex) {
+    const followerUl = this.getPairedFollower(primaryUl);
+    if (!followerUl) return;
+
+    const followerItems = this.getRealListItems(followerUl);
+    const moved = followerItems[oldIndex];
+    if (!moved) return;
+
+    const remaining = followerItems.filter((li) => li !== moved);
+    const reference = remaining[newIndex];
+
+    if (reference) {
+      followerUl.insertBefore(moved, reference);
+    } else {
+      followerUl.appendChild(moved);
+    }
+  },
+
+  dispatchPairedItemCloned(primaryLi, followerLi, index) {
+    const event = new CustomEvent("paired-list:item-cloned", {
+      bubbles: true,
+      detail: { primaryLi, followerLi, index }
+    });
+
+    followerLi.dispatchEvent(event);
   }
 }

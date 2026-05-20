@@ -1,3 +1,7 @@
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <% provide :title do %><%= @investment.title %><% end %>
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: budget_investment_url %>

@@ -1,0 +1,47 @@
+<tr id="<%= dom_id(idea) %>" class="kern-table__row">
+  <td class="kern-table__cell" data-field="id"><%= idea.id %></td>
+  <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
+    <%= link_to adm_ideas_idea_path(idea),
+          class: "adm-table-thumb-link",
+          data: { turbo_frame: "_top" },
+          title: idea.title do %>
+      <%= render Adm::TableThumbComponent.new(
+            image: idea.image,
+            title: idea.title,
+            fallback_icon: idea.category&.icon,
+            fallback_color: idea.category&.color
+          ) %>
+    <% end %>
+  </td>
+  <th scope="row" class="kern-table__header" data-field="title">
+    <%= link_to truncate(idea.title, length: 60), idea_path(idea), target: "_blank", class: "kern-link", title: idea.title %>
+  </th>
+  <td class="kern-table__cell" data-field="admin_accepted">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      idea,
+      :accepted?,
+      path: toggle_accepted_adm_ideas_idea_path(idea)
+    ) %>
+    <% if idea.admin_accepted_at.present? %>
+      <small><%= l(idea.admin_accepted_at, format: "%d.%m.%Y") %></small>
+    <% end %>
+  </td>
+  <td class="kern-table__cell" data-field="created_at"><%= l(idea.created_at, format: "%d.%m.%Y") %></td>
+  <td class="kern-table__cell" data-field="author"><%= link_to idea.author.username, user_path(idea.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell" data-field="status"><%= t("ideas.status.#{idea.status}") %></td>
+  <td class="kern-table__cell" data-field="category"><%= idea.category&.name %></td>
+  <td class="kern-table__cell" data-field="officer"><%= idea.officer&.name %></td>
+  <td class="kern-table__cell" data-field="actions">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.show"), url: adm_ideas_idea_path(idea), icon: "open_in_new", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.administer"), url: administer_adm_ideas_idea_path(idea), icon: "settings", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.ideas.ideas.tabs.audits"), url: audits_adm_ideas_idea_path(idea), icon: "history", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_ideas_idea_path(idea),
+        icon: "delete", style: :delete, divider: true,
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
+      ) %>
+    <% end %>
+  </td>
+</tr>

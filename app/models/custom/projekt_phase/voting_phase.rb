@@ -18,15 +18,26 @@ class ProjektPhase::VotingPhase < ProjektPhase
     4
   end
 
+  def customizable_email_templates
+    [
+      ["NotificationServiceMailer", "new_poll"]
+    ]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions settings
+    %w[duration naming restrictions general_settings
        poll_questions
        officing_managers officing_manager_audits
+       email_templates
        age_ranges_for_stats]
   end
 
   def safe_to_destroy?
     polls.empty?
+  end
+
+  def after_hide
+    polls.each(&:hide)
   end
 
   def poll
@@ -44,9 +55,20 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
       name_extension = projekt.polls.count > 0 ? projekt.polls.count + 1 : nil
 
-      polls.create!(
+      new_poll = polls.create!(
         name: [projekt.name, name_extension].compact.join(" "),
         slug: [projekt.name.parameterize, name_extension].compact.join("-")
       )
+
+      copy_projekt_image_to(new_poll)
+    end
+
+    def copy_projekt_image_to(new_poll)
+      source = projekt.image
+      return unless source&.attachment&.attached?
+
+      image = new_poll.build_image(user: source.user, title: source.title)
+      image.attachment.attach(source.attachment.blob)
+      image.save!(validate: false)
     end
 end

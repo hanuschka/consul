@@ -1,0 +1,44 @@
+<%= content_for :title, [@projekt_phase.title, t("adm.projekts.phases.index.title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <% if @projekt_phase.name == "voting_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase.poll, :name, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@poll_image, :attachment, :image,
+          label: t(".poll_image_label"),
+          description: t(".poll_image_description")) %>
+  <% end %>
+
+  <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :phase_tab_name, :string) %>
+
+  <% if @projekt_phase.name.in?(%w[debate_phase proposal_phase budget_phase voting_phase question_phase formular_phase legislation_phase comment_phase livestream_phase point_of_interest_phase]) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :cta_button_name, :string) %>
+  <% end %>
+
+  <% if @projekt_phase.name.in?(%w[proposal_phase budget_phase]) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_intro, :rich_text) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title_placeholder, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_description_placeholder, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :welcome_text_in_show, :rich_text) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :labels_name, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :sentiments_name, :string) %>
+  <% end %>
+
+  <% if @projekt_phase.name == "proposal_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :support_button_text, :string) %>
+  <% end %>
+
+  <% if @projekt_phase.name == "voting_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :description, :rich_text) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase.poll, :closing_note, :rich_text) %>
+  <% end %>
+
+  <% if @projekt_phase.name == "comment_phase" %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :comment_form_title, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :comment_form_button, :string) %>
+  <% end %>
+</div>

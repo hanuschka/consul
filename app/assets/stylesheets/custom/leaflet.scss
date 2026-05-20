@@ -13,6 +13,10 @@
   border: none !important;
   box-shadow: none !important;
 
+  &::placeholder {
+    color: #595959;
+  }
+
   &:focus {
     border: none;
     box-shadow: none;
@@ -108,6 +112,7 @@
 
   span {
     position: relative;
+    top: -2px;
   }
 
   &:hover {

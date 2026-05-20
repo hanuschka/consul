@@ -23,7 +23,7 @@ module CsvServices
       def headers
         [
           "Id", "Username", "Email", "Vorname", "Nachname",
-          "Stadt", "Adresse", "Postleitzahl", "Gebiet",
+          "Stadt", "Adresse", "Postleitzahl",
           "Dokument", "Dokument (4 letzten Ziffern)",
           "Nutzer angelegt am", "letzter Login am",
           "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am", "Reverifizieren"
@@ -33,7 +33,7 @@ module CsvServices
       def row(user)
         user_row = [
           user.id, sanitize_for_csv(user.name), sanitize_for_csv(user.email), sanitize_for_csv(user.first_name), sanitize_for_csv(user.last_name),
-          sanitize_for_csv(user.city_name), sanitize_for_csv(user.formatted_address), user.plz, user.geozone&.name,
+          sanitize_for_csv(user.city_name), sanitize_for_csv(user.formatted_address), user.plz,
           user.document_type, user.document_last_digits,
           I18n.l(user.created_at, format: "%d.%m.%Y"), last_sign_in_date_formatted(user, "%d.%m.%Y")
         ]

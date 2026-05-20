@@ -1,0 +1,64 @@
+<%= form_with model: [:adm, @user] do |f| %>
+  <% if @user.errors.any? %>
+    <div class="kern-alert kern-alert--danger mb-4" role="alert">
+      <div class="kern-alert__body">
+        <ul class="mb-0">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:email)) do %>
+    <%= f.email_field :email, label: false, placeholder: User.human_attribute_name(:email) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:first_name)) do %>
+    <%= f.text_field :first_name, label: false, placeholder: User.human_attribute_name(:first_name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:last_name)) do %>
+    <%= f.text_field :last_name, label: false, placeholder: User.human_attribute_name(:last_name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:date_of_birth)) do %>
+    <%= f.date_field :date_of_birth, label: false %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:gender)) do %>
+    <%= f.select :gender,
+      options_for_gender_select,
+      { include_blank: t("custom.helpers.select.gender_prompt") },
+      { label: false } %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:city_name)) do %>
+    <%= f.text_field :city_name, label: false, placeholder: User.human_attribute_name(:city_name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:plz)) do %>
+    <%= f.text_field :plz, label: false, placeholder: User.human_attribute_name(:plz) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_name)) do %>
+    <%= f.text_field :street_name, label: false, placeholder: User.human_attribute_name(:street_name) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number)) do %>
+    <%= f.text_field :street_number, label: false, placeholder: User.human_attribute_name(:street_number) %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number_extension)) do %>
+    <%= f.text_field :street_number_extension, label: false, placeholder: User.human_attribute_name(:street_number_extension) %>
+  <% end %>
+
+  <div class="d-flex gap-2">
+    <%= form_submit_button(text: t("shared.submit")) %>
+
+    <% if Setting["feature.melderegister"].present? %>
+      <%= form_submit_button(text: t("adm.users.form.submit_with_reverify"), name: "reverify", icon: "verified", data: { turbo_confirm: t("adm.users.form.reverify_confirm") }) %>
+    <% end %>
+  </div>
+<% end %>

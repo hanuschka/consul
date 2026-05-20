@@ -1,5 +1,12 @@
-<div id="projekt_labels_selector" class="projekt-labels">
-  <h2 class="rich-form-label">
+<% has_projekt_labels_error = model.errors.where(:projekt_labels).any? %>
+<div
+  id="projekt_labels_selector"
+  class="projekt-labels"
+  role="group"
+  aria-labelledby="projekt_labels_heading"
+  <%= "aria-describedby=\"projekt_labels_error\" aria-invalid=\"true\"".html_safe if has_projekt_labels_error %>
+>
+  <h2 class="rich-form-label" id="projekt_labels_heading">
     <i class="fas fa-tag"></i>
     <%= projekt_phase.labels_name.presence || t("custom.shared.form.projekt_labels_label") %>
     <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
@@ -21,8 +28,8 @@
   </div>
 </div>
 
-<% model.errors.where(:projekt_labels).each do |error| %>
-  <small class='form-error is-visible'>
-    <%= error.message %>
+<% if has_projekt_labels_error %>
+  <small id="projekt_labels_error" class="form-error is-visible" role="alert">
+    <%= model.errors.where(:projekt_labels).map(&:message).join(", ") %>
   </small>
 <% end %>

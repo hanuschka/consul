@@ -5,14 +5,24 @@ class DtApi::Resources::VoiceAssistant
     @client = client
   end
 
-  def create_session(session_uuid:, codename:, consul_projekt_phase_id:, data:)
-    @client.post_with_auth(
+  def create_session(codename:, consul_projekt_phase_id:, data:)
+    @client.post(
       BASE_PATH + "/create_session",
       body: {
-        session_uuid: session_uuid,
-        codename: codename,
-        consul_projekt_phase_id: consul_projekt_phase_id,
-        data: data
+        codename:,
+        consul_projekt_phase_id:,
+        data:
+      }
+    )
+  end
+
+  def create_session_v2(codename:, consul_projekt_phase_id:, data:)
+    @client.post(
+      BASE_PATH + "/create_session_v2",
+      body: {
+        codename:,
+        consul_projekt_phase_id:,
+        data:
       }
     )
   end

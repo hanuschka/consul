@@ -1,11 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
@@ -42,6 +46,46 @@ class Setting < ApplicationRecord
 
     def defaults
       {
+        # homepage
+        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
+        "extended_option.general.subtitle": "in der Stadt CONSUL",
+
+        "welcomepage.usage_stats": true,
+        "welcomepage.platform_activity": true,
+        "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
+        # homepage
+
+        # metadata
+        "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
+        "url": "https://deine-stadt.de", # Public-facing URL of the app.
+        "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_name": "CONSUL",
+        "meta_title": nil,
+        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
+        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
+        "facebook_handle": nil,
+        "instagram_handle": nil,
+        "twitter_handle": nil,
+        "twitter_hashtag": nil,
+        "telegram_handle": nil,
+        "youtube_handle": nil,
+        # metadata
+
+        # gdpr
+        "extended_feature.gdpr.gdpr_conformity": true,
+        "extended_feature.gdpr.link_out_warning": true,
+        "extended_feature.gdpr.two_click_iframe_solution": true,
+        "extended_option.gdpr.devise_timeout_min": 30,
+        "extended_option.gdpr.devise_verification_token_validity_days": 3,
+        # gdpr
+
+        # newsletter
+        "advanced_newsletter": false,
+        # newsletter
+
+        "extended_option.general.city_name": "Consul",
+
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
         "feature.google_login": true,
@@ -70,7 +114,7 @@ class Setting < ApplicationRecord
         "feature.bund_id_verification": false,
 
         # "feature.remove_investments_supports": false,
-        "homepage.widgets.feeds.feeds.active_projekts": true,
+        "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": false,
@@ -127,24 +171,13 @@ class Setting < ApplicationRecord
         # Users with this email domain will automatically be marked as level 1 officials
         # Emails under the domain's subdomains will also be included
         "email_domain_for_officials": "",
-        "facebook_handle": nil,
-        "instagram_handle": nil,
-        "telegram_handle": nil,
-        "twitter_handle": nil,
-        "twitter_hashtag": nil,
-        "youtube_handle": nil,
-        "url": "http://example.com", # Public-facing URL of the app.
         # CONSUL installation's organization name
-        "org_name": "CONSUL",
+        "brand_color": "",
         "newsletter_brand_color": "#004a83",
-        "meta_title": nil,
-        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
-        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
         "proposal_notification_minimum_interval_in_days": 3,
         "direct_message_max_per_day": 3,
-        "mailer_from_name": "CONSUL",
-        "mailer_from_address": "noreply@consul.dev",
         "mailer_from_deficiency_report_address": "noreply@consul.dev",
+        "moderation.reports_notification_email": nil,
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,
@@ -179,16 +212,7 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
-        "welcomepage.usage_stats": true,
-        "welcomepage.platform_activity": true,
-        "welcomepage.newsletter_subscription": false,
-        "welcomepage.projekt_search": false,
         "welcomepage.share_buttons": "",
-
-        "projekts.show_archived.sidebar": true,
-        "projekts.second_level_projekts_in_active_filter": false,
-        "projekts.second_level_projekts_in_archived_filter": false,
-        "projekts.set_default_sorting_to_newest": false,
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
@@ -205,7 +229,6 @@ class Setting < ApplicationRecord
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
 
-        "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
         "ideas.officers_can_edit_assigned_reports": false,
@@ -230,18 +253,9 @@ class Setting < ApplicationRecord
         "extended_feature.general.show_guest_login_links": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
-        "extended_option.general.city_name": "CONSUL",
-        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
-        "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",
-
-        "extended_feature.gdpr.gdpr_conformity": true,
-        "extended_feature.gdpr.link_out_warning": true,
-        "extended_feature.gdpr.two_click_iframe_solution": true,
-        "extended_option.gdpr.devise_timeout_min": 30,
-        "extended_option.gdpr.devise_verification_token_validity_days": 3,
 
         "extended_feature.modulewide.enable_categories": true,
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,
@@ -262,7 +276,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.show_suggested_proposals_in_proposal_sidebar": false,
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
-        "extended_option.proposals.max_active_proposals_per_user": 100,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,
@@ -270,7 +283,6 @@ class Setting < ApplicationRecord
 
         "extended_feature.deficiency_reports.enable_my_posts_filter": true,
 
-        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_all": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_underway": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_ongoing": true,
@@ -278,6 +290,7 @@ class Setting < ApplicationRecord
         "extended_feature.projekts_overview_page_navigation.show_index_order_expired": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_individual_list": true,
         "extended_feature.projekts_overview_page_navigation.show_index_order_drafts": true,
+        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
 
         "extended_feature.projekts_overview_page_footer.show_in_index_order_all": true,
         "extended_feature.projekts_overview_page_footer.show_in_index_order_underway": true,
@@ -290,7 +303,32 @@ class Setting < ApplicationRecord
         "extra_fields.registration.check_documents": false,
 
         "extra_fields.verification.check_documents": false,
-        "extra_fields.verification.show_verification_status": true
+        "extra_fields.verification.show_data_completeness_status": true,
+        "extra_fields.verification.show_verification_status": true,
+
+        # Per-section admin intro text, notice, and notice toggle.
+        # Read on each section's adm home; edited under each section's "Einstellungen" tab.
+        "adm.ideas.intro_text": nil,
+        "adm.ideas.notice_message": nil,
+        "adm.ideas.notice_active": nil,
+        "adm.deficiency_reports.intro_text": nil,
+        "adm.deficiency_reports.notice_message": nil,
+        "adm.deficiency_reports.notice_active": nil,
+        "adm.projekts.intro_text": nil,
+        "adm.projekts.notice_message": nil,
+        "adm.projekts.notice_active": nil,
+        "adm.moderation.intro_text": nil,
+        "adm.moderation.notice_message": nil,
+        "adm.moderation.notice_active": nil,
+        "adm.valuation.intro_text": nil,
+        "adm.valuation.notice_message": nil,
+        "adm.valuation.notice_active": nil,
+        "adm.landing_pages.intro_text": nil,
+        "adm.landing_pages.notice_message": nil,
+        "adm.landing_pages.notice_active": nil,
+        "adm.officing.intro_text": nil,
+        "adm.officing.notice_message": nil,
+        "adm.officing.notice_active": nil
       }
     end
 

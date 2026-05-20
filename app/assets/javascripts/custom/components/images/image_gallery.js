@@ -4,14 +4,31 @@
     initialize: function() {
       this.setMissingHrefs()
       this.setupGlighbox()
+      this.bindScrollbarWidthCapture()
     },
 
-    getStickyHeader() {
-      return document.querySelector(".top-bar-wrapper")
+    getFixedElement() {
+      return document.querySelector(".topbar-header")
     },
 
-    getScrollbarWidth: function() {
+    measureScrollbarWidth() {
       return window.innerWidth - document.documentElement.clientWidth;
+    },
+
+    bindScrollbarWidthCapture() {
+      this.cachedScrollbarWidth = this.measureScrollbarWidth();
+
+      window.addEventListener("resize", () => {
+        if (!document.documentElement.classList.contains("glightbox-open")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        if (event.target.closest(".glightbox")) {
+          this.cachedScrollbarWidth = this.measureScrollbarWidth();
+        }
+      }, true);
     },
 
     initializeFor(element) {
@@ -19,16 +36,18 @@
     },
 
     setupGlighbox(element = null) {
-      this.scrollbarWidth = this.getScrollbarWidth();
+      if (this.lightbox) {
+        this.lightbox.destroy();
+      }
 
-      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container">
+      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
                                   <div class="gloader visible"></div>
                                   <div class="goverlay"></div>
                                   <div class="gcontainer">
                                     <div id="glightbox-slider" class="gslider"></div>
-                                    <button class="gnext gbtn" tabindex="0" aria-label="Nächste" data-customattribute="example">{nextSVG}</button>
-                                    <button class="gprev gbtn" tabindex="1" aria-label="Vorherige">{prevSVG}</button>
-                                    <button class="gclose gbtn" tabindex="2" aria-label="Schließen">{closeSVG}</button>
+                                    <button class="gnext gbtn" tabindex="0" aria-label="Nächste">{nextSVG}</button>
+                                    <button class="gprev gbtn" tabindex="0" aria-label="Vorherige">{prevSVG}</button>
+                                    <button class="gclose gbtn" tabindex="0" aria-label="Schließen (ESC)">{closeSVG}</button>
                                   </div>
                                 </div>`;
 
@@ -38,28 +57,78 @@
         additionalParams.elements = element
       }
 
-      var lightbox = new GLightbox({
+      this.lightbox = new GLightbox({
         lightboxHTML: customLightboxHTML,
         openEffect: "fade",
         closeEffect: "fade",
-        preload: false
-        *additionalParams
+        preload: false,
+        ...additionalParams
       });
 
-      lightbox.on('open', () => {
-        var stickyHeader = this.getStickyHeader();
+      this.lightbox.on('open', () => {
+        this.triggerElement = document.activeElement;
 
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
+        var scrollbarWidth = this.cachedScrollbarWidth;
+
+        if (scrollbarWidth > 0) {
+          document.body.style.paddingRight = scrollbarWidth + "px";
+
+          var fixedElement = this.getFixedElement();
+
+          if (fixedElement) {
+            var currentPaddingRight = parseFloat(getComputedStyle(fixedElement).paddingRight) || 0;
+            fixedElement.dataset.lightboxOriginalPaddingRight = fixedElement.style.paddingRight;
+            fixedElement.style.paddingRight = (currentPaddingRight + scrollbarWidth) + "px";
+          }
+        }
+
+        setTimeout(() => {
+          var closeBtn = document.querySelector(".gclose");
+
+          if (closeBtn) {
+            closeBtn.focus();
+          }
+        }, 100);
+      });
+      this.lightbox.on('close', () => {
+        document.body.style.paddingRight = "";
+
+        var fixedElement = this.getFixedElement();
+
+        if (fixedElement) {
+          fixedElement.style.paddingRight = fixedElement.dataset.lightboxOriginalPaddingRight || "";
+          delete fixedElement.dataset.lightboxOriginalPaddingRight;
+        }
+
+        if (this.triggerElement) {
+          this.triggerElement.focus();
+          this.triggerElement = null;
         }
       });
-      lightbox.on('close', () => {
-        var stickyHeader = this.getStickyHeader();
-
-        if (stickyHeader) {
-          stickyHeader.style.paddingRight = "0";
-        }
+      this.lightbox.on('slide_after_load', (data) => {
+        this.applySlideAltText(data);
       });
+    },
+
+    applySlideAltText(data) {
+      var slideEl = data.slideNode || data.slide;
+      if (!slideEl) return
+
+      var img = slideEl.querySelector('.gslide-media img');
+      if (!img) return
+
+      if (data.trigger) {
+        var altText = data.trigger.getAttribute('data-alt');
+
+        if (altText) {
+          img.setAttribute('alt', altText);
+          return
+        }
+      }
+
+      if (!img.alt || img.alt === '') {
+        img.setAttribute('alt', 'Vergrößerte Ansicht');
+      }
     },
 
     setMissingHrefs: function() {
@@ -70,5 +139,6 @@
         }
       });
     },
+
   };
 }).call(this);

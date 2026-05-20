@@ -4,14 +4,22 @@ de:
       form:
         title: "Neuen %{label} erstellen"
         page_description: "Die Plattform lebt von Ihren Beiträgen! Teilen Sie uns mit, was Sie bewegt – und tauschen Sie sich im Anschluss mit anderen zu Ihren Ideen aus. Es gibt kein Richtig und kein Falsch, jeder Beitrag zählt. Danke, dass Sie sich die Zeit nehmen und sich beteiligen!"
-        submit_button: Jetzt veröffentlichen
+        submit_button: Jetzt einreichen
+        privacy_policy_heading: "Datenschutzbestimmungen & Allgemeine Nutzerbedingungen"
         map_location_label: Karte
         map_location_instructions: "Wo soll Ihr Beitrag umgesetzt werden? Platzieren Sie einen „Pin“, um andere ins Bild zu setzen."
         map_location_instructions_mandatory: "Bitte setzen Sie einen Eintrag auf die Karte (Pflichtfeld)."
-        map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte (optional)."
+        map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte."
       image_upload:
         top_line_default: Wählen Sie ein passendes Bild für Ihren Beitrag. Beiträge mit Bild erhalten meistens mehr Unterstützung.
         title_default: Bild hinzufügen (optional)
         bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel."
         max_image_size: Die maximale Bildgröße beträgt %{size} MB.
+        supported_formats: "Dateiformat: %{formats}"
         credits_field_placeholder: Hier klicken, um Copyright des Bildes hinzuzufügen
+        generating_title: "KI erstellt ein Bild …"
+        generating_subtitle: "Das kann bis zu 25 Sekunden dauern. Sie können stattdessen auch ein eigenes Bild hochladen."
+        ownership_notice_title: "Hinweis zum Urheberrecht"
+        ownership_notice_body: "Bitte laden Sie nur Bilder hoch, an denen Sie selbst die Rechte besitzen oder für die Sie eine ausdrückliche Erlaubnis zur Veröffentlichung haben."
+        ownership_notice_confirm: "Bild auswählen"
+        ownership_notice_cancel: "Abbrechen"

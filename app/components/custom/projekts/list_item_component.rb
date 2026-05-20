@@ -5,9 +5,8 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   delegate :projekt_option, to: :helpers
 
-  def initialize(projekt:, additional_url_params: nil)
+  def initialize(projekt:)
     @projekt = projekt
-    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -19,7 +18,7 @@ class Projekts::ListItemComponent < ApplicationComponent
       narrow_header: true,
       url: projekt_url,
       url_target: url_target,
-      image_url: image_url
+      image: projekt.image
     }
   end
 
@@ -44,16 +43,7 @@ class Projekts::ListItemComponent < ApplicationComponent
   end
 
   def projekt_url
-    base_url = projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
-
-    if @additional_url_params.present? && @additional_url_params[:landing_page].present?
-      helpers.landing_page_projekt_page_path(
-        landing_page_slug: @additional_url_params[:landing_page],
-        id: projekt.page.slug
-      )
-    else
-      base_url
-    end
+    projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
   end
 
   def url_target

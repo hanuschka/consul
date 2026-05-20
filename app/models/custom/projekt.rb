@@ -15,6 +15,7 @@ class Projekt < ApplicationRecord
   include Taggable
   include Searchable
   include Notifiable
+  include SectionTrackable
 
   translates :description
   include Globalizable
@@ -30,6 +31,7 @@ class Projekt < ApplicationRecord
   belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_one :projekt_evaluation, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -53,6 +55,12 @@ class Projekt < ApplicationRecord
 
   has_and_belongs_to_many :geozone_affiliations, class_name: "Geozone",
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :registered_address_district_affiliations,
+    class_name: "RegisteredAddress::District",
+    join_table: "projekts_registered_address_districts",
+    foreign_key: "projekt_id",
+    association_foreign_key: "registered_address_district_id",
+    after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
@@ -70,6 +78,7 @@ class Projekt < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   has_many :map_layers, as: :mappable, dependent: :destroy
+  has_many :navbar_items, dependent: :destroy
 
   # has_many :projekt_labels, dependent: :destroy #remove
 
@@ -88,19 +97,14 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
-  has_and_belongs_to_many :landing_pages,
-    class_name: 'SiteCustomization::Page',
-    join_table: 'landing_pages_projekts',
-    foreign_key: 'projekt_id',
-    association_foreign_key: 'site_customization_page_id'
+  belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
-  # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity
-  around_update :update_page
+
   after_save do
     if parent_id_previously_changed?
       Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
@@ -108,6 +112,7 @@ class Projekt < ApplicationRecord
   end
 
   before_save :assign_top_level_projekt_from_parent
+  before_save :sync_published_at
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -120,14 +125,17 @@ class Projekt < ApplicationRecord
       return false
     end
 
-    InternalApiClient.active_dt? && (on_global_overview? || acceptable_to_be_exported_for_global_overview?)
+    InternalApiClient.active_dt? && (
+      on_dt_global_overview? || acceptable_to_be_exported_for_global_overview?
+    )
   end
 
-  # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
+  validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
+  attribute :show_content_background, :boolean, default: false
 
   enum import_file_status: {
     never_run: "never_run",
@@ -177,6 +185,7 @@ class Projekt < ApplicationRecord
     activated
       .with_published_custom_page
       .show_in_overview_page
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_underway, ->() {
@@ -185,6 +194,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases, :projekt_settings)
+      .order("projekts.created_at DESC")
       .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
@@ -194,6 +204,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
+      .order("projekts.created_at DESC")
       .select do |p|
         p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
       end
@@ -205,6 +216,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
@@ -212,6 +224,7 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
@@ -219,10 +232,12 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_drafts, -> {
     not_activated
+      .order("projekts.created_at DESC")
   }
 
   scope :not_in_individual_list, -> {
@@ -291,13 +306,6 @@ class Projekt < ApplicationRecord
       .sort_by_order_number
   }
 
-  scope :assigned_to_landing_page, ->(landing_page_id = nil) {
-    if landing_page_id.blank?
-      joins(:landing_pages).distinct
-    else
-      joins(:landing_pages).where(site_customization_pages: { id: landing_page_id })
-    end
-  }
 
   ##################
 
@@ -382,11 +390,6 @@ class Projekt < ApplicationRecord
     page&.status == "published"
   end
 
-  def update_page
-    update_corresponding_page if name_changed?
-    yield
-  end
-
   def can_assign_resources?(controller_name, user, resource = nil)
     return false if user.nil?
     return true if resource&.respond_to?(:author) && resource.author == user
@@ -436,6 +439,25 @@ class Projekt < ApplicationRecord
 
   def activated?
     projekt_settings_hash["projekt_feature.main.activate"].present?
+  end
+
+  # Re-evaluates publish criteria on every save and sets/clears `published_at`
+  # accordingly. Always updates if criteria change — no "first visibility wins".
+  def sync_published_at
+    if meets_publish_criteria?
+      self.published_at ||= Time.current
+    else
+      self.published_at = nil
+    end
+  end
+
+  # TODO(review): confirm these are the right conditions for a projekt to be
+  # considered "published". Adjust the criteria as needed.
+  def meets_publish_criteria?
+    !special? &&
+      activated? &&
+      hard_individual_group_values.none? &&
+      page&.published?
   end
 
   def activated_children
@@ -533,7 +555,7 @@ class Projekt < ApplicationRecord
   end
 
   def title
-    name
+    page&.title || name
   end
 
   def legislation_process
@@ -587,6 +609,14 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(user = nil)
     true
+  end
+
+  def section_tracking_section
+    "projekts"
+  end
+
+  def section_tracking_user
+    author
   end
 
   def vc_map_enabled?
@@ -720,11 +750,16 @@ class Projekt < ApplicationRecord
       if hidden_at.present?
         sync_destroy_for_global_overview
       else
-        Projekts::OverviewProjektUpdatedJob.perform_later(
-          self
-        )
+        Projekts::OverviewProjektUpdatedJob.perform_later(self)
       end
     end
+  end
+
+  def sync_for_global_overview_from_page_changes(page_saved_changes)
+    changed_set = page_saved_changes.except("created_at", "updated_at")
+    return if changed_set.empty?
+
+    perform_sync_update_for_global_overview
   end
 
   private
@@ -732,20 +767,17 @@ class Projekt < ApplicationRecord
     def create_corresponding_page
       create_page(
         title: name,
-        slug: form_page_slug,
+        slug: generate_page_slug(name),
         status: "published",
         content: ""
       )
     end
 
-    def update_corresponding_page
-      page.update(title: name, slug: form_page_slug)
-    end
-
-    def form_page_slug
-      clean_slug = name.downcase.gsub("ä", "ae").gsub("ö", "oe").gsub("ü", "ue").gsub("ß", "ss")
+    def generate_page_slug(title)
+      clean_slug = title.downcase.gsub("ä", "ae").gsub("ö", "oe").gsub("ü", "ue").gsub("ß", "ss")
         .gsub(/[^a-z0-9\s]/, "").gsub(/\s+/, "-")
       pages_with_similar_slugs = SiteCustomization::Page.where("slug ~ ?", "^#{clean_slug}(-[0-9]+$|$)")
+        .where.not(id: page&.id)
         .order(id: :asc)
 
       if pages_with_similar_slugs.any? && pages_with_similar_slugs.last.slug.match?(/-\d+$/)
@@ -811,13 +843,9 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
-    end
-
-    def set_default_color
-      self.color ||= "#004a83"
     end
 
     def touch_updated_at(geozone)
@@ -844,8 +872,9 @@ class Projekt < ApplicationRecord
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported_for_global_overview?
-        Projekts::OverviewProjektDestroyedJob.perform_later(id)
-      end
+      return unless on_dt_global_overview?
+
+      Projekts::OverviewProjektDestroyedJob.perform_later(id)
+      update_column(:on_dt_global_overview, false) unless destroyed?
     end
 end

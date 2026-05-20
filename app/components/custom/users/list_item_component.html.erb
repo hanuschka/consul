@@ -1,7 +1,7 @@
 <div class="user-list-item new-card -no-padding">
   <div class="user-list-item--background-image">
     <% if user.background_image.attached? %>
-      <%= image_tag(user.background_image.variant(resize: "300x300>")) %>
+      <%= image_tag(user.background_image.variant(resize_to_limit: [300, 300])) %>
     <% end %>
   </div>
   <div class="user-list-item--info">
@@ -9,7 +9,7 @@
       <% if user.image&.variant(:thumb2).present? %>
         <%= image_tag(user.image&.variant(:thumb2)) %>
       <% else %>
-        <div class="user-list-item--avatar-placeholder">
+        <div class="user-list-item--avatar-placeholder" aria-hidden="true">
           <%= user.first_letter_of_name %>
         </div>
       <% end %>
@@ -21,9 +21,9 @@
       </div>
     <% end %>
 
-    <div class="user-list-item--registration-date margin-bottom-10">
+    <p class="user-list-item--registration-date margin-bottom-10">
       <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
-    </div>
+    </p>
     <div class="margin-bottom-10">
       <%= render Shared::OfficialPositionBadgeComponent.new(user: user) %>
     </div>

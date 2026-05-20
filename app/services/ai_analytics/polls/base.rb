@@ -23,13 +23,28 @@ class AiAnalytics::Polls::Base < ApplicationService
   def generate_analysis
     chat = Ai::RubyLlmFactory.chat
       .with_schema(@output_schema)
+      .with_instructions(system_instructions)
 
-    response = chat.ask(full_prompt)
+    response = chat.ask(user_prompt)
     response.content
   end
 
-  def full_prompt
-    context = <<~TEXT
+  def system_instructions
+    <<~TEXT
+      #{@prompt}
+
+      Formating guideline:
+      - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful.
+      - Dont add spaces before <li> items.
+      - Structure your answer clearly with paragraphs
+      - Dont use br html tags
+
+      Output response in #{target_language} language.
+    TEXT
+  end
+
+  def user_prompt
+    <<~TEXT
       Poll: #{@poll.name}
       Summary: #{@poll.summary}
       Total Voters: #{@poll.voters.count}
@@ -40,15 +55,7 @@ class AiAnalytics::Polls::Base < ApplicationService
 
       Citizen Comments:
       #{formatted_comments}
-
-      Formating guideline:
-      - Use semantic HTML structure (e.g. <h4>, <p>, <ul>, <li>) where helpful.
-      - Dont add spaces before <li> items.
-      - Structure your answer clearly with paragraphs
-      - Dont use br html tags
     TEXT
-
-    context + @prompt.gsub("{{target_language}}", target_language)
   end
 
   def store_result(result)

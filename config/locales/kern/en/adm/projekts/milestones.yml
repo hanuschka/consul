@@ -1,0 +1,29 @@
+en:
+  adm:
+    projekts:
+      milestones:
+        new:
+          title: Create milestone
+        create:
+          success: Milestone created successfully.
+        edit:
+          title: Edit milestone
+        update:
+          success: Milestone updated successfully.
+        destroy:
+          success: Milestone deleted successfully.
+        form:
+          status_label: Current status (optional)
+          status_hint_html: "Assign a status to the milestone that signals the current processing state — e.g. 'In planning', 'In implementation', or 'Completed'. The status is shown next to the milestone on the frontend. %{manage_link}"
+          no_statuses: No statuses have been defined for these proposals yet.
+          manage_statuses: Manage statuses
+          description_label: Description
+          description_hint: "Detailed description of the milestone, shown on the frontend. Explain what was achieved in this step or what is planned. Provide relevant background, decisions, or next steps. The text supports rich-text formatting with links and highlights."
+          publication_date_label: Publication date
+          publication_date_hint: "Determines from when the milestone is visible on the frontend and defines its chronological position on the timeline. Milestones are displayed sorted by this date. Use the actual date of the event or the planned publication date."
+          custom_date_label: Display date (optional)
+          custom_date_hint: "Optional free text shown on the frontend instead of the publication date. Suitable for imprecise time expressions like 'Summer 2026', 'Q3 2026', or 'After completion of the planning phase'. If empty, the publication date entered above is shown automatically in the standard format."
+          custom_date_placeholder: "e.g. Summer 2026"
+          image_label: Cover image
+          image_hint: "Optional image shown on the frontend next to the milestone. Use a meaningful landscape image that visually supports the progress or result of this milestone. Recommended minimum width: 800 pixels. Supported formats: JPG, PNG."
+          submit: Save

@@ -495,6 +495,50 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/auth/rotate_token":
+    post:
+      summary: Rotate API access token
+      tags:
+      - Auth
+      security:
+      - bearer_auth: []
+      description: Regenerates the access token for the authenticated API client.
+        The old token is immediately invalidated and the new token is returned. Any
+        authenticated client can rotate its own token.
+      responses:
+        '200':
+          description: old token is invalidated after rotation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: sk_abc123...
+                    required:
+                    - access_token
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budgets/{budget_id}/investments":
     parameters:
     - name: budget_id
@@ -1230,6 +1274,175 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/budgets/{budget_id}/budget_phases":
+    parameters:
+    - name: budget_id
+      in: path
+      description: Budget ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List budget phases
+      tags:
+      - Budget Phases
+      security:
+      - bearer_auth: []
+      description: "Retrieve all workflow phases for a budget. Each budget has 9 phases:
+        informing, accepting, reviewing, selecting, valuating, publishing_prices,
+        balloting, reviewing_ballots, finished. \n\n*Authorization: Available to both
+        `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: budget phases returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_phases:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            kind:
+                              type: string
+                            name:
+                              type: string
+                            starts_at:
+                              type: string
+                              nullable: true
+                            ends_at:
+                              type: string
+                              nullable: true
+                            enabled:
+                              type: boolean
+                    required:
+                    - budget_phases
+                required:
+                - data
+        '404':
+          description: budget not found
+  "/api/budget_phases/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Budget Phase ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a budget phase
+      tags:
+      - Budget Phases
+      security:
+      - bearer_auth: []
+      description: "Retrieve a single budget phase by ID. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: budget phase returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_phase:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          kind:
+                            type: string
+                          name:
+                            type: string
+                          starts_at:
+                            type: string
+                            nullable: true
+                          ends_at:
+                            type: string
+                            nullable: true
+                          enabled:
+                            type: boolean
+                    required:
+                    - budget_phase
+                required:
+                - data
+    patch:
+      summary: Update a budget phase
+      tags:
+      - Budget Phases
+      security:
+      - bearer_auth: []
+      description: "Update a budget phase's dates and enabled status. Use this to
+        configure the budget workflow timeline. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: budget phase disabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_phase:
+                        type: object
+                    required:
+                    - budget_phase
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                budget_phase:
+                  type: object
+                  properties:
+                    starts_at:
+                      type: string
+                      nullable: true
+                      description: Phase start date (YYYY-MM-DD)
+                    ends_at:
+                      type: string
+                      nullable: true
+                      description: Phase end date (YYYY-MM-DD)
+                    enabled:
+                      type: boolean
+                      nullable: true
+                      description: Enable or disable this phase
+              required:
+              - budget_phase
+        description: Budget phase attributes to update
   "/api/budgets":
     get:
       summary: List all budgets
@@ -1423,13 +1636,12 @@ paths:
                     currency_symbol:
                       type: string
                       nullable: true
-                      description: Currency symbol to display (e.g., $, €, £)
+                      description: Currency symbol to display (e.g., $, €, £, ¥)
                     voting_style:
                       type: string
                       nullable: true
-                      description: 'Voting mechanism type: "knapsack" (individual
-                        budget allocation), "plurality" (select preferred options),
-                        or others'
+                      description: 'Voting mechanism type: "knapsack", "approval",
+                        or "distributed"'
                     published:
                       type: boolean
                       nullable: true
@@ -1439,11 +1651,55 @@ paths:
                       nullable: true
                       description: URL-friendly identifier for the budget (auto-generated
                         if not provided)
+                    hide_money:
+                      type: boolean
+                      nullable: true
+                      description: Hide monetary values from public view
+                    max_number_of_winners:
+                      type: integer
+                      nullable: true
+                      description: Maximum number of winning proposals (0 = unlimited)
+                    show_results_after_first_vote:
+                      type: boolean
+                      nullable: true
+                      description: Show voting results in real time after the first
+                        vote
+                    show_percentage_values_only:
+                      type: boolean
+                      nullable: true
+                      description: Display only percentage values instead of absolute
+                        numbers
+                    max_preselected:
+                      type: integer
+                      nullable: true
+                      description: Maximum number of pre-selected proposals (0 = disabled)
+                    heading_attributes:
+                      type: object
+                      nullable: true
+                      description: 'Budget heading configuration: total amount, population
+                        and ballot limits'
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                          description: Heading ID (required for updates)
+                        price:
+                          type: integer
+                          nullable: true
+                          description: Total budget amount for this heading
+                        population:
+                          type: integer
+                          nullable: true
+                          description: Population count for this heading
+                        max_ballot_lines:
+                          type: integer
+                          nullable: true
+                          description: Maximum ballot lines per voter
                     image_attributes:
                       type: object
                       nullable: true
-                      description: 'Optional: Image for budget branding or visualization
-                        (logo, cover image, etc.). Upload as base64-encoded data.'
+                      description: 'Optional: Image for budget branding or visualization.
+                        Upload as base64-encoded data.'
                       properties:
                         id:
                           type: integer
@@ -1451,36 +1707,32 @@ paths:
                         title:
                           type: string
                           nullable: true
-                          description: Image caption, alt text, or brief description.
-                            Used for accessibility and displayed with the image.
+                          description: Image caption or alt text
                         attachment:
                           type: string
                           nullable: true
-                          description: 'Base64-encoded image file. Required when adding
-                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB for optimal performance).'
+                          description: Base64-encoded image file (JPEG, PNG, GIF,
+                            WebP, max 5MB)
                         cached_attachment:
                           type: string
                           nullable: true
                         credits:
                           type: string
                           nullable: true
-                          description: Image source attribution, photographer/artist
-                            name, or copyright information.
+                          description: Image source attribution or copyright
                         user_id:
                           type: integer
                           nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
-                          description: Set to true to remove the current image from
-                            the budget.
+                          description: Set to true to remove the image
                   required:
                   - name
               required:
               - budget
         description: Budget configuration with required name and optional currency,
-          voting style, publication settings, and image attachment
+          voting style, publication settings, heading attributes and image attachment
   "/api/budgets/{id}":
     parameters:
     - name: id
@@ -1605,7 +1857,7 @@ paths:
                     name:
                       type: string
                       nullable: true
-                      description: Budget display name to update
+                      description: Budget display name
                     phase:
                       type: string
                       nullable: true
@@ -1613,11 +1865,11 @@ paths:
                     currency_symbol:
                       type: string
                       nullable: true
-                      description: New currency symbol to display
+                      description: Currency symbol (€, $, £, ¥)
                     voting_style:
                       type: string
                       nullable: true
-                      description: New voting mechanism type
+                      description: 'Voting mechanism: "knapsack", "approval", or "distributed"'
                     published:
                       type: boolean
                       nullable: true
@@ -1625,13 +1877,54 @@ paths:
                     slug:
                       type: string
                       nullable: true
-                      description: URL-friendly identifier for the budget
+                      description: URL-friendly identifier
+                    hide_money:
+                      type: boolean
+                      nullable: true
+                      description: Hide monetary values from public view
+                    max_number_of_winners:
+                      type: integer
+                      nullable: true
+                      description: Maximum number of winning proposals
+                    show_results_after_first_vote:
+                      type: boolean
+                      nullable: true
+                      description: Show results in real time
+                    show_percentage_values_only:
+                      type: boolean
+                      nullable: true
+                      description: Display only percentages
+                    max_preselected:
+                      type: integer
+                      nullable: true
+                      description: Maximum pre-selected proposals
+                    heading_attributes:
+                      type: object
+                      nullable: true
+                      description: 'Budget heading: total amount, population and ballot
+                        limits'
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                          description: Heading ID (required for updates)
+                        price:
+                          type: integer
+                          nullable: true
+                          description: Total budget amount
+                        population:
+                          type: integer
+                          nullable: true
+                          description: Population count
+                        max_ballot_lines:
+                          type: integer
+                          nullable: true
+                          description: Maximum ballot lines per voter
                     image_attributes:
                       type: object
                       nullable: true
-                      description: Update, replace, or remove the budget image. Attach
-                        a new image (base64-encoded), update metadata (title/credits),
-                        or set _destroy=true to remove. All fields are optional.
+                      description: Update, replace or remove budget image via base64-encoded
+                        data.
                       properties:
                         id:
                           type: integer
@@ -1639,34 +1932,29 @@ paths:
                         title:
                           type: string
                           nullable: true
-                          description: Updated image caption or alt text. Improves
-                            accessibility by describing the image content.
+                          description: Image caption or alt text
                         attachment:
                           type: string
                           nullable: true
-                          description: 'Base64-encoded image file to replace current
-                            image. Supported formats: JPEG, PNG, GIF, WebP (recommended
-                            max 5MB). Omit to keep existing image.'
+                          description: Base64-encoded image file (JPEG, PNG, GIF,
+                            WebP, max 5MB)
                         cached_attachment:
                           type: string
                           nullable: true
                         credits:
                           type: string
                           nullable: true
-                          description: Updated image source attribution, photographer/artist
-                            name, or copyright notice.
+                          description: Image source attribution or copyright
                         user_id:
                           type: integer
                           nullable: true
                         _destroy:
                           type: boolean
                           nullable: true
-                          description: Set to true to remove the image entirely from
-                            the budget while preserving other budget properties.
+                          description: Set to true to remove the image
               required:
               - budget
-        description: Budget attributes to update (name, currency_symbol, voting_style,
-          published, image). Any field not provided remains unchanged.
+        description: Budget attributes to update. Any field not provided remains unchanged.
     delete:
       summary: Delete a budget
       tags:
@@ -2620,7 +2908,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: projekt event created
+          description: projekt event created with base64 image
           content:
             application/json:
               schema:
@@ -2707,6 +2995,42 @@ paths:
                     sign_language_interpreter:
                       type: boolean
                       nullable: true
+                    image_attributes:
+                      type: object
+                      nullable: true
+                      description: 'Optional: Image associated with the event (e.g.,
+                        flyer, venue photo, speaker portrait). Upload as base64-encoded
+                        data.'
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption or alt text. Used for accessibility
+                            and displayed with the image.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Required when adding
+                            a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended
+                            max 5MB).'
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer name,
+                            or copyright information.
+                        user_id:
+                          type: integer
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current event image.
                   required:
                   - title
               required:
@@ -2763,7 +3087,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: projekt event updated
+          description: projekt event updated with base64 image
           content:
             application/json:
               schema:
@@ -2850,6 +3174,44 @@ paths:
                     sign_language_interpreter:
                       type: boolean
                       nullable: true
+                    image_attributes:
+                      type: object
+                      nullable: true
+                      description: Update, replace, or remove the event image. Attach
+                        a new image (base64-encoded), update metadata (title/credits),
+                        or set _destroy=true to remove. All fields are optional.
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                          description: ID of the existing image to update. Omit when
+                            adding a new image.
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption or alt text. Used for accessibility
+                            and displayed with the image.
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: 'Base64-encoded image file. Provide to replace
+                            the current image. Supported formats: JPEG, PNG, GIF,
+                            WebP (recommended max 5MB).'
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution, photographer name,
+                            or copyright information.
+                        user_id:
+                          type: integer
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current event image.
         description: Attributes to update on the event
     delete:
       summary: Delete a projekt event
@@ -4663,7 +5025,7 @@ paths:
     parameters:
     - name: projekt_phase_id
       in: path
-      description: Projekt Phase ID
+      description: Projekt Phase ID (MilestonePhase)
       required: true
       schema:
         type: integer
@@ -4674,7 +5036,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates. Each milestone spans a date range and contains status information about completed activities.
+        Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -4737,6 +5099,84 @@ paths:
                         type: array
                         items:
                           type: string
+        '404':
+          description: projekt phase not found
+    post:
+      summary: Create a milestone
+      tags:
+      - Milestones
+      security:
+      - bearer_auth: []
+      description: |-
+        Create a new milestone for a MilestonePhase. Milestones require a publication_date and either a description or a status_id.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '201':
+          description: milestone created with status_id instead of description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      milestone:
+                        type: object
+                    required:
+                    - milestone
+                required:
+                - data
+        '422':
+          description: missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: projekt phase not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                milestone:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Milestone title (max 80 characters)
+                    description:
+                      type: string
+                      description: Milestone description. Required unless status_id
+                        is provided.
+                    publication_date:
+                      type: string
+                      format: date
+                      description: Publication date in YYYY-MM-DD format. Required.
+                    custom_date:
+                      type: string
+                      nullable: true
+                      description: Custom display date text (optional)
+                    status_id:
+                      type: integer
+                      nullable: true
+                      description: Milestone status ID (optional). When provided,
+                        description becomes optional.
+              required:
+              - milestone
+        description: Milestone attributes
   "/api/{invalid_path}":
     parameters:
     - name: invalid_path
@@ -5869,6 +6309,825 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/poll_questions/{poll_question_id}/answers":
+    parameters:
+    - name: poll_question_id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List answers for a poll question
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "List all answers for a specific poll question. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: answers found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answers:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answers
+                required:
+                - data
+        '404':
+          description: question not found
+    post:
+      summary: Create a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Create a new answer for a poll question. If given_order is not
+        provided, it will be auto-assigned to the next position. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: answer created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Answer title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Answer description (sets for the current locale)
+                    open_answer:
+                      type: boolean
+                      nullable: true
+                      description: Free-text answer (no predefined options)
+                    more_info_link:
+                      type: string
+                      nullable: true
+                      description: External link URL for more info
+                    more_info_iframe:
+                      type: string
+                      nullable: true
+                      description: Embedded iframe URL
+                    next_question_id:
+                      type: integer
+                      nullable: true
+                      description: ID of next question to show after this answer
+                    terminates_poll:
+                      type: boolean
+                      nullable: true
+                      description: Whether selecting this answer ends the poll
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order (auto-assigned if omitted)
+                    videos_attributes:
+                      type: array
+                      description: External videos (YouTube/Vimeo)
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Video ID (required for update/delete)
+                          title:
+                            type: string
+                            description: Video title
+                          url:
+                            type: string
+                            description: YouTube or Vimeo URL
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set true to remove video
+                    translations_attributes:
+                      type: array
+                      description: Multilingual content. Provide title and description
+                        for each language.
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            description: Answer title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Answer description in the specified language
+              required:
+              - answer
+        description: Poll question answer creation payload
+  "/api/poll_questions/{poll_question_id}/answers/order":
+    parameters:
+    - name: poll_question_id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Reorder answers for a poll question
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Reorder the answers of a poll question by providing an ordered
+        list of answer IDs. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: answers reordered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ordered_list:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of answer IDs in desired order
+              required:
+              - ordered_list
+        description: Ordered list of answer IDs
+  "/api/poll_question_answers/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Poll Question Answer ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Retrieve a specific poll question answer by ID. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: answer found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '404':
+          description: answer not found
+    patch:
+      summary: Update a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Update an existing poll question answer. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: answer updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      answer:
+                        "$ref": "#/components/schemas/PollQuestionAnswer"
+                    required:
+                    - answer
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                      description: Answer title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Answer description (sets for the current locale)
+                    open_answer:
+                      type: boolean
+                      nullable: true
+                      description: Free-text answer (no predefined options)
+                    more_info_link:
+                      type: string
+                      nullable: true
+                      description: External link URL for more info
+                    more_info_iframe:
+                      type: string
+                      nullable: true
+                      description: Embedded iframe URL
+                    next_question_id:
+                      type: integer
+                      nullable: true
+                      description: ID of next question to show after this answer
+                    terminates_poll:
+                      type: boolean
+                      nullable: true
+                      description: Whether selecting this answer ends the poll
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order of the answer
+                    videos_attributes:
+                      type: array
+                      description: External videos (YouTube/Vimeo)
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Video ID (required for update/delete)
+                          title:
+                            type: string
+                            description: Video title
+                          url:
+                            type: string
+                            description: YouTube or Vimeo URL
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set true to remove video
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Translation ID (required for updating existing
+                              translations)
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            nullable: true
+                            description: Answer title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Answer description in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
+        description: Attributes to update on the answer
+    delete:
+      summary: Delete a poll question answer
+      tags:
+      - Poll Question Answers
+      security:
+      - bearer_auth: []
+      description: "Delete a poll question answer. \n\n*Authorization: Requires `admin`
+        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: answer deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: answer not found
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/polls/{poll_id}/questions":
+    parameters:
+    - name: poll_id
+      in: path
+      description: Poll ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List questions for a poll
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "List all questions within a specific poll. Returns questions with
+        their answers. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
+      responses:
+        '200':
+          description: questions found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      questions:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - questions
+                required:
+                - data
+        '404':
+          description: poll not found
+    post:
+      summary: Create a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Create a new question within a poll. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: bundle question created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Question title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Description text (sets for the current locale)
+                    intro:
+                      type: string
+                      nullable: true
+                      description: Introduction text (sets for the current locale)
+                    multiple:
+                      type: boolean
+                      nullable: true
+                      description: Whether multiple answers can be selected
+                    show_images:
+                      type: boolean
+                      nullable: true
+                      description: Display answer options as images
+                    answer_mandatory:
+                      type: boolean
+                      nullable: true
+                      description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Set to true to create a bundle question (container
+                        for nested questions)
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order (auto-assigned if omitted)
+                    votation_type_attributes:
+                      type: object
+                      properties:
+                        vote_type:
+                          type: string
+                          enum:
+                          - unique
+                          - multiple
+                          - multiple_with_weight
+                          - rating_scale
+                          description: Votation type
+                        max_votes:
+                          type: integer
+                          nullable: true
+                          description: Max total votes allowed (for multiple types)
+                        max_votes_per_answer:
+                          type: integer
+                          nullable: true
+                          description: Max votes per single answer (for multiple types)
+                        show_hint_callout:
+                          type: boolean
+                          nullable: true
+                          description: Show blue info box in frontend
+                    translations_attributes:
+                      type: array
+                      description: Multilingual content. Provide title, description,
+                        and intro for each language.
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            description: Question title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Question description in the specified language
+                          intro:
+                            type: string
+                            nullable: true
+                            description: Introduction text in the specified language
+              required:
+              - question
+        description: Poll question creation payload
+  "/api/poll_questions/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Poll Question ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Retrieve a specific poll question by ID with its answers. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
+      responses:
+        '200':
+          description: question found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '404':
+          description: question not found
+    patch:
+      summary: Update a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Update an existing poll question. \n\n*Authorization: Requires
+        `admin` access level. Requests with `public_data` access level will receive
+        `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: question updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      question:
+                        "$ref": "#/components/schemas/PollQuestion"
+                    required:
+                    - question
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                      description: Question title (sets title for the current locale)
+                    description:
+                      type: string
+                      nullable: true
+                      description: Description text (sets for the current locale)
+                    intro:
+                      type: string
+                      nullable: true
+                      description: Introduction text (sets for the current locale)
+                    multiple:
+                      type: boolean
+                      nullable: true
+                      description: Whether multiple answers can be selected
+                    show_images:
+                      type: boolean
+                      nullable: true
+                      description: Display answer options as images
+                    answer_mandatory:
+                      type: boolean
+                      nullable: true
+                      description: Whether answering is mandatory
+                    bundle_question:
+                      type: boolean
+                      nullable: true
+                      description: Whether this is a bundle question (container for
+                        nested questions)
+                    given_order:
+                      type: integer
+                      nullable: true
+                      description: Display order of the question
+                    votation_type_attributes:
+                      type: object
+                      properties:
+                        vote_type:
+                          type: string
+                          enum:
+                          - unique
+                          - multiple
+                          - multiple_with_weight
+                          - rating_scale
+                          description: Votation type
+                        max_votes:
+                          type: integer
+                          nullable: true
+                          description: Max total votes allowed (for multiple types)
+                        max_votes_per_answer:
+                          type: integer
+                          nullable: true
+                          description: Max votes per single answer (for multiple types)
+                        show_hint_callout:
+                          type: boolean
+                          nullable: true
+                          description: Show blue info box in frontend
+                    translations_attributes:
+                      type: array
+                      nullable: true
+                      description: Update multilingual content
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: Translation ID (required for updating existing
+                              translations)
+                          locale:
+                            type: string
+                            description: Language code (e.g., en, de)
+                          title:
+                            type: string
+                            nullable: true
+                            description: Question title in the specified language
+                          description:
+                            type: string
+                            nullable: true
+                            description: Question description in the specified language
+                          intro:
+                            type: string
+                            nullable: true
+                            description: Introduction text in the specified language
+                          _destroy:
+                            type: boolean
+                            nullable: true
+        description: Attributes to update on the poll question
+    delete:
+      summary: Delete a poll question
+      tags:
+      - Poll Questions
+      security:
+      - bearer_auth: []
+      description: "Delete a poll question and all its answers. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: question deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: question not found
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/polls":
     parameters:
     - name: projekt_phase_id
@@ -6297,6 +7556,218 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/projekt_phases/{projekt_phase_id}/progress_bars":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List progress bars
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve all progress bars for a projekt phase.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: progress bars returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bars:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - progress_bars
+                required:
+                - data
+        '404':
+          description: projekt phase not found
+    post:
+      summary: Create a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Create a new progress bar for a projekt phase. Only one primary bar allowed per phase. Secondary bars require a title.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '201':
+          description: secondary progress bar created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bar:
+                        type: object
+                    required:
+                    - progress_bar
+                required:
+                - data
+        '422':
+          description: invalid percentage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: projekt phase not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                progress_bar:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Progress bar label. Required for secondary bars,
+                        optional for primary.
+                    kind:
+                      type: string
+                      enum:
+                      - primary
+                      - secondary
+                      description: Bar type. Only one primary per phase allowed.
+                    percentage:
+                      type: integer
+                      description: Completion percentage (0-100)
+              required:
+              - progress_bar
+        description: Progress bar attributes
+  "/api/progress_bars/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Progress Bar ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve a single progress bar by ID.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: progress bar found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      progress_bar:
+                        type: object
+                    required:
+                    - progress_bar
+                required:
+                - data
+        '404':
+          description: progress bar not found
+    patch:
+      summary: Update a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Update a progress bar's percentage, title, or kind.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      parameters: []
+      responses:
+        '200':
+          description: progress bar updated
+        '422':
+          description: invalid update
+        '404':
+          description: progress bar not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                progress_bar:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Progress bar label. Required for secondary bars,
+                        optional for primary.
+                    kind:
+                      type: string
+                      enum:
+                      - primary
+                      - secondary
+                      description: Bar type. Only one primary per phase allowed.
+                    percentage:
+                      type: integer
+                      description: Completion percentage (0-100)
+              required:
+              - progress_bar
+        description: Progress bar attributes to update
+    delete:
+      summary: Delete a progress bar
+      tags:
+      - Progress Bars
+      security:
+      - bearer_auth: []
+      description: |-
+        Delete a progress bar permanently.
+
+        *Authorization: Requires `admin` access level. Requests with `public_data` access level will receive `403 Forbidden`.*
+      responses:
+        '200':
+          description: progress bar deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: progress bar not found
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id
@@ -8841,6 +10312,8 @@ paths:
                         items:
                           type: string
 tags:
+- name: Auth
+  description: Authentication and token management
 - name: Projekts
   description: Projekt management and core operations
 - name: Projekt Phases
@@ -8881,7 +10354,14 @@ tags:
   description: Reports of deficiencies or issues
 - name: Iframes
   description: Embedded iframe content
+- name: Poll Questions
+  description: Questions within polls
+- name: Poll Question Answers
+  description: Answer options for poll questions
 x-tagGroups:
+- name: Auth
+  tags:
+  - Auth
 - name: Projekts
   tags:
   - Projekts
@@ -8902,6 +10382,8 @@ x-tagGroups:
   - Iframes
   - Point Of Interest Categories
   - Point Of Interest Pins
+  - Poll Questions
+  - Poll Question Answers
 - name: Ideas
   tags:
   - Ideas
@@ -9172,11 +10654,10 @@ components:
               nullable: true
               description: Comma-separated list of related Sustainable Development
                 Goal IDs
-            landing_page_ids:
-              type: array
-              items:
-                type: integer
-              description: Array of landing page IDs associated with this projekt
+            landing_page_id:
+              type: integer
+              nullable: true
+              description: ID of the landing page associated with this projekt
             geozone_affiliation_ids:
               type: array
               items:
@@ -9285,11 +10766,10 @@ components:
               nullable: true
               description: Comma-separated list of related Sustainable Development
                 Goal IDs
-            landing_page_ids:
-              type: array
-              items:
-                type: integer
-              description: Array of landing page IDs associated with this projekt
+            landing_page_id:
+              type: integer
+              nullable: true
+              description: ID of the landing page associated with this projekt
             geozone_affiliation_ids:
               type: array
               items:
@@ -10190,13 +11670,32 @@ components:
           example: Public funding allocation for community projects
         currency_symbol:
           type: string
-          description: Currency symbol used (e.g., $, €, £)
-          example: "$"
-        total_budget:
-          type: number
-          nullable: true
-          description: Total budget amount available for allocation
-          example: 1000000
+          description: Currency symbol used (e.g., $, €, £, ¥)
+          example: "€"
+        voting_style:
+          type: string
+          description: 'Voting mechanism: knapsack, approval or distributed'
+          example: knapsack
+        published:
+          type: boolean
+          description: Whether the budget is publicly visible
+        hide_money:
+          type: boolean
+          description: Whether monetary values are hidden from public view
+        max_number_of_winners:
+          type: integer
+          description: Maximum number of winning proposals (0 = unlimited)
+          example: 0
+        show_results_after_first_vote:
+          type: boolean
+          description: Show voting results in real time
+        show_percentage_values_only:
+          type: boolean
+          description: Display only percentages instead of absolute values
+        max_preselected:
+          type: integer
+          description: Maximum pre-selected proposals (0 = disabled)
+          example: 0
         projekt_phase_id:
           type: integer
           description: ID of the projekt phase this budget belongs to
@@ -10219,6 +11718,37 @@ components:
       - projekt_phase_id
       - created_at
       - updated_at
+    BudgetPhase:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+        kind:
+          type: string
+          description: 'Phase kind: informing, accepting, reviewing, selecting, valuating,
+            publishing_prices, balloting, reviewing_ballots, finished'
+        name:
+          type: string
+          description: Phase display name
+        starts_at:
+          type: string
+          format: date_time
+          nullable: true
+          description: Phase start date
+        ends_at:
+          type: string
+          format: date_time
+          nullable: true
+          description: Phase end date
+        enabled:
+          type: boolean
+          description: Whether this phase is active
+      required:
+      - id
+      - kind
+      - name
+      - enabled
     BudgetInvestment:
       type: object
       properties:
@@ -10951,3 +12481,147 @@ components:
               nullable: true
               description: Original unmodified image
               example: https://example.com/uploads/original.jpg
+    PollQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the poll question
+          example: 1
+        title:
+          type: string
+          description: The question text in the current locale
+          example: What is your preference?
+        description:
+          type: string
+          nullable: true
+          description: Description text in the current locale
+        intro:
+          type: string
+          nullable: true
+          description: Introduction text shown above the question in the current locale
+        multiple:
+          type: boolean
+          nullable: true
+          description: Whether multiple answers can be selected
+          example: false
+        show_images:
+          type: boolean
+          nullable: true
+          description: Display answer options as images
+        answer_mandatory:
+          type: boolean
+          nullable: true
+          description: Whether answering this question is mandatory
+        vote_type:
+          type: string
+          nullable: true
+          description: Votation type (unique, multiple, multiple_with_weight, rating_scale)
+        show_hint_callout:
+          type: boolean
+          nullable: true
+          description: Show blue info box in frontend
+        bundle_question:
+          type: boolean
+          nullable: true
+          description: Whether this is a bundle question (container for nested questions)
+        given_order:
+          type: integer
+          nullable: true
+          description: Display order of the question
+          example: 1
+        created_at:
+          type: string
+          format: date_time
+          description: Timestamp when the question was created
+          example: '2024-01-10T09:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          description: Timestamp when the question was last modified
+          example: '2024-01-15T11:00:00Z'
+        answers:
+          type: array
+          description: Available answer options for this question
+          items:
+            "$ref": "#/components/schemas/PollQuestionAnswer"
+      required:
+      - id
+      - created_at
+      - updated_at
+    PollQuestionAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the answer
+          example: 1
+        title:
+          type: string
+          description: The answer text in the current locale
+          example: Option A
+        description:
+          type: string
+          nullable: true
+          description: Description in the current locale
+        open_answer:
+          type: boolean
+          nullable: true
+          description: Free-text answer (no predefined options)
+        more_info_link:
+          type: string
+          nullable: true
+          description: External link URL for more info
+        more_info_iframe:
+          type: string
+          nullable: true
+          description: Embedded iframe URL
+        next_question_id:
+          type: integer
+          nullable: true
+          description: ID of the next question to show after this answer
+        terminates_poll:
+          type: boolean
+          nullable: true
+          description: Whether selecting this answer ends the poll
+        given_order:
+          type: integer
+          nullable: true
+          description: Display order of the answer
+          example: 1
+        total_votes:
+          type: integer
+          description: Total number of votes for this answer
+          example: 42
+        total_votes_percentage:
+          type: number
+          description: Percentage of total votes
+          example: 35.5
+        videos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Video ID
+              title:
+                type: string
+                description: Video title
+              url:
+                type: string
+                description: YouTube or Vimeo URL
+          description: External videos
+        created_at:
+          type: string
+          format: date_time
+          description: Created timestamp
+        updated_at:
+          type: string
+          format: date_time
+          description: Updated timestamp
+      required:
+      - id
+      - title
+      - created_at
+      - updated_at

@@ -1,0 +1,18 @@
+de:
+  adm:
+    administrators:
+      index:
+        title: Administratoren
+        empty_title: "Keine Administratoren vorhanden"
+        empty_description: "Fügen Sie über den Button oben einen neuen Administrator hinzu."
+        new_link: Neuen Administrator hinzufügen
+        no_administrators: Keine Administratoren vorhanden.
+        hint: Hier verwalten Sie die Plattformadministratoren. Sie haben vollen Zugriff auf Einstellungen, Inhalte und Verwaltungsbereiche dieser Plattform sowie auf alle untergeordneten Dashboards wie Projekte, Mängelmelder oder Ideenplattform. Über „Neuen Administrator hinzufügen" befördern Sie Nutzer; im Aktionsmenü entziehen Sie Rechte wieder.
+      new:
+        title: Neuer Administrator
+        search_label: Nutzer durchsuchen
+        search_description: "Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href=\"/adm/users\" target=\"_blank\">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Administrator hinzugefügt werden. Administratoren erhalten vollen Zugriff auf alle Einstellungen und Verwaltungsbereiche der Plattform."
+      search:
+        no_results: Keine Nutzer gefunden mit diesen Kriterien.
+      administrator:
+        cannot_delete_self: Kann nicht gelöscht werden

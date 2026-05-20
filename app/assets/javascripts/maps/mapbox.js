@@ -25,6 +25,7 @@
       this.baseLayers = {};
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -71,6 +72,7 @@
 
     initMap(callback) {
       const instance = this;
+      this.initialPitch = 53;
 
       function initMapInstance() {
         mapboxgl.accessToken = instance.element.dataset.mapboxPublicToken;
@@ -78,7 +80,7 @@
           container: instance.element,
           center: [instance.mapCenterLongitude, instance.mapCenterLatitude],
           zoom: instance.zoom,
-          pitch: 53,
+          pitch: instance.initialPitch,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
           cooperativeGestures: true,
@@ -154,14 +156,42 @@
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
+        instance.addResetViewControl();
         instance.setupPlugins();
         instance.setupEventListenersForUpdatingFormInputs();
         instance.setupEventListenersForUpdatingMapCenter();
       });
     }
 
+    whenIdle() {
+      const instance = this;
+
+      return new Promise((resolve) => {
+        if (!instance.map) {
+          resolve();
+          return;
+        }
+
+        const waitForIdle = () => {
+          if (instance.map.loaded()) {
+            instance.map.once('idle', resolve);
+          } else {
+            instance.map.once('load', () => {
+              instance.map.once('idle', resolve);
+            });
+          }
+        };
+
+        waitForIdle();
+      });
+    }
+
     setupExpandControl() {
       this.map.addControl(new ExpandControl(this), 'top-right');
+    }
+
+    addResetViewControl() {
+      this.map.addControl(new ResetViewControl(this), 'top-right');
     }
 
     setupLayers() {
@@ -276,7 +306,7 @@
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.5 }
+          paint: { 'circle-radius': 12, 'circle-color': '#008000', 'circle-opacity': 0.5 }
         });
 
         instance.map.addLayer({
@@ -285,7 +315,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'LineString'],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': '#ff0000', 'line-width': 4 }
+          paint: { 'line-color': '#008000', 'line-width': 4 }
         });
 
         instance.map.addLayer({
@@ -294,7 +324,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: { 'fill-color': '#ff0000', 'fill-opacity': 0.2 }
+          paint: { 'fill-color': '#008000', 'fill-opacity': 0.2 }
         });
       }
 
@@ -364,7 +394,7 @@
     }
 
     renderAdminFeaturesNote() {
-      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#ff0000;">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#008000;">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
     }
 
     setupPlugins() {
@@ -385,11 +415,19 @@
     renderFeatures() {
       if (this.editable) return;
 
-      const allFeatures = App.Map.formattedFeatures(this.features);
+      const split = App.Map.splitMasterportalFeatures(this.features);
+
       let pointFeatures = {
         type: 'FeatureCollection',
-        features: allFeatures.features.filter(function(f) {
-          return f.geometry.type === 'Point';
+        features: split.regular.features.filter(function(f) {
+          return f.geometry && f.geometry.type === 'Point';
+        })
+      }
+
+      let masterportalPointFeatures = {
+        type: 'FeatureCollection',
+        features: split.masterportal.features.filter(function(f) {
+          return f.geometry && f.geometry.type === 'Point';
         })
       }
 
@@ -400,6 +438,8 @@
       });
 
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
+
+      this.hasMasterportalPins = masterportalPointFeatures.features.length > 0;
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -493,6 +533,11 @@
           paint: { 'fill-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
         });
 
+        if (this.hasMasterportalPins) {
+          this.addMasterportalPinsLayers(masterportalPointFeatures, clusterColor);
+          this.addMasterportalPinsCheckbox();
+        }
+
         if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
           const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
           const instance = this;
@@ -507,8 +552,110 @@
 
             instance.map.on('click', layerId, instance.openMarkerPopup);
           })
+
+          if (this.hasMasterportalPins) {
+            ['masterportal-pins-circles'].forEach(function(layerId) {
+              instance.map.on('mouseenter', layerId, () => {
+                instance.map.getCanvas().style.cursor = 'pointer';
+              });
+
+              instance.map.on('mouseleave', layerId, () => {
+                instance.map.getCanvas().style.cursor = '';
+              });
+
+              instance.map.on('click', layerId, instance.openMarkerPopup);
+            })
+          }
         }
       }
+    }
+
+    addMasterportalPinsLayers(featureCollection, clusterColor) {
+      this.map.addSource('masterportal-pins-points', {
+        type: 'geojson',
+        data: featureCollection,
+        cluster: true,
+        clusterMaxZoom: 17,
+        clusterRadius: 50
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles-clusters',
+        type: 'circle',
+        source: 'masterportal-pins-points',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [ 'step', ['get', 'point_count'], clusterColor, 10, clusterColor, 30, clusterColor ],
+          'circle-radius': [ 'step', ['get', 'point_count'], 18, 10, 22, 28, 25 ]
+        }
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles-cluster-count',
+        type: 'symbol',
+        source: 'masterportal-pins-points',
+        filter: ['has', 'point_count'],
+        layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 },
+        paint: { 'text-color': '#ffffff' }
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles',
+        type: 'circle',
+        source: 'masterportal-pins-points',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-radius': 16,
+          'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
+          'circle-opacity': 0.75
+        }
+      });
+
+      this.map.on('click', 'masterportal-pins-circles-clusters', (e) => {
+        const features = this.map.queryRenderedFeatures(e.point, {
+          layers: ['masterportal-pins-circles-clusters']
+        });
+        const clusterId = features[0].properties.cluster_id;
+        this.map.getSource('masterportal-pins-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) return;
+          this.map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom + 1
+          });
+        });
+      });
+    }
+
+    addMasterportalPinsCheckbox() {
+      if (!this.layerControl) return;
+
+      const instance = this;
+      const layerIds = [
+        'masterportal-pins-circles-clusters',
+        'masterportal-pins-circles-cluster-count',
+        'masterportal-pins-circles'
+      ];
+
+      const label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true;
+
+      const span = document.createElement('span');
+      span.textContent = this.masterportalPinsLayerLabel;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      input.addEventListener('change', () => {
+        layerIds.forEach((layerId) => {
+          instance.toggleLayer(layerId, instance.map, input.checked);
+        });
+      });
+
+      this.layerControl.dropdownList.appendChild(label);
     }
 
     openMarkerPopup(e) {
@@ -1045,6 +1192,41 @@
           map.resize();
           this.mapboxMapInstance.toggleControlVisibility();
         }
+      });
+
+      return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
+
+  class ResetViewControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = '<i class="fas fa-home"></i>';
+      button.title = 'Ansicht zurücksetzen';
+
+      this._container.appendChild(button);
+
+      button.addEventListener('click', () => {
+        map.flyTo({
+          center: [this.mapboxMapInstance.mapCenterLongitude, this.mapboxMapInstance.mapCenterLatitude],
+          zoom: this.mapboxMapInstance.zoom,
+          pitch: this.mapboxMapInstance.initialPitch,
+          bearing: 0
+        });
       });
 
       return this._container;

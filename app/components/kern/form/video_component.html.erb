@@ -1,0 +1,38 @@
+<div data-controller="kern--form--video"
+     data-kern--form--video-auto-submit-value="<%= @auto_submit %>">
+  <%= hidden_field_tag :remove_attachment, "false", data: { kern__form__video_target: "destroy" } %>
+
+  <div class="kern-form-input <%= 'kern-form-input--error' if video_errors.any? %> <%= 'd-none' if show_preview? %>"
+       data-kern--form--video-target="inputWrapper">
+    <%= @form.file_field @attribute,
+                         label: false,
+                         accept: "video/mp4,video/webm",
+                         class: "kern-form-input__input #{'kern-form-input__input--error' if video_errors.any?}",
+                         data: { kern__form__video_target: "input", action: "change->kern--form--video#change" } %>
+    <% if video_errors.any? %>
+      <p class="kern-error" role="alert">
+        <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+        <span class="kern-body"><%= video_errors.join(". ") %></span>
+      </p>
+    <% end %>
+  </div>
+
+  <div class="<%= 'd-none' unless show_preview? %>" data-kern--form--video-target="preview">
+    <% if show_preview? %>
+      <%= video_tag(polymorphic_path(preview_attachment), autoplay: true, loop: true, muted: true, playsinline: true, controls: true, style: "max-width: 100%; height: auto;", data: { kern__form__video_target: "previewVideo" }) %>
+    <% else %>
+      <%= tag.video autoplay: true, loop: true, muted: true, playsinline: true, controls: true, style: "max-width: 100%; height: auto;", data: { kern__form__video_target: "previewVideo" } %>
+    <% end %>
+  </div>
+
+  <% if @show_actions %>
+    <%= tag.button type: "button",
+            class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
+            style: "float: right;",
+            data: { kern__form__video_target: "actions", action: "kern--form--video#remove" } do %>
+      <span class="kern-label">
+        <%= t("adm.components.attribute_editors.video_component.remove") %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

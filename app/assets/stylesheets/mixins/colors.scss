@@ -9,7 +9,7 @@
 
 @mixin brand-text {
   @include normal-selection;
-  color: $brand;
+  color: var(--brand-color);
 }
 
 @mixin normal-selection {
@@ -25,7 +25,7 @@
   &::selection,
   *::selection {
     background-color: rgba($white, 0.99);
-    color: $brand;
+    color: var(--brand-color);
   }
 }
 

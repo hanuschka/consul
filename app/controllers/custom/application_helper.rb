@@ -15,15 +15,21 @@ module ApplicationHelper
     return "" unless params[:projekt_phase_id].present?
 
     projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
+    permitted = params.permit(
+      :page, :filter, :order, :sentiment_id, :section,
+      :annotation_id, :proposal_view_mode,
+      projekt_label_ids: [], category_ids: []
+    )
     url_options = {
-      page: pagination_page || params[:page],
-      filter: filter || params[:filter],
-      order: order || params[:order],
-      projekt_label_ids: projekt_label_ids || params[:projekt_label_ids],
-      sentiment_id: sentiment_id || params[:sentiment_id],
-      category_ids: category_ids || params[:category_ids],
-      section: section || params[:section],
-      annotation_id: params[:annotation_id]
+      page: pagination_page || permitted[:page],
+      filter: filter || permitted[:filter],
+      order: order || permitted[:order],
+      projekt_label_ids: projekt_label_ids || permitted[:projekt_label_ids],
+      sentiment_id: sentiment_id || permitted[:sentiment_id],
+      category_ids: category_ids || permitted[:category_ids],
+      section: section || permitted[:section],
+      annotation_id: permitted[:annotation_id],
+      proposal_view_mode: permitted[:proposal_view_mode]
     }
 
     url_options.reject! { |k, v| k == :sentiment_id && v == 0 }

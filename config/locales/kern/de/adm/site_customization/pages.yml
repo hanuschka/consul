@@ -1,0 +1,23 @@
+de:
+  adm:
+    site_customization:
+      pages:
+        default_titles:
+          privacy: Datenschutzbestimmungen
+          conditions: Allgemeine Nutzungsbedingungen
+          impressum: Impressum
+          contact_us: Kontakt
+        tabs:
+          privacy: Datenschutzbestimmungen
+          conditions: Nutzungsbedingungen
+          impressum: Impressum
+          contact_us: Kontakt
+        edit:
+          status_legend: Status
+          status_options:
+            draft: Entwurf
+            published: Veröffentlicht
+          content_label: Inhalt
+          save: Speichern
+        update:
+          success: Seite gespeichert.

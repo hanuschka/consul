@@ -47,10 +47,11 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link', title: @title, aria: { label: @title }, target: @url_target, 'aria-hidden': true do %>
+    <%= link_to @url, class: 'resource-item--image-link', target: @url_target, tabindex: "-1", 'aria-hidden': true do %>
       <%= render(
         Shared::ResourceImageComponent.new(
-          image_url: @image_url,
+          image_url: image_url,
+          image_url_2x: image_url_2x,
           image_placeholder_icon_class: @image_placeholder_icon_class,
           resource: @resource)
       ) %>
@@ -78,7 +79,7 @@
                 <% end %>
 
                 <% if @tags[2].present? %>
-                  <%= link_to(path_for_resource_with_params(@resource, tags: @tags), class: 'resource-item--tag') do %>
+                  <%= link_to(path_for_resource_with_params(@resource, tags: @tags.map(&:name).join(",")), class: 'resource-item--tag') do %>
                     <% remaining_tags_count = @tags.count - 2 %>
                     <%= t("custom.tags.remaining_count", count: remaining_tags_count) %>
                   <% end %>

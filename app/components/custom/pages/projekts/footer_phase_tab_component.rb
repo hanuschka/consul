@@ -1,5 +1,5 @@
 class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
-  delegate :format_date, :format_date_range, :current_user, :projekt_feature?,
+  delegate :format_date, :format_date_range, :format_budget_phase_duration, :current_user, :projekt_feature?,
            :phase_user_status_restriction_name, :phase_geo_restriction_name, :phase_age_restriction_name,
            :phase_extended_geozone_restriction_name, :phase_individual_group_value_restriction_name, to: :helpers
   attr_reader :phase, :default_projekt_phase, :resource_count
@@ -43,5 +43,10 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
 
     def tab_title
       @phase.title
+    end
+
+    def adm_phase_action_path(phase)
+      action = phase.admin_nav_bar_items.first || "general_settings"
+      helpers.send("#{action}_adm_projekts_phase_path", phase)
     end
 end

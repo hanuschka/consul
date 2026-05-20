@@ -1,0 +1,19 @@
+<%= content_for :title, t("adm.landing_pages.menu.items.settings") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.landing_pages.menu.items.settings"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.landing_pages.settings.tabs.dashboard"),
+    url: adm_landing_pages_settings_path
+  },
+  {
+    label: t("adm.landing_pages.settings.tabs.contact_persons"),
+    url: contact_persons_adm_landing_pages_settings_path,
+    current: true
+  }
+]) %>
+
+<div class="kern-container my-5">
+  <%= render "adm/section_contact_people/section_block", section: "landing_pages" %>
+</div>

@@ -1,0 +1,59 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <div class="d-flex justify-content-start gap-2 mb-4">
+    <%= kern_link_button new_adm_projekts_phase_projekt_event_path(@projekt_phase), text: t(".create_button"), style: :secondary %>
+  </div>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "projekt_events_table",
+        records: @projekt_events,
+        headers: {},
+        column_count: 4,
+        empty_state: {
+          title: t(".no_events_title"),
+          description: t(".no_events_description"),
+          icon: "event"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <th scope="col" class="kern-table__header" data-field="title"><%= t(".table.title") %></th>
+      <th scope="col" class="kern-table__header" data-field="location"><%= t(".table.location") %></th>
+      <th scope="col" class="kern-table__header" data-field="datetime"><%= t(".table.datetime") %></th>
+      <th scope="col" class="kern-table__header" data-field="actions"><%= t(".table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @projekt_events.each do |event| %>
+        <tr id="<%= dom_id(event) %>" class="kern-table__row">
+          <th scope="row" class="kern-table__header" data-field="title"><%= event.title %></th>
+          <td class="kern-table__cell" data-field="location"><%= event.location %></td>
+          <td class="kern-table__cell" data-field="datetime">
+            <%= event.datetime.strftime("%d.%m.%Y %H:%M") %>
+            <% if event.end_datetime.present? %>
+              — <%= event.end_datetime.strftime("%d.%m.%Y %H:%M") %>
+            <% elsif event.open_ended? %>
+              (<%= t(".table.open_ended") %>)
+            <% end %>
+          </td>
+          <td class="kern-table__cell" data-field="actions">
+            <%= render Kern::Table::ActionsComponent.new do |actions| %>
+              <% actions.with_action(label: t(".table.show"), url: adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "visibility", data: { turbo_frame: "_top" }) %>
+              <% actions.with_action(
+                   label: t(".table.registrations_count", count: event.projekt_event_registrations.where.not(status: "cancelled").count),
+                   url: adm_projekts_phase_projekt_event_registrations_path(@projekt_phase, event),
+                   icon: "how_to_reg",
+                   data: { turbo_frame: "_top" }) %>
+              <% actions.with_action(label: t(".table.send_notifications"), url: send_notifications_adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "send", data: { turbo_method: :post, turbo_confirm: t(".table.send_notifications_confirm"), turbo_frame: "_top" }) %>
+              <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_projekt_event_path(@projekt_phase, event), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

@@ -19,6 +19,10 @@ module Dt
     Rails.application.secrets.dt[:enabled]
   end
 
+  def self.connected?
+    InternalApiClient.dt_connected?
+  end
+
   def self.platforms_overview_url
     "#{url}/platforms"
   end
@@ -49,5 +53,21 @@ module Dt
 
   def self.website_url
     "https://demokratie.today"
+  end
+
+  def self.file_import_url(user_id:)
+    return nil if !connected?
+
+    verifier = ActiveSupport::MessageVerifier.new(
+      Rails.application.secret_key_base,
+      digest: "SHA256"
+    )
+
+    token = verifier.generate(
+      { "user_id" => user_id, "exp" => 5.minutes.from_now.to_i },
+      purpose: :iframe_auth
+    )
+
+    "#{url}/projekt_imports/from_file/new?embedded=true&iframe_token=#{CGI.escape(token)}"
   end
 end

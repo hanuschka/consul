@@ -72,10 +72,6 @@
   }
 }
 
-.content-block-dnd-move {
-  background-color: red;
-}
-
 .content-block-dnd-placeholder {
   opacity: 0.45;
 }
@@ -273,6 +269,17 @@
   /* display: block; */
   z-index: -1;
   transition: 100ms ease background-color;
+}
+
+.projekt-content-block-wrapper:not(.-in-edit-mode):not(.-ai-edit-mode):not(.-loading):has(.projekt-content-block-edit-main-controlls:hover) .projekt-content-block--overlay {
+  display: block;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
+  background-color: rgba(131, 205, 234, 0.11);
+  border-radius: 12px;
+  z-index: 2;
 }
 
 .projekt-content-block {

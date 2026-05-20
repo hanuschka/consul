@@ -1,7 +1,7 @@
 class Adm::SettingPolicy < ApplicationPolicy
   def update?
-    return false unless @record.is_a?(Setting)
     return true if @user&.administrator?
+    return false unless @record.is_a?(Setting)
 
     predicate = Adm::Section::MANAGER_PREDICATES[section_from_key]
     predicate.present? && @user&.public_send(predicate)

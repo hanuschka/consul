@@ -9,11 +9,10 @@ de:
           no_items_description: Sobald sich Personen für diese Veranstaltung anmelden, werden sie hier angezeigt.
           no_results_filtered_title: Keine Anmeldungen entsprechen dem Filter
           no_results_filtered_description: Passen Sie den Statusfilter an, um andere Anmeldungen anzuzeigen.
-          counts:
-            confirmed: "Bestätigt: %{confirmed} / %{max}"
-            total_active:
-              one: "1 aktive Anmeldung"
-              other: "%{count} aktive Anmeldungen"
+          total_label:
+            one: Anmeldung
+            other: Anmeldungen
+          total_hint: Anzahl der Anmeldungen in der aktuellen Ansicht (inkl. aktiver Filter).
           columns:
             name: Name
             email: E-Mail

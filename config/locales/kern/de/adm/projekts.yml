@@ -57,6 +57,8 @@ de:
           import_projekt: Projekt aus Datei importieren
           no_projekts_title: Keine Projekte vorhanden
           no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
+          no_results_filtered_title: Keine Projekte für die aktuelle Suche
+          no_results_filtered_description: Passen Sie die Suche an oder entfernen Sie sie, um weitere Projekte zu sehen.
           table:
             status: Status
             actions: Aktionen
@@ -92,6 +94,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
         details:
           title: Projektdetails
           hint_title: Hinweis zu den Projektdetails

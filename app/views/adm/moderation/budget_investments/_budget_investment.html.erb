@@ -1,9 +1,9 @@
 <tr id="<%= dom_id(budget_investment, :moderation) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header"><%= budget_investment.title %></th>
-  <td class="kern-table__cell"><%= budget_investment.budget&.projekt&.name %></td>
-  <td class="kern-table__cell"><%= budget_investment.author.username %></td>
-  <td class="kern-table__cell"><%= budget_investment.flags_count %></td>
-  <td class="kern-table__cell">
+  <th scope="row" class="kern-table__header" data-field="title"><%= budget_investment.title %></th>
+  <td class="kern-table__cell" data-field="projekt"><%= budget_investment.budget&.projekt&.name %></td>
+  <td class="kern-table__cell" data-field="author"><%= budget_investment.author.username %></td>
+  <td class="kern-table__cell" data-field="flags_count"><%= budget_investment.flags_count %></td>
+  <td class="kern-table__cell" data-field="actions">
     <% if budget_investment.hidden? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
         <%= c.with_action label: t("adm.moderation.budget_investments.index.actions.unhide"),

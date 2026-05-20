@@ -11,10 +11,16 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
+  <section
+    class="phase-evaluation-section"
+    data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
+    data-phase-id="<%= phase["phase_id"] %>"
+    data-section="kpis"
+  >
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
@@ -38,9 +44,79 @@
       </div>
     </div>
   </div>
+  </section>
+  <% end %>
+
+  <% phase_ai_stats = phase["ai_stats"] || {} %>
+
+  <% if phase_ai_stats["summary"].present? && show_section.call("phase_summary") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:phase_summary"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="phase_summary"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_summary",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% has_tone = phase_ai_stats["tone_of_participation"].present? || phase_ai_stats["tone_of_comments"].present? %>
+  <% if has_tone && show_section.call("tone") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:tone"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="tone"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_tone",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% if show_section.call("timeline") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:timeline"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="timeline"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_timeline",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% if show_section.call("label_sentiment") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:label_sentiment"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="label_sentiment"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_label_sentiment",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% if show_section.call("user_segments") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:user_segments"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="user_segments"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_user_segments",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
   <% end %>
 
   <% if show_section.call("key_findings") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="key_findings"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
       locals: {
         phase: phase,
@@ -48,10 +124,53 @@
         accent_light: accent_light,
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
+    </section>
+  <% end %>
+
+  <% if show_section.call("topic_clustering") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:topic_clustering"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="topic_clustering"
+      style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
+    >
+      <div data-controller="shared--collapse">
+        <%= render AiStats::CategoriesClusteringComponent.new(
+          clustering_data: phase_ai_stats["topic_clustering"] || {},
+          title_key: "custom.ai_stats.topic_clustering",
+          resource_class: Budget::Investment
+        ) %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if show_section.call("semantic_clustering") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:semantic_clustering"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="semantic_clustering"
+      style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
+    >
+      <div data-controller="shared--collapse">
+        <%= render AiStats::CategoriesClusteringComponent.new(
+          clustering_data: phase_ai_stats["semantic_clustering"] || {},
+          title_key: "custom.ai_stats.semantic_clustering",
+          resource_class: Budget::Investment
+        ) %>
+      </div>
+    </section>
   <% end %>
 
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ai_questions"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_ai_questions",
       locals: {
         phase: phase,
@@ -59,5 +178,6 @@
         accent_light: accent_light,
         pdf_mode: pdf_mode_local
       } %>
+    </section>
   <% end %>
 </div>

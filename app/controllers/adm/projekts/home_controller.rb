@@ -6,8 +6,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
 
     @intro_text = Setting["adm.projekts.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.projekts", default: nil)
-    @notice_active = Setting["adm.projekts.notice_active"].present?
-    @notice_message = Setting["adm.projekts.notice_message"]
+    @notice = Setting["adm.projekts.notice_active"].present? ? Setting["adm.projekts.notice_message"] : nil
     @contact_persons = SectionContactPerson.for_section("projekts")
     visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
     @pagy_activities, @activities = pagy(

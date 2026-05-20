@@ -30,10 +30,8 @@ de:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
-          columns: Spalten
           download_csv: CSV herunterladen
           download_geojson: GeoJSON herunterladen
-          no_deficiency_reports: Keine Mängelmelder vorhanden
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
           no_results_filtered_title: Keine Meldungen für die aktuellen Filter

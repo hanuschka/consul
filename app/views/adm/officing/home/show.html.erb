@@ -2,20 +2,13 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.officing.home.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::DashboardHomeComponent.new(
-  team_members: @team_members,
-  team_url: current_user&.administrator? ? adm_officing_managers_path : nil,
-  intro_text: @intro_text,
-  quick_links: @quick_links,
-  stats: @stats,
-  contact_persons: @contact_persons,
-  section: "officing",
-  notice_active: @notice_active,
-  notice_message: @notice_message,
-  activities: @activities,
-  activity_pagy: @pagy_activities,
-  section_settings_path: Adm::Officing::SettingPolicy.new(current_user, nil).show? ? adm_officing_settings_path : nil
-) %>
+<%= render Adm::DashboardHomeComponent.new do |d| %>
+  <% d.with_notice(message: @notice) if @notice.present? %>
+  <% d.with_header_row(intro: @intro_text, stats: @stats) %>
+  <% d.with_team(members: @team_members, add_url: current_user&.administrator? ? adm_officing_managers_path : nil) %>
+  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
+  <% d.with_activity_feed(activities: @activities, pagy: @pagy_activities) %>
+<% end %>
 
 <div class="kern-container">
   <% if @budgets.any? %>

@@ -92,6 +92,8 @@ de:
           dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
         naming:
           title: Benennung
+          poll_image_label: Bild der Abstimmung
+          poll_image_description: "Wird in der Übersicht der Abstimmungen als Vorschaubild neben dem Titel angezeigt und unterstützt die schnelle visuelle Wiedererkennung. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zur Abstimmung passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG."
         restrictions:
           title: Beteiligungsbeschränkung
           intro_title: Hinweis zur Beteiligungsbeschränkung

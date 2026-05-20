@@ -27,6 +27,18 @@ de:
             Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
           regenerate_button: Neu generieren
+          regenerate_phase_button: Phase neu generieren
+          phase_download_pdf_button: PDF exportieren…
+          open_in_admin: Im Admin öffnen
+          configure_visibility_button: Sichtbarkeit
+          phase_processing_title: Phase wird neu generiert
+          phase_processing_description: >
+            Diese Phase wird neu generiert. Dies kann einige Minuten dauern.
+          phase_failed_title: Phasen-Generierung fehlgeschlagen
+          phase_failed_description: >
+            Bei der Generierung dieser Phase ist ein Fehler aufgetreten.
+            Bitte versuchen Sie es erneut.
+          phase_retry_button: Erneut versuchen
           download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
@@ -51,6 +63,14 @@ de:
           ranking_subtitle: "%{proposals} Vorschläge · %{supports} Unterstützungen gesamt"
           rank_first: Platz 1
           ai_summary: KI-Bewertung
+          timeline_title: Zeitverlauf
+          timeline_submissions: Einreichungen im Zeitverlauf
+          timeline_comments: Kommentare im Zeitverlauf
+          label_sentiment_title: Label und Sentiment
+          labels_distribution: Labels-Verteilung
+          sentiments_distribution: Sentiment-Verteilung
+          user_segments_title: Nutzersegmente
+          geozone_distribution: Stadtteile / Bezirke
           key_findings: Zentrale Erkenntnisse
           ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
@@ -65,12 +85,20 @@ de:
             include_report: Bericht einbeziehen (Projektzusammenfassung, Einstellungen, Phasen-Zusammenfassungen)
             sections:
               kpis: Kennzahlen
+              key_metrics: Detailkennzahlen
               ranking: Ranking-Diagramm
               proposals: Vorschlagskarten
               questions: Fragen und Diagramme
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
+              phase_summary: Zusammenfassung der Phase
+              tone: Tonanalyse
+              timeline: Zeitverlauf
+              label_sentiment: Label- und Sentiment-Verteilung
+              user_segments: Nutzersegmente
               key_findings: Zentrale Erkenntnisse
+              topic_clustering: Themengruppen
+              semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
@@ -89,6 +117,9 @@ de:
           report_tab:
             title: Bericht
             kpi_label: Übersicht
+          phase_tab:
+            generated_at: "Stand %{date}"
+            generated_at_unknown: Noch nicht generiert
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel
@@ -121,3 +152,5 @@ de:
           description: Wählen Sie, welche Phasen und Abschnitte im PDF enthalten sein sollen.
           cancel: Abbrechen
           download: PDF herunterladen
+          downloading: PDF wird vorbereitet…
+          ready: Bereit

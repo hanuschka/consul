@@ -4,6 +4,7 @@
       <thead class="kern-table__head">
         <tr class="kern-table__row">
           <th scope="col" class="kern-table__header" style="width: 5rem;"><%= t("adm.valuation.investments.index.table.id") %></th>
+          <th scope="col" class="kern-table__header adm-table-thumb-cell"><%= t("adm.valuation.investments.index.table.image") %></th>
           <th scope="col" class="kern-table__header"><%= t("adm.valuation.investments.index.table.title") %></th>
           <th scope="col" class="kern-table__header" style="width: 12rem;"><%= t("adm.valuation.investments.index.table.budget") %></th>
           <th scope="col" class="kern-table__header" style="width: 12rem;"><%= t("adm.valuation.investments.index.table.valuator") %></th>
@@ -15,6 +16,14 @@
         <% @investments.each do |investment| %>
           <tr id="<%= dom_id(investment) %>" class="kern-table__row">
             <td class="kern-table__cell"><strong><%= investment.id %></strong></td>
+            <td class="kern-table__cell adm-table-thumb-cell">
+              <%= link_to budget_investment_path(investment.budget, investment),
+                    class: "adm-table-thumb-link",
+                    target: "_blank", rel: "noopener",
+                    title: investment.title do %>
+                <%= render Adm::TableThumbComponent.new(image: investment.image, title: investment.title) %>
+              <% end %>
+            </td>
             <td class="kern-table__cell">
               <%= link_to investment.title, budget_investment_path(investment.budget, investment), target: "_blank", rel: "noopener", class: "kern-link" %>
             </td>

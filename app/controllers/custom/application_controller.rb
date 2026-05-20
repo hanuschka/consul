@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   private
     def set_deploy_test_header
-      response.headers["X-Deploy-Test"] = "v1"
+      response.headers["X-Deploy-Test"] = "v2"
     end
 
     def sanitize_pagination_params

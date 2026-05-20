@@ -59,9 +59,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     if @projekt_phase.name == "voting_phase"
       poll = @projekt_phase.poll
-      image = poll.image || poll.build_image(user: current_user)
-      @poll_image = image if Adm::ImagePolicy.new(current_user, image).update?
-      @poll_image&.save!(validate: false) if @poll_image&.new_record?
+      @poll_image = poll.image || poll.build_image(user: current_user)
+      @poll_image.save!(validate: false) if @poll_image.new_record?
     end
 
     @breadcrumbs = [

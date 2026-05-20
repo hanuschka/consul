@@ -19,3 +19,7 @@ de:
         credits_field_placeholder: Hier klicken, um Copyright des Bildes hinzuzufügen
         generating_title: "KI erstellt ein Bild …"
         generating_subtitle: "Das kann bis zu 25 Sekunden dauern. Sie können stattdessen auch ein eigenes Bild hochladen."
+        ownership_notice_title: "Hinweis zum Urheberrecht"
+        ownership_notice_body: "Bitte laden Sie nur Bilder hoch, an denen Sie selbst die Rechte besitzen oder für die Sie eine ausdrückliche Erlaubnis zur Veröffentlichung haben."
+        ownership_notice_confirm: "Bild auswählen"
+        ownership_notice_cancel: "Abbrechen"

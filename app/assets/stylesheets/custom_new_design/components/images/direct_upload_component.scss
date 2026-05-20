@@ -138,6 +138,30 @@
   cursor: pointer;
 }
 
+.direct-image-upload--confirmation-step {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.direct-image-upload {
+  &.-confirmation-pending {
+    .direct-image-upload--file-attach-area {
+      display: none;
+    }
+
+    .direct-image-upload--confirmation-step {
+      display: block;
+    }
+  }
+}
+
 .direct-image-upload--file-field {
   bottom: 0;
 }

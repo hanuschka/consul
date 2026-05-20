@@ -38,7 +38,7 @@
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
-      App.AdminTopbarViewMode.initialize();
+      App.StudioPreviewMode.initialize();
       App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
       App.ProjektFooterPhaseRegenerate.initialize();

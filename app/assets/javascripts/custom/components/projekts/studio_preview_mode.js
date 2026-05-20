@@ -1,13 +1,14 @@
 (function() {
   "use strict";
-  App.AdminTopbarViewMode = {
+  App.StudioPreviewMode = {
     initialize() {
       const $document = $(document);
-      $document.on("click", ".js-view-mode-button", this.handleViewModeToggle.bind(this));
+      $document.on("click", ".js-studio-preview-mode-button", this.handleViewModeToggle.bind(this));
     },
 
     handleViewModeToggle(event) {
       event.preventDefault();
+
       const $clickedButton = $(event.currentTarget);
       const viewMode = $clickedButton.data("view-mode");
 
@@ -15,7 +16,7 @@
         return;
       }
 
-      const $allViewModeButtons = $(".js-view-mode-button");
+      const $allViewModeButtons = $(".js-studio-preview-mode-button");
 
       $allViewModeButtons.removeClass("-selected").attr("aria-checked", "false");
       $clickedButton.addClass("-selected").attr("aria-checked", "true");
@@ -28,8 +29,6 @@
     },
 
     togglePreviewMode(activated) {
-      window.scrollTo(0, 0);
-
       document.body.classList.toggle("-preview-mode", activated);
 
       const previewModeEnabled = document.body.classList.contains("-preview-mode");

@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
+  before_action :set_deploy_test_header
   helper_method :set_comment_flags
 
   # unless Rails.env.production?
@@ -19,6 +20,10 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+    def set_deploy_test_header
+      response.headers["X-Deploy-Test"] = "v1"
+    end
+
     def sanitize_pagination_params
       %i[page per_page resource_browse_mode_page].each do |key|
         value = params[key]

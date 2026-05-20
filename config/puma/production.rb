@@ -3,3 +3,6 @@
 _load_from File.expand_path("../defaults.rb", __FILE__)
 
 environment "production"
+
+threads 5, 5
+workers 6

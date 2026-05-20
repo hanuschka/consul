@@ -5,11 +5,13 @@
   display: flex;
   flex-wrap: wrap;
   list-style: none;
-  margin: -$spacing 0 $line-height / 3 -#{$spacing};
-  margin-left: calc(-1 * #{$max-spacing});
-  margin-top: calc(-1 * #{$max-spacing});
-  width: calc(100% + #{$spacing});
-  width: calc(100% + #{$max-spacing});
+  margin-left: 0;
+  margin-top: 0;
+  // margin: -$spacing 0 $line-height / 3 -#{$spacing};
+  // margin-left: calc(-1 * #{$max-spacing});
+  // margin-top: calc(-1 * #{$max-spacing});
+  // width: calc(100% + #{$spacing});
+  // width: calc(100% + #{$max-spacing});
 
   > *,
   > .tabs-title {

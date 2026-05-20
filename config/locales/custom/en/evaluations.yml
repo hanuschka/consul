@@ -27,6 +27,18 @@ en:
             An error occurred while generating the evaluation.
             Please try again.
           regenerate_button: Regenerate
+          regenerate_phase_button: Regenerate phase
+          phase_download_pdf_button: Export PDF…
+          open_in_admin: Open in admin
+          configure_visibility_button: Visibility
+          phase_processing_title: Phase is being regenerated
+          phase_processing_description: >
+            This phase is being regenerated. This may take a few minutes.
+          phase_failed_title: Phase generation failed
+          phase_failed_description: >
+            An error occurred while generating this phase.
+            Please try again.
+          phase_retry_button: Retry
           download_pdf: Download PDF
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.
@@ -51,6 +63,14 @@ en:
           ranking_subtitle: "%{proposals} proposals · %{supports} supports total"
           rank_first: Rank 1
           ai_summary: AI evaluation
+          timeline_title: Timeline
+          timeline_submissions: Submissions over time
+          timeline_comments: Comments over time
+          label_sentiment_title: Label and sentiment
+          labels_distribution: Label distribution
+          sentiments_distribution: Sentiment distribution
+          user_segments_title: User segments
+          geozone_distribution: City districts / zones
           key_findings: Key findings
           ai_questions_heading: Ask AI about this phase
           sources_label:
@@ -65,12 +85,20 @@ en:
             include_report: Include report (project summary, settings, phase summaries)
             sections:
               kpis: KPIs
+              key_metrics: Detailed metrics
               ranking: Ranking chart
               proposals: Proposal cards
               questions: Questions and charts
               open_responses: Open contributions
               ai_summary: AI summary
+              phase_summary: Phase summary
+              tone: Tone analysis
+              timeline: Timeline
+              label_sentiment: Label and sentiment
+              user_segments: User segments
               key_findings: Key findings
+              topic_clustering: Topic groups
+              semantic_clustering: Sentiment analysis
               ai_questions: AI questions
           votes_label: Votes
           open_responses_title: "Open contributions from citizens — %{count} text entries"
@@ -89,6 +117,9 @@ en:
           report_tab:
             title: Report
             kpi_label: Overview
+          phase_tab:
+            generated_at: "As of %{date}"
+            generated_at_unknown: Not generated yet
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle
@@ -121,3 +152,5 @@ en:
           description: Choose which phases and sections to include in the PDF.
           cancel: Cancel
           download: Download PDF
+          downloading: Preparing PDF…
+          ready: Ready

@@ -14,7 +14,6 @@ en:
         modules: Modules
         application_subitems:
           homepage: Homepage
-          documents: Documents
           pages: System pages
           navbar: Navigation
           overview_pages: Overview pages
@@ -27,6 +26,7 @@ en:
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
+          features: Features
         pages: Pages
         pages_subitems:
           privacy: Privacy policy

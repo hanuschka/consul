@@ -78,6 +78,18 @@ de:
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent
+          evaluation_visibility: Auswertungs-Sichtbarkeit
+        evaluation_visibility:
+          title: Auswertungs-Sichtbarkeit
+          heading: Sichtbarkeit für reguläre Nutzer:innen konfigurieren
+          description: >
+            Wählen Sie aus, welche Auswertungsabschnitte reguläre Nutzer:innen
+            im Projekt-Footer für diese Phase sehen können. Admins und
+            Projektmanager:innen sehen immer alle Abschnitte.
+          save: Speichern
+          cancel: Abbrechen
+        update_evaluation_visibility:
+          success: Sichtbarkeitseinstellungen gespeichert.
         masterportal_pins:
           delete_all_button: Alle Pins und verknüpfte Ressourcen löschen
           delete_all_confirm: Dadurch werden alle aus dem Masterportal importierten Pins dieser Phase zusammen mit ihren verknüpften Vorschlägen, Investitionen oder Point-of-Interest-Pins endgültig gelöscht. Fortfahren?

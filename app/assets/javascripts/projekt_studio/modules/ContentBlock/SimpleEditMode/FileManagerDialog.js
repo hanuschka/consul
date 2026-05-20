@@ -2,7 +2,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   state: {
     type: 'picture',
     page: 1,
-    search: '',
+    filters: {},
     selectedImage: null,
     isLoading: false,
     uploadingCount: 0,
@@ -20,8 +20,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     document: ''
   },
   uploadEndpoints: {
-    picture: '/ckeditor/pictures',
-    document: '/ckeditor/documents'
+    picture: '/file_manager/images',
+    document: '/file_manager/documents'
+  },
+  listEndpoints: {
+    picture: '/file_manager/images',
+    document: '/file_manager/documents'
   },
   fileTypeIcons: {
     'application/pdf': 'fa-file-pdf',
@@ -54,14 +58,22 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     return 'fa-file';
   },
 
+  currentProjektId() {
+    if (typeof ProjektStudio === "undefined") return null;
+    if (typeof ProjektStudio.isProjektPage !== "function") return null;
+    if (!ProjektStudio.isProjektPage()) return null;
+
+    return ProjektStudio.getCurrentProjektId();
+  },
+
   initialize() {
     this.initEventListeners()
     this.initDebouncedSearch()
   },
 
   initDebouncedSearch() {
-    this.debouncedSearch = ProjektStudio.utils.debounce(() => {
-      this.performSearch();
+    this.debouncedSearchChanged = ProjektStudio.utils.debounce(() => {
+      this.refetchAfterFilterChange();
     }, 200);
   },
 
@@ -72,9 +84,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     $document.on("close", ".js-file-upload-manager-dialog", this.handleDialogClosed.bind(this));
     $document.on("cancel", ".js-file-upload-manager-dialog", this.handleDialogCancel.bind(this));
 
-    $document.on("input", ".js-file-upload-manager-search", this.handleSearchInputType.bind(this));
-    $document.on("keydown", ".js-file-upload-manager-search", this.handleSearchKeydown.bind(this));
-    $document.on("click", ".js-file-upload-manager-search-clear", this.clearSearch.bind(this));
+    $document.on("input", ".js-fm-filter-search", this.handleSearchChanged.bind(this));
+    $document.on("change", ".js-fm-filter-extension, .js-fm-filter-size-min, .js-fm-filter-size-max, .js-fm-filter-created-from, .js-fm-filter-created-to, .js-fm-filter-updated-from, .js-fm-filter-updated-to", this.handleFilterChanged.bind(this));
+    $document.on("change", ".js-fm-filter-sort", this.handleSortChanged.bind(this));
+    $document.on("click", ".js-fm-filter-reset", this.handleResetClicked.bind(this));
 
     $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
     $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
@@ -120,7 +133,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     this.state = {
       type: type,
       page: 1,
-      search: '',
+      filters: {},
       selectedImage: null,
       isLoading: false,
       uploadingCount: 0,
@@ -132,10 +145,63 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     if (this.activeDialog && !this.activeDialog.open) {
       this.activeDialog.showModal();
     }
-    this.$q(".js-file-upload-manager-search").val("")
+
+    this.resetFilterForm();
 
     this.updateEditButtonVisibility();
     this.updateSelectButtonState();
+    this.fetchImageItems();
+  },
+
+  resetFilterForm() {
+    if (!this.activeDialog) return;
+
+    const filterBar = this.activeDialog.querySelector(".js-fm-filter-bar");
+    if (!filterBar) return;
+
+    const inputs = filterBar.querySelectorAll("input, select");
+    inputs.forEach((input) => {
+      if (input.tagName === "SELECT") {
+        input.selectedIndex = 0;
+      } else {
+        input.value = "";
+      }
+    });
+
+    this.state.filters = window.FilesFilterSerializer.serializeForm(filterBar);
+  },
+
+  readFilterParams() {
+    if (!this.activeDialog) return {};
+
+    const filterBar = this.activeDialog.querySelector(".js-fm-filter-bar");
+    if (!filterBar) return {};
+
+    return window.FilesFilterSerializer.serializeForm(filterBar);
+  },
+
+  refetchAfterFilterChange() {
+    this.state.filters = this.readFilterParams();
+    this.state.page = 1;
+    this.fetchImageItems();
+  },
+
+  handleSearchChanged(_e) {
+    this.debouncedSearchChanged();
+  },
+
+  handleFilterChanged(_e) {
+    this.refetchAfterFilterChange();
+  },
+
+  handleSortChanged(_e) {
+    this.refetchAfterFilterChange();
+  },
+
+  handleResetClicked(e) {
+    e.preventDefault();
+    this.resetFilterForm();
+    this.state.page = 1;
     this.fetchImageItems();
   },
 
@@ -189,42 +255,18 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
 
   updateUploadingState() {
     const isUploading = this.state.uploadingCount > 0;
-    const searchInput = this.q('.js-file-upload-manager-search');
+    const searchInput = this.q('.js-fm-filter-search');
     const pagination = this.q('.js-file-upload-manager-pagination');
 
-    searchInput.disabled = isUploading;
+    if (searchInput) {
+      searchInput.disabled = isUploading;
+    }
 
     if (pagination) {
       pagination.classList.toggle('-disabled', isUploading);
       this.$q(".js-file-upload-manager-page-btn").prop("disabled", isUploading);
       this.$q(`.js-file-upload-manager-page-btn[data-page=${this.state.page}]`).prop("disabled", true);
     }
-  },
-
-  handleSearchInputType(e) {
-    this.state.search = e.target.value;
-
-    this.debouncedSearch();
-  },
-
-  handleSearchKeydown(e) {
-    if (e.key === 'Enter') {
-      this.performSearch();
-    }
-  },
-
-  performSearch() {
-    if (this.state.search.length >= 2 || this.state.search.length === 0) {
-      this.state.page = 1;
-      this.fetchImageItems();
-    }
-  },
-
-  clearSearch(e) {
-    const searchInput = this.q(".js-file-upload-manager-search");
-    searchInput.value = '';
-    this.state.search = '';
-    this.performSearch();
   },
 
   async navigateToPage(pageNumber) {
@@ -301,6 +343,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
       title: file.name,
       data_file_name: file.name,
       data_content_type: file.type,
+      file_size: file.size,
     };
   },
 
@@ -380,14 +423,32 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
         .style.backgroundImage = `url('${imageData.in_memory_preview_url}')`;
     }
 
-    $imageItem
-      .find('.file-upload-manager-dialog--item-title')
+    var $itemTitle = $imageItem.find('.file-upload-manager-dialog--item-title')
+    $itemTitle
       .text(imageData.title)
       .attr("title", imageData.title)
+      .foundation()
 
     $imageItem
       .find('.file-upload-manager-dialog--item-alt')
       .text(imageData.alt_text || '')
+
+    var $sizeBadge = $imageItem.find('.js-file-manager-badge-size')
+    if (imageData.file_size) {
+      $sizeBadge.text(this.formatFileSize(imageData.file_size)).show()
+    }
+
+    var $dimBadge = $imageItem.find('.js-file-manager-badge-dimensions')
+    if (imageData.dimensions && imageData.dimensions.width && imageData.dimensions.height) {
+      $dimBadge.text(imageData.dimensions.width + ' × ' + imageData.dimensions.height).show()
+    }
+  },
+
+  formatFileSize(bytes) {
+    if (!bytes) return ''
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
   },
 
   handleItemClick(e) {
@@ -474,10 +535,24 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     }
   },
 
-  async fetchImageData(params = {}) {
-    const { type, page, search } = this.state;
+  async fetchImageData(extraParams = {}) {
+    const { type, page, filters } = this.state;
+    const filterParams = Object.assign({}, filters, { type, page });
+    const projektId = this.currentProjektId();
 
-    return await fetch(`/ckeditor/assets?${new URLSearchParams({ type, page, search, ...params })}`, {
+    if (projektId) {
+      filterParams.projekt_id = projektId;
+    }
+
+    const baseUrl = this.listEndpoints[type] || this.listEndpoints.picture;
+    let url = window.FilesFilterSerializer.urlForParams(baseUrl, filterParams);
+
+    Object.keys(extraParams).forEach((key) => {
+      const separator = url.indexOf("?") >= 0 ? "&" : "?";
+      url = `${url}${separator}${encodeURIComponent(key)}=${encodeURIComponent(extraParams[key])}`;
+    });
+
+    return await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
@@ -499,6 +574,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
   async uploadNewFile(file, uploadItemId) {
     const formData = new FormData();
     formData.append('upload', file);
+
+    const projektId = this.currentProjektId();
+    if (projektId) {
+      formData.append('projekt_id', projektId);
+    }
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -584,15 +664,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     editModal.classList.add("-opened");
 
     const titleInput = editModal.querySelector(".js-file-upload-manager-edit-title");
-    const descInput = editModal.querySelector(".js-file-upload-manager-edit-description");
-    const altInput = editModal.querySelector(".js-file-upload-manager-edit-alt");
-    const altField = editModal.querySelector(".js-file-upload-manager-edit-alt-field");
-
-    altField.style.display = this.state.type === 'document' ? 'none' : '';
 
     titleInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '').trim();
-    descInput.value = (this.state.selectedImage.dataset.description || '').trim();
-    altInput.value = (this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '').trim();
   },
 
   closeEditModal(e) {
@@ -604,17 +677,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
 
     const modal = this.q(".js-file-upload-manager-edit-modal");
     const titleInput = modal.querySelector(".js-file-upload-manager-edit-title");
-    const descInput = modal.querySelector(".js-file-upload-manager-edit-description");
-    const altInput = modal.querySelector(".js-file-upload-manager-edit-alt");
 
     const formData = new FormData();
     const type = this.state.type
-    formData.append(`${type}[title]`, titleInput.value);
-    formData.append(`${type}[description]`, descInput.value);
-
-    if (type === 'picture') {
-      formData.append(`${type}[alt_text]`, altInput.value);
-    }
+    const modelKey = type === 'picture' ? 'image' : 'document';
+    formData.append(`${modelKey}[title]`, titleInput.value);
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 

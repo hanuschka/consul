@@ -41,6 +41,7 @@
       App.AdminTopbarViewMode.initialize();
       App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.ProjektFooterPhaseRegenerate.initialize();
       App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();

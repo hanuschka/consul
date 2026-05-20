@@ -122,6 +122,14 @@ en:
         two_click_iframe_solution: "Two-click solution for iframes"
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
+        enable_google_translate: Enable Google Translate
+        enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Show guest login
+        show_guest_login_links_description: Shows the guest-login link in the footer
+        users_overview_page: Overview of all users
+        users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
+        use_white_top_navigation_text: Use white text in top navigation
+        use_white_top_navigation_text_description: "Enable when the homepage background image is dark — switches the top navigation text to white so it stays readable. Once the user scrolls and the navigation switches to a white background, the setting no longer applies."
         enable_projekt_events_page: Events calendar
         enable_projekt_events_page_description: >
           Enables a central overview page for all public events from the participation projects. Citizens can view upcoming workshops, town-hall meetings, and information events there. The page can be made reachable via the navigation.
@@ -255,12 +263,12 @@ en:
         Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
 
     process:
-      proposals: Proposals
+      proposals: Proposals overview
       proposals_description: >
-        Allows citizens to submit their own improvement proposals, which can be supported and commented on by other users. Proposals can be tagged with locations, labels, and sentiment indicators. With enough support, they can be advanced to voting.
-      polls: Votes
+        Enables a central overview page for all submitted proposals from the participation projects. Citizens can browse, comment on, rate, and support proposals there. The page can be made reachable via the navigation.
+      polls: Polls overview
       polls_description: >
-        Enables the voting module, with which citizens can make direct decisions on concrete questions. Votes support various question types like single- and multiple-choice. Both online and offline voting are possible.
+        Enables a central overview page for all active and completed polls from the participation projects. Citizens can open active polls, cast their vote, and view results of completed polls there. The page can be made reachable via the navigation.
       budgets: Participatory budget
       budgets_description: >
         Enables the participatory budget, in which citizens submit investment proposals and vote on the allocation of a set budget. The process covers multiple phases: submission, feasibility review by the administration, and final citizen vote.

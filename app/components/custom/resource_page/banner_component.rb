@@ -14,6 +14,8 @@ class ResourcePage::BannerComponent < ApplicationComponent
     return nil unless resource.image&.attached?
 
     polymorphic_path(resource.image.attachment.variant(
+      # TODO Resize to `[415, 260]` when image croping will be inroduced
+      # resize_to_limit: [415, 260],
       resize_to_limit: [500, 500],
       saver: { quality: 80 },
       strip: true,

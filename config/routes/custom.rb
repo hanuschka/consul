@@ -36,6 +36,22 @@ namespace :ckeditor do
   resources :documents, only: [:create, :update, :destroy]
 end
 
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index, :update] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :documents, only: [:index, :update, :destroy] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+end
+
+namespace :file_manager do
+  resources :images, only: [:index, :create, :update, :destroy]
+  resources :documents, only: [:index, :create, :update, :destroy]
+end
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 

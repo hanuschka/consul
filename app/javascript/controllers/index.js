@@ -83,8 +83,8 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
-import PdfDownloadController from "./pdf_download_controller"
-application.register("pdf-download", PdfDownloadController)
+import AdmButtonWithProgressController from "./adm/button_with_progress_controller"
+application.register("adm--button-with-progress", AdmButtonWithProgressController)
 
 import GlightboxController from "./glightbox_controller"
 application.register("glightbox", GlightboxController)
@@ -126,6 +126,9 @@ application.register("clipboard", ClipboardController)
 import SharedAdminIframeController from "./shared/admin_iframe_controller"
 application.register("shared--admin-iframe", SharedAdminIframeController)
 
+import SharedCollapseController from "./shared/collapse_controller"
+application.register("shared--collapse", SharedCollapseController)
+
 import AdmProjektImportController from "./adm/projekt_import_controller"
 application.register("adm-projekt-import", AdmProjektImportController)
 
@@ -156,3 +159,20 @@ application.register("adm-user-select", AdmUserSelectController)
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)
 
+import FilesFilterBarController from "./files/filter_bar_controller"
+application.register("files--filter-bar", FilesFilterBarController)
+
+import FilesUploadController from "./files/upload_controller"
+application.register("files--upload", FilesUploadController)
+
+import AdmAiActionButtonController from "./adm/ai_action_button_controller"
+application.register("adm--ai-action-button", AdmAiActionButtonController)
+
+import SharedPollingController from "./shared/polling_controller"
+application.register("shared--polling", SharedPollingController)
+
+import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
+application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
+
+import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
+application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)

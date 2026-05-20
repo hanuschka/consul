@@ -69,36 +69,10 @@
   animation: adm-ai-action-button-spin 800ms linear infinite;
 }
 
-.adm-ai-action-button--progress-bar {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 4px;
-  background: #ddd6fe;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.adm-ai-action-button--progress-bar-fill {
-  position: absolute;
-  top: 0;
-  left: -40%;
-  width: 40%;
-  height: 100%;
-  background: #7c3aed;
-  border-radius: 999px;
-  animation: adm-ai-action-button-bar 1400ms ease-in-out infinite;
-}
-
 .adm-ai-action-button--progress-message {
   white-space: nowrap;
 }
 
 @keyframes adm-ai-action-button-spin {
   to { transform: rotate(360deg); }
-}
-
-@keyframes adm-ai-action-button-bar {
-  0% { left: -40%; }
-  100% { left: 100%; }
 }

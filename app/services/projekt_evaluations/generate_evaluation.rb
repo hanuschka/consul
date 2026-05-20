@@ -89,7 +89,7 @@ class ProjektEvaluations::GenerateEvaluation < ApplicationService
   end
 
   def collect_report_settings
-    open_phase_titles = @projekt.projekt_phases.current.pluck(:title).compact_blank
+    open_phase_titles = @projekt.projekt_phases.current.map(&:title).compact_blank
 
     polls_count = @projekt
       .polls

@@ -31,13 +31,12 @@
   %>
 
   <div
-    class="projekt-phase-evaluation-footer adm-projekt-evaluation-report"
-    data-controller="adm--phase-regenerate"
-    data-adm--phase-regenerate-status-url-value="<%= status_url %>"
+    class="projekt-phase-evaluation-footer adm-projekt-evaluation-report js-projekt-footer-phase-regenerate"
+    data-status-url="<%= status_url %>"
+    data-phase-id="<%= @projekt_phase.id %>"
   >
     <div
-      class="projekt-phase-evaluation-footer__loading"
-      data-adm--phase-regenerate-target="loading"
+      class="projekt-phase-evaluation-footer__loading js-projekt-footer-phase-regenerate-loading"
       <%= "hidden" unless processing %>
     >
       <div class="adm-empty-state">
@@ -51,8 +50,7 @@
     </div>
 
     <div
-      class="projekt-phase-evaluation-footer__content"
-      data-adm--phase-regenerate-target="content"
+      class="projekt-phase-evaluation-footer__content js-projekt-footer-phase-regenerate-content"
       <%= "hidden" if processing %>
     >
       <% if is_admin_or_pm %>
@@ -68,8 +66,7 @@
           </a>
           <a
             href="<%= regenerate_url %>"
-            class="projekt-phase-evaluation-footer__regen-button"
-            data-action="click->adm--phase-regenerate#start"
+            class="projekt-phase-evaluation-footer__regen-button js-projekt-footer-phase-regenerate-trigger"
           >
             <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
             <span><%= t("adm.projekts.projekts.evaluation.regenerate_phase_button") %></span>

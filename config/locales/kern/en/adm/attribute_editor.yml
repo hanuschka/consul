@@ -32,6 +32,8 @@ en:
         comment_form_button_label: Comment form button text
         comment_form_button_description: Defines the text of the button users submit their comment with. Choose a clear, action-oriented phrase like "Submit comment", "Publish post", or "Send". The button text should clearly convey that the comment will be published.
       poll:
+        name_label: Name
+        name_description: Sets the name of the poll. Choose a concise, easy-to-understand label that clearly describes the content, e.g. "Citizen survey on urban development" or "Vote on the budget plan". The name helps users quickly identify the poll.
         closing_note_label: Closing page text
         closing_note_description: Shown on the frontend on the closing page after users have cast their vote. Use this field for a thank-you note, information about what happens next, or a hint about next steps — e.g. when results will be published. The text supports rich-text formatting and can contain links.
       projekt:

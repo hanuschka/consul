@@ -1,4 +1,4 @@
-class Evaluations::GeneratePhaseEvaluation < ApplicationService
+class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
   def initialize(projekt_phase_evaluation)
     @row = projekt_phase_evaluation
     @projekt_phase = projekt_phase_evaluation.projekt_phase
@@ -53,7 +53,7 @@ class Evaluations::GeneratePhaseEvaluation < ApplicationService
   private
 
   def supported_phase_type?
-    Evaluations::AggregateStatistics::PHASE_COLLECTORS.key?(@projekt_phase.type)
+    ProjektEvaluations::AggregateStatistics::PHASE_COLLECTORS.key?(@projekt_phase.type)
   end
 
   def refresh_ai_stats
@@ -68,7 +68,7 @@ class Evaluations::GeneratePhaseEvaluation < ApplicationService
   end
 
   def aggregate_phase_stats
-    Evaluations::AggregateStatistics.new(@projekt_phase.projekt).call_for_phase(@projekt_phase)
+    ProjektEvaluations::AggregateStatistics.new(@projekt_phase.projekt).call_for_phase(@projekt_phase)
   end
 
   def collect_ai_data
@@ -91,25 +91,25 @@ class Evaluations::GeneratePhaseEvaluation < ApplicationService
     questions = poll[:questions] || []
     return poll if questions.empty?
 
-    groupings = Evaluations::GroupPollQuestions.call(questions)
+    groupings = ProjektEvaluations::GroupPollQuestions.call(questions)
     poll.merge(groupings: groupings)
   end
 
   def generate_phase_evaluation_summary(phase)
     case phase[:phase_type]
     when "ProjektPhase::ProposalPhase"
-      Evaluations::GenerateProposalPhaseSummary.call(phase[:stats])
+      ProjektEvaluations::GenerateProposalPhaseSummary.call(phase[:stats])
     when "ProjektPhase::VotingPhase"
-      Evaluations::GenerateVotingPhaseSummary.call(phase[:stats])
+      ProjektEvaluations::GenerateVotingPhaseSummary.call(phase[:stats])
     end
   end
 
   def generate_phase_key_findings(phase)
-    Evaluations::GeneratePhaseKeyFindings.call(phase)
+    ProjektEvaluations::GeneratePhaseKeyFindings.call(phase)
   end
 
   def generate_phase_short_summary(phase)
-    Evaluations::GeneratePhaseShortSummary.call(phase)
+    ProjektEvaluations::GeneratePhaseShortSummary.call(phase)
   rescue StandardError => e
     Rails.logger.warn("[Evaluation] Phase short summary generation failed: #{e.message}")
     nil

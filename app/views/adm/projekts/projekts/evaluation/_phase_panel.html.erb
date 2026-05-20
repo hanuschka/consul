@@ -49,7 +49,7 @@
     <% else %>
       <div class="evaluation-phase-panel__toolbar">
         <div class="evaluation-phase-panel__toolbar-title">
-          <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+          <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
           <span><%= phase["phase_title"] %></span>
         </div>
         <div class="evaluation-phase-panel__toolbar-actions">

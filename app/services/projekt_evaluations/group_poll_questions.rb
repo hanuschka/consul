@@ -1,4 +1,4 @@
-class Evaluations::GroupPollQuestions < ApplicationService
+class ProjektEvaluations::GroupPollQuestions < ApplicationService
   MIN_QUESTIONS_FOR_GROUPING = 3
 
   def initialize(questions)

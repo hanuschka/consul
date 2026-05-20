@@ -12,3 +12,12 @@ en:
           conditions: Terms of use
           impressum: Legal notice
           contact_us: Contact
+        edit:
+          status_legend: Status
+          status_options:
+            draft: Draft
+            published: Published
+          content_label: Content
+          save: Save
+        update:
+          success: Page saved.

@@ -9,7 +9,7 @@ module Adm
 
       if ai_gated_blocked?
         flash.now[:error] = t("adm.ai_required_note")
-      elsif attachment_kind? && params[:remove_attachment] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+      elsif attachment_kind? && remove_attachment_requested? && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
       elsif @kind == :image && imageable_image_attribute?
@@ -32,6 +32,11 @@ module Adm
 
       def attachment_kind?
         [:image, :video].include?(@kind)
+      end
+
+      def remove_attachment_requested?
+        params[:remove_attachment] == "1" ||
+          params.dig(@record.model_name.param_key, :_destroy) == "1"
       end
 
       def find_record

@@ -1,4 +1,4 @@
-class Evaluations::GeneratePhaseShortSummary < ApplicationService
+class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
   def initialize(phase)
     @phase = phase
   end

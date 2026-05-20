@@ -1,4 +1,4 @@
-class Evaluations::GeneratePhaseKeyFindings < ApplicationService
+class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
   include Rails.application.routes.url_helpers
 
   VALID_SENTIMENTS = %w[negative positive warning primary].freeze

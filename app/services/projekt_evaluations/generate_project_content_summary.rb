@@ -1,4 +1,4 @@
-class Evaluations::GenerateProjectContentSummary < ApplicationService
+class ProjektEvaluations::GenerateProjectContentSummary < ApplicationService
   CONTENT_TRUNCATE = 6000
 
   def initialize(projekt)

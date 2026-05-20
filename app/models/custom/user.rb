@@ -16,6 +16,12 @@ User.class_eval do
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
+  def self.timeout_in
+    minutes = Setting["extended_option.gdpr.devise_timeout_min"].to_i
+    minutes = 30 if minutes < 1
+    minutes.minutes
+  end
+
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
   delegate :district, to: :registered_address, allow_nil: true
@@ -113,6 +119,32 @@ User.class_eval do
 
     def administrators_ids
       joins(:administrator).ids
+    end
+
+    def masterportal
+      @masterportal_user ||= find_or_create_masterportal_user
+    end
+
+    def find_or_create_masterportal_user
+      user = User.find_by(username: "masterportal")
+
+      if user.present?
+        return user
+      end
+
+      create_masterportal_user
+    end
+
+    def create_masterportal_user
+      user = User.new(
+        username: "masterportal",
+        email: "masterportal@system.consul",
+        password: SecureRandom.hex(32)
+      )
+
+      user.skip_confirmation!
+      user.save!(validate: false)
+      user
     end
   end
 

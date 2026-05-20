@@ -92,6 +92,8 @@ de:
           dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
         naming:
           title: Benennung
+          poll_image_label: Bild der Abstimmung
+          poll_image_description: "Wird in der Übersicht der Abstimmungen als Vorschaubild neben dem Titel angezeigt und unterstützt die schnelle visuelle Wiedererkennung. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zur Abstimmung passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG."
         restrictions:
           title: Beteiligungsbeschränkung
           intro_title: Hinweis zur Beteiligungsbeschränkung
@@ -130,6 +132,9 @@ de:
           title: Nutzerfunktionen
         proposals:
           title: Vorschläge
+          columns: Spalten
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_proposals_title: Keine Vorschläge vorhanden
           no_proposals_description: Sobald Nutzer in dieser Beteiligungsphase Vorschläge einreichen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, Vorschläge freizugeben, herauszumoderieren oder gemeldete Beiträge zu prüfen. Die Tabelle zeigt Titel, Autor und Moderationsstatus jedes einzelnen Vorschlags an.
           table:
@@ -176,6 +181,8 @@ de:
             actions: Aktionen
         map:
           title: Karte
+        masterportal_pins:
+          title: Importierte Masterportal-Pins
         officing_managers:
           title: Abstimmungshelfer
           lock_on: Sperrdatum
@@ -258,6 +265,7 @@ de:
             actions: Aktionen
         projekt_point_of_interest_pins:
           title: Pins
+          download_geojson: GeoJSON herunterladen
           no_pins: Keine Pins vorhanden.
           no_pins_title: Keine Pins vorhanden
           no_pins_description: Sobald Nutzer im Frontend Orte von Interesse auf der Karte markieren, werden die erstellten Pins hier aufgelistet und können verwaltet werden. Jeder Pin enthält eine Adresse, eine Kategorie und den zugehörigen Autor. Über die Tabelle können Sie Pins einsehen, bearbeiten oder bei Bedarf entfernen und so die Karteninhalte gezielt steuern.
@@ -470,6 +478,7 @@ de:
           recalculate_winners: Gewinner neu ermitteln
           recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
           download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           columns: Spalten
           no_investments_title: Keine Vorschläge vorhanden
           no_investments_description: Sobald Nutzer in dieser Beteiligungsphase Investitionsvorschläge einreichen, werden diese hier aufgelistet und können von Gutachtern bewertet, auf Machbarkeit geprüft und bei Bedarf moderiert werden. Über die Tabelle haben Sie Zugriff auf alle relevanten Details wie Kosten, Status und Bewertungsergebnisse jedes einzelnen Vorschlags.

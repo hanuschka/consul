@@ -1,131 +1,365 @@
 def privacy_page_content
-  content = '<p><strong>1. Allgemeine Hinweise</strong></p>'
-  content += '<p>Die Stadt <span class="replace-highlighted">xyz</span> als Betreiber der Online-Beteiligungsplattform <span class="replace-highlighted">www.xyz.de</span> nimmt den Schutz personenbezogener Daten sehr ernst. Wir behandeln personenbezogene Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie auf Grundlage dieser Datenschutzerklärung. Die rechtlichen Grundlagen finden Sie insbesondere in der Datenschutz-Grundverordnung (DSGVO) sowie im Bundesdatenschutzgesetz (BDSG).</p>'
-  content += '<p>Wenn Sie diese Online-Beteiligungsplattform benutzen, werden je nach Art und Umfang der Nutzung verschiedene personenbezogene Daten verarbeitet. Personenbezogene Daten sind Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person (im Folgenden „betroffene Person“) beziehen; als identifizierbar wird eine natürliche Person angesehen, die direkt oder indirekt (z.B. mittels Zuordnung zu einer Online-Kennung) identifiziert werden kann. Darunter fallen Informationen wie der Name, die Anschrift oder die Telefonnummer.</p>'
-  content += '<p>Die vorliegende Datenschutzerklärung informiert Sie gemäß Art. 12 ff. DSGVO über den Umgang mit Ihren personenbezogenen Daten bei der Nutzung unserer Online-Beteiligungsplattform. Sie erläutert insbesondere, welche Daten wir erheben und wofür wir sie nutzen. Zudem informiert sie Sie darüber, wie und zu welchem Zweck das geschieht.</p>'
-  content += '<p>Diese Datenschutzerklärung <span class="replace-highlighted">bezieht sich ausdrücklich auf die Online-Beteiligungsplattform spezifischen Datenverarbeitungsprozesse</span> beim Besuch unserer Online-Beteiligungsplattform unter <span class="replace-highlighted">www.xyz.com</span>. Auch über die Online-Beteiligungsplattform spezifischen Datenverarbeitungsprozesse hinaus messen wir dem Schutz personenbezogener Daten hohe Bedeutung zu. Bitte berücksichtigen Sie – soweit für Sie zutreffend – daher auch unsere weiteren Datenschutzhinweise, die Sie in Ihrer jeweils gültigen Fassung jederzeit <span class="replace-highlighted">hier</span> abrufen können.</p>'
+  <<~'HTML'
+  <h1>Datenschutzerklärung</h1>
 
+  <h2>1. Allgemeine Hinweise</h2>
 
-  content += '<p><strong>2. Verantwortlicher</strong></p>'
+  <p>Der Schutz Ihrer persönlichen Daten ist uns ein besonderes Anliegen. Wir verarbeiten Ihre Daten daher ausschließlich auf Grundlage der gesetzlichen Bestimmungen, insbesondere der Europäischen Datenschutz-Grundverordnung (DSGVO) und des {{LDSG_NAME}}.</p>
 
-  content += '<p>Verantwortlicher ist die natürliche oder juristische Person, die allein oder gemeinsam mit anderen über die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.B. Namen, E-Mail-Adressen) entscheidet. Verantwortlicher im Sinne der DSGVO und der geltenden nationalen Datenschutzgesetze (insbesondere BDSG) sowie sonstiger datenschutzrechtlicher Bestimmungen ist die:</p>'
-  content += '<p><span class="replace-highlighted">Stadt</span></p>'
-  content += '<p><span class="replace-highlighted">Straße</span></p>'
-  content += '<p><span class="replace-highlighted">PLZ Ort</span></p>'
-  content += '<p><span class="replace-highlighted">Telefon</span></p>'
-  content += '<p><span class="replace-highlighted">E-Mail</span></p>'
+  <p>Diese Datenschutzerklärung informiert Sie gemäß Art. 12, 13 und 14 DSGVO über die Art, den Umfang und die Zwecke der Erhebung und Verwendung personenbezogener Daten auf der Beteiligungsplattform <strong>{{PLATTFORM_NAME}}</strong> unter <strong>{{PLATTFORM_URL}}</strong> (nachfolgend „Plattform&quot;).</p>
 
+  <p>Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen (Art. 4 Nr. 1 DSGVO).</p>
 
-  content += '<p><strong>3. Der/Die behördliche Datenschutzbeauftragte/r</strong></p>'
+  <hr>
 
-  content += '<p>Wir haben eine/n behördlichen Datenschutzbeauftragte/n bestellt. Diese/n erreichen Sie unter:</p>'
-  content += '<p><span class="replace-highlighted">Stadt</span></p>'
-  content += '<p><span class="replace-highlighted">Straße</span></p>'
-  content += '<p><span class="replace-highlighted">PLZ Ort</span></p>'
-  content += '<p><span class="replace-highlighted">Telefon</span></p>'
-  content += '<p><span class="replace-highlighted">E-Mail</span></p>'
+  <h2>2. Verantwortlicher</h2>
 
+  <p>Verantwortlich für die Datenverarbeitung im Sinne der DSGVO ist:</p>
 
-  content += '<p><strong>4. Zwecke und Rechtsgrundlagen der Verarbeitung von Daten</strong></p>'
+  <p><strong>{{STADT_NAME}}</strong>
+  {{STADT_ADRESSE}}
+  Telefon: {{STADT_TELEFON}}
+  E-Mail: {{STADT_EMAIL}}
+  Website: {{STADT_WEBSITE}}</p>
 
-  content += '<p><strong>4.1. Aufruf und Besuch unserer Online-Beteiligungsplattform – Server-Log-Dateien</strong></p>'
+  <hr>
 
-  content += '<p>Zum Zweck der technischen Bereitstellung der Online-Beteiligungsplattform, ist es erforderlich, dass wir bestimmte, durch Ihren Browser automatisch übermittelte Informationen verarbeiten, damit unsere Online-Beteiligungsplattform in Ihrem Browser angezeigt werden kann und Sie die Online-Beteiligungsplattform nutzen können. Diese Informationen werden bei jedem Aufruf unserer Online-Beteiligungsplattform automatisch erfasst und automatisch in so genannten Server-Log-Dateien gespeichert. Dies sind:</p>'
+  <h2>3. Datenschutzbeauftragte/r</h2>
 
-  content += '<ul>'
-  content += '<li><span class="replace-highlighted">Browsertyp und Browserversion</span></li>'
-  content += '<li><span class="replace-highlighted">verwendetes Betriebssystem</span></li>'
-  content += '<li><span class="replace-highlighted">Online-Beteiligungsplattform, von der aus der Zugriff erfolgt (Referrer URL)</span></li>'
-  content += '<li><span class="replace-highlighted">Hostname des zugreifenden Rechners</span></li>'
-  content += '<li><span class="replace-highlighted">Datum und Uhrzeit des Zugriffs</span></li>'
-  content += '<li><span class="replace-highlighted">IP-Adresse des anfragenden Rechners</span></li>'
-  content += '</ul>'
+  <p>Bei Fragen zum Datenschutz erreichen Sie unsere/n behördliche/n Datenschutzbeauftragte/n unter:</p>
 
-  content += '<p>Die Speicherung der vorgenannten Zugriffsdaten ist zur Bereitstellung einer funktionsfähigen Online-Beteiligungsplattform und zur Sicherstellung der Systemsicherheit aus technischen Gründen erforderlich. Dies gilt auch für die Speicherung Ihrer IP-Adresse, die notwendigerweise erfolgt und unter weiteren Voraussetzungen zumindest theoretisch eine Zuordnung zu Ihrer Person ermöglichen kann. Über die vorstehend genannten Zwecke hinaus verwenden wir Server-Log-Dateien ausschließlich zur bedarfsgerechten Gestaltung und Optimierung unseres Internetangebotes rein statistisch und ohne Rückschluss auf Ihre Person. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, auch eine Auswertung der Daten zu Marketingzwecken findet nicht statt.</p>'
+  <p>{{DSB_NAME}}
+  {{DSB_ADRESSE}}
+  Telefon: {{DSB_TELEFON}}
+  E-Mail: {{DSB_EMAIL}}</p>
 
-  content += '<p>Die im Rahmen der Nutzung unserer Online-Beteiligungsplattform erhobenen Zugriffsdaten werden nur für den Zeitraum aufbewahrt, für den diese Daten zur Erreichung der vorstehenden Zwecke benötigt werden. Ihre IP-Adresse wird hierbei zu Zwecken der IT-Sicherheit auf unserem Webserver für maximal <span class="replace-highlighted">7 Tage gespeichert.</span></p>'
+  <hr>
 
-  content += '<p>Rechtsgrundlage für die vorübergehende Speicherung der technischen Zugriffsdaten ist Art. 6 Abs. 1 S. 1 lit. f DSGVO. Unser berechtigtes Interesse besteht hierbei darin, Ihnen eine technisch funktionierende und benutzerfreundlich gestaltete Online-Beteiligungsplattform zur Verfügung stellen zu können sowie die Sicherheit unserer Systeme zu gewährleisten.</p>'
+  <h2>4. Auftragsverarbeiter</h2>
 
-  content += '<p><strong>4.2 Kontaktaufnahme</strong></p>'
+  <p>Die technische Bereitstellung und Wartung der Plattform erfolgt durch:</p>
 
-  content += '<p>Wenn Sie mit uns kontaktieren, werden Ihre Nachricht / Mitteilung inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung und Beantwortung der Anfrage sowie für den Fall von Anschlussfragen bei uns gespeichert und entsprechend weiterverarbeitet. Diese Daten geben wir nicht an Dritte weiter, es sei denn, dies ist im Rahmen der Bearbeitung und Beantwortung Ihrer Anfrage erforderlich oder Sie haben uns Ihre entsprechende Einwilligung erteilt.</p>'
+  <p><strong>demokratie.today</strong>
+  Mühlleite 13
+  91465 Ergersheim
+  E-Mail: <a href="mailto:info@demokratie.today">info@demokratie.today</a>
+  Website: demokratie.today</p>
 
-  content += '<p>Wir verarbeiten die Daten auf Grundlage von Art. 6 Abs. 1 S. 1 lit. a DSGVO (Einwilligung für einen bestimmten Verarbeitungszweck) oder auf Grundlage von Art. 6 Abs. 1 S. 1 lit. b DSGVO (Erfüllung vertraglicher oder vorvertraglicher Pflichten).</p>'
+  <p>demokratie.today verarbeitet Ihre Daten ausschließlich im Auftrag und nach Weisung des Verantwortlichen gemäß Art. 28 DSGVO. Grundlage ist ein Auftragsverarbeitungsvertrag (AVV), der die Einhaltung der datenschutzrechtlichen Anforderungen sicherstellt.</p>
 
-  content += '<p>Wir löschen die Daten, wenn sich aus den Umständen entnehmen lässt, dass der betroffene Sachverhalt abschließend geklärt ist oder schränken die Verarbeitung der Daten ein, wenn vertragliche und/oder gesetzliche Pflichten bestehen.</p>'
+  <p>Das Hosting der Plattform erfolgt auf Servern der <strong>{{HOSTING_PROVIDER}}</strong> in Deutschland.</p>
 
-  content += '<p><strong>4.3 Verwendung von Cookies und zugehöriger Funktionen/Technologien</strong></p>'
+  <hr>
 
-  content += '<p>Wir setzen auf unserer Website teilweise so genannte Cookies ein. Cookies dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen und die Bereitstellung bestimmter Funktionen zu ermöglichen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert. Ein Cookie enthält eine charakteristische Zeichenfolge, die eine eindeutige Identifizierung Ihres Browsers beim erneuten Aufrufen der Website ermöglicht.</p>'
+  <h2>5. Zwecke und Rechtsgrundlagen der Datenverarbeitung</h2>
 
-  content += '<p>Die meisten der von uns verwendeten Cookies sind so genannte “Session-Cookies”. Sie werden nach Ende Ihres Besuchs bzw. Ihrer Browser-Sitzung automatisch gelöscht (sog. transiente Cookies). Andere Cookies bleiben auf Ihrem Endgerät für eine vorgegebene Dauer bzw. bis Sie diese löschen gespeichert (sog. persistente Cookies). Diese Cookies ermöglichen es uns, Ihren Browser beim nächsten Besuch wiederzuerkennen. Auf schriftliche Anfrage sind wir gerne bereit, weitere Auskünfte zu den verwendeten funktionalen Cookies zu geben. Bitte wenden Sie sich dann an die og Kontaktdaten.</p>'
+  <h3>5.1 Server-Logdaten</h3>
 
-  content += '<p>Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browsers aktivieren. Die Vorgehensweise zur Deaktivierung von Cookies können Sie regelmäßig über die „Hilfe“-Funktion Ihres Internet-Browsers erhalten. Bei der Deaktivierung von Cookies können die Funktionalität und/oder die vollständige Verfügbarkeit dieser Website eingeschränkt sein. Für weitergehende cookiespezifische Einstellungs- und Deaktivierungsmöglichkeiten sehen Sie bitte nachfolgend zudem die Einzelerläuterungen zu den im Rahmen des Besuchs unserer Website konkret verwendeten Cookies und zugehörigen Funktionen/Technologien.</p>'
+  <p>Bei jedem Zugriff auf die Plattform werden automatisch folgende Daten erfasst und in Server-Logdateien gespeichert:</p>
 
-  content += '<p><span class="replace-highlighted">Einige der Cookies, die wir auf unserer Website verwenden, stammen von Dritten, die uns helfen, die Wirkung unserer Websiteinhalte und Interessen unserer Besucher zu analysieren, die Leistung und Performance unserer Website zu messen oder bedarfsgerechte Werbung und anderen Content auf unsere oder andere Websites zu setzen. Im Rahmen unserer Website setzen wir sowohl First Party Cookies (nur von der Domäne aus sichtbar, die man gerade besucht) als auch Third Party Cookies (domainübergreifend sichtbar und regelmäßig von Dritten gesetzt) ein.</span></p>'
+  <ul>
+  <li>IP-Adresse des anfragenden Rechners</li>
+  <li>Datum und Uhrzeit des Zugriffs</li>
+  <li>Name und URL der abgerufenen Seite</li>
+  <li>Übertragene Datenmenge</li>
+  <li>Browsertyp und -version</li>
+  <li>Verwendetes Betriebssystem</li>
+  <li>Referrer-URL (zuvor besuchte Seite)</li>
+  </ul>
 
-  content += '<p>Die cookiebasierten Datenverarbeitungen erfolgen auf Basis Ihrer erteilten Einwilligung gemäß Art. 6 Abs. 1 S. 1 lit. a) DSGVO (Rechtsgrundlage) bzw. auf Grundlage des Art. 6 Abs. 1 S. 1 lit. f DSGVO (Rechtsgrundlage) zur Wahrung unserer berechtigten Interessen. Unsere berechtigten Interessen liegen hierbei insbesondere darin, Ihnen eine technisch optimierte sowie benutzerfreundlich und bedarfsgerecht gestaltete Website zur Verfügung stellen zu können sowie die Sicherheit unserer Systeme zu gewährleisten. Einwilligungen, die Sie uns erteilt haben, können Sie jederzeit widerrufen, zB durch entsprechende Deaktivierung der in der nachfolgenden Übersicht im Einzelnen aufgeführten cookiebasierten <span class="replace-highlighted">Tools/Plugins</span>. Durch entsprechende Einstellungen können Sie zudem auch einer auf berechtigten Interessen gestützten Verarbeitung widersprechen.</p>'
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. e DSGVO i.V.m. {{LDSG_REFERENZ}} (Wahrnehmung einer Aufgabe im öffentlichen Interesse). Die Verarbeitung ist aus Gründen der technischen Sicherheit, insbesondere zur Abwehr von Angriffsversuchen auf den Webserver, erforderlich.</p>
 
-  content += '<p>Im Einzelnen werden im Rahmen dieser Website folgende cookiebasierte <span class="replace-highlighted">Tools/Plugins</span> eingesetzt:</p>'
+  <p><strong>Speicherdauer:</strong> Die IP-Adressen werden nach spätestens 7 Tagen gelöscht. Die übrigen Logdaten werden in anonymisierter Form für statistische Zwecke aufbewahrt.</p>
 
-  content += '<ul>'
-  content += '<li><span class="replace-highlighted">Session-Cookie</span></li>'
-  content += '<li><span class="replace-highlighted">ahoy_visitor“, first-party analytics for Rails, Zweck: statistische Auswertung</span></li>'
-  content += '<li><span class="replace-highlighted">ahoy_visit“ first-party analytics for Rails, Zweck: statistische Auswertung</span></li>'
-  content += '</ul>'
+  <hr>
 
-  content += '<p><strong>4.4 Registrierung und Beteiligung</strong></p>'
+  <h3>5.2 SSL-/TLS-Verschlüsselung</h3>
 
-  content += '<p>Um die Online-Beteiligungsplattform nutzen zu können, müssen Sie sich registrieren. Hierzu ist die Angabe eines Benutzernamens, Ihrer E-Mail-Adresse und eines Passworts erforderlich. Der Benutzername muss kein Klarname sein. Nach der Registrierung können Sie freiwillig weitere Benutzerangaben machen, um an (auf Geolokationen) eingeschränkten Projekten partizipieren zu können. Rechtsgrundlage für diese Datenverarbeitung ist bis zum Abschluss der Registrierung Art. 6 Abs. 1 S. 1 lit. b) DSGVO (Erfüllung vertraglicher oder vorvertraglicher Pflichten) und anschließend Art. 6 Abs. 1 S. 1 lit. a) DSGVO (Einwilligung für einen bestimmten Verarbeitungszweck).</p>'
+  <p>Die Plattform nutzt aus Sicherheitsgründen und zum Schutz der Übertragung personenbezogener Daten eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://&quot; auf „https://&quot; wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.</p>
 
-  content += '<p>In der Online-Beteiligungsplattform können Sie sich beteiligen und hierzu insbesondere Beiträge wie z.B. Ideen und Kommentare erstellen oder an Abstimmungen teilnehmen. Ihre Beteiligung wird unter Angabe ihres Benutzernamens in der Online-Beteiligungsplattform öffentlich zugänglich gemacht. Auch Ihre Benutzer-Aktivität wird öffentlich zugänglich gemacht, etwa die Anzahl Ihrer Beiträge. Indem Sie sich in der Online-Beteiligungsplattform beteiligen, stimmen Sie dieser Verarbeitung von Daten und der öffentlichen Zugänglichmachung zu. Rechtsgrundlage für diese Datenverarbeitung ist Art. 6 Abs. 1 S. 1 lit. a) DSGVO (Einwilligung für einen bestimmten Verarbeitungszweck).</p>'
+  <hr>
 
-  content += '<p>Wenn Sie Ihr Benutzerkonto löschen <span class="replace-highlighted">oder Ihre Einwilligung widerrufen</span>, wird Ihr Benutzername und Ihre Beteiligung in der Online-Beteiligungsplattform anonymisiert. Alle anderen Daten, z.B. Ihr Vor- und Familienname, Ihre Adresse und Ihre E-Mail Adresse werden gelöscht.</p>'
+  <h3>5.3 Cookies</h3>
 
+  <p>Die Plattform verwendet Cookies. Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden und die Ihr Browser beim nächsten Besuch wieder an die Plattform sendet.</p>
 
-  content += '<p><strong>5. Empfänger von Daten</strong></p>'
+  <h4>Technisch notwendige Cookies</h4>
 
-  content += '<p>Innerhalb der Behörde erhalten diejenigen Stellen Zugriff auf Ihre Daten, die diese zur Erfüllung unserer vertraglichen und gesetzlichen Pflichten brauchen. Auch von uns eingesetzte Dienstleister und Erfüllungsgehilfen (z.B. technische Dienstleister) können zu diesen Zwecken Daten erhalten. Wir beschränken die Weitergabe Ihrer personenbezogener Daten dabei auf das Notwendige unter Berücksichtigung der datenschutzrechtlichen Vorgaben. Teilweise erhalten die Empfänger Ihre personenbezogenen Daten als Auftragsverarbeiter und sind dann bei dem Umgang mit Ihren personenbezogenen Daten streng an unsere Weisungen gebunden.</p>'
+  <p>Die Plattform setzt technisch notwendige Cookies ein, die für den Betrieb der Plattform zwingend erforderlich sind:</p>
 
+  <ul>
+  <li><strong>Session-Cookie:</strong> Ermöglicht die Zuordnung Ihrer Anfragen zu Ihrer Sitzung. Wird nach Beenden der Browsersitzung gelöscht.</li>
+  <li><strong>CSRF-Token:</strong> Schützt vor Cross-Site-Request-Forgery-Angriffen.</li>
+  <li><strong>Cookie-Einstellungen:</strong> Speichert Ihre Cookie-Präferenzen.</li>
+  </ul>
 
-  content += '<p><strong>6. Datenübermittlung in Drittländer</strong></p>'
+  <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 2 TDDDG sowie Art. 6 Abs. 1 lit. e DSGVO i.V.m. {{LDSG_REFERENZ}}. Diese Cookies sind für den Betrieb der Plattform technisch erforderlich.</p>
 
-  content += '<p>Wir übertragen Ihre personenbezogenen Daten <span class="replace-highlighted">nicht in Länder außerhalb der EU bzw. des EWR</span> oder an internationale Organisationen, soweit in dieser Datenschutzerklärung nicht ausdrücklich anders angegeben.</p>'
+  <h4>Analyse-Cookies (nur mit Einwilligung)</h4>
 
+  <!-- MODULE:matomo-cookies -->
 
-  content += '<p><strong>7. Dauer der Datenspeicherung</strong></p>'
+  <!-- MODULE:matomo-cookieless -->
 
-  content += '<p>Wir verarbeiten und speichern Ihre personenbezogenen Daten zunächst für die Dauer, für die der jeweilige Nutzungszweck eine entsprechende Speicherung erfordert. Anschließend löschen wir die Daten, es sei denn, die befristete Weiterverarbeitung ist erforderlich zur Erfüllung unserer vertraglichen und / oder gesetzlichen Pflichten.</p>'
+  <p>Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browsers aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität der Plattform eingeschränkt sein.</p>
 
-  content += '<p>Wenn Sie Ihr Benutzerkonto löschen <span class="replace-highlighted">oder Ihre Einwilligung widerrufen</span>, wird Ihr Benutzername und Ihre Beteiligung in der Online-Beteiligungsplattform anonymisiert. Alle anderen Daten, z.B. Ihr Vor- und Familienname, Ihre Adresse und Ihre E-Mail Adresse werden gelöscht.</p>'
+  <hr>
 
+  <h3>5.4 Registrierung und Nutzerkonto</h3>
 
-  content += '<p>8. Datensicherheit</p>'
+  <p>Für die aktive Teilnahme an Beteiligungsverfahren ist eine Registrierung auf der Plattform erforderlich. Bei der Registrierung werden folgende Daten erhoben:</p>
 
-  content += '<p>Personenbezogene Daten werden durch uns mittels geeigneter technischer und organisatorischer Maßnahmen geschützt, um ein angemessenes Schutzniveau zu gewährleisten und die Persönlichkeitsrechte der betroffenen Personen zu wahren. Die getroffenen Maßnahmen dienen unter anderem der Vermeidung eines unerlaubten Zugriffs auf die durch uns genutzten technischen Einrichtungen sowie dem Schutz personenbezogener Daten vor unerlaubter Kenntnisnahme durch Dritte. Insbesondere nutzt diese Online-Beteiligungsplattform aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Ihrer Kontaktanfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von “http://” auf “https://” wechselt und an dem Schloss-Symbol in Ihrer Browserzeile. Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden. Dennoch weisen wir darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist insoweit nicht möglich.</p>'
+  <ul>
+  <li>Benutzername (frei wählbar)</li>
+  <li>E-Mail-Adresse</li>
+  <li>Passwort (wird verschlüsselt gespeichert)</li>
+  </ul>
 
-  content += '<p><strong>9. Ihre Rechte als betroffene Person</strong></p>'
+  <p>Optional können Sie weitere Angaben machen, insbesondere wenn für bestimmte Beteiligungsverfahren eine Verifikation oder ein Wohnsitznachweis erforderlich ist:</p>
 
-  content += '<p>Ihnen stehen unter den gesetzlichen Voraussetzungen die nachfolgenden Rechte als betroffene Person zu:</p>'
+  <ul>
+  <li>Vor- und Nachname</li>
+  <li>Postleitzahl / Adresse</li>
+  <li>Geburtsdatum</li>
+  <li>Geschlecht</li>
+  </ul>
 
-  content += '<p>Auskunftsrecht: Sie sind jederzeit berechtigt, im Rahmen von Art. 15 DSGVO von uns eine Bestätigung darüber zu verlangen, ob wir Sie betreffende personenbezogene Daten verarbeiten; ist dies der Fall, sind Sie im Rahmen von Art. 15 DSGVO ferner berechtigt, Auskunft über diese personenbezogenen Daten sowie bestimmte weitere Informationen (unter anderem Verarbeitungszwecke, Kategorien personenbezogener Daten, Kategorien von Empfängern, geplante Speicherdauer, die Herkunft der Daten, den Einsatz einer automatisierten Entscheidungsfindung und im Fall des Drittlandtransfers die geeigneten Garantien) und eine Kopie Ihrer Daten zu erhalten. Es gelten die Einschränkungen des § 34 BDSG.</p>'
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) für die Registrierung. Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) für optionale Angaben.</p>
 
-  content += '<p>Recht auf Berichtigung: Sie sind berechtigt, nach Art. 16 DSGVO von uns zu verlangen, dass wir die über Sie gespeicherten personenbezogenen Daten berichtigen, wenn diese unzutreffend oder fehlerhaft sind.</p>'
+  <p><strong>Öffentlich sichtbar</strong> sind auf der Plattform: Ihr Benutzername, die Anzahl Ihrer Aktivitäten sowie Ihre Beiträge (Vorschläge, Kommentare, Abstimmungsteilnahmen). Alle weiteren Daten sind nicht öffentlich einsehbar.</p>
 
-  content += '<p>Recht auf Löschung: Sie sind berechtigt, unter den Voraussetzungen von Art. 17 DSGVO von uns zu verlangen, dass wir Sie betreffende personenbezogene Daten unverzüglich löschen. Das Recht auf Löschung besteht unter anderem nicht, wenn die Verarbeitung der personenbezogenen Daten erforderlich ist z.B. zur Erfüllung einer rechtlichen Verpflichtung (z.B. gesetzliche Aufbewahrungspflichten) oder zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen. Darüber hinaus gelten die Einschränkungen des § 35 BDSG.</p>'
+  <p><strong>Speicherdauer:</strong> Ihre Kontodaten werden gespeichert, solange Ihr Nutzerkonto besteht. Bei Löschung Ihres Kontos werden Ihre personenbezogenen Daten gelöscht. Öffentliche Beiträge (Vorschläge, Kommentare) werden anonymisiert und bleiben ohne Personenbezug erhalten.</p>
 
-  content += '<p>Recht auf Einschränkung der Verarbeitung: Sie sind berechtigt, unter den Voraussetzungen von Art. 18 DSGVO von uns zu verlangen, dass wir die Verarbeitung Ihrer personenbezogenen Daten einschränken.</p>'
+  <h4>Registrierung über Drittanbieter (Social Login)</h4>
 
-  content += '<p>Recht auf Datenübertragbarkeit: Sie sind berechtigt, unter den Voraussetzungen von Art. 20 DSGVO von uns zu verlangen, dass wir Ihnen die Sie betreffenden personenbezogenen Daten, die Sie uns bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesbaren Format übergeben.</p>'
+  <!-- MODULE:facebook -->
 
-  content += '<p>Widerrufsrecht: Eine erteilte Einwilligung in die Verarbeitung personenbezogener Daten können Sie jederzeit uns gegenüber widerrufen. Bitte beachten Sie, dass der Widerruf erst für die Zukunft wirkt. Verarbeitungen, die vor dem Widerruf erfolgt sind, sind davon nicht betroffen. Zur Erklärung des Widerrufs reicht eine formlose Mitteilung z.B. per E-Mail an <span class="replace-highlighted">xyz@xyz.de</span>.</p>'
+  <!-- MODULE:google -->
 
-  content += '<p>Widerspruchsrecht: Sie sind berechtigt, unter den Voraussetzungen von Art. 21 DSGVO Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten einzulegen, so dass wir die Verarbeitung Ihrer personenbezogenen Daten beenden müssen. Das Widerspruchsrecht besteht nur in den in Art. 21 DSGVO vorgesehenen Grenzen. Zudem können unsere Interessen einer Beendigung der Verarbeitung entgegenstehen, so dass wir trotz Ihres Widerspruchs berechtigt sind, Ihre personenbezogenen Daten zu verarbeiten. </p>'
+  <!-- MODULE:x-twitter -->
 
-  content += '<p>Beschwerderecht bei einer Aufsichtsbehörde: Unter den Voraussetzungen von Art. 77 DSGVO in Verbindung mit § 19 BDSG steht Ihnen ein Beschwerderecht bei einer zuständigen Aufsichtsbehörde zu. Insbesondere können Sie sich mit einer Beschwerde an die für uns zuständige <span class="replace-highlighted">Aufsichtsbehörde, Telefon,  E-Mail</span>, oder eine sonstige zuständige Aufsichtsbehörde wenden. Eine Liste der Datenschutzaufsichtsbehörden sowie deren Kontaktdaten können folgendem Link entnommen werden: <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html">https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html</a></p>'
+  <!-- MODULE:wordpress -->
 
-  content += '<p>Sonstige Anliegen: Für weitergehende Datenschutzfragen und -anliegen steht Ihnen unser Datenschutzbeauftragter zur Verfügung. Entsprechende Anfragen sowie die Ausübung Ihrer vorstehenden Rechte sollten nach Möglichkeit schriftlich an unsere oben angegebene Anschrift oder per E-Mail an <span class="replace-highlighted">xyz@xyz.de</span> geschickt werden.</p>'
+  <hr>
+
+  <h3>5.5 Identitätsprüfung / Verifizierung</h3>
+
+  <p>Für bestimmte Beteiligungsverfahren kann eine Identitätsprüfung oder ein Wohnsitznachweis erforderlich sein, um sicherzustellen, dass nur berechtigte Personen teilnehmen. Je nach Konfiguration des Beteiligungsverfahrens stehen folgende Verifizierungsmethoden zur Verfügung:</p>
+
+  <!-- MODULE:bundid -->
+
+  <!-- MODULE:bayernid -->
+
+  <!-- MODULE:servicekonto-nrw -->
+
+  <!-- MODULE:openrathaus -->
+
+  <!-- MODULE:sms -->
+
+  <!-- MODULE:letter -->
+
+  <!-- MODULE:melderegister -->
+
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) oder Art. 6 Abs. 1 lit. e DSGVO (Wahrnehmung einer Aufgabe im öffentlichen Interesse), je nach Ausgestaltung des Beteiligungsverfahrens.</p>
+
+  <p><strong>Speicherdauer:</strong> Verifizierungsdaten werden gespeichert, solange Ihr Nutzerkonto besteht, und bei Kontolöschung gelöscht.</p>
+
+  <hr>
+
+  <h3>5.6 Bürgerbeteiligung</h3>
+
+  <p>Im Rahmen der Nutzung der Plattform können Sie an verschiedenen Beteiligungsverfahren teilnehmen. Je nach Art des Beteiligungsverfahrens können dabei folgende Daten verarbeitet werden:</p>
+
+  <ul>
+  <li><strong>Textbeiträge:</strong> Vorschläge, Ideen, Kommentare, Diskussionsbeiträge, Mängelmeldungen – jeweils mit Titel, Beschreibungstext und Zeitstempel</li>
+  <li><strong>Bilder und Dokumente:</strong> Hochgeladene Fotos, Dokumente oder andere Dateien zu Ihren Beiträgen. Metadaten (z. B. EXIF-Daten in Fotos) werden beim Upload entfernt</li>
+  <li><strong>Standortdaten:</strong> Kartenmarkierungen (Pins) und Geokoordinaten, die Sie Ihren Beiträgen zuordnen, ggf. mit Adressnäherung</li>
+  <li><strong>Abstimmungen:</strong> Ihre Stimmabgabe (die konkrete Stimmabgabe ist nicht öffentlich einsehbar, die Teilnahme an einer Abstimmung kann jedoch sichtbar sein)</li>
+  <li><strong>Umfragen:</strong> Ihre Antworten auf Umfragefragen</li>
+  <li><strong>Formulareingaben:</strong> Alle von Ihnen in Formulare eingegebenen Daten (Textfelder, Auswahlen, Datumsangaben, Datei-Uploads). Ob Ihre Eingabe anonym oder mit Ihrem Benutzernamen verknüpft erfolgt, hängt von der Konfiguration des jeweiligen Verfahrens ab. Sie werden vor dem Absenden darüber informiert</li>
+  <li><strong>Veranstaltungen:</strong> Anmeldungen zu Veranstaltungen im Rahmen von Beteiligungsverfahren. Ihre Anmeldung ist nur für die Verwaltung sichtbar und wird nicht öffentlich angezeigt</li>
+  <li><strong>Bewertungen:</strong> Zustimmungen oder Ablehnungen zu Beiträgen anderer Nutzender</li>
+  </ul>
+
+  <p>Ihre Textbeiträge, Bilder und Standortmarkierungen werden in Verbindung mit Ihrem Benutzernamen auf der Plattform veröffentlicht. Bitte achten Sie darauf, keine Fotos hochzuladen, die Personen oder private Kennzeichen erkennbar zeigen.</p>
+
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. Art. 6 Abs. 1 lit. e DSGVO (Wahrnehmung einer Aufgabe im öffentlichen Interesse).</p>
+
+  <p><strong>Speicherdauer:</strong> Formulardaten werden für die Dauer des Beteiligungsverfahrens und dessen Auswertung gespeichert. Veranstaltungsanmeldungen werden nach Durchführung gelöscht, sofern keine Dokumentationspflichten bestehen. Alle übrigen Beiträge werden bei Kontolöschung anonymisiert (siehe Abschnitt 8).</p>
+
+  <hr>
+
+  <h3>5.7 Kontakt und Support</h3>
+
+  <p>Wenn Sie uns per E-Mail oder über ein Kontaktformular kontaktieren, werden Ihre Angaben (Name, E-Mail-Adresse, Nachrichteninhalt) zur Bearbeitung Ihrer Anfrage verarbeitet und gespeichert.</p>
+
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) oder Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung), sofern Ihre Anfrage mit der Nutzung der Plattform zusammenhängt.</p>
+
+  <p><strong>Speicherdauer:</strong> Die Daten werden gelöscht, sobald Ihre Anfrage abschließend bearbeitet wurde und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
+
+  <hr>
+
+  <h3>5.8 KI-gestützte Funktionen</h3>
+
+  <!-- MODULE:ki-nutzerhilfe -->
+
+  <!-- MODULE:ki-uebersetzung -->
+
+  <hr>
+
+  <h3>5.9 Externe Inhalte und Kartendienste</h3>
+
+  <p>Die Plattform kann externe Inhalte einbinden (z. B. Videos, Karten, interaktive Inhalte). Um Ihre Privatsphäre zu schützen, werden externe Inhalte erst nach Ihrer ausdrücklichen Zustimmung geladen (<strong>Zwei-Klick-Lösung</strong>). Erst wenn Sie den externen Inhalt aktiv freischalten, wird eine Verbindung zum jeweiligen Drittanbieter hergestellt.</p>
+
+  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktive Freischaltung).</p>
+
+  <!-- MODULE:3d-maps -->
+
+  <hr>
+
+  <h3>5.10 Newsletter</h3>
+
+  <!-- MODULE:brevo -->
+
+  <hr>
+
+  <h2>6. Empfänger von Daten und Auftragsverarbeiter</h2>
+
+  <p>Ihre personenbezogenen Daten werden nur an Dritte weitergegeben, soweit dies zur Erfüllung der genannten Zwecke erforderlich ist, eine Rechtsgrundlage besteht oder Sie eingewilligt haben.</p>
+
+  <h3>Auftragsverarbeiter</h3>
+
+  <p>Die folgenden Dienstleister verarbeiten Daten in unserem Auftrag:</p>
+
+  <table><thead>
+  <tr>
+  <th>Auftragsverarbeiter</th>
+  <th>Zweck</th>
+  <th>Sitz</th>
+  </tr>
+  </thead><tbody>
+  <tr>
+  <td>demokratie.today</td>
+  <td>Technischer Betrieb und Wartung der Plattform</td>
+  <td>Deutschland</td>
+  </tr>
+  <tr>
+  <td>{{HOSTING_PROVIDER}}</td>
+  <td>Hosting der Plattform</td>
+  <td>Deutschland</td>
+  </tr>
+  </tbody></table>
+
+  <!-- SUBPROCESSOR_LIST -->
+
+  <p>Mit allen Auftragsverarbeitern wurden Auftragsverarbeitungsverträge gemäß Art. 28 DSGVO geschlossen.</p>
+
+  <h3>Interne Empfänger</h3>
+
+  <p>Innerhalb der Verwaltung des Verantwortlichen erhalten nur diejenigen Stellen Zugriff auf Ihre Daten, die diese zur Durchführung der Beteiligungsverfahren benötigen.</p>
+
+  <hr>
+
+  <h2>7. Datenübermittlung in Drittländer</h2>
+
+  <p>Die Plattform wird auf Servern in Deutschland betrieben. Eine Übermittlung Ihrer Daten in Länder außerhalb der Europäischen Union bzw. des Europäischen Wirtschaftsraums (Drittländer) findet grundsätzlich nicht statt.</p>
+
+  <!-- DRITTLAND_LIST -->
+
+  <hr>
+
+  <h2>8. Dauer der Datenspeicherung</h2>
+
+  <p>Wir speichern Ihre personenbezogenen Daten nur so lange, wie es für die Erfüllung der jeweiligen Verarbeitungszwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.</p>
+
+  <table><thead>
+  <tr>
+  <th>Datenkategorie</th>
+  <th>Speicherdauer</th>
+  </tr>
+  </thead><tbody>
+  <tr>
+  <td>Server-Logdaten (IP-Adressen)</td>
+  <td>Maximal 7 Tage</td>
+  </tr>
+  <tr>
+  <td>Kontodaten (Benutzername, E-Mail)</td>
+  <td>Solange das Nutzerkonto besteht</td>
+  </tr>
+  <tr>
+  <td>Optionale Profilangaben</td>
+  <td>Solange das Nutzerkonto besteht</td>
+  </tr>
+  <tr>
+  <td>Verifizierungsdaten</td>
+  <td>Solange das Nutzerkonto besteht</td>
+  </tr>
+  <tr>
+  <td>Öffentliche Beiträge</td>
+  <td>Nach Kontolöschung anonymisiert</td>
+  </tr>
+  <tr>
+  <td>Kontaktanfragen</td>
+  <td>Nach abschließender Bearbeitung</td>
+  </tr>
+  <tr>
+  <td>Session-Daten</td>
+  <td>Nach Ende der Browsersitzung</td>
+  </tr>
+  </tbody></table>
+
+  <p>Bei Löschung Ihres Nutzerkontos werden Ihre personenbezogenen Daten gelöscht. Öffentliche Beiträge (Vorschläge, Kommentare) werden anonymisiert und bleiben ohne Personenbezug auf der Plattform erhalten, um die Nachvollziehbarkeit der Beteiligungsergebnisse zu gewährleisten.</p>
+
+  <hr>
+
+  <h2>9. Ihre Rechte als betroffene Person</h2>
+
+  <p>Sie haben gegenüber dem Verantwortlichen folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+
+  <h3>Auskunftsrecht (Art. 15 DSGVO)</h3>
+
+  <p>Sie haben das Recht, Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten zu verlangen, einschließlich der Verarbeitungszwecke, der Kategorien der Daten und der Empfänger.</p>
+
+  <h3>Recht auf Berichtigung (Art. 16 DSGVO)</h3>
+
+  <p>Sie haben das Recht, die unverzügliche Berichtigung unrichtiger oder die Vervollständigung unvollständiger personenbezogener Daten zu verlangen.</p>
+
+  <h3>Recht auf Löschung (Art. 17 DSGVO)</h3>
+
+  <p>Sie haben das Recht, die Löschung Ihrer personenbezogenen Daten zu verlangen, sofern die Voraussetzungen des Art. 17 DSGVO vorliegen. Sie können Ihr Nutzerkonto jederzeit selbstständig über die Kontoeinstellungen der Plattform löschen.</p>
+
+  <h3>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</h3>
+
+  <p>Sie haben unter bestimmten Voraussetzungen das Recht, die Einschränkung der Verarbeitung Ihrer Daten zu verlangen.</p>
+
+  <h3>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</h3>
+
+  <p>Sie haben das Recht, die Sie betreffenden personenbezogenen Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten oder deren Übermittlung an einen anderen Verantwortlichen zu verlangen.</p>
+
+  <h3>Widerspruchsrecht (Art. 21 DSGVO)</h3>
+
+  <p>Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung Ihrer Daten Widerspruch einzulegen, sofern die Verarbeitung auf Art. 6 Abs. 1 lit. e DSGVO beruht.</p>
+
+  <h3>Beschwerderecht bei der Aufsichtsbehörde (Art. 77 DSGVO)</h3>
+
+  <p>Unbeschadet eines anderweitigen Rechtsbehelfs steht Ihnen das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde zu. Sie können sich hierzu an die Aufsichtsbehörde Ihres Aufenthaltsortes, Ihres Arbeitsplatzes oder des Ortes des mutmaßlichen Verstoßes wenden.</p>
+
+  <hr>
+
+  <h2>10. Widerruf der Einwilligung</h2>
+
+  <p>Soweit die Verarbeitung Ihrer personenbezogenen Daten auf einer Einwilligung beruht (Art. 6 Abs. 1 lit. a DSGVO), haben Sie das Recht, diese Einwilligung jederzeit mit Wirkung für die Zukunft zu widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt.</p>
+
+  <p>Den Widerruf können Sie per E-Mail an {{STADT_EMAIL}} oder an den/die Datenschutzbeauftragte/n unter {{DSB_EMAIL}} richten. Darüber hinaus können Sie bestimmte Einwilligungen (z. B. Cookie-Einstellungen) jederzeit über die Plattform selbst ändern.</p>
+
+  <hr>
+
+  <h2>11. Stand und Änderungen dieser Datenschutzerklärung</h2>
+
+  <p>Diese Datenschutzerklärung hat den Stand: <strong>{{STAND_DATUM}}</strong>.</p>
+
+  <p>Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte Rechtslagen oder Änderungen der Plattform anzupassen. Die jeweils aktuelle Fassung ist auf der Plattform abrufbar.</p>
+  HTML
 end
 
 def generate_content(page)
@@ -135,10 +369,7 @@ def generate_content(page)
 end
 
 if SiteCustomization::Page.find_by(slug: "privacy").nil?
-  page = SiteCustomization::Page.new(slug: "privacy", status: "published")
+  page = SiteCustomization::Page.new(slug: "privacy", status: "draft")
   page.print_content_flag = true
-  I18n.available_locales.each do |locale|
-    I18n.with_locale(locale) { generate_content(page) }
-  end
+  I18n.with_locale(:de) { generate_content(page) }
 end
-

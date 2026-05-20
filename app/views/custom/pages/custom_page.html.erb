@@ -61,8 +61,10 @@
     <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
 
     <div id='footer-content'>
-      <% if @default_projekt_phase.present? %>
-        <%= render "pages/projekt_footer/#{@default_projekt_phase.name}" %>
+      <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+        <% if @default_projekt_phase.present? %>
+          <%= render "pages/projekt_footer/#{@default_projekt_phase.name}" %>
+        <% end %>
       <% end %>
     </div>
   <% end %>

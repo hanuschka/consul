@@ -1,0 +1,53 @@
+<%
+  full = phase["full_stats"] || {}
+  ls = full["label_sentiment"] || {}
+  labels = (ls["labels"] || {})
+  sentiments = (ls["sentiments"] || {})
+  labels_title = ls["labels_title"].presence || t("adm.projekts.projekts.evaluation.labels_distribution")
+  sentiments_title = ls["sentiments_title"].presence || t("adm.projekts.projekts.evaluation.sentiments_distribution")
+
+  has_labels = (labels["values"] || []).any? { |v| v.to_i > 0 }
+  has_sentiments = (sentiments["values"] || []).any? { |v| v.to_i > 0 }
+%>
+
+<% if has_labels || has_sentiments %>
+  <div class="phase-distribution-card" data-controller="adm-charts">
+    <div class="phase-distribution-card__header">
+      <span class="material-symbols-outlined" aria-hidden="true">donut_large</span>
+      <span class="phase-distribution-card__title">
+        <%= t("adm.projekts.projekts.evaluation.label_sentiment_title") %>
+      </span>
+    </div>
+    <div class="phase-distribution-card__grid">
+      <% if has_labels %>
+        <div class="phase-distribution-card__panel">
+          <div class="phase-distribution-card__panel-label"><%= labels_title %></div>
+          <div
+            class="phase-distribution-card__chart"
+            data-bar-chart
+            data-chart-labels="<%= (labels["labels"] || []).to_json %>"
+            data-chart-values="<%= (labels["values"] || []).to_json %>"
+            data-chart-color="<%= accent %>"
+          >
+            <canvas></canvas>
+          </div>
+        </div>
+      <% end %>
+
+      <% if has_sentiments %>
+        <div class="phase-distribution-card__panel">
+          <div class="phase-distribution-card__panel-label"><%= sentiments_title %></div>
+          <div
+            class="phase-distribution-card__chart"
+            data-bar-chart
+            data-chart-labels="<%= (sentiments["labels"] || []).to_json %>"
+            data-chart-values="<%= (sentiments["values"] || []).to_json %>"
+            data-chart-color="<%= accent %>"
+          >
+            <canvas></canvas>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -1,5 +1,13 @@
 de:
   adm:
+    ai_required_note: Diese Funktion ist nur verfügbar, wenn die KI aktiviert ist.
+    masterportal_imports:
+      collections:
+        root_label: "Masterportal"
+      errors:
+        upstream: "Masterportal ist nicht erreichbar."
+        host_not_allowlisted: "Endpunkt-Host ist nicht zulässig."
+        invalid_url: "Ungültige Endpunkt-URL."
     deficiency_reports:
       deficiency_reports:
         show:
@@ -16,12 +24,47 @@ de:
         custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
         update: Änderungen speichern
     projekts:
+      projekt_point_of_interest_categories:
+        form:
+          icon_image_label: Kategorie-Symbol
+          icon_image_hint: "SVG, PNG oder JPEG. Max 512 KB."
+          icon_image_remove: Symbol entfernen
+      projekts:
+        update_image:
+          success: Bild erfolgreich aktualisiert.
+        delete_image:
+          success: Bild erfolgreich entfernt.
       phases:
         ai_user_flow:
           title: KI Textassistent
           criteria_title: Bewertungskriterien
           add_criterion: Kriterium hinzufügen
           text_placeholder: "Kriterium beschreiben …"
+          hard_criteria_title: Harte Kriterien (Bestanden / Nicht bestanden)
+          hard_criteria_hint: "Ein Vorschlag muss alle harten Kriterien erfüllen. Schlägt eines fehl, sieht der Bürger nur dieses blockierende Problem."
+          soft_criteria_title: Weiche Kriterien (0–25 Punkte)
+          soft_criteria_hint: "Qualitative Bewertung. Wird nur ausgewertet, wenn alle harten Kriterien bestanden sind."
+          add_hard_criterion: Hartes Kriterium hinzufügen
+          add_soft_criterion: Weiches Kriterium hinzufügen
+          delete_criterion: Kriterium löschen
+          field_name: Name
+          field_description: Beschreibung (wird Bürgern angezeigt)
+          field_ai_instruction: KI-Anweisung (Prompt für das Modell)
+          name_placeholder: "Kurzer Name des Kriteriums"
+          description_placeholder: "Optional: Erläuterung für Bürger – was ist mit diesem Kriterium gemeint?"
+          ai_instruction_placeholder: "Anweisung, die die KI bei der Bewertung dieses Kriteriums verwenden soll"
+          drag_to_reorder: "Zum Sortieren ziehen"
+          kind_label:
+            hard: "Pflicht"
+            soft: "Qualität"
+          criteria_count:
+            zero: "Keine Kriterien"
+            one: "1 Kriterium"
+            other: "%{count} Kriterien"
+          empty_hard:
+            "Noch keine harten Kriterien definiert. Fügen Sie unten Pflicht-Kriterien hinzu, die jeder Vorschlag erfüllen muss."
+          empty_soft:
+            "Noch keine weichen Kriterien definiert. Diese werden zur qualitativen Bewertung der Vorschläge verwendet."
         ai_settings:
           title: KI Sprachassistent
           empty_title: KI Sprachassistent nicht verfügbar
@@ -35,16 +78,55 @@ de:
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent
+          evaluation_visibility: Auswertungs-Sichtbarkeit
+        evaluation_visibility:
+          title: Auswertungs-Sichtbarkeit
+          heading: Sichtbarkeit für reguläre Nutzer:innen konfigurieren
+          description: >
+            Wählen Sie aus, welche Auswertungsabschnitte reguläre Nutzer:innen
+            im Projekt-Footer für diese Phase sehen können. Admins und
+            Projektmanager:innen sehen immer alle Abschnitte.
+          save: Speichern
+          cancel: Abbrechen
+        update_evaluation_visibility:
+          success: Sichtbarkeitseinstellungen gespeichert.
+        masterportal_pins:
+          delete_all_button: Alle Pins und verknüpfte Ressourcen löschen
+          delete_all_confirm: Dadurch werden alle aus dem Masterportal importierten Pins dieser Phase zusammen mit ihren verknüpften Vorschlägen, Investitionen oder Point-of-Interest-Pins endgültig gelöscht. Fortfahren?
+          deleting: Masterportal-Pins werden gelöscht…
+          deleting_hint: Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen.
+          filter:
+            label: Nach Sammlung filtern
+            all: Alle Sammlungen
+          search:
+            label: Pins durchsuchen
+            placeholder: Suche nach Titel, Beschreibung, ID oder beliebigen Eigenschaften…
+            submit: Suchen
+            clear: Zurücksetzen
+            no_results: 'Keine Pins entsprechen „%{query}".'
+          tabs:
+            list: Listenansicht
+            map: Kartenansicht
+          empty:
+            title: Noch keine Masterportal-Pins
+            description: Diese Phase enthält keine importierten Masterportal-Pins. Starten Sie einen Import in der Kartenkonfiguration, um Pins hinzuzufügen.
+            link: Zur Kartenkonfiguration
+        destroy_all_masterportal_pins:
+          success: Alle Masterportal-Pins und die zugehörigen Ressourcen wurden gelöscht.
+        destroy_masterportal_pin:
+          success: Pin und ggf. die verknüpfte Ressource wurden gelöscht.
+        masterportal_pins_summary:
+          loading: Karte wird geladen…
   projekt_phase_setting:
     proposal_phase:
       feature:
         resource:
           create_proposal_with_ai: Vorschlag mit KI erstellen
-          create_proposal_with_ai_description: Zeigt die Schaltfläche "Vorschlag mit KI erstellen" an
+          create_proposal_with_ai_description: Aktiviert die Schaltfläche "Vorschlag mit KI erstellen" im Frontend. Nutzer können dann mithilfe eines KI-Assistenten Vorschläge formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der entstandene Entwurf bleibt vor dem Einreichen vollständig editierbar.
     budget_phase:
       feature:
         resource:
           create_proposal_with_ai: Vorschlag mit KI erstellen
-          create_proposal_with_ai_description: Zeigt die Schaltfläche "Vorschlag mit KI erstellen" an
+          create_proposal_with_ai_description: Aktiviert die Schaltfläche "Vorschlag mit KI erstellen" im Frontend. Nutzer können dann mithilfe eines KI-Assistenten Vorschläge formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der entstandene Entwurf bleibt vor dem Einreichen vollständig editierbar.
           create_investment_with_ai: Investitionsvorschlag mit KI erstellen
-          create_investment_with_ai_description: Zeigt die Schaltfläche "Investitionsvorschlag mit KI erstellen" an
+          create_investment_with_ai_description: Aktiviert die Schaltfläche "Investitionsvorschlag mit KI erstellen" im Frontend. Nutzer können mithilfe eines KI-Assistenten einen Investitionsvorschlag formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der Entwurf bleibt vor dem Einreichen vollständig editierbar.

@@ -46,7 +46,7 @@ gem 'pagy', '~> 9.4'
 
 gem 'liquid'
 
-gem 'ruby_llm', '1.13.2'
+gem 'ruby_llm', '1.14.1'
 
 gem 'pdf-reader', '2.15.1'
 
@@ -64,3 +64,6 @@ group :development, :test do
 end
 
 gem 'proj4rb'
+
+# A Ruby gem to transform HTML into PDF, PNG or JPEG by wrapping the NodeJS Google Puppeteer driver for Chromium
+gem 'grover', '1.2.10'

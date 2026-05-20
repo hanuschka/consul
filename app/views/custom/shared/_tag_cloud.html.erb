@@ -7,7 +7,7 @@
     <% @tag_cloud.tags.each do |tag| %>
       <li class="inline-block">
         <% selected_tags.include?(tag.name) ? css_class = { class: "is-active js-projekt-tag-filter-link" } : css_class = { class: "js-projekt-tag-filter-link" } %>
-        <%= link_to taggables_path(taggable, tag.name), css_class do %>
+        <%= link_to taggables_path(taggable, tag.name), css_class.merge(rel: "nofollow") do %>
           <span class="tag"><%= tag.name %></span>
         <% end %>
       </li>

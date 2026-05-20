@@ -17,8 +17,8 @@
 
       const $allViewModeButtons = $(".js-view-mode-button");
 
-      $allViewModeButtons.removeClass("-selected");
-      $clickedButton.addClass("-selected");
+      $allViewModeButtons.removeClass("-selected").attr("aria-checked", "false");
+      $clickedButton.addClass("-selected").attr("aria-checked", "true");
 
       if (viewMode === "user") {
         this.togglePreviewMode(true);

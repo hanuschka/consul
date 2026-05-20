@@ -13,6 +13,12 @@
     <% end %>
   </div>
 
+  <%= render Adm::UserSearchComponent.new(
+    url: search_user_adm_individual_group_value_path(@individual_group, @individual_group_value),
+    label: t(".search_label"),
+    description: t(".search_description")
+  ) %>
+
   <% if @related_users.any? %>
     <h2 class="kern-title kern-title--small mb-3">
       <%= t(".related_users_heading", count: @individual_group_value.users.count) %>

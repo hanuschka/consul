@@ -1,5 +1,5 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %><%= ' -embbeded-in-ai-flow' if @embbeded_in_ai_flow %>">
-  <% if !@embbeded_in_ai_flow && helpers.projekt_phase_feature?(projekt_phase, "form.voice_assistant") && Ai::Settings.voice_assistant_allowed? %>
+  <% if !@embbeded_in_ai_flow && projekt_phase_feature?(projekt_phase, "form.voice_assistant") && Ai::Settings.voice_assistant_allowed? %>
     <%= render Dt::VoiceAssistantComponent.new(
       assistant_codename: "proposal_voice_assistant",
       projekt_phase: projekt_phase

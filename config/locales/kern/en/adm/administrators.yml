@@ -7,7 +7,7 @@ en:
         empty_description: "Use the button above to add a new administrator."
         new_link: Add new administrator
         no_administrators: No administrators available.
-        hint: Here you manage the platform administrators. Administrators have full access to all settings and administrative areas of the platform. Use "New administrator" to add registered users as administrators.
+        hint: Here you manage the platform administrators. They have full access to settings, content and administrative areas of this platform as well as all sub-dashboards such as projects, deficiency reports or the ideas platform. Use "Add new administrator" to promote registered users; revoke rights again via the actions menu.
       new:
         title: New administrator
         search_label: Search users

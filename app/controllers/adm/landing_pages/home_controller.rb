@@ -3,12 +3,16 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     authorize ::SiteCustomization::Page, :index?, policy_class: Adm::LandingPages::LandingPagePolicy
 
     @team_members = LandingPageManager.includes(user: :image).order(:id)
-    @recent_items = policy_scope(::SiteCustomization::Page, policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope)
-                      .order(updated_at: :desc).limit(10)
+    @landing_pages = policy_scope(::SiteCustomization::Page,
+                                  policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope).order(:landing_nav_position)
 
-    @section_setting = SectionSetting.for_section("landing_pages")
+    @intro_text = Setting["adm.landing_pages.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.landing_pages", default: nil)
+    @notice = if Setting["adm.landing_pages.notice_active"].present?
+                Setting["adm.landing_pages.notice_message"]
+              end
     @contact_persons = SectionContactPerson.for_section("landing_pages")
-    @activities = SectionActivity.for_section("landing_pages").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("landing_pages"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: ::SiteCustomization::Page.count, label: t("adm.landing_pages.home.stats.total"), icon: "web" },
@@ -17,12 +21,11 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     ]
 
     @quick_links = [
-      { label: t("adm.landing_pages.home.quick_links.new"), path: new_adm_landing_pages_landing_page_path, primary: true },
-      { label: t("adm.landing_pages.home.quick_links.all"), path: adm_landing_pages_landing_pages_list_path }
+      { label: t("adm.landing_pages.home.quick_links.new"), path: new_adm_landing_pages_landing_page_path, primary: true }
     ]
 
     @breadcrumbs = [
-      { name: t("adm.landing_pages.home.title"), icon: "home" }
+      { name: t("adm.landing_pages.menu.items.home"), icon: "home" }
     ]
   end
 end

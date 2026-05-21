@@ -25,6 +25,7 @@
       this.baseLayers = {};
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -414,11 +415,19 @@
     renderFeatures() {
       if (this.editable) return;
 
-      const allFeatures = App.Map.formattedFeatures(this.features);
+      const split = App.Map.splitMasterportalFeatures(this.features);
+
       let pointFeatures = {
         type: 'FeatureCollection',
-        features: allFeatures.features.filter(function(f) {
-          return f.geometry.type === 'Point';
+        features: split.regular.features.filter(function(f) {
+          return f.geometry && f.geometry.type === 'Point';
+        })
+      }
+
+      let masterportalPointFeatures = {
+        type: 'FeatureCollection',
+        features: split.masterportal.features.filter(function(f) {
+          return f.geometry && f.geometry.type === 'Point';
         })
       }
 
@@ -429,6 +438,8 @@
       });
 
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
+
+      this.hasMasterportalPins = masterportalPointFeatures.features.length > 0;
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -522,6 +533,11 @@
           paint: { 'fill-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
         });
 
+        if (this.hasMasterportalPins) {
+          this.addMasterportalPinsLayers(masterportalPointFeatures, clusterColor);
+          this.addMasterportalPinsCheckbox();
+        }
+
         if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
           const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
           const instance = this;
@@ -536,8 +552,110 @@
 
             instance.map.on('click', layerId, instance.openMarkerPopup);
           })
+
+          if (this.hasMasterportalPins) {
+            ['masterportal-pins-circles'].forEach(function(layerId) {
+              instance.map.on('mouseenter', layerId, () => {
+                instance.map.getCanvas().style.cursor = 'pointer';
+              });
+
+              instance.map.on('mouseleave', layerId, () => {
+                instance.map.getCanvas().style.cursor = '';
+              });
+
+              instance.map.on('click', layerId, instance.openMarkerPopup);
+            })
+          }
         }
       }
+    }
+
+    addMasterportalPinsLayers(featureCollection, clusterColor) {
+      this.map.addSource('masterportal-pins-points', {
+        type: 'geojson',
+        data: featureCollection,
+        cluster: true,
+        clusterMaxZoom: 17,
+        clusterRadius: 50
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles-clusters',
+        type: 'circle',
+        source: 'masterportal-pins-points',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [ 'step', ['get', 'point_count'], clusterColor, 10, clusterColor, 30, clusterColor ],
+          'circle-radius': [ 'step', ['get', 'point_count'], 18, 10, 22, 28, 25 ]
+        }
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles-cluster-count',
+        type: 'symbol',
+        source: 'masterportal-pins-points',
+        filter: ['has', 'point_count'],
+        layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 },
+        paint: { 'text-color': '#ffffff' }
+      });
+
+      this.map.addLayer({
+        id: 'masterportal-pins-circles',
+        type: 'circle',
+        source: 'masterportal-pins-points',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-radius': 16,
+          'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
+          'circle-opacity': 0.75
+        }
+      });
+
+      this.map.on('click', 'masterportal-pins-circles-clusters', (e) => {
+        const features = this.map.queryRenderedFeatures(e.point, {
+          layers: ['masterportal-pins-circles-clusters']
+        });
+        const clusterId = features[0].properties.cluster_id;
+        this.map.getSource('masterportal-pins-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) return;
+          this.map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom + 1
+          });
+        });
+      });
+    }
+
+    addMasterportalPinsCheckbox() {
+      if (!this.layerControl) return;
+
+      const instance = this;
+      const layerIds = [
+        'masterportal-pins-circles-clusters',
+        'masterportal-pins-circles-cluster-count',
+        'masterportal-pins-circles'
+      ];
+
+      const label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true;
+
+      const span = document.createElement('span');
+      span.textContent = this.masterportalPinsLayerLabel;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      input.addEventListener('change', () => {
+        layerIds.forEach((layerId) => {
+          instance.toggleLayer(layerId, instance.map, input.checked);
+        });
+      });
+
+      this.layerControl.dropdownList.appendChild(label);
     }
 
     openMarkerPopup(e) {

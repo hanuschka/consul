@@ -1,27 +1,16 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
   <td class="kern-table__cell" data-field="id"><%= deficiency_report.id %></td>
-  <td class="kern-table__cell adm-deficiency-report-row__image-cell" data-field="image">
+  <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
     <%= link_to adm_deficiency_reports_deficiency_report_path(deficiency_report),
-          class: "adm-deficiency-report-row__thumb-link",
+          class: "adm-table-thumb-link",
           data: { turbo_frame: "_top" },
           title: deficiency_report.title do %>
-      <% if deficiency_report.image&.attachment&.attached? %>
-        <%= image_tag deficiency_report.image.attachment.variant(resize_to_limit: [80, 80], format: "jpeg"),
-              class: "adm-deficiency-report-row__thumb",
-              alt: deficiency_report.title,
-              loading: "lazy" %>
-      <% elsif deficiency_report.category&.icon.present? %>
-        <% category = deficiency_report.category %>
-        <span class="adm-deficiency-report-row__thumb adm-deficiency-report-row__thumb--category"
-              style="background: <%= "color-mix(in srgb, #{category.color} 18%, transparent)" if category.color.present? %>; color: <%= category.color %>;"
-              aria-hidden="true">
-          <i class="fas fa-<%= category.icon %>"></i>
-        </span>
-      <% else %>
-        <span class="adm-deficiency-report-row__thumb adm-deficiency-report-row__thumb--placeholder" aria-hidden="true">
-          <span class="material-symbols-outlined">image_not_supported</span>
-        </span>
-      <% end %>
+      <%= render Adm::TableThumbComponent.new(
+            image: deficiency_report.image,
+            title: deficiency_report.title,
+            fallback_icon: deficiency_report.category&.icon,
+            fallback_color: deficiency_report.category&.color
+          ) %>
     <% end %>
   </td>
   <th scope="row" class="kern-table__header" data-field="title" style="min-width: 250px; width: 250px; max-width: 250px;">

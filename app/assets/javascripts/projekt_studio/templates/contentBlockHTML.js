@@ -43,7 +43,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
       data-context="${context || 'projekt'}"
       >
-      <div class="relative">
+      <div class="projekt-content-block-wrapper--inner">
         <div class="projekt-content-block--toolbar-zone js-studio-hide-on-preview">
         <div class="projekt-content-block--toolbar">
 
@@ -153,6 +153,17 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   class="studio-icon-button js-content-block-add-link"
                 >
                   <i class="fas fa-link"></i>
+                </button>
+                <button
+                  type="button"
+                  disabled
+                  data-tooltip
+                  data-hover-delay="800"
+                  tabindex="0"
+                  title="Datei-Link einfügen"
+                  class="studio-icon-button js-content-block-insert-file-link"
+                >
+                  <i class="fas fa-paperclip"></i>
                 </button>
               </div>
             </div>

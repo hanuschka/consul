@@ -6,12 +6,12 @@ en:
           Typical deficiencies include road damage or damaged park benches.
         title_placeholder: Give your report a catchy title, for example “Zebra crossing in front of the XY primary school” or “More diversity at the weekly markets”.
         description_placeholder: "
-          Describe the deficiency you would like to report here.\n\n
-          Details help the city administration to find the deficiency and eliminate it quickly.\n\n
+          Describe your concern here.\n\n
+          Details help the city administration to find the issue and address it quickly.\n\n
           For example, if you know the number of the broken street lamp, then feel free to provide it.\n\n
           Please do not provide any personal information from third parties such as addresses."
         map:
-          hint: Place a pin on the map to precisely locate the deficiency.
+          hint: Place a pin on the map to precisely mark the location.
         district:
           title: Quick map zoom
           description: Quickly navigate to the desired map position
@@ -34,15 +34,15 @@ en:
           description: Only admins can see this field. You can create a post on behalf of someone here.
           placeholder: Enter name...
         create:
-          submit_button: Submit deficiency
+          submit_button: Submit now
         labels:
-          description: Description of the deficiency
-          summary: Summary of the deficiency
-          title: Title of the deficiency
+          description: Description
+          summary: Summary
+          title: Title
         new:
-          submit_button: Submit deficiency
+          submit_button: Submit now
         edit:
-          submit_button: Update deficiency
+          submit_button: Save changes
         submit_button_new_design: Submit now
       create:
         flash_success: Your report has been successfully submitted.
@@ -51,7 +51,7 @@ en:
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.
           On this page you can see which defects have already been reported. The map will help you locate the respective defect.
           Please contact us if you notice a deficiency - and contribute to a clean cityscape and a functioning city.
-        count: Mangelmeldungen
+        count: Reports
         deficiency_report:
           by: by
         orders:
@@ -60,13 +60,13 @@ en:
           newest: Newest
         search_form:
           button: search
-          placeholder: Search for deficiency reports...
-          title: Search for deficiency reports
+          placeholder: Search reports...
+          title: Search reports
         section_footer:
-          description: Deficiencies, subject to user verification settings, can be submitted by any user. They offer an easy opportunity to report deficiencies in a city. Thank you for your support!
-          title: Help with Deficiency reports
+          description: Reports, subject to user verification settings, can be submitted by any user. They offer an easy way to flag concerns in the city quickly. Thank you for your support!
+          title: Help
         section_header:
-          help: Help with Deficiency reports
+          help: Help
           icon_alt: Deficiency reports
           title: Deficiency reports
         seo:
@@ -98,12 +98,12 @@ en:
         recommendation_one: Verwenden Sie bitte nicht ausschließelich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
         recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
         recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
-        recommendations_title: Tips for reporting a deficiency
+        recommendations_title: Tips for creating a report
         seo:
-          title: Report a deficiency
-        start_new: Report a deficiency
+          title: New report
+        start_new: New report
       show:
-        title: "%{author} reported this issue"
+        title: "Submitted by %{author}"
         welcome_text_default: This defeciency has already been reported to us by a user. Here you can view the current status and follow the progress of the deficiency report.
            You can also express your opinion with your own comment. And after the deficiency has been closed, you can find the city's official statement here.
         video:
@@ -112,7 +112,7 @@ en:
           title: Official reply
         sidebar:
           category: Categories
-          delete: Delete report
+          delete: Delete
           officer: Officer
           select_officer: Select officer
           social_share: Share

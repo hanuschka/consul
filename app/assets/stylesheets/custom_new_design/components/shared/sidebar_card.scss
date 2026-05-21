@@ -103,7 +103,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
     transition: background-color 150ms ease, color 150ms ease;
 
     &::before {
-      font-size: 21px !important;
+      font-size: 25px !important;
       line-height: 1 !important;
       margin: 0 !important;
     }
@@ -152,7 +152,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   color: #111;
   font-weight: 600;
   letter-spacing: -0.005em;
-  padding: 20px $sidebar-card-horizontal-padding 16px;
+  padding: 15px $sidebar-card-horizontal-padding 16px;
   user-select: none;
 
   @media(max-width: $mobile-viewport-start) {
@@ -269,7 +269,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   margin: 0;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.4;
   transition: background-color 150ms ease;

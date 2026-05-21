@@ -175,8 +175,8 @@ class PagesController < ApplicationController
 
       @current_order = if @valid_orders.include?(params[:order])
                          params[:order]
-                       elsif sort_option.present?
-                         @current_order = sort_option.value
+                       elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+                         sort_option.value
                        else
                          Setting["selectable_setting.proposals.default_order"]
                        end
@@ -202,6 +202,7 @@ class PagesController < ApplicationController
         end
 
         @proposals_coordinates = all_proposal_map_locations(@resources)
+        @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
         @proposals =
           @resources
@@ -292,8 +293,8 @@ class PagesController < ApplicationController
       @current_order =
         if @valid_orders.include?(params[:order])
           params[:order]
-        elsif sort_option.present? || @valid_orders.include?(sort_option.value)
-          @current_order = sort_option.value
+        elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+          sort_option.value
         else
           @valid_orders.first
         end
@@ -336,6 +337,7 @@ class PagesController < ApplicationController
         @investment_ids = @investments.ids
         @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment",
   mappable_id: @investment_ids).map(&:features_json_data)
+        @investment_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
         @investments = @investments.perform_sort_by(@current_order,
   session[:random_seed]).page(params[:page]).per(24)
       end
@@ -376,7 +378,8 @@ class PagesController < ApplicationController
 
       @pin_coordinates = MapLocation.enriched_feature_collection(
         map_locations,
-        category_icons: selected_categories&.pluck(:icon)
+        category_icons: selected_categories&.pluck(:icon),
+        extra_features: MasterportalPin.standalone_features_for_phase(@projekt_phase)
       )
     end
 

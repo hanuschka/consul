@@ -17,3 +17,4 @@
 //= link_tree ../builds
 
 //= link packs/projekt_studio.js
+//= link lib/files/filter_serializer.js

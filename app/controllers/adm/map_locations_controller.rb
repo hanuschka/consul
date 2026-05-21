@@ -1,6 +1,11 @@
 module Adm
   class MapLocationsController < Adm::BaseController
+    MIN_SCREENSHOT_BYTES = 5_000
+    ALLOWED_SCREENSHOT_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp"].freeze
+
     before_action :find_map_location
+
+    skip_after_action :verify_authorized, only: :update_screenshot
 
     def update
       authorize @map_location.mappable, :update?, policy_class: policy_class_for(@map_location.mappable)
@@ -18,7 +23,41 @@ module Adm
       )
     end
 
+    def update_screenshot
+      uploaded = params[:screenshot]
+
+      if invalid_screenshot?(uploaded)
+        render json: { success: false, errors: ["Screenshot blob missing, too small, or wrong type"] },
+               status: :unprocessable_entity
+        return
+      end
+
+      @map_location.screenshot.attach(uploaded)
+
+      if @map_location.screenshot.attached?
+        render json: { success: true }
+      else
+        render json: { success: false, errors: @map_location.errors.full_messages },
+               status: :unprocessable_entity
+      end
+    end
+
     private
+
+      def invalid_screenshot?(uploaded)
+        return true if uploaded.blank?
+        return true if !uploaded.respond_to?(:size)
+        return true if uploaded.size < MIN_SCREENSHOT_BYTES
+        return true if !valid_screenshot_content_type?(uploaded)
+
+        false
+      end
+
+      def valid_screenshot_content_type?(uploaded)
+        return false if !uploaded.respond_to?(:content_type)
+
+        ALLOWED_SCREENSHOT_CONTENT_TYPES.include?(uploaded.content_type)
+      end
 
       def find_map_location
         if params[:id]

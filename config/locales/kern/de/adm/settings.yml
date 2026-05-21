@@ -29,8 +29,8 @@ de:
           versendete Verifikationslink gültig bleibt, bevor er abläuft und ein neuer Link angefordert
           werden muss.
       registration:
-        title: Konto & Zugang
-        intro_title: Hinweis zu Konto & Zugang
+        title: Registrierung & Verifizierung
+        intro_title: Hinweis zu Registrierung & Verifizierung
         intro_text_p1: >
           Hier steuern Sie, welche Informationen Nutzer bei der Registrierung angeben müssen.
           Bei aktivierter erweiterter Registrierung werden zusätzliche Felder abgefragt – darunter Vorname,

@@ -326,8 +326,11 @@ en:
           features: Features
           dashboard: Dashboard settings
           contact_persons: Contact persons
+          naming: Naming
         dashboard:
           intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
+        naming:
+          intro: "Customize the public-facing wording of the deficiency reports area. Leave a field empty to keep the platform default."
       stats:
         show:
           title: Statistics

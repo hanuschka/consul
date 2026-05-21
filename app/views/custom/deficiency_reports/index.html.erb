@@ -1,4 +1,4 @@
-<% provide :title do %><%= t("custom.deficiency_reports.index.seo.title") %><% end %>
+<% provide :title do %><%= deficiency_reports_feature_name %><% end %>
 <% content_for :header_addon do %>
   <%= render "shared/search_form",
              search_path: deficiency_reports_path(page: 1),
@@ -31,7 +31,14 @@
       </div>
     </div>
   <% else %>
-    <%= render "shared/section_header", i18n_namespace: "custom.deficiency_reports.index.section_header", image: "deficiency_reports" %>
+    <div class="help-header">
+      <div class="row">
+        <div class="small-12 column" style='float:none;'>
+          <%= image_tag "help/help_icon_deficiency_reports.png", alt: deficiency_reports_feature_name, class: "align-top" %>
+          <h1 class="inline-block"><%= deficiency_reports_feature_name %></h1>
+        </div>
+      </div>
+    </div>
   <% end %>
 
   <% if feature?(:map) %>
@@ -58,7 +65,7 @@
       </div>
 
       <aside class="margin-bottom">
-        <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+        <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
           class: "button expanded" %>
 
         <%= render "deficiency_reports/sidebar/categories" %>
@@ -112,7 +119,7 @@
       </div>
 
       <div class="show-for-small-only margin-top">
-        <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
+        <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
           class: "button expanded js-preselect-projekt" %>
       </div>
 

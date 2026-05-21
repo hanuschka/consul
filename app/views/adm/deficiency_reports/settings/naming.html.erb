@@ -16,15 +16,20 @@
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.contact_persons"),
-    url: contact_persons_adm_deficiency_reports_settings_path,
-    current: true
+    url: contact_persons_adm_deficiency_reports_settings_path
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.naming"),
-    url: naming_adm_deficiency_reports_settings_path
+    url: naming_adm_deficiency_reports_settings_path,
+    current: true
   }
 ]) %>
 
 <div class="kern-container my-5">
-  <%= render "adm/section_contact_people/section_block", section: "deficiency_reports" %>
+  <p class="adm-hint__text mb-3">
+    <%= t("adm.deficiency_reports.settings.naming.intro") %>
+  </p>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.feature_name"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.create_cta"), :value, :string) %>
 </div>

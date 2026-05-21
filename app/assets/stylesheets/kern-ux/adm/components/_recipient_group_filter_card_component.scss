@@ -172,9 +172,8 @@ $mobile-viewport-start: 640px !default;
     color: var(--kern-color-layout-text-secondary, #555);
   }
 
-  // Kern-style for the inline form-check (checkbox + label).
-  // Native browser checkbox tinted via accent-color — matches the pattern used in
-  // _evaluation_report.scss and other adm components.
+  // Inline form-check (checkbox + label) — fully custom-styled, scoped to the card
+  // to avoid bleed and override any Foundation/inherited checkbox styling.
   .kern-form-check {
     display: inline-flex;
     align-items: center;
@@ -182,13 +181,42 @@ $mobile-viewport-start: 640px !default;
     padding: 0.25rem 0;
     font-size: var(--kern-font-size-14, 0.875rem);
 
-    &__checkbox {
-      width: 18px;
-      height: 18px;
-      margin: 0;
+    input[type="checkbox"].kern-form-check__checkbox {
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px;
+      margin: 0 !important;
+      padding: 0;
+      border: 2px solid #c0c4d6;
+      border-radius: 3px;
+      background-color: #fff;
+      background-image: none;
+      box-shadow: none;
       cursor: pointer;
-      accent-color: var(--adm-color-primary);
       flex-shrink: 0;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      vertical-align: middle;
+
+      &:hover {
+        border-color: var(--adm-color-primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--adm-color-primary);
+        outline-offset: 2px;
+      }
+
+      &:checked {
+        background-color: var(--adm-color-primary);
+        border-color: var(--adm-color-primary);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 70% 70%;
+      }
     }
 
     &__label {

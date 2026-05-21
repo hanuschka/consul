@@ -76,6 +76,14 @@ namespace :adm do
 
   scope :newsletters do
     resources :recipient_groups, except: :show do
+      resources :filters,
+                controller: "recipient_group_filters",
+                only: [:create, :update, :destroy] do
+        collection do
+          post :reorder
+          get :recount
+        end
+      end
       collection do
         post :select_options
       end

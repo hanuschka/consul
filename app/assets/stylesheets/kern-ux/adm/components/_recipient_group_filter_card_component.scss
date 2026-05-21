@@ -211,13 +211,14 @@ $mobile-viewport-start: 640px !default;
         &::after {
           content: "";
           position: absolute;
-          left: 4px;
-          top: 0;
-          width: 6px;
-          height: 11px;
+          left: 50%;
+          top: 45%;
+          width: 0.3125rem;
+          height: 0.625rem;
           border: solid #fff;
           border-width: 0 2px 2px 0;
-          transform: rotate(45deg);
+          transform: translate(-50%, -50%) rotate(45deg);
+          pointer-events: none;
         }
       }
     }

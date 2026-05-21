@@ -77,7 +77,12 @@ module Adm
 
       @recipient_group.destroy!
       redirect_to adm_recipient_groups_path, notice: t(".success")
-    rescue ActiveRecord::DeleteRestrictionError
+    rescue ActiveRecord::DeleteRestrictionError, ActiveRecord::InvalidForeignKey
+      # `dependent: :restrict_with_exception` on `has_many :newsletters` only sees
+      # non-hidden records (Newsletter uses `acts_as_paranoid column: :hidden_at`),
+      # so when every related newsletter is soft-deleted the association reports
+      # "no children" and Postgres' FK constraint raises `InvalidForeignKey`
+      # instead of Rails' `DeleteRestrictionError`. Treat both as the same UX.
       redirect_to adm_recipient_groups_path, alert: t(".restricted")
     end
 

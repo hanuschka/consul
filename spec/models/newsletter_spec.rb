@@ -139,4 +139,40 @@ describe Newsletter do
       expect(Activity.first.actionable).to eq(newsletter)
     end
   end
+
+  describe "RecipientGroup deletion with soft-deleted newsletters" do
+    let(:recipient_group) do
+      RecipientGroup.create!(
+        name: "Test group",
+        origin_class_name: "User",
+        access_method: "newsletter_subscriber_ids"
+      )
+    end
+
+    it "still references the recipient_group via the FK after a newsletter is soft-deleted" do
+      newsletter = create(:newsletter, recipient_group: recipient_group)
+      newsletter.destroy
+
+      expect(newsletter.reload.hidden_at).to be_present
+      expect(Newsletter.where(recipient_group_id: recipient_group.id)).to be_empty
+      expect(Newsletter.with_hidden.where(recipient_group_id: recipient_group.id)).to include(newsletter)
+    end
+
+    it "raises ActiveRecord::InvalidForeignKey when destroying a recipient_group whose only newsletter is soft-deleted" do
+      newsletter = create(:newsletter, recipient_group: recipient_group)
+      newsletter.destroy
+
+      # `dependent: :restrict_with_exception` does not see soft-deleted records,
+      # so Rails-level guard is bypassed and Postgres raises the FK violation.
+      expect { recipient_group.destroy! }.to raise_error(ActiveRecord::InvalidForeignKey)
+      expect(RecipientGroup.exists?(recipient_group.id)).to be true
+    end
+
+    it "raises ActiveRecord::DeleteRestrictionError when destroying a recipient_group with active newsletters" do
+      create(:newsletter, recipient_group: recipient_group)
+
+      expect { recipient_group.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      expect(RecipientGroup.exists?(recipient_group.id)).to be true
+    end
+  end
 end

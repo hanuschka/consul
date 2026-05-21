@@ -1,0 +1,402 @@
+(function() {
+  "use strict";
+
+  ProjektStudio.CreateContentBlockWithAi = {
+    state: {
+      mode: "add",
+      replaceTargetWrapper: null,
+      previousContentBlockWrapper: null,
+      addAtTop: false,
+      targetContentBlockId: null,
+      previousContentBlockId: null,
+      contentBlockId: null,
+      statusUrl: null,
+      cancelUrl: null,
+      pollAttempts: 0,
+      pollActive: false,
+      categoriesAvailable: false,
+      categories: []
+    },
+
+    initialize() {
+      const $document = $(document);
+
+      $document.on("click", ".js-open-create-content-block-with-ai", this.handleOpen.bind(this));
+      $document.on("click", ".js-content-block-ai-submit", this.handleSubmit.bind(this));
+      $document.on("click", ".js-content-block-ai-cancel", this.handleCancel.bind(this));
+      $document.on("change", ".js-content-block-ai-category", this.handleCategoryChange.bind(this));
+      $document.on("click", ".js-content-block-ai-modal-close", this.handleCloseRequest.bind(this));
+
+      this.bindUnloadCancel();
+    },
+
+    bindUnloadCancel() {
+      window.addEventListener("beforeunload", () => {
+        if (!this.state.pollActive) return
+        if (!this.state.cancelUrl) return
+
+        navigator.sendBeacon && navigator.sendBeacon(this.state.cancelUrl, "");
+      });
+    },
+
+    handleOpen(e) {
+      e.preventDefault();
+
+      const templateSelector = ProjektStudio.ContentBlockTemplateSelector;
+      const crud = ProjektStudio.ContentBlock.Crud;
+
+      this.state.mode = templateSelector.selectionMode === "replace" ? "replace" : "add";
+      this.state.replaceTargetWrapper = templateSelector.replaceTargetWrapper;
+      this.state.previousContentBlockWrapper = crud.addContentBlockAfter;
+      this.state.addAtTop = crud.addContentBlockAtTop;
+      this.state.targetContentBlockId = templateSelector.replaceTargetWrapper
+        ? templateSelector.replaceTargetWrapper.dataset.contentBlockId
+        : null;
+      this.state.previousContentBlockId = crud.addContentBlockAfter
+        ? crud.addContentBlockAfter.dataset.contentBlockId
+        : null;
+
+      templateSelector.closeDialog();
+
+      this.resetUI();
+      this.openModal();
+      this.loadMetadata();
+    },
+
+    openModal() {
+      $("#contentBlockAiModal").foundation("open");
+      setTimeout(() => {
+        $(".js-content-block-ai-prompt").trigger("focus");
+      }, 200);
+    },
+
+    closeModal() {
+      $("#contentBlockAiModal").foundation("close");
+    },
+
+    resetUI() {
+      const modal = document.querySelector(".js-content-block-ai-modal");
+      modal.dataset.state = "idle";
+
+      $(".js-content-block-ai-prompt").val("");
+      $(".js-content-block-ai-context").prop("checked", false);
+      $(".js-content-block-ai-loader").hide();
+      $(".js-content-block-ai-error").hide().text("");
+      $(".js-content-block-ai-fallback-note").hide();
+      $(".js-content-block-ai-cancel").hide();
+      $(".js-content-block-ai-modal-close").show();
+      $(".js-content-block-ai-submit").prop("disabled", false);
+      $(".js-content-block-ai-template").val("").prop("disabled", true);
+      $(".js-content-block-ai-category").val("");
+    },
+
+    loadMetadata() {
+      App.Ajax
+        .request({
+          url: "/projekt_content_block_templates/metadata",
+          method: "GET",
+          dataType: "json"
+        })
+        .then((data) => this.populateCategories(data))
+        .catch(() => this.populateCategories({ available: false, categories: [] }));
+    },
+
+    populateCategories(data) {
+      this.state.categoriesAvailable = !!data.available;
+      this.state.categories = data.categories || [];
+
+      const $categorySelect = $(".js-content-block-ai-category");
+      const anyOption = $categorySelect.find("option").first().clone();
+
+      $categorySelect.empty().append(anyOption);
+
+      this.state.categories.forEach((category) => {
+        $categorySelect.append(
+          $("<option>").val(category.id || category.name).text(category.name)
+        );
+      });
+
+      $(".js-content-block-ai-fallback-note").toggle(!this.state.categoriesAvailable);
+
+      this.populateTemplates("");
+    },
+
+    handleCategoryChange(e) {
+      this.populateTemplates(e.currentTarget.value);
+    },
+
+    populateTemplates(categoryKey) {
+      const $templateSelect = $(".js-content-block-ai-template");
+      const anyOption = $templateSelect.find("option").first().clone();
+
+      $templateSelect.empty().append(anyOption);
+
+      if (!categoryKey || !this.state.categoriesAvailable) {
+        $templateSelect.prop("disabled", true);
+        return
+      }
+
+      const category = this.state.categories.find((c) => (c.id || c.name) === categoryKey);
+
+      if (!category || !category.templates || category.templates.length === 0) {
+        $templateSelect.prop("disabled", true);
+        return
+      }
+
+      category.templates.forEach((template) => {
+        if (!template.id) return
+
+        $templateSelect.append(
+          $("<option>").val(template.id).text(template.name)
+        );
+      });
+
+      $templateSelect.prop("disabled", $templateSelect.find("option").length <= 1);
+    },
+
+    handleSubmit(e) {
+      e.preventDefault();
+
+      const prompt = $(".js-content-block-ai-prompt").val().trim();
+
+      if (!prompt) {
+        this.showError("Bitte geben Sie einen Prompt ein.");
+        return
+      }
+
+      this.startGeneration(prompt);
+    },
+
+    startGeneration(prompt) {
+      const projektId = ProjektStudio.getCurrentProjektId();
+      const payload = {
+        prompt: prompt,
+        mode: this.state.mode,
+        category_hint: $(".js-content-block-ai-category").val(),
+        anchor_template_id: $(".js-content-block-ai-template").val(),
+        use_projekt_context: $(".js-content-block-ai-context").is(":checked"),
+        previous_content_block_id: this.state.previousContentBlockId,
+        add_at_top: this.state.addAtTop,
+        target_content_block_id: this.state.targetContentBlockId
+      };
+
+      this.enterProcessingMode();
+
+      App.Ajax
+        .request({
+          url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/generate_with_ai`,
+          method: "POST",
+          dataType: "json",
+          data: payload
+        })
+        .then((data) => this.handleStartResponse(data))
+        .catch((response) => this.handleStartError(response));
+    },
+
+    handleStartResponse(data) {
+      if (data.error) {
+        this.showError(data.error.message || "Fehler beim Generieren");
+        this.exitProcessingMode();
+        return
+      }
+
+      this.state.contentBlockId = data.content_block_id;
+      this.state.statusUrl = data.status_url;
+      this.state.cancelUrl = data.cancel_url;
+
+      this.startPolling();
+    },
+
+    handleStartError(response) {
+      const message = (response && response.error && response.error.message)
+        ? response.error.message
+        : "Netzwerkfehler beim Generieren";
+
+      this.showError(message);
+      this.exitProcessingMode();
+    },
+
+    enterProcessingMode() {
+      const modal = document.querySelector(".js-content-block-ai-modal");
+      modal.dataset.state = "processing";
+
+      $(".js-content-block-ai-submit").prop("disabled", true);
+      $(".js-content-block-ai-loader").show();
+      $(".js-content-block-ai-error").hide().text("");
+      $(".js-content-block-ai-cancel").show();
+      $(".js-content-block-ai-modal-close").hide();
+    },
+
+    exitProcessingMode() {
+      const modal = document.querySelector(".js-content-block-ai-modal");
+      modal.dataset.state = "idle";
+
+      $(".js-content-block-ai-submit").prop("disabled", false);
+      $(".js-content-block-ai-loader").hide();
+      $(".js-content-block-ai-cancel").hide();
+      $(".js-content-block-ai-modal-close").show();
+
+      this.state.pollActive = false;
+    },
+
+    startPolling() {
+      this.state.pollActive = true;
+      this.state.pollAttempts = 0;
+      this.poll();
+    },
+
+    poll() {
+      if (!this.state.pollActive) return
+      if (this.state.pollAttempts >= 300) {
+        this.handlePollTimeout();
+        return
+      }
+
+      this.state.pollAttempts++;
+
+      App.Ajax
+        .request({
+          url: this.state.statusUrl,
+          method: "GET",
+          dataType: "json"
+        })
+        .then((response) => this.handlePollResponse(response))
+        .catch(() => this.handlePollError());
+    },
+
+    handlePollResponse(response) {
+      if (!this.state.pollActive) return
+
+      if (response.status === "completed") {
+        this.handleCompletion(response);
+      }
+      else if (response.status === "failed") {
+        this.handlePollFailure(response);
+      }
+      else if (response.status === "cancelled") {
+        this.exitProcessingMode();
+        this.closeModal();
+      }
+      else {
+        setTimeout(() => this.poll(), 3000);
+      }
+    },
+
+    handlePollError() {
+      if (this.state.pollActive) {
+        setTimeout(() => this.poll(), 3000);
+      }
+    },
+
+    handlePollTimeout() {
+      this.exitProcessingMode();
+      this.showError("Zeitüberschreitung beim Generieren. Bitte versuchen Sie es erneut.");
+    },
+
+    handlePollFailure(response) {
+      const message = (response && response.error && response.error.message)
+        ? response.error.message
+        : "Fehler beim Generieren des Inhaltsblocks.";
+
+      this.exitProcessingMode();
+      this.showError(message);
+    },
+
+    handleCompletion(response) {
+      this.state.pollActive = false;
+
+      if (this.state.mode === "replace") {
+        this.applyReplace(response);
+      } else {
+        this.applyInsert(response);
+      }
+
+      this.exitProcessingMode();
+      this.closeModal();
+    },
+
+    applyInsert(response) {
+      const wrapperHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
+        response.body_html,
+        { contentBlockId: response.content_block_id }
+      );
+
+      const newWrapper = ProjektStudio.utils.htmlToDomElement(wrapperHTML).firstChild;
+      ProjektStudio.utils.removeFoundationIds(newWrapper);
+      ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newWrapper);
+
+      const previousWrapper = this.state.previousContentBlockWrapper;
+
+      if (this.state.addAtTop) {
+        const topSection = document.querySelector(".js-content-blocks-list .js-add-content-block-at-top");
+
+        if (topSection) {
+          topSection.after(newWrapper);
+        } else {
+          $(".js-content-blocks-list").prepend(newWrapper);
+        }
+      }
+      else if (previousWrapper && document.body.contains(previousWrapper)) {
+        previousWrapper.after(newWrapper);
+      }
+      else {
+        $(".js-content-blocks-list").append(newWrapper);
+      }
+
+      ProjektStudio.ContentBlock.Crud.rerenderContentBlockListControls();
+
+      newWrapper.classList.add("-highlight-changed");
+      setTimeout(() => {
+        newWrapper.classList.remove("-highlight-changed");
+      }, 1700);
+
+      setTimeout(() => {
+        newWrapper.scrollIntoView({ block: "center" });
+        $(newWrapper).find(".projekt-content-block").foundation();
+        $(newWrapper).find("[data-tooltip]").foundation();
+        App.ImageGallery.initialize();
+      }, 0);
+    },
+
+    applyReplace(response) {
+      const wrapper = this.state.replaceTargetWrapper;
+      if (!wrapper) return
+
+      const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+      if (!contentBlock) return
+
+      const updatedContent = ProjektStudio.utils.htmlToDomElement(response.body_html);
+      ProjektStudio.utils.removeFoundationIds(updatedContent);
+
+      ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
+      contentBlock.innerHTML = updatedContent.innerHTML;
+      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+      ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(wrapper);
+    },
+
+    handleCancel(e) {
+      e.preventDefault();
+
+      if (!this.state.cancelUrl) return
+
+      App.Ajax
+        .request({
+          url: this.state.cancelUrl,
+          method: "DELETE",
+          dataType: "json"
+        })
+        .catch(() => {});
+    },
+
+    handleCloseRequest(e) {
+      if (this.state.pollActive) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+
+    showError(message) {
+      $(".js-content-block-ai-error").text(message).show();
+    }
+  };
+}).call(this);

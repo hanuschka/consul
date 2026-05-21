@@ -249,3 +249,27 @@
   border-radius: 4px;
   margin-right: 20px;
 }
+
+.content-block-templates-selector--ai-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-left: auto;
+  margin-right: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+
+  i {
+    color: #2563eb;
+  }
+}

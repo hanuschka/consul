@@ -122,6 +122,7 @@ as: :destroy_user_resource_criterion
       collection do
         post :import_document
         post :generate_from_prompt
+        post :generate_with_ai
         get :import_status
         delete :destroy_all
       end
@@ -555,6 +556,8 @@ as: "update_heading_content_block"
     member do
       patch :update_position
       patch :change_with_ai
+      get :ai_generation_status
+      delete :cancel_ai_generation
     end
   end
 

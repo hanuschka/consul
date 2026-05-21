@@ -36,12 +36,33 @@ en:
       generate_from_prompt:
         success: Content has been successfully generated
         no_prompt: Please enter a prompt
+      ai_create:
+        modal_title: Create content block with AI
+        prompt_label: "Describe the content block you want to create:"
+        prompt_placeholder: "E.g. A notice banner about citizen participation dates with date and location..."
+        category_label: Category (optional)
+        category_any: All categories
+        template_label: Template as inspiration (optional)
+        template_any: No fixed template
+        use_context_label: Include full projekt context
+        submit: Create with AI
+        cancel: Cancel generation
+        processing_message: Content block is being created...
+        fallback_note: "Templates from demokratie.today are unavailable. AI will use only local template names as inspiration."
+        cancel_acknowledged: Generation is being cancelled
+        errors:
+          no_prompt: Please enter a prompt
+          generation_failed: Error generating content block
+          cancelled: Generation was cancelled
       destroy_all:
         success: All content blocks deleted
     projekt:
       content_block_templates_selector:
         loading: "Loading content block templates..."
         fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
+        ai_create_button:
+          label: Create with AI
+          title: Let AI create a content block
         visibility:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"

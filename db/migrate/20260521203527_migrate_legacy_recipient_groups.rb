@@ -8,7 +8,7 @@ class MigrateLegacyRecipientGroups < ActiveRecord::Migration[6.1]
       attrs = legacy_to_filter_attrs(rg)
       next unless attrs
 
-      rg.filters.create!(attrs.merge(position: 0, operator: "include"))
+      rg.filters.create!(attrs.merge(position: 1, operator: "include"))
     end
   end
 

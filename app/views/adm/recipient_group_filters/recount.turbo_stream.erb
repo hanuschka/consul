@@ -1,8 +1,15 @@
 <%= turbo_stream.update "filter-stack-footer" do %>
-  Total: <%= @resolver.count %>
+  <strong><%= t("adm.recipient_groups.filters.counter.total_summary", count: @resolver.count) %></strong>
 <% end %>
 <% @resolver.per_filter_counts.each do |entry| %>
   <%= turbo_stream.update "filter-count-#{entry[:id]}" do %>
-    <%= entry[:count] %> (<%= entry[:delta].positive? ? "+#{entry[:delta]}" : entry[:delta] %>)
+    <%= t("adm.recipient_groups.filters.counter.total", count: entry[:count]) %>
+    <% if entry[:delta] != 0 %>
+      <span class="rg-filter-card__delta">
+        <%= entry[:delta].positive? ?
+              t("adm.recipient_groups.filters.counter.delta_plus", count: entry[:delta]) :
+              t("adm.recipient_groups.filters.counter.delta_minus", count: entry[:delta].abs) %>
+      </span>
+    <% end %>
   <% end %>
 <% end %>

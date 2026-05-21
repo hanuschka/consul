@@ -15,10 +15,6 @@ class Adm::RecipientGroupPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
-  def select_options?
-    @user&.administrator?
-  end
-
   def create_filter?
     @user&.administrator?
   end

@@ -25,6 +25,7 @@ de:
         empty_description: Erstellen Sie eine Empfängergruppe, um Newsletter gezielt an bestimmte Nutzerkreise zu versenden.
       new:
         title: Empfängergruppe erstellen
+        create: Erstellen und Filter konfigurieren
         label_for_general: Typ der Empfängergruppe
         label_for_projekt: Projekt auswählen
         label_for_projekt_phase: Phase auswählen

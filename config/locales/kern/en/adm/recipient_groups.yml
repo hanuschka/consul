@@ -24,6 +24,7 @@ en:
         empty_description: Create a recipient group to send newsletters to specific audiences.
       new:
         title: Create recipient group
+        create: Create and configure filters
         label_for_general: Recipient group type
         label_for_projekt: Select project
         label_for_projekt_phase: Select phase

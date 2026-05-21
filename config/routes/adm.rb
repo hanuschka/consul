@@ -84,9 +84,6 @@ namespace :adm do
           get :recount
         end
       end
-      collection do
-        post :select_options
-      end
     end
     resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
   end

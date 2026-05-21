@@ -2,13 +2,47 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_recipient_groups_path, narrow: true) %>
 
-<div class="kern-container my-5">
-  <%= form_with model: [:adm, @recipient_group] do |f| %>
+<div class="kern-container my-5"
+     data-controller="adm-newsletters--filter-stack"
+     data-adm-newsletters--filter-stack-recount-url-value="<%= recount_adm_recipient_group_filters_path(@recipient_group) %>"
+     data-adm-newsletters--filter-stack-reorder-url-value="<%= reorder_adm_recipient_group_filters_path(@recipient_group) %>">
 
+  <%= form_with model: [:adm, @recipient_group] do |f| %>
     <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t(".name_hint")) do %>
-      <%= f.text_field :name, label: false, placeholder: "z. B. Alle Abonnenten" %>
+      <%= f.text_field :name, label: false %>
     <% end %>
 
     <%= form_submit_button(text: t("adm.recipient_groups.edit.submit")) %>
   <% end %>
+
+  <h3 class="mt-5"><%= t("adm.recipient_groups.filters.section_title") %></h3>
+
+  <ul id="filter-stack"
+      class="list-unstyled"
+      data-adm-newsletters--filter-stack-target="list">
+    <% if @recipient_group.filters.any? %>
+      <% @recipient_group.filters.each_with_index do |filter, idx| %>
+        <li>
+          <%= render Adm::RecipientGroupFilterCardComponent.new(
+                filter: filter,
+                count: @counts[idx][:count],
+                delta: @counts[idx][:delta]) %>
+        </li>
+      <% end %>
+    <% else %>
+      <li class="rg-filter-empty"><%= t("adm.recipient_groups.filters.empty") %></li>
+    <% end %>
+  </ul>
+
+  <%= form_with url: adm_recipient_group_filters_path(@recipient_group),
+                data: { turbo_stream: true } do |f| %>
+    <%= hidden_field_tag "recipient_group_filter[kind]", "newsletter_subscribers" %>
+    <%= hidden_field_tag "recipient_group_filter[operator]",
+          @recipient_group.filters.any? ? "intersect" : "include" %>
+    <%= f.submit t("adm.recipient_groups.filters.add_filter"), class: "kern-button kern-button--secondary" %>
+  <% end %>
+
+  <div id="filter-stack-footer" class="mt-4">
+    <%= render "footer", recipient_group: @recipient_group %>
+  </div>
 </div>

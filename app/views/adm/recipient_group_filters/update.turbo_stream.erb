@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@filter) do %>
+  <div id="<%= dom_id(@filter) %>">Filter #<%= @filter.position %> — <%= @filter.kind %></div>
+<% end %>
+<%= turbo_stream.update "filter-stack-footer" do %>
+<% end %>

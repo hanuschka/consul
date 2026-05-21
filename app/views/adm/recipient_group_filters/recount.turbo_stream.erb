@@ -1,0 +1,8 @@
+<%= turbo_stream.update "filter-stack-footer" do %>
+  Total: <%= @resolver.count %>
+<% end %>
+<% @resolver.per_filter_counts.each do |entry| %>
+  <%= turbo_stream.update "filter-count-#{entry[:id]}" do %>
+    <%= entry[:count] %> (<%= entry[:delta].positive? ? "+#{entry[:delta]}" : entry[:delta] %>)
+  <% end %>
+<% end %>

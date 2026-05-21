@@ -1,0 +1,7 @@
+<%= turbo_stream.append "filter-stack" do %>
+  <%# Placeholder until Adm::RecipientGroupFilterCardComponent exists (T24) %>
+  <div id="<%= dom_id(@filter) %>">Filter #<%= @filter.position %> — <%= @filter.kind %></div>
+<% end %>
+<%= turbo_stream.update "filter-stack-footer" do %>
+  <%# Updated by T25's _footer partial %>
+<% end %>

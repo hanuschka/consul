@@ -40,24 +40,26 @@
       ></textarea>
     </div>
 
-    <div class="content-block-ai-create--field">
-      <label for="contentBlockAiCategory">
-        <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
-      </label>
-      <select id="contentBlockAiCategory" name="category_hint" class="js-content-block-ai-category">
-        <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
-      </select>
-    </div>
+    <div class="content-block-ai-create--row">
+      <div class="content-block-ai-create--field">
+        <label for="contentBlockAiCategory">
+          <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
+        </label>
+        <select id="contentBlockAiCategory" name="category_hint" class="js-content-block-ai-category">
+          <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
+        </select>
+      </div>
 
-    <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
-      <label>
-        <input
-          type="checkbox"
-          name="use_projekt_context"
-          class="js-content-block-ai-context"
-        >
-        <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
-      </label>
+      <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
+        <label>
+          <input
+            type="checkbox"
+            name="use_projekt_context"
+            class="js-content-block-ai-context"
+          >
+          <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
+        </label>
+      </div>
     </div>
 
     <div

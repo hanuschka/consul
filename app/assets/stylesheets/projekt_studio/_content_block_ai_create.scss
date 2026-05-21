@@ -97,6 +97,22 @@
   user-select: none;
 }
 
+.content-block-ai-create--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 16px;
+}
+
+.content-block-ai-create--row > .content-block-ai-create--field {
+  flex: 1 1 200px;
+}
+
+.content-block-ai-create--row > .content-block-ai-create--checkbox-row {
+  flex: 0 0 auto;
+  padding-bottom: 10px;
+}
+
 .content-block-ai-create--checkbox-row input[type="checkbox"] {
   flex-shrink: 0;
   width: 18px;

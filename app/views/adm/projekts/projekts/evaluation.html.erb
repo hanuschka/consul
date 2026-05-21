@@ -24,19 +24,19 @@
     </div>
 
   <% elsif @evaluation.processing? %>
-    <div
-      class="adm-empty-state"
-      data-controller="shared--polling"
-      data-shared--polling-url-value="<%= evaluation_status_adm_projekts_projekt_path(@projekt) %>"
-      data-shared--polling-interval-value="4000"
-      data-shared--polling-terminal-states-value="completed failed"
-    >
-      <h3><%= t(".processing_title") %></h3>
-      <p><%= t(".processing_description") %></p>
-      <span
-        class="material-symbols-outlined adm-spinner adm-spinner--lg"
-        aria-hidden="true"
-      >progress_activity</span>
+    <div class="adm-empty-state">
+      <h3><%= t(".not_generated_title") %></h3>
+      <p><%= t(".not_generated_description") %></p>
+
+      <%= render Adm::AiActionButtonComponent.new(
+        url: generate_evaluation_adm_projekts_projekt_path(@projekt),
+        text: t(".generate_button"),
+        icon: "auto_awesome",
+        style: :primary,
+        processing_text: t(".processing_title"),
+        status_url: evaluation_status_adm_projekts_projekt_path(@projekt),
+        loading: true
+      ) %>
     </div>
 
   <% elsif @evaluation.failed? %>

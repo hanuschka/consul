@@ -57,7 +57,8 @@
               "pdf_options[phase_ids][]",
               phase_id,
               @selection_defaults.include_phase?(phase_id),
-              id: "pdf_options_phase_#{phase_id}"
+              id: "pdf_options_phase_#{phase_id}",
+              data: { action: "change->adm--evaluation-pdf-download#togglePhaseSections" }
             ) %>
             <strong><%= phase["phase_title"] %></strong>
             <span class="pdf-options-phase__type">

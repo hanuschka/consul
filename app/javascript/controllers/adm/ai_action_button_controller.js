@@ -5,7 +5,15 @@ export default class extends Controller {
   static values = {
     statusUrl: String,
     progressMode: { type: String, default: "swap" },
-    pollInterval: { type: Number, default: 4000 }
+    pollInterval: { type: Number, default: 4000 },
+    loading: { type: Boolean, default: false }
+  }
+
+  connect() {
+    if (!this.loadingValue) return
+    if (!this.hasStatusUrlValue || this.statusUrlValue.length === 0) return
+
+    this.schedulePoll()
   }
 
   start() {

@@ -216,6 +216,12 @@ en:
       external_video_description: >
         Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
     deficiency_reports:
+      feature_name: Feature name
+      feature_name_description: >
+        Custom name for the deficiency reporter, e.g. "Mängelmelder", "Hinweisportal", or "Bürgermelder". This name is shown on the list page heading, the main-menu link, and in browser tabs. Leave empty to use the default ("Mängelmelder").
+      create_cta: Primary create-report button label
+      create_cta_description: >
+        Label of the prominent button citizens click to start a new report on the list page (e.g. "Mangel melden", "Hinweis geben"). Leave empty to use the default ("Mangel melden").
       show_in_main_menu: Deficiency reports in navigation
       show_in_main_menu_description: >
         When enabled, the deficiency reporter is shown as a standalone menu item in the platform's main navigation. Users can access the deficiency overview directly from the main menu without first opening a project. Disable this option if the deficiency reporter should only be visible inside specific projects.

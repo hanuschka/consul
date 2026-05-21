@@ -43,8 +43,6 @@ en:
         prompt_placeholder: "E.g. A notice banner about citizen participation dates with date and location..."
         category_label: Category (optional)
         category_any: All categories
-        template_label: Template as inspiration (optional)
-        template_any: No fixed template
         use_context_label: Include full projekt context
         submit: Create with AI
         cancel: Cancel generation

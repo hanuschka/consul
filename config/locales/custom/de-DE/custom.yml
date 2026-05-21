@@ -55,8 +55,6 @@ de:
         prompt_placeholder: "Z.B. Ein Hinweisbanner zu den Bürgerbeteiligungsterminen mit Datum und Ort..."
         category_label: Kategorie (optional)
         category_any: Alle Kategorien
-        template_label: Vorlage als Inspiration (optional)
-        template_any: Ohne feste Vorlage
         use_context_label: Vollständigen Projektkontext einbeziehen
         submit: Mit KI erstellen
         cancel: Generierung abbrechen

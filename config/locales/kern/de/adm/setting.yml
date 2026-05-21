@@ -219,6 +219,12 @@ de:
       external_video_description: >
         Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
     deficiency_reports:
+      feature_name: Bezeichnung des Bereichs
+      feature_name_description: >
+        Eigene Bezeichnung für den Mängelmelder, z.B. "Mängelmelder", "Hinweisportal" oder "Bürgermelder". Diese Bezeichnung erscheint auf der Übersichtsseite, im Hauptmenü und im Browser-Tab. Leer lassen, um die Standardbezeichnung ("Mängelmelder") zu verwenden.
+      create_cta: Beschriftung der Melde-Schaltfläche
+      create_cta_description: >
+        Beschriftung der zentralen Schaltfläche, mit der Bürgerinnen und Bürger auf der Übersichtsseite eine neue Meldung starten (z.B. "Mangel melden", "Hinweis abgeben"). Leer lassen, um die Standardbeschriftung ("Mangel melden") zu verwenden.
       show_in_main_menu: Mängelmelder in der Navigation
       show_in_main_menu_description: >
         Wenn aktiviert, wird der Mängelmelder als eigenständiger Menüpunkt in der Hauptnavigation der Plattform angezeigt. Nutzer können so direkt über das Hauptmenü auf die Mängelübersicht zugreifen, ohne erst ein Projekt aufrufen zu müssen. Deaktivieren Sie diese Option, wenn der Mängelmelder nur innerhalb bestimmter Projekte sichtbar sein soll.

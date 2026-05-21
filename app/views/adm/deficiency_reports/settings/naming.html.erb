@@ -12,8 +12,7 @@
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.dashboard"),
-    url: dashboard_adm_deficiency_reports_settings_path,
-    current: true
+    url: dashboard_adm_deficiency_reports_settings_path
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.contact_persons"),
@@ -21,7 +20,8 @@
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.naming"),
-    url: naming_adm_deficiency_reports_settings_path
+    url: naming_adm_deficiency_reports_settings_path,
+    current: true
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.confirmation_popup"),
@@ -31,10 +31,9 @@
 
 <div class="kern-container my-5">
   <p class="adm-hint__text mb-3">
-    <%= t("adm.deficiency_reports.settings.dashboard.intro") %>
+    <%= t("adm.deficiency_reports.settings.naming.intro") %>
   </p>
 
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.intro_text"), :value, :text) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_message"), :value, :text) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_active"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.feature_name"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.create_cta"), :value, :string) %>
 </div>

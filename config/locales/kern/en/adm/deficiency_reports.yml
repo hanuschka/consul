@@ -330,8 +330,6 @@ en:
           confirmation_popup: Confirmation popup
         dashboard:
           intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
-        naming:
-          intro: "Customize the public-facing wording of the deficiency reports area. Leave a field empty to keep the platform default."
       confirmation_popups:
         edit:
           title: Confirmation popup

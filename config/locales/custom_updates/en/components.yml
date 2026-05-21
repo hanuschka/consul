@@ -1,0 +1,12 @@
+en:
+  components:
+    adm:
+      download_pdf_button_component:
+        label: "Download PDF"
+        loading: "Generating PDF..."
+        success: "Downloaded"
+      image_with_lightbox_component:
+        download_original: "Download original"
+    images:
+      direct_upload_component:
+        generating_image: "Generating image, please wait…"

@@ -134,6 +134,20 @@
   }
 }
 
+.kern-btn--xs {
+  min-height: 30px;
+  padding: 0 var(--kern-metric-space-x-small, 8px);
+  gap: 4px;
+
+  .kern-label {
+    font-size: 0.875rem;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
 .adm-text-link {
   display: inline-flex;
   align-items: center;

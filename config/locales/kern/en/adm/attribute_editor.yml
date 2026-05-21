@@ -32,6 +32,8 @@ en:
         comment_form_button_label: Comment form button text
         comment_form_button_description: Defines the text of the button users submit their comment with. Choose a clear, action-oriented phrase like "Submit comment", "Publish post", or "Send". The button text should clearly convey that the comment will be published.
       poll:
+        name_label: Name
+        name_description: Sets the name of the poll. Choose a concise, easy-to-understand label that clearly describes the content, e.g. "Citizen survey on urban development" or "Vote on the budget plan". The name helps users quickly identify the poll.
         closing_note_label: Closing page text
         closing_note_description: Shown on the frontend on the closing page after users have cast their vote. Use this field for a thank-you note, information about what happens next, or a hint about next steps — e.g. when results will be published. The text supports rich-text formatting and can contain links.
       projekt:
@@ -78,9 +80,9 @@ en:
         logo_newsletter_email_description: "This logo is shown in the header of every newsletter email and serves as a visual identifier for your platform. Ideally use a PNG with a transparent background that is readable on a light background. The logo should ensure recognition of your municipality or platform. Recommended format: 130 × 45 pixels."
       site_customization/video:
         header_video_label: Background video for desktop
-        header_video_description: "Optional video shown at the top of the homepage on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+        header_video_description: "Optional video shown at the top of the homepage on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. Recommended format: 1920 × 760 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
         mobile_header_video_label: Background video for mobile
-        mobile_header_video_description: "Optional video shown at the top of the homepage on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject and small file size — load time and data usage matter on mobile. If no mobile video is uploaded, mobile devices fall back to the background image (mobile image, otherwise desktop image). If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+        mobile_header_video_description: "Optional video shown at the top of the homepage on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject. Recommended format: 470 × 246 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
       site_customization/page:
         projekt:
           title_label: Homepage title
@@ -98,11 +100,11 @@ This logo should be readable on both light and dark backgrounds, since it appear
           landing_desktop_header_image_label: Background image for desktop
           landing_desktop_header_image_description: "This image is shown at the top of the topic page on desktop devices. Please use a high-resolution landscape image with a clear subject. It should fit thematically with the topic page and work well across different screen sizes. Recommended format: 1920 × 760 pixels. Ignored when a desktop background video is uploaded below."
           landing_desktop_header_video_label: Background video for desktop
-          landing_desktop_header_video_description: "Optional video shown at the top of the topic page on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+          landing_desktop_header_video_description: "Optional video shown at the top of the topic page on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. Recommended format: 1920 × 760 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
           landing_mobile_header_image_label: Background image for mobile
           landing_mobile_header_image_description: "This image is shown at the top of the topic page on mobile devices. Use an image with a centered main subject, since it may be cropped on small screens. Recommended format: 470 × 246 pixels. Ignored when a mobile background video is uploaded below."
           landing_mobile_header_video_label: Background video for mobile
-          landing_mobile_header_video_description: "Optional video shown at the top of the topic page on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject and small file size — load time and data usage matter on mobile. If no mobile video is uploaded, mobile devices fall back to the background image. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+          landing_mobile_header_video_description: "Optional video shown at the top of the topic page on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject. Recommended format: 470 × 246 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
           title_label: Topic page title
           title_description: "The topic page title is prominently shown over the background image on the homepage. It should be short and punchy to catch visitors' attention."
           subtitle_label: Topic page subtitle

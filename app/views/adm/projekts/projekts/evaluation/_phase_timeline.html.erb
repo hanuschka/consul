@@ -1,0 +1,51 @@
+<%
+  full = phase["full_stats"] || {}
+  timeline = full["timeline"] || {}
+  submissions = timeline["submissions"] || { "labels" => [], "values" => [] }
+  comments = timeline["comments"] || { "labels" => [], "values" => [] }
+  total_submissions = timeline["total_submissions"].to_i
+  total_comments = timeline["total_comments"].to_i
+%>
+
+<% if total_submissions > 0 %>
+  <div class="phase-timeline-card" data-controller="adm-charts">
+    <div class="phase-timeline-card__header">
+      <span class="material-symbols-outlined" aria-hidden="true">timeline</span>
+      <span class="phase-timeline-card__title"><%= t("adm.projekts.projekts.evaluation.timeline_title") %></span>
+    </div>
+    <div class="phase-timeline-card__grid">
+      <div class="phase-timeline-card__panel">
+        <div class="phase-timeline-card__panel-label">
+          <%= t("adm.projekts.projekts.evaluation.timeline_submissions") %>
+          <span class="phase-timeline-card__panel-count"><%= total_submissions %></span>
+        </div>
+        <div
+          class="phase-timeline-card__chart"
+          data-area-chart
+          data-chart-labels="<%= submissions["labels"].to_json %>"
+          data-chart-values="<%= submissions["values"].to_json %>"
+          data-chart-color="<%= accent %>"
+        >
+          <canvas></canvas>
+        </div>
+      </div>
+      <% if total_comments > 0 %>
+        <div class="phase-timeline-card__panel">
+          <div class="phase-timeline-card__panel-label">
+            <%= t("adm.projekts.projekts.evaluation.timeline_comments") %>
+            <span class="phase-timeline-card__panel-count"><%= total_comments %></span>
+          </div>
+          <div
+            class="phase-timeline-card__chart"
+            data-area-chart
+            data-chart-labels="<%= comments["labels"].to_json %>"
+            data-chart-values="<%= comments["values"].to_json %>"
+            data-chart-color="<%= accent %>"
+          >
+            <canvas></canvas>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

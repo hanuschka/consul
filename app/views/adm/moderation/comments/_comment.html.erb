@@ -1,9 +1,9 @@
 <tr id="<%= dom_id(comment, :moderation) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header"><%= truncate(comment.body, length: 100) %></th>
-  <td class="kern-table__cell"><%= comment.projekt&.name %></td>
-  <td class="kern-table__cell"><%= comment.author.username %></td>
-  <td class="kern-table__cell"><%= comment.flags_count %></td>
-  <td class="kern-table__cell">
+  <th scope="row" class="kern-table__header" data-field="body"><%= truncate(comment.body, length: 100) %></th>
+  <td class="kern-table__cell" data-field="projekt"><%= comment.projekt&.name %></td>
+  <td class="kern-table__cell" data-field="author"><%= comment.author.username %></td>
+  <td class="kern-table__cell" data-field="flags_count"><%= comment.flags_count %></td>
+  <td class="kern-table__cell" data-field="actions">
     <% if comment.hidden? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
         <%= c.with_action label: t("adm.moderation.comments.index.actions.unhide"),

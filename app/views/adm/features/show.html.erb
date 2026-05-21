@@ -1,0 +1,14 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <section class="mb-5">
+    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.enable_google_translate"),  :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.show_guest_login_links"),   :value, :boolean) %>
+  </section>
+</div>

@@ -1,13 +1,19 @@
 en:
   adm:
     officing:
+      title: Polling officials
       menu:
         aria_label: Officing navigation
         items:
+          home: Home
           officing_managers: Team
-          dashboard: Overview
-      dashboard:
-        title: Officing
+          settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+      home:
+        title: Welcome to the polling officials area
         budgets: Budgets to vote on
         proposals: Proposals to vote on
         polls: Polls to vote on
@@ -17,7 +23,12 @@ en:
           open: Open
           vote: Vote
           bulk_votes: Bulk voting
-        no_assignments: You currently have no assigned votes.
+        no_assignments_title: No assigned votes yet
+        no_assignments_description: As soon as budgets, proposal phases, or polls are assigned to you, they will appear here. Contact your administrator if you expect an assignment.
+        stats:
+          budgets: Assigned budgets
+          proposals: Assigned proposal phases
+          polls: Assigned polls
       verification:
         title: Add offline vote
         skip_verification: Continue without verification

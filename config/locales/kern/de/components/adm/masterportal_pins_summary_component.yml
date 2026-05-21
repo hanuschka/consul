@@ -1,0 +1,13 @@
+de:
+  components:
+    adm:
+      masterportal_pins_summary_component:
+        pins_count:
+          one: importierter Masterportal-Pin
+          other: importierte Masterportal-Pins
+        linked_to: "Verknüpft mit %{resource_name}"
+        view_all: Alle ansehen
+        resource_names:
+          proposals: Vorschlägen
+          budget_investments: Bürgerbudget-Einreichungen
+          point_of_interest_pins: Points of Interest

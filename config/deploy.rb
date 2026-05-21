@@ -47,6 +47,10 @@ set :fnm_map_bins, %w[bundle node npm puma pumactl rake yarn]
 
 set :puma_conf, "#{release_path}/config/puma/#{fetch(:rails_env)}.rb"
 set :puma_systemctl_user, :user
+# Puma owns its socket via the `bind` directive in config/puma/defaults.rb;
+# don't let capistrano-puma also generate a systemd .socket unit, otherwise
+# the two race to bind the same path and puma crashes on boot.
+set :puma_enable_socket_service, false
 
 set :delayed_job_workers, 2
 set :delayed_job_roles, :background
@@ -62,7 +66,7 @@ namespace :deploy do
   after "deploy:migrate", "add_new_settings"
 
   after :publishing, "setup_puma"
-  before "puma:smart_restart", "stop_puma_daemon"
+  before "puma:restart", "stop_puma_daemon"
   after :finished, "restart_delayed_jobs"
   after :finished, "refresh_sitemap"
 
@@ -72,7 +76,7 @@ namespace :deploy do
     invoke "deploy"
   end
 
-  before "deploy:restart", "puma:smart_restart"
+  before "deploy:restart", "puma:restart"
 end
 
 task :install_ruby do
@@ -167,9 +171,17 @@ end
 
 task :restart_delayed_jobs do
   on roles(:app) do
+    template_unit_present = test("[ -f /etc/systemd/system/delayed_job@.service ]")
     within release_path do
       with rails_env: fetch(:rails_env) do
-        execute "sudo systemctl restart delayed_job2"
+        if template_unit_present
+          fetch(:delayed_job_workers).times do |i|
+            execute "sudo systemctl restart delayed_job@#{i + 1}"
+          end
+        else
+          # Legacy cli_* branches: only the literal delayed_job2 unit exists.
+          execute "sudo systemctl restart delayed_job2"
+        end
       end
     end
   end

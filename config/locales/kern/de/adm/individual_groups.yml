@@ -79,7 +79,8 @@ de:
           Der Spaltenname muss "Email" lauten.
           Sie können sich zunächst die <a href="%{sample_url}">Beispieldatei</a> ansehen.
         import_button: CSV importieren
-        search_user_label: Nutzer suchen (E-Mail)
+        search_label: Nutzer suchen
+        search_description: Suchen Sie nach Benutzernamen oder E-Mail-Adresse, um einzelne Nutzer zur Gruppe hinzuzufügen.
         related_users_heading:
           one: "%{count} zugeordneter Nutzer"
           other: "%{count} zugeordnete Nutzer"
@@ -97,7 +98,7 @@ de:
       search_user:
         add_user: Hinzufügen
         already_assigned: Bereits zugeordnet
-        not_found: Kein Nutzer mit dieser E-Mail-Adresse gefunden.
+        not_found: Keine Nutzer gefunden.
       new:
         title: Neuen Wert erstellen
       edit:

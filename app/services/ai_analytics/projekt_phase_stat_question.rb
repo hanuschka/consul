@@ -45,12 +45,27 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       when ProjektPhase::ProposalPhase
         projekt_phase.resources.base_selection.includes(:author, comments: :user)
       when ProjektPhase::BudgetPhase
-        return [] unless projekt_phase.budget
+        return [] if projekt_phase.budget.blank?
 
         projekt_phase.budget.investments.includes(:author, comments: :user)
+      when ProjektPhase::CommentPhase
+        projekt_phase.comments.includes(:user)
+      when ProjektPhase::VotingPhase
+        sibling = sibling_proposal_phase(projekt_phase)
+        return [] if sibling.blank?
+
+        sibling.resources.base_selection.includes(:author, comments: :user)
       else
         []
       end
+    end
+
+    def sibling_proposal_phase(projekt_phase)
+      projekt_phase
+        .projekt
+        .projekt_phases
+        .where(type: "ProjektPhase::ProposalPhase")
+        .first
     end
 
     def generate_answer(resources)
@@ -72,6 +87,8 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def build_item_text(item)
+      return build_comment_item_text(item) if item.is_a?(Comment)
+
       text = "Title: #{item.title}"
       text += "\nDescription: #{item.description&.truncate(500)}" if item.description.present?
 
@@ -85,6 +102,12 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
       text
     end
 
+    def build_comment_item_text(comment)
+      text = "Comment: #{comment.body&.truncate(500)}"
+      text += "\nAuthor: #{comment.user.name}" if comment.user.present?
+      text
+    end
+
     def build_system_instructions
       fetched_prompt = fetch_prompt
 
@@ -95,7 +118,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def build_user_prompt(items_text, resources)
-      resource_type = resources.first.is_a?(Budget::Investment) ? "budget proposals" : "proposals"
+      resource_type = resource_label(resources.first)
 
       <<~TEXT
         Based on the following #{resource_type}, answer this question:
@@ -104,6 +127,17 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
         #{resource_type.capitalize}:
         #{items_text}
       TEXT
+    end
+
+    def resource_label(item)
+      case item
+      when Budget::Investment
+        "budget proposals"
+      when Comment
+        "user comments"
+      else
+        "proposals"
+      end
     end
 
     def fetch_prompt

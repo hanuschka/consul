@@ -164,7 +164,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img)
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId
 
-    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForImages(
       (selectedPicture) => {
         this.replaceImage(img, selectedPicture)
       },

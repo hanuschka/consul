@@ -1,0 +1,21 @@
+.shared-admin-iframe--wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.shared-admin-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  min-height: 500px;
+  border-radius: 12px;
+  background-image: url("custom/loader_animations/90-ring-gray.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50px 50px;
+
+  &.-loaded {
+    background-image: none;
+  }
+}

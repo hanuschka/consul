@@ -1,3 +1,11 @@
 <%= turbo_stream.remove dom_id(@filter) %>
 <%= turbo_stream.update "filter-stack-footer" do %>
+  <%= render "adm/recipient_groups/footer", recipient_group: @recipient_group %>
+<% end %>
+<% if @recipient_group.filters.reload.empty? %>
+  <%= turbo_stream.append "filter-stack" do %>
+    <li id="filter-stack-empty" class="rg-filter-empty">
+      <%= t("adm.recipient_groups.filters.empty") %>
+    </li>
+  <% end %>
 <% end %>

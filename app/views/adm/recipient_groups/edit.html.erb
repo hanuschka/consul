@@ -30,16 +30,20 @@
         </li>
       <% end %>
     <% else %>
-      <li class="rg-filter-empty"><%= t("adm.recipient_groups.filters.empty") %></li>
+      <li id="filter-stack-empty" class="rg-filter-empty"><%= t("adm.recipient_groups.filters.empty") %></li>
     <% end %>
   </ul>
 
   <%= form_with url: adm_recipient_group_filters_path(@recipient_group),
-                data: { turbo_stream: true } do |f| %>
+                data: { turbo_stream: true },
+                class: "mt-3" do |f| %>
     <%= hidden_field_tag "recipient_group_filter[kind]", "newsletter_subscribers" %>
     <%= hidden_field_tag "recipient_group_filter[operator]",
           @recipient_group.filters.any? ? "intersect" : "include" %>
-    <%= f.submit t("adm.recipient_groups.filters.add_filter"), class: "kern-button kern-button--secondary" %>
+    <%= kern_button(text: t("adm.recipient_groups.filters.add_filter"),
+                    icon: "add",
+                    type: :submit,
+                    style: :secondary) %>
   <% end %>
 
   <div id="filter-stack-footer" class="mt-4">

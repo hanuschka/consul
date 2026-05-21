@@ -2,7 +2,7 @@
          id="<%= dom_id(filter) %>"
          data-filter-id="<%= filter.id %>"
          data-controller="adm-newsletters--filter-stack-item">
-  <header class="rg-filter-card__header">
+  <div class="rg-filter-card__header">
     <button type="button"
             class="rg-filter-card__handle"
             title="<%= t("adm.recipient_groups.filters.move_up") %>"
@@ -44,7 +44,7 @@
           data: { confirm: t("adm.recipient_groups.filters.delete_confirm") } do %>
       <span class="material-symbols-outlined" aria-hidden="true">close</span>
     <% end %>
-  </header>
+  </div>
 
   <section class="rg-filter-card__params">
     <%= render "adm/recipient_group_filters/params/#{filter.kind}", filter: filter, filter_params: filter_params %>

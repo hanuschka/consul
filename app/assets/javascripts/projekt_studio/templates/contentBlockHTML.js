@@ -338,7 +338,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
         title="Inhaltsblock mit KI erstellen"
         ${isDraft ? "disabled" : ''}
       >
-        <i class="fas fa-wand-magic-sparkles"></i>
+        <i class="fas fa-magic"></i>
       </button>
       <button
         type="button"

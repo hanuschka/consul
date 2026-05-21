@@ -1,0 +1,23 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.projekt_id") %>
+  <%= select_tag "recipient_group_filter[params][projekt_id]",
+        options_for_select(
+          Projekt.order(:name).pluck(:name, :id),
+          filter_params["projekt_id"]
+        ),
+        include_blank: true,
+        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+</label>
+
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.projekt_phase_id") %>
+  <%= select_tag "recipient_group_filter[params][projekt_phase_id]",
+        options_for_select(
+          ProjektPhase.includes(:projekt).order("projekts.name").map { |pp|
+            ["#{pp.projekt&.name} – #{pp.title || pp.type}", pp.id]
+          },
+          filter_params["projekt_phase_id"]
+        ),
+        include_blank: true,
+        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+</label>

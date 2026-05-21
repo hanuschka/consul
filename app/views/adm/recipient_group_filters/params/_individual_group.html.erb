@@ -1,0 +1,13 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.individual_group_value_ids") %>
+  <%= select_tag "recipient_group_filter[params][individual_group_value_ids][]",
+        options_for_select(
+          IndividualGroupValue.includes(:individual_group).map { |v|
+            ["#{v.individual_group&.name} – #{v.try(:name) || v.try(:value)}", v.id]
+          },
+          Array(filter_params["individual_group_value_ids"]).map(&:to_i)
+        ),
+        multiple: true,
+        size: 6,
+        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+</label>

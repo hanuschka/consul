@@ -1,0 +1,10 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.role") %>
+  <%= select_tag "recipient_group_filter[params][role]",
+        options_for_select(
+          RecipientGroupFilter::ALLOWED_ROLES.map { |r| [t("adm.recipient_groups.filters.roles.#{r}"), r] },
+          filter_params["role"]
+        ),
+        include_blank: true,
+        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+</label>

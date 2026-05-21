@@ -66,6 +66,7 @@ de:
         add_filter: Filter hinzufügen
         empty: Noch keine Filter — beginnen Sie mit einer Quelle
         delete: Filter entfernen
+        delete_confirm: Diesen Filter wirklich entfernen?
         move_up: Nach oben verschieben
         move_down: Nach unten verschieben
         operators:

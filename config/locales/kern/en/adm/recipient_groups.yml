@@ -65,6 +65,7 @@ en:
         add_filter: Add filter
         empty: No filters yet — start with a source
         delete: Remove filter
+        delete_confirm: Really remove this filter?
         move_up: Move up
         move_down: Move down
         operators:

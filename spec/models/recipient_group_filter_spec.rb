@@ -63,4 +63,34 @@ describe RecipientGroupFilter do
       expect(second).to be_valid
     end
   end
+
+  describe "params validation per kind" do
+    let(:group) { create(:recipient_group) }
+
+    it "rejects geozone filter without geozone_ids" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "geozone", params: {})
+      expect(f).not_to be_valid
+      expect(f.errors[:params]).to be_present
+    end
+
+    it "accepts geozone filter with geozone_ids" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "geozone", params: { "geozone_ids" => [1] })
+      expect(f).to be_valid
+    end
+
+    it "rejects role filter with unsupported role" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "role", params: { "role" => "nope" })
+      expect(f).not_to be_valid
+    end
+
+    it "accepts role filter with allowed role" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "role", params: { "role" => "administrator" })
+      expect(f).to be_valid
+    end
+
+    it "rejects phase_authors without projekt_phase_id" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "phase_authors", params: { "criterion" => "winners" })
+      expect(f).not_to be_valid
+    end
+  end
 end

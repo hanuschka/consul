@@ -34,12 +34,17 @@ module KernHelper
     end
   end
 
-  def empty_state(title:, description: nil, icon: "folder_open", link_url: nil, link_text: nil)
+  def empty_state(title:, description: nil, icon: "folder_open", link_url: nil, link_text: nil, link_class: "adm-empty-state__link kern-button kern-button--outline mt-3", link_target: nil, link_rel: nil)
     content_tag(:div, class: "adm-empty-state") do
       concat(content_tag(:div, content_tag(:span, icon, class: "adm-empty-state__icon material-symbols-outlined", "aria-hidden": "true"), class: "adm-empty-state__icon-wrap"))
       concat(content_tag(:p, title, class: "adm-empty-state__title"))
       concat(content_tag(:p, description, class: "adm-empty-state__description")) if description.present?
-      concat(link_to(link_text, link_url, class: "adm-empty-state__link kern-button kern-button--outline mt-3")) if link_url.present? && link_text.present?
+      if link_url.present? && link_text.present?
+        link_opts = { class: link_class }
+        link_opts[:target] = link_target if link_target.present?
+        link_opts[:rel] = link_rel if link_rel.present?
+        concat(link_to(link_text, link_url, **link_opts))
+      end
     end
   end
 

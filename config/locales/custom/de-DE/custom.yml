@@ -48,6 +48,25 @@ de:
       generate_from_prompt:
         success: Inhalte wurden erfolgreich generiert
         no_prompt: Bitte geben Sie einen Prompt ein
+      ai_create:
+        modal_title: Inhaltsblock mit KI erstellen
+        description: "Beschreiben Sie kurz, welchen Inhaltsblock Sie benötigen. Die KI nutzt vorhandene Vorlagen als Inspiration und kann optional den vollständigen Projektkontext einbeziehen, um einen neuen Block zu erstellen."
+        prompt_label: "Beschreiben Sie den Inhaltsblock, den Sie erstellen möchten:"
+        prompt_placeholder: "Z.B. Ein Hinweisbanner zu den Bürgerbeteiligungsterminen mit Datum und Ort..."
+        category_label: Kategorie (optional)
+        category_any: Alle Kategorien
+        template_label: Vorlage als Inspiration (optional)
+        template_any: Ohne feste Vorlage
+        use_context_label: Vollständigen Projektkontext einbeziehen
+        submit: Mit KI erstellen
+        cancel: Generierung abbrechen
+        processing_message: Inhaltsblock wird erstellt...
+        fallback_note: "Vorlagen von demokratie.today sind nicht verfügbar. KI nutzt nur lokale Vorlagennamen als Inspiration."
+        cancel_acknowledged: Generierung wird abgebrochen
+        errors:
+          no_prompt: Bitte geben Sie einen Prompt ein
+          generation_failed: Fehler beim Generieren des Inhaltsblocks
+          cancelled: Generierung wurde abgebrochen
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:

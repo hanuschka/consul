@@ -53,29 +53,9 @@
 }
 
 .adm-ai-question-section--textarea {
-  width: 100%;
   min-height: 90px;
-  padding: 0.75rem 0.875rem;
   margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--er-text, #0f172a);
-  background: var(--er-bg, #fafbfc);
-  border: 1px solid var(--er-border, #e5e7eb);
-  border-radius: var(--er-radius, 8px);
   resize: vertical;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-
-  &::placeholder {
-    color: var(--er-text-muted, #94a3b8);
-  }
-
-  &:focus {
-    outline: none;
-    background: var(--er-surface, #ffffff);
-    border-color: var(--kern-color-action-default, #2c3e9c);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--kern-color-action-default, #2c3e9c) 18%, transparent);
-  }
 }
 
 .adm-ai-question-section--form-actions {

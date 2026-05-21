@@ -59,7 +59,7 @@ class Adm::HeaderComponent < ApplicationComponent
       projekt_phase = controller.instance_variable_get(:@projekt_phase)
       projekt = controller.instance_variable_get(:@projekt) || projekt_phase&.projekt
 
-      if projekt
+      if projekt && projekt.page&.slug.present?
         base = "/#{projekt.page.slug}"
         url = projekt_phase ? "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" : base
         return [url, t.call(:projekt)]

@@ -4,6 +4,12 @@
   failed = row.failed?
   status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
   regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+  page_slug = projekt.page&.slug
+  phase_footer_url =
+    if page_slug.present?
+      page_path(page_slug, projekt_phase_id: phase_id, anchor: "projekt-footer")
+    end
+  phase_edit_url = naming_adm_projekts_phase_path(phase_id)
 %>
 
 <div
@@ -48,10 +54,28 @@
       </div>
     <% else %>
       <div class="evaluation-phase-panel__toolbar">
-        <div class="evaluation-phase-panel__toolbar-title">
-          <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
-          <span><%= phase["phase_title"] %></span>
-        </div>
+        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <span class="evaluation-phase-panel__toolbar-title-text"><%= phase["phase_title"] %></span>
+        <span class="evaluation-phase-panel__toolbar-title-links">
+            <% if phase_footer_url.present? %>
+              <a
+                href="<%= phase_footer_url %>"
+                class="evaluation-phase-panel__toolbar-title-link"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="material-symbols-outlined evaluation-phase-panel__toolbar-title-link-icon" aria-hidden="true">open_in_new</span>
+                <span><%= t("adm.projekts.projekts.evaluation.toolbar_title_view_link") %></span>
+              </a>
+            <% end %>
+            <a
+              href="<%= phase_edit_url %>"
+              class="evaluation-phase-panel__toolbar-title-link"
+            >
+              <span class="material-symbols-outlined evaluation-phase-panel__toolbar-title-link-icon" aria-hidden="true">edit</span>
+              <span><%= t("adm.projekts.projekts.evaluation.toolbar_title_edit_link") %></span>
+            </a>
+        </span>
         <div class="evaluation-phase-panel__toolbar-actions">
           <%= kern_link_button(
             evaluation_visibility_adm_projekts_phase_path(phase_id),

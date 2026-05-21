@@ -11,7 +11,6 @@
   page_image = page&.image
 
   open_phases = (report_settings["open_phases"] || []).reject(&:blank?)
-  polls_count = report_settings["polls_count"].to_i
   tags = (report_settings["tags"] || []).reject(&:blank?)
   sdg_goals = report_settings["sdg_goals"] || []
 
@@ -121,23 +120,6 @@
         <% else %>
           <div class="report-summary--stat-card-empty">
             <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases_none") %>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="report-summary--stat-card -indigo">
-        <div class="report-summary--stat-card-head">
-          <strong class="report-summary--stat-card-number"><%= polls_count %></strong>
-          <div class="report-summary--stat-card-label">
-            <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">how_to_vote</span>
-            </span>
-            <%= t("adm.projekts.projekts.evaluation.polls") %>
-          </div>
-        </div>
-        <% if !polls_count.positive? %>
-          <div class="report-summary--stat-card-empty">
-            <%= t("adm.projekts.projekts.evaluation.report.settings_polls_none") %>
           </div>
         <% end %>
       </div>

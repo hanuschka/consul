@@ -26,18 +26,6 @@ export default class extends Controller {
     this.startDownload()
   }
 
-  togglePhaseSections(event) {
-    const checkbox = event.currentTarget
-    const phase = checkbox.closest(".pdf-options-phase")
-
-    if (!phase) return
-
-    const sectionCheckboxes = phase.querySelectorAll(".pdf-options-sections input[type='checkbox']")
-    sectionCheckboxes.forEach((box) => {
-      box.checked = checkbox.checked
-    })
-  }
-
   async startDownload() {
     this.dispatchProgress(BEGIN_EVENT)
 

@@ -31,6 +31,8 @@ en:
           phase_download_pdf_button: Export PDF…
           open_in_admin: Open in admin
           configure_visibility_button: Visibility
+          toolbar_title_view_link: Go to phase in projekt footer
+          toolbar_title_edit_link: Edit phase
           phase_processing_title: Phase is being regenerated
           phase_processing_description: >
             This phase is being regenerated. This may take a few minutes.

@@ -31,6 +31,8 @@ de:
           phase_download_pdf_button: PDF exportieren…
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit
+          toolbar_title_view_link: Zur Phase im Projekt-Footer
+          toolbar_title_edit_link: Phase bearbeiten
           phase_processing_title: Phase wird neu generiert
           phase_processing_description: >
             Diese Phase wird neu generiert. Dies kann einige Minuten dauern.

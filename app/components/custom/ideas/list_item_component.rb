@@ -13,7 +13,7 @@ class Ideas::ListItemComponent < ApplicationComponent
       title: idea.title,
       description: idea.description,
       url: helpers.idea_path(idea),
-      image_url: idea.image&.variant(:card_thumb),
+      image: idea.image,
       image_placeholder_icon_class: "fa-lightbulb",
       subline: idea.category&.name
     }

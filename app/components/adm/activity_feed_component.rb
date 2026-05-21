@@ -1,14 +1,21 @@
 class Adm::ActivityFeedComponent < ApplicationComponent
+  include Pagy::Frontend
+
   delegate :time_ago_in_words, to: :helpers
 
-  attr_reader :activities
+  attr_reader :activities, :pagy
 
-  def initialize(activities:)
+  def initialize(activities:, pagy: nil)
     @activities = activities
+    @pagy = pagy
   end
 
   def render?
     activities.any?
+  end
+
+  def show_pagination?
+    pagy.present? && pagy.pages > 1
   end
 
   def activity_description(activity)

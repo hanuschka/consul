@@ -2,32 +2,32 @@ en:
   mailer:
     budget_investment_created:
       title: Submission confirmation
-      description: Sent to the author when a project idea has been successfully submitted.
+      description: 'Sent to the author during the "Accepting projects" budget phase, as soon as their project idea has been successfully submitted.'
       recipient: The user who submitted the project idea.
     budget_investment_feasible:
       title: Project idea evaluated as feasible
-      description: Sent to the author when their project idea has been evaluated as feasible.
+      description: 'Sent to the author once their project idea has been evaluated as feasible by a valuator.'
       recipient: The user who submitted the project idea.
     budget_investment_unfeasible:
       title: Project idea evaluated as unfeasible
-      description: Sent to the author when their project idea has been evaluated as unfeasible.
+      description: 'Sent to the author once their project idea has been evaluated as unfeasible by a valuator.'
       recipient: The user who submitted the project idea.
     budget_investment_selected:
       title: Project idea selected
-      description: Sent to the author when their project idea has been shortlisted.
+      description: 'Sent to the author once their project idea has been marked as selected by a valuator (and thereby qualifies for the voting phase).'
       recipient: The user who submitted the project idea.
     budget_investment_unselected:
       title: Project idea not selected
-      description: Sent to the author when their project idea has not been shortlisted.
+      description: 'Sent to the author once their project idea has been marked as not selected by a valuator (and thereby will not move on to the voting phase).'
       recipient: The user who submitted the project idea.
     budget_investment_preselected:
       title: Project idea pre-selected
-      description: Sent to the author when their project idea has been pre-selected.
-      recipient: The user who submitted the project idea.
+      description: 'Sent to the author of a feasible project idea on transition into the "Valuating projects" budget phase, when their idea was automatically pre-selected based on the votes cast during the prior "Selecting projects" phase.'
+      recipient: The user who submitted the feasible project idea.
     budget_investment_not_preselected:
       title: Project idea not pre-selected
-      description: Sent to the author when their project idea has not been pre-selected.
-      recipient: The user who submitted the project idea.
+      description: 'Sent to the author of a feasible project idea on transition into the "Valuating projects" budget phase, when their idea was not pre-selected based on the votes cast during the prior "Selecting projects" phase.'
+      recipient: The user who submitted the feasible project idea.
     proposal_created:
       title: Submission confirmation
       description: Sent to the author when a proposal has been successfully submitted.
@@ -120,7 +120,7 @@ en:
       recipient: All users subscribed to the project.
     new_budget_investment:
       title: Notification of new project idea
-      description: Sent to subscribers when a new project idea has been submitted.
+      description: 'Sent to project subscribers during the "Accepting projects" budget phase, as soon as a new project idea has been submitted.'
       recipient: All users subscribed to the project.
     user_reverification_failed:
       title: Re-verification failed

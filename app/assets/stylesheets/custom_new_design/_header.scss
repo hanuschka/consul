@@ -1,11 +1,24 @@
 .custom-new-design {
   .top-bar-wrapper {
-    position: fixed;
     width: 100%;
+    height: $topbar-height;
+    margin: auto;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    box-shadow: $top-bar-banner-shadow;
 
-    @media (max-width: 480px) {
-      position: static;
+    @media(max-width: $small-tablet-viewport-start) {
+      height: $topbar-height-mobile;
     }
+  }
+
+  header.topbar-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1002;
   }
 
   header {
@@ -13,11 +26,6 @@
     z-index: 1000;
     margin-bottom: 0;
     max-width: none;
-    height: 90px;
-
-    @media(max-width: $small-tablet-viewport-start) {
-      height: $topbar-height-mobile;
-    }
 
     @media(max-width: $mobile-viewport-start) {
       z-index: 1002;
@@ -34,17 +42,6 @@
     &::after {
       box-shadow: 0 7px 0 black, 0 14px 0 black;
       background: black;
-    }
-  }
-
-  .top-bar-background-wrapper {
-    height: $topbar-height;
-    // max-width: 1920px;
-    margin: auto;
-    background-color: white;
-
-    @media(max-width: $small-tablet-viewport-start) {
-      height: $topbar-height-mobile;
     }
   }
 
@@ -73,6 +70,57 @@
     margin: auto;
     margin-bottom: 30px;
     margin-top: -100px;
+    overflow: hidden;
+  }
+
+  .homepage-image-header--video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .homepage-image-header--video--desktop {
+    @media (max-width: $small-tablet-viewport-start) {
+      display: none;
+    }
+  }
+
+  .homepage-image-header--video--mobile {
+    @media (min-width: $small-tablet-viewport-start + 1) {
+      display: none;
+    }
+  }
+
+  .homepage-image-header--video-toggle {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background-color 0.2s;
+
+    &:hover, &:focus {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
   }
 
   @media screen and (max-width: 1245px) {
@@ -83,7 +131,7 @@
       padding: 0 20px;
     }
 
-    .top-bar-background-wrapper {
+    .top-bar-wrapper {
       padding: 0 25px;
     }
   }
@@ -109,6 +157,8 @@
     max-width: $topbar-max-width;
     padding-top: 240px;
     margin: auto;
+    position: relative;
+    z-index: 1;
 
     .button {
       font-size: 20px;
@@ -196,16 +246,11 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
   }
 
-  .top-bar-background-wrapper {
-    // height: 100px;
-    // transition: all 200ms ease;
-  }
-
   .top-bar {
     // height: 150px;
     display: flex;
     align-items: center;
-    padding-top: 18px;
+    // padding-top: 18px;
     justify-content: flex-start !important;
     background: transparent !important;
 
@@ -244,7 +289,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: white;
+    background-color: white !important;
+    box-shadow: $top-bar-banner-shadow !important;
 
     @media (max-width: 480px) {
       position: static;
@@ -675,7 +721,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       margin-bottom: 5px;
     }
 
-    .top-bar-background-wrapper {
+    .top-bar-wrapper {
       padding: 0 20px;
     }
 
@@ -871,9 +917,19 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 }
 
 
-body:has(.projekt-page--admin-topbar) {
-  header.topbar-header {
-    margin-top: var(--admin-topbar-height);
+body.custom-new-design {
+  padding-top: $topbar-height;
+
+  @media(max-width: $small-tablet-viewport-start) {
+    padding-top: $topbar-height-mobile;
+  }
+}
+
+body.custom-new-design:has(.projekt-page--admin-topbar) {
+  padding-top: calc(#{$topbar-height} + var(--admin-topbar-height));
+
+  @media(max-width: $small-tablet-viewport-start) {
+    padding-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height));
   }
 
   @media (max-width: $small-tablet-viewport-start) {

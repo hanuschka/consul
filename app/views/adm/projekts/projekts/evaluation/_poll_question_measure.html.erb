@@ -1,0 +1,46 @@
+<%
+  answers = question["answers"] || []
+  ja = answers.find { |a| a["title"].to_s.match?(/\b(ja|yes|dafür|gut)\b/i) }
+  nein = answers.find { |a| a["title"].to_s.match?(/\b(nein|no|dagegen)/i) }
+  abstain = answers.find { |a| a["title"].to_s.match?(/keine\s+angabe|k\.a\.|enthaltung|no\s+opinion/i) } || answers.find { |a| a != ja && a != nein }
+
+  verdict = question["verdict"] || {}
+  verdict_color =
+    case verdict["color"]
+    when "positive" then "#059669"
+    when "negative" then "#DC2626"
+    else "#94A3B8"
+    end
+
+  ja_pct = ja ? ja["percentage"].to_f : 0
+  nein_pct = nein ? nein["percentage"].to_f : 0
+  abstain_pct = abstain ? abstain["percentage"].to_f : 0
+%>
+
+<div class="measure-card">
+  <div class="measure-title"><%= question["title"] %></div>
+  <div class="measure-pct" style="color:<%= verdict_color %>">
+    <%= ja_pct.round %>%
+  </div>
+  <% if verdict["key"].present? %>
+    <div class="measure-verdict" style="color:<%= verdict_color %>">
+      <%= t("adm.projekts.projekts.evaluation.verdict.#{verdict["key"]}") %>
+    </div>
+  <% end %>
+  <div class="measure-bar">
+    <% if ja_pct > 0 %>
+      <div class="measure-seg" style="width:<%= ja_pct %>%;background:#059669"></div>
+    <% end %>
+    <% if nein_pct > 0 %>
+      <div class="measure-seg" style="width:<%= nein_pct %>%;background:#DC2626"></div>
+    <% end %>
+    <% if abstain_pct > 0 %>
+      <div class="measure-seg" style="width:<%= abstain_pct %>%;background:#CBD5E1"></div>
+    <% end %>
+  </div>
+  <div class="measure-labels">
+    <% if ja %><span><%= ja["title"] %>: <%= ja["count"].to_i %></span><% end %>
+    <% if nein %><span><%= nein["title"] %>: <%= nein["count"].to_i %></span><% end %>
+    <% if abstain %><span><%= abstain["title"] %>: <%= abstain["count"].to_i %></span><% end %>
+  </div>
+</div>

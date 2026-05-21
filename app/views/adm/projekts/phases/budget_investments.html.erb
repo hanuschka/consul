@@ -7,7 +7,7 @@
 <div class="kern-container mb-5">
   <% if @investments.any? %>
     <div data-controller="adm-column-selector"
-         data-adm-column-selector-cookie-value="adm-budget-investments-columns"
+         data-adm-column-selector-storage-key-value="adm-budget-investments-columns"
          data-adm-column-selector-defaults-value="id,created_at,title,feasibility,valuation_finished,total_votes,selected,winner"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center justify-content-between mb-3">
@@ -33,10 +33,16 @@
                   data: { turbo_method: :put, turbo_confirm: t(".recalculate_winners_confirm") } %>
           <% end %>
         </div>
-        <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
-          <span class="material-symbols-outlined" aria-hidden="true">download</span>
-          <%= t(".download_csv") %>
-        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+            <span class="material-symbols-outlined" aria-hidden="true">download</span>
+            <%= t(".download_csv") %>
+          </a>
+          <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :geojson, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+            <span class="material-symbols-outlined" aria-hidden="true">map</span>
+            <%= t(".download_geojson") %>
+          </a>
+        </div>
       </div>
 
       <div class="kern-table-responsive" tabindex="0">

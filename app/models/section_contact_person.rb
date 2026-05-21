@@ -1,5 +1,5 @@
 class SectionContactPerson < ApplicationRecord
-  SECTIONS = SectionSetting::SECTIONS
+  SECTIONS = Adm::Section::NAMES
 
   belongs_to :user, touch: true
 

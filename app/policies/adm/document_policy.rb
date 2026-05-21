@@ -7,6 +7,10 @@ class Adm::DocumentPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def update?
+    @user&.administrator?
+  end
+
   def destroy?
     @user&.administrator?
   end

@@ -7,11 +7,13 @@ module Adm
       authorize @record, :update?, policy_class: policy_class_for(@record)
       @kind = params[:kind]&.to_sym
 
-      if @kind == :image && params[:remove_image] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+      if ai_gated_blocked?
+        flash.now[:error] = t("adm.ai_required_note")
+      elsif attachment_kind? && remove_attachment_requested? && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
       elsif @kind == :image && imageable_image_attribute?
-        if params[:remove_image] == "1"
+        if params[:remove_attachment] == "1"
           remove_imageable_image
         else
           update_imageable_image
@@ -27,6 +29,15 @@ module Adm
     end
 
     private
+
+      def attachment_kind?
+        [:image, :video].include?(@kind)
+      end
+
+      def remove_attachment_requested?
+        params[:remove_attachment] == "1" ||
+          params.dig(@record.model_name.param_key, :_destroy) == "1"
+      end
 
       def find_record
         record_class = params[:record_type].tr("-", "/").classify.constantize
@@ -73,7 +84,21 @@ module Adm
         options[:hide_label] = true if params[:hide_label].present?
         options[:inline] = true if params[:inline].present?
         options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
+        options[:ai_gated] = true if params[:ai_gated].present?
         options
+      end
+
+      def ai_gated_blocked?
+        return false if !@record.respond_to?(:ai_gated?) || !@record.ai_gated?
+        return false if Ai::Settings.ai_available?
+
+        ActiveModel::Type::Boolean.new.cast(submitted_attribute_value) == true
+      end
+
+      def submitted_attribute_value
+        permitted_params[params[:attribute]]
+      rescue ActionController::ParameterMissing
+        nil
       end
   end
 end

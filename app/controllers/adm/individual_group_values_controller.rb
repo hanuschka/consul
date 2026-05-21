@@ -72,7 +72,7 @@ module Adm
 
     def search_user
       authorize [:adm, @individual_group_value]
-      @user = User.find_by(email: params[:search])
+      @users = User.search(params[:search]).limit(20)
     end
 
     def add_user

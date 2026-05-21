@@ -1,0 +1,22 @@
+<%= tag.span class: "adm-button-with-progress", data: root_data do %>
+  <% if link_mode? %>
+    <%= link_to url, class: trigger_class, data: trigger_data do %>
+      <span class="kern-label material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+      <span class="kern-label"><%= label %></span>
+    <% end %>
+  <% else %>
+    <%= button_tag type: button_type, class: trigger_class, data: trigger_data do %>
+      <span class="kern-label material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+      <span class="kern-label"><%= label %></span>
+    <% end %>
+  <% end %>
+  <span class="<%= loading_class %>" data-adm--button-with-progress-target="loading" aria-hidden="true">
+    <span class="adm-button-with-progress__spinner" aria-hidden="true"></span>
+    <span class="kern-label"><%= loading_label %></span>
+  </span>
+  <span class="<%= success_class %>" data-adm--button-with-progress-target="success" aria-hidden="true">
+    <span class="kern-label material-symbols-outlined adm-button-with-progress__success-icon" aria-hidden="true"><%= success_icon %></span>
+    <span class="kern-label"><%= success_label %></span>
+  </span>
+  <%= content %>
+<% end %>

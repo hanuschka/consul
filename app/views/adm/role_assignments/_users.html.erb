@@ -25,7 +25,7 @@
         <p class="adm-empty-state__title"><%= t("adm.pending_role_assignments.offer_preassign", email: pending_role_email) %></p>
         <%= button_to create_pending_adm_role_assignment_path(email: pending_role_email, role: role),
               class: "kern-btn kern-btn--primary mt-3", method: :post, data: { turbo_frame: "_top" } do %>
-          <span class="kern-label"><%= t("adm.pending_role_assignments.preassign_button") %></span>
+          <span class="kern-label"><%= t("adm.pending_role_assignments.preassign_button.#{role}") %></span>
         <% end %>
       </div>
     <% end %>

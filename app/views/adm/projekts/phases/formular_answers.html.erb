@@ -6,8 +6,11 @@
 
 <div class="kern-container mb-5">
   <% if @formular_answers.any? %>
-    <div class="d-flex justify-content-start gap-2 mb-5">
-      <%= kern_link_button formular_answers_adm_projekts_phase_path(@projekt_phase, format: :csv), text: t(".download_csv"), style: :secondary %>
+    <div class="d-flex align-items-center justify-content-end gap-3 mb-3">
+      <a href="<%= formular_answers_adm_projekts_phase_path(@projekt_phase, format: :csv) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t(".download_csv") %>
+      </a>
     </div>
 
     <div class="kern-table-responsive" tabindex="0">

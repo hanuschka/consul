@@ -1,0 +1,5 @@
+en:
+  components:
+    adm:
+      module_bento_card_component:
+        cta: "Go to dashboard"

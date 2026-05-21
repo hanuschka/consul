@@ -80,6 +80,12 @@ class Api::BudgetsController < Api::BaseController
       :voting_style,
       :published,
       :slug,
+      :hide_money,
+      :max_number_of_winners,
+      :show_results_after_first_vote,
+      :show_percentage_values_only,
+      :max_preselected,
+      heading_attributes: [:id, :price, :population, :max_ballot_lines]
     )
   end
 

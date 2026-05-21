@@ -1,11 +1,15 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
-  PRO_SETTINGS = [
-    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
-  ]
+  AI_GATED_KEYS = %w[
+    deficiency_reports.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def type
     if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
@@ -224,8 +228,9 @@ class Setting < ApplicationRecord
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
+        "deficiency_reports.feature_name": nil,
+        "deficiency_reports.create_cta": nil,
 
-        "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
         "ideas.officers_can_edit_assigned_reports": false,
@@ -301,7 +306,31 @@ class Setting < ApplicationRecord
 
         "extra_fields.verification.check_documents": false,
         "extra_fields.verification.show_data_completeness_status": true,
-        "extra_fields.verification.show_verification_status": true
+        "extra_fields.verification.show_verification_status": true,
+
+        # Per-section admin intro text, notice, and notice toggle.
+        # Read on each section's adm home; edited under each section's "Einstellungen" tab.
+        "adm.ideas.intro_text": nil,
+        "adm.ideas.notice_message": nil,
+        "adm.ideas.notice_active": nil,
+        "adm.deficiency_reports.intro_text": nil,
+        "adm.deficiency_reports.notice_message": nil,
+        "adm.deficiency_reports.notice_active": nil,
+        "adm.projekts.intro_text": nil,
+        "adm.projekts.notice_message": nil,
+        "adm.projekts.notice_active": nil,
+        "adm.moderation.intro_text": nil,
+        "adm.moderation.notice_message": nil,
+        "adm.moderation.notice_active": nil,
+        "adm.valuation.intro_text": nil,
+        "adm.valuation.notice_message": nil,
+        "adm.valuation.notice_active": nil,
+        "adm.landing_pages.intro_text": nil,
+        "adm.landing_pages.notice_message": nil,
+        "adm.landing_pages.notice_active": nil,
+        "adm.officing.intro_text": nil,
+        "adm.officing.notice_message": nil,
+        "adm.officing.notice_active": nil
       }
     end
 

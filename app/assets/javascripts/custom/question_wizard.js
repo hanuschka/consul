@@ -22,15 +22,18 @@
       var $nestedQuestions = $questionElement.find(".poll-question--nested-question");
 
       $(".js-question-wizard-next").prop("disabled", false);
+      $(".js-poll-closing-note").prop("disabled", false);
 
       if ($questionElement.data("answerMandatory") && $questionElement.find(".js-question-answered").length === 0) {
         $(".js-question-wizard-next").prop("disabled", true);
+        $(".js-poll-closing-note").prop("disabled", true);
       }
 
       if ($nestedQuestions.length > 0) {
         $nestedQuestions.each(function(index, nestedQuestion) {
           if ( $(nestedQuestion).data("answerMandatory") && $(nestedQuestion).find(".js-question-answered").length === 0 ) {
             $(".js-question-wizard-next").prop("disabled", true);
+            $(".js-poll-closing-note").prop("disabled", true);
           }
         });
       }

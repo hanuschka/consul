@@ -6,7 +6,7 @@ module ProposalsHelper
     ids = proposals_for_map.except(:limit, :offset, :order).ids.uniq
 
     map_locations = MapLocation.where(mappable_type: "Proposal", mappable_id: ids)
-                               .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment])
+                               .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment, :masterportal_pin])
                                .map(&:features_json_data)
   end
 

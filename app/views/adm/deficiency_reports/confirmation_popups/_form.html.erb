@@ -1,0 +1,33 @@
+<%= form_with model: confirmation_popup,
+              url: adm_deficiency_reports_confirmation_popup_path,
+              method: :patch do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".enabled_label"), hint: t(".enabled_hint")) do %>
+    <%= f.check_box :enabled %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".question_label"), hint: t(".question_hint")) do %>
+    <%= f.text_area :question, label: false, rows: 3 %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".answers_label"), hint: t(".answers_hint"), stacked: true) do %>
+    <div data-controller="adm-nested-fields">
+      <div data-adm-nested-fields-target="container">
+        <%= f.fields_for :answers do |ff| %>
+          <%= render "answer_fields", f: ff %>
+        <% end %>
+      </div>
+
+      <template data-adm-nested-fields-target="template">
+        <%= f.fields_for :answers, DeficiencyReport::ConfirmationPopupAnswer.new, child_index: "NEW_RECORD" do |ff| %>
+          <%= render "answer_fields", f: ff %>
+        <% end %>
+      </template>
+
+      <%= kern_button icon: "add", text: t(".add_answer"), style: :secondary, class: "mt-2",
+            data: { action: "adm-nested-fields#add" } %>
+    </div>
+  <% end %>
+
+  <%= form_submit_button(text: t(".submit")) %>
+<% end %>

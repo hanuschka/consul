@@ -11,8 +11,8 @@ en:
     allow_text_modification: "Allow text content modification"
     allow_text_modification_hint: "When unchecked (default), the AI will only modify HTML structure, styling, and layout while preserving all existing text content. When checked, the AI can also modify the text content based on your instructions."
     allow_text_modification_hint_short: "By default, AI modifies only HTML structure and styling, not text content"
-    use_full_projekt_context: "Use full projekt context"
-    use_full_projekt_context_hint: "Includes all content blocks, projekt dates, SDGs, categories, and phases in the AI prompt (may be slower)"
+    use_full_projekt_context: "Use additional projekt context"
+    use_full_projekt_context_hint: "The basic projekt context is always included for the AI. When enabled, additional content (all content blocks, projekt dates, SDGs, categories, and phases) is added — this consumes more tokens and is therefore more expensive."
     use_full_projekt_context_hint_short: "Additional context for more comprehensive AI responses"
   shared:
     suggest:

@@ -32,7 +32,7 @@ class Ai::GenerateProposalsAndCommentsForAiStats
     puts "  Created #{Comment.where(commentable: @proposals).count} comments"
 
     total_labels = ProjektLabeling.where(labelable: @proposals).count
-    total_sentiments = @proposals.where.not(sentiment_id: nil).count
+    total_sentiments = @proposals.count { |p| p.sentiment_id.present? }
     puts "  Assigned #{total_labels} labels" if total_labels > 0
     puts "  Assigned #{total_sentiments} sentiments" if total_sentiments > 0
   end
@@ -227,10 +227,13 @@ class Ai::GenerateProposalsAndCommentsForAiStats
     cleaned = content.strip
     cleaned = cleaned.gsub(/^```json\s*/, '').gsub(/\s*```$/, '')
 
-    if cleaned.include?('{') && cleaned.include?('}')
-      cleaned = cleaned[cleaned.index('{')..cleaned.rindex('}')]
-    elsif cleaned.include?('[') && cleaned.include?(']')
-      cleaned = cleaned[cleaned.index('[')..cleaned.rindex(']')]
+    first_brace = cleaned.index('{')
+    first_bracket = cleaned.index('[')
+
+    if first_bracket && (first_brace.nil? || first_bracket < first_brace)
+      cleaned = cleaned[first_bracket..cleaned.rindex(']')]
+    elsif first_brace
+      cleaned = cleaned[first_brace..cleaned.rindex('}')]
     end
 
     JSON.parse(cleaned)

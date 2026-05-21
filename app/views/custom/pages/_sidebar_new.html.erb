@@ -7,8 +7,18 @@
 
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_admin_controls_for_projekt?(@projekt) %>
-    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info") do |c| %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info", opened_on_mobile: true) do |c| %>
       <% return_path = page_path(@projekt.page.slug) %>
+      <% if show_admin_controls_for_projekt?(@projekt) %>
+        <% sidebar_locale = current_user&.locale || I18n.default_locale %>
+        <% sidebar_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: sidebar_locale, key: content_block_sidebar_name) %>
+        <% if content_block_body_blank?(sidebar_block&.body) %>
+          <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
+            <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
+            <span><%= t("custom.projekts.page.sidebar.projekt_information.admin_empty_hint") %></span>
+          </div>
+        <% end %>
+      <% end %>
       <%= render_custom_block(content_block_sidebar_name, projekt: @projekt, return_path: return_path) %>
     <% end %>
   <% end %>
@@ -83,14 +93,12 @@
         <% if show_admin_controls_for_projekt?(@projekt) %>
           <% c.with_edit_link do %>
             <% if embedded? %>
-              <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="button hollow expanded margin-top-0-force left-aligned js-frame-open-admin-page js-studio-hide-on-preview">
-                <i class="fas fa-cog"></i>
-                <%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>
+              <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="sidebar-card--edit-icon-button js-frame-open-admin-page js-studio-hide-on-preview" title="<%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>" aria-label="<%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>">
+                <i class="fas fa-pen"></i>
               </button>
             <% else %>
-              <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", class: "button hollow expanded margin-top-0-force left-aligned js-studio-hide-on-preview") do %>
-                <i class="fas fa-cog"></i>
-                <%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>
+              <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", class: "sidebar-card--edit-icon-button js-studio-hide-on-preview", title: t("custom.projekts.page.sidebar.admin_controls.edit_map"), aria: { label: t("custom.projekts.page.sidebar.admin_controls.edit_map") }) do %>
+                <i class="fas fa-pen"></i>
               <% end %>
             <% end %>
           <% end %>

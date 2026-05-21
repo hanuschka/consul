@@ -1,5 +1,6 @@
 ProjektStudio.ContentBlock.Crud = {
   addContentBlockAfter: null,
+  addContentBlockAtTop: false,
 
   initialize() {
     const $document = $(document);
@@ -70,8 +71,12 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   addContentBlock(previousContentBlockWrapper, contentBlockTemplate) {
-    // console.log(previousContentBlockWrapper)
-    const previousContentBlockId = previousContentBlockWrapper ? previousContentBlockWrapper.dataset.contentBlockId : null;
+    const isAtTop = this.addContentBlockAtTop;
+    this.addContentBlockAtTop = false;
+
+    const previousContentBlockId = (!isAtTop && previousContentBlockWrapper)
+      ? previousContentBlockWrapper.dataset.contentBlockId
+      : null;
     const draftContentBlockIndex = this.generateDraftIndex();
 
     ProjektStudio.ContentBlockTemplateSelector.closeDialog()
@@ -86,7 +91,17 @@ ProjektStudio.ContentBlock.Crud = {
 
     ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlockContainer);
 
-    if (previousContentBlockWrapper) {
+    if (isAtTop) {
+      const topSection = document.querySelector(".js-content-blocks-list .js-add-content-block-at-top");
+
+      if (topSection) {
+        topSection.after(newContentBlockContainer)
+      }
+      else {
+        $('.js-content-blocks-list').prepend(newContentBlockContainer)
+      }
+    }
+    else if (previousContentBlockWrapper) {
       const isFirstBlock = $(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0;
       previousContentBlockWrapper.after(newContentBlockContainer)
 
@@ -118,7 +133,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
 
     $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
-    $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
+    $(".js-add-content-block-at-top").toggle(!hasNoContentBlocks)
     $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
 

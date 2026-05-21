@@ -1,0 +1,18 @@
+<%= turbo_frame_tag "files-imageable-type-filter" do %>
+  <div class="files-filter-bar--field">
+    <label class="files-filter-bar--label">
+      <%= t("files.filter_bar.imageable_type") %>
+    </label>
+    <select
+      class="files-filter-bar--input js-fm-filter-imageable-type"
+      data-action="change->files--filter-bar#filterChanged"
+    >
+      <option value=""><%= t("files.filter_bar.imageable_type_any") %></option>
+      <% @imageable_types.each do |imageable_type| %>
+        <option value="<%= imageable_type %>" <%= "selected" if imageable_type == @selected %>>
+          <%= imageable_type.safe_constantize&.model_name&.human || imageable_type %>
+        </option>
+      <% end %>
+    </select>
+  </div>
+<% end %>

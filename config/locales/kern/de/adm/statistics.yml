@@ -2,7 +2,6 @@ de:
   adm:
     statistics:
       show:
-        title: Statistiken
         sections:
           users: Nutzer
           projects: Projekte
@@ -13,7 +12,7 @@ de:
         users:
           total:
             label: "Gesamt (aktiv)"
-            tip: "Registrierte, aktive Nutzerkonten. Gelöschte und deaktivierte Konten sind nicht enthalten."
+            tip: "Aktive Nutzerkonten mit bestätigter E-Mail-Adresse. Gastkonten und gelöschte Konten sind nicht enthalten."
           new_week:
             label: Neu diese Woche
             tip: "Neu registrierte Nutzer in den letzten 7 Tagen. Der Trend zeigt den Vergleich mit der vorherigen 7-Tage-Periode."

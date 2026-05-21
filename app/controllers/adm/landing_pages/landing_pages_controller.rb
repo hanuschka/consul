@@ -2,18 +2,6 @@ module Adm
   module LandingPages
     class LandingPagesController < Adm::LandingPages::BaseController
 
-      def index
-        authorize [:adm, :landing_pages, :landing_page]
-        @breadcrumbs = [
-          { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web" }
-        ]
-
-        @landing_pages = policy_scope(
-          ::SiteCustomization::Page,
-          policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope
-        ).order(:landing_nav_position)
-      end
-
       def new
         @landing_page = ::SiteCustomization::Page.new(landing: true, status: "draft")
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy

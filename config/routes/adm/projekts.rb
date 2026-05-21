@@ -1,15 +1,22 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "home#show"
+    get "list", to: "projekts#list", as: :projekts_list
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
       patch :toggle_manage_all_projekts, on: :member
     end
 
-    resource :overview_page, only: [], controller: "overview_page" do
-      get :navigation
-      get :footer
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "projekts" } do
+      post :search, on: :collection
     end
 
     resources :milestone_statuses, except: %i[show]
@@ -46,6 +53,11 @@ namespace :adm do
 
         # Map & location
         get :map
+        get :masterportal_pins
+        get :masterportal_pins_summary
+        delete :destroy_all_masterportal_pins
+        delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
+               as: :destroy_masterportal_pin
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
         get :map_resources_overview
@@ -67,6 +79,10 @@ namespace :adm do
         # AI
         get :ai_settings
         patch :update_ai_settings
+
+        # Evaluation visibility
+        get :evaluation_visibility
+        patch :update_evaluation_visibility
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications
@@ -114,6 +130,11 @@ namespace :adm do
       resources :projekt_livestreams, except: %i[index] do
         member do
           post :send_notifications
+        end
+      end
+      resources :stat_questions, only: [] do
+        member do
+          get :poll
         end
       end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
@@ -178,23 +199,37 @@ namespace :adm do
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
+      collection do
+        get :import_projekt
+      end
       get :details, on: :member
       get :visibility, on: :member
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :images, on: :member
+      get :documents, on: :member
+      get :evaluation, on: :member
+      post :generate_evaluation, on: :member
+      get :evaluation_status, on: :member
+      post :regenerate_phase_evaluation, on: :member
+      get :phase_evaluation_status, on: :member
+      get :evaluation_pdf_options, on: :member
+      get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
+      patch :update_color, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
+      patch :update_image, on: :member
+      delete :delete_image, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create] do
         patch :reorder, on: :collection
       end
       resources :manager_assignments, only: [:update]
-      patch :update_default_phase, on: :member
     end
   end
 end

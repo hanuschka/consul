@@ -68,52 +68,99 @@ $mobile-viewport-start: 640px !default;
     }
   }
 
+  &__operator select {
+    min-width: 8rem;
+  }
+
+  &__kind select {
+    min-width: 14rem;
+  }
+
+  // Generic kern-style for all form controls inside the card.
+  // Mirrors .kern-form-input__input from _table.scss so partials don't need explicit classes.
+  select,
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  textarea {
+    height: auto;
+    min-height: var(--kern-metric-dimension-large, 40px);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-layout-border, #A5AAC3);
+    border-radius: var(--kern-metric-border-radius-small, 3px);
+    background: var(--kern-custom-white, #fff);
+    margin-bottom: 0;
+    box-shadow: none;
+
+    &:hover {
+      border-color: var(--kern-color-form-input-border, #171A2B);
+    }
+
+    &:focus {
+      outline: var(--kern-metric-border-width-default, 2px) solid var(--kern-color-form-input-border, #171A2B);
+      outline-offset: -1px;
+      background: var(--kern-custom-white, #fff);
+    }
+  }
+
+  textarea {
+    min-height: 4rem;
+    font-family: inherit;
+  }
+
   &__delete {
     margin-left: auto;
-    border: none;
+    border: var(--kern-metric-border-width-light, 1px) solid transparent;
     background: transparent;
     color: var(--kern-color-action-destructive, #c33);
-    padding: var(--kern-4, 0.25rem);
+    padding: 0.375rem 0.5rem;
+    border-radius: var(--kern-metric-border-radius-small, 3px);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    .material-symbols-outlined {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
 
     &:hover,
     &:focus {
-      background: color-mix(in srgb, var(--kern-color-action-destructive, #c33) 8%, transparent);
+      background: color-mix(in srgb, var(--kern-color-action-destructive, #c33) 10%, transparent);
+      border-color: color-mix(in srgb, var(--kern-color-action-destructive, #c33) 40%, transparent);
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--kern-color-action-destructive, #c33);
+      outline-offset: 2px;
+    }
+  }
+
+  // button_to wraps the delete button in a <form>; flatten it
+  form {
+    display: inline-flex;
+    margin: 0;
+    margin-left: auto;
   }
 
   &__params {
     display: flex;
     flex-direction: column;
-    gap: var(--kern-8, 0.5rem);
-    padding: var(--kern-8, 0.5rem) 0;
+    gap: var(--kern-12, 0.75rem);
+    padding: var(--kern-4, 0.25rem) 0 0;
   }
 
-  &__param-label,
-  &__param-checkbox {
+  &__param-label {
     display: flex;
     flex-direction: column;
     gap: var(--kern-4, 0.25rem);
     font-size: var(--kern-font-size-14, 0.875rem);
-
-    select,
-    input[type="text"],
-    input[type="number"],
-    textarea {
-      margin-bottom: 0;
-    }
-  }
-
-  &__param-checkbox {
-    flex-direction: row;
-    align-items: center;
-
-    input[type="checkbox"] {
-      margin: 0;
-    }
+    font-weight: 500;
+    color: var(--kern-color-layout-text-secondary, #555);
   }
 
   &__counter {

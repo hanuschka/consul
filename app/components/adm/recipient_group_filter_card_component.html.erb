@@ -21,6 +21,7 @@
                 RecipientGroupFilter::OPERATORS.map { |op| [t("adm.recipient_groups.filters.operators.#{op}"), op] },
                 filter.operator
               ),
+              class: "kern-form-input__input",
               data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
       </label>
     <% end %>
@@ -32,6 +33,7 @@
               RecipientGroupFilter::KINDS.map { |k| [t("adm.recipient_groups.filters.kinds.#{k}"), k] },
               filter.kind
             ),
+            class: "kern-form-input__input",
             data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
     </label>
 

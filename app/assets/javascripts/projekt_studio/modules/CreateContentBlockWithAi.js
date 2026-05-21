@@ -24,7 +24,6 @@
       $document.on("click", ".js-open-create-content-block-with-ai", this.handleOpen.bind(this));
       $document.on("click", ".js-content-block-ai-submit", this.handleSubmit.bind(this));
       $document.on("click", ".js-content-block-ai-cancel", this.handleCancel.bind(this));
-      $document.on("change", ".js-content-block-ai-category", this.handleCategoryChange.bind(this));
       $document.on("click", ".js-content-block-ai-modal-close", this.handleCloseRequest.bind(this));
 
       this.bindUnloadCancel();
@@ -98,7 +97,6 @@
       $(".js-content-block-ai-cancel").hide();
       $(".js-content-block-ai-modal-close").show();
       $(".js-content-block-ai-submit").prop("disabled", false);
-      $(".js-content-block-ai-template").val("").prop("disabled", true);
       $(".js-content-block-ai-category").val("");
     },
 
@@ -129,41 +127,6 @@
       });
 
       $(".js-content-block-ai-fallback-note").toggle(!this.state.categoriesAvailable);
-
-      this.populateTemplates("");
-    },
-
-    handleCategoryChange(e) {
-      this.populateTemplates(e.currentTarget.value);
-    },
-
-    populateTemplates(categoryKey) {
-      const $templateSelect = $(".js-content-block-ai-template");
-      const anyOption = $templateSelect.find("option").first().clone();
-
-      $templateSelect.empty().append(anyOption);
-
-      if (!categoryKey || !this.state.categoriesAvailable) {
-        $templateSelect.prop("disabled", true);
-        return
-      }
-
-      const category = this.state.categories.find((c) => (c.id || c.name) === categoryKey);
-
-      if (!category || !category.templates || category.templates.length === 0) {
-        $templateSelect.prop("disabled", true);
-        return
-      }
-
-      category.templates.forEach((template) => {
-        if (!template.id) return
-
-        $templateSelect.append(
-          $("<option>").val(template.id).text(template.name)
-        );
-      });
-
-      $templateSelect.prop("disabled", $templateSelect.find("option").length <= 1);
     },
 
     handleSubmit(e) {
@@ -185,7 +148,6 @@
         prompt: prompt,
         mode: this.state.mode,
         category_hint: $(".js-content-block-ai-category").val(),
-        anchor_template_id: $(".js-content-block-ai-template").val(),
         use_projekt_context: $(".js-content-block-ai-context").is(":checked"),
         previous_content_block_id: this.state.previousContentBlockId,
         add_at_top: this.state.addAtTop,

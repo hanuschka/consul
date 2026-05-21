@@ -10,7 +10,6 @@
     <div class="d-flex">
       <h3>
         <%= t("custom.projekt_content_blocks.ai_create.modal_title") %>
-        <i class="fas fa-magic content-block-ai-create--title-icon"></i>
       </h3>
       <button
         class="close-button round-icon-button js-content-block-ai-modal-close"
@@ -41,24 +40,13 @@
       ></textarea>
     </div>
 
-    <div class="content-block-ai-create--row">
-      <div class="content-block-ai-create--field">
-        <label for="contentBlockAiCategory">
-          <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
-        </label>
-        <select id="contentBlockAiCategory" name="category_hint" class="js-content-block-ai-category">
-          <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
-        </select>
-      </div>
-
-      <div class="content-block-ai-create--field">
-        <label for="contentBlockAiTemplate">
-          <%= t("custom.projekt_content_blocks.ai_create.template_label") %>
-        </label>
-        <select id="contentBlockAiTemplate" name="anchor_template_id" class="js-content-block-ai-template" disabled>
-          <option value=""><%= t("custom.projekt_content_blocks.ai_create.template_any") %></option>
-        </select>
-      </div>
+    <div class="content-block-ai-create--field">
+      <label for="contentBlockAiCategory">
+        <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
+      </label>
+      <select id="contentBlockAiCategory" name="category_hint" class="js-content-block-ai-category">
+        <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
+      </select>
     </div>
 
     <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">

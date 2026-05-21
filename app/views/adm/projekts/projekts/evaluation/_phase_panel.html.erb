@@ -55,7 +55,7 @@
     <% else %>
       <div class="evaluation-phase-panel__toolbar">
         <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
-        <span class="evaluation-phase-panel__toolbar-title-text"><%= phase["phase_title"] %></span>
+        <span><%= phase["phase_title"] %></span>
         <span class="evaluation-phase-panel__toolbar-title-links">
             <% if phase_footer_url.present? %>
               <a

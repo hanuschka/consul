@@ -47,8 +47,24 @@ export default class extends Controller {
     const filterId = card.dataset.filterId
     if (!filterId) return
 
+    const target = event.target
     const formData = new FormData()
-    formData.append(event.target.name, event.target.value)
+
+    if (target.type === "checkbox") {
+      // Checkbox: send the value when checked, empty when unchecked.
+      // event.target.value is the HTML value attribute (e.g. "1"), independent of checked state.
+      formData.append(target.name, target.checked ? target.value : "")
+    } else if (target.tagName === "SELECT" && target.multiple) {
+      // Multi-select: send each selected option (or one empty marker if none).
+      const selected = Array.from(target.selectedOptions).map((o) => o.value)
+      if (selected.length === 0) {
+        formData.append(target.name, "")
+      } else {
+        selected.forEach((v) => formData.append(target.name, v))
+      }
+    } else {
+      formData.append(target.name, target.value)
+    }
 
     const updateUrl = this.filterUrl(filterId)
 

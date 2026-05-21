@@ -12,7 +12,7 @@ module Adm
 
     def update
       authorize [:adm, @recipient_group], :update_filter?
-      @filter.update(filter_params)
+      @filter.update(merged_filter_params)
 
       respond_to { |f| f.turbo_stream }
     end
@@ -55,6 +55,17 @@ module Adm
       def filter_params
         params.require(:recipient_group_filter)
               .permit(:kind, :operator, params: {})
+      end
+
+      # PATCH updates send a single changed field. Merge into existing params
+      # instead of replacing the whole JSONB hash, so other keys are preserved.
+      def merged_filter_params
+        attrs = filter_params
+        return attrs unless attrs[:params].is_a?(ActionController::Parameters) || attrs[:params].is_a?(Hash)
+
+        incoming = attrs[:params].to_h.stringify_keys
+        existing = (@filter.params || {}).stringify_keys
+        attrs.merge(params: existing.merge(incoming))
       end
   end
 end

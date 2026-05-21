@@ -25,6 +25,7 @@
         <li>
           <%= render Adm::RecipientGroupFilterCardComponent.new(
                 filter: filter,
+                display_position: idx + 1,
                 count: @counts[idx][:count],
                 delta: @counts[idx][:delta]) %>
         </li>

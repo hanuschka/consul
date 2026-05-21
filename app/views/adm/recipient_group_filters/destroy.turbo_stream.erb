@@ -1,11 +1,21 @@
-<%= turbo_stream.remove dom_id(@filter) %>
-<%= turbo_stream.update "filter-stack-footer" do %>
-  <%= render "adm/recipient_groups/footer", recipient_group: @recipient_group %>
-<% end %>
-<% if @recipient_group.filters.reload.empty? %>
-  <%= turbo_stream.append "filter-stack" do %>
+<% @recipient_group.filters.reload %>
+<%= turbo_stream.update "filter-stack" do %>
+  <% if @recipient_group.filters.any? %>
+    <% @recipient_group.filters.each_with_index do |filter, idx| %>
+      <li>
+        <%= render Adm::RecipientGroupFilterCardComponent.new(
+              filter: filter,
+              display_position: idx + 1,
+              count: 0,
+              delta: 0) %>
+      </li>
+    <% end %>
+  <% else %>
     <li id="filter-stack-empty" class="rg-filter-empty">
       <%= t("adm.recipient_groups.filters.empty") %>
     </li>
   <% end %>
+<% end %>
+<%= turbo_stream.update "filter-stack-footer" do %>
+  <%= render "adm/recipient_groups/footer", recipient_group: @recipient_group %>
 <% end %>

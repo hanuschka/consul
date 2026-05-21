@@ -6,7 +6,7 @@
           filter_params["projekt_id"]
         ),
         include_blank: true,
-        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
 </label>
 
 <label class="rg-filter-card__param-label">
@@ -19,5 +19,5 @@
           filter_params["projekt_phase_id"]
         ),
         include_blank: true,
-        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
 </label>

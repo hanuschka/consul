@@ -8,7 +8,7 @@
           filter_params["projekt_phase_id"]
         ),
         include_blank: true,
-        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
 </label>
 
 <label class="rg-filter-card__param-label">
@@ -16,5 +16,5 @@
   <%= text_field_tag "recipient_group_filter[params][criterion]",
         filter_params["criterion"],
         placeholder: "all / feasible / unfeasible / selected / winners / not_winners",
-        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
 </label>

@@ -2,6 +2,6 @@
   <%= check_box_tag "recipient_group_filter[params][include_unregistered]",
         "1",
         ActiveModel::Type::Boolean.new.cast(filter_params["include_unregistered"]),
-        data: { action: "change->adm-newsletters--filter-stack#recount" } %>
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
   <%= t("adm.recipient_groups.filters.params_labels.include_unregistered") %>
 </label>

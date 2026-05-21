@@ -1,17 +1,22 @@
 module Adm
   class RecipientGroupFilterCardComponent < ApplicationComponent
-    def initialize(filter:, count: 0, delta: 0)
+    def initialize(filter:, count: 0, delta: 0, display_position: nil)
       @filter = filter
       @count = count.to_i
       @delta = delta.to_i
+      @display_position = display_position
     end
 
     private
 
       attr_reader :filter, :count, :delta
 
+      def display_position
+        @display_position || filter.position
+      end
+
       def first_filter?
-        return true if filter.position.to_i <= 1
+        return true if display_position.to_i <= 1
 
         filter.recipient_group.filters.where("position < ?", filter.position).none?
       end

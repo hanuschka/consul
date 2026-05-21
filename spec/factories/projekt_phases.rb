@@ -14,5 +14,9 @@ FactoryBot.define do
     trait :debate_phase do
       type { "ProjektPhase::DebatePhase" }
     end
+
+    trait :voting_phase do
+      type { "ProjektPhase::VotingPhase" }
+    end
   end
 end

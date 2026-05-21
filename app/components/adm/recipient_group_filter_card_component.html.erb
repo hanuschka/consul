@@ -48,18 +48,20 @@
     <% end %>
   </div>
 
-  <section class="rg-filter-card__params">
-    <%= render "adm/recipient_group_filters/params/#{filter.kind}", filter: filter, filter_params: filter_params %>
-  </section>
+  <div class="rg-filter-card__body">
+    <section class="rg-filter-card__params">
+      <%= render "adm/recipient_group_filters/params/#{filter.kind}", filter: filter, filter_params: filter_params %>
+    </section>
 
-  <footer class="rg-filter-card__counter" id="filter-count-<%= filter.id %>">
-    <span class="rg-filter-card__total">
-      <%= t("adm.recipient_groups.filters.counter.total", count: count) %>
-    </span>
-    <% if delta != 0 %>
-      <span class="rg-filter-card__delta <%= delta_class %>">
-        <%= delta_label %>
+    <div class="rg-filter-card__counter" id="filter-count-<%= filter.id %>">
+      <span class="rg-filter-card__total">
+        <%= t("adm.recipient_groups.filters.counter.total", count: count) %>
       </span>
-    <% end %>
-  </footer>
+      <% if delta != 0 %>
+        <span class="rg-filter-card__delta <%= delta_class %>">
+          <%= delta_label %>
+        </span>
+      <% end %>
+    </div>
+  </div>
 </article>

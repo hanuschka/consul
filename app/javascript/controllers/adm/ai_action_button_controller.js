@@ -6,7 +6,8 @@ export default class extends Controller {
     statusUrl: String,
     progressMode: { type: String, default: "swap" },
     pollInterval: { type: Number, default: 4000 },
-    loading: { type: Boolean, default: false }
+    loading: { type: Boolean, default: false },
+    confirm: String
   }
 
   connect() {
@@ -16,7 +17,15 @@ export default class extends Controller {
     this.schedulePoll()
   }
 
-  start() {
+  start(event) {
+    if (this.hasConfirmValue && this.confirmValue.length > 0) {
+      if (!window.confirm(this.confirmValue)) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        return
+      }
+    }
+
     if (this.progressModeValue === "inline") {
       this.showInlineProgress()
     } else {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_18_144804) do
+ActiveRecord::Schema.define(version: 2026_05_21_104824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2055,6 +2055,16 @@ ActiveRecord::Schema.define(version: 2026_05_18_144804) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
+  create_table "projekt_evaluation_visibilities", force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.boolean "show_project_summary", default: false, null: false
+    t.boolean "show_settings", default: false, null: false
+    t.boolean "show_phase_summaries", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_projekt_evaluation_visibilities_on_projekt_id", unique: true
+  end
+
   create_table "projekt_evaluations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.jsonb "data", default: {}
@@ -2886,6 +2896,8 @@ ActiveRecord::Schema.define(version: 2026_05_18_144804) do
     t.integer "projekt_id"
     t.integer "position"
     t.integer "margin_bottom"
+    t.jsonb "ai_generation_data"
+    t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 

@@ -27,7 +27,13 @@ en:
             An error occurred while generating the evaluation.
             Please try again.
           regenerate_button: Regenerate
+          regenerate_confirm: >
+            Are you sure you want to regenerate the evaluation? The existing
+            evaluation will be overwritten.
           regenerate_phase_button: Regenerate phase
+          regenerate_phase_confirm: >
+            Are you sure you want to regenerate this phase? The existing
+            evaluation of this phase will be overwritten.
           phase_download_pdf_button: Export PDF…
           open_in_admin: Open in admin
           configure_visibility_button: Visibility
@@ -146,6 +152,23 @@ en:
             phases_empty: No AI phase summaries available yet.
             phase_short_summary_empty: No data available for this phase yet.
             qr_code_label: Open project page
+        evaluation_visibility:
+          title: Visibility
+          heading: Evaluation section visibility
+          description: >
+            Control which report sections and per-phase sections are shown in
+            the evaluation view and the PDF export.
+          report_group_title: Report overview
+          report_sections:
+            project_summary: Project summary
+            settings: Project settings
+            phase_summaries: Phase summaries
+          bulk_all_on: Turn all off
+          bulk_all_off: Turn all on
+          cancel: Back
+          save: Save
+        update_evaluation_visibility:
+          success: Evaluation visibility was updated.
         generate_evaluation:
           started: Evaluation is being generated. Please reload the page in a few minutes.
         evaluation_pdf_options:

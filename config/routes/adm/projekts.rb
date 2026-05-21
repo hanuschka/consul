@@ -80,10 +80,6 @@ namespace :adm do
         get :ai_settings
         patch :update_ai_settings
 
-        # Evaluation visibility
-        get :evaluation_visibility
-        patch :update_evaluation_visibility
-
         # Dynamic resources (from resources_name)
         get :projekt_notifications
         get :projekt_events
@@ -210,6 +206,8 @@ namespace :adm do
       get :images, on: :member
       get :documents, on: :member
       get :evaluation, on: :member
+      get :evaluation_visibility, on: :member
+      patch :update_evaluation_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member

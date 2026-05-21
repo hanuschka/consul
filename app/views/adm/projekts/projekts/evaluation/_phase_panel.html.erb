@@ -4,12 +4,6 @@
   failed = row.failed?
   status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
   regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase_id)
-  page_slug = projekt.page&.slug
-  phase_footer_url =
-    if page_slug.present?
-      page_path(page_slug, projekt_phase_id: phase_id, anchor: "projekt-footer")
-    end
-  phase_edit_url = naming_adm_projekts_phase_path(phase_id)
 %>
 
 <div
@@ -17,6 +11,7 @@
   class="evaluation-phase-panel"
   data-controller="adm--phase-regenerate"
   data-adm--phase-regenerate-status-url-value="<%= status_url %>"
+  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
 >
   <div
     class="evaluation-phase-panel__loading"
@@ -53,62 +48,15 @@
         </a>
       </div>
     <% else %>
-      <div class="evaluation-phase-panel__toolbar">
-        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
-        <span><%= phase["phase_title"] %></span>
-        <span class="evaluation-phase-panel__toolbar-title-links">
-            <% if phase_footer_url.present? %>
-              <a
-                href="<%= phase_footer_url %>"
-                class="evaluation-phase-panel__toolbar-title-link"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="material-symbols-outlined evaluation-phase-panel__toolbar-title-link-icon" aria-hidden="true">open_in_new</span>
-                <span><%= t("adm.projekts.projekts.evaluation.toolbar_title_view_link") %></span>
-              </a>
-            <% end %>
-            <a
-              href="<%= phase_edit_url %>"
-              class="evaluation-phase-panel__toolbar-title-link"
-            >
-              <span class="material-symbols-outlined evaluation-phase-panel__toolbar-title-link-icon" aria-hidden="true">edit</span>
-              <span><%= t("adm.projekts.projekts.evaluation.toolbar_title_edit_link") %></span>
-            </a>
-        </span>
-        <div class="evaluation-phase-panel__toolbar-actions">
-          <%= kern_link_button(
-            evaluation_visibility_adm_projekts_phase_path(phase_id),
-            text: t("adm.projekts.projekts.evaluation.configure_visibility_button"),
-            icon: "visibility",
-            style: :secondary
-          ) %>
-          <a
-            href="<%= regenerate_url %>"
-            class="kern-btn kern-btn--secondary"
-            data-action="click->adm--phase-regenerate#start"
-          >
-            <span class="kern-label material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-            <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_phase_button") %></span>
-          </a>
-          <%= render Adm::ButtonWithProgressComponent.new(
-            label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
-            loading_label: t("adm.projekts.projekts.evaluation.pdf_options.downloading"),
-            success_label: t("adm.projekts.projekts.evaluation.pdf_options.ready"),
-            icon: "picture_as_pdf",
-            success_icon: "check_circle",
-            style: :secondary,
-            url: evaluation_pdf_options_adm_projekts_projekt_path(projekt, phase_id: phase_id)
-          ) %>
-        </div>
-      </div>
-
       <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
         locals: {
+          projekt: projekt,
           phase: phase,
           accent_color: accent_color,
           accent_light_color: accent_light_color,
-          accent_shades: accent_shades
+          accent_shades: accent_shades,
+          selection: local_assigns.fetch(:selection, nil),
+          regenerate_url: regenerate_url
         } %>
     <% end %>
   </div>

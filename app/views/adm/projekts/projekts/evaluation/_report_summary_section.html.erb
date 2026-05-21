@@ -14,6 +14,11 @@
   tags = (report_settings["tags"] || []).reject(&:blank?)
   sdg_goals = report_settings["sdg_goals"] || []
 
+  report_visibility = projekt.projekt_evaluation_visibility
+  show_project_summary = report_visibility.nil? || report_visibility.show_project_summary
+  show_settings = report_visibility.nil? || report_visibility.show_settings
+  show_phase_summaries = report_visibility.nil? || report_visibility.show_phase_summaries
+
   renderable_phases = phases.select { |p| phase_palette.present? && p["phase_type"].present? }
 
   qr_url =
@@ -48,6 +53,7 @@
     </div>
   <% end %>
 
+  <% if show_project_summary %>
   <section class="report-summary--card report-summary--project">
     <h2 class="report-summary--project-title"><%= page_title %></h2>
 
@@ -94,7 +100,9 @@
       </div>
     </div>
   </section>
+  <% end %>
 
+  <% if show_settings %>
   <section class="report-summary--card report-summary--settings">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.settings_label") %>
@@ -179,7 +187,9 @@
       </div>
     </div>
   </section>
+  <% end %>
 
+  <% if show_phase_summaries %>
   <section class="report-summary--card report-summary--phases">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.phases_label") %>
@@ -189,7 +199,7 @@
       <div class="report-summary--phases-list">
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
-            color = phase_palette[idx % phase_palette.size]
+            color = phase_palette[phase["phase_type"]]
             short_summary = phase["short_summary"]
           %>
           <div
@@ -231,4 +241,5 @@
       </div>
     <% end %>
   </section>
+  <% end %>
 </section>

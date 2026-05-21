@@ -49,13 +49,20 @@
         text: t(".regenerate_button"),
         icon: "auto_awesome",
         style: :primary,
-        processing_text: t(".processing_title")
+        processing_text: t(".processing_title"),
+        confirm: t(".regenerate_confirm")
       ) %>
     </div>
 
   <% elsif @evaluation.completed? %>
     <div class="d-flex justify-content-end align-items-center mb-4">
       <div class="d-flex gap-2">
+        <%= kern_link_button(
+          evaluation_visibility_adm_projekts_projekt_path(@projekt),
+          text: t(".configure_visibility_button"),
+          icon: "visibility",
+          style: :secondary
+        ) %>
         <%= render Adm::ButtonWithProgressComponent.new(
           label: t(".download_pdf"),
           loading_label: t("adm.projekts.projekts.evaluation.pdf_options.downloading"),
@@ -70,7 +77,8 @@
           text: t(".regenerate_button"),
           icon: "auto_awesome",
           style: :secondary,
-          processing_text: t(".processing_title")
+          processing_text: t(".processing_title"),
+          confirm: t(".regenerate_confirm")
         ) %>
       </div>
     </div>

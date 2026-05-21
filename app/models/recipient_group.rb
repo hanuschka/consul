@@ -1,4 +1,5 @@
 class RecipientGroup < ApplicationRecord
+  has_many :filters, class_name: "RecipientGroupFilter", dependent: :destroy
   has_many :newsletters, dependent: :restrict_with_exception
 
   def self.base_options_for_kind

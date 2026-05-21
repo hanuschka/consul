@@ -14,4 +14,19 @@ class RecipientGroupFilter < ApplicationRecord
 
   validates :kind, inclusion: { in: KINDS }
   validates :operator, inclusion: { in: OPERATORS }
+
+  validate :first_filter_must_be_include
+
+  private
+
+    def first_filter_must_be_include
+      return if operator == "include"
+      return if recipient_group.blank?
+
+      is_first =
+        recipient_group.filters.where.not(id: id).none? ||
+          recipient_group.filters.where.not(id: id).minimum(:position).to_i >= position.to_i
+
+      errors.add(:operator, :must_be_include_for_first_filter) if is_first
+    end
 end

@@ -37,4 +37,30 @@ describe RecipientGroupFilter do
       expect(filter.errors[:operator]).to be_present
     end
   end
+
+  describe "first_filter_must_be_include validation" do
+    let(:group) { create(:recipient_group) }
+
+    it "rejects exclude as the first filter" do
+      filter = build(:recipient_group_filter, recipient_group: group, operator: "exclude")
+      expect(filter).not_to be_valid
+      expect(filter.errors[:operator]).to be_present
+    end
+
+    it "rejects intersect as the first filter" do
+      filter = build(:recipient_group_filter, recipient_group: group, operator: "intersect")
+      expect(filter).not_to be_valid
+    end
+
+    it "allows include as the first filter" do
+      filter = build(:recipient_group_filter, recipient_group: group, operator: "include")
+      expect(filter).to be_valid
+    end
+
+    it "allows exclude as the second filter" do
+      create(:recipient_group_filter, recipient_group: group, position: 1)
+      second = build(:recipient_group_filter, recipient_group: group, operator: "exclude", position: 2)
+      expect(second).to be_valid
+    end
+  end
 end

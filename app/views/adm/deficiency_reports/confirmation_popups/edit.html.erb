@@ -12,8 +12,7 @@
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.dashboard"),
-    url: dashboard_adm_deficiency_reports_settings_path,
-    current: true
+    url: dashboard_adm_deficiency_reports_settings_path
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.contact_persons"),
@@ -25,16 +24,11 @@
   },
   {
     label: t("adm.deficiency_reports.settings.tabs.confirmation_popup"),
-    url: edit_adm_deficiency_reports_confirmation_popup_path
+    url: edit_adm_deficiency_reports_confirmation_popup_path,
+    current: true
   }
 ]) %>
 
 <div class="kern-container my-5">
-  <p class="adm-hint__text mb-3">
-    <%= t("adm.deficiency_reports.settings.dashboard.intro") %>
-  </p>
-
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.intro_text"), :value, :text) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_message"), :value, :text) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.deficiency_reports.notice_active"), :value, :boolean) %>
+  <%= render "form", confirmation_popup: @confirmation_popup %>
 </div>

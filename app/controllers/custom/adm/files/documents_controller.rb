@@ -1,12 +1,12 @@
 class Adm::Files::DocumentsController < Adm::Files::BaseController
   def index
     authorize [:adm, :document]
-    skip_policy_scope
 
     @assets =
       DocumentsQuery
         .new(query_params)
         .call
+        .merge(policy_scope([:adm, Document]))
         .page(params[:page])
         .per(24)
 

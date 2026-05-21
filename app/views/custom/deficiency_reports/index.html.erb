@@ -65,8 +65,7 @@
       </div>
 
       <aside class="margin-bottom">
-        <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
-          class: "button expanded" %>
+        <%= deficiency_report_create_cta_button(css_class: "button expanded") %>
 
         <%= render "deficiency_reports/sidebar/categories" %>
         <%= render "deficiency_reports/sidebar/statuses" %>
@@ -119,8 +118,7 @@
       </div>
 
       <div class="show-for-small-only margin-top">
-        <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
-          class: "button expanded js-preselect-projekt" %>
+        <%= deficiency_report_create_cta_button(css_class: "button expanded js-preselect-projekt") %>
       </div>
 
       <div id="deficiency-reports-list">
@@ -146,3 +144,5 @@
     </div>
   </div>
 </main>
+
+<%= render "create_cta_modal" %>

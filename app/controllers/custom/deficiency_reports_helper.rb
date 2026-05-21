@@ -36,4 +36,22 @@ module DeficiencyReportsHelper
     DeficiencyReport::OfficerGroup.all.order(:name) +
       DeficiencyReport::Officer.joins(:user).order("users.username ASC")
   end
+
+  def active_deficiency_report_confirmation_popup
+    popup = DeficiencyReport::ConfirmationPopup.current
+    popup.active? ? popup : nil
+  end
+
+  def deficiency_report_create_cta_button(css_class:, link_data: {}, style: nil)
+    label = deficiency_reports_create_cta
+    common = { class: css_class }
+    common[:style] = style if style.present?
+
+    if active_deficiency_report_confirmation_popup
+      button_tag(label, **common, type: "button",
+        data: { open: "deficiency-report-create-cta-modal" })
+    else
+      link_to(label, new_deficiency_report_path, **common, data: link_data)
+    end
+  end
 end

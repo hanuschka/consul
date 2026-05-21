@@ -327,10 +327,35 @@ de:
           dashboard: Dashboard-Einstellungen
           contact_persons: Ansprechpartner
           naming: Bezeichnungen
+          confirmation_popup: Bestätigungs-Popup
         dashboard:
           intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
         naming:
           intro: "Passen Sie die öffentlich sichtbaren Bezeichnungen des Mängelmelders an. Felder, die leer bleiben, behalten die Standardbeschriftung."
+      confirmation_popups:
+        edit:
+          title: Bestätigungs-Popup
+        update:
+          success: Bestätigungs-Popup gespeichert.
+        form:
+          enabled_label: Bestätigungs-Popup aktivieren
+          enabled_hint: Wenn aktiv, öffnet der gelbe "Neue Anliegen"-Button ein Popup mit der unten konfigurierten Frage und den Antworten.
+          question_label: Frage
+          question_hint: Wird dem Nutzer angezeigt, wenn er auf den "Neue Anliegen"-Button klickt.
+          answers_label: Antworten
+          answers_hint: Pro Antwort einen Button hinzufügen. "Weiterleiten"-Antworten führen zum Meldeformular. "Blockieren"-Antworten brechen den Vorgang ab und zeigen die Hinweismeldung auf der Übersichtsseite.
+          add_answer: Antwort hinzufügen
+          answer_title: Antwort
+          remove_answer: Entfernen
+          label_label: Button-Beschriftung
+          label_placeholder: z.B. "Ja, neue Meldung erstellen"
+          behavior_label: Verhalten
+          behaviors:
+            allow: Zum Meldeformular weiterleiten
+            block: Blockieren und Hinweismeldung anzeigen
+          flash_notice_label: Hinweismeldung
+          flash_notice_placeholder: z.B. "Bitte prüfen Sie zuerst bestehende Meldungen."
+          submit: Speichern
       stats:
         show:
           title: Statistiken

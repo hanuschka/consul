@@ -26,8 +26,10 @@
     <div class="main-column">
       <% if deficiency_reports_feature?("show_create_report_button") %>
         <div class="show-on-small-tablet margin-bottom text-center">
-          <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false } %>
+          <%= deficiency_report_create_cta_button(
+            css_class: "button -orange",
+            link_data: { turbolinks: false }
+          ) %>
         </div>
       <% end %>
 
@@ -61,8 +63,11 @@
 
         <% if deficiency_reports_feature?("show_create_report_button") %>
           <div class="hide-on-mobile">
-            <%= link_to deficiency_reports_create_cta, new_deficiency_report_path,
-              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+            <%= deficiency_report_create_cta_button(
+              css_class: "button -orange",
+              link_data: { turbolinks: false },
+              style: "display:inline-flex;"
+            ) %>
           </div>
         <% end %>
       <% end %>
@@ -100,3 +105,5 @@
     </div>
   </div>
 </main>
+
+<%= render "create_cta_modal" %>

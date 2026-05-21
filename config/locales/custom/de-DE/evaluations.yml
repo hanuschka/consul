@@ -26,7 +26,7 @@ de:
           failed_description: >
             Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
-          regenerate_button: Neu generieren
+          regenerate_button: Gesamte Auswertung neu generieren
           regenerate_confirm: >
             Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
             Auswertung wird überschrieben.
@@ -36,7 +36,7 @@ de:
             Auswertung dieser Phase wird überschrieben.
           phase_download_pdf_button: PDF exportieren…
           open_in_admin: Im Admin öffnen
-          configure_visibility_button: Sichtbarkeit
+          configure_visibility_button: Sichtbarkeit konfigurieren
           toolbar_title_view_link: Zur Phase im Projekt-Footer
           toolbar_title_edit_link: Phase bearbeiten
           phase_processing_title: Phase wird neu generiert

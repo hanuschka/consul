@@ -26,7 +26,7 @@ en:
           failed_description: >
             An error occurred while generating the evaluation.
             Please try again.
-          regenerate_button: Regenerate
+          regenerate_button: Regenerate full evaluation
           regenerate_confirm: >
             Are you sure you want to regenerate the evaluation? The existing
             evaluation will be overwritten.
@@ -36,7 +36,7 @@ en:
             evaluation of this phase will be overwritten.
           phase_download_pdf_button: Export PDF…
           open_in_admin: Open in admin
-          configure_visibility_button: Visibility
+          configure_visibility_button: Configure visibility
           toolbar_title_view_link: Go to phase in projekt footer
           toolbar_title_edit_link: Edit phase
           phase_processing_title: Phase is being regenerated

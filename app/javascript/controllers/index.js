@@ -19,6 +19,12 @@ application.register("adm--ai-question-form", AdmAiQuestionFormController)
 import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
 application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
 
+import AdmAiQuestionRowController from "./adm/ai_question_row_controller"
+application.register("adm--ai-question-row", AdmAiQuestionRowController)
+
+import AdmMenuPopoverController from "./adm/menu_popover_controller"
+application.register("adm--menu-popover", AdmMenuPopoverController)
+
 import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
 application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
 

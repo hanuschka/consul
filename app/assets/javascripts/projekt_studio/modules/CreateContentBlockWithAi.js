@@ -42,6 +42,18 @@
     handleOpen(e) {
       e.preventDefault();
 
+      const directSection = e.currentTarget.closest(".js-show-content-block-templates-section");
+      if (directSection) {
+        const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+        const isAtTop = directSection.classList.contains("js-add-content-block-at-top");
+
+        ProjektStudio.ContentBlockTemplateSelector.selectionMode = "add";
+        ProjektStudio.ContentBlockTemplateSelector.replaceTargetWrapper = null;
+        ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+        ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
+        ProjektStudio.ContentBlock.Crud.addContentBlockAtTop = isAtTop;
+      }
+
       const templateSelector = ProjektStudio.ContentBlockTemplateSelector;
       const crud = ProjektStudio.ContentBlock.Crud;
 

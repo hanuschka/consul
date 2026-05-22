@@ -330,8 +330,6 @@ de:
           confirmation_popup: Bestätigungs-Popup
         dashboard:
           intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
-        naming:
-          intro: "Passen Sie die öffentlich sichtbaren Bezeichnungen des Mängelmelders an. Felder, die leer bleiben, behalten die Standardbeschriftung."
       confirmation_popups:
         edit:
           title: Bestätigungs-Popup

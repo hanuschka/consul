@@ -63,7 +63,11 @@ User.class_eval do
 
   belongs_to :api_client, optional: true
 
-  scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :projekt_managers,           -> { joins(:projekt_manager) }
+  scope :valuators,                  -> { joins(:valuator) }
+  scope :idea_managers,              -> { joins(:idea_manager) }
+  scope :officing_managers,          -> { joins(:officing_manager) }
+  scope :deficiency_report_managers, -> { joins(:deficiency_report_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }

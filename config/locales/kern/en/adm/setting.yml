@@ -222,6 +222,12 @@ en:
       create_cta: Primary create-report button label
       create_cta_description: >
         Label of the prominent button citizens click to start a new report on the list page (e.g. "Mangel melden", "Hinweis geben"). Leave empty to use the default ("Mangel melden").
+      new_form_title: New-report form heading
+      new_form_title_description: >
+        Heading shown at the top of the new-report form page (e.g. "Neue Meldung", "Mangel melden"). Leave empty to use the platform default.
+      new_form_title_placeholder: New-report title placeholder
+      new_form_title_placeholder_description: >
+        Placeholder text shown inside the report-title field on the new-report form. Use it to guide citizens with a good example (e.g. "Schlagloch in XY-Straße vor Hausnummer 123"). Leave empty to use the platform default.
       show_in_main_menu: Deficiency reports in navigation
       show_in_main_menu_description: >
         When enabled, the deficiency reporter is shown as a standalone menu item in the platform's main navigation. Users can access the deficiency overview directly from the main menu without first opening a project. Disable this option if the deficiency reporter should only be visible inside specific projects.

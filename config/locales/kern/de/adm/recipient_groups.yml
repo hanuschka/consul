@@ -25,6 +25,9 @@ de:
         empty_description: Erstellen Sie eine Empfängergruppe, um Newsletter gezielt an bestimmte Nutzerkreise zu versenden.
       new:
         title: Empfängergruppe erstellen
+        create: Erstellen und Filter konfigurieren
+        name_label: Name der Empfängergruppe
+        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
         label_for_general: Typ der Empfängergruppe
         label_for_projekt: Projekt auswählen
         label_for_projekt_phase: Phase auswählen
@@ -42,6 +45,10 @@ de:
             Wählen Sie die Beteiligungsphase innerhalb des Projekts aus. Die verfügbaren Empfängerkriterien
             hängen vom Typ der Phase ab — bei Budgetphasen stehen z. B. Autoren machbarer oder ausgewählter
             Vorschläge zur Verfügung, bei anderen Phasen die Abonnenten der jeweiligen Phase.
+        placeholders:
+          label_for_general: Bitte Typ auswählen
+          label_for_projekt: Bitte Projekt auswählen
+          label_for_projekt_phase: Bitte Phase auswählen
         base_options_for_kind:
           projekts: Projekte
           user_roles: Nutzerrollen
@@ -57,12 +64,80 @@ de:
           authors_of_selected_ids: Autoren, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
           authors_of_not_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
           authors_of_winners_ids: Autoren, deren Vorschläge in der finalen Abstimmung gewonnen haben
+      filters:
+        section_title: Filter
+        add_filter: Filter hinzufügen
+        empty_title: Noch keine Filter
+        empty_description: Ein Filter besteht aus einer Quelle (etwa Newsletter-Abonnenten, Projektteilnehmer oder einer Rolle) und einem Operator, der festlegt, wie die Quelle mit dem bisherigen Ergebnis verknüpft wird. Filter werden von oben nach unten ausgewertet — der erste Filter bildet die Ausgangsmenge, jeder weitere ergänzt, schränkt ein oder schließt aus.
+        delete: Filter entfernen
+        delete_confirm: Diesen Filter wirklich entfernen?
+        move_up: Nach oben verschieben
+        move_down: Nach unten verschieben
+        operators:
+          include: Hinzufügen
+          exclude: Ausschließen
+          intersect: Schnittmenge
+        kind_groups:
+          sources: Quellen
+          demographics: Demografie
+          special: Sondergruppen
+          manual: Manuell
+        kinds:
+          newsletter_subscribers: Newsletter-Abonnenten
+          role: Rolle
+          phase_authors: Autoren einer Projektphase
+          phase_subscribers: Abonnenten einer Phase / eines Projekts
+          projekt_subscribers: Abonnenten eines Projekts (Sidebar-Schalter)
+          comment_authors: Kommentatoren
+          voting_participants: Abstimmungs-Teilnehmer
+          geozone: Stadtteil
+          plz: Postleitzahl
+          age_range: Altersgruppe
+          gender: Geschlecht
+          individual_group: Sondergruppe
+          manual_users: Manuelle Auswahl
+        roles:
+          administrator: Administratoren
+          moderator: Moderatoren
+          valuator: Bewerter
+          projekt_manager: Projekt-Manager
+          idea_manager: Ideen-Manager
+          officing_manager: Abstimmungshelfer
+          deficiency_report_manager: Mängel-Manager
+        params_labels:
+          include_unregistered: Newsletter-Empfänger ohne Konto einbeziehen
+          role: Rolle auswählen
+          projekt_phase_id: Projektphase
+          projekt_id: Projekt
+          criterion: Kriterium
+          commentable_type: Bezugsobjekt
+          commentable_id: Konkretes Objekt (optional)
+          geozone_ids: Stadtteile
+          plz_list: Postleitzahlen (eine pro Zeile)
+          age_range_id: Altersgruppe (vordefiniert)
+          min_age: Mindestalter
+          max_age: Höchstalter
+          gender: Geschlecht
+          individual_group_value_ids: Werte
+          user_ids: Nutzer
+        counter:
+          total: "%{count} Empfänger"
+          total_summary: "Endgröße: %{count} Empfänger"
+          delta_plus: "+%{count}"
+          delta_minus: "−%{count}"
+        preview: Vorschau
+        errors:
+          create_failed: Filter konnte nicht hinzugefügt werden.
       edit:
         title: Empfängergruppe bearbeiten
-        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
+        name_label: Name der Empfängergruppe
+        name_hint: Der Name wird beim Verlassen des Feldes automatisch gespeichert. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
         submit: Speichern
+        name_autosaved: Name gespeichert
+        name_autosave_error: Fehler beim Speichern
       create:
         success: Empfängergruppe wurde erfolgreich erstellt.
+        default_name: Neue Empfängergruppe
       update:
         success: Empfängergruppe wurde erfolgreich aktualisiert.
       destroy:

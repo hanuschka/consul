@@ -1,0 +1,11 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.geozone_ids") %>
+  <%= select_tag "recipient_group_filter[params][geozone_ids][]",
+        options_for_select(
+          Geozone.order(:name).pluck(:name, :id),
+          Array(filter_params["geozone_ids"]).map(&:to_i)
+        ),
+        multiple: true,
+        size: [Geozone.count, 6].min,
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+</label>

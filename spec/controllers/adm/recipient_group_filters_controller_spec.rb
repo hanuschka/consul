@@ -16,6 +16,40 @@ describe Adm::RecipientGroupFiltersController do
       expect(response).to have_http_status(:ok)
       expect(group.reload.filters.size).to eq(1)
     end
+
+    # Regression: previously, when the second filter passed validation but
+    # the first one already existed, the controller still rendered the
+    # card component with an unpersisted filter — crashing during URL
+    # generation in the card template.
+    it "appends a second filter with intersect without raising" do
+      create(:recipient_group_filter, recipient_group: group, position: 1)
+
+      expect {
+        post :create,
+             params: { recipient_group_id: group.id,
+                       recipient_group_filter: { kind: "newsletter_subscribers", operator: "intersect", params: {} } },
+             format: :turbo_stream
+      }.to change { group.reload.filters.count }.by(1)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    context "when validation fails" do
+      render_views
+
+      it "does not crash and responds with an error turbo_stream" do
+        # `bogus` is not a permitted kind; this triggers the `kind`
+        # inclusion validation, leaving @filter unpersisted.
+        post :create,
+             params: { recipient_group_id: group.id,
+                       recipient_group_filter: { kind: "bogus", operator: "include", params: {} } },
+             format: :turbo_stream
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(group.reload.filters.size).to eq(0)
+        expect(response.body).to include("flash-messages")
+      end
+    end
   end
 
   describe "PATCH #update" do

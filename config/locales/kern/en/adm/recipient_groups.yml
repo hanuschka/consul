@@ -25,6 +25,8 @@ en:
       new:
         title: Create recipient group
         create: Create and configure filters
+        name_label: Recipient group name
+        name_hint: The name of the recipient group is shown in the selection list when creating a newsletter. Choose a clear, descriptive name that makes the composition of the group easy to recognize, e.g. All subscribers, Registered users old town, or Participants climate protection project.
         label_for_general: Recipient group type
         label_for_projekt: Select project
         label_for_projekt_phase: Select phase
@@ -64,7 +66,8 @@ en:
       filters:
         section_title: Filters
         add_filter: Add filter
-        empty: No filters yet — start with a source
+        empty_title: No filters yet
+        empty_description: A filter consists of a source (such as newsletter subscribers, project participants, or a user role) and an operator that determines how the source is combined with the previous result. Filters are evaluated from top to bottom — the first filter sets the initial audience, each additional filter adds to, narrows down, or excludes from it.
         delete: Remove filter
         delete_confirm: Really remove this filter?
         move_up: Move up
@@ -83,6 +86,7 @@ en:
           role: Role
           phase_authors: Phase authors
           phase_subscribers: Phase / projekt subscribers
+          projekt_subscribers: Projekt subscribers (sidebar toggle)
           comment_authors: Commenters
           voting_participants: Voting participants
           geozone: District
@@ -121,12 +125,18 @@ en:
           delta_plus: "+%{count}"
           delta_minus: "−%{count}"
         preview: Preview
+        errors:
+          create_failed: Could not add filter.
       edit:
         title: Edit recipient group
-        name_hint: The name of the recipient group is shown in the selection list when creating a newsletter. Choose a clear, descriptive name that makes the composition of the group easy to recognize, e.g. All subscribers, Registered users old town, or Participants climate protection project.
+        name_label: Recipient group name
+        name_hint: The name is saved automatically when you leave the field. Choose a clear, descriptive name that makes the composition of the group easy to recognize, e.g. All subscribers, Registered users old town, or Participants climate protection project.
         submit: Save
+        name_autosaved: Name saved
+        name_autosave_error: Error saving
       create:
         success: Recipient group created successfully.
+        default_name: New recipient group
       update:
         success: Recipient group updated successfully.
       destroy:

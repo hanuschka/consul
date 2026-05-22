@@ -13,33 +13,13 @@ module Adm
       ]
     end
 
-    def new
-      @recipient_group = RecipientGroup.new
-      authorize [:adm, @recipient_group]
-
-      @breadcrumbs = [
-        { name: t("adm.menu.items.notifications"), icon: "send" },
-        { name: t("adm.menu.items.notifications_subitems.newsletters"), url: adm_newsletters_path },
-        { name: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path },
-        { name: t(".title") }
-      ]
-    end
-
     def create
       @recipient_group = RecipientGroup.new(recipient_group_params)
+      @recipient_group.name = t("adm.recipient_groups.create.default_name") if @recipient_group.name.blank?
       authorize [:adm, @recipient_group]
 
-      if @recipient_group.save
-        redirect_to edit_adm_recipient_group_path(@recipient_group), notice: t(".success")
-      else
-        @breadcrumbs = [
-          { name: t("adm.menu.items.notifications"), icon: "send" },
-          { name: t("adm.menu.items.notifications_subitems.newsletters"), url: adm_newsletters_path },
-        { name: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path },
-          { name: t("adm.recipient_groups.new.title") }
-        ]
-        render :new, status: :unprocessable_entity
-      end
+      @recipient_group.save!
+      redirect_to edit_adm_recipient_group_path(@recipient_group), notice: t(".success")
     end
 
     def edit
@@ -64,16 +44,29 @@ module Adm
       @recipient_group = RecipientGroup.find(params[:id])
       authorize [:adm, @recipient_group]
 
-      if @recipient_group.update(recipient_group_params)
-        redirect_to adm_recipient_groups_path, notice: t(".success")
+      attrs = recipient_group_params
+      attrs[:name] = t("adm.recipient_groups.create.default_name") if attrs.key?(:name) && attrs[:name].blank?
+
+      if @recipient_group.update(attrs)
+        respond_to do |format|
+          format.html { redirect_to adm_recipient_groups_path, notice: t(".success") }
+          format.json { head :ok }
+        end
       else
-        @breadcrumbs = [
-          { name: t("adm.menu.items.notifications"), icon: "send" },
-          { name: t("adm.menu.items.notifications_subitems.newsletters"), url: adm_newsletters_path },
-        { name: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path },
-          { name: t("adm.recipient_groups.edit.title") }
-        ]
-        render :edit, status: :unprocessable_entity
+        respond_to do |format|
+          format.html do
+            @breadcrumbs = [
+              { name: t("adm.menu.items.notifications"), icon: "send" },
+              { name: t("adm.menu.items.notifications_subitems.newsletters"), url: adm_newsletters_path },
+              { name: t("adm.newsletters.index.tabs.recipient_groups"), url: adm_recipient_groups_path },
+              { name: t("adm.recipient_groups.edit.title") }
+            ]
+            render :edit, status: :unprocessable_entity
+          end
+          format.json do
+            render json: { errors: @recipient_group.errors.full_messages }, status: :unprocessable_entity
+          end
+        end
       end
     end
 
@@ -95,7 +88,7 @@ module Adm
     private
 
       def recipient_group_params
-        params.require(:recipient_group).permit(:name)
+        params.fetch(:recipient_group, {}).permit(:name)
       end
   end
 end

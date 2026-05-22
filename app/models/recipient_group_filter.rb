@@ -1,7 +1,7 @@
 class RecipientGroupFilter < ApplicationRecord
   KINDS = %w[
     newsletter_subscribers role
-    phase_authors phase_subscribers comment_authors voting_participants
+    phase_authors phase_subscribers projekt_subscribers comment_authors voting_participants
     geozone plz age_range gender
     individual_group manual_users
   ].freeze
@@ -13,6 +13,7 @@ class RecipientGroupFilter < ApplicationRecord
     "role"                   => ["role"],
     "phase_authors"          => ["projekt_phase_id"],
     "phase_subscribers"      => [], # validated below — either projekt_id OR projekt_phase_id
+    "projekt_subscribers"    => ["projekt_id"],
     "comment_authors"        => [],
     "voting_participants"    => ["projekt_phase_id"],
     "geozone"                => ["geozone_ids"],
@@ -42,35 +43,22 @@ class RecipientGroupFilter < ApplicationRecord
     def first_filter_must_be_include
       return if operator == "include"
       return if recipient_group.blank?
+      return if recipient_group.filters.where.not(id: id).exists?
 
-      is_first =
-        recipient_group.filters.where.not(id: id).none? ||
-          recipient_group.filters.where.not(id: id).minimum(:position).to_i >= position.to_i
-
-      errors.add(:operator, :must_be_include_for_first_filter) if is_first
+      errors.add(:operator, :must_be_include_for_first_filter)
     end
 
+    # Required-key checks intentionally omitted: the UI mutates kind and params
+    # in separate Turbo PATCHes, so an interim state where a new kind has no
+    # params yet is normal. Resolvers tolerate blank params (return []).
     def params_valid_for_kind
       return if kind.blank?
 
-      required = REQUIRED_PARAMS[kind] || []
-      required.each do |key|
-        value = params&.dig(key)
-        if value.blank? || (value.is_a?(Array) && value.empty?)
-          errors.add(:params, "missing required key: #{key}")
-        end
-      end
-
       case kind
       when "role"
-        errors.add(:params, "unsupported role") unless ALLOWED_ROLES.include?(params&.dig("role").to_s)
-      when "phase_subscribers"
-        unless params&.dig("projekt_id").present? || params&.dig("projekt_phase_id").present?
-          errors.add(:params, "either projekt_id or projekt_phase_id required")
-        end
-      when "age_range"
-        unless params&.dig("age_range_id").present? || params&.dig("min_age").present? || params&.dig("max_age").present?
-          errors.add(:params, "either age_range_id or min/max required")
+        role_value = params&.dig("role")
+        if role_value.present? && !ALLOWED_ROLES.include?(role_value.to_s)
+          errors.add(:params, "unsupported role")
         end
       end
     end

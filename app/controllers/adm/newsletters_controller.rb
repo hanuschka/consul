@@ -132,7 +132,7 @@ module Adm
       def newsletter_params
         params.require(:newsletter).permit(
           :subject, :recipient_group_id, :from, :body, :title, :subtitle,
-          :greeting, :title_color, :subtitle_color,
+          :greeting, :title_color, :subtitle_color, :respect_newsletter_optout,
           image_attributes: image_attributes
         )
       end

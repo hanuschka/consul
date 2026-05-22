@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_21_203527) do
+ActiveRecord::Schema.define(version: 2026_05_22_000000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1699,6 +1699,7 @@ ActiveRecord::Schema.define(version: 2026_05_21_203527) do
     t.bigint "recipient_group_id"
     t.string "title_color", default: "#000000", null: false
     t.string "subtitle_color", default: "#000000", null: false
+    t.boolean "respect_newsletter_optout", default: true, null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 

@@ -26,6 +26,8 @@ de:
       new:
         title: Empfängergruppe erstellen
         create: Erstellen und Filter konfigurieren
+        name_label: Name der Empfängergruppe
+        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
         label_for_general: Typ der Empfängergruppe
         label_for_projekt: Projekt auswählen
         label_for_projekt_phase: Phase auswählen
@@ -65,7 +67,8 @@ de:
       filters:
         section_title: Filter
         add_filter: Filter hinzufügen
-        empty: Noch keine Filter — beginnen Sie mit einer Quelle
+        empty_title: Noch keine Filter
+        empty_description: Ein Filter besteht aus einer Quelle (etwa Newsletter-Abonnenten, Projektteilnehmer oder einer Rolle) und einem Operator, der festlegt, wie die Quelle mit dem bisherigen Ergebnis verknüpft wird. Filter werden von oben nach unten ausgewertet — der erste Filter bildet die Ausgangsmenge, jeder weitere ergänzt, schränkt ein oder schließt aus.
         delete: Filter entfernen
         delete_confirm: Diesen Filter wirklich entfernen?
         move_up: Nach oben verschieben
@@ -84,6 +87,7 @@ de:
           role: Rolle
           phase_authors: Autoren einer Projektphase
           phase_subscribers: Abonnenten einer Phase / eines Projekts
+          projekt_subscribers: Abonnenten eines Projekts (Sidebar-Schalter)
           comment_authors: Kommentatoren
           voting_participants: Abstimmungs-Teilnehmer
           geozone: Stadtteil
@@ -122,12 +126,18 @@ de:
           delta_plus: "+%{count}"
           delta_minus: "−%{count}"
         preview: Vorschau
+        errors:
+          create_failed: Filter konnte nicht hinzugefügt werden.
       edit:
         title: Empfängergruppe bearbeiten
-        name_hint: Der Name der Empfängergruppe wird in der Auswahlliste beim Erstellen eines Newsletters angezeigt. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
+        name_label: Name der Empfängergruppe
+        name_hint: Der Name wird beim Verlassen des Feldes automatisch gespeichert. Wählen Sie einen eindeutigen, beschreibenden Namen, der die Zusammensetzung der Gruppe klar erkennen lässt, z. B. Alle Abonnenten, Registrierte Nutzer Altstadt oder Teilnehmer Klimaschutz-Projekt.
         submit: Speichern
+        name_autosaved: Name gespeichert
+        name_autosave_error: Fehler beim Speichern
       create:
         success: Empfängergruppe wurde erfolgreich erstellt.
+        default_name: Neue Empfängergruppe
       update:
         success: Empfängergruppe wurde erfolgreich aktualisiert.
       destroy:

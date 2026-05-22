@@ -378,6 +378,11 @@ en:
           empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative to activate AI-supported evaluation criteria. After activation, you can define criteria here, by which submitted contributions are automatically evaluated and categorized.
         email_templates:
           title: System emails
+          groups:
+            submission: Submission (Phase 2)
+            feasibility: Feasibility review (Phase 2 + 3)
+            preselection: Preselection (Phase 4 → 5 transition)
+            selection: Final selection for voting (Phase 5)
         ai_settings:
           title: AI voice assistant
           empty_title: AI voice assistant not available

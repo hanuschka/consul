@@ -5,6 +5,16 @@
 <% recipient_groups_exist = RecipientGroup.any? %>
 
 <div class="kern-container my-5">
+  <%# Out-of-tree form used by the "create recipient group" buttons below.
+      Nested <form> elements are invalid HTML, so the button_to-equivalents
+      use the HTML5 `form="..."` attribute to associate themselves with this
+      sibling form instead of the outer newsletter form. %>
+  <%= form_tag adm_recipient_groups_path,
+        method: :post,
+        id: "create-recipient-group-form",
+        class: "d-none" do %>
+  <% end %>
+
   <%= form_with model: [:adm, @newsletter] do |f| %>
     <%= render Kern::FormFieldComponent.new(
       label: Newsletter.human_attribute_name(:subject),
@@ -25,24 +35,34 @@
           { prompt: t("custom.shared.select") },
           label: false %>
         <div class="mt-2">
-          <%= link_to t(".create_recipient_group_link"),
-            new_adm_recipient_group_path,
-            class: "kern-link kern-body kern-body--small",
-            target: "_blank",
-            rel: "noopener" %>
+          <%= button_tag t(".create_recipient_group_link"),
+            type: :submit,
+            form: "create-recipient-group-form",
+            class: "kern-link kern-body kern-body--small kern-link--inline-button" %>
         </div>
       <% end %>
     <% else %>
-      <%= empty_state(
-        title: t(".empty_recipient_groups.title"),
-        description: t(".empty_recipient_groups.description"),
-        icon: "group_add",
-        link_url: new_adm_recipient_group_path,
-        link_text: t(".empty_recipient_groups.cta"),
-        link_class: "adm-empty-state__link kern-btn kern-btn--primary mt-3",
-        link_target: "_blank",
-        link_rel: "noopener"
-      ) %>
+      <div class="adm-empty-state">
+        <div class="adm-empty-state__icon-wrap">
+          <span class="adm-empty-state__icon material-symbols-outlined" aria-hidden="true">group_add</span>
+        </div>
+        <p class="adm-empty-state__title"><%= t(".empty_recipient_groups.title") %></p>
+        <p class="adm-empty-state__description"><%= t(".empty_recipient_groups.description") %></p>
+        <%= button_tag t(".empty_recipient_groups.cta"),
+          type: :submit,
+          form: "create-recipient-group-form",
+          class: "adm-empty-state__link kern-btn kern-btn--primary mt-3" %>
+      </div>
+    <% end %>
+
+    <% if recipient_groups_exist %>
+      <%= render Kern::FormFieldComponent.new(
+        label: Newsletter.human_attribute_name(:respect_newsletter_optout),
+        hint: t(".hints.respect_newsletter_optout"),
+        divider: false
+      ) do %>
+        <%= f.check_box :respect_newsletter_optout, label: false %>
+      <% end %>
     <% end %>
 
     <%= f.hidden_field :from, value: (f.object.from || Setting['mailer_from_address']) %>

@@ -7,12 +7,29 @@
      data-adm-newsletters--filter-stack-recount-url-value="<%= recount_adm_recipient_group_filters_path(@recipient_group) %>"
      data-adm-newsletters--filter-stack-reorder-url-value="<%= reorder_adm_recipient_group_filters_path(@recipient_group) %>">
 
-  <%= form_with model: [:adm, @recipient_group] do |f| %>
-    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t(".name_hint")) do %>
-      <%= f.text_field :name, label: false %>
+  <% default_name = t("adm.recipient_groups.create.default_name") %>
+  <% name_is_default = @recipient_group.name == default_name %>
+  <%= form_with model: [:adm, @recipient_group],
+                data: {
+                  controller: "adm-recipient-groups--name-autosave",
+                  "adm-recipient-groups--name-autosave-url-value": adm_recipient_group_path(@recipient_group),
+                  "adm-recipient-groups--name-autosave-saved-text-value": t("adm.recipient_groups.edit.name_autosaved"),
+                  "adm-recipient-groups--name-autosave-error-text-value": t("adm.recipient_groups.edit.name_autosave_error"),
+                  action: "submit->adm-recipient-groups--name-autosave#save"
+                } do |f| %>
+    <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+      <%= f.text_field :name,
+            label: false,
+            value: name_is_default ? "" : @recipient_group.name,
+            placeholder: default_name,
+            data: {
+              "adm-recipient-groups--name-autosave-target": "input",
+              action: "blur->adm-recipient-groups--name-autosave#save"
+            } %>
+      <span class="adm-name-autosave-status text-muted small mt-2 d-block"
+            data-adm-recipient-groups--name-autosave-target="status"
+            aria-live="polite"></span>
     <% end %>
-
-    <%= form_submit_button(text: t("adm.recipient_groups.edit.submit")) %>
   <% end %>
 
   <h3 class="mt-5"><%= t("adm.recipient_groups.filters.section_title") %></h3>
@@ -31,7 +48,12 @@
         </li>
       <% end %>
     <% else %>
-      <li id="filter-stack-empty" class="rg-filter-empty"><%= t("adm.recipient_groups.filters.empty") %></li>
+      <li id="filter-stack-empty">
+        <%= empty_state(
+              title: t("adm.recipient_groups.filters.empty_title"),
+              description: t("adm.recipient_groups.filters.empty_description"),
+              icon: "filter_alt") %>
+      </li>
     <% end %>
   </ul>
 

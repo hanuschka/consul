@@ -11,8 +11,11 @@
       </li>
     <% end %>
   <% else %>
-    <li id="filter-stack-empty" class="rg-filter-empty">
-      <%= t("adm.recipient_groups.filters.empty") %>
+    <li id="filter-stack-empty">
+      <%= empty_state(
+            title: t("adm.recipient_groups.filters.empty_title"),
+            description: t("adm.recipient_groups.filters.empty_description"),
+            icon: "filter_alt") %>
     </li>
   <% end %>
 <% end %>

@@ -7,7 +7,14 @@ module Adm
       authorize [:adm, @recipient_group], :create_filter?
       @filter = @recipient_group.filters.create(filter_params)
 
-      respond_to { |f| f.turbo_stream }
+      respond_to do |f|
+        if @filter.persisted?
+          f.turbo_stream
+        else
+          flash.now[:alert] = filter_error_message(@filter)
+          f.turbo_stream { render :create_error, status: :unprocessable_entity }
+        end
+      end
     end
 
     def update
@@ -66,6 +73,11 @@ module Adm
         incoming = attrs[:params].to_h.stringify_keys
         existing = (@filter.params || {}).stringify_keys
         attrs.merge(params: existing.merge(incoming))
+      end
+
+      def filter_error_message(filter)
+        full = filter.errors.full_messages.first
+        full.presence || t("adm.recipient_groups.filters.errors.create_failed")
       end
   end
 end

@@ -28,6 +28,18 @@ module KernHelper
     end
   end
 
+  # POST-variant of new_resource_link. Renders a button_to (form-wrapped button)
+  # styled identically to kern_link_button(style: :secondary) so it visually
+  # matches the legacy "new resource" link button.
+  def new_resource_button(url, link_name, method: :post, style: :secondary, form_data: {}, **options)
+    classes = ["kern-btn", "kern-btn--#{style}", options.delete(:class)].compact.join(" ")
+    content_tag(:div, class: "d-flex justify-content-start mb-4") do
+      button_to(url, method: method, class: classes, form: { data: form_data }, **options) do
+        content_tag(:span, link_name, class: "kern-label")
+      end
+    end
+  end
+
   def form_submit_button(text: I18n.t("shared.submit"), icon: "save", disabled: false, **options)
     content_tag(:div, class: "d-flex justify-content-start mb-4") do
       kern_button(text: text, icon: icon, type: "submit", disabled: disabled, **options)

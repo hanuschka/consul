@@ -1,11 +1,11 @@
 class FileManager::ImagesController < FileManager::BaseController
   def index
     authorize [:adm, :image], :index?
-    skip_policy_scope
 
     @images =
       Image
         .for_studio_file_manager(current_projekt)
+        .merge(policy_scope([:adm, Image]))
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)

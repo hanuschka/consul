@@ -1,5 +1,9 @@
 <% provide :title do %><%= t("custom.projekts.index.title") %><% end %>
 
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: projekts_url %>
+<% end %>
+
 <main class="projekts-page">
   <div class="help-header">
     <div class='row'>

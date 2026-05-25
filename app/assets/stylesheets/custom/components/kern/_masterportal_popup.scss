@@ -1,0 +1,37 @@
+.masterportal-popup-wrapper .leaflet-popup-content {
+  width: auto;
+  min-width: 240px;
+  max-width: 360px;
+}
+
+.masterportal-popup {
+  font-size: 14px;
+}
+
+.masterportal-popup--title {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.masterportal-popup--title a {
+  text-decoration: underline;
+}
+
+.masterportal-popup--rows {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 12px;
+  row-gap: 4px;
+  margin: 0;
+  padding: 12px;
+}
+
+.masterportal-popup--row-label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.masterportal-popup--row-value {
+  margin: 0;
+  word-break: break-word;
+}

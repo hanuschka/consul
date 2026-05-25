@@ -3,9 +3,12 @@ de:
     users:
       index:
         title: Nutzer verwalten
-        columns: Spalten
-        csv_export_button: CSV Export
+        download_csv: CSV herunterladen
         csv_export_notice: Der Export wird vorbereitet. Sie erhalten eine E-Mail mit einem Download-Link.
+        total_label:
+          one: Nutzer
+          other: Nutzer
+        total_hint: Anzahl der Nutzer in der aktuellen Ansicht (inkl. aktiver Filter).
         table:
           email: E-Mail
           first_name: Vorname
@@ -22,6 +25,10 @@ de:
           created_at: Erstellt am
           last_sign_in: Letzter Login
           verified_at: Verifiziert am
+        no_users_title: Keine Nutzer vorhanden
+        no_users_description: Sobald sich Nutzer registrieren, werden diese hier angezeigt.
+        no_results_filtered_title: Keine Nutzer für die aktuellen Filter
+        no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Nutzer zu sehen.
       user:
         table:
           actions:

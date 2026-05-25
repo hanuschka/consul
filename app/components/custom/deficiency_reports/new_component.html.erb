@@ -1,7 +1,7 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
-    <% if Setting["deficiency_reports.voice_assistant"].present?  %>
+    <% if Setting["deficiency_reports.voice_assistant"].present? && Ai::Settings.ai_available? %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "deficiency_report_voice_assistant",
         custom_data: {
@@ -16,7 +16,7 @@
       <div class="flex-layout">
         <div class="main-column">
           <h1 class="user-resources-form--title">
-            <%= t("custom.deficiency_reports.new.start_new") %>
+            <%= Setting["deficiency_reports.new_form_title"].presence || t("custom.deficiency_reports.new.start_new") %>
           </h1>
 
           <div class="hide-on-mobile">
@@ -37,7 +37,7 @@
                 <%= translations_form.text_area :title,
                   label: false,
                   class: "user-resources-form--banner-editor-title js-user-resource-form-title",
-                  placeholder: t("custom.deficiency_reports.form.title_placeholder"),
+                  placeholder: Setting["deficiency_reports.new_form_title_placeholder"].presence || t("custom.deficiency_reports.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
 

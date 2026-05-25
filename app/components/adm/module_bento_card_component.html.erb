@@ -1,0 +1,18 @@
+<%= link_to path,
+      class: "adm-module-bento__card",
+      title: link_title,
+      aria: { label: link_title } do %>
+  <div class="adm-module-bento__card-top">
+    <span class="adm-module-bento__icon-tile" aria-hidden="true">
+      <span class="material-symbols-outlined"><%= icon %></span>
+    </span>
+  </div>
+  <h4 class="adm-module-bento__title"><%= title %></h4>
+  <% if metric_text.present? %>
+    <p class="adm-module-bento__metric"><%= metric_text %></p>
+  <% end %>
+  <span class="adm-module-bento__cta">
+    <%= cta_text %>
+    <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+  </span>
+<% end %>

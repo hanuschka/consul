@@ -1,0 +1,217 @@
+<%
+  section_icon = kind == "hard" ? "rule" : "auto_awesome"
+  card_kind_icon = kind == "hard" ? "block" : "trending_up"
+  section_modifier = "kern-criteria-section--#{kind}"
+  card_modifier = "kern-criteria-card--#{kind}"
+  kind_label = t("adm.projekts.phases.ai_user_flow.kind_label.#{kind}")
+  count_label = t("adm.projekts.phases.ai_user_flow.criteria_count", count: criteria.size)
+%>
+
+<div
+  class="kern-criteria-section <%= section_modifier %>"
+  data-controller="adm-criteria-list"
+  data-adm-criteria-list-kind-value="<%= kind %>"
+  data-adm-criteria-list-create-url-value="<%= create_user_resource_criterion_adm_projekts_phase_path(projekt_phase) %>"
+  data-adm-criteria-list-reorder-url-value="<%= reorder_user_resource_criteria_adm_projekts_phase_path(projekt_phase) %>"
+  data-adm-criteria-list-update-url-template-value="<%= update_user_resource_criterion_adm_projekts_phase_path(projekt_phase, criterion_id: "CRITERION_ID") %>"
+  data-adm-criteria-list-delete-url-template-value="<%= destroy_user_resource_criterion_adm_projekts_phase_path(projekt_phase, criterion_id: "CRITERION_ID") %>"
+>
+  <div class="kern-criteria-section__header">
+    <div class="kern-criteria-section__icon-wrap">
+      <span class="material-symbols-outlined"><%= section_icon %></span>
+    </div>
+    <div class="kern-criteria-section__heading">
+      <h3 class="kern-criteria-section__title"><%= t("adm.projekts.phases.ai_user_flow.#{kind}_criteria_title") %></h3>
+      <p class="kern-criteria-section__hint"><%= t("adm.projekts.phases.ai_user_flow.#{kind}_criteria_hint") %></p>
+    </div>
+    <div class="kern-criteria-section__meta">
+      <span
+        class="kern-criteria-section__count"
+        data-adm-criteria-list-target="count"
+        data-zero-label="<%= t("adm.projekts.phases.ai_user_flow.criteria_count.zero") %>"
+        data-one-label="<%= t("adm.projekts.phases.ai_user_flow.criteria_count.one") %>"
+        data-other-label="<%= t("adm.projekts.phases.ai_user_flow.criteria_count.other") %>"
+      ><%= count_label %></span>
+    </div>
+  </div>
+
+  <div data-adm-criteria-list-target="list" class="kern-criteria-list">
+    <% criteria.each do |criterion| %>
+      <article
+        class="kern-criteria-card <%= card_modifier %>"
+        data-criterion-id="<%= criterion.id %>"
+      >
+        <div class="kern-criteria-card__badge-row">
+          <span class="kern-criteria-card__kind-tag">
+            <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+            <%= kind_label %>
+          </span>
+        </div>
+
+        <div class="kern-criteria-card__top">
+          <span
+            class="material-symbols-outlined kern-criteria-card__handle"
+            data-criteria-handle
+            title="<%= t("adm.projekts.phases.ai_user_flow.drag_to_reorder") %>"
+          >drag_indicator</span>
+
+          <div class="kern-criteria-card__name-wrap">
+            <label class="kern-criteria-card__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_name") %></label>
+            <input
+              type="text"
+              class="kern-criteria-card__name-input"
+              data-criteria-field="name"
+              value="<%= criterion.name %>"
+              placeholder="<%= t("adm.projekts.phases.ai_user_flow.name_placeholder") %>"
+            />
+          </div>
+
+          <button
+            type="button"
+            class="kern-criteria-card__delete-btn"
+            data-action="adm-criteria-list#deleteCriterion"
+            aria-label="<%= t("adm.projekts.phases.ai_user_flow.delete_criterion") %>"
+            title="<%= t("adm.projekts.phases.ai_user_flow.delete_criterion") %>"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+
+        <div class="kern-criteria-card__body">
+          <div class="kern-criteria-card__field kern-criteria-card__field--public">
+            <label class="kern-criteria-card__field-label">
+              <span class="material-symbols-outlined kern-criteria-card__field-icon">visibility</span>
+              <%= t("adm.projekts.phases.ai_user_flow.field_description") %>
+            </label>
+            <textarea
+              class="kern-criteria-card__textarea"
+              data-criteria-field="description"
+              rows="2"
+              placeholder="<%= t("adm.projekts.phases.ai_user_flow.description_placeholder") %>"
+            ><%= criterion.description %></textarea>
+          </div>
+
+          <div class="kern-criteria-card__field kern-criteria-card__field--ai">
+            <label class="kern-criteria-card__field-label">
+              <span class="material-symbols-outlined kern-criteria-card__field-icon">smart_toy</span>
+              <%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %>
+            </label>
+            <textarea
+              class="kern-criteria-card__textarea"
+              data-criteria-field="ai_instruction"
+              rows="3"
+              placeholder="<%= t("adm.projekts.phases.ai_user_flow.ai_instruction_placeholder") %>"
+            ><%= criterion.ai_instruction %></textarea>
+          </div>
+        </div>
+      </article>
+    <% end %>
+
+    <div class="kern-criteria-empty" data-adm-criteria-list-target="empty" <%= "hidden" if criteria.any? %>>
+      <span class="material-symbols-outlined kern-criteria-empty__icon">
+        <%= kind == "hard" ? "rule" : "tips_and_updates" %>
+      </span>
+      <p class="kern-criteria-empty__text"><%= t("adm.projekts.phases.ai_user_flow.empty_#{kind}") %></p>
+    </div>
+  </div>
+
+  <script type="text/template" data-adm-criteria-list-target="template">
+    <article
+      class="kern-criteria-card kern-criteria-card--new <%= card_modifier %>"
+      data-criterion-id="{{ id }}"
+    >
+      <div class="kern-criteria-card__badge-row">
+        <span class="kern-criteria-card__kind-tag">
+          <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+          <%= kind_label %>
+        </span>
+      </div>
+
+      <div class="kern-criteria-card__top">
+        <span
+          class="material-symbols-outlined kern-criteria-card__handle"
+          data-criteria-handle
+        >drag_indicator</span>
+
+        <div class="kern-criteria-card__name-wrap">
+          <label class="kern-criteria-card__field-label"><%= t("adm.projekts.phases.ai_user_flow.field_name") %></label>
+          <input
+            type="text"
+            class="kern-criteria-card__name-input"
+            data-criteria-field="name"
+            value="{{ name }}"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="kern-criteria-card__delete-btn"
+          data-action="adm-criteria-list#deleteCriterion"
+          aria-label="<%= t("adm.projekts.phases.ai_user_flow.delete_criterion") %>"
+        >
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+
+      <div class="kern-criteria-card__body">
+        <div class="kern-criteria-card__field kern-criteria-card__field--public">
+          <label class="kern-criteria-card__field-label">
+            <span class="material-symbols-outlined kern-criteria-card__field-icon">visibility</span>
+            <%= t("adm.projekts.phases.ai_user_flow.field_description") %>
+          </label>
+          <textarea
+            class="kern-criteria-card__textarea"
+            data-criteria-field="description"
+            rows="2"
+            placeholder="<%= t("adm.projekts.phases.ai_user_flow.description_placeholder") %>"
+          >{{ description }}</textarea>
+        </div>
+
+        <div class="kern-criteria-card__field kern-criteria-card__field--ai">
+          <label class="kern-criteria-card__field-label">
+            <span class="material-symbols-outlined kern-criteria-card__field-icon">smart_toy</span>
+            <%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %>
+          </label>
+          <textarea
+            class="kern-criteria-card__textarea"
+            data-criteria-field="ai_instruction"
+            rows="3"
+          >{{ ai_instruction }}</textarea>
+        </div>
+      </div>
+    </article>
+  </script>
+
+  <form
+    data-action="submit->adm-criteria-list#addCriterion"
+    class="kern-criteria-add-form"
+  >
+    <div class="kern-criteria-add-form__header">
+      <span class="material-symbols-outlined kern-criteria-add-form__icon">add_circle</span>
+      <h4 class="kern-criteria-add-form__title"><%= t("adm.projekts.phases.ai_user_flow.add_#{kind}_criterion") %></h4>
+    </div>
+    <div class="kern-criteria-add-form__fields">
+      <div class="kern-criteria-add-form__field">
+        <label class="kern-criteria-add-form__label"><%= t("adm.projekts.phases.ai_user_flow.field_name") %></label>
+        <input
+          type="text"
+          data-adm-criteria-list-target="inputName"
+          class="kern-criteria-add-form__input"
+          placeholder="<%= t("adm.projekts.phases.ai_user_flow.name_placeholder") %>"
+        />
+      </div>
+      <div class="kern-criteria-add-form__field">
+        <label class="kern-criteria-add-form__label"><%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %></label>
+        <textarea
+          data-adm-criteria-list-target="inputAiInstruction"
+          class="kern-criteria-add-form__input"
+          rows="2"
+          placeholder="<%= t("adm.projekts.phases.ai_user_flow.ai_instruction_placeholder") %>"
+        ></textarea>
+      </div>
+      <div class="kern-criteria-add-form__submit">
+        <%= form_submit_button(text: t("adm.projekts.phases.ai_user_flow.add_#{kind}_criterion")) %>
+      </div>
+    </div>
+  </form>
+</div>

@@ -55,9 +55,20 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
       name_extension = projekt.polls.count > 0 ? projekt.polls.count + 1 : nil
 
-      polls.create!(
+      new_poll = polls.create!(
         name: [projekt.name, name_extension].compact.join(" "),
         slug: [projekt.name.parameterize, name_extension].compact.join("-")
       )
+
+      copy_projekt_image_to(new_poll)
+    end
+
+    def copy_projekt_image_to(new_poll)
+      source = projekt.image
+      return unless source&.attachment&.attached?
+
+      image = new_poll.build_image(user: source.user, title: source.title)
+      image.attachment.attach(source.attachment.blob)
+      image.save!(validate: false)
     end
 end

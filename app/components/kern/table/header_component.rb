@@ -7,7 +7,50 @@ class Kern::Table::HeaderComponent < ApplicationComponent
     @sort = options.delete(:sort)
     @search = options.delete(:search)
     @filter_options = options.delete(:filter_options)&.reject { |k, _v| k.nil? } || {}
+    @default = options.delete(:default)
+    @date_range = options.delete(:date_range)
     @data_field = options.delete(:data_field)
+  end
+
+  def filter_pills(current_params)
+    pills = []
+
+    if @search && (search_value = current_params["#{@column}__search"].to_s).present?
+      pills << {
+        label: "#{@label}: #{search_value}",
+        remove_key: "#{@column}__search"
+      }
+    end
+
+    if @filter_options.present?
+      current = Array(current_params[@column]).map(&:to_s).compact_blank
+      default_values = Array(@default).map(&:to_s)
+
+      unless default_values.present? && current.sort == default_values.sort
+        current.each do |value|
+          option = @filter_options.find { |v, _| v.to_s == value }
+          option_label = option ? option[1] : value
+          pills << {
+            label: "#{@label}: #{option_label}",
+            remove_array_key: @column,
+            remove_array_value: value
+          }
+        end
+      end
+    end
+
+    if @date_range
+      from = current_params["#{@column}__from"].presence
+      to = current_params["#{@column}__to"].presence
+      if from || to
+        pills << {
+          label: "#{@label}: #{date_range_label(from, to)}",
+          remove_keys: ["#{@column}__from", "#{@column}__to"]
+        }
+      end
+    end
+
+    pills
   end
 
   private
@@ -17,7 +60,7 @@ class Kern::Table::HeaderComponent < ApplicationComponent
     end
 
     def show_filter?
-      @search.present? || @filter_options.present?
+      @search.present? || @filter_options.present? || @date_range.present?
     end
 
     def sorted?
@@ -28,7 +71,9 @@ class Kern::Table::HeaderComponent < ApplicationComponent
 
     def filtered?
       params["#{@column}__search"].present? ||
-        params[@column].present?
+        params[@column].present? ||
+        params["#{@column}__from"].present? ||
+        params["#{@column}__to"].present?
     end
 
     def filter_param_values
@@ -90,5 +135,21 @@ class Kern::Table::HeaderComponent < ApplicationComponent
 
     def readable_direction(direction)
       t("shared.table.sort.directions.#{direction}")
+    end
+
+    def date_range_label(from, to)
+      if from && to
+        "#{format_date(from)} – #{format_date(to)}"
+      elsif from
+        I18n.t("shared.table.filter.date_range.from_only", date: format_date(from))
+      elsif to
+        I18n.t("shared.table.filter.date_range.to_only", date: format_date(to))
+      end
+    end
+
+    def format_date(value)
+      I18n.l(Date.parse(value), format: "%d.%m.%Y")
+    rescue ArgumentError, TypeError
+      value.to_s
     end
 end

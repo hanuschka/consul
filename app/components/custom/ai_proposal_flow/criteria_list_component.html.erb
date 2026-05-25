@@ -1,8 +1,61 @@
-<div class="ai-proposal-flow--criteria-grid">
-  <% criteria.each do |criterion| %>
-    <div class="ai-proposal-flow--criteria-card">
-      <i class="fas fa-check ai-proposal-flow--criteria-card--icon"></i>
-      <span class="ai-proposal-flow--criteria-card--text"><%= criterion.text %></span>
-    </div>
+<div class="ai-proposal-flow--criteria-groups">
+  <% if hard_criteria.any? %>
+    <section class="ai-proposal-flow--criteria-group -hard">
+      <div class="ai-proposal-flow--criteria-group--header">
+        <span class="ai-proposal-flow--criteria-group--icon">
+          <i class="fas fa-shield-alt"></i>
+        </span>
+        <div class="ai-proposal-flow--criteria-group--titles">
+          <h3 class="ai-proposal-flow--criteria-group--title"><%= t("ai_proposal_flow.criteria.hard_title") %></h3>
+          <p class="ai-proposal-flow--criteria-group--hint"><%= t("ai_proposal_flow.criteria.hard_hint") %></p>
+        </div>
+      </div>
+
+      <div class="ai-proposal-flow--criteria-grid">
+        <% hard_criteria.each do |criterion| %>
+          <article class="ai-proposal-flow--criteria-card -hard">
+            <span class="ai-proposal-flow--criteria-card--icon">
+              <i class="fas fa-shield-alt" aria-hidden="true"></i>
+            </span>
+            <div class="ai-proposal-flow--criteria-card--body">
+              <span class="ai-proposal-flow--criteria-card--title"><%= criterion.name %></span>
+              <% if criterion.description.present? %>
+                <span class="ai-proposal-flow--criteria-card--description"><%= criterion.description %></span>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if soft_criteria.any? %>
+    <section class="ai-proposal-flow--criteria-group -soft">
+      <div class="ai-proposal-flow--criteria-group--header">
+        <span class="ai-proposal-flow--criteria-group--icon">
+          <i class="fas fa-star"></i>
+        </span>
+        <div class="ai-proposal-flow--criteria-group--titles">
+          <h3 class="ai-proposal-flow--criteria-group--title"><%= t("ai_proposal_flow.criteria.soft_title") %></h3>
+          <p class="ai-proposal-flow--criteria-group--hint"><%= t("ai_proposal_flow.criteria.soft_hint") %></p>
+        </div>
+      </div>
+
+      <div class="ai-proposal-flow--criteria-grid">
+        <% soft_criteria.each do |criterion| %>
+          <article class="ai-proposal-flow--criteria-card -soft">
+            <span class="ai-proposal-flow--criteria-card--icon">
+              <i class="fas fa-star" aria-hidden="true"></i>
+            </span>
+            <div class="ai-proposal-flow--criteria-card--body">
+              <span class="ai-proposal-flow--criteria-card--title"><%= criterion.name %></span>
+              <% if criterion.description.present? %>
+                <span class="ai-proposal-flow--criteria-card--description"><%= criterion.description %></span>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </section>
   <% end %>
 </div>

@@ -46,12 +46,17 @@ class Api::EventsController < Api::BaseController
     projekt_event = @projekt_phase.projekt_events.new(projekt_event_params)
 
     if projekt_event.save
+      process_image_with_base64(projekt_event, params[:projekt_event][:image_attributes])
       serialized_projekt_event = EventSerializer.new(projekt_event).serialize
 
       render json: { data: { projekt_event: serialized_projekt_event } }, status: 201
     else
       render json: { error: { messages: projekt_event.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def show
@@ -64,12 +69,17 @@ class Api::EventsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_event.update(projekt_event_params)
+      process_image_with_base64(@projekt_event, params[:projekt_event][:image_attributes]) if params[:projekt_event]&.key?(:image_attributes)
       serialized_projekt_event = EventSerializer.new(@projekt_event).serialize
 
       render json: { data: { projekt_event: serialized_projekt_event } }
     else
       render json: { error: { messages: @projekt_event.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   def destroy

@@ -2,19 +2,19 @@ class Adm::Projekts::LegislationDraftVersionPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def create?
-    permitted?
+    manage_permitted?
   end
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   def draft_text?
-    permitted?
+    manage_permitted?
   end
 
   def destroy?
-    permitted?
+    manage_permitted?
   end
 
   class Scope < Scope

@@ -31,6 +31,7 @@ class Projekt < ApplicationRecord
   belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_one :projekt_evaluation, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -77,6 +78,7 @@ class Projekt < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   has_many :map_layers, as: :mappable, dependent: :destroy
+  has_many :navbar_items, dependent: :destroy
 
   # has_many :projekt_labels, dependent: :destroy #remove
 
@@ -100,7 +102,6 @@ class Projekt < ApplicationRecord
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
-  # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity
 
@@ -125,11 +126,11 @@ class Projekt < ApplicationRecord
     end
 
     InternalApiClient.active_dt? && (
-      on_global_overview? || acceptable_to_be_exported_for_global_overview?
+      on_dt_global_overview? || acceptable_to_be_exported_for_global_overview?
     )
   end
 
-  # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
+  validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
@@ -184,6 +185,7 @@ class Projekt < ApplicationRecord
     activated
       .with_published_custom_page
       .show_in_overview_page
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_underway, ->() {
@@ -192,6 +194,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases, :projekt_settings)
+      .order("projekts.created_at DESC")
       .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
@@ -201,6 +204,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
+      .order("projekts.created_at DESC")
       .select do |p|
         p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
       end
@@ -212,6 +216,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
@@ -219,6 +224,7 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
@@ -226,10 +232,12 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_drafts, -> {
     not_activated
+      .order("projekts.created_at DESC")
   }
 
   scope :not_in_individual_list, -> {
@@ -742,9 +750,7 @@ class Projekt < ApplicationRecord
       if hidden_at.present?
         sync_destroy_for_global_overview
       else
-        Projekts::OverviewProjektUpdatedJob.perform_later(
-          self
-        )
+        Projekts::OverviewProjektUpdatedJob.perform_later(self)
       end
     end
   end
@@ -842,10 +848,6 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def set_default_color
-      self.color ||= "#004a83"
-    end
-
     def touch_updated_at(geozone)
       touch if persisted?
     end
@@ -870,8 +872,9 @@ class Projekt < ApplicationRecord
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported_for_global_overview?
-        Projekts::OverviewProjektDestroyedJob.perform_later(id)
-      end
+      return unless on_dt_global_overview?
+
+      Projekts::OverviewProjektDestroyedJob.perform_later(id)
+      update_column(:on_dt_global_overview, false) unless destroyed?
     end
 end

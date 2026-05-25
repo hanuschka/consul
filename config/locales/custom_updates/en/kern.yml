@@ -1,0 +1,89 @@
+en:
+  components:
+    adm:
+      delete_collection_component:
+        default_headline: "Deleting…"
+        default_hint: "This may take a moment for large datasets. Please don't close this tab."
+      masterportal_import_panel_component:
+        progress:
+          running: "Import is running"
+          processed: "%{count} entries processed so far"
+          create_resource_on: "Creating %{resource_name} from each imported entry"
+          create_resource_off: "Importing pins only — no module entries created"
+    kern:
+      map_component:
+        masterportal_wms_layer_name: "Masterportal (Regensburg)"
+        masterportal_popup:
+          category: "Category"
+          accessibility: "Accessibility"
+          go_to_resource: "Go to resource"
+      map_legend_component:
+        aria_label: "Map legend"
+        user_pin: "User-created"
+        imported_pin: "Imported from Masterportal"
+    shared:
+      map_component:
+        layers:
+          masterportal_pins: "Masterportal pins"
+          masterportal_wms_layer_name: "Masterportal (Regensburg)"
+      masterportal_pin_info_component:
+        title: "Masterportal data"
+        category: "Category"
+        address: "Address"
+        contact: "Contact"
+        phone: "Phone"
+        fax: "Fax"
+        email: "E-mail"
+        website: "Website"
+        location_note: "Location"
+        accessibility: "Accessibility"
+      masterportal_pin_properties_component:
+        title: "Properties from Masterportal"
+        flag_true: "Yes"
+        flag_false: "No"
+  masterportal:
+    imported_proposal_default_title: "Imported point %{external_id}"
+    imported_investment_default_title: "Imported point %{external_id}"
+    imported_resource_description: "This entry was imported from Masterportal. Detailed information is loaded directly from the Masterportal data."
+    description:
+      properties_heading: "Properties from Masterportal"
+    feature:
+      category_label: "Category"
+    accessibility_flags:
+      ZUGAENGLICH_VOLL: "Fully accessible"
+      ZUGAENGLICH_EINGESCHRAENKT: "Partially accessible"
+      ZUGAENGLICH_NICHT: "Not accessible"
+      ZUGAENGLICH_BEGLEITPERSON: "Accessible with assistance"
+      ROLLSTUHL_PARKPLATZ: "Wheelchair parking"
+      ROLLSTUHL_WC: "Wheelchair-accessible restroom"
+      HOERANLAGE_IND: "Induction hearing loop"
+      INFO_BLINDENSCHRIFT: "Info in Braille"
+      INFO_GEBAERDENSPRACHE: "Info in sign language"
+      INFO_LEICHTE_SPRACHE: "Info in easy-read language"
+      WELTERBERELEVANT: "World heritage-related"
+    popup:
+      value_yes: "Yes"
+      property_labels:
+        address: "Address"
+        name: "Name"
+        kategorie: "Category"
+        category: "Category"
+        art: "Type"
+        art_name: "Type"
+        art_category: "Category"
+        tel_nr: "Phone"
+        telefon: "Phone"
+        phone: "Phone"
+        fax_nr: "Fax"
+        e_mail_adresse: "E-mail"
+        email: "E-mail"
+        internet: "Website"
+        homepage: "Website"
+        website: "Website"
+        denkmal_id: "Monument ID"
+        denkmal_name: "Monument name"
+        ort: "City"
+        plz: "Postal code"
+        strasse: "Street"
+        haus_nr: "House number"
+        haus_nr_zusatz: "House number extension"

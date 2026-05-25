@@ -1,0 +1,79 @@
+<section class="masterportal-pin-info">
+  <h3 class="masterportal-pin-info--title"><%= t(".title") %></h3>
+
+  <% if category.present? %>
+    <div class="masterportal-pin-info--row">
+      <span class="masterportal-pin-info--label"><%= t(".category") %></span>
+      <span class="masterportal-pin-info--value"><%= category %></span>
+    </div>
+  <% end %>
+
+  <% if address_line.present? || post_city.present? %>
+    <div class="masterportal-pin-info--row">
+      <span class="masterportal-pin-info--label"><%= t(".address") %></span>
+      <span class="masterportal-pin-info--value">
+        <% if address_line.present? %><%= address_line %><% end %>
+        <% if post_city.present? %><br><%= post_city %><% end %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if contact_present? %>
+    <div class="masterportal-pin-info--row">
+      <span class="masterportal-pin-info--label"><%= t(".contact") %></span>
+      <span class="masterportal-pin-info--value">
+        <% if phone.present? %>
+          <div class="masterportal-pin-info--contact-item">
+            <%= t(".phone") %>:
+            <%= link_to phone, "tel:#{phone}" %>
+          </div>
+        <% end %>
+        <% if fax.present? %>
+          <div class="masterportal-pin-info--contact-item">
+            <%= t(".fax") %>: <%= fax %>
+          </div>
+        <% end %>
+        <% if email.present? %>
+          <div class="masterportal-pin-info--contact-item">
+            <%= t(".email") %>:
+            <%= link_to email, "mailto:#{email}" %>
+          </div>
+        <% end %>
+        <% if website.present? %>
+          <div class="masterportal-pin-info--contact-item">
+            <%= t(".website") %>:
+            <%= link_to(
+              website,
+              website,
+              target: "_blank",
+              rel: "noopener noreferrer"
+            ) %>
+          </div>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if location_note.present? %>
+    <div class="masterportal-pin-info--row">
+      <span class="masterportal-pin-info--label"><%= t(".location_note") %></span>
+      <span class="masterportal-pin-info--value"><%= location_note %></span>
+    </div>
+  <% end %>
+
+  <% if accessibility_flags.any? %>
+    <div class="masterportal-pin-info--row">
+      <span class="masterportal-pin-info--label"><%= t(".accessibility") %></span>
+      <ul class="masterportal-pin-info--accessibility-list">
+        <% accessibility_flags.each do |flag| %>
+          <li>
+            <%= t(
+              "masterportal.accessibility_flags.#{flag}",
+              default: flag.humanize
+            ) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</section>

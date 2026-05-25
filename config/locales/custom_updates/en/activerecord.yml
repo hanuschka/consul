@@ -67,6 +67,8 @@ en:
         one: Category
         other: Categories
     errors:
+      messages:
+        too_many_lines: must contain at most %{count} lines
       models:
         proposal:
           attributes:
@@ -88,6 +90,16 @@ en:
           attributes:
             overall_satisfaction:
               blank: Please select an option.
+        projekt_point_of_interest_category:
+          attributes:
+            icon_image:
+              invalid_content_type: must be SVG, PNG or JPEG
+              too_large: is too large (max 512 KB)
+              unsafe_svg: SVG contains disallowed content
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: has already been used
     attributes:
       map_location:
         latitude: Latitude
@@ -202,7 +214,7 @@ en:
       projekt_event_registration:
         first_name: First name
         last_name: Last name
-        email: Email
+        email: Email address
       projekt_event:
         title: Event title
         location: Event location
@@ -254,3 +266,4 @@ en:
         name: Name
         icon: Icon
         color: Farbe
+        icon_image: Category icon

@@ -28,6 +28,12 @@ de:
         search_placeholder: "%{column_label} suchen..."
         apply: "Filter anwenden"
         close: "Schließen"
+        remove_filter: "%{filter} entfernen"
+        date_range:
+          from_label: "Von"
+          to_label: "Bis"
+          from_only: "ab %{date}"
+          to_only: "bis %{date}"
       sort:
         action_label: "Sortieren nach %{column_label}, %{direction}"
         status_text_sorted: "Sortiert nach %{column_label} in %{direction} Reihenfolge"

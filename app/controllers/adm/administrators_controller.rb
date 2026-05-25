@@ -7,8 +7,7 @@ module Adm
       @pagy, @administrators = pagy(policy_scope([:adm, Administrator]).order(id: :desc))
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.administrators") }
+        { name: t("adm.menu.items.team"), icon: "badge" }
       ]
     end
 
@@ -16,8 +15,7 @@ module Adm
       authorize [:adm, Administrator], :index?
 
       @breadcrumbs = [
-        { name: t("adm.menu.items.profiles"), icon: "3p" },
-        { name: t("adm.menu.items.profiles_subitems.administrators"), url: adm_administrators_path },
+        { name: t("adm.menu.items.team"), icon: "badge", url: adm_administrators_path },
         { name: t(".title") }
       ]
     end

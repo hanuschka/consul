@@ -110,6 +110,26 @@ module ProjektsHelper
     end
   end
 
+  def format_budget_phase_duration(phase)
+    now = Time.zone.now
+    starts_at = phase.starts_at
+    ends_at   = phase.ends_at
+
+    if ends_at.present? && ends_at <= now
+      last_active_day = (ends_at - 1.second).to_date
+      t("custom.shared.dates.ends_on", date: l(last_active_day, format: :long))
+    elsif ends_at.present? && starts_at.present? && starts_at <= now
+      last_active_day = (ends_at - 1.second).to_date
+      if last_active_day == now.to_date
+        t("custom.shared.dates.ends_today")
+      else
+        t("custom.shared.dates.days_left", count: (last_active_day - now.to_date).to_i + 1)
+      end
+    elsif starts_at.present? && starts_at > now
+      t("custom.shared.dates.starts_in_days", count: (starts_at.to_date - now.to_date).to_i)
+    end
+  end
+
   def get_projekt_phase_duration(phase)
     if phase
       format_date_range(phase.start_date, phase.end_date)

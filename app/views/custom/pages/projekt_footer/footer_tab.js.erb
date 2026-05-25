@@ -4,7 +4,7 @@ $("li#filter-subnav-<%= @projekt_phase.id %>").addClass("is-active")
 $("li#filter-subnav-<%= @projekt_phase.id %>").attr("aria-selected", "true")
 $("#footer-content").removeClass("show-loader");
 <% footer_version = Setting.new_design_enabled? ? 'projekt_footer_new' : 'projekt_footer'  %>
-$("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
+$("#footer-content > .loader-spinner-wrapper > .loader-spinner-wrapper--content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();

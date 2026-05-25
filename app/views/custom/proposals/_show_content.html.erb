@@ -57,9 +57,15 @@
         <% end %>
         <%= render ResourcePage::BannerComponent.new(resource: proposal) %>
 
-        <div class="resource-page--description new-card main-content-card">
-          <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
-        </div>
+        <% if proposal.masterportal_pin.present? %>
+          <%= render Shared::MasterportalPinPropertiesComponent.new(
+            masterportal_pin: proposal.masterportal_pin
+          ) %>
+        <% else %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
+          </div>
+        <% end %>
 
         <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") && proposal.map_location.present? %>
           <div class="margin-bottom not-print">

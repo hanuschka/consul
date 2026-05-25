@@ -1,6 +1,10 @@
-<%= form_with model: [:adm, @section_contact_person] do |f| %>
+<% form_url = @section_contact_person.new_record? ?
+              send("adm_#{adm_section}_contact_persons_path") :
+              send("adm_#{adm_section}_contact_person_path", @section_contact_person) %>
+
+<%= form_with model: @section_contact_person, url: form_url do |f| %>
   <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:user), hint: t(".hints.user"), stacked: true) do %>
-    <div data-controller="adm-user-select" data-adm-user-select-url-value="<%= search_adm_section_contact_people_path %>">
+    <div data-controller="adm-user-select" data-adm-user-select-url-value="<%= send("search_adm_#{adm_section}_contact_persons_path") %>">
       <%= f.hidden_field :user_id, data: { adm_user_select_target: "hiddenField" } %>
 
       <div data-adm-user-select-target="searchArea" class="<%= 'd-none' if @section_contact_person.user_id.present? %>">
@@ -29,13 +33,6 @@
         <% end %>
       </div>
     </div>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:section), hint: t(".hints.section")) do %>
-    <%= f.select :section,
-      SectionContactPerson::SECTIONS.map { |s| [t("adm.section_contact_people.index.sections.#{s}"), s] },
-      { include_blank: t(".select_section") },
-      { label: false, class: "kern-form-select__select" } %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: SectionContactPerson.human_attribute_name(:role), hint: t(".hints.role")) do %>

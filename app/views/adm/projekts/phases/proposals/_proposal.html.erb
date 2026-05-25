@@ -1,5 +1,13 @@
 <tr id="<%= dom_id(proposal) %>" class="kern-table__row">
   <td class="kern-table__cell" data-field="id"><%= proposal.id %></td>
+  <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
+    <%= link_to adm_projekts_phase_proposal_path(projekt_phase, proposal),
+          class: "adm-table-thumb-link",
+          data: { turbo_frame: "_top" },
+          title: proposal.title do %>
+      <%= render Adm::TableThumbComponent.new(image: proposal.image, title: proposal.title) %>
+    <% end %>
+  </td>
   <% if projekt_phase.feature?("general.require_admin_acceptance") %>
     <td class="kern-table__cell" data-field="admin_accepted">
       <%= render Adm::AttributeEditors::BooleanComponent.new(

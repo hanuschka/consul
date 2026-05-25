@@ -22,6 +22,13 @@
       </div>
     <% end %>
 
+    <%
+      custom_fields_visible = f.object.persisted? ||
+                              f.object.preset.present? ||
+                              f.object.projekt_id.present? ||
+                              f.object.external_url.present?
+    %>
+
     <div
       class="mb-4"
       style="display: <%= (@available_kinds.one? || f.object.kind == "presets") ? "block" : "none;" %>"
@@ -34,7 +41,7 @@
         <div class="kern-fieldset__body">
           <%= f.collection_radio_buttons :preset, @available_presets, :first, :first do |cb| %>
             <div class="kern-form-check">
-              <%= cb.radio_button(class: "kern-form-check__radio") %>
+              <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
               <%= cb.label(class: "kern-label") { t("navbar.presets.#{cb.text }") } %>
             </div>
           <% end %>
@@ -52,7 +59,7 @@
             <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
               <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
                 <div class="kern-form-check">
-                  <%= cb.radio_button(class: "kern-form-check__radio") %>
+                  <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
                   <%= cb.label(class: "kern-label") %>
                 </div>
               <% end %>
@@ -70,20 +77,25 @@
 
     <% if @available_kinds.include?("external") %>
       <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
-        <fieldset class="kern-fieldset">
-          <legend class="kern-label mb-3">
-            <%= t(".external_label") %>
-          </legend>
-          <div class="kern-fieldset__body">
-            <%= f.text_field :external_title, class: "mb-3", label: false, placeholder: t(".external.title_placeholder") %>
-            <%= f.text_field :external_url, class: "mb-3", label: false, placeholder: t(".external.url_placeholder") %>
-          <div>
-        </fieldset>
+        <%= f.text_field :external_url, label: t(".external_label"), placeholder: t(".external.url_placeholder"), data: { action: "input->components-adm-new-navbar-item#selectionChanged" } %>
       </div>
     <% end %>
 
+    <div
+      style="display: <%= custom_fields_visible ? "block" : "none" %>"
+      data-components-adm-new-navbar-item-target="customFields"
+    >
+      <div class="mb-4">
+        <%= f.text_field :custom_title, label: t(".custom_title_label"), placeholder: t(".custom_title_placeholder") %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.check_box :open_in_new_tab, label: t(".open_in_new_tab_label") %>
+      </div>
+    </div>
+
     <div>
-      <%= kern_button(text: t(".create"), autofocus: false, type: "submit") %>
+      <%= kern_button(text: f.object.persisted? ? t(".update") : t(".create"), autofocus: false, type: "submit") %>
     </div>
   <% end %>
 </div>

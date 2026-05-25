@@ -4,6 +4,7 @@ en:
       subnav:
         key_metrics: Key Metrics
         analysis: Analysis
+        evaluation: Evaluation
         full_stats: Full Evaluation
         overview:
           proposal_phase: Proposals
@@ -73,7 +74,7 @@ en:
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
-            only_citizens: Participation is limited to citizens of the city.
+            only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
             only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
             only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
             only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -100,7 +101,7 @@ en:
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
-            only_citizens: Participation is limited to citizens of the city.
+            only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
             only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
             only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
             only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -116,7 +117,7 @@ en:
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations may participate in this vote.
-            only_citizens: Participation is limited to citizens of the city.
+            only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
             only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
             only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
             only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -139,7 +140,7 @@ en:
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
-            only_citizens: Participation is limited to citizens of the city.
+            only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
             only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
             only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
             only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -158,7 +159,7 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to vote.
-          only_citizens: Participation is limited to citizens of the city.
+          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
           only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -175,7 +176,7 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
-          only_citizens: Participation is limited to citizens of the city.
+          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
           only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -191,7 +192,7 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
-          only_citizens: Participation is limited to citizens of the city.
+          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
           only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -207,7 +208,7 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
-          only_citizens: Participation is limited to citizens of the city.
+          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
           only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
@@ -223,7 +224,7 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
-          only_citizens: Participation is limited to citizens of the city.
+          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
           only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."

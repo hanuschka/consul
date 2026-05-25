@@ -1,0 +1,17 @@
+en:
+  adm:
+    projekts:
+      proposals:
+        show:
+          video_url: Video
+          view_on_site: View on the website
+          on_behalf_of: on behalf of
+          admin_accepted_status: Approval status
+          accepted: Approved
+          not_accepted: Not approved
+          official_answer: Official response
+          official_answer_hint: Please enter the official response for this proposal.
+        update_official_answer:
+          success: Official response updated successfully.
+          official_answer: Official response
+          official_answer_hint: Please enter the official response for this proposal.

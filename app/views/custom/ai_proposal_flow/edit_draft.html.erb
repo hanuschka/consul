@@ -4,44 +4,47 @@
   <div
     class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
     data-generate-image-url="<%= @generate_image_url %>"
+    data-remove-image-url="<%= ai_remove_image_from_resource_path %>"
     data-aspect-ratio="16:9"
     data-image-prompt="<%= @draft_resource.ai_image_prompt %>"
-    data-has-image="<%= @draft_resource.image.present? %>"
-    data-codename="<%= @draft_resource.projekt_phase.try(:voice_assistant_codename) %>"
+    data-has-image="<%= @draft_resource.image.present? || @draft_resource.generated_image? %>"
+    data-codename="<%= Ai::Settings.ai_available? ? @draft_resource.projekt_phase.try(:voice_assistant_codename) : nil %>"
     data-projekt-phase-id="<%= @draft_resource.projekt_phase_id %>"
     data-resource-type="<%= @draft_resource.class.name %>"
     data-resource-id="<%= @draft_resource.id %>"
   >
-    <% if @draft_resource.is_a?(Proposal) %>
-      <%= render UserResources::FormComponent.new(
-        @draft_resource,
-        url: @update_draft_url,
-        title: t("proposals.new.start_new"),
-        embbeded_in_ai_flow: true
-      ) %>
-    <% else %>
-      <%= render Budgets::Investments::FormComponent.new(
-        @draft_resource,
-        url: @update_draft_url
-      ) %>
-    <% end %>
+    <div class="ai-proposal-flow--body-content js-ai-flow-body-content">
+      <% if @draft_resource.is_a?(Proposal) %>
+        <%= render UserResources::FormComponent.new(
+          @draft_resource,
+          url: @update_draft_url,
+          title: t("proposals.new.start_new"),
+          embbeded_in_ai_flow: true
+        ) %>
+      <% else %>
+        <%= render Budgets::Investments::FormComponent.new(
+          @draft_resource,
+          url: @update_draft_url
+        ) %>
+      <% end %>
+
+      <div class="ai-proposal-flow--navigation">
+        <button
+          type="submit"
+          form="<%= dom_id(@draft_resource, :form) %>"
+          class="button ai-proposal-flow--navigation--submit js-ai-flow-step2-submit"
+        >
+          <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
+        </button>
+        <%= link_to @back_to_new_url, class: "button -outline" do %>
+          <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back") %>
+        <% end %>
+      </div>
+    </div>
 
     <%= render AiProposalFlow::AiLoaderComponent.new(
       message_key: "ai_proposal_flow.loader.evaluating_message",
       submessage_key: "ai_proposal_flow.loader.evaluating_submessage"
     ) %>
-
-    <div class="ai-proposal-flow--navigation">
-      <button
-        type="submit"
-        form="<%= dom_id(@draft_resource, :form) %>"
-        class="button ai-proposal-flow--navigation--submit"
-      >
-        <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
-      </button>
-      <%= link_to @back_to_new_url, class: "button -outline" do %>
-        <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back") %>
-      <% end %>
-    </div>
   </div>
 </main>

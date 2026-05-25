@@ -12,13 +12,14 @@ App.MapPopup = {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "projekt_point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data, properties);
+    } else if (resourceType == "masterportal_pin") {
+      return this.masterportalPinPopupContent(data);
     } else {
       return this.standardResourcePopupContent(data, resourceType);
     }
   },
 
   getPopupDataUrl: function(resourceType, properties) {
-    // console.log("getPopupDataUrl", resourceType, properties)
     if (resourceType == "proposal") {
       return "/proposals/" + properties.id + "/json_data";
     } else if (resourceType == "deficiency_report") {
@@ -31,6 +32,8 @@ App.MapPopup = {
       return "/investments/" + properties.id + "/json_data";
     } else if (resourceType == "projekt_point_of_interest_pin") {
       return "/projekt_point_of_interest_pins/" + properties.id + "/json_data";
+    } else if (resourceType == "masterportal_pin") {
+      return "/masterportal_pins/" + properties.id + "/json_data";
     }
   },
 
@@ -105,5 +108,61 @@ App.MapPopup = {
     popupHtml += "</h5>";
 
     return popupHtml;
+  },
+
+  masterportalPinPopupContent: function(data) {
+    var headerHtml = this.masterportalPinHeader(data);
+    var rowsHtml = (data.popup_data || []).map(this.masterportalPinRow.bind(this)).join("");
+
+    var html = "<div class='masterportal-popup'>";
+    html += headerHtml;
+
+    if (rowsHtml) {
+      html += "<dl class='masterportal-popup--rows'>" + rowsHtml + "</dl>";
+    }
+
+    html += "</div>";
+
+    return html;
+  },
+
+  masterportalPinHeader: function(data) {
+    var titleText = data.associated_resource_title || data.title || "";
+    if (!titleText) return "";
+
+    var safeTitle = this.escapeHtml(titleText);
+
+    if (data.associated_resource_url) {
+      return "<h5 class='masterportal-popup--title'>" +
+             "<a href='" + this.escapeHtml(data.associated_resource_url) + "'>" + safeTitle + "</a>" +
+             "</h5>";
+    }
+
+    return "<h5 class='masterportal-popup--title'>" + safeTitle + "</h5>";
+  },
+
+  masterportalPinRow: function(row) {
+    var label = this.escapeHtml(row.label || "");
+    var value = row.value == null ? "" : String(row.value);
+    var valueHtml = this.masterportalPinValue(row.type, value);
+
+    return "<dt class='masterportal-popup--row-label'>" + label + "</dt>" +
+           "<dd class='masterportal-popup--row-value'>" + valueHtml + "</dd>";
+  },
+
+  masterportalPinValue: function(type, value) {
+    var safe = this.escapeHtml(value);
+
+    if (type === "email") return "<a href='mailto:" + safe + "'>" + safe + "</a>";
+    if (type === "url") return "<a href='" + safe + "' target='_blank' rel='noopener noreferrer'>" + safe + "</a>";
+    if (type === "phone") return "<a href='tel:" + safe + "'>" + safe + "</a>";
+
+    return safe;
+  },
+
+  escapeHtml: function(value) {
+    var div = document.createElement("div");
+    div.textContent = value == null ? "" : String(value);
+    return div.innerHTML;
   }
 }

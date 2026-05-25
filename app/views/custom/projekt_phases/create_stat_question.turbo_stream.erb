@@ -1,0 +1,4 @@
+<%= turbo_stream.prepend "adm-ai-questions-pending-list-#{@projekt_phase.id}" do %>
+  <%= render partial: "adm/projekts/projekts/evaluation/ai_question_pending_item",
+    locals: { stat_question: @stat_question, projekt_phase: @projekt_phase } %>
+<% end %>

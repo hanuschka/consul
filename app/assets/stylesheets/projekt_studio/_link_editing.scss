@@ -5,7 +5,7 @@
   padding: 15px;
   box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
   display: none;
-  z-index: 100;
+  z-index: 300;
   border-radius: 10px;
   width: 500px;
 
@@ -17,7 +17,6 @@
   .content-block-link-popup-checkbox-label {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
     font-size: 16px;
 
     input {
@@ -107,6 +106,22 @@
 
 .content-block-link-popup textarea {
   width: 100%;
+}
+
+.content-block-link-popup-checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.content-block-link-popup-pick-file {
+  background-color: $light-gray-2;
+
+  &:hover {
+    background-color: $light-gray-1;
+  }
 }
 
 .content-block-edit-link-button {

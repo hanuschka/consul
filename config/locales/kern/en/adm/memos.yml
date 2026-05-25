@@ -1,0 +1,15 @@
+en:
+  adm:
+    memos:
+      title: Internal notes
+      hint: Visible only to admins and project managers. Use the bell to notify colleagues by email.
+      form:
+        submit: Create note
+        placeholder: Write an internal note...
+        placeholder_reply: Write a reply...
+      memo:
+        reply: Reply
+        send_notification: Send notification
+        last_notification: "Last notification sent at %{datetime}"
+        delete: Delete
+        delete_confirm: Are you sure you want to delete this note?

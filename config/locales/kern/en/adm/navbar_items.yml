@@ -1,0 +1,23 @@
+en:
+  adm:
+    navbar_items:
+      new:
+        title: Create navbar item
+      destroy:
+        success_notice: Navbar item deleted
+      form:
+        kinds:
+          presets: System pages
+          projekts: Projects
+          external: Custom link
+        external:
+          url_placeholder: e.g. https://www.exampletown.com/contact
+        kind_label: What type of navbar item would you like to create?
+        preset_label: System pages
+        projekt_label: Project
+        projekt_filter_placeholder: Search projects...
+        external_label: Custom link
+        no_projekts_title: No projects available
+        no_projekts_description: There are no projects yet that can be added to the navigation. Create a project first under Projects so you can then add it as a navigation entry.
+        open_in_new_tab_label: Open in a new tab
+        create: Create navbar item

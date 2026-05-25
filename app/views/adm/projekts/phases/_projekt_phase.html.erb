@@ -1,7 +1,12 @@
+<% manage_allowed = policy([:adm, :projekts, projekt_phase.projekt]).update? %>
 <tr class="kern-table__row" id="<%= dom_id(projekt_phase) %>" data-sortable-id="<%= projekt_phase.id %>">
-  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
-    <span class="material-symbols-outlined">drag_indicator</span>
-  </td>
+  <% if manage_allowed %>
+    <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+      <span class="material-symbols-outlined">drag_indicator</span>
+    </td>
+  <% else %>
+    <td class="kern-table__cell"></td>
+  <% end %>
   <th scope="row" class="kern-table__header">
     <%= projekt_phase.title %>
   </th>
@@ -13,7 +18,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         projekt_phase,
         :default_phase,
-        path: update_default_phase_adm_projekts_projekt_path(projekt_phase.projekt, projekt_phase_id: projekt_phase.id)
+        path: update_default_phase_adm_projekts_projekt_path(projekt_phase.projekt, projekt_phase_id: projekt_phase.id),
+        disabled: !manage_allowed
       ) %>
     </div>
   </td>
@@ -22,7 +28,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         projekt_phase,
         :active,
-        path: toggle_active_adm_projekts_phase_path(projekt_phase)
+        path: toggle_active_adm_projekts_phase_path(projekt_phase),
+        disabled: !manage_allowed
       ) %>
     </div>
   </td>
@@ -31,7 +38,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         projekt_phase,
         :frontend_visibility,
-        path: toggle_frontend_visibility_adm_projekts_phase_path(projekt_phase)
+        path: toggle_frontend_visibility_adm_projekts_phase_path(projekt_phase),
+        disabled: !manage_allowed
       ) %>
     </div>
   </td>

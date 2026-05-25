@@ -7,7 +7,7 @@
 <div class="kern-container mb-5">
   <% if @investments.any? %>
     <div data-controller="adm-column-selector"
-         data-adm-column-selector-cookie-value="adm-budget-investments-columns"
+         data-adm-column-selector-storage-key-value="adm-budget-investments-columns"
          data-adm-column-selector-defaults-value="id,created_at,title,feasibility,valuation_finished,total_votes,selected,winner"
          data-action="click@window->adm-column-selector#close">
       <div class="d-flex align-items-center justify-content-between mb-3">
@@ -21,19 +21,28 @@
               <div data-adm-column-selector-target="list"></div>
             </div>
           </div>
-          <% if @budget.balloting_or_later? %>
+          <% budget_policy = policy([:adm, :projekts, @budget]) %>
+          <% if budget_policy.calculate_winners? %>
             <%= kern_link_button calculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
                   text: t(".calculate_winners"), icon: "calculate", style: :secondary,
                   data: { turbo_method: :put, turbo_confirm: t(".calculate_winners_confirm") } %>
+          <% end %>
+          <% if budget_policy.recalculate_winners? %>
             <%= kern_link_button recalculate_winners_adm_projekts_phase_budget_path(@projekt_phase, @budget),
                   text: t(".recalculate_winners"), icon: "sync", style: :secondary,
                   data: { turbo_method: :put, turbo_confirm: t(".recalculate_winners_confirm") } %>
           <% end %>
         </div>
-        <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
-          <span class="material-symbols-outlined" aria-hidden="true">download</span>
-          <%= t(".download_csv") %>
-        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+            <span class="material-symbols-outlined" aria-hidden="true">download</span>
+            <%= t(".download_csv") %>
+          </a>
+          <a href="<%= budget_investments_adm_projekts_phase_path(@projekt_phase, format: :geojson, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+            <span class="material-symbols-outlined" aria-hidden="true">map</span>
+            <%= t(".download_geojson") %>
+          </a>
+        </div>
       </div>
 
       <div class="kern-table-responsive" tabindex="0">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_21_144713) do
+ActiveRecord::Schema.define(version: 2026_05_25_085759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3183,6 +3183,7 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
+    t.string "guest_user_agent"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

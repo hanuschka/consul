@@ -14,4 +14,12 @@
       <%= deficiency_report.status&.title %>
     </div>
   <% end %>
+
+  <% if helpers.deficiency_reports_feature?("allow_voting") %>
+    <% c.with_footer_section do %>
+      <div id="<%= dom_id(deficiency_report) %>_votes">
+        <%= render "deficiency_reports/votes", deficiency_report: deficiency_report %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>

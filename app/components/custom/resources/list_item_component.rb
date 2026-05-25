@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Resources::ListItemComponent < ApplicationComponent
+  IMAGE_THUMB_SIZE = [300, 180].freeze
+  IMAGE_THUMB_SIZE_2X = [600, 360].freeze
+
   renders_one :header
   renders_one :image_overlay_item
   renders_many :additional_body_sections
@@ -11,7 +14,7 @@ class Resources::ListItemComponent < ApplicationComponent
     description:,
     resource: nil,
     projekt: nil,
-    image_url: nil,
+    image: nil,
     subline: nil,
     url: nil,
     url_target: nil,
@@ -26,7 +29,7 @@ class Resources::ListItemComponent < ApplicationComponent
     @projekt = projekt
     @description = description
     @resource = resource
-    @image_url = image_url
+    @image = image
     @url = url
     @url_target = url_target
     @subline = subline
@@ -98,4 +101,25 @@ class Resources::ListItemComponent < ApplicationComponent
       @resource.respond_to?(:image)
     end
   end
+
+  private
+
+    def image_url
+      image_variant(IMAGE_THUMB_SIZE)
+    end
+
+    def image_url_2x
+      image_variant(IMAGE_THUMB_SIZE_2X)
+    end
+
+    def image_variant(size)
+      return if @image.blank?
+
+      @image.attachment&.variant(
+        coalesce: true,
+        resize_to_fill: size,
+        saver: { quality: 85 },
+        format: "jpeg"
+      )
+    end
 end

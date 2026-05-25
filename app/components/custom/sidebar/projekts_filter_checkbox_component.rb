@@ -23,7 +23,7 @@ class Sidebar::ProjektsFilterCheckboxComponent < ApplicationComponent
     def resource_count
       projekt_ids_to_count = projekt.all_children_ids.unshift(projekt.id)
 
-      @all_resources.where(projekt_phase: { projekts: { id: projekt_ids_to_count }}).count
+      @all_resources.where(projekt_phases: { projekt_id: projekt_ids_to_count }).count
     end
 
     def selectable_children

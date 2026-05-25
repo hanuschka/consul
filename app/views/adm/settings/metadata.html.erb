@@ -15,6 +15,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_title"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_description"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, :string) %>
+
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_handle"), :value, :string) %>

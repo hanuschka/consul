@@ -2,7 +2,7 @@ class Adm::Projekts::ProjektSettingPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   private

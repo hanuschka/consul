@@ -1,14 +1,15 @@
 <div class="ai-proposal-flow--header">
-  <a
-    href="<%= projekt_page_url %>"
-    class="ai-proposal-flow--projekt-badge"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <%= projekt_phase.projekt.page.title %>
-  </a>
-
-  <h1><%= t("ai_proposal_flow.header.title") %></h1>
+  <div class="ai-proposal-flow--header--title-row">
+    <h1><%= t("ai_proposal_flow.header.title") %></h1>
+    <a
+      href="<%= projekt_page_url %>"
+      class="ai-proposal-flow--projekt-badge"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <%= projekt_phase.projekt.page.title %>
+    </a>
+  </div>
   <p><%= t("ai_proposal_flow.header.subtitle") %></p>
 
   <div class="ai-proposal-flow--step-progress">

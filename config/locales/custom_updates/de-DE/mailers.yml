@@ -84,6 +84,10 @@ de:
     proposal_created:
       hi: "Hallo %{username},"
       text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+    formular_answer_created:
+      subject: "Vielen Dank für Ihre Einsendung!"
+      hi: "Hallo %{username},"
+      text1: "Ihre Einsendung zum Formular \"%{phase_title}\" im Projekt \"%{projekt_title}\" ist erfolgreich eingegangen."
     new_valuator_assignment:
       subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
       hi: "Hallo %{username},"

@@ -9,6 +9,8 @@ class Ckeditor::DocumentsController < ApplicationController
     if document.save
       render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
         url: document.url_content(editor_id: params[:editor_id]),
+        gallery_thumb_url: document.gallery_thumb_url,
+        custom_thumb_url: document.custom_thumb_url(width: 925),
         created_at: document.created_at.strftime("%d.%m.%Y")
       )
     else
@@ -22,6 +24,7 @@ class Ckeditor::DocumentsController < ApplicationController
     document.update!(document_params)
     render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
       url: document.url_content(editor_id: params[:editor_id]),
+      gallery_thumb_url: document.gallery_thumb_url,
       created_at: document.created_at.strftime("%d.%m.%Y")
     )
   end

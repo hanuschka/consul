@@ -24,15 +24,19 @@ export default class extends Controller {
 
   showSidebar() {
     this.sidebarTarget.classList.remove("d-none")
+    this.togglerTarget.classList.add("adm-sidebar-toggle--open")
     this.togglerTarget.querySelector("span").textContent = "close"
     this.togglerTarget.setAttribute("aria-expanded", "true")
+    document.body.style.overflow = "hidden"
     this.sidebarHidden = false
   }
 
   hideSidebar() {
     this.sidebarTarget.classList.add("d-none")
+    this.togglerTarget.classList.remove("adm-sidebar-toggle--open")
     this.togglerTarget.querySelector("span").textContent = "menu"
     this.togglerTarget.setAttribute("aria-expanded", "false")
+    document.body.style.overflow = ""
     this.sidebarHidden = true
   }
 }

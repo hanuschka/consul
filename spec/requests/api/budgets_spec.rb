@@ -96,7 +96,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       security [bearer_auth: []]
       description "Create a new participatory budget for a projekt phase. Budgets define spending priorities, voting mechanisms, and investment categories. Supports optional image attachments for budget visualization or branding. Supports multiple voting styles (knapsack, plurality, etc.) and currency configurations. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :budget, in: :body, description: 'Budget configuration with required name and optional currency, voting style, publication settings, and image attachment', schema: {
+      parameter name: :budget, in: :body, description: 'Budget configuration with required name and optional currency, voting style, publication settings, heading attributes and image attachment', schema: {
         type: :object,
         properties: {
           budget: {
@@ -104,22 +104,38 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             properties: {
               name: { type: :string, description: 'Budget display name (required, must be unique within phase)' },
               phase: { type: :string, nullable: true, description: 'Optional: budget phase identifier' },
-              currency_symbol: { type: :string, nullable: true, description: 'Currency symbol to display (e.g., $, €, £)' },
-              voting_style: { type: :string, nullable: true, description: 'Voting mechanism type: "knapsack" (individual budget allocation), "plurality" (select preferred options), or others' },
+              currency_symbol: { type: :string, nullable: true, description: 'Currency symbol to display (e.g., $, €, £, ¥)' },
+              voting_style: { type: :string, nullable: true, description: 'Voting mechanism type: "knapsack", "approval", or "distributed"' },
               published: { type: :boolean, nullable: true, description: 'Whether the budget is visible to the public' },
               slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the budget (auto-generated if not provided)' },
+              hide_money: { type: :boolean, nullable: true, description: 'Hide monetary values from public view' },
+              max_number_of_winners: { type: :integer, nullable: true, description: 'Maximum number of winning proposals (0 = unlimited)' },
+              show_results_after_first_vote: { type: :boolean, nullable: true, description: 'Show voting results in real time after the first vote' },
+              show_percentage_values_only: { type: :boolean, nullable: true, description: 'Display only percentage values instead of absolute numbers' },
+              max_preselected: { type: :integer, nullable: true, description: 'Maximum number of pre-selected proposals (0 = disabled)' },
+              heading_attributes: {
+                type: :object,
+                nullable: true,
+                description: 'Budget heading configuration: total amount, population and ballot limits',
+                properties: {
+                  id: { type: :integer, nullable: true, description: 'Heading ID (required for updates)' },
+                  price: { type: :integer, nullable: true, description: 'Total budget amount for this heading' },
+                  population: { type: :integer, nullable: true, description: 'Population count for this heading' },
+                  max_ballot_lines: { type: :integer, nullable: true, description: 'Maximum ballot lines per voter' }
+                }
+              },
               image_attributes: {
                 type: :object,
                 nullable: true,
-                description: 'Optional: Image for budget branding or visualization (logo, cover image, etc.). Upload as base64-encoded data.',
+                description: 'Optional: Image for budget branding or visualization. Upload as base64-encoded data.',
                 properties: {
                   id: { type: :integer, nullable: true },
-                  title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image.' },
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file (JPEG, PNG, GIF, WebP, max 5MB)' },
                   cached_attachment: { type: :string, nullable: true },
-                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution or copyright' },
                   user_id: { type: :integer, nullable: true },
-                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the budget.' }
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image' }
                 }
               }
             },
@@ -214,6 +230,50 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '201', 'budget created with heading and settings' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase_id) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt).id }
+        let(:budget) do
+          {
+            budget: {
+              name: 'Configured Budget',
+              currency_symbol: '€',
+              voting_style: 'approval',
+              published: true,
+              hide_money: false,
+              max_number_of_winners: 10,
+              show_results_after_first_vote: true,
+              show_percentage_values_only: false,
+              max_preselected: 5,
+              heading_attributes: {
+                price: 250_000,
+                population: 50_000,
+                max_ballot_lines: 3
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget: { type: :object }
+                   },
+                   required: ['budget']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['budget']['name']).to eq('Configured Budget')
+          expect(data['data']['budget']['voting_style']).to eq('approval')
+          expect(response.status).to eq(201)
         end
       end
 
@@ -327,30 +387,46 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       security [bearer_auth: []]
       description "Update budget configuration such as name, voting style, currency, publication status, or image. Can add, replace, or remove the budget image. All fields are optional - only provide fields to change. Returns the updated budget object. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :budget, in: :body, description: 'Budget attributes to update (name, currency_symbol, voting_style, published, image). Any field not provided remains unchanged.', schema: {
+      parameter name: :budget, in: :body, description: 'Budget attributes to update. Any field not provided remains unchanged.', schema: {
         type: :object,
         properties: {
           budget: {
             type: :object,
             properties: {
-              name: { type: :string, nullable: true, description: 'Budget display name to update' },
+              name: { type: :string, nullable: true, description: 'Budget display name' },
               phase: { type: :string, nullable: true, description: 'Budget phase identifier' },
-              currency_symbol: { type: :string, nullable: true, description: 'New currency symbol to display' },
-              voting_style: { type: :string, nullable: true, description: 'New voting mechanism type' },
+              currency_symbol: { type: :string, nullable: true, description: 'Currency symbol (€, $, £, ¥)' },
+              voting_style: { type: :string, nullable: true, description: 'Voting mechanism: "knapsack", "approval", or "distributed"' },
               published: { type: :boolean, nullable: true, description: 'Publish or unpublish the budget' },
-              slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the budget' },
+              slug: { type: :string, nullable: true, description: 'URL-friendly identifier' },
+              hide_money: { type: :boolean, nullable: true, description: 'Hide monetary values from public view' },
+              max_number_of_winners: { type: :integer, nullable: true, description: 'Maximum number of winning proposals' },
+              show_results_after_first_vote: { type: :boolean, nullable: true, description: 'Show results in real time' },
+              show_percentage_values_only: { type: :boolean, nullable: true, description: 'Display only percentages' },
+              max_preselected: { type: :integer, nullable: true, description: 'Maximum pre-selected proposals' },
+              heading_attributes: {
+                type: :object,
+                nullable: true,
+                description: 'Budget heading: total amount, population and ballot limits',
+                properties: {
+                  id: { type: :integer, nullable: true, description: 'Heading ID (required for updates)' },
+                  price: { type: :integer, nullable: true, description: 'Total budget amount' },
+                  population: { type: :integer, nullable: true, description: 'Population count' },
+                  max_ballot_lines: { type: :integer, nullable: true, description: 'Maximum ballot lines per voter' }
+                }
+              },
               image_attributes: {
                 type: :object,
                 nullable: true,
-                description: 'Update, replace, or remove the budget image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                description: 'Update, replace or remove budget image via base64-encoded data.',
                 properties: {
                   id: { type: :integer, nullable: true },
-                  title: { type: :string, nullable: true, description: 'Updated image caption or alt text. Improves accessibility by describing the image content.' },
-                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file (JPEG, PNG, GIF, WebP, max 5MB)' },
                   cached_attachment: { type: :string, nullable: true },
-                  credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution or copyright' },
                   user_id: { type: :integer, nullable: true },
-                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the budget while preserving other budget properties.' }
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image' }
                 }
               }
             }
@@ -457,6 +533,46 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'budget updated with heading and settings' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) { Budget.create!(name_en: 'Original', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'original') }
+        let(:id) { test_budget.id }
+        let(:budget) do
+          {
+            budget: {
+              currency_symbol: '€',
+              voting_style: 'approval',
+              hide_money: false,
+              max_number_of_winners: 15,
+              show_results_after_first_vote: true,
+              heading_attributes: {
+                id: test_budget.heading&.id,
+                price: 500_000
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget: { type: :object }
+                   },
+                   required: ['budget']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['budget']['currency_symbol']).to eq('€')
+          expect(data['data']['budget']['voting_style']).to eq('approval')
         end
       end
 

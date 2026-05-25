@@ -1,0 +1,213 @@
+en:
+  adm:
+    attribute_editor:
+      default_description: No description
+      projekt_phase:
+        lock_on_label: Lock date
+        lock_on_description: "From this date, no more offline votes can be recorded via voting helpers. Votes already submitted are preserved. The lock date limits offline voting in time, e.g. after an event or at the end of a participation phase. Leave the field empty if no time limit is desired."
+        phase_tab_name_label: Tab label
+        phase_tab_name_description: Defines the name of the tab shown in the project's tab bar on the frontend for this participation phase. Choose a short, meaningful label that clearly conveys the content of the phase — e.g. "Vote", "Submit proposals", or "Discussion". The tab name is visible to all users.
+        cta_button_name_label: Button label on the project page
+        cta_button_name_description: Defines the text of the participation button shown on the project page, prompting users to participate. Choose an action-oriented phrase, e.g. "Vote now", "Submit proposal", or "Share your opinion". The button links directly to the respective participation phase.
+        resource_form_intro_label: Hint text at the start of contribution creation
+        resource_form_intro_description: Shown on the frontend above the input area, giving users orientation when creating a contribution. Use this field for hints about the desired format, content direction, or wording tips. The text supports rich-text formatting and can contain links or highlights.
+        resource_form_title_label: Heading above the input area
+        resource_form_title_description: Shown on the frontend as an introductory heading at the very top of the contribution-creation area. Choose a clear, action-oriented phrasing like "Create a new proposal" or "Submit your idea". The heading helps users understand what is expected of them on this page.
+        resource_form_title_placeholder_label: Placeholder text for the title
+        resource_form_title_placeholder_description: Shown in the title input field as grey placeholder text before the user types anything. Use this text as guidance or inspiration — e.g. "Give your proposal a meaningful title". The placeholder disappears automatically as soon as the user starts typing.
+        resource_form_description_placeholder_label: Placeholder text for the description
+        resource_form_description_placeholder_description: Shown in the description input field as grey placeholder text before the user types anything. Use this text to give users direction — e.g. "Describe your concern as specifically as possible". The placeholder disappears automatically as soon as the user starts typing.
+        labels_name_label: Label term for labels
+        labels_name_description: Defines what term labels appear under on the frontend for users. By default the term "Labels" is used, but you can replace it with a more suitable one — e.g. "Categories", "Topic areas", or "Keywords". The change affects all places on the frontend.
+        sentiments_name_label: Label term for sentiments
+        sentiments_name_description: Defines what term sentiments appear under on the frontend for users. By default the term "Sentiments" is used, but you can replace it with a more suitable one — e.g. "Mood", "Rating", or "Attitude". The change affects all places on the frontend.
+        welcome_text_in_show_label: Introduction text above submitted proposals
+        welcome_text_in_show_description: Shown on the frontend above the list of published proposals. Use this field to give users a content introduction, explain the participation context, or point out special conditions. The text supports rich-text formatting and can contain links or highlights.
+        support_button_text_label: Support button text
+        support_button_text_description: Defines the text of the button with which users can support a proposal. Choose a clear, motivating phrase like "Support", "I agree", or "Like". The button text is shown next to every proposal on the frontend and should match the tone of the participation.
+        description_label: Description of the voting phase
+        description_description: Shown on the frontend as introductory text above the vote. Use this field to explain the context of the vote to participants — e.g. what it's about, how voting works, and what happens with the results. The text can be formatted and supports rich-text elements.
+        comment_form_title_label: Comment form title
+        comment_form_title_description: Shown as a heading above the comment form, giving users orientation about what is expected of them. Choose an inviting phrase, e.g. "Your opinion matters", "Write a comment", or "Leave feedback". If the field is empty, no title is shown.
+        comment_form_button_label: Comment form button text
+        comment_form_button_description: Defines the text of the button users submit their comment with. Choose a clear, action-oriented phrase like "Submit comment", "Publish post", or "Send". The button text should clearly convey that the comment will be published.
+      poll:
+        name_label: Name
+        name_description: Sets the name of the poll. Choose a concise, easy-to-understand label that clearly describes the content, e.g. "Citizen survey on urban development" or "Vote on the budget plan". The name helps users quickly identify the poll.
+        closing_note_label: Closing page text
+        closing_note_description: Shown on the frontend on the closing page after users have cast their vote. Use this field for a thank-you note, information about what happens next, or a hint about next steps — e.g. when results will be published. The text supports rich-text formatting and can contain links.
+      projekt:
+        total_duration_start_label: Start date
+        total_duration_start_description: Start date
+        total_duration_end_label: End date
+        total_duration_end_description: End date
+      image:
+        attachment_label: Image
+        attachment_description: "The image is shown at the top of the newsletter as a visual lead, directly below the logo and above the title. Use a landscape image with a clear subject that fits thematically with the newsletter content. Recommended format: at least 600 pixels wide, JPG or PNG. The image is required and must be uploaded before sending."
+      newsletter:
+        recipient_group_id_label: Recipient group
+        recipient_group_id_description: 'Defines which recipient group this newsletter is sent to. Recipient groups are managed under <a href="/adm/recipient_groups" target="_blank">Notifications > Recipient groups</a> and can be composed by area, interest, or registration status. Only users assigned to the selected group receive the email. If you want to reach all registered users, choose the corresponding default group.'
+        from_label: From
+        from_description: "The email address shown as the sender in recipients' inboxes. Important: the domain (everything after the @) must not be changed, or email sending will fail. Only the part before the @ can be adjusted. Replies from recipients are sent to this address — make sure the inbox is actively monitored."
+        subject_label: Subject
+        subject_description: "The subject appears as the first line in recipients' inboxes and is decisive for whether the email gets opened. Choose a short, meaningful text that clearly names the topic of the newsletter. Recommended length: 40 to 60 characters. Avoid generic phrasings like Newsletter No. 5."
+        title_label: Title
+        title_description: "Shown as a large heading at the top of the newsletter, directly below the logo. The title should capture the central topic of the issue and draw visual attention. It can differ from the subject — while the subject is optimized for the inbox, the title inside the newsletter can be more detailed or stylistically freer."
+        title_color_label: Title color
+        title_color_description: "Sets the font color of the main heading in the newsletter. Use a color that matches your municipality's corporate design and is readable on the background. Dark colors on a light background offer the best contrast. Enter the value as a hex code (e.g. #1B3A5C). If the field is empty, the default color is used."
+        subtitle_label: Subtitle
+        subtitle_description: Shown directly below the title in the newsletter, offering space for a supplementary explanation or slogan. Use the subtitle to expand on the title. If the field is empty, no subtitle is shown and the title stands alone.
+        subtitle_color_label: Subtitle color
+        subtitle_color_description: "Sets the font color of the subtitle in the newsletter. Choose a color that contrasts subtly with the title but is still readable — e.g. a slightly lighter shade of the same hue. Enter the value as a hex code (e.g. #4A6A8A). If the field is empty, the default color is used."
+        greeting_label: Greeting
+        greeting_description: The greeting text is shown at the beginning of the newsletter content, before the main body. Use a friendly, personal salutation. A good greeting creates closeness and motivates the reader to continue. The text may also include a short introductory sentence if needed.
+        body_label: Content
+        body_description: "The main content of the newsletter. Here you can insert text, links, images, and formatting to inform recipients about current participation projects, results, or events. Structure the content with paragraphs and subheadings so it's easy to skim. The editor supports rich-text formatting."
+      site_customization/content_block:
+        newsletter_email_footer_block_1:
+          body_label: Newsletter footer
+          body_description: "The footer is shown at the end of every newsletter email. Here you can add, for example, contact details, legal-notice links, or unsubscribe hints. The content is automatically included in all sent newsletters and should meet your municipality's legal requirements. Changes take effect immediately for new newsletters."
+      site_customization/image:
+        header_image_label: Background image for desktop
+        header_image_description: "This image is shown at the top of the homepage on desktop devices. Please use a high-resolution landscape image with a clear subject. It should fit thematically with the participation platform and work well across different screen sizes. Recommended format: 1920 × 760 pixels. Ignored when a desktop background video is uploaded below."
+        mobile_header_image_label: Background image for mobile
+        mobile_header_image_description: "This image is shown at the top of the homepage on mobile devices. Use an image with a centered main subject, since it may be cropped on small screens. It should fit thematically with the platform and still be clearly recognizable at small sizes. Recommended format: 470 × 246 pixels. Ignored when a mobile background video is uploaded below."
+        logo_header_label: Logo (white background)
+        logo_header_description: "This logo is shown in the top navigation bar as soon as the background is white — e.g. after scrolling on the homepage. It should be readable on a light background. Ideally use a PNG with a transparent background. Recommended format: max. 80 × 80 pixels."
+        logo_header_for_transparent_label: Logo (transparent background)
+        logo_header_for_transparent_description: "This logo is shown in the top navigation bar while the background is transparent — e.g. over the header image. It should be readable on varying backgrounds. Ideally use a light PNG with a transparent background. Recommended format: max. 80 × 80 pixels."
+        logo_newsletter_email_label: Newsletter logo
+        logo_newsletter_email_description: "This logo is shown in the header of every newsletter email and serves as a visual identifier for your platform. Ideally use a PNG with a transparent background that is readable on a light background. The logo should ensure recognition of your municipality or platform. Recommended format: 130 × 45 pixels."
+      site_customization/video:
+        header_video_label: Background video for desktop
+        header_video_description: "Optional video shown at the top of the homepage on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. Recommended format: 1920 × 760 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+        mobile_header_video_label: Background video for mobile
+        mobile_header_video_description: "Optional video shown at the top of the homepage on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject. Recommended format: 470 × 246 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+      site_customization/page:
+        projekt:
+          title_label: Homepage title
+          title_description: "The homepage title is prominently shown over the background image on the homepage. It should be short and punchy to catch visitors' attention."
+          slug_label: Project URL path
+          slug_description: Define the path under which the project is reachable (e.g. "climate-budget" for domain.com/climate-budget). The URL path must not contain spaces or special characters and should be as short and unique as possible.
+        landing:
+          slug_label: Topic page URL
+          slug_description: 'Defines the last part of the web address (slug) of this topic page, e.g. "youthparticipation". The full URL would be e.g. "your-domain.com/youthparticipation". The URL must not contain spaces or special characters.'
+          landing_site_logo_for_transparent_background_label: Logo on transparent background
+          landing_site_logo_for_transparent_background_description: "Shown when the top navigation still sits over the background image (e.g. right when opening the page).
+This logo should be readable on both light and dark backgrounds, since it appears over the background image. A PNG with a transparent background works best. As soon as the user scrolls, the navigation switches to a white background — the second logo is used for that."
+          landing_site_logo_for_white_background_label: Logo on white background
+          landing_site_logo_for_white_background_description: "Shown as soon as the page is scrolled and the top navigation has a white background.<br><br>This logo should be clearly visible in a dark color on a white background. It automatically replaces the transparent logo once the navigation is fixed. A PNG is recommended here too for a sharp display on all devices."
+          landing_desktop_header_image_label: Background image for desktop
+          landing_desktop_header_image_description: "This image is shown at the top of the topic page on desktop devices. Please use a high-resolution landscape image with a clear subject. It should fit thematically with the topic page and work well across different screen sizes. Recommended format: 1920 × 760 pixels. Ignored when a desktop background video is uploaded below."
+          landing_desktop_header_video_label: Background video for desktop
+          landing_desktop_header_video_description: "Optional video shown at the top of the topic page on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. Recommended format: 1920 × 760 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+          landing_mobile_header_image_label: Background image for mobile
+          landing_mobile_header_image_description: "This image is shown at the top of the topic page on mobile devices. Use an image with a centered main subject, since it may be cropped on small screens. Recommended format: 470 × 246 pixels. Ignored when a mobile background video is uploaded below."
+          landing_mobile_header_video_label: Background video for mobile
+          landing_mobile_header_video_description: "Optional video shown at the top of the topic page on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject. Recommended format: 470 × 246 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
+          title_label: Topic page title
+          title_description: "The topic page title is prominently shown over the background image on the homepage. It should be short and punchy to catch visitors' attention."
+          subtitle_label: Topic page subtitle
+          subtitle_description: "The subtitle is shown directly below the title in the background image. If the field is empty, no subtitle is shown."
+          landing_hide_title_and_subtitle_label: Hide title and subtitle on topic page
+          landing_hide_title_and_subtitle_description: "Hides the topic page's title and subtitle on the frontend. These values are then used only for internal configuration and not shown over the background image."
+
+
+          landing_site_logo_follow_to_landing_page_label: Click on logo leads to this landing page
+          landing_site_logo_follow_to_landing_page_description: "When enabled, clicking the logo in the top navigation leads not to the general homepage but to the currently configured topic or area page."
+          landing_navigation_link_color_label: Color of links in the top navigation
+          landing_navigation_link_color_description: "Set the font color of the links in the top navigation bar. This matters because the background image on this topic page can differ from the one on the homepage, and readability must be ensured."
+      budget/phase:
+        name_label: Phase label
+        name_description: >
+          Enter the name of this budget phase, shown on the frontend and in administration.
+          Choose a clear label that uniquely describes the step — e.g. "Submit proposals",
+          "Internal review", or "Vote". The name helps users understand the current state of
+          the participatory budget.
+        starts_at_label: Start date
+        starts_at_description: >
+          Defines when this budget phase becomes active. From this date, the phase is marked
+          as current on the frontend and the associated functions (e.g. submission, voting)
+          are unlocked. The start date should come chronologically after the end of the
+          previous phase, to ensure a seamless flow.
+        ends_at_label: End date
+        ends_at_description: >
+          Defines when this budget phase ends. After this date, the phase is marked as
+          completed on the frontend and the associated functions are disabled. The system
+          automatically switches to the next active phase. Make sure the end date is before
+          the start date of the following phase.
+      budget:
+        voting_style_label: Voting style
+        voting_style_description: "Defines how users cast their votes in the voting phase. 'Knapsack' allows multiple votes until the available budget is used up. 'Approval' limits to one vote per proposal. 'Multiple votes' allows a fixed number of votes, independent of the budget."
+        voting_style_label_options:
+          knapsack: Knapsack (multiple votes until budget is used up)
+          approval: Approval (one vote)
+          distributed: Multiple votes
+        currency_symbol_label: Currency
+        currency_symbol_description: "Defines the currency symbol shown next to amounts throughout the participatory budget — e.g. for proposal costs, budget size, and results. Choose the symbol that matches your municipality's actual currency. The change takes effect immediately on all displays."
+        currency_symbol_label_options:
+          "€": "€ (Euro)"
+          "$": "$ (Dollar)"
+          "£": "£ (Pound)"
+          "¥": "¥ (Yen)"
+        max_preselected_label: Shortlist (optional)
+        max_preselected_description: "Limits the number of top-rated proposals that move on from the support phase to the review phase. Only proposals with the most supports are carried over. Leave the field empty if all proposals should go to review without pre-selection."
+        hide_money_label: Hide money
+        hide_money_description: "Hides all monetary amounts throughout the participatory budget — on individual proposals as well as overviews and results. This option is suitable if the budget is not measured in monetary values or if proposal costs are not relevant to participants."
+        max_number_of_winners_label: Maximum number of winners
+        max_number_of_winners_description: "Limits the number of proposals that can be determined as winners at the end of voting. Only the top-rated proposals within the available budget are considered. Leave the field empty if all proposals within the budget can win."
+        results_enabled_label: Results
+        results_enabled_description: "Controls whether the results of the participatory budget are publicly viewable after voting closes. When enabled, winners and vote distribution are shown on the results page. Disable this option if results should first be evaluated internally."
+        show_results_after_first_vote_label: Show results after first vote
+        show_results_after_first_vote_description: "Shows intermediate results as soon as the first vote has been cast. Users can follow the current state of voting in real time. Disable this option if intermediate results might influence voting and should only be visible after closing."
+        show_percentage_values_only_label: Percentage values only
+        show_percentage_values_only_description: "Shows voting results only as percentage values instead of absolute vote counts. This can make sense if the total number of votes shouldn't be publicly communicated, or if relative ratios are more meaningful than absolute numbers."
+        stats_enabled_label: Statistics
+        stats_enabled_description: "Enables the statistics page for the participatory budget, showing demographic data and participation metrics after voting closes. The statistics include total participants and gender breakdown. Disable if no statistics should be published."
+        advanced_stats_enabled_label: Advanced statistics
+        advanced_stats_enabled_description: "Adds detailed analyses to the statistics page, such as age distribution, geographic distribution, and voting over time. These extended data offer deeper insight into participation behavior. Requires basic statistics to be enabled as well."
+      budget/investment:
+        title_label: Title
+        title_description: The proposal title.
+        description_label: Description
+        description_description: Detailed description of the proposal.
+        price_label: Total cost
+        price_description: Estimated total cost of the proposal.
+        feasibility_label: Criteria
+        feasibility_description: "Criteria status of the proposal."
+        feasibility_label_options:
+          undecided: Not evaluated
+          feasible: Meets criteria
+          unfeasible: Does not meet criteria
+        selected_label: Selected
+        selected_description: Has this proposal been selected for voting?
+        winner_label: Winner
+        winner_description: Has this proposal won the vote?
+        incompatible_label: Incompatible
+        incompatible_description: Is this proposal incompatible with another one?
+        visible_to_valuators_label: Visible to valuators
+        visible_to_valuators_description: Should this proposal be visible to valuators?
+        valuator_explanation_label: Valuator explanation
+        valuator_explanation_description: Explanation for valuators.
+        valuation_finished_label: Valuation finished
+        valuation_finished_description: The proposal can no longer be edited by the author.
+        price_first_year_label: Annual follow-up costs (internal)
+        price_first_year_description: Annual follow-up costs — for internal information only.
+        duration_label: Implementation period (internal)
+        duration_description: Estimated implementation period — for internal information only.
+        video_url_label: Video URL
+        on_behalf_of_label: On behalf of
+        implementation_performer_label: Implementation
+        implementation_performer_label_options:
+          city: Implementation by the city administration
+          user: I can help with the implementation
+        implementation_contribution_label: Contribution to implementation
+        user_cost_estimate_label: Estimated cost (user)
+      budget/heading:
+        section_title: Default heading
+        price_label: Budget
+        price_description: "Sets the total budget available for proposals in this area. This amount determines how many proposals can be implemented — the sum of winning proposals may not exceed this value. Enter the amount in the currency selected above."
+        population_label: Population (optional)
+        population_description: "Number of residents associated with this budget area. The value is used for statistical reports and for calculating participation rates. Leave the field empty if no population-related analysis is desired or if the data isn't available."
+        max_ballot_lines_label: Votes allowed
+        max_ballot_lines_description: "Maximum number of proposals a user can vote for in the voting phase. Only applies to budgets with 'Approval' voting style. With 'Knapsack', voting is instead limited by the available budget. Leave the field empty for unlimited votes."

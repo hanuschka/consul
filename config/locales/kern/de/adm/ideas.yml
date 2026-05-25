@@ -1,15 +1,44 @@
 de:
   adm:
     ideas:
+      home:
+        title: Willkommen im Ideenmanagement
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          active: Aktiv
+          archived: Archiviert
+        quick_links:
+          all: Alle Ideen
+          active: Aktive Ideen
+          pending: Ausstehende Ideen
+      menu:
+        aria_label: Ideen Navigation
+        items:
+          home: Home
+          officers: Team
+          ideas: Ideen
+          categories: Kategorien
+          settings: Konfiguration
+          districts: Gebiete
       ideas:
         index:
           title: Ideen
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           page_hint: "Hier sehen Sie alle eingereichten Ideen. Die Tabelle zeigt Titel, Sichtbarkeit, Kategorie, Sachbearbeiter und Status jeder Idee. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Idee, um Details einzusehen, den Sachbearbeiter zuzuweisen, eine offizielle Antwort zu verfassen oder die Idee zu bearbeiten."
           no_ideas: Keine Ideen vorhanden
           no_items_title: Keine Ideen vorhanden
           no_items_description: Sobald Ideen eingereicht werden, werden diese hier angezeigt.
+          no_results_filtered_title: Keine Ideen für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Ideen zu sehen.
+          total_label:
+            one: Idee
+            other: Ideen
+          total_hint: Anzahl der Ideen in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             admin_accepted: Sichtbarkeit
             admin_accepted_at: Veröffentlichung
             created_at: Erstellungsdatum
@@ -99,8 +128,6 @@ de:
           officer_hint: Der Sachbearbeiter ist die zuständige Person für die Bearbeitung und Beantwortung dieser Idee. Er erhält Benachrichtigungen über neue Kommentare und Statusänderungen und kann eine offizielle Antwort verfassen. Wird kein Sachbearbeiter zugewiesen, greift der Standard-Sachbearbeiter der jeweiligen Kategorie oder des Gebiets.
           no_officer: "-- Kein Sachbearbeiter --"
           submit: Speichern
-        settings:
-          title: Funktionen
         audits:
           title: Änderungslog
           audits_title: Änderungen
@@ -112,6 +139,14 @@ de:
             new_value: Neuer Wert
             edited_at: Geändert am
             edited_by: Geändert von
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard der Ideenplattform angezeigt werden."
       categories:
         index:
           title: Kategorien
@@ -160,7 +195,8 @@ de:
           table:
             name: Name
             email: E-Mail
-        _officer:
+            admin: Admin
+        officer:
           add: Hinzufügen
         search:
           table:

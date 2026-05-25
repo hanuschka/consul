@@ -1,13 +1,20 @@
 $sidebar-card-horizontal-padding: 22px;
 
+// Brand-Color-Tints (color-mix mit transparent) zentral als Variablen.
+// Vermeidet Duplikate von "color-mix(in srgb, var(--brand-color) X%, transparent)".
+$brand-tint-8: color-mix(in srgb, var(--brand-color) 8%, transparent);
+$brand-tint-14: color-mix(in srgb, var(--brand-color) 14%, transparent);
+$brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
+
 .sidebar-card {
   position: relative;
   background: white;
-  border-radius: 10px;
-  border: 1px solid $border-color;
-  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  margin-bottom: 18px;
   color: $main-text-color;
-  font-size: 14px;
+  font-size: 15px;
   width: 100%;
 
   .sidebar-collapse-icon {
@@ -19,17 +26,12 @@ $sidebar-card-horizontal-padding: 22px;
     margin-bottom: 5px;
   }
 
-  .sidebar-card--content { // margin-top: 12px;
+  .sidebar-card--content {
     padding-top: 0;
   }
 
-  .sidebar-collapse-icon {
-    display: none;
-  }
-
   @media(max-width: $small-tablet-viewport-start) {
-    // margin-bottom: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 
     .sidebar-collapse-icon {
       display: block;
@@ -79,14 +81,44 @@ $sidebar-card-horizontal-padding: 22px;
     margin-bottom: 5px;
   }
 
+  // Social-Share-Buttons: monochrom & ruhig im Sidebar-Card-Kontext.
+  // Keine vollfarbigen Brand-Hintergründe mehr – Icons in neutralem Grau,
+  // Brand-Color erst beim Hover als Plattform-Hint.
+  .social-share-full .social-share-button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
   .social-share-button .ssb-icon {
-    width: 47px;
-    height: 47px;
+    width: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    border-radius: 8px;
+    background: #f3f4f6 !important;
+    color: rgba(0, 0, 0, 0.55) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 150ms ease, color 150ms ease;
+
+    &::before {
+      font-size: 25px !important;
+      line-height: 1 !important;
+      margin: 0 !important;
+    }
+
+    &:hover,
+    &:focus {
+      background: $brand-tint-14 !important;
+      color: var(--brand-color) !important;
+      text-decoration: none;
+    }
   }
 }
 
 .sidebar-card--section {
-  padding: 18px $sidebar-card-horizontal-padding;
+  padding: 20px $sidebar-card-horizontal-padding;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -97,7 +129,7 @@ $sidebar-card-horizontal-padding: 22px;
   }
 
   @media(max-width: $small-tablet-viewport-start) {
-    padding: 15px 20px;
+    padding: 16px 20px;
   }
 
   h2 {
@@ -114,23 +146,35 @@ $sidebar-card-horizontal-padding: 22px;
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  font-size: 16px !important;
+  font-size: 17px !important;
+  line-height: 1.25;
   margin-bottom: 0 !important;
-  color: black;
-  font-weight: 500;
-  padding: 18px $sidebar-card-horizontal-padding;
-  padding-bottom: 15px;
+  color: #111;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 15px $sidebar-card-horizontal-padding 16px;
   user-select: none;
 
   @media(max-width: $mobile-viewport-start) {
-    padding: 15px $sidebar-card-horizontal-padding;
+    padding: 16px $sidebar-card-horizontal-padding;
   }
 
   .sidebar--icon {
-    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    background: $brand-tint-14;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--brand-color);
+    flex-shrink: 0;
   }
+
   i {
-    color: $dt-base;
+    color: var(--brand-color);
   }
 
   .sidebar-card--title-text {
@@ -146,12 +190,14 @@ $sidebar-card-horizontal-padding: 22px;
 }
 
 .sidebar-card--description {
-  // margin-bottom: 10px;
   padding: 0 $sidebar-card-horizontal-padding;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
 .sidebar-card--section + .sidebar-card--section {
-  border-top: 1px solid $border-color;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .sidebar-active-users-section {
@@ -163,7 +209,88 @@ $sidebar-card-horizontal-padding: 22px;
 
 .sidebar-card--separator {
   position: relative;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+// Admin-only hint inside sidebar cards: shown when a content block is empty
+// so admins/projekt-managers know the block stays hidden for end users.
+// Subtle dashed grey box — clearly an editorial note, not an error/warning.
+.sidebar-card--admin-empty-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 13px;
+  line-height: 1.4;
+
+  @media (max-width: $mobile-viewport-start) {
+    font-size: 12.5px;
+    padding: 8px 10px;
+  }
+}
+
+.sidebar-card--admin-empty-hint-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+// Tag-Chips im Sidebar-Card-Kontext: zugewiesene Tags in Brand-Color,
+// nicht zugewiesene neutral gray. Greift sowohl für die Public-View
+// (Partial pages/sidebar/_tags.html.erb mit ul.categories) als auch
+// die Admin-View (Categories::SimpleEditSelectorComponent).
+.sidebar-card .categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin: 0;
+  }
+}
+
+.sidebar-card .categories--simple-selector .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sidebar-card .categories a,
+.sidebar-card .categories--simple-selector .tags a {
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: background-color 150ms ease;
+}
+
+// Public-View: Tags sind immer "zugewiesen" → Brand-Color
+.sidebar-card .categories a,
+.sidebar-card .categories--simple-selector .tags a.selected {
+  background: $brand-tint-8;
+  color: var(--brand-color);
+
+  &:hover {
+    background: $brand-tint-16;
+    text-decoration: none;
+  }
+}
+
+// Admin-View: nicht zugewiesene Tags neutral, gleiche Größe/Padding
+.sidebar-card .categories--simple-selector .tags a:not(.selected) {
+  background: #f0f0f0;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 .toggle-section-with-setting {
@@ -173,7 +300,8 @@ $sidebar-card-horizontal-padding: 22px;
 
 .toggle-section-with-setting.-deactivated {
   .sidebar-card {
-    border-color: white;
+    border-color: rgba(0, 0, 0, 0.04);
+    box-shadow: none;
   }
   .sidebar-card--title, .sidebar-card--content {
     opacity: 0.5;
@@ -181,3 +309,115 @@ $sidebar-card-horizontal-padding: 22px;
   }
 }
 
+// Hover-Reveal für Admin-Edit-Icon-Buttons (z. B. "Karte editieren") – als
+// absolut positionierter Icon-Button, damit das Einblenden den Inhalt
+// darunter nicht verschiebt. Sitzt links neben dem Sichtbarkeits-Toggle.
+.js-sidebar-card-edit-link {
+  position: absolute;
+  top: 14px;
+  right: 56px;
+  margin: 0 !important;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.sidebar-card:hover .js-sidebar-card-edit-link,
+.sidebar-card:focus-within .js-sidebar-card-edit-link,
+.toggle-section-with-setting.-deactivated .js-sidebar-card-edit-link {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar-card--edit-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  color: var(--brand-color);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+
+  i {
+    color: var(--brand-color);
+    font-size: 13px;
+  }
+
+  &:hover {
+    background-color: #f3f4f6;
+    border-color: rgba(0, 0, 0, 0.16);
+  }
+
+  &:active {
+    background-color: #e5e7eb;
+  }
+}
+
+// Hover-Reveal für die Content-Block-Toolbar (Edit/KI/Code/Kopieren/Undo/Tauschen/Löschen)
+.sidebar-card {
+  .projekt-content-block--toolbar,
+  .projekt-content-block--toolbar-border {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+    transition: max-height 220ms ease, opacity 180ms ease, margin 220ms ease;
+  }
+
+  &:hover,
+  &:focus-within {
+    .projekt-content-block--toolbar {
+      max-height: 60px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .projekt-content-block--toolbar-border {
+      max-height: 1px;
+      opacity: 1;
+      margin-bottom: 12px;
+    }
+  }
+
+  // Im aktiven Edit-Mode immer sichtbar
+  .projekt-content-block-wrapper.-in-edit-mode {
+    .projekt-content-block--toolbar,
+    .projekt-content-block--toolbar-border {
+      max-height: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .projekt-content-block--toolbar-border {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+@media (max-width: $small-tablet-viewport-start) {
+  .js-sidebar-card-edit-link {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar-card {
+    .projekt-content-block--toolbar,
+    .projekt-content-block--toolbar-border {
+      max-height: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .projekt-content-block--toolbar-border {
+      margin-bottom: 12px;
+    }
+  }
+}

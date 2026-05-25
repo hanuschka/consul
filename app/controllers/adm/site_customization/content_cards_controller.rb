@@ -9,6 +9,7 @@ module Adm
         @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
         @breadcrumbs = parent_breadcrumbs + [{ name: @content_card.title }]
+        @back_button_url = redirect_path
       end
 
       def update
@@ -38,7 +39,7 @@ module Adm
 
         def content_card_params
           params.require(:site_customization_content_card).permit(
-           :active,
+           :active, :title,
            *::SiteCustomization::ContentCard::DEFAULT_SETTINGS.map { |_k, v| v.keys }.flatten.uniq,
            translation_params(::SiteCustomization::ContentCard)
           )

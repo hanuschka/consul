@@ -2,20 +2,30 @@ de:
   adm:
     projekts:
       title: Projekte
+      home:
+        title: Willkommen im Projektbereich
+        stats:
+          total: Gesamt
+          current: Aktiv
+          expired: Abgelaufen
+          draft: Entwurf
+        quick_links:
+          new: Neues Projekt
+          import_projekt: Projekt aus Datei importieren
+          all: Alle Projekte
+          current: Aktive Projekte
       menu:
         aria_label: Projekts Navigation
         items:
+          home: Home
           projekts: Projekte
-          managers: Projektmanager
+          managers: Team
           landing_pages: Themenseiten
-          overview_page: Projektübersichtsseite
-      overview_page:
-        title: Projektübersichtsseite
-        hint_text: >
-          Konfigurieren Sie hier die öffentliche Projektübersichtsseite, auf der alle Beteiligungsprojekte
-          gelistet werden. Über die Navigation steuern Sie, welche Projektlisten in der oberen Filterleiste
-          angezeigt werden. Im Footer-Tab legen Sie fest, welche Projektlisten im unteren Bereich der Seite
-          erscheinen.
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       landing_pages:
         index:
           title: Themenseiten
@@ -41,13 +51,22 @@ de:
             Hier verwalten Sie alle Beteiligungsprojekte der Plattform. Jedes Projekt kann mit
             Laufzeit, Beteiligungsphasen, Sichtbarkeit und Projektmanagern konfiguriert werden.
             Über den Status-Toggle können Projekte aktiviert oder deaktiviert werden – deaktivierte
-            Projekte sind im Frontend nicht sichtbar.
+            Projekte sind im Frontend nicht sichtbar. Ein Klick auf den Projekttitel öffnet die
+            Einstellungen, ein Klick auf das Vorschaubild führt zur öffentlichen Projektseite.
           new_projekt: Neues Projekt erstellen
+          import_projekt: Projekt aus Datei importieren
           no_projekts_title: Keine Projekte vorhanden
           no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
+          no_results_filtered_title: Keine Projekte für die aktuelle Suche
+          no_results_filtered_description: Passen Sie die Suche an oder entfernen Sie sie, um weitere Projekte zu sehen.
           table:
             status: Status
             actions: Aktionen
+        import_projekt:
+          title: Projekt aus Datei importieren
+          dt_not_connected: "Der DemokratieToday-Dienst ist nicht verbunden. Bitte richten Sie zuerst die Verbindung ein."
+          error_title: "Import fehlgeschlagen"
+          try_again: "Erneut versuchen"
         new:
           title: Neues Projekt erstellen
           intro_title: Neues Beteiligungsprojekt anlegen
@@ -69,11 +88,14 @@ de:
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:
+          frontend_page: Zur Projektseite
           details: Projektdetails
           visibility: Sichtbarkeit
           projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
         details:
           title: Projektdetails
           hint_title: Hinweis zu den Projektdetails
@@ -118,7 +140,7 @@ de:
           no_managers_description: Erstellen Sie einen neuen Projektmanager unter „Projektmanager" in der Seitenleiste, um diesen anschließend dem Projekt zuzuweisen.
           no_managers_link: Projektmanager anlegen
           assignment:
-            hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
+            hint: Legen Sie hier fest, welche Rechte dem ausgewählten Projektmanager für dieses Projekt erteilt werden sollen. Die Auswahl bestimmt, welche Aktionen verfügbar sind — etwa die Projektverwaltung, die Moderation von Inhalten, das Erstellen von Beiträgen im Namen anderer oder das Empfangen von Benachrichtigungen. Mehrere Rechte können kombiniert werden.
             permissions:
               manage: Projekt administrieren
               moderate: Inhalte moderieren

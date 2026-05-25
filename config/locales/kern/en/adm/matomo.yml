@@ -1,0 +1,7 @@
+en:
+  adm:
+    matomo:
+      show:
+        title: Matomo
+        iframe_title: Matomo dashboard
+        not_configured: Matomo is not configured.

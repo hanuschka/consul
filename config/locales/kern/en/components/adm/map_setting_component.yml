@@ -1,0 +1,11 @@
+en:
+  components:
+    adm:
+      map_setting_component:
+        map_label: Set map view
+        map_description: >
+          The map view can be set by dragging the map with the mouse button held down.
+          The mouse wheel adjusts the zoom.
+          Use the icons on the right edge of the map to place pins, draw lines, and outline polygons.
+          These are displayed in red on the frontend.
+          Multiple elements can be drawn at once.

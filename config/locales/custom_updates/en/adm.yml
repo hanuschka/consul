@@ -71,8 +71,11 @@ en:
           empty_title: Voice assistant not available
           empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative at demokratie.today to activate the voice assistant.
           questions: What questions should be asked to citizens?
+          questions_hint: Define the questions the AI voice assistant asks citizens when they enter their contributions. These questions guide users through creating their proposal. Leave the field empty to use the default questions shown in the placeholder. Multiple questions can be listed line by line.
           criteria: What criteria must the proposals meet?
+          criteria_hint: Specify the criteria the AI voice assistant uses to evaluate and categorize submitted contributions. Leave the field empty to use the default criteria shown in the placeholder. Clear and precise criteria improve analysis quality.
           parting_words: What parting words should the AI assistant give?
+          parting_words_hint: The parting words are spoken by the AI voice assistant at the end of the dialogue. Leave the field empty to use the default formulations shown in the placeholder.
           update_button: Update
           not_connected: The AI app is not connected
         projekt_phase:

@@ -194,6 +194,21 @@ namespace :adm do
       end
     end
 
+    resources :imports, only: [:new, :create, :show], controller: "imports/from_files" do
+      member do
+        get :status
+        post :reset
+      end
+
+      resource :chat, only: [:show], controller: "imports/chats" do
+        get :messages
+        post :message
+        post :command
+        post :extract
+        post :execute
+      end
+    end
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       collection do
         get :import_projekt

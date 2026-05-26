@@ -185,3 +185,9 @@ application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
 import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
 application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
+
+import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
+application.register("projekt-imports--from-file", ProjektImportsFromFileController)
+
+import ProjektImportsChatController from "./projekt_imports/chat_controller"
+application.register("projekt-imports--chat", ProjektImportsChatController)

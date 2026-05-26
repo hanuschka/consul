@@ -1,0 +1,124 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container my-5">
+  <div class="projekt-import-chat"
+       data-controller="projekt-imports--chat"
+       data-projekt-imports--chat-messages-url-value="<%= messages_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-send-url-value="<%= message_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-command-url-value="<%= command_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-extract-url-value="<%= extract_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-status-url-value="<%= status_adm_projekts_import_path(@projekt_import) %>"
+       data-projekt-imports--chat-import-id-value="<%= @projekt_import.id %>"
+       data-projekt-imports--chat-csrf-value="<%= form_authenticity_token %>"
+       data-projekt-imports--chat-poll-interval-value="2000"
+       data-projekt-imports--chat-confirm-import-value="<%= t('.confirm_import') %>"
+       data-projekt-imports--chat-confirm-start-over-value="<%= t('.confirm_start_over') %>"
+       data-projekt-imports--chat-progress-finalizing-value="<%= t('.progress.finalizing_data') %>"
+       data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
+       data-projekt-imports--chat-progress-creating-value="<%= t('.progress.creating_projekt') %>"
+       data-projekt-imports--chat-progress-generating-image-value="<%= t('.progress.generating_image') %>"
+       data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>">
+
+    <%# Messages %>
+    <div class="projekt-import-chat--messages"
+         role="log"
+         aria-live="polite"
+         data-projekt-imports--chat-target="messages">
+      <% @messages.each do |message| %>
+        <%= render "adm/projekts/imports/chats/message", message: message %>
+      <% end %>
+
+      <div class="projekt-import-chat-bubble -ai projekt-import-chat--typing-indicator -hidden"
+           data-projekt-imports--chat-target="typingIndicator">
+        <div class="projekt-import-chat-bubble--avatar"><span>AI</span></div>
+        <div class="projekt-import-chat-bubble--wrapper">
+          <div class="projekt-import-chat-bubble--content">
+            <div class="projekt-import-chat--typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Topbar %>
+    <div class="projekt-import-chat--topbar"
+         role="toolbar"
+         aria-label="<%= t('.commands_label', default: 'Actions') %>">
+      <div class="projekt-import-chat--topbar-group">
+        <button type="button"
+                class="projekt-import-chat--topbar-button"
+                data-action="click->projekt-imports--chat#regenerate">
+          <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+          <%= t(".commands.regenerate") %>
+        </button>
+        <button type="button"
+                class="projekt-import-chat--topbar-button"
+                data-action="click->projekt-imports--chat#summarize">
+          <span class="material-symbols-outlined" aria-hidden="true">format_list_bulleted</span>
+          <%= t(".commands.summarize") %>
+        </button>
+        <button type="button"
+                class="projekt-import-chat--topbar-button"
+                data-action="click->projekt-imports--chat#startOver">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          <%= t(".commands.start_over") %>
+        </button>
+      </div>
+
+      <button type="button"
+              class="projekt-import-chat--topbar-button -primary"
+              data-action="click->projekt-imports--chat#startImport">
+        <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+        <%= t(".commands.import") %>
+      </button>
+    </div>
+
+    <%# Input area %>
+    <form class="projekt-import-chat--input-area"
+          data-projekt-imports--chat-target="form"
+          data-action="submit->projekt-imports--chat#submit">
+      <label class="projekt-import-chat--attach-button"
+             for="projekt-import-chat-attach"
+             aria-label="<%= t('.attach') %>">
+        <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+        <input id="projekt-import-chat-attach"
+               type="file"
+               multiple
+               accept=".pdf,.docx,.odt,.txt,.md"
+               hidden
+               data-action="change->projekt-imports--chat#filesPicked">
+      </label>
+
+      <div class="projekt-import-chat--input-wrapper">
+        <ul class="projekt-import-chat--file-previews"
+            data-projekt-imports--chat-target="attachments"
+            aria-live="polite"></ul>
+
+        <textarea class="projekt-import-chat--textarea"
+                  rows="1"
+                  data-projekt-imports--chat-target="textarea"
+                  placeholder="<%= t('.input_placeholder') %>"
+                  data-action="keydown->projekt-imports--chat#textareaKeydown"></textarea>
+      </div>
+
+      <button type="submit"
+              class="projekt-import-chat--send-button"
+              data-projekt-imports--chat-target="sendButton"
+              aria-label="<%= t('.send') %>">
+        <span class="material-symbols-outlined" aria-hidden="true">send</span>
+      </button>
+    </form>
+
+    <%# Overlay during final import %>
+    <div class="projekt-import-chat--overlay -hidden"
+         data-projekt-imports--chat-target="overlay">
+      <div class="projekt-import-chat--overlay-content">
+        <div class="projekt-import-chat--overlay-spinner" aria-hidden="true"></div>
+        <p data-projekt-imports--chat-target="overlayLabel"></p>
+      </div>
+    </div>
+  </div>
+</div>

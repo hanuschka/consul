@@ -48,7 +48,16 @@ ul.no-ul-style {
 
   .toast-stack {
     top: 110px;
+    // Align the stack's right edge with the centered content container
+    // (main, .top-bar: max-width 1245px in _layout.scss). Below 1285px
+    // (= 1245 + 2 * 20) keep a 20px viewport gutter; above it, track the
+    // container edge. (Bare calc + media query is LibSass/sassc-safe;
+    // `max()` is not, as sassc evaluates it as a Sass function.)
     right: 20px;
+
+    @media(min-width: 1285px) {
+      right: calc((100% - 1245px) / 2);
+    }
 
     @media(max-width: $mobile-viewport-start) {
       right: 12px;

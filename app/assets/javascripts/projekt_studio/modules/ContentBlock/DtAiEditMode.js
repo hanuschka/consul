@@ -82,7 +82,7 @@ ProjektStudio.ContentBlock.DtAiEditMode = {
 
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
-    contentBlock.innerHTML = params.html
+    contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(params.html)
 
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 

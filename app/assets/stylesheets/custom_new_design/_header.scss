@@ -71,6 +71,9 @@
     margin-bottom: 30px;
     margin-top: -100px;
     overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.25),
+                0 8px 16px -8px rgba(0, 0, 0, 0.08);
   }
 
   .homepage-image-header--video {
@@ -137,17 +140,31 @@
   }
 
   .homepage-image-header--title {
-    background: #ffffffcc;
+    background: rgba(255, 255, 255, 0.7);
     display: inline-block;
-    padding: 20px 30px;
+    padding: 28px 40px;
     line-height: 1.3;
-    color: var(--brand-color);
-    font-size: 32px;
+    color: #1f1f1f;
+    font-size: 24px;
+    font-weight: 400;
     margin-bottom: 30px;
-    border-radius: 4px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 4px solid var(--brand-color);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25),
+                0 2px 4px rgba(0, 0, 0, 0.06);
     word-wrap: break-word;
     max-width: 100%;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+
+    b {
+      display: inline-block;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--brand-color);
+    }
   }
 
   .homepage-image-header--title-wrapper {
@@ -231,8 +248,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: #dedede !important;
-    color: black !important;
+    background: var(--brand-color) !important;
+    color: white !important;
   }
 
   .locale .locale-form select {
@@ -278,8 +295,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       }
 
       .main-navigation-item--account--image-wrapper {
-        background: white !important;
-        color: black !important;
+        background: var(--brand-color) !important;
+        color: white !important;
       }
     }
   }
@@ -304,7 +321,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       }
 
       .main-navigation-item--account--image-wrapper {
-        background: black !important;
+        background: var(--brand-color) !important;
         color: white !important;
       }
 
@@ -601,6 +618,18 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         &:hover {
           text-decoration: none;
         }
+
+        // Keep d-flex links (icon + label) horizontally aligned —
+        // overrides the inline-block default above so the Material
+        // Symbols icons sit next to the label, not above it.
+        &.d-flex {
+          display: flex;
+        }
+
+        .material-symbols-outlined {
+          flex-shrink: 0;
+          color: var(--brand-color);
+        }
       }
 
       &:first-child {
@@ -615,6 +644,70 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       @media screen and (min-width: $small-tablet-viewport-start) {
         padding: 1em;
         min-height: 45px;
+      }
+    }
+
+  }
+
+  // Konto flyout (avatar dropdown) — overrides for the menu rendered by
+  // _subnavigation_konto_new + _login_items_new. Scoped to the wrapper so
+  // the projekt navigation flyout (which shares .nav-flyout-block markup)
+  // keeps its legacy borders + spacing.
+  .main-navigation-item-account--wrapper > .nav-flyout-block {
+    // Paint a solid surface on the container itself. The base
+    // .main-menu li.flyout-item rule (custom/menu.scss:450) only paints
+    // each row, so the divider rows (margin: 0.5rem 1em) would otherwise
+    // expose the transparent container — making the hairline look like
+    // a wide grey band over the page background. With the container
+    // filled, the divider sits cleanly inside the flyout surface.
+    background-color: $flyout-item-bg-color;
+    // Border-radius is set on the container (10px, line 599) but the
+    // per-item :first-child / :last-child radii from the base block can
+    // overshoot due to row backgrounds painted by .main-menu li.flyout-item.
+    // Clip to the container so the surface keeps clean rounded corners.
+    overflow: hidden;
+
+    // Strip the base per-row border-bottom/border-top set in
+    // custom/menu.scss (li.flyout-item { border-bottom: 1px solid ... } and
+    // &:first-child { border-top: 1px solid ... }). Otherwise these stack
+    // with the divider rows in login_items_new and render as a doubled /
+    // thicker hairline.
+    li.flyout-item {
+      border-top: 0;
+      border-bottom: 0;
+    }
+
+    // gap-1 utility from Bootstrap-style spacing isn't available in this
+    // bundle, so the Material Symbols icon collapses against the label.
+    // Explicit gap on the d-flex links inside the dropdown restores the
+    // icon ↔ label spacing seen in the /adm subnavigation-konto flyout.
+    .nav-element a.d-flex {
+      gap: 0.5rem;
+    }
+
+    // Hairline divider rows rendered via .flyout-item--divider in
+    // login_items_new. Mirrors the Backend /adm subnavigation-konto
+    // strategy: a 1px tall row that paints the divider colour as its
+    // background — no border stacking, no inherited padding box. Wrapper
+    // scope (0,3,2) beats the base .main-menu li.flyout-item rule (0,1,2)
+    // so the 1em padding + per-row border-bottom from custom/menu.scss
+    // are cleanly overridden without !important.
+    li.flyout-item--divider {
+      width: auto;
+      height: 1px;
+      min-height: 0;
+      margin: 0.5rem 1em;
+      padding: 0;
+      background: $flyout-item-divider-color;
+      pointer-events: none;
+      list-style: none;
+
+      // Defensive: ensure no inherited focus/hover background paints over
+      // the hairline if the row ever gains :hover from a parent rule.
+      &:hover,
+      &:focus,
+      &:active {
+        background: $flyout-item-divider-color;
       }
     }
   }
@@ -702,8 +795,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .homepage-image-header--title {
-      font-size: 22px;
-      padding: 10px 20px;
+      font-size: 18px;
+      padding: 20px 24px;
+      border-radius: 10px;
+
+      b {
+        font-size: 28px;
+      }
     }
 
     .homepage-image-header--button.button {
@@ -719,6 +817,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header {
       height: 450px;
       margin-bottom: 5px;
+      border-radius: 12px;
     }
 
     .top-bar-wrapper {

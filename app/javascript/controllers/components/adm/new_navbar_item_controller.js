@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "presets", "projekts", "external", "customFields" ]
+  static targets = [ "presets", "projekts", "landingPages", "external", "customFields" ]
 
   kindChanged(event) {
     const targets = {
       presets: this.presetsTarget,
       projekts: this.hasProjektsTarget ? this.projektsTarget : null,
+      landing_pages: this.hasLandingPagesTarget ? this.landingPagesTarget : null,
       external: this.hasExternalTarget ? this.externalTarget : null
     }
 
@@ -36,6 +37,10 @@ export default class extends Controller {
 
     if (kind === "projekts") {
       return !!this.element.querySelector('input[name*="[projekt_id]"]:checked')
+    }
+
+    if (kind === "landing_pages") {
+      return !!this.element.querySelector('input[name*="[linked_page_id]"]:checked')
     }
 
     if (kind === "external") {

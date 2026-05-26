@@ -6,6 +6,7 @@ de:
     newsletters:
       new_projekt:
         subject: "Neues Projekt: %{title}"
+        intro: "Wir freuen uns, Ihnen ein neues Beteiligungsprojekt vorstellen zu dürfen:"
         total_duration_start: Projektstart
         total_duration_end: Projektlaufzeit
         total_duration_end_till: bis

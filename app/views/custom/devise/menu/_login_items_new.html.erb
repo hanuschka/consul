@@ -6,7 +6,7 @@
     <% end %>
   </li>
 
-  <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
+  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
@@ -71,7 +71,7 @@
     </li>
   <% end %>
 
-  <% if current_user.officing_manager? %>
+  <% if current_user.administrator? || current_user.poll_officer? || current_user.officing_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-1" do %>
         <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">how_to_vote</span>
@@ -80,7 +80,7 @@
     </li>
   <% end %>
 
-  <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
+  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
     <%= link_to destroy_user_session_path, rel: "nofollow", data: { turbo_method: :delete }, class: "d-flex align-items-center gap-1" do %>

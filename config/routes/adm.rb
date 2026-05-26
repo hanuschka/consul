@@ -4,7 +4,9 @@ namespace :adm do
   patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute
 
   # application
-  resource :homepage, controller: "homepage", only: [:show]
+  resource :homepage, controller: "homepage", only: [:show] do
+    patch :update_navigation_link_color, on: :collection
+  end
   resource :navbar, controller: "navbar", only: [:show]
   resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection

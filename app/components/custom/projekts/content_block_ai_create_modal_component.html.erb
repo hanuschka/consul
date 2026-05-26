@@ -40,26 +40,38 @@
       ></textarea>
     </div>
 
-    <div class="content-block-ai-create--row">
-      <div class="content-block-ai-create--field">
-        <label for="contentBlockAiCategory">
-          <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
-        </label>
-        <select id="contentBlockAiCategory" name="category_hint" class="js-content-block-ai-category">
-          <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
-        </select>
-      </div>
+    <div class="content-block-ai-create--field">
+      <label for="contentBlockAiCategory">
+        <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
+      </label>
+      <select
+        id="contentBlockAiCategory"
+        name="category_hint"
+        class="content-block-ai-create--select js-content-block-ai-category"
+      >
+        <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
+      </select>
+      <p class="content-block-ai-create--hint">
+        <%= t("custom.projekt_content_blocks.ai_create.category_hint") %>
+      </p>
+    </div>
 
-      <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
-        <label>
-          <input
-            type="checkbox"
-            name="use_projekt_context"
-            class="js-content-block-ai-context"
-          >
-          <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
-        </label>
-      </div>
+    <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
+      <label>
+        <input
+          type="checkbox"
+          name="use_projekt_context"
+          class="js-content-block-ai-context"
+        >
+        <span class="content-block-ai-create--checkbox-text">
+          <span class="content-block-ai-create--checkbox-label">
+            <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
+          </span>
+          <span class="content-block-ai-create--checkbox-hint">
+            <%= t("custom.projekt_content_blocks.ai_create.use_context_hint") %>
+          </span>
+        </span>
+      </label>
     </div>
 
     <div
@@ -83,6 +95,12 @@
     </div>
 
     <div class="content-block-ai-create--actions">
+      <p class="content-block-ai-create--shortcut-note">
+        <%= t(
+          "custom.projekt_content_blocks.ai_create.submit_shortcut_hint_html",
+          shortcut: tag.kbd("Ctrl + Enter", class: "content-block-ai-create--kbd js-content-block-ai-shortcut")
+        ) %>
+      </p>
       <button
         type="button"
         class="button js-content-block-ai-submit"

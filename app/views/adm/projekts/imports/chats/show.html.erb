@@ -2,7 +2,7 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
-<div class="kern-container my-5">
+<div class="kern-container">
   <div class="projekt-import-chat"
        data-controller="projekt-imports--chat"
        data-projekt-imports--chat-messages-url-value="<%= messages_adm_projekts_import_chat_path(@projekt_import) %>"
@@ -50,7 +50,15 @@
       <div class="projekt-import-chat--topbar-group">
         <button type="button"
                 class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#regenerate">
+                data-action="click->projekt-imports--chat#startOver">
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+                <%= t(".commands.start_over") %>
+        </button>
+        <button
+           type="button"
+           class="projekt-import-chat--topbar-button"
+           data-action="click->projekt-imports--chat#regenerate"
+        >
           <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
           <%= t(".commands.regenerate") %>
         </button>
@@ -59,12 +67,6 @@
                 data-action="click->projekt-imports--chat#summarize">
           <span class="material-symbols-outlined" aria-hidden="true">format_list_bulleted</span>
           <%= t(".commands.summarize") %>
-        </button>
-        <button type="button"
-                class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#startOver">
-          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-          <%= t(".commands.start_over") %>
         </button>
       </div>
 

@@ -43,8 +43,11 @@ en:
         prompt_placeholder: "E.g. A notice banner about citizen participation dates with date and location..."
         category_label: Category (optional)
         category_any: All categories
+        category_hint: "Pick a category to limit which existing content block templates the AI uses as inspiration (e.g. headers, banners, CTAs). Leave on \"All categories\" to let the AI choose any template type that fits your prompt."
         use_context_label: Include full projekt context
+        use_context_hint: "When enabled, the AI receives your projekt's title, description, phases and other key fields so the generated block can reference real projekt content. Leave off for a generic, projekt-independent block."
         submit: Create with AI
+        submit_shortcut_hint_html: "Tip: press %{shortcut} to submit"
         cancel: Cancel generation
         processing_message: Content block is being created...
         fallback_note: "Templates from demokratie.today are unavailable. AI will use only local template names as inspiration."

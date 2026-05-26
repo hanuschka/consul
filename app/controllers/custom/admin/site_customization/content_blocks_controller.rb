@@ -35,7 +35,7 @@ class Admin::SiteCustomization::ContentBlocksController
     allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
 
     new_content_block_body =
-      Ai::GenerateContentBlock.call(
+      Ai::EditContentBlock.call(
         params[:instructions],
         params[:content_block_html],
         nil,

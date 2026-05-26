@@ -11,7 +11,7 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
     data = content_block.ai_generation_data || {}
     options = data["options"] || {}
 
-    Ai::GenerateContentBlockFromPrompt.call(
+    Ai::GenerateContentBlock.call(
       content_block: content_block,
       projekt: projekt,
       prompt: options["prompt"],
@@ -19,7 +19,7 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
       anchor_template_id: options["anchor_template_id"],
       use_projekt_context: options["use_projekt_context"]
     )
-  rescue Ai::GenerateContentBlockFromPrompt::AiCancelledError
+  rescue Ai::GenerateContentBlock::AiCancelledError
     handle_cancellation(content_block, mode)
   rescue => e
     Rails.logger.error("CreateContentBlockWithAiJob failed: #{e.message}\n#{e.backtrace.first(5).join("\n")}")

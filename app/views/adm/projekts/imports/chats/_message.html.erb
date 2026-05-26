@@ -39,9 +39,6 @@
             <p class="projekt-import-chat-bubble--user-popover-name">
               <%= user.full_name.presence || user.name %>
             </p>
-            <% if user.email.present? %>
-              <p class="projekt-import-chat-bubble--user-popover-email"><%= user.email %></p>
-            <% end %>
           </div>
         </div>
       <% end %>

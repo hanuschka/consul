@@ -120,6 +120,22 @@ $_chat-error-text: #7f1d1d;
   transform: translateY(4px);
   transition: opacity 140ms ease-out, visibility 140ms ease-out, transform 140ms ease-out;
   pointer-events: none;
+  user-select: text;
+  cursor: default;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 10px;
+  }
+}
+
+.projekt-import-chat-bubble--avatar-wrapper:hover .projekt-import-chat-bubble--user-popover,
+.projekt-import-chat-bubble--avatar-wrapper:focus-within .projekt-import-chat-bubble--user-popover {
+  pointer-events: auto;
 }
 
 .projekt-import-chat-bubble--user-popover-avatar {
@@ -127,11 +143,11 @@ $_chat-error-text: #7f1d1d;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  font-size: 14px;
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   color: #fff;
   background: #4a5560;
   border-radius: 50%;
@@ -153,20 +169,10 @@ $_chat-error-text: #7f1d1d;
 
 .projekt-import-chat-bubble--user-popover-name {
   margin: 0;
-  font-size: 14px;
+  font-size: 28px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.2;
   color: $_chat-text;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.projekt-import-chat-bubble--user-popover-email {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.3;
-  color: $_chat-text-muted;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -439,9 +445,9 @@ $_chat-error-text: #7f1d1d;
   flex-shrink: 0;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px 16px;
+  padding: 2px 20px 16px;
   background: #fff;
-  border-top: 1px solid $_chat-border;
+  // border-top: 1px solid $_chat-border;
   margin: 0 auto;
   width: 100%;
   max-width: 750px;
@@ -547,7 +553,7 @@ $_chat-error-text: #7f1d1d;
 .projekt-import-chat--textarea {
   width: 100%;
   padding: 10px 4px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: inherit;
   line-height: 1.45;
   min-height: 57px;

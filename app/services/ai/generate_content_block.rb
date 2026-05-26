@@ -19,7 +19,7 @@ class Ai::GenerateContentBlock < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    llm_response.content["html"]
+    AdminWYSIWYGSanitizer.new.sanitize(llm_response.content["html"])
   end
 
   private
@@ -36,10 +36,6 @@ class Ai::GenerateContentBlock < ApplicationService
       #{fetch_prompt}
 
       #{text_modification_instruction}
-
-      IMPORTANT: You MUST NOT include any JavaScript in the output. No <script>
-      tags, no inline event handlers (onclick, onload, etc.), no javascript:
-      URLs. Output only pure HTML and CSS.
 
       Output response in #{target_language} language.
     TEXT

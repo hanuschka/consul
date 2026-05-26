@@ -129,8 +129,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @proposals = pagy(base_scope)
+        @pagy, @proposals = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
+        @title_header_options = { search: true }
         @moderation_header_options = { filter_options: moderation_filter_options }
 
         @breadcrumbs = [
@@ -264,7 +265,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @investments = pagy(base_scope)
+        @pagy, @investments = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 

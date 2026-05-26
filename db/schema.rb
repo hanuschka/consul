@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2026_05_22_080004) do
+=======
+ActiveRecord::Schema.define(version: 2026_05_25_085759) do
+>>>>>>> new-connection
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3243,8 +3247,13 @@ ActiveRecord::Schema.define(version: 2026_05_22_080004) do
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
+<<<<<<< HEAD
     t.string "keycloak_link"
     t.text "keycloak_id_token", default: ""
+=======
+    t.string "guest_user_agent"
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
+>>>>>>> new-connection
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

@@ -16,7 +16,7 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     unscoped.where("ai_generation_data->>'status' IN (?)", %w[pending processing cancelled failed])
   }
 
-  before_validation :repair_html_body
+  before_validation :repair_html_body, :sanitize_body
 
   def ai_generation_status
     return nil if ai_generation_data.blank?
@@ -48,11 +48,23 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     end
   end
 
+  def body_stripped?
+    !!@body_stripped
+  end
+
   private
 
   def repair_html_body
     return if body.blank?
 
     self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
+  end
+
+  def sanitize_body
+    return if body.blank?
+
+    original = body
+    self.body = AdminWYSIWYGSanitizer.new.sanitize(body)
+    @body_stripped = original != body
   end
 end

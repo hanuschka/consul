@@ -180,7 +180,7 @@ class Ai::GenerateContentBlockFromPrompt < ApplicationService
     return "" if anchor_template.blank?
 
     <<~TEXT
-      Anchor template (you MUST start from this template's HTML and adapt it to the user's prompt):
+      Anchor template:
       Name: #{anchor_template['name']}
       Description: #{anchor_template['description']}
       HTML:
@@ -249,7 +249,7 @@ class Ai::GenerateContentBlockFromPrompt < ApplicationService
   end
 
   def fetch_base_prompt
-    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:content_block_ai_edit)
+    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:content_block_ai_create)
 
     return "" if !response.success?
 

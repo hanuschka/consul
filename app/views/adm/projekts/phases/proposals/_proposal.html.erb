@@ -22,7 +22,7 @@
   <td class="kern-table__cell" data-field="author"><%= proposal.author.username %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility") %>
+      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility", data: { turbo_frame: "_top" }) %>
       <% if policy([:adm, proposal]).unhide? %>
         <% actions.with_action(label: t("adm.projekts.phases.proposals.table.unhide"),
                                url: unhide_adm_projekts_phase_proposal_path(projekt_phase, proposal),

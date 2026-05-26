@@ -46,20 +46,18 @@ ul.no-ul-style {
     }
   }
 
-  .notice-container {
-    z-index: 100;
+  .toast-stack {
     top: 110px;
     right: 20px;
-    position: absolute;
 
     @media(max-width: $mobile-viewport-start) {
-      right: 10px;
-      left: 10px;
+      right: 12px;
+      left: 12px;
     }
   }
 
   &:has(.projekt-page--admin-topbar)  {
-    .notice-container {
+    .toast-stack {
       top: 110px + $admin-topbar-height;
     }
 
@@ -72,7 +70,7 @@ ul.no-ul-style {
     // therefore can't follow the runtime CSS custom property. Breakpoint kept
     // in sync with _admin_topbar.scss ($small-tablet-viewport-start = 750px).
     @media (max-width: $small-tablet-viewport-start) {
-      .notice-container {
+      .toast-stack {
         top: 110px + $admin-topbar-height + 8px;
       }
 
@@ -83,7 +81,7 @@ ul.no-ul-style {
   }
 
 
-  .wrapper.has-custom-fixed-tabs .notice-container {
+  .wrapper.has-custom-fixed-tabs .toast-stack {
     @media screen and (max-width: $small-tablet-viewport-start) {
       top: 170px;
     }

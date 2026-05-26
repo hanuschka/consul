@@ -98,14 +98,20 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     if success
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append("flash-messages", html:
-            helpers.content_tag(:div, class: "kern-flash kern-flash--success", role: "alert") do
-              helpers.content_tag(:span, t("adm.attribute.update.success")) +
-              helpers.button_tag(type: "button", class: "kern-flash__close", aria: { label: "Close" }, onclick: "this.parentElement.remove()") do
-                helpers.content_tag(:span, "close", class: "material-symbols-outlined")
+          render turbo_stream: [
+            turbo_stream.update("investment_content",
+              partial: "adm/projekts/budget_investments/show_content",
+              locals: { investment: @investment, projekt_phase: @projekt_phase }
+            ),
+            turbo_stream.append("flash-messages", html:
+              helpers.content_tag(:div, class: "kern-flash kern-flash--success", role: "alert") do
+                helpers.content_tag(:span, t("adm.attribute.update.success")) +
+                helpers.button_tag(type: "button", class: "kern-flash__close", aria: { label: "Close" }, onclick: "this.parentElement.remove()") do
+                  helpers.content_tag(:span, "close", class: "material-symbols-outlined")
+                end
               end
-            end
-          )
+            )
+          ]
         end
         format.html do
           redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment), notice: t(".success")

@@ -9,6 +9,8 @@ module NavbarItemsHelper
       end
     when "projekts"
       item.projekt&.url
+    when "landing_pages"
+      item.linked_page&.url
     when "external"
       item.external_url
     end

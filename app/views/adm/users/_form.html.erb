@@ -11,46 +11,46 @@
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:email)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:email), inline: true, divider: false) do %>
     <%= f.email_field :email, label: false, placeholder: User.human_attribute_name(:email) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:first_name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:first_name), inline: true, divider: false) do %>
     <%= f.text_field :first_name, label: false, placeholder: User.human_attribute_name(:first_name) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:last_name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:last_name), inline: true, divider: false) do %>
     <%= f.text_field :last_name, label: false, placeholder: User.human_attribute_name(:last_name) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:date_of_birth)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:date_of_birth), inline: true, divider: false) do %>
     <%= f.date_field :date_of_birth, label: false %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:gender)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:gender), inline: true, divider: false) do %>
     <%= f.select :gender,
       options_for_gender_select,
       { include_blank: t("custom.helpers.select.gender_prompt") },
       { label: false } %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:city_name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:city_name), inline: true, divider: false) do %>
     <%= f.text_field :city_name, label: false, placeholder: User.human_attribute_name(:city_name) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:plz)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:plz), inline: true, divider: false) do %>
     <%= f.text_field :plz, label: false, placeholder: User.human_attribute_name(:plz) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_name)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_name), inline: true, divider: false) do %>
     <%= f.text_field :street_name, label: false, placeholder: User.human_attribute_name(:street_name) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number), inline: true, divider: false) do %>
     <%= f.text_field :street_number, label: false, placeholder: User.human_attribute_name(:street_number) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number_extension)) do %>
+  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number_extension), inline: true, divider: false) do %>
     <%= f.text_field :street_number_extension, label: false, placeholder: User.human_attribute_name(:street_number_extension) %>
   <% end %>
 

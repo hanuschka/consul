@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_21_144713) do
+ActiveRecord::Schema.define(version: 2026_05_26_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1702,7 +1702,9 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
     t.integer "landing_page_id"
     t.string "custom_title"
     t.boolean "open_in_new_tab", default: false, null: false
+    t.integer "linked_page_id"
     t.index ["landing_page_id"], name: "index_navbar_items_on_landing_page_id"
+    t.index ["linked_page_id"], name: "index_navbar_items_on_linked_page_id"
     t.index ["parent_id"], name: "index_navbar_items_on_parent_id"
     t.index ["projekt_id"], name: "index_navbar_items_on_projekt_id"
   end
@@ -1722,6 +1724,7 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
     t.bigint "recipient_group_id"
     t.string "title_color", default: "#000000", null: false
     t.string "subtitle_color", default: "#000000", null: false
+    t.boolean "respect_newsletter_optout", default: true, null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
@@ -2592,6 +2595,19 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
+  create_table "recipient_group_filters", force: :cascade do |t|
+    t.bigint "recipient_group_id", null: false
+    t.integer "position", default: 0, null: false
+    t.string "kind", null: false
+    t.string "operator", default: "include", null: false
+    t.jsonb "params", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind"], name: "index_recipient_group_filters_on_kind"
+    t.index ["recipient_group_id", "position"], name: "index_rgf_on_recipient_group_id_and_position"
+    t.index ["recipient_group_id"], name: "index_recipient_group_filters_on_recipient_group_id"
+  end
+
   create_table "recipient_groups", force: :cascade do |t|
     t.string "name"
     t.string "origin_class_name"
@@ -3183,6 +3199,7 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
+    t.string "guest_user_agent"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -3467,6 +3484,7 @@ ActiveRecord::Schema.define(version: 2026_05_21_144713) do
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
+  add_foreign_key "recipient_group_filters", "recipient_groups"
   add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"

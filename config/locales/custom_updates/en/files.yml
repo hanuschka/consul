@@ -9,10 +9,10 @@ en:
   files:
     images:
       index:
-        title: Images
+        title: Overview of all images
     documents:
       index:
-        title: Documents
+        title: Overview of all documents
     search_form:
       placeholder: Search…
       button_title: Search
@@ -27,14 +27,14 @@ en:
       updated_from: Modified from
       updated_to: Modified to
       imageable_type: Assigned to
-      imageable_type_any: All
+      imageable_type_any: "Assigned: all"
       documentable_type: Assigned to
-      documentable_type_any: All
+      documentable_type_any: "Assigned: all"
       admin_flag: Source
       admin_flag_any: All sources
       admin_flag_true: Admin uploads
       admin_flag_false: Regular uploads
-      sort_default: Sort
+      sort_label: Sort
       reset: Reset
       sort:
         created_desc: Newest first
@@ -45,6 +45,14 @@ en:
         name_desc: Name Z–A
         size_asc: Smallest first
         size_desc: Largest first
+      aria:
+        search: Search files
+        filter_extension: Filter by file type
+        filter_imageable_type: Filter by assignment
+        filter_documentable_type: Filter by assignment
+        filter_admin_flag: Filter by source
+        sort: Sort by
+        reset: Reset filters
     upload_failed: Upload failed
     upload_loading: Uploading file…
     upload_success: Uploaded
@@ -69,12 +77,11 @@ en:
       upload: Upload
       open_in_new_tab: Open in new tab
       download: Download
-      size: Size
+      file_size: File size
       dimensions: Dimensions
-      created: Created
-      modified: Modified
-      imageable_type: Assigned to
-      documentable_type: Assigned to
+      uploaded: Uploaded
+      last_edited: Last edited
+      projekt: Project
       resource_type: Resource type
       admin_badge: Admin upload
     edit_modal:

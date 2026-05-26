@@ -143,6 +143,10 @@ de:
           attributes:
             email:
               taken: wurde bereits verwendet
+        recipient_group_filter:
+          attributes:
+            operator:
+              must_be_include_for_first_filter: muss „Hinzufügen" sein, solange noch kein anderer Filter vorhanden ist
     attributes:
       map_location:
         latitude: Breitengrad

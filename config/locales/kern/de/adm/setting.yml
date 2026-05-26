@@ -130,8 +130,6 @@ de:
         show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
         users_overview_page: Übersicht aller Nutzer*innen
         users_overview_page_description: "Aktiviert eine öffentliche Übersichtsseite mit allen aktiven Nutzer*innen, die ihrer Anzeige zugestimmt haben. Besucher können Profile durchsuchen und die Beteiligungsaktivität anderer Nutzer*innen einsehen, etwa eingereichte Vorschläge, Kommentare und Abstimmungsteilnahmen."
-        use_white_top_navigation_text: Weiße Schrift in der Top-Navigation
-        use_white_top_navigation_text_description: "Aktivieren, wenn das Hintergrundbild der Startseite dunkel ist – schaltet die Top-Navigation auf weiße Schrift, damit sie lesbar bleibt. Sobald Nutzer scrollen und die Navigation auf weißen Hintergrund wechselt, gilt die Einstellung nicht mehr."
         enable_projekt_events_page: Veranstaltungskalender
         enable_projekt_events_page_description: >
           Aktiviert eine zentrale Übersichtsseite für alle öffentlichen Veranstaltungen aus den Beteiligungsprojekten. Bürger können dort kommende Workshops, Bürgerversammlungen und Informationsveranstaltungen einsehen. Die Seite kann über die Navigation erreichbar gemacht werden.
@@ -150,6 +148,8 @@ de:
         homepage_button_text_description: "Text, der auf dem Button im Hero-Bereich der Startseite angezeigt wird. Der Button dient als zentraler Call-to-Action für Besucher. Wählen Sie eine kurze, handlungsorientierte Beschriftung (z. B. 'Jetzt mitmachen' oder 'Projekte entdecken'). Wenn das Feld leer bleibt, wird kein Button angezeigt."
         homepage_button_link: Homepage-Button-Link
         homepage_button_link_description: "Ziel-URL, die beim Klick auf den Homepage-Button aufgerufen wird. Sie können einen internen Pfad (z. B. /projekts) oder eine vollständige externe URL (z. B. https://beispiel.de) angeben. Der Link wird nur wirksam, wenn auch ein Button-Text eingetragen ist. Ohne Button-Text bleibt der Link unsichtbar."
+        homepage_navigation_link_color: Farbe der Links in der Top-Navigation
+        homepage_navigation_link_color_description: "Legt die Schriftfarbe der Links in der oberen Navigationsleiste der Startseite fest. Das ist wichtig, da das Hintergrundbild dunkel sein kann und die Lesbarkeit sichergestellt sein muss."
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: >
@@ -225,6 +225,12 @@ de:
       create_cta: Beschriftung der Melde-Schaltfläche
       create_cta_description: >
         Beschriftung der zentralen Schaltfläche, mit der Bürgerinnen und Bürger auf der Übersichtsseite eine neue Meldung starten (z.B. "Mangel melden", "Hinweis abgeben"). Leer lassen, um die Standardbeschriftung ("Mangel melden") zu verwenden.
+      new_form_title: Überschrift des Meldeformulars
+      new_form_title_description: >
+        Überschrift am Anfang des Formulars für neue Meldungen (z.B. "Neue Meldung", "Mangel melden"). Leer lassen, um die Plattform-Standardüberschrift zu verwenden.
+      new_form_title_placeholder: Platzhalter für den Titel
+      new_form_title_placeholder_description: >
+        Platzhaltertext im Titel-Feld des Meldeformulars. Geben Sie Bürgerinnen und Bürgern hier ein gutes Beispiel an die Hand (z.B. "Schlagloch in XY-Straße vor Hausnummer 123"). Leer lassen, um den Plattform-Standard zu verwenden.
       show_in_main_menu: Mängelmelder in der Navigation
       show_in_main_menu_description: >
         Wenn aktiviert, wird der Mängelmelder als eigenständiger Menüpunkt in der Hauptnavigation der Plattform angezeigt. Nutzer können so direkt über das Hauptmenü auf die Mängelübersicht zugreifen, ohne erst ein Projekt aufrufen zu müssen. Deaktivieren Sie diese Option, wenn der Mängelmelder nur innerhalb bestimmter Projekte sichtbar sein soll.

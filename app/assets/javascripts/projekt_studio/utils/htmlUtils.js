@@ -102,6 +102,8 @@ ProjektStudio.utils.hasNoBlockChildren = (element) => {
 ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes = [] }) => {
   const ALLOWED_TAGS = new Set(allowedTags.map(tag => tag.toUpperCase())); // uppercase tagNames
   const ALLOWED_ATTRS = new Set(allowedAttributes); // only class allowed
+  const URL_ATTRS = new Set(["href", "src", "action", "formaction", "xlink:href", "data"]);
+  const DANGEROUS_URL = /^\s*(javascript|vbscript|data):/i;
 
   const container = document.createElement('div');
   container.innerHTML = input;
@@ -124,7 +126,14 @@ ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes
       // allowed: strip all attributes except "class"
       const attrs = Array.from(el.attributes);
       for (const a of attrs) {
-        if (!ALLOWED_ATTRS.has(a.name.toLowerCase())) {
+        const name = a.name.toLowerCase();
+
+        if (!ALLOWED_ATTRS.has(name)) {
+          el.removeAttribute(a.name);
+          continue;
+        }
+
+        if (URL_ATTRS.has(name) && DANGEROUS_URL.test(a.value)) {
           el.removeAttribute(a.name);
         }
       }
@@ -132,6 +141,62 @@ ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes
   }
 
   return container.innerHTML;
+}
+
+// Mirror of AdminWYSIWYGSanitizer (lib/admin_wysiwyg_sanitizer.rb + lib/wysiwyg_sanitizer.rb).
+// If you change these lists, update the Ruby class to match.
+ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
+  allowedTags: [
+    "div", "p", "ul", "ol", "li", "blockquote", "br", "hr", "a",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "b", "strong", "em", "u", "s", "sub", "sup", "span", "img",
+    "table", "caption", "thead", "tr", "th", "tbody", "td", "abbr",
+    "i", "figure", "figcaption", "section", "nav",
+    "iframe", "object", "param", "embed",
+    "input", "label", "form", "button", "textarea", "oembed"
+  ],
+  allowedAttributes: [
+    "href", "style", "target", "class", "id", "name", "alt", "src",
+    "align", "border", "cellpadding", "cellspacing", "summary", "scope",
+    "title", "allowfullscreen", "frameborder", "height", "width",
+    "data-src", "data-path",
+    "min-height", "longdesc", "scrolling", "allow", "value", "dir",
+    "action", "role", "tabindex", "type", "for",
+    "data-toggle", "aria-label", "aria-hidden", "placeholder",
+    "data-slider", "data-initial-start", "data-end",
+    "data-slider-handle", "data-slider-fill",
+    "data-dropdown-menu", "data-dropdown", "data-auto-focus",
+    "data-magellan", "data-magellan-target",
+    "data-sticky-container", "data-sticky", "data-margin-top",
+    "data-anchor", "data-sticky-on",
+    "data-deep-link", "data-update-history", "data-deep-linking",
+    "data-animation-duration", "data-animation-easing",
+    "data-threshold", "data-active-class", "data-offset",
+    "data-drilldown",
+    "data-accordion", "data-accordion-item", "data-tab-content",
+    "data-allow-all-closed", "data-accordion-menu",
+    "data-reveal", "data-open", "data-close",
+    "data-tabs", "aria-selected", "data-tabs-target", "data-tabs-content",
+    "data-orbit", "data-slide", "data-slide-active-label",
+    "aria-valuenow", "aria-valuemin", "aria-valuemax", "aria-valuetext",
+    "data-tooltip", "data-use-m-u-i",
+    "data-anim-in-from-left", "data-anim-in-from-right",
+    "data-anim-out-to-left", "data-anim-out-to-right",
+    "data-options",
+    "data-equalizer", "data-equalizer-watch", "data-equalize-on",
+    "data-target",
+    "data-map", "data-map-center-latitude", "data-map-center-longitude",
+    "data-map-zoom", "data-admin-editor", "data-show-admin-shape",
+    "data-admin-shape", "data-parent-class", "data-map-layers",
+    "data-show-more-text", "data-show-less-text",
+    "data-pswp-width", "data-pswp-height",
+    "data-turbolinks", "data-box-shadow", "data-glightbox",
+    "url"
+  ]
+};
+
+ProjektStudio.utils.sanitizeAdminHtml = function(html) {
+  return ProjektStudio.utils.sanitizeHtml(html, ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST);
 }
 
 ProjektStudio.utils.formatHTML = function(html) {

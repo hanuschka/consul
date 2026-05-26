@@ -75,6 +75,6 @@ class Admin::NewslettersController < Admin::BaseController
 
     def allowed_params
       [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting,
-       :title_color, :subtitle_color]
+       :title_color, :subtitle_color, :respect_newsletter_optout]
     end
 end

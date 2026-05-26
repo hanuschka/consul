@@ -228,6 +228,10 @@ class Setting < ApplicationRecord
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
+        "deficiency_reports.feature_name": nil,
+        "deficiency_reports.create_cta": nil,
+        "deficiency_reports.new_form_title": nil,
+        "deficiency_reports.new_form_title_placeholder": nil,
 
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
@@ -248,7 +252,6 @@ class Setting < ApplicationRecord
         "extended_feature.general.enable_investments_overview": false,
         "extended_feature.general.enable_google_translate": false,
         # "extended_feature.general.enable_old_design": true,
-        "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
         # "extended_feature.general.homepage_projekt_search": false,
@@ -256,6 +259,7 @@ class Setting < ApplicationRecord
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",
+        "extended_option.general.homepage_navigation_link_color": "#000000",
 
         "extended_feature.modulewide.enable_categories": true,
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,

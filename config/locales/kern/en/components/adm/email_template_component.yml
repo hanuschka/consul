@@ -16,3 +16,6 @@ en:
         customized: Customized
         default_template: Default template
         default_template_description: The preset template used as long as no individual customization has been made.
+        recipient_types:
+          author: "To: Author"
+          subscribers: "To: Subscribers"

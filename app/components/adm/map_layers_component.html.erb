@@ -47,6 +47,11 @@
       </tbody>
     </table>
   <% else %>
-    <p class="kern-body kern-body--small"><%= t("#{i18n_scope}.no_layers") %></p>
+    <%= helpers.empty_state(
+          title: t("#{i18n_scope}.no_layers"),
+          icon: "layers",
+          link_url: new_path,
+          link_text: t("#{i18n_scope}.add_layer")
+        ) %>
   <% end %>
 </div>

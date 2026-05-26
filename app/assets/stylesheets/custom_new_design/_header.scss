@@ -71,6 +71,9 @@
     margin-bottom: 30px;
     margin-top: -100px;
     overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.25),
+                0 8px 16px -8px rgba(0, 0, 0, 0.08);
   }
 
   .homepage-image-header--video {
@@ -137,17 +140,31 @@
   }
 
   .homepage-image-header--title {
-    background: #ffffffcc;
+    background: rgba(255, 255, 255, 0.7);
     display: inline-block;
-    padding: 20px 30px;
+    padding: 28px 40px;
     line-height: 1.3;
-    color: var(--brand-color);
-    font-size: 32px;
+    color: #1f1f1f;
+    font-size: 24px;
+    font-weight: 400;
     margin-bottom: 30px;
-    border-radius: 4px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 4px solid var(--brand-color);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25),
+                0 2px 4px rgba(0, 0, 0, 0.06);
     word-wrap: break-word;
     max-width: 100%;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+
+    b {
+      display: inline-block;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--brand-color);
+    }
   }
 
   .homepage-image-header--title-wrapper {
@@ -160,14 +177,59 @@
     position: relative;
     z-index: 1;
 
-    .button {
-      font-size: 20px;
+    // Pill-CTA — glass-twin to the title card. Lifted with soft shadow,
+    // micro-arrow interaction on hover. Background uses var(--brand-color)
+    // so client themes carry through (see feedback_brand_color_adm_tree.md).
+    .homepage-image-header--button.button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--brand-color);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      padding: 16px 36px;
+      border-radius: 10px;
+      box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35),
+                  0 4px 10px -4px rgba(0, 0, 0, 0.2);
+      transition: transform 200ms ease,
+                  box-shadow 200ms ease,
+                  filter 200ms ease;
+
+      &::after {
+        content: "\2192"; // right arrow
+        display: inline-block;
+        transform: translateX(0);
+        transition: transform 200ms ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.4),
+                    0 4px 10px -4px rgba(0, 0, 0, 0.2);
+        filter: brightness(1.05);
+        color: #fff;
+
+        &::after {
+          transform: translateX(3px);
+        }
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--brand-color);
+        outline-offset: 3px;
+      }
     }
   }
 
   .homepage-search-form {
-    max-width: 350px;
-    margin-top: 25px;
+    max-width: 480px;
+    margin-top: 26px;
     flex-grow: 1;
     width: 100%;
 
@@ -175,12 +237,134 @@
       display: none;
     }
 
-    .search-form-header {
-      input[type="text"] {
-        width: 100%;
-        height: 42px;
-        font-size: 18px;
-        border-radius: 4px;
+    // "Premium Glass Tablet" — heavy frosted glass mit eigenständigem
+    // Charakter. Substantielle Präsenz, polierte Glasplatte, brand-color
+    // Identity über die linke 3px Border. Nicht content-first wie Spotify,
+    // sondern UI-Element mit Gewicht.
+    //
+    // font-size: 22px liegt am .text-search-form (dem realen <form>-/Wrapper-
+    // Container, den der Component rendert), damit der Search-Button per
+    // font-size: inherit !important (global) automatisch dieselbe Icon-Größe
+    // erbt — wir können font-size am Button nicht direkt setzen.
+    .text-search-form {
+      font-size: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      height: 58px;
+      font-size: 18px;
+      color: rgba(31, 31, 31, 0.92);
+      // Lupe links innen ⇒54px Padding links; rechts nur Reset im
+      // aktiven Zustand.
+      padding-left: 54px;
+      padding-right: 22px;
+      // Vertikaler Gradient simuliert Glanz-Falloff oben → unten,
+      // gibt echtes Glas-Feeling (top catches light, bottom darker).
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.60) 0%,
+        rgba(255, 255, 255, 0.42) 100%
+      );
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      // Brand-Identität als 3px-Akzent links — sichtbares Marker, nicht
+      // nur Focus-Cue.
+      border-left: 3px solid var(--brand-color);
+      border-radius: 18px;
+      // Multi-Layer Shadow: heavy float + close-shadow + INSET top
+      // highlight (das innere weisse Glanzlicht das echtes Glas
+      // kennzeichnet).
+      box-shadow:
+        0 24px 48px -14px rgba(0, 0, 0, 0.4),
+        0 4px 12px -4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      transition:
+        border-color 200ms ease,
+        box-shadow 200ms ease,
+        background 200ms ease;
+
+      &::placeholder {
+        color: rgba(31, 31, 31, 0.6);
+      }
+
+      &:focus {
+        outline: none;
+        // Border ringsum tönt zur Marke, linke 3px Border bleibt explizit
+        // damit die Breite nicht auf 1px zusammenfällt.
+        border: 1px solid var(--brand-color);
+        border-left: 3px solid var(--brand-color);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.72) 0%,
+          rgba(255, 255, 255, 0.55) 100%
+        );
+        // Multi-Layer Shadow bleibt erhalten; Brand-Glow nur in
+        // @supports-Block für moderne Browser via color-mix.
+        box-shadow:
+          0 24px 48px -14px rgba(0, 0, 0, 0.4),
+          0 4px 12px -4px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+        @supports (background: color-mix(in srgb, red 50%, transparent)) {
+          box-shadow:
+            0 24px 48px -14px rgba(0, 0, 0, 0.4),
+            0 4px 12px -4px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.85),
+            0 0 0 4px color-mix(in srgb, var(--brand-color) 18%, transparent);
+        }
+      }
+    }
+
+    // Lupe LINKS innen. Globale text_search_form.scss positioniert den
+    // Button auf right:5px — wir setzen left:7px und right:auto, um das
+    // zu neutralisieren. Transparenter Hintergrund, dezent dunkles Icon,
+    // weiss-glas-Highlight beim Hover (harmonisiert mit dem Glas-Look).
+    // font-size kommt vom Parent (.text-search-form: 22px) via
+    // font-size: inherit !important.
+    .text-search-form--search-button {
+      width: 42px;
+      height: 42px;
+      left: 6px;
+      right: auto;
+      background: transparent;
+      color: rgba(31, 31, 31, 0.7);
+      border-radius: 50%;
+      transition: background 180ms ease, color 180ms ease;
+
+      &:hover,
+      &:focus {
+        background: rgba(255, 255, 255, 0.4);
+        color: var(--brand-color);
+      }
+    }
+
+    // Reset-Button (X) bleibt rechts — globale Datei setzt right:5px, wir
+    // schieben ihn auf right:18px, damit er sauber innerhalb der
+    // Tablet-Rundung sitzt. Wird nur im .-active-State gerendert
+    // (display:flex via global rule).
+    .text-search-form--reset-button {
+      right: 18px;
+      left: auto;
+    }
+
+    // Active-state (input has content): globaler text_search_form.scss
+    // schiebt unseren Search-Button im aktiven Zustand auf right:2.2em
+    // (würde ihn vom links-Layout wegreißen) und macht den Reset-Button
+    // sichtbar. Wir neutralisieren das Re-Positioning: Lupe bleibt
+    // STARR links, Reset bleibt starr rechts. Wrapper-Specificity
+    // (.homepage-search-form ⇒ 0,4,0) schlägt globale Regel (0,3,0) —
+    // globale Datei bleibt unangetastet.
+    .text-search-form.-active {
+      .text-search-form--search-button {
+        left: 6px;
+        right: auto;
+      }
+
+      .text-search-form--reset-button {
+        right: 18px;
+        left: auto;
       }
     }
   }
@@ -231,8 +415,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: #dedede !important;
-    color: black !important;
+    background: var(--brand-color) !important;
+    color: white !important;
   }
 
   .locale .locale-form select {
@@ -278,8 +462,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       }
 
       .main-navigation-item--account--image-wrapper {
-        background: white !important;
-        color: black !important;
+        background: var(--brand-color) !important;
+        color: white !important;
       }
     }
   }
@@ -304,7 +488,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       }
 
       .main-navigation-item--account--image-wrapper {
-        background: black !important;
+        background: var(--brand-color) !important;
         color: white !important;
       }
 
@@ -601,6 +785,18 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         &:hover {
           text-decoration: none;
         }
+
+        // Keep d-flex links (icon + label) horizontally aligned —
+        // overrides the inline-block default above so the Material
+        // Symbols icons sit next to the label, not above it.
+        &.d-flex {
+          display: flex;
+        }
+
+        .material-symbols-outlined {
+          flex-shrink: 0;
+          color: var(--brand-color);
+        }
       }
 
       &:first-child {
@@ -615,6 +811,70 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       @media screen and (min-width: $small-tablet-viewport-start) {
         padding: 1em;
         min-height: 45px;
+      }
+    }
+
+  }
+
+  // Konto flyout (avatar dropdown) — overrides for the menu rendered by
+  // _subnavigation_konto_new + _login_items_new. Scoped to the wrapper so
+  // the projekt navigation flyout (which shares .nav-flyout-block markup)
+  // keeps its legacy borders + spacing.
+  .main-navigation-item-account--wrapper > .nav-flyout-block {
+    // Paint a solid surface on the container itself. The base
+    // .main-menu li.flyout-item rule (custom/menu.scss:450) only paints
+    // each row, so the divider rows (margin: 0.5rem 1em) would otherwise
+    // expose the transparent container — making the hairline look like
+    // a wide grey band over the page background. With the container
+    // filled, the divider sits cleanly inside the flyout surface.
+    background-color: $flyout-item-bg-color;
+    // Border-radius is set on the container (10px, line 599) but the
+    // per-item :first-child / :last-child radii from the base block can
+    // overshoot due to row backgrounds painted by .main-menu li.flyout-item.
+    // Clip to the container so the surface keeps clean rounded corners.
+    overflow: hidden;
+
+    // Strip the base per-row border-bottom/border-top set in
+    // custom/menu.scss (li.flyout-item { border-bottom: 1px solid ... } and
+    // &:first-child { border-top: 1px solid ... }). Otherwise these stack
+    // with the divider rows in login_items_new and render as a doubled /
+    // thicker hairline.
+    li.flyout-item {
+      border-top: 0;
+      border-bottom: 0;
+    }
+
+    // gap-1 utility from Bootstrap-style spacing isn't available in this
+    // bundle, so the Material Symbols icon collapses against the label.
+    // Explicit gap on the d-flex links inside the dropdown restores the
+    // icon ↔ label spacing seen in the /adm subnavigation-konto flyout.
+    .nav-element a.d-flex {
+      gap: 0.5rem;
+    }
+
+    // Hairline divider rows rendered via .flyout-item--divider in
+    // login_items_new. Mirrors the Backend /adm subnavigation-konto
+    // strategy: a 1px tall row that paints the divider colour as its
+    // background — no border stacking, no inherited padding box. Wrapper
+    // scope (0,3,2) beats the base .main-menu li.flyout-item rule (0,1,2)
+    // so the 1em padding + per-row border-bottom from custom/menu.scss
+    // are cleanly overridden without !important.
+    li.flyout-item--divider {
+      width: auto;
+      height: 1px;
+      min-height: 0;
+      margin: 0.5rem 1em;
+      padding: 0;
+      background: $flyout-item-divider-color;
+      pointer-events: none;
+      list-style: none;
+
+      // Defensive: ensure no inherited focus/hover background paints over
+      // the hairline if the row ever gains :hover from a parent rule.
+      &:hover,
+      &:focus,
+      &:active {
+        background: $flyout-item-divider-color;
       }
     }
   }
@@ -702,14 +962,64 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .homepage-image-header--title {
-      font-size: 22px;
-      padding: 10px 20px;
+      font-size: 18px;
+      padding: 20px 24px;
+      border-radius: 10px;
+
+      b {
+        font-size: 28px;
+      }
     }
 
     .homepage-image-header--button.button {
-      font-size: 20px;
-      padding: 5px 20px;
+      font-size: 21px;
+      padding: 14px 28px;
       max-width: 300px;
+    }
+
+    // Mobile-Twin des "Premium Glass Tablet": 16px font-size verhindert
+    // iOS-Auto-Zoom beim Focus. Input auf 56px Höhe, schlanker Tablet-
+    // Radius 16px, 3px Brand-Border-Left bleibt erhalten. Gradient,
+    // backdrop-filter und multi-layer shadow erben vom Desktop-Block.
+    // Font-size für den Button kommt vom realen .text-search-form-
+    // Container (20px) via global font-size: inherit !important.
+    .homepage-search-form {
+      max-width: 100%;
+
+      .text-search-form {
+        font-size: 18px;
+      }
+
+      input[type="text"] {
+        height: 52px;
+        font-size: 16px;
+        padding-left: 50px;
+        border-radius: 16px;
+      }
+
+      .text-search-form--search-button {
+        width: 38px;
+        height: 38px;
+        left: 5px;
+        right: auto;
+      }
+
+      .text-search-form--reset-button {
+        right: 14px;
+        left: auto;
+      }
+
+      .text-search-form.-active {
+        .text-search-form--search-button {
+          left: 5px;
+          right: auto;
+        }
+
+        .text-search-form--reset-button {
+          right: 14px;
+          left: auto;
+        }
+      }
     }
 
     .homepage-image-header--title-wrapper {
@@ -719,6 +1029,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header {
       height: 450px;
       margin-bottom: 5px;
+      border-radius: 12px;
     }
 
     .top-bar-wrapper {

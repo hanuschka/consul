@@ -1,7 +1,7 @@
 module RecipientGroups
   module FilterResolvers
     def self.for(kind)
-      const_get(kind.to_s.camelize)
+      "RecipientGroups::FilterResolvers::#{kind.to_s.camelize}".constantize
     end
   end
 end

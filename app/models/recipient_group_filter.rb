@@ -2,7 +2,7 @@ class RecipientGroupFilter < ApplicationRecord
   KINDS = %w[
     newsletter_subscribers role
     phase_authors phase_subscribers projekt_subscribers comment_authors voting_participants
-    geozone plz age_range gender
+    district plz age_range gender
     individual_group manual_users
   ].freeze
 
@@ -16,7 +16,7 @@ class RecipientGroupFilter < ApplicationRecord
     "projekt_subscribers"    => ["projekt_id"],
     "comment_authors"        => [],
     "voting_participants"    => ["projekt_phase_id"],
-    "geozone"                => ["geozone_ids"],
+    "district"               => ["district_ids"],
     "plz"                    => ["plz_list"],
     "age_range"              => [], # validated below — either age_range_id OR min/max
     "gender"                 => ["gender"],

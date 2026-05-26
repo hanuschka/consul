@@ -6,7 +6,7 @@ describe RecipientGroupFilter do
       expect(RecipientGroupFilter::KINDS).to match_array(%w[
         newsletter_subscribers role
         phase_authors phase_subscribers projekt_subscribers comment_authors voting_participants
-        geozone plz age_range gender
+        district plz age_range gender
         individual_group manual_users
       ])
     end
@@ -95,13 +95,13 @@ describe RecipientGroupFilter do
     # switched filter often has the new kind without any params yet. Blocking
     # the save would corrupt the persisted state (kind reverts to whatever was
     # last valid) and break the multi-step edit flow.
-    it "accepts geozone filter without geozone_ids (partial UI state)" do
-      f = build(:recipient_group_filter, recipient_group: group, kind: "geozone", params: {})
+    it "accepts district filter without district_ids (partial UI state)" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "district", params: {})
       expect(f).to be_valid
     end
 
-    it "accepts geozone filter with geozone_ids" do
-      f = build(:recipient_group_filter, recipient_group: group, kind: "geozone", params: { "geozone_ids" => [1] })
+    it "accepts district filter with district_ids" do
+      f = build(:recipient_group_filter, recipient_group: group, kind: "district", params: { "district_ids" => [1] })
       expect(f).to be_valid
     end
 

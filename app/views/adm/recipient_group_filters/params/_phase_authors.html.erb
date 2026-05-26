@@ -1,8 +1,34 @@
+<%
+  supported_phase_types = %w[
+    ProjektPhase::BudgetPhase
+    ProjektPhase::ProposalPhase
+    ProjektPhase::DebatePhase
+    ProjektPhase::ArgumentPhase
+    ProjektPhase::QuestionPhase
+  ]
+  selected_phase = ProjektPhase.find_by(id: filter_params["projekt_phase_id"])
+  criterion_options =
+    case selected_phase&.type
+    when "ProjektPhase::BudgetPhase"
+      [[t("adm.recipient_groups.filters.params_labels.criteria.all"), "all"]] +
+        RecipientGroups::FilterResolvers::PhaseAuthors::BUDGET_CRITERIA.map { |c|
+          [t("adm.recipient_groups.filters.params_labels.criteria.#{c}"), c]
+        }
+    when "ProjektPhase::ProposalPhase",
+         "ProjektPhase::DebatePhase",
+         "ProjektPhase::ArgumentPhase",
+         "ProjektPhase::QuestionPhase"
+      [[t("adm.recipient_groups.filters.params_labels.criteria.all"), "all"]]
+    else
+      []
+    end
+%>
+
 <label class="rg-filter-card__param-label">
   <%= t("adm.recipient_groups.filters.params_labels.projekt_phase_id") %>
   <%= select_tag "recipient_group_filter[params][projekt_phase_id]",
         options_for_select(
-          ProjektPhase.includes(:projekt).order("projekts.name").map { |pp|
+          ProjektPhase.where(type: supported_phase_types).includes(:projekt).order("projekts.name").map { |pp|
             ["#{pp.projekt&.name} – #{pp.title || pp.type}", pp.id]
           },
           filter_params["projekt_phase_id"]
@@ -11,10 +37,12 @@
         data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
 </label>
 
-<label class="rg-filter-card__param-label">
-  <%= t("adm.recipient_groups.filters.params_labels.criterion") %>
-  <%= text_field_tag "recipient_group_filter[params][criterion]",
-        filter_params["criterion"],
-        placeholder: "all / feasible / unfeasible / selected / winners / not_winners",
-        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
-</label>
+<% if criterion_options.any? %>
+  <label class="rg-filter-card__param-label">
+    <%= t("adm.recipient_groups.filters.params_labels.criterion") %>
+    <%= select_tag "recipient_group_filter[params][criterion]",
+          options_for_select(criterion_options, filter_params["criterion"]),
+          include_blank: true,
+          data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+  </label>
+<% end %>

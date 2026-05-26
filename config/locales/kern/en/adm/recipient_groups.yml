@@ -85,11 +85,11 @@ en:
           newsletter_subscribers: Newsletter subscribers
           role: Role
           phase_authors: Phase authors
-          phase_subscribers: Phase / projekt subscribers
+          phase_subscribers: Phase subscribers
           projekt_subscribers: Projekt subscribers (sidebar toggle)
           comment_authors: Commenters
           voting_participants: Voting participants
-          geozone: District
+          district: District
           plz: Postal code
           age_range: Age range
           gender: Gender
@@ -109,9 +109,20 @@ en:
           projekt_phase_id: Projekt phase
           projekt_id: Projekt
           criterion: Criterion
+          criteria:
+            all: All authors
+            feasible: Feasible
+            unfeasible: Unfeasible
+            selected: Selected
+            winners: Winners
+            not_winners: Non-winners
           commentable_type: Reference type
+          commentable_types:
+            Proposal: Proposal
+            Debate: Debate
+            Budget::Investment: Budget investment
           commentable_id: Specific object (optional)
-          geozone_ids: Districts
+          district_ids: Districts
           plz_list: Postal codes (one per line)
           age_range_id: Age range (preset)
           min_age: Minimum age

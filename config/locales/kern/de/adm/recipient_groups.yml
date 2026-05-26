@@ -86,11 +86,11 @@ de:
           newsletter_subscribers: Newsletter-Abonnenten
           role: Rolle
           phase_authors: Autoren einer Projektphase
-          phase_subscribers: Abonnenten einer Phase / eines Projekts
+          phase_subscribers: Abonnenten einer Phase
           projekt_subscribers: Abonnenten eines Projekts (Sidebar-Schalter)
           comment_authors: Kommentatoren
           voting_participants: Abstimmungs-Teilnehmer
-          geozone: Stadtteil
+          district: Stadtteil
           plz: Postleitzahl
           age_range: Altersgruppe
           gender: Geschlecht
@@ -110,9 +110,20 @@ de:
           projekt_phase_id: Projektphase
           projekt_id: Projekt
           criterion: Kriterium
+          criteria:
+            all: Alle Autoren
+            feasible: Durchführbare
+            unfeasible: Nicht durchführbare
+            selected: Vorausgewählte
+            winners: Gewinner
+            not_winners: Nicht-Gewinner
           commentable_type: Bezugsobjekt
+          commentable_types:
+            Proposal: Vorschlag
+            Debate: Debatte
+            Budget::Investment: Bürgerhaushalt-Vorschlag
           commentable_id: Konkretes Objekt (optional)
-          geozone_ids: Stadtteile
+          district_ids: Stadtteile
           plz_list: Postleitzahlen (eine pro Zeile)
           age_range_id: Altersgruppe (vordefiniert)
           min_age: Mindestalter

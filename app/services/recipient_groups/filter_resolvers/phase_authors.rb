@@ -20,6 +20,7 @@ module RecipientGroups
 
           case phase.type
           when "ProjektPhase::BudgetPhase"
+            return phase.budget.investments.pluck(:author_id).uniq if criterion == "all"
             return [] unless BUDGET_CRITERIA.include?(criterion)
 
             phase.send("authors_of_#{criterion}_ids")

@@ -1722,6 +1722,7 @@ ActiveRecord::Schema.define(version: 2026_05_25_085759) do
     t.bigint "recipient_group_id"
     t.string "title_color", default: "#000000", null: false
     t.string "subtitle_color", default: "#000000", null: false
+    t.boolean "respect_newsletter_optout", default: true, null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
@@ -2590,6 +2591,19 @@ ActiveRecord::Schema.define(version: 2026_05_25_085759) do
     t.index ["selected"], name: "index_proposals_on_selected"
     t.index ["sentiment_id"], name: "index_proposals_on_sentiment_id"
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
+  end
+
+  create_table "recipient_group_filters", force: :cascade do |t|
+    t.bigint "recipient_group_id", null: false
+    t.integer "position", default: 0, null: false
+    t.string "kind", null: false
+    t.string "operator", default: "include", null: false
+    t.jsonb "params", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind"], name: "index_recipient_group_filters_on_kind"
+    t.index ["recipient_group_id", "position"], name: "index_rgf_on_recipient_group_id_and_position"
+    t.index ["recipient_group_id"], name: "index_recipient_group_filters_on_recipient_group_id"
   end
 
   create_table "recipient_groups", force: :cascade do |t|
@@ -3468,6 +3482,7 @@ ActiveRecord::Schema.define(version: 2026_05_25_085759) do
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
+  add_foreign_key "recipient_group_filters", "recipient_groups"
   add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"

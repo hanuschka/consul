@@ -75,9 +75,14 @@ namespace :adm do
   resources :modal_notifications, except: :show
 
   scope :newsletters do
-    resources :recipient_groups, except: :show do
-      collection do
-        post :select_options
+    resources :recipient_groups, except: [:show, :new] do
+      resources :filters,
+                controller: "recipient_group_filters",
+                only: [:create, :update, :destroy] do
+        collection do
+          post :reorder
+          get :recount
+        end
       end
     end
     resources :unregistered_newsletter_subscribers, only: [:index, :destroy]

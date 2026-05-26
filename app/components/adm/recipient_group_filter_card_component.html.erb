@@ -1,0 +1,67 @@
+<article class="rg-filter-card"
+         id="<%= dom_id(filter) %>"
+         data-filter-id="<%= filter.id %>"
+         data-controller="adm-newsletters--filter-stack-item">
+  <div class="rg-filter-card__header">
+    <button type="button"
+            class="rg-filter-card__handle"
+            title="<%= t("adm.recipient_groups.filters.move_up") %>"
+            aria-label="<%= t("adm.recipient_groups.filters.move_up") %>"
+            data-sortable-handle>
+      <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+    </button>
+
+    <span class="rg-filter-card__position"><%= display_position %></span>
+
+    <% unless first_filter? %>
+      <label class="rg-filter-card__operator">
+        <span class="sr-only"><%= t("adm.recipient_groups.filters.operators.include") %></span>
+        <%= select_tag "recipient_group_filter[operator]",
+              options_for_select(
+                RecipientGroupFilter::OPERATORS.map { |op| [t("adm.recipient_groups.filters.operators.#{op}"), op] },
+                filter.operator
+              ),
+              class: "kern-form-input__input",
+              data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+      </label>
+    <% end %>
+
+    <label class="rg-filter-card__kind">
+      <span class="sr-only"><%= t("adm.recipient_groups.filters.section_title") %></span>
+      <%= select_tag "recipient_group_filter[kind]",
+            options_for_select(
+              RecipientGroupFilter::KINDS.map { |k| [t("adm.recipient_groups.filters.kinds.#{k}"), k] },
+              filter.kind
+            ),
+            class: "kern-form-input__input",
+            data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+    </label>
+
+    <%= button_to adm_recipient_group_filter_path(filter.recipient_group, filter),
+          method: :delete,
+          form: { data: { turbo_stream: true } },
+          class: "rg-filter-card__delete",
+          title: t("adm.recipient_groups.filters.delete"),
+          "aria-label": t("adm.recipient_groups.filters.delete"),
+          data: { confirm: t("adm.recipient_groups.filters.delete_confirm") } do %>
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    <% end %>
+  </div>
+
+  <div class="rg-filter-card__body">
+    <section class="rg-filter-card__params">
+      <%= render "adm/recipient_group_filters/params/#{filter.kind}", filter: filter, filter_params: filter_params %>
+    </section>
+
+    <div class="rg-filter-card__counter" id="filter-count-<%= filter.id %>">
+      <span class="rg-filter-card__total">
+        <%= t("adm.recipient_groups.filters.counter.total", count: count) %>
+      </span>
+      <% if delta != 0 %>
+        <span class="rg-filter-card__delta <%= delta_class %>">
+          <%= delta_label %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</article>

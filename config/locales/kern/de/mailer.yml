@@ -2,7 +2,7 @@ de:
   mailer:
     budget_investment_created:
       title: Bestätigung nach Einreichung
-      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" an den Autor gesendet, sobald sein Bürgervorschlag erfolgreich eingereicht wurde.'
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an den Autor gesendet, sobald sein Bürgervorschlag erfolgreich eingereicht wurde.'
       recipient: Der Nutzer, der den Bürgervorschlag eingereicht hat.
     budget_investment_feasible:
       title: Vorschlag als umsetzbar bewertet
@@ -14,20 +14,20 @@ de:
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_selected:
       title: Vorschlag ausgewählt
-      description: 'Wird an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als ausgewählt markiert wurde (und damit für die Abstimmungsphase qualifiziert ist).'
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als ausgewählt markiert wurde — und damit für die Abstimmungsphase (7. Phase) qualifiziert ist.'
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_unselected:
       title: Vorschlag nicht ausgewählt
-      description: 'Wird an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als nicht ausgewählt markiert wurde (und damit nicht in die Abstimmungsphase übernommen wird).'
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als nicht ausgewählt markiert wurde — und damit nicht in die Abstimmungsphase (7. Phase) übernommen wird.'
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_preselected:
       title: Vorschlag vorausgewählt
-      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" abgegebenen Stimmen automatisch in die Vorauswahl aufgenommen wurde.'
-      recipient: Der Nutzer, der den umsetzbaren Vorschlag eingereicht hat.
+      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen automatisch in die Vorauswahl aufgenommen wurde.'
+      recipient: 'Der Nutzer, dessen Vorschlag (1) als umsetzbar markiert wurde und (2) aufgrund der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen in die Vorauswahl aufgenommen wurde.'
     budget_investment_not_preselected:
       title: Vorschlag nicht vorausgewählt
-      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" abgegebenen Stimmen nicht in die Vorauswahl aufgenommen wurde.'
-      recipient: Der Nutzer, der den umsetzbaren Vorschlag eingereicht hat.
+      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen nicht in die Vorauswahl aufgenommen wurde.'
+      recipient: 'Der Nutzer, dessen Vorschlag (1) als umsetzbar markiert wurde, aber (2) aufgrund der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen nicht in die Vorauswahl aufgenommen wurde.'
     proposal_created:
       title: Bestätigung nach Einreichung
       description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.
@@ -120,7 +120,7 @@ de:
       recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_budget_investment:
       title: Benachrichtigung über neuen Bürgervorschlag
-      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" an Abonnenten gesendet, sobald ein neuer Bürgervorschlag eingereicht wurde.'
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an Abonnenten gesendet, sobald ein neuer Bürgervorschlag eingereicht wurde.'
       recipient: Alle Nutzer, die das Projekt abonniert haben.
     user_reverification_failed:
       title: Re-Verifizierung fehlgeschlagen

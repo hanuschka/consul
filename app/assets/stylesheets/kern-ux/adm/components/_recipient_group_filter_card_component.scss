@@ -1,0 +1,297 @@
+$mobile-viewport-start: 640px !default;
+
+.rg-filter-card {
+  border: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-layout-border, #ddd);
+  border-radius: var(--kern-metric-border-radius-default, 6px);
+  padding: var(--kern-16, 1rem) var(--kern-16, 1rem) var(--kern-12, 0.75rem);
+  margin-bottom: var(--kern-12, 0.75rem);
+  background: var(--kern-color-layout-background-default, #fff);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--adm-color-primary) 30%, var(--kern-color-layout-border, #ddd));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--adm-color-primary) 6%, transparent);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--kern-8, 0.5rem);
+    padding-bottom: var(--kern-12, 0.75rem);
+    margin-bottom: var(--kern-12, 0.75rem);
+    border-bottom: 1px solid var(--kern-color-layout-border, #f0f0f0);
+    flex-wrap: wrap;
+  }
+
+  &__handle {
+    cursor: grab;
+    color: var(--kern-grey-500, #888);
+    border: none;
+    background: transparent;
+    padding: var(--kern-4, 0.25rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+
+    &:hover {
+      background: color-mix(in srgb, var(--adm-color-primary) 6%, transparent);
+      color: var(--adm-color-primary);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__position {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    background: var(--adm-color-primary);
+    color: #fff;
+    font-weight: 600;
+    font-size: var(--kern-font-size-14, 0.875rem);
+    margin-right: var(--kern-4, 0.25rem);
+  }
+
+  &__operator,
+  &__kind {
+    margin-bottom: 0;
+
+    select {
+      margin-bottom: 0;
+    }
+  }
+
+  &__operator select {
+    min-width: 8rem;
+  }
+
+  &__kind select {
+    min-width: 14rem;
+  }
+
+  // Generic kern-style for all form controls inside the card.
+  // Mirrors .kern-form-input__input from _table.scss so partials don't need explicit classes.
+  select,
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  textarea {
+    height: auto;
+    min-height: var(--kern-metric-dimension-large, 40px);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-layout-border, #A5AAC3);
+    border-radius: var(--kern-metric-border-radius-small, 3px);
+    background: var(--kern-custom-white, #fff);
+    margin-bottom: 0;
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      border-width: 1px;
+      padding: 0.5rem 0.75rem;
+      border-color: color-mix(in srgb, var(--adm-color-primary) 40%, var(--kern-color-layout-border, #A5AAC3));
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-color: var(--adm-color-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--adm-color-primary) 20%, transparent);
+      outline: none;
+      background: var(--kern-custom-white, #fff);
+    }
+  }
+
+  textarea {
+    min-height: 4rem;
+    font-family: inherit;
+  }
+
+  &__delete {
+    margin-left: auto;
+    border: var(--kern-metric-border-width-light, 1px) solid transparent;
+    background: transparent;
+    color: var(--kern-color-action-destructive, #c33);
+    padding: 0.375rem 0.5rem;
+    border-radius: var(--kern-metric-border-radius-small, 3px);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    .material-symbols-outlined {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    &:hover,
+    &:focus {
+      background: color-mix(in srgb, var(--kern-color-action-destructive, #c33) 10%, transparent);
+      border-color: color-mix(in srgb, var(--kern-color-action-destructive, #c33) 40%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--kern-color-action-destructive, #c33);
+      outline-offset: 2px;
+    }
+  }
+
+  // button_to wraps the delete button in a <form>; flatten it
+  form {
+    display: inline-flex;
+    margin: 0;
+    margin-left: auto;
+  }
+
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--kern-16, 1rem);
+    padding-top: var(--kern-4, 0.25rem);
+  }
+
+  &__params {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--kern-12, 0.75rem);
+  }
+
+  &__param-label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kern-4, 0.25rem);
+    font-size: var(--kern-font-size-14, 0.875rem);
+    font-weight: 500;
+    color: var(--kern-color-layout-text-secondary, #555);
+  }
+
+  // Inline form-check (checkbox + label) — fully custom-styled, scoped to the card
+  // to avoid bleed and override any Foundation/inherited checkbox styling.
+  .kern-form-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.25rem 0;
+    font-size: var(--kern-font-size-14, 0.875rem);
+
+    input[type="checkbox"].kern-form-check__checkbox {
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px;
+      margin: 0 !important;
+      padding: 0;
+      border: 2px solid #c0c4d6;
+      border-radius: 3px;
+      background-color: #fff;
+      background-image: none;
+      box-shadow: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      vertical-align: middle;
+
+      &::before,
+      &:checked::before,
+      &:checked:hover::before,
+      &:checked:focus::before,
+      &:checked:focus-visible::before {
+        display: none !important;
+        content: none !important;
+      }
+
+      &:hover {
+        border-color: var(--adm-color-primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--adm-color-primary);
+        outline-offset: 2px;
+      }
+
+      &:checked {
+        background-color: var(--adm-color-primary);
+        border-color: var(--adm-color-primary);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 70% 70%;
+      }
+    }
+
+    &__label {
+      cursor: pointer;
+      user-select: none;
+      color: var(--kern-color-layout-text-default, #171A2B);
+      line-height: 1.4;
+    }
+  }
+
+  &__counter {
+    font-size: var(--kern-font-size-14, 0.875rem);
+    color: var(--kern-color-layout-text-secondary, #555);
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding-top: 0.375rem;
+  }
+
+  &__delta {
+    margin-left: var(--kern-8, 0.5rem);
+    font-weight: 600;
+
+    &--positive {
+      color: var(--kern-color-action-confirm, #2a7);
+    }
+
+    &--negative {
+      color: var(--kern-color-action-destructive, #c33);
+    }
+  }
+
+  @media (max-width: $mobile-viewport-start) {
+    &__body {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__counter {
+      text-align: left;
+      padding-top: var(--kern-8, 0.5rem);
+      border-top: 1px solid var(--kern-color-layout-border, #f0f0f0);
+    }
+
+    &__header {
+      flex-wrap: wrap;
+    }
+
+    &__delete {
+      margin-left: 0;
+    }
+  }
+}
+
+.rg-filter-stack-footer {
+  font-size: var(--kern-font-size-16, 1rem);
+  padding: var(--kern-16, 1rem);
+  background: color-mix(in srgb, var(--adm-color-primary) 4%, transparent);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+  text-align: right;
+
+  @media (max-width: $mobile-viewport-start) {
+    text-align: left;
+  }
+}

@@ -23,9 +23,14 @@ class Ai::GenerateContentBlockFromPrompt < ApplicationService
     raise_if_cancelled!
     mark_processing
 
-    dt_templates_by_category = fetch_dt_templates
-    filtered_templates = filter_templates_by_category(dt_templates_by_category)
-    anchor_template = fetch_anchor_template(dt_templates_by_category)
+    filtered_templates = []
+    anchor_template = nil
+
+    if @category_hint.present?
+      dt_templates_by_category = fetch_dt_templates
+      filtered_templates = filter_templates_by_category(dt_templates_by_category)
+      anchor_template = fetch_anchor_template(dt_templates_by_category)
+    end
 
     chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema)
 
@@ -152,7 +157,7 @@ class Ai::GenerateContentBlockFromPrompt < ApplicationService
 
   def build_system_instructions(filtered_templates, anchor_template)
     base_prompt = fetch_base_prompt
-    templates_reference = build_templates_reference(filtered_templates)
+    templates_reference = @category_hint.present? ? build_templates_reference(filtered_templates) : ""
     anchor_section = build_anchor_section(anchor_template)
     projekt_context_section = build_projekt_context_section
 

@@ -17,12 +17,20 @@ de:
             image: Bild
     navbar_items:
       deleted_projekt: "[Gelöschtes Projekt]"
+      deleted_landing_page: "[Gelöschte Themenseite]"
       edit:
         title: Navigationseintrag bearbeiten
       form:
         custom_title_label: Anzeigename (optional)
         custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
         update: Änderungen speichern
+        kinds:
+          landing_pages: Themenseiten
+        landing_page_label: Themenseite
+        landing_page_filter_placeholder: Themenseite suchen...
+        no_landing_pages_title: Keine veröffentlichten Themenseiten vorhanden
+        no_landing_pages_description: Es sind aktuell keine veröffentlichten Themenseiten verfügbar, die in die Navigation aufgenommen werden können. Erstellen Sie eine neue Themenseite oder aktivieren Sie eine bestehende im Bereich Themenseiten, um sie anschließend als eigenständigen Navigationseintrag hinzuzufügen und Bürgern den direkten Einstieg in zielgruppenspezifische Inhalte zu ermöglichen.
+        no_landing_pages_link: Zu den Themenseiten
     projekts:
       projekt_point_of_interest_categories:
         form:

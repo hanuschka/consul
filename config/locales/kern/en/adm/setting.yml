@@ -128,8 +128,6 @@ en:
         show_guest_login_links_description: Shows the guest-login link in the footer
         users_overview_page: Overview of all users
         users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
-        use_white_top_navigation_text: Use white text in top navigation
-        use_white_top_navigation_text_description: "Enable when the homepage background image is dark — switches the top navigation text to white so it stays readable. Once the user scrolls and the navigation switches to a white background, the setting no longer applies."
         enable_projekt_events_page: Events calendar
         enable_projekt_events_page_description: >
           Enables a central overview page for all public events from the participation projects. Citizens can view upcoming workshops, town-hall meetings, and information events there. The page can be made reachable via the navigation.
@@ -148,6 +146,8 @@ en:
         homepage_button_text_description: "Text shown on the button in the hero area of the homepage. The button serves as the central call-to-action for visitors. Choose a short, action-oriented label (e.g. 'Get involved now' or 'Discover projects'). If the field is empty, no button is shown."
         homepage_button_link: Homepage button link
         homepage_button_link_description: "Target URL opened when the homepage button is clicked. You can enter an internal path (e.g. /projekts) or a full external URL (e.g. https://example.com). The link only takes effect if a button text is also entered. Without button text, the link remains invisible."
+        homepage_navigation_link_color: Top navigation link color
+        homepage_navigation_link_color_description: "Sets the text color of the links in the top navigation bar of the homepage. This matters because the header background image can be dark and readability must be ensured."
       gdpr:
         devise_timeout_min: "Duration of user sessions in minutes"
         devise_timeout_min_description: >

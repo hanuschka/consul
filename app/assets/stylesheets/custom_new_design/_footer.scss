@@ -1,16 +1,256 @@
+// Footer-Redesign (CON-2821) — citizen-facing footer with 4-column layout,
+// modern spacing, and an admin-only empty-hint pattern for the two
+// `footer_block_*` content blocks. Mirrors the sidebar-card empty-hint
+// approach (see `components/shared/sidebar_card.scss`).
+//
+// Stays inside `.custom-new-design { ... }` so Foundation resets don't win
+// on specificity (Spec-Falle, siehe Memory `custom_new_design_specificity`).
 .custom-new-design {
   .footer {
     margin-top: 50px;
     width: 100%;
     max-width: 100%;
+    // Dezent gray background + top-corner radius (matching .homepage-image-header)
+    // replace the previous 1px top border as the visual separator from the page
+    // content above. No border-top here — it would clip awkwardly against the
+    // rounded top corners.
+    background: #dfdfdf;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 16px -4px rgba(0, 0, 0, 0.08);
 
-    @media(max-width: $big-tablet-viewport-start) {
-      padding: 20px;
+    @media (max-width: $big-tablet-viewport-start) {
+      padding: 0 20px;
     }
 
-    .row .column {
-      padding-right: 15px !important;
-      margin-bottom: 25px;
+    // Flex layout so the *actually rendered* columns fill the available width
+    // evenly — regardless of whether 2, 3 or 4 columns end up rendering. Avoids
+    // the right-side gap when admin-only blocks are hidden or contact column is
+    // skipped. Foundation grid classes were removed from the markup on purpose;
+    // gap + flex-basis handle spacing/wrapping instead.
+    .footer-main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      padding: 48px 0 24px;
+
+      @media (max-width: $small-tablet-viewport-start) {
+        gap: 24px;
+        padding: 32px 0 16px;
+      }
+
+      .footer-column {
+        flex: 1 1 220px;
+        padding-right: 0;
+        margin-bottom: 0;
+
+        @media (max-width: $small-tablet-viewport-start) {
+          flex: 1 1 100%;
+        }
+      }
+    }
+
+    .footer-heading {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.25;
+      margin: 0 0 12px;
+      color: inherit;
+    }
+
+    .footer-description {
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+
+      a {
+        text-decoration: underline;
+        transition: color 150ms ease;
+
+        &:hover,
+        &:focus {
+          color: var(--brand-color);
+        }
+      }
+    }
+
+    // ---- Contact / social column -------------------------------------------
+    .footer-contact {
+      .footer-social-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 16px;
+        padding: 0;
+        list-style: none;
+
+        li {
+          margin: 0;
+        }
+
+        a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 44px;
+          min-height: 44px;
+          padding: 8px;
+          border-radius: 50%;
+          color: inherit;
+          transition: color 150ms ease, background-color 150ms ease;
+
+          &:hover,
+          &:focus {
+            color: var(--brand-color);
+            background-color: rgba(0, 0, 0, 0.04);
+          }
+
+          [class^="icon-"] {
+            font-size: 20px;
+            line-height: 1;
+          }
+        }
+      }
+
+      .footer-contact-block {
+        font-size: 14px;
+        line-height: 1.55;
+
+        a {
+          text-decoration: underline;
+          transition: color 150ms ease;
+
+          &:hover,
+          &:focus {
+            color: var(--brand-color);
+          }
+        }
+      }
+
+      @media (max-width: $small-tablet-viewport-start) {
+        .footer-social-list {
+          justify-content: center;
+        }
+
+        .footer-heading,
+        .footer-contact-block {
+          text-align: center;
+        }
+      }
+    }
+
+    // ---- Subfooter ---------------------------------------------------------
+    // Copyright + legal links share one centered, wrapping row instead of
+    // pinning to the far left / far right with a big gap in between.
+    // We keep the Foundation `.row` class on the wrapper for max-width and the
+    // outer margins, and force its display + Foundation column widths here.
+    .subfooter {
+      padding: 16px 0 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      font-size: 13px;
+
+      &.row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 8px 16px;
+      }
+
+      .subfooter-copyright,
+      .subfooter-legal {
+        width: auto;
+        max-width: none;
+        flex: 0 0 auto;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .subfooter-copyright {
+        p {
+          margin: 0;
+          line-height: 1.5;
+        }
+      }
+
+      .subfooter-legal-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 4px 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          margin: 0;
+          padding: 0;
+          display: inline-flex;
+          align-items: center;
+        }
+
+        // Neutral dot separator between legal links — replaces hardcoded `|`
+        // pipes that used to live in the markup.
+        li + li::before {
+          content: "·";
+          margin: 0 8px;
+          color: rgba(0, 0, 0, 0.3);
+        }
+
+        a {
+          transition: color 150ms ease;
+
+          &:hover,
+          &:focus {
+            color: var(--brand-color);
+          }
+        }
+      }
+
+      // Also draw a dot between the copyright block and the legal list so the
+      // centered row reads as one continuous line.
+      .subfooter-copyright + .subfooter-legal::before {
+        content: "·";
+        margin-right: 16px;
+        color: rgba(0, 0, 0, 0.3);
+
+        @media (max-width: $small-tablet-viewport-start) {
+          display: none;
+        }
+      }
+    }
+
+    // ---- Admin-only empty hint for footer content blocks -------------------
+    // Dezent: inline italic note (no box, no background) so the hint doesn't
+    // outshine the actual brand content. Marker class is toggled live by
+    // `ProjektStudio.ContentBlock.EmptyHintToggle` based on
+    // `.custom-content-block-body` content (see EmptyHintToggle.js).
+    .footer-content-block--admin-empty-hint {
+      display: none;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 8px 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 12.5px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .footer-content-block.is-content-empty .footer-content-block--admin-empty-hint {
+      display: flex;
+    }
+
+    .footer-content-block--admin-empty-hint-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.4);
     }
   }
 

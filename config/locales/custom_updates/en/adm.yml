@@ -18,12 +18,20 @@ en:
             image: Image
     navbar_items:
       deleted_projekt: "[Deleted project]"
+      deleted_landing_page: "[Deleted landing page]"
       edit:
         title: Edit navbar item
       form:
         custom_title_label: Display name (optional)
         custom_title_placeholder: Leave blank to use the default title
         update: Save changes
+        kinds:
+          landing_pages: Landing pages
+        landing_page_label: Landing page
+        landing_page_filter_placeholder: Search landing pages...
+        no_landing_pages_title: No published landing pages available
+        no_landing_pages_description: There are currently no published landing pages that can be added to the navigation. Create a new landing page or activate an existing one in the landing pages section so you can then add it as a standalone navigation entry and give citizens a direct entry point into audience-specific content and curated themes.
+        no_landing_pages_link: Go to landing pages
     projekts:
       projekt_point_of_interest_categories:
         form:

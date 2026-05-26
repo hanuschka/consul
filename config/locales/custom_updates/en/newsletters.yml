@@ -17,6 +17,7 @@ en:
     newsletters:
       new_projekt:
         subject: "New Projekt: %{title}"
+        intro: "We are pleased to introduce a new participation project:"
         total_duration_start: Start date
         total_duration_end: Duration
         total_duration_end_till: till

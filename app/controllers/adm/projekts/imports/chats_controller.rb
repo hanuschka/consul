@@ -9,6 +9,9 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def show
     @messages = @ai_chat.ai_chat_messages.order(created_at: :asc)
+    @chat_user = @projekt_import.user
+    @chat_user_initials = chat_user_initials(@chat_user)
+    @chat_user_image_url = chat_user_image_url(@chat_user)
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -20,13 +23,16 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   def messages
     after_id = params[:after].to_i
     scope = @ai_chat.ai_chat_messages.order(created_at: :asc)
-    scope = scope.where("id > ?", after_id) if after_id.positive?
+    new_messages = after_id.positive? ? scope.where("id > ?", after_id) : scope
+    latest_assistant = scope.where(role: "assistant").last
+    combined = new_messages.to_a
+    combined << latest_assistant if latest_assistant && combined.exclude?(latest_assistant)
 
     render json: {
       ai_chat: {
         running: @ai_chat.running?
       },
-      messages: scope.map { |m| serialize_message(m) },
+      messages: combined.sort_by(&:id).map { |m| serialize_message(m) },
       import: {
         status: @projekt_import.status,
         projekt_id: @projekt_import.projekt_id,
@@ -52,9 +58,13 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       attached_documents: attached_documents
     )
 
+    assistant_message = create_assistant_placeholder(user_message)
     ProjektImports::ChatMessageJob.perform_later(user_message.id)
 
-    render json: { message_id: user_message.id, status: "queued" }
+    render json: {
+      status: "queued",
+      messages: [serialize_message(user_message), serialize_message(assistant_message)]
+    }
   end
 
   def command
@@ -81,9 +91,13 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
         custom_command: name
       )
 
+      assistant_message = create_assistant_placeholder(user_message)
       ProjektImports::ChatMessageJob.perform_later(user_message.id)
 
-      render json: { status: "queued", message_id: user_message.id }
+      render json: {
+        status: "queued",
+        messages: [serialize_message(user_message), serialize_message(assistant_message)]
+      }
     end
   end
 
@@ -162,6 +176,34 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     end
   end
 
+  def chat_user_initials(user)
+    return "" if user.blank?
+
+    if user.first_name.present? && user.last_name.present?
+      "#{user.first_name.chars.first}#{user.last_name.chars.first}".upcase
+    else
+      user.first_letter_of_name.to_s
+    end
+  end
+
+  def chat_user_image_url(user)
+    return "" if user.blank?
+    return "" unless user.image&.attached?
+
+    url_for(user.image.variant(:popup))
+  rescue StandardError
+    ""
+  end
+
+  def create_assistant_placeholder(user_message)
+    @ai_chat.ai_chat_messages.create!(
+      role: "assistant",
+      status: "scheduled",
+      user_message_id: user_message.id,
+      content: ""
+    )
+  end
+
   def command_prompt_for(name)
     case name
     when "regenerate"
@@ -179,7 +221,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       status: message.status,
       custom_command: message.custom_command,
       attached_documents: message.attached_documents.map { |d| d.slice("name", "filetype") },
-      created_at: message.created_at.iso8601
+      created_at: message.created_at.iso8601,
+      html: render_to_string(
+        partial: "adm/projekts/imports/chats/message",
+        locals: { message: message, user: @projekt_import.user },
+        formats: [:html]
+      )
     }
   end
 end

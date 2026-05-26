@@ -19,7 +19,9 @@
        data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
        data-projekt-imports--chat-progress-creating-value="<%= t('.progress.creating_projekt') %>"
        data-projekt-imports--chat-progress-generating-image-value="<%= t('.progress.generating_image') %>"
-       data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>">
+       data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>"
+       data-projekt-imports--chat-user-initials-value="<%= @chat_user_initials %>"
+       data-projekt-imports--chat-user-image-url-value="<%= @chat_user_image_url %>">
 
     <%# Messages %>
     <div class="projekt-import-chat--messages"
@@ -27,7 +29,7 @@
          aria-live="polite"
          data-projekt-imports--chat-target="messages">
       <% @messages.each do |message| %>
-        <%= render "adm/projekts/imports/chats/message", message: message %>
+        <%= render "adm/projekts/imports/chats/message", message: message, user: @chat_user %>
       <% end %>
 
       <div class="projekt-import-chat-bubble -ai projekt-import-chat--typing-indicator -hidden"
@@ -103,7 +105,7 @@
                   rows="1"
                   data-projekt-imports--chat-target="textarea"
                   placeholder="<%= t('.input_placeholder') %>"
-                  data-action="keydown->projekt-imports--chat#textareaKeydown"></textarea>
+                  data-action="keydown->projekt-imports--chat#textareaKeydown input->projekt-imports--chat#textareaInput"></textarea>
       </div>
 
       <button type="submit"

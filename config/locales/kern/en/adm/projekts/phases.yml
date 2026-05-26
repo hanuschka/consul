@@ -137,8 +137,15 @@ en:
           download_geojson: Download GeoJSON
           no_proposals_title: No proposals available
           no_proposals_description: As soon as users submit proposals in this participation phase, they are listed here and can be moderated. You can approve proposals, hide them, or review flagged contributions. The table shows title, author, and moderation status of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             admin_accepted: Approved
             title: Title
             moderation: Moderation
@@ -487,8 +494,15 @@ en:
           columns: Columns
           no_investments_title: No proposals available
           no_investments_description: As soon as users submit investment proposals in this participation phase, they are listed here and can be evaluated by valuators, checked for feasibility, and moderated as needed. Via the table you have access to all relevant details like cost, status, and valuation results of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             created_at: Submitted
             title: Title
             feasibility: Criteria

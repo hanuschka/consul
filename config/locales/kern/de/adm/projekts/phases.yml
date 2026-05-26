@@ -137,8 +137,15 @@ de:
           download_geojson: GeoJSON herunterladen
           no_proposals_title: Keine Vorschläge vorhanden
           no_proposals_description: Sobald Nutzer in dieser Beteiligungsphase Vorschläge einreichen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, Vorschläge freizugeben, herauszumoderieren oder gemeldete Beiträge zu prüfen. Die Tabelle zeigt Titel, Autor und Moderationsstatus jedes einzelnen Vorschlags an.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
+          total_label:
+            one: Vorschlag
+            other: Vorschläge
+          total_hint: Anzahl der Vorschläge in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             admin_accepted: Freigegeben
             title: Titel
             moderation: Moderation
@@ -487,8 +494,15 @@ de:
           columns: Spalten
           no_investments_title: Keine Vorschläge vorhanden
           no_investments_description: Sobald Nutzer in dieser Beteiligungsphase Investitionsvorschläge einreichen, werden diese hier aufgelistet und können von Gutachtern bewertet, auf Machbarkeit geprüft und bei Bedarf moderiert werden. Über die Tabelle haben Sie Zugriff auf alle relevanten Details wie Kosten, Status und Bewertungsergebnisse jedes einzelnen Vorschlags.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
+          total_label:
+            one: Vorschlag
+            other: Vorschläge
+          total_hint: Anzahl der Vorschläge in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             created_at: Eingereicht
             title: Titel
             feasibility: Kriterien

@@ -159,8 +159,13 @@
       .subfooter-copyright,
       .subfooter-legal {
         width: auto;
-        max-width: none;
-        flex: 0 0 auto;
+        // Allow these columns to shrink (flex-shrink 1 + min-width 0) and cap
+        // their width to the row, so the legal-links list can actually wrap
+        // instead of forcing one max-content line that overflows on mobile
+        // (flexbox min-width:auto trap).
+        max-width: 100%;
+        flex: 0 1 auto;
+        min-width: 0;
         padding: 0;
         margin: 0;
         display: flex;

@@ -128,10 +128,6 @@
       </h1>
     <% end %>
 
-    <% unless @custom_page&.landing? %>
-      <%= header_button_html %>
-    <% end %>
-
     <% if Setting["welcomepage.projekt_search"].present? && !@custom_page&.landing? %>
       <div class="homepage-search-form">
         <%= render(
@@ -142,6 +138,10 @@
           )
         ) %>
       </div>
+    <% end %>
+
+    <% unless @custom_page&.landing? %>
+      <%= header_button_html %>
     <% end %>
   </div>
 </div>

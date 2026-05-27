@@ -205,15 +205,6 @@ $mobile-viewport-start: 640px !default;
       transition: background-color 0.15s ease, border-color 0.15s ease;
       vertical-align: middle;
 
-      &::before,
-      &:checked::before,
-      &:checked:hover::before,
-      &:checked:focus::before,
-      &:checked:focus-visible::before {
-        display: none !important;
-        content: none !important;
-      }
-
       &:hover {
         border-color: var(--adm-color-primary);
       }

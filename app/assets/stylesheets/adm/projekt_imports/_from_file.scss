@@ -223,17 +223,17 @@ $_import-icon-bg-neutral: #f0f1f3;
   width: 32px;
   height: 32px;
   padding: 0;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
   color: $_import-text-muted;
-  background: transparent;
+  background: $_import-icon-bg-neutral;
   border: 0;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
   flex-shrink: 0;
 
   &:hover {
-    background: $_import-icon-bg-neutral;
+    background: color-mix(in srgb, $_import-icon-bg-neutral 88%, black);
     color: $_import-text;
   }
 

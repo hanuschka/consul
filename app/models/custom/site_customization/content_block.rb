@@ -42,8 +42,9 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   def sanitize_body
     return if body.blank?
 
+    sanitizer = AdminWYSIWYGSanitizer.new
     original = body
-    self.body = AdminWYSIWYGSanitizer.new.sanitize(body)
-    @body_stripped = original != body
+    self.body = sanitizer.sanitize(body)
+    @body_stripped = sanitizer.stripped?(original, body)
   end
 end

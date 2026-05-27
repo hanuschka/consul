@@ -14,6 +14,7 @@ extra_properties = %w[
   transition transform
   backdrop-filter -webkit-backdrop-filter
   scrollbar-width -webkit-overflow-scrolling -ms-overflow-style
+  opacity text-transform word-break overflow-wrap
 ]
 
 if defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES)

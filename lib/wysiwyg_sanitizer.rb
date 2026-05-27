@@ -24,4 +24,14 @@ class WYSIWYGSanitizer
   def sanitize(html)
     ActionController::Base.helpers.sanitize(html, tags: allowed_tags, attributes: allowed_attributes)
   end
+
+  def stripped?(original, sanitized)
+    normalize_for_comparison(original) != normalize_for_comparison(sanitized)
+  end
+
+  private
+
+  def normalize_for_comparison(html)
+    html.gsub(/<!--.*?-->/m, "").gsub(/\s+/, "")
+  end
 end

@@ -605,11 +605,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   .top-bar--title {
     flex-grow: initial;
     user-select: none;
-    min-width: 150px;
 
     a img {
       max-height: 52px;
-      // max-width: 52px;
+      max-width: 200px;
     }
   }
 

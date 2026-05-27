@@ -96,8 +96,6 @@ $mobile-viewport-start: 640px !default;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
     &:hover {
-      border-width: 1px;
-      padding: 0.5rem 0.75rem;
       border-color: color-mix(in srgb, var(--adm-color-primary) 40%, var(--kern-color-layout-border, #A5AAC3));
     }
 

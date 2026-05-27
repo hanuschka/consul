@@ -26,12 +26,13 @@
 
     <div class="row margin-bottom">
       <div class="column large-8 small-12">
+        <p class="help-text"><%= t("custom.admin.projekt_phases.ai_settings.questions_description") %></p>
         <%= f.text_area(
           :questions,
           label: t("custom.admin.projekt_phases.ai_settings.questions"),
           placeholder: @ai_assistant_config["default_questions"],
           value: @ai_assistant_config["questions"],
-          rows: 5,
+          rows: 10,
           style: "field-sizing: content"
         ) %>
       </div>
@@ -39,13 +40,14 @@
 
     <div class="row margin-bottom">
       <div class="column large-8 small-12">
+        <p class="help-text"><%= t("custom.admin.projekt_phases.ai_settings.criteria_description") %></p>
         <%= f.text_area(
           :criteria,
           label: t("custom.admin.projekt_phases.ai_settings.criteria"),
           placeholder: @ai_assistant_config["default_criteria"],
           value: @ai_assistant_config["criteria"],
           style: "",
-          rows: 5,
+          rows: 10,
           style: "field-sizing: content"
         ) %>
       </div>
@@ -53,13 +55,14 @@
 
     <div class="row margin-bottom">
       <div class="column large-8 small-12">
+        <p class="help-text"><%= t("custom.admin.projekt_phases.ai_settings.parting_words_description") %></p>
         <%= f.text_area(
           :parting_words,
           label: t("custom.admin.projekt_phases.ai_settings.parting_words"),
           placeholder: @ai_assistant_config["default_parting_words"],
           value: @ai_assistant_config["parting_words"],
           style: "",
-          rows: 5,
+          rows: 10,
           style: "field-sizing: content"
         ) %>
       </div>

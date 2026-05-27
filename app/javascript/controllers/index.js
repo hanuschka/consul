@@ -126,6 +126,12 @@ application.register("adm--poll-question-answers--open-answer", AdmPollQuestionA
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
 
+import AdmNewslettersFilterStackController from "./adm/newsletters/filter_stack_controller"
+application.register("adm-newsletters--filter-stack", AdmNewslettersFilterStackController)
+
+import AdmRecipientGroupsNameAutosaveController from "./adm/recipient_groups/name_autosave_controller"
+application.register("adm-recipient-groups--name-autosave", AdmRecipientGroupsNameAutosaveController)
+
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 

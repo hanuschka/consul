@@ -746,6 +746,85 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
   }
 
+  // Werthaltigere Top-Nav-Links: eine animierte Akzent-Linie in Markenfarbe
+  // (das horizontale Pendant zum vertikalen Marken-Streifen an Titelkarte,
+  // Suchfeld und CTA) plus weicher Farb-Hover. Rein optisch.
+  //
+  // WICHTIG: Die Linie liegt auf ::before. Das ::after ist auf genau diesen
+  // Links bereits vom Dropdown-Chevron belegt (custom/menu.scss: content
+  // "\f078", rotiert bei aria-expanded) — also "der arrow down". Wuerden wir
+  // ::after benutzen, kollidierte beides → doppelte/zerschossene Linie.
+  // ::before ist frei und laesst Chevron + Flyout-Funktion unberuehrt.
+  //
+  // Label-Knoten existiert in zwei Varianten: direkter Link (Navbar-Items)
+  // ODER der .flyout-item-name-Wrapper (Projekte-Overview / Projekt-Links,
+  // mit innerem <a>). Beide werden getroffen.
+  .header--navigation .content-items .nav-element.top-level-item {
+    > a,
+    > .flyout-item-name {
+      position: relative;
+      transition: color 200ms ease;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -3px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--brand-color);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 220ms ease;
+      }
+    }
+
+    // DER zweite Strich: layout.scss:117 setzt global
+    // `a:hover, a:active { text-decoration: underline }` (Consul-Core). Das
+    // unterstreicht den inneren Link-Text schwarz — zusaetzlich zu unserer
+    // Marken-Akzentlinie. Hier am echten <a> (direkt ODER in .flyout-item-name)
+    // hart abschalten, damit nur die ::before-Linie bleibt.
+    > a,
+    > .flyout-item-name a {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        text-decoration: none;
+      }
+    }
+
+    &:hover,
+    &:focus-within {
+      > a,
+      > .flyout-item-name,
+      > .flyout-item-name a {
+        color: var(--brand-color);
+      }
+
+      > a::before,
+      > .flyout-item-name::before {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  // Ueber dem Hero-Bild (data-white-text) bleiben die Links auch im Hover
+  // weiss — die Markenfarben-Linie traegt dort den Hover-Hinweis. So bleibt
+  // der Text auf hellem Himmel maximal lesbar, statt in einen evtl.
+  // kontrastarmen Markenton zu kippen.
+  &.home-page .top-bar[data-white-text="true"] {
+    .header--navigation .content-items .nav-element.top-level-item:hover,
+    .header--navigation .content-items .nav-element.top-level-item:focus-within {
+      > a,
+      > .flyout-item-name,
+      > .flyout-item-name a {
+        color: white;
+      }
+    }
+  }
+
   .user-notification-badge--wrapper {
     position: relative;
     width: 50px;

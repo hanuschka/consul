@@ -1,10 +1,10 @@
 en:
   navbar:
     presets:
-      projekts: Projects overview
+      projekts: Projects
       events: Events
-      investments: Budget overview
-      proposals: Proposals overview
-      polls: Polls overview
+      investments: Budget investments
+      proposals: Proposals
+      polls: Polls
       deficiency_reports: Deficiency reports
       ideas: Ideas platform

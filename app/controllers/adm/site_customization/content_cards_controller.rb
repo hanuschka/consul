@@ -9,6 +9,7 @@ module Adm
         @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
         @breadcrumbs = parent_breadcrumbs + [{ name: @content_card.title }]
+        @back_button_url = redirect_path
       end
 
       def update

@@ -2,7 +2,7 @@
   <div class="projekt-page--admin-topbar--inner">
     <div class="projekt-page--admin-topbar-left hide-on-medium-tablet">
       <button
-        class="button hollow -selected js-admin-view-button js-view-mode-button"
+        class="button hollow -selected js-admin-view-button js-studio-preview-mode-button"
         data-view-mode="admin"
         type="button"
       >
@@ -11,7 +11,7 @@
       </button>
 
       <button
-        class="button hollow js-user-view-button js-view-mode-button"
+        class="button hollow js-user-view-button js-studio-preview-mode-button"
         data-view-mode="user"
         type="button"
       >
@@ -36,9 +36,9 @@
       <% end %>
 
       <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
-        <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt), method: "post", role: "button", class: "button hollow projekt-page--admin-topbar-button hide-on-mobile" do %>
-          <i class="fas fa-bell"></i>
-          <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+        <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt), role: "button", class: "button hollow projekt-page--admin-topbar-button hide-on-mobile js-notify-reviewers" do %>
+          <i class="fas fa-bell js-notify-reviewers-icon"></i>
+          <span class="js-notify-reviewers-label"><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
         <% end %>
       <% end %>
 

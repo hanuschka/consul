@@ -1,0 +1,15 @@
+en:
+  adm:
+    deficiency_report_managers:
+      index:
+        title: Deficiency managers
+        empty_title: "No deficiency managers available"
+        empty_description: "Use the button above to add a new deficiency manager."
+        new_link: Add new deficiency manager
+        no_deficiency_report_managers: No deficiency managers available.
+      new:
+        title: Add new deficiency manager
+        search_label: Search users
+        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as deficiency managers. Deficiency managers administer submitted reports and assign them to officers.
+      search:
+        no_results: No users found matching these criteria.

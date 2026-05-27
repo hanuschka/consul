@@ -3,11 +3,11 @@
 
   <%= form_for projekt_answer, url: path, remote: true, html: { class: "controls-stacked js-projekt-answer-form" } do |f| %>
     <% projekt_question.question_options.each do |question_option| %>
-      <label class="control radio <%= "is-active" if projekt_answer.question_option&.id == question_option.id %>">
+      <label class="projekt-question-answer-option <%= "-active" if projekt_answer.question_option&.id == question_option.id %>">
         <% radio_button_disabled = projekt_question.permission_problem(current_user).present? %>
 
         <%= f.radio_button :projekt_question_option_id, question_option.id, disabled: radio_button_disabled, label: false %>
-        <span class="js-projekt-question-option control-indicator"></span>
+        <span class="js-projekt-question-option projekt-question-answer-option--indicator"></span>
         <%= question_option.value %>
         <% if projekt_question.show_answers_count? %>
           (<span class="js-projekt-question-option--answers-count"><%= question_option.answers_count  %></span>)

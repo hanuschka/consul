@@ -16,7 +16,7 @@
 
 <div class="kern-container my-5">
 
-  <%= new_resource_link(new_adm_recipient_group_path, t('.new_recipient_group')) %>
+  <%= new_resource_button(adm_recipient_groups_path, t('.new_recipient_group')) %>
 
   <% if @recipient_groups.any? %>
     <div class="kern-table-responsive" tabindex="0">

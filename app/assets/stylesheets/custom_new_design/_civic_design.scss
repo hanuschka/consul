@@ -1,0 +1,435 @@
+// ==========================================================================
+// Civic Participation Design System
+// Foundation 6 compatible, public-facing projekt pages
+// ==========================================================================
+
+// --- Design Tokens ---
+$civic-primary: #0F172A;
+$civic-secondary: #334155;
+$civic-accent: #0369A1;
+$civic-accent-light: rgba(3, 105, 161, 0.08);
+$civic-accent-lighter: rgba(3, 105, 161, 0.04);
+$civic-cta: #F97316;
+$civic-cta-hover: #EA580C;
+$civic-bg: #F8FAFC;
+$civic-card: #FFFFFF;
+$civic-muted: #E8ECF1;
+$civic-muted-text: #64748B;
+$civic-border: #E2E8F0;
+$civic-success: #16A34A;
+$civic-destructive: #DC2626;
+
+$civic-heading-font: 'Lexend', 'Asap', sans-serif;
+$civic-body-font: 'Source Sans 3', 'Asap', sans-serif;
+
+$civic-radius: 8px;
+$civic-radius-lg: 12px;
+$civic-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+$civic-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+$civic-transition: 200ms ease;
+
+// --- Typography ---
+.custom-new-design {
+  .projekt-page {
+    font-family: $civic-body-font;
+    color: $civic-primary;
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $civic-heading-font;
+      color: $civic-primary;
+    }
+  }
+
+  // ==========================================================================
+  // HERO / BANNER
+  // ==========================================================================
+  .custom-page--banner {
+    background: linear-gradient(135deg, $civic-primary 0%, #024E7C 100%) !important;
+    color: #FFFFFF;
+    min-height: 220px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 100%);
+      pointer-events: none;
+    }
+  }
+
+  .custom-page--banner-title {
+    font-family: $civic-heading-font !important;
+    font-weight: 700 !important;
+    font-size: 34px !important;
+    color: #FFFFFF !important;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+
+    a {
+      color: #FFFFFF !important;
+    }
+
+    @media(max-width: $mobile-viewport-start) {
+      font-size: 26px !important;
+    }
+  }
+
+  .custom-page--banner-description {
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-family: $civic-body-font;
+    font-size: 18px;
+    line-height: 1.6;
+
+    @media(max-width: $mobile-viewport-start) {
+      font-size: 16px;
+    }
+  }
+
+  .custom-page--banner-breadcrumbs {
+    .custom-breadcrumbs .breadcrumbs-item,
+    .custom-breadcrumbs .breadcrumbs-divider {
+      color: rgba(255, 255, 255, 0.65) !important;
+
+      a {
+        color: rgba(255, 255, 255, 0.65) !important;
+
+        &:hover {
+          color: #FFFFFF !important;
+        }
+      }
+    }
+  }
+
+  // ==========================================================================
+  // MAIN CONTENT CARD
+  // ==========================================================================
+  .main-content-card {
+    border-color: $civic-border;
+    border-radius: $civic-radius-lg;
+    box-shadow: $civic-shadow-sm;
+
+    h1, h2, h3 {
+      font-family: $civic-heading-font;
+    }
+  }
+
+  // ==========================================================================
+  // SIDEBAR CARDS
+  // ==========================================================================
+  .sidebar-card {
+    border-color: $civic-border;
+    border-radius: $civic-radius-lg;
+    box-shadow: $civic-shadow-sm;
+    transition: box-shadow $civic-transition;
+    overflow: hidden;
+
+    &:hover {
+      box-shadow: $civic-shadow-md;
+    }
+  }
+
+  .sidebar-card--title {
+    font-family: $civic-heading-font;
+    font-weight: 600;
+    font-size: 15px !important;
+    color: $civic-primary;
+    padding-bottom: 14px;
+
+    i, .sidebar--icon {
+      color: $civic-accent !important;
+      font-size: 16px;
+    }
+  }
+
+  .sidebar-card--section {
+    font-family: $civic-body-font;
+    font-size: 15px;
+    color: $civic-secondary;
+  }
+
+  // Navigator dots in sidebar
+  .sidebar li.projekt-navigator::before {
+    background: $civic-accent !important;
+  }
+
+  li.projekt-navigator a {
+    font-family: $civic-body-font;
+  }
+
+  li.current-projekt > a {
+    color: $civic-accent !important;
+    font-weight: 600;
+  }
+
+  // Sidebar phase status dots
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-status {
+    background-color: #93C5E4 !important;
+    border-color: $civic-accent !important;
+  }
+
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-details {
+    color: $civic-accent !important;
+  }
+
+  .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details::before {
+    color: $civic-accent !important;
+  }
+
+  // Social share buttons in sidebar
+  .sidebar-card .social-share-button .ssb-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid $civic-border;
+    background: $civic-bg;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $civic-transition;
+    color: $civic-secondary;
+
+    &:hover {
+      background: $civic-accent;
+      border-color: $civic-accent;
+      color: #FFFFFF;
+
+      svg {
+        fill: #FFFFFF;
+      }
+    }
+  }
+
+  // Notification toggle
+  .sidebar-card .switch-paddle {
+    background: $civic-muted;
+  }
+
+  .sidebar-card input:checked ~ .switch-paddle {
+    background: $civic-accent;
+  }
+
+  // ==========================================================================
+  // PHASE TABS (Footer Navigation)
+  // ==========================================================================
+  .projekt-footer-phase-tab {
+    border-color: $civic-border !important;
+    border-radius: $civic-radius $civic-radius 0 0 !important;
+    background: $civic-card !important;
+    box-shadow: $civic-shadow-sm;
+    transition: all $civic-transition;
+    min-height: 110px !important;
+
+    &:hover {
+      background: $civic-accent-lighter !important;
+      border-color: $civic-accent !important;
+    }
+
+    h2 {
+      font-family: $civic-heading-font !important;
+      font-weight: 600 !important;
+      font-size: 20px !important;
+      color: $civic-accent !important;
+      margin-bottom: 6px !important;
+    }
+
+    // Meta info (Fortlaufend, Registrierte Nutzer)
+    .tab-info-summary {
+      font-family: $civic-body-font;
+      font-size: 13px;
+      color: $civic-muted-text;
+
+      span {
+        color: $civic-muted-text;
+
+        &:before {
+          color: $civic-muted-text !important;
+        }
+      }
+    }
+
+    // Phase subscription icon
+    .phase-subscription a {
+      color: $civic-accent !important;
+
+      &:hover {
+        background-color: $civic-accent-light !important;
+      }
+    }
+
+    // Active state
+    &.is-active {
+      background: $civic-accent !important;
+      border-color: $civic-accent !important;
+      box-shadow: $civic-shadow-md;
+
+      h2 {
+        color: #FFFFFF !important;
+      }
+
+      .tab-info-summary span {
+        color: rgba(255, 255, 255, 0.8);
+
+        &:before {
+          color: rgba(255, 255, 255, 0.8) !important;
+        }
+      }
+
+      .phase-subscription a {
+        color: rgba(255, 255, 255, 0.9) !important;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+      }
+    }
+  }
+
+  // Arrow controls
+  .arrow-controls button, .arrow-controls a {
+    color: $civic-accent !important;
+    transition: color $civic-transition;
+
+    &:hover {
+      color: #025D8C !important;
+    }
+
+    &.disabled i {
+      opacity: 0.25;
+    }
+  }
+
+  // ==========================================================================
+  // COMMENT SECTION (inside phases)
+  // ==========================================================================
+  .projekt-footer .comments {
+    .comment-form {
+      border-color: $civic-border;
+      border-radius: $civic-radius-lg;
+      box-shadow: $civic-shadow-sm;
+      font-family: $civic-body-font;
+
+      textarea {
+        border: 2px solid $civic-border;
+        border-radius: 6px;
+        font-family: $civic-body-font;
+        font-size: 16px;
+        padding: 12px 16px;
+        transition: border-color $civic-transition, box-shadow $civic-transition;
+
+        &:focus {
+          border-color: $civic-accent;
+          box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+          outline: none;
+        }
+      }
+
+      h2 {
+        font-family: $civic-heading-font;
+        font-size: 18px;
+        font-weight: 600;
+        color: $civic-primary;
+      }
+
+      // Submit button
+      input[type="submit"], button[type="submit"], .button.is-outlined {
+        background: $civic-cta !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-family: $civic-heading-font;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 12px 24px;
+        transition: background $civic-transition;
+        cursor: pointer;
+
+        &:hover {
+          background: $civic-cta-hover !important;
+        }
+      }
+
+      // Checkboxes
+      label {
+        font-family: $civic-body-font;
+        font-size: 14px;
+        color: $civic-muted-text;
+      }
+    }
+
+    .comment {
+      border-color: $civic-border;
+      border-radius: $civic-radius;
+    }
+  }
+
+  // ==========================================================================
+  // FIXED TAB NAVIGATION (Inhalt / Info / Beteiligung)
+  // ==========================================================================
+  .custom-fixed-tabs--content {
+    background-color: $civic-card !important;
+    border-color: $civic-border !important;
+    border-bottom-width: 2px;
+  }
+
+  .custom-tab {
+    font-family: $civic-heading-font;
+    font-weight: 500;
+    font-size: 16px !important;
+    color: $civic-muted-text;
+    transition: color $civic-transition, background-color $civic-transition;
+
+    &:hover {
+      color: $civic-secondary;
+    }
+
+    &.-selected {
+      color: $civic-accent !important;
+      background-color: $civic-accent-lighter !important;
+      font-weight: 600;
+      border-bottom: 3px solid $civic-accent !important;
+    }
+  }
+
+  // ==========================================================================
+  // GENERAL BUTTONS ON PROJEKT PAGE
+  // ==========================================================================
+  .projekt-page {
+    .button {
+      font-family: $civic-heading-font;
+      border-radius: 6px;
+    }
+
+    // Primary buttons (brand-color based)
+    .button:not(.hollow):not(.clear) {
+      transition: background $civic-transition;
+    }
+  }
+
+  // ==========================================================================
+  // FOOTER PHASES CONTAINER
+  // ==========================================================================
+  .projekt-footer {
+    margin-top: 16px;
+
+    #footer-content {
+      background: $civic-card;
+      border: 1px solid $civic-border;
+      border-top: none;
+      border-radius: 0 0 $civic-radius-lg $civic-radius-lg;
+      padding: 24px;
+      box-shadow: $civic-shadow-sm;
+    }
+  }
+
+  // ==========================================================================
+  // PAGE BACKGROUND
+  // ==========================================================================
+  &.custom-page {
+    background-color: $civic-bg;
+  }
+}

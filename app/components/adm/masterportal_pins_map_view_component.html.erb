@@ -1,0 +1,22 @@
+<section class="masterportal-pins-map-view">
+  <header class="masterportal-pins-map-view--header">
+    <div class="masterportal-pins-map-view--title-wrap">
+      <span class="masterportal-pins-map-view--title-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">map</span>
+      </span>
+      <h3 class="masterportal-pins-map-view--title"><%= t(".title") %></h3>
+    </div>
+
+    <span class="masterportal-pins-map-view--count-pill">
+      <%= t(".total", count: total_count) %>
+    </span>
+  </header>
+
+  <div class="masterportal-pins-map-view--map">
+    <%= render Kern::MapComponent.new(
+      map_location: map_location,
+      feature_collection: feature_collection,
+      height: 640
+    ) %>
+  </div>
+</section>

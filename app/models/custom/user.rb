@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 User.class_eval do
-  audited only: [:username, :first_name, :last_name, :registered_address_id,
+  audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
 
@@ -15,6 +15,12 @@ User.class_eval do
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
+
+  def self.timeout_in
+    minutes = Setting["extended_option.gdpr.devise_timeout_min"].to_i
+    minutes = 30 if minutes < 1
+    minutes.minutes
+  end
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
@@ -57,9 +63,13 @@ User.class_eval do
 
   belongs_to :api_client, optional: true
 
-  scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :projekt_managers,           -> { joins(:projekt_manager) }
+  scope :valuators,                  -> { joins(:valuator) }
+  scope :idea_managers,              -> { joins(:idea_manager) }
+  scope :officing_managers,          -> { joins(:officing_manager) }
+  scope :deficiency_report_managers, -> { joins(:deficiency_report_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
@@ -112,6 +122,32 @@ User.class_eval do
 
     def administrators_ids
       joins(:administrator).ids
+    end
+
+    def masterportal
+      @masterportal_user ||= find_or_create_masterportal_user
+    end
+
+    def find_or_create_masterportal_user
+      user = User.find_by(username: "masterportal")
+
+      if user.present?
+        return user
+      end
+
+      create_masterportal_user
+    end
+
+    def create_masterportal_user
+      user = User.new(
+        username: "masterportal",
+        email: "masterportal@system.consul",
+        password: SecureRandom.hex(32)
+      )
+
+      user.skip_confirmation!
+      user.save!(validate: false)
+      user
     end
   end
 

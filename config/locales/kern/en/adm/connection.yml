@@ -1,0 +1,28 @@
+en:
+  adm:
+    connection:
+      show:
+        title: "DT API connection status"
+        connection_error_label: "Error:"
+        errors:
+          no_client: "No registered DT API client found (InternalApiClient with name 'DT')."
+          no_token: "DT API client found, but service_api_token is missing."
+        checks:
+          dt_connected:
+            label_ok: "DT API connected"
+            label_fail: "DT API not connected"
+            description_ok: "The DT API client is registered and has a valid service token."
+            description_fail: "No DT API client registered, or service token is missing."
+            hint: "Local configuration check only — no HTTP request is sent."
+          api_accessible:
+            label_ok: "DT API reachable"
+            label_fail: "DT API not reachable"
+            description_ok: "The DT API endpoint is reachable and responds without server errors."
+            description_fail: "The DT API endpoint returned a timeout or a server error (5xx)."
+            hint: "Sends an HTTP request to the status endpoint; passes if the response is not 5xx."
+          connection_works:
+            label_ok: "DT connection works"
+            label_fail: "DT connection failed"
+            description_ok: "Authentication is valid and the connection is fully functional."
+            description_fail: "The connection check returned an unexpected response, or authentication failed."
+            hint: "Requires HTTP 200 with authenticated: true in the JSON response body."

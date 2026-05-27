@@ -81,6 +81,7 @@ de:
         other: Kategorien
     errors:
       messages:
+        too_many_lines: 'darf höchstens %{count} Zeilen enthalten'
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
         file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
         file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'
@@ -132,6 +133,20 @@ de:
           attributes:
             overall_satisfaction:
               blank: Bitte wählen Sie eine Option aus.
+        projekt_point_of_interest_category:
+          attributes:
+            icon_image:
+              invalid_content_type: muss SVG, PNG oder JPEG sein
+              too_large: ist zu groß (max 512 KB)
+              unsafe_svg: SVG enthält unzulässige Inhalte
+        projekt_event_registration:
+          attributes:
+            email:
+              taken: wurde bereits verwendet
+        recipient_group_filter:
+          attributes:
+            operator:
+              must_be_include_for_first_filter: muss „Hinzufügen" sein, solange noch kein anderer Filter vorhanden ist
     attributes:
       map_location:
         latitude: Breitengrad
@@ -292,7 +307,7 @@ de:
       projekt_event_registration:
         first_name: Vorname
         last_name: Nachname
-        email: E-Mail
+        email: E-Mail-Adresse
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort
@@ -352,3 +367,4 @@ de:
         name: Name
         icon: Icon
         color: Farbe
+        icon_image: Kategorie-Symbol

@@ -2,18 +2,6 @@ module Adm
   module LandingPages
     class LandingPagesController < Adm::LandingPages::BaseController
 
-      def index
-        authorize [:adm, :landing_pages, :landing_page]
-        @breadcrumbs = [
-          { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web" }
-        ]
-
-        @landing_pages = policy_scope(
-          ::SiteCustomization::Page,
-          policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope
-        ).order(:landing_nav_position)
-      end
-
       def new
         @landing_page = ::SiteCustomization::Page.new(landing: true, status: "draft")
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
@@ -53,7 +41,11 @@ module Adm
         @landing_page = ::SiteCustomization::Page.find(params[:id])
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
 
-        @landing_page.update(landing_page_params)
+        if remove_attachment_request?
+          @landing_page.public_send(params[:attribute]).purge
+        else
+          @landing_page.update(landing_page_params)
+        end
         flash.now[:success] = t(".success")
 
         if params[:respond_with].present?
@@ -81,13 +73,20 @@ module Adm
 
       private
 
+        def remove_attachment_request?
+          return false unless params[:remove_attachment] == "1" && params[:attribute].present?
+
+          ::SiteCustomization::Page.reflect_on_attachment(params[:attribute].to_sym).present?
+        end
+
         def landing_page_params
           params.require(:site_customization_page).permit(
-            :title, :subtitle, :status, :slug,
+            :title, :header_title, :subtitle, :status, :slug,
             :landing_hide_title_and_subtitle,
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
             :landing_desktop_header_image, :landing_mobile_header_image,
+            :landing_desktop_header_video, :landing_mobile_header_video,
             landing_page_manager_ids: []
           )
         end

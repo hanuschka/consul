@@ -3,13 +3,14 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
     authorize DeficiencyReport, :index?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @team_members = DeficiencyReport::Officer.includes(user: :image).order(:id)
-    @recent_items = scoped_deficiency_reports
-                      .includes(:status, :translations, :author, :category, :responsible, :feedback_form)
-                      .order(updated_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("deficiency_reports")
+    @intro_text = Setting["adm.deficiency_reports.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.deficiency_reports", default: nil)
+    @notice = if Setting["adm.deficiency_reports.notice_active"].present?
+                Setting["adm.deficiency_reports.notice_message"]
+              end
     @contact_persons = SectionContactPerson.for_section("deficiency_reports")
-    @activities = SectionActivity.for_section("deficiency_reports").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("deficiency_reports"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: DeficiencyReport.count, label: t("adm.deficiency_reports.home.stats.total"), icon: "report" },
@@ -18,12 +19,8 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
       { value: DeficiencyReport.closed.count, label: t("adm.deficiency_reports.home.stats.closed"), icon: "check_circle" }
     ]
 
-    @quick_links = [
-      { label: t("adm.deficiency_reports.home.quick_links.all"), path: adm_deficiency_reports_deficiency_reports_list_path }
-    ]
-
     @breadcrumbs = [
-      { name: t("adm.deficiency_reports.home.title"), icon: "home" }
+      { name: t("adm.deficiency_reports.menu.items.home"), icon: "home" }
     ]
   end
 end

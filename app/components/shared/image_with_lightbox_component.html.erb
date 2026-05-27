@@ -1,0 +1,19 @@
+<a
+  href="<%= original_url %>"
+  class="shared-image-with-lightbox glightbox"
+  data-controller="glightbox"
+  data-type="image"
+  data-gallery="<%= gallery %>"
+  data-glightbox-title-value="<%= alt %>"
+  aria-label="<%= alt %>"
+>
+  <img
+    src="<%= image_url %>"
+    alt="<%= alt %>"
+    loading="<%= loading %>"
+    class="shared-image-with-lightbox--image"
+  >
+  <span class="shared-image-with-lightbox--zoom" aria-hidden="true">
+    <i class="fas fa-magnifying-glass-plus"></i>
+  </span>
+</a>

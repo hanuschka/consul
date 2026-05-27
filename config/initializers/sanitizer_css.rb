@@ -1,33 +1,43 @@
 # Extends Loofah's CSS safelist used by Rails' sanitize helper (ActionView/ActionController).
-# Fixes sanitization issues in AdminWYSIWYGSanitizer and allows to use extra css attributes and functions
+# Fixes sanitization issues in AdminWYSIWYGSanitizer and allows extra css properties and functions.
 
-# Allow positioning-related and modern layout inline CSS in sanitized content.
-extra_properties = %w[
-  position top bottom left right box-shadow border-radius z-index
-  gap row-gap column-gap
-  border-top border-bottom border-left border-right
-  min-height max-height min-width
-  inset
-  object-fit object-position
-  pointer-events
-  scroll-snap-type scroll-snap-align
-  transition transform
-  backdrop-filter -webkit-backdrop-filter
-  scrollbar-width -webkit-overflow-scrolling -ms-overflow-style
-  opacity text-transform word-break overflow-wrap
+# Allow ALL inline CSS property NAMES. Loofah still applies value-level scrubbing
+# on every declaration: url()/bad_url tokens are always rejected and any CSS
+# function not in ALLOWED_CSS_FUNCTIONS is dropped. So the script-execution
+# vectors (expression(), behavior:url(), -moz-binding, url(javascript:)) stay
+# blocked; only the property-name allowlist is lifted. Authored content is
+# admin/PM only.
+[
+  defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES) && Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES,
+  defined?(Loofah::HTML4::SafeList::ALLOWED_CSS_PROPERTIES) && Loofah::HTML4::SafeList::ALLOWED_CSS_PROPERTIES
+].each do |property_set|
+  next unless property_set
+
+  def property_set.include?(_property)
+    true
+  end
+end
+
+# Allow additional CSS functions for design tokens and modern color/math/grid syntax.
+# Loofah's defaults cover gradients, transforms, filters, calc(), rgb()/hsl(),
+# attr(), counter(), etc. but NOT var()/mix() nor the modern math/color/grid
+# functions below. url()-bearing values stay rejected by Loofah's url_flags check
+# regardless of this list, and expression() is intentionally never added
+# (script-execution vector).
+extra_functions = %w[
+  var mix
+  min max clamp
+  conic-gradient repeating-conic-gradient
+  lab lch oklab oklch color color-mix
+  minmax repeat fit-content
+  env steps
 ]
 
-if defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES)
-  Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES.merge(extra_properties)
-end
+[
+  defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS) && Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS,
+  defined?(Loofah::HTML4::SafeList::ALLOWED_CSS_FUNCTIONS) && Loofah::HTML4::SafeList::ALLOWED_CSS_FUNCTIONS
+].each do |function_set|
+  next unless function_set
 
-if defined?(Loofah::HTML4::SafeList::ALLOWED_CSS_PROPERTIES)
-  Loofah::HTML4::SafeList::ALLOWED_CSS_PROPERTIES.merge(extra_properties)
-end
-
-# Allow CSS functions used in custom design tokens (e.g. background-color: var(--brand-color),
-# color: mix(...)).  Without these, values using var() or mix() are stripped on sanitize.
-if defined?(Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS)
-  Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS.add("var")
-  Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS.add("mix")
+  function_set.merge(extra_functions)
 end

@@ -34,7 +34,7 @@ class ProjektImports::Builders::BudgetBuilder < ProjektImports::Builders::Base
   end
 
   def configure_phases(budget)
-    raw_phases = Array(payload["phases"]).index_by { it["kind"] }
+    raw_phases = Array(payload["phases"]).index_by { |ph| ph["kind"] }
 
     BUDGET_PHASE_KINDS.each do |kind|
       phase_data = raw_phases[kind]

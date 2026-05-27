@@ -26,6 +26,58 @@ $_chat-error-text: #7f1d1d;
   overflow: hidden;
 }
 
+.projekt-import-chat--error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: $_chat-error-text;
+  background: color-mix(in srgb, $_chat-error 8%, white);
+  border-bottom: 1px solid color-mix(in srgb, $_chat-error 25%, white);
+
+  &.-hidden {
+    display: none;
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    color: $_chat-error;
+  }
+}
+
+.projekt-import-chat--error-banner-message {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.projekt-import-chat--error-banner-dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: $_chat-error;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, $_chat-error 14%, white);
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
 .projekt-import-chat--messages {
   flex: 1;
   overflow-y: auto;

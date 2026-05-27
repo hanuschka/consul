@@ -23,6 +23,22 @@
        data-projekt-imports--chat-user-initials-value="<%= @chat_user_initials %>"
        data-projekt-imports--chat-user-image-url-value="<%= @chat_user_image_url %>">
 
+    <%# Import error banner (shown once on failure, dismissible) %>
+    <div class="projekt-import-chat--error-banner -hidden"
+         role="alert"
+         data-projekt-imports--chat-target="importError"
+         data-fallback="<%= t('.errors.import_failed') %>">
+      <span class="material-symbols-outlined" aria-hidden="true">error</span>
+      <span class="projekt-import-chat--error-banner-message"
+            data-projekt-imports--chat-target="importErrorMessage"></span>
+      <button type="button"
+              class="projekt-import-chat--error-banner-dismiss"
+              aria-label="<%= t('.errors.dismiss') %>"
+              data-action="click->projekt-imports--chat#dismissImportError">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
     <%# Messages %>
     <div class="projekt-import-chat--messages"
          role="log"

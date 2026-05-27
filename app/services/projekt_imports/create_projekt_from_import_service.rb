@@ -83,7 +83,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
       record = type.constantize.create!(
         projekt: projekt,
-        name: phase_data["name"].presence,
+        phase_tab_name: phase_data["name"].presence,
         start_date: phase_data["start_date"].presence,
         end_date: phase_data["end_date"].presence,
         description: phase_data["description"].presence,
@@ -103,6 +103,8 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       next if body.blank?
 
       projekt.content_blocks.create!(
+        name: "custom",
+        key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
         body: body,
         locale: I18n.locale.to_s,
         position: position + 1

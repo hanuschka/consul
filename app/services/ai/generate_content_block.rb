@@ -148,7 +148,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
     dt_templates_by_category.each do |category_data|
       templates = category_data["templates"] || []
-      found = templates.find { it["id"].to_s == @anchor_template_id.to_s }
+      found = templates.find { |t| t["id"].to_s == @anchor_template_id.to_s }
       return found if found.present?
     end
 

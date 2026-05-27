@@ -1,11 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Stop polling after this many consecutive failed /messages requests so a
+// persistently-down endpoint isn't hammered every 2s forever.
+const MAX_POLL_ERRORS = 5
+
 // Chat screen: polls /messages?after=:last_id every 2s, supports mid-chat
 // document attach, four command buttons, and the final import overlay.
 export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
-    "attachments", "typingIndicator", "overlay", "overlayLabel"
+    "attachments", "typingIndicator", "overlay", "overlayLabel",
+    "importError", "importErrorMessage"
   ]
 
   static values = {
@@ -33,6 +38,8 @@ export default class extends Controller {
     this.attachedDocuments = []
     this.pollTimer = null
     this.statusPollTimer = null
+    this.lastImportStatus = null
+    this.pollErrorCount = 0
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
     this.scrollToBottom()
     this.scheduleMessagesPoll()
@@ -71,9 +78,23 @@ export default class extends Controller {
       credentials: "same-origin",
       headers: { "Accept": "application/json" }
     })
-      .then((response) => response.json())
-      .then((data) => this.handleMessages(data))
-      .catch(() => this.scheduleMessagesPoll())
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+        return response.json()
+      })
+      .then((data) => {
+        this.pollErrorCount = 0
+        this.handleMessages(data)
+      })
+      .catch(() => this.handlePollError())
+  }
+
+  handlePollError() {
+    this.pollErrorCount += 1
+    if (this.pollErrorCount >= MAX_POLL_ERRORS) return
+
+    this.scheduleMessagesPoll()
   }
 
   handleMessages(data) {
@@ -81,11 +102,7 @@ export default class extends Controller {
       data.messages.forEach((m) => this.appendOrUpdateMessage(m))
     }
 
-    if (data.ai_chat && data.ai_chat.running) {
-      this.typingIndicatorTarget.hidden = false
-    } else {
-      this.typingIndicatorTarget.hidden = true
-    }
+    this.typingIndicatorTarget.classList.toggle("-hidden", !(data.ai_chat && data.ai_chat.running))
 
     if (data.import) {
       this.handleImportState(data.import)
@@ -133,15 +150,23 @@ export default class extends Controller {
       return
     }
 
-    if (state.status === "failed") {
-      this.clearPollTimer()
+    if (state.status === "failed" && this.lastImportStatus !== "failed") {
       this.hideOverlay()
-      window.alert(state.error || "")
-      this.scheduleMessagesPoll()
-      return
+      this.showImportError(state.error)
     }
 
+    this.lastImportStatus = state.status
     this.scheduleMessagesPoll()
+  }
+
+  showImportError(message) {
+    this.importErrorMessageTarget.textContent =
+      message || this.importErrorTarget.dataset.fallback || ""
+    this.importErrorTarget.classList.remove("-hidden")
+  }
+
+  dismissImportError() {
+    this.importErrorTarget.classList.add("-hidden")
   }
 
   scheduleStatusPoll() {
@@ -169,7 +194,7 @@ export default class extends Controller {
         }
         if (data.status === "failed") {
           this.hideOverlay()
-          window.alert(data.error || "")
+          this.showImportError(data.error)
           return
         }
         this.scheduleStatusPoll()
@@ -179,11 +204,11 @@ export default class extends Controller {
 
   showOverlay(label) {
     this.overlayLabelTarget.textContent = label
-    this.overlayTarget.hidden = false
+    this.overlayTarget.classList.remove("-hidden")
   }
 
   hideOverlay() {
-    this.overlayTarget.hidden = true
+    this.overlayTarget.classList.add("-hidden")
   }
 
   submit(event) {
@@ -362,6 +387,9 @@ export default class extends Controller {
 
   startImport() {
     if (!window.confirm(this.confirmImportValue)) return
+
+    this.dismissImportError()
+    this.lastImportStatus = null
     this.showOverlay(this.progressFinalizingValue)
     this.sendCommand("import").then((data) => {
       if (data && data.status === "importing") {
@@ -423,7 +451,8 @@ export default class extends Controller {
         this.renderAttachments()
       })
       .catch(() => {
-        window.alert(this.errorExtractFailedValue)
+        console.log("filesPicked:", this.errorExtractFailedValue)
+        // window.alert(this.errorExtractFailedValue)
       })
 
     event.target.value = ""

@@ -41,14 +41,12 @@
         class="kern-criteria-card <%= card_modifier %>"
         data-criterion-id="<%= criterion.id %>"
       >
-        <% if kind != "hard" %>
-          <div class="kern-criteria-card__badge-row">
-            <span class="kern-criteria-card__kind-tag">
-              <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
-              <%= kind_label %>
-            </span>
-          </div>
-        <% end %>
+        <div class="kern-criteria-card__badge-row">
+          <span class="kern-criteria-card__kind-tag">
+            <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+            <%= kind_label %>
+          </span>
+        </div>
 
         <div class="kern-criteria-card__top">
           <span
@@ -82,6 +80,7 @@
         <div class="kern-criteria-card__body">
           <div class="kern-criteria-card__field kern-criteria-card__field--public">
             <label class="kern-criteria-card__field-label">
+              <span class="material-symbols-outlined kern-criteria-card__field-icon">visibility</span>
               <%= t("adm.projekts.phases.ai_user_flow.field_description") %>
             </label>
             <textarea
@@ -94,6 +93,7 @@
 
           <div class="kern-criteria-card__field kern-criteria-card__field--ai">
             <label class="kern-criteria-card__field-label">
+              <span class="material-symbols-outlined kern-criteria-card__field-icon">smart_toy</span>
               <%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %>
             </label>
             <textarea
@@ -120,14 +120,12 @@
       class="kern-criteria-card kern-criteria-card--new <%= card_modifier %>"
       data-criterion-id="{{ id }}"
     >
-      <% if kind != "hard" %>
-        <div class="kern-criteria-card__badge-row">
-          <span class="kern-criteria-card__kind-tag">
-            <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
-            <%= kind_label %>
-          </span>
-        </div>
-      <% end %>
+      <div class="kern-criteria-card__badge-row">
+        <span class="kern-criteria-card__kind-tag">
+          <span class="material-symbols-outlined kern-criteria-card__kind-icon"><%= card_kind_icon %></span>
+          <%= kind_label %>
+        </span>
+      </div>
 
       <div class="kern-criteria-card__top">
         <span
@@ -158,6 +156,7 @@
       <div class="kern-criteria-card__body">
         <div class="kern-criteria-card__field kern-criteria-card__field--public">
           <label class="kern-criteria-card__field-label">
+            <span class="material-symbols-outlined kern-criteria-card__field-icon">visibility</span>
             <%= t("adm.projekts.phases.ai_user_flow.field_description") %>
           </label>
           <textarea
@@ -170,6 +169,7 @@
 
         <div class="kern-criteria-card__field kern-criteria-card__field--ai">
           <label class="kern-criteria-card__field-label">
+            <span class="material-symbols-outlined kern-criteria-card__field-icon">smart_toy</span>
             <%= t("adm.projekts.phases.ai_user_flow.field_ai_instruction") %>
           </label>
           <textarea

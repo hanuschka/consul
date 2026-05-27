@@ -92,7 +92,7 @@
 
       <% if documentable_name.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.projekt") %></dt>
+          <dt><%= t("files.card.documentable_type") %></dt>
           <dd>
             <% if documentable_url.present? %>
               <%= link_to documentable_name, documentable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
@@ -105,18 +105,18 @@
 
       <% if humanized_size.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.file_size") %></dt>
+          <dt><%= t("files.card.size") %></dt>
           <dd><%= humanized_size %></dd>
         </div>
       <% end %>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.uploaded") %></dt>
+        <dt><%= t("files.card.created") %></dt>
         <dd><%= created_at_formatted %></dd>
       </div>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.last_edited") %></dt>
+        <dt><%= t("files.card.modified") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
     </dl>

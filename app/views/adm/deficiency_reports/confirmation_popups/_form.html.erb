@@ -3,7 +3,7 @@
               method: :patch do |f| %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".enabled_label"), hint: t(".enabled_hint")) do %>
-    <%= f.check_box :enabled, label: t(".enabled_label") %>
+    <%= f.check_box :enabled %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".question_label"), hint: t(".question_hint")) do %>

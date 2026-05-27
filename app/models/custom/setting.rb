@@ -230,8 +230,6 @@ class Setting < ApplicationRecord
         "deficiency_reports.show_create_report_button": "active",
         "deficiency_reports.feature_name": nil,
         "deficiency_reports.create_cta": nil,
-        "deficiency_reports.new_form_title": nil,
-        "deficiency_reports.new_form_title_placeholder": nil,
 
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,

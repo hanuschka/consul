@@ -1,6 +1,0 @@
-<%= turbo_stream.replace dom_id(@filter) do %>
-  <%= render Adm::RecipientGroupFilterCardComponent.new(filter: @filter, count: 0, delta: 0) %>
-<% end %>
-<%= turbo_stream.update "filter-stack-footer" do %>
-  <%= render "adm/recipient_groups/footer", recipient_group: @recipient_group %>
-<% end %>

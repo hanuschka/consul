@@ -645,14 +645,6 @@ en:
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
         age_ranges_for_stats:
           page_title: Age ranges for stats
-        ai_settings:
-          page_title: Voice assistant
-          questions: What questions should be asked to citizens?
-          questions_description: These are the questions the AI voice assistant will ask the citizen during the conversation in order to gather enough information for a well-formed proposal. Phrase them as open, easy to understand prompts that encourage the citizen to describe their concern in detail, with concrete examples and the relevant context.
-          criteria: What criteria must the proposals meet?
-          criteria_description: The AI assistant uses these criteria to decide whether the citizen's answers are sufficient to end the dialogue and generate a proposal draft. Describe clearly which contents, details and minimum information every proposal must contain so that it can be processed further in the participation workflow.
-          parting_words: What parting words should the AI assistant give?
-          parting_words_description: With this closing message the AI assistant ends the conversation once all criteria are met and immediately before the proposal draft is generated. Use this text to thank the citizen, announce the next step in the process and build confidence that the submitted concern will be handled with care and respect.
       modal_notifications:
         index:
           create: Create

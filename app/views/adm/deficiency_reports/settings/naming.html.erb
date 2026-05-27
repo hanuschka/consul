@@ -30,8 +30,10 @@
 ]) %>
 
 <div class="kern-container my-5">
+  <p class="adm-hint__text mb-3">
+    <%= t("adm.deficiency_reports.settings.naming.intro") %>
+  </p>
+
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.feature_name"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.create_cta"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.new_form_title"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.new_form_title_placeholder"), :value, :string) %>
 </div>

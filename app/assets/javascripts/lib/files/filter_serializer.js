@@ -70,18 +70,7 @@
 
     if (!input) return;
 
-    const normalized = value === null || value === undefined ? "" : value;
-
-    if (input.tagName === "SELECT" && normalized === "") {
-      input.selectedIndex = 0;
-      return;
-    }
-
-    input.value = normalized;
-
-    if (input.tagName === "SELECT" && input.selectedIndex === -1) {
-      input.selectedIndex = 0;
-    }
+    input.value = value === null || value === undefined ? "" : value;
   };
 
   const entryForKey = (key) => FORM_INPUTS.find((entry) => entry.key === key);

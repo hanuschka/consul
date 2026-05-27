@@ -387,17 +387,6 @@ class ProjektPhase < ApplicationRecord
     raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
-  def customizable_email_template_groups
-    [
-      {
-        key: nil,
-        templates: customizable_email_templates.map do |mailer_class, mailer_action|
-          { mailer_class: mailer_class, mailer_action: mailer_action, recipient_type: nil }
-        end
-      }
-    ]
-  end
-
   def admin_nav_bar_items
     []
   end

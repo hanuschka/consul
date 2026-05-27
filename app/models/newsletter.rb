@@ -23,20 +23,9 @@ class Newsletter < ApplicationRecord
   end
 
   def list_of_recipient_emails
-    emails =
-      if recipient_group
-        recipient_group.user_emails
-      elsif valid_segment_recipient?
-        UserSegments.user_segment_emails(segment_recipient)
-      end
+    return recipient_group.user_emails if recipient_group
 
-    return emails if emails.blank?
-    return emails unless respect_newsletter_optout?
-
-    optin_emails = User.actual.where(newsletter: true).pluck(:email).compact +
-                   UnregisteredNewsletterSubscriber.confirmed.pluck(:email).compact
-    optin_set = optin_emails.to_set
-    emails.select { |e| optin_set.include?(e) }
+    UserSegments.user_segment_emails(segment_recipient) if valid_segment_recipient?
   end
 
   def valid_segment_recipient?
@@ -90,10 +79,19 @@ class Newsletter < ApplicationRecord
 
       if pct_match
         pixel_width = (pct_match[1].to_f / 100.0 * container_width).round
-        img["width"] = pixel_width.to_s
+        intrinsic_w = img["width"].to_i
+        intrinsic_h = img["height"].to_i
+
+        if intrinsic_w > 0 && intrinsic_h > 0
+          pixel_height = (pixel_width.to_f / intrinsic_w * intrinsic_h).round
+          img["width"] = pixel_width.to_s
+          img["height"] = pixel_height.to_s
+        else
+          img["width"] = pixel_width.to_s
+          img.remove_attribute("height")
+        end
       end
 
-      img.remove_attribute("height")
       img["style"] = img["style"].to_s.gsub(/aspect-ratio:[^;]+;?/, "").strip
       img.remove_attribute("class")
 
@@ -109,28 +107,6 @@ class Newsletter < ApplicationRecord
       end
 
       figure.replace(img)
-    end
-
-    doc.css("img").each do |img|
-      img.remove_attribute("height")
-      style = img["style"].to_s.gsub(/height\s*:[^;]+;?/i, "").strip
-      style << ";" unless style.empty? || style.end_with?(";")
-      style << "height:auto;" unless style =~ /height\s*:\s*auto/i
-      style << "max-width:100%;" unless style =~ /max-width\s*:/i
-      img["style"] = style
-    end
-
-    doc.css("a[href], img[src]").each do |node|
-      attr = node.name == "a" ? "href" : "src"
-      url = node[attr].to_s
-      next if url.blank?
-      next if url.match?(/\A(?:https?:|mailto:|tel:|cid:|data:|#)/i)
-
-      begin
-        node[attr] = URI.join(Setting["url"].to_s, url).to_s
-      rescue URI::InvalidURIError
-        next
-      end
     end
 
     doc.to_html

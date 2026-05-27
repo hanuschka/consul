@@ -112,43 +112,17 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     !selectable_by_users?
   end
 
-  def customizable_email_template_groups
-    [
-      {
-        key: "submission",
-        templates: [
-          { mailer_class: "Mailer", mailer_action: "budget_investment_created", recipient_type: "author" },
-          { mailer_class: "NotificationServiceMailer", mailer_action: "new_budget_investment", recipient_type: "subscribers" }
-        ]
-      },
-      {
-        key: "feasibility",
-        templates: [
-          { mailer_class: "Mailer", mailer_action: "budget_investment_feasible", recipient_type: "author" },
-          { mailer_class: "Mailer", mailer_action: "budget_investment_unfeasible", recipient_type: "author" }
-        ]
-      },
-      {
-        key: "preselection",
-        templates: [
-          { mailer_class: "Mailer", mailer_action: "budget_investment_preselected", recipient_type: "author" },
-          { mailer_class: "Mailer", mailer_action: "budget_investment_not_preselected", recipient_type: "author" }
-        ]
-      },
-      {
-        key: "selection",
-        templates: [
-          { mailer_class: "Mailer", mailer_action: "budget_investment_selected", recipient_type: "author" },
-          { mailer_class: "Mailer", mailer_action: "budget_investment_unselected", recipient_type: "author" }
-        ]
-      }
-    ]
-  end
-
   def customizable_email_templates
-    customizable_email_template_groups.flat_map do |group|
-      group[:templates].map { |t| [t[:mailer_class], t[:mailer_action]] }
-    end
+    [
+      ["Mailer", "budget_investment_created"],
+      ["Mailer", "budget_investment_feasible"],
+      ["Mailer", "budget_investment_unfeasible"],
+      ["Mailer", "budget_investment_selected"],
+      ["Mailer", "budget_investment_unselected"],
+      ["Mailer", "budget_investment_preselected"],
+      ["Mailer", "budget_investment_not_preselected"],
+      ["NotificationServiceMailer", "new_budget_investment"]
+    ]
   end
 
   def admin_nav_bar_items

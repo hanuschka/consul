@@ -587,21 +587,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def email_templates
     authorize_phase(:update?)
 
-    @email_template_groups = @projekt_phase.customizable_email_template_groups.map do |group|
-      {
-        key: group[:key],
-        entries: group[:templates].map do |tpl|
-          record = @projekt_phase.email_templates.find_or_create_by!(
-            mailer_class: tpl[:mailer_class],
-            mailer_action: tpl[:mailer_action],
-            locale: I18n.locale
-          )
-          { template: record, recipient_type: tpl[:recipient_type] }
-        end
-      }
+    @email_templates = @projekt_phase.customizable_email_templates.map do |mailer_class, mailer_action|
+      @projekt_phase.email_templates.find_or_create_by!(mailer_class: mailer_class, mailer_action: mailer_action, locale: I18n.locale)
     end
-
-    @email_templates = @email_template_groups.flat_map { |g| g[:entries].map { |e| e[:template] } }
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },

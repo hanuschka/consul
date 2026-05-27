@@ -2,74 +2,13 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_recipient_groups_path, narrow: true) %>
 
-<div class="kern-container my-5"
-     data-controller="adm-newsletters--filter-stack"
-     data-adm-newsletters--filter-stack-recount-url-value="<%= recount_adm_recipient_group_filters_path(@recipient_group) %>"
-     data-adm-newsletters--filter-stack-reorder-url-value="<%= reorder_adm_recipient_group_filters_path(@recipient_group) %>">
+<div class="kern-container my-5">
+  <%= form_with model: [:adm, @recipient_group] do |f| %>
 
-  <% default_name = t("adm.recipient_groups.create.default_name") %>
-  <% name_is_default = @recipient_group.name == default_name %>
-  <%= form_with model: [:adm, @recipient_group],
-                data: {
-                  controller: "adm-recipient-groups--name-autosave",
-                  "adm-recipient-groups--name-autosave-url-value": adm_recipient_group_path(@recipient_group),
-                  "adm-recipient-groups--name-autosave-saved-text-value": t("adm.recipient_groups.edit.name_autosaved"),
-                  "adm-recipient-groups--name-autosave-error-text-value": t("adm.recipient_groups.edit.name_autosave_error"),
-                  action: "submit->adm-recipient-groups--name-autosave#save"
-                } do |f| %>
-    <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
-      <%= f.text_field :name,
-            label: false,
-            value: name_is_default ? "" : @recipient_group.name,
-            placeholder: default_name,
-            data: {
-              "adm-recipient-groups--name-autosave-target": "input",
-              action: "blur->adm-recipient-groups--name-autosave#save"
-            } %>
-      <span class="adm-name-autosave-status text-muted small mt-2 d-block"
-            data-adm-recipient-groups--name-autosave-target="status"
-            aria-live="polite"></span>
+    <%= render Kern::FormFieldComponent.new(label: RecipientGroup.human_attribute_name(:name), hint: t(".name_hint")) do %>
+      <%= f.text_field :name, label: false, placeholder: "z. B. Alle Abonnenten" %>
     <% end %>
+
+    <%= form_submit_button(text: t("adm.recipient_groups.edit.submit")) %>
   <% end %>
-
-  <h3 class="mt-5"><%= t("adm.recipient_groups.filters.section_title") %></h3>
-
-  <ul id="filter-stack"
-      class="list-unstyled"
-      data-adm-newsletters--filter-stack-target="list">
-    <% if @recipient_group.filters.any? %>
-      <% @recipient_group.filters.each_with_index do |filter, idx| %>
-        <li>
-          <%= render Adm::RecipientGroupFilterCardComponent.new(
-                filter: filter,
-                display_position: idx + 1,
-                count: @counts[idx][:count],
-                delta: @counts[idx][:delta]) %>
-        </li>
-      <% end %>
-    <% else %>
-      <li id="filter-stack-empty">
-        <%= empty_state(
-              title: t("adm.recipient_groups.filters.empty_title"),
-              description: t("adm.recipient_groups.filters.empty_description"),
-              icon: "filter_alt") %>
-      </li>
-    <% end %>
-  </ul>
-
-  <%= form_with url: adm_recipient_group_filters_path(@recipient_group),
-                data: { turbo_stream: true },
-                class: "mt-3" do |f| %>
-    <%= hidden_field_tag "recipient_group_filter[kind]", "newsletter_subscribers" %>
-    <%= hidden_field_tag "recipient_group_filter[operator]",
-          @recipient_group.filters.any? ? "intersect" : "include" %>
-    <%= kern_button(text: t("adm.recipient_groups.filters.add_filter"),
-                    icon: "add",
-                    type: :submit,
-                    style: :secondary) %>
-  <% end %>
-
-  <div id="filter-stack-footer" class="mt-4">
-    <%= render "footer", recipient_group: @recipient_group %>
-  </div>
 </div>

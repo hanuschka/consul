@@ -5,12 +5,7 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container mb-5">
-  <% @email_template_groups.each do |group| %>
-    <% if group[:key].present? %>
-      <h3 class="kern-title kern-title--small mt-5 mb-3"><%= t(".groups.#{group[:key]}") %></h3>
-    <% end %>
-    <% group[:entries].each do |entry| %>
-      <%= render Adm::EmailTemplateComponent.new(entry[:template], recipient_type: entry[:recipient_type]) %>
-    <% end %>
+  <% @email_templates.each do |template| %>
+    <%= render Adm::EmailTemplateComponent.new(template) %>
   <% end %>
 </div>

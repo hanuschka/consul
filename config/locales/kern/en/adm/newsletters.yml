@@ -51,7 +51,6 @@ en:
         hints:
           subject: "The subject appears as the heading in the email and in the recipients' inbox. Choose a short, meaningful text that clearly names the topic of the newsletter. A good subject increases the open rate and helps recipients categorize the newsletter thematically. Recommended length: 40 to 60 characters."
           recipient_group: "Choose the recipient group this newsletter should be sent to. Recipient groups define which users receive the newsletter — e.g. all registered users, subscribers of specific projects, or manually compiled groups. You can create and manage new recipient groups under the tab of the same name."
-          respect_newsletter_optout: "When enabled, only users who activated \"Newsletter and system emails\" in their account receive the newsletter. Disable this option only if all recipients of the group should be reached regardless of their newsletter setting."
         placeholders:
           subject: "e.g. New participation projects in March 2026"
       edit:

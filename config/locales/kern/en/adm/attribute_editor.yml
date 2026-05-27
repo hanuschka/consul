@@ -47,8 +47,6 @@ en:
       newsletter:
         recipient_group_id_label: Recipient group
         recipient_group_id_description: 'Defines which recipient group this newsletter is sent to. Recipient groups are managed under <a href="/adm/recipient_groups" target="_blank">Notifications > Recipient groups</a> and can be composed by area, interest, or registration status. Only users assigned to the selected group receive the email. If you want to reach all registered users, choose the corresponding default group.'
-        respect_newsletter_optout_label: Respect newsletter opt-out
-        respect_newsletter_optout_description: "When enabled, users who disabled \"Newsletter and system emails\" in their account are skipped at send time — even if they would otherwise belong to the selected recipient group. This option should normally stay enabled to respect users' preferences. Disable it only in exceptional cases, e.g. for mandatory information that all recipients of the group should receive regardless of their newsletter setting. Note: This option only takes effect when a recipient group is assigned to the newsletter. For older newsletters using the legacy segment selection, the opt-out is already applied by the segment itself."
         from_label: From
         from_description: "The email address shown as the sender in recipients' inboxes. Important: the domain (everything after the @) must not be changed, or email sending will fail. Only the part before the @ can be adjusted. Replies from recipients are sent to this address — make sure the inbox is actively monitored."
         subject_label: Subject

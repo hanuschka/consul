@@ -2,19 +2,7 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_newsletters_path, narrow: true) %>
 
-<% recipient_groups_exist = RecipientGroup.any? %>
-
 <div class="kern-container my-5">
-  <%# Out-of-tree form used by the "create recipient group" buttons below.
-      Nested <form> elements are invalid HTML, so the button_to-equivalents
-      use the HTML5 `form="..."` attribute to associate themselves with this
-      sibling form instead of the outer newsletter form. %>
-  <%= form_tag adm_recipient_groups_path,
-        method: :post,
-        id: "create-recipient-group-form",
-        class: "d-none" do %>
-  <% end %>
-
   <%= form_with model: [:adm, @newsletter] do |f| %>
     <%= render Kern::FormFieldComponent.new(
       label: Newsletter.human_attribute_name(:subject),
@@ -24,51 +12,19 @@
       <%= f.text_field :subject, label: false, placeholder: t(".placeholders.subject") %>
     <% end %>
 
-    <% if recipient_groups_exist %>
-      <%= render Kern::FormFieldComponent.new(
-        label: Newsletter.human_attribute_name(:recipient_group),
-        hint: t(".hints.recipient_group"),
-        divider: false
-      ) do %>
-        <%= f.select :recipient_group_id,
-          options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id),
-          { prompt: t("custom.shared.select") },
-          label: false %>
-        <div class="mt-2">
-          <%= button_tag t(".create_recipient_group_link"),
-            type: :submit,
-            form: "create-recipient-group-form",
-            class: "kern-link kern-body kern-body--small kern-link--inline-button" %>
-        </div>
-      <% end %>
-    <% else %>
-      <div class="adm-empty-state">
-        <div class="adm-empty-state__icon-wrap">
-          <span class="adm-empty-state__icon material-symbols-outlined" aria-hidden="true">group_add</span>
-        </div>
-        <p class="adm-empty-state__title"><%= t(".empty_recipient_groups.title") %></p>
-        <p class="adm-empty-state__description"><%= t(".empty_recipient_groups.description") %></p>
-        <%= button_tag t(".empty_recipient_groups.cta"),
-          type: :submit,
-          form: "create-recipient-group-form",
-          class: "adm-empty-state__link kern-btn kern-btn--primary mt-3" %>
-      </div>
-    <% end %>
-
-    <% if recipient_groups_exist %>
-      <%= render Kern::FormFieldComponent.new(
-        label: Newsletter.human_attribute_name(:respect_newsletter_optout),
-        hint: t(".hints.respect_newsletter_optout"),
-        divider: false
-      ) do %>
-        <%= f.check_box :respect_newsletter_optout, label: false %>
-      <% end %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Newsletter.human_attribute_name(:recipient_group),
+      hint: t(".hints.recipient_group"),
+      divider: false
+    ) do %>
+      <%= f.select :recipient_group_id,
+        options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id),
+        { prompt: t("custom.shared.select") },
+        label: false %>
     <% end %>
 
     <%= f.hidden_field :from, value: (f.object.from || Setting['mailer_from_address']) %>
 
-    <% if recipient_groups_exist %>
-      <%= form_submit_button(text: t("shared.create")) %>
-    <% end %>
+    <%= form_submit_button(text: t("shared.create")) %>
   <% end %>
 </div>

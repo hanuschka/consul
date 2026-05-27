@@ -1,8 +1,10 @@
 <%= turbo_frame_tag "files-imageable-type-filter" do %>
   <div class="files-filter-bar--field">
+    <label class="files-filter-bar--label">
+      <%= t("files.filter_bar.imageable_type") %>
+    </label>
     <select
       class="files-filter-bar--input js-fm-filter-imageable-type"
-      aria-label="<%= t("files.filter_bar.aria.filter_imageable_type") %>"
       data-action="change->files--filter-bar#filterChanged"
     >
       <option value=""><%= t("files.filter_bar.imageable_type_any") %></option>

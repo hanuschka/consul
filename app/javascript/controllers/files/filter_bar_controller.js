@@ -376,11 +376,7 @@ export default class extends Controller {
 
       if (!input) return
 
-      if (input.tagName === "SELECT") {
-        input.selectedIndex = 0
-      } else {
-        input.value = ""
-      }
+      input.value = ""
     })
   }
 

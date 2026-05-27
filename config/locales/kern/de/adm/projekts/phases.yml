@@ -385,11 +385,6 @@ de:
           empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner, um die KI-gestützten Bewertungskriterien zu aktivieren. Nach der Freischaltung können Sie hier Kriterien definieren, anhand derer eingereichte Beiträge automatisch bewertet und kategorisiert werden.
         email_templates:
           title: System-E-Mails
-          groups:
-            submission: Einreichung (Phase 2)
-            feasibility: Bewertung der Umsetzbarkeit (Phase 2 + 3)
-            preselection: Vorauswahl (Übergang Phase 4 → 5)
-            selection: Finale Auswahl zur Abstimmung (Phase 5)
         ai_settings:
           title: KI Sprachassistent
           empty_title: KI Sprachassistent nicht verfügbar

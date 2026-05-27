@@ -704,11 +704,6 @@ form:has(> .adm-detail-media-card__action) {
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 12%, transparent);
     color: var(--kern-color-feedback-danger, #bd0f09);
   }
-
-  &--info {
-    background: color-mix(in srgb, var(--kern-color-feedback-info, #1976d2) 12%, transparent);
-    color: var(--kern-color-feedback-info, #1976d2);
-  }
 }
 
 .adm-admin-phase__body {

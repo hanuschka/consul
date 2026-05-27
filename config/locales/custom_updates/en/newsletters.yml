@@ -2,17 +2,6 @@ en:
   admin:
     segment_recipient:
       newsletter_subscribers: Newsletter-Subscribers
-  adm:
-    newsletters:
-      new:
-        create_recipient_group_link: "+ Create recipient group"
-        empty_recipient_groups:
-          title: No recipient groups yet
-          description: >
-            Before you can create a newsletter, please create at least one recipient group.
-            The group defines who will receive the newsletter — for example all subscribers of
-            a project or all users who have consented to receive newsletters.
-          cta: Create recipient group
   custom:
     newsletters:
       new_projekt:

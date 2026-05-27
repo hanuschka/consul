@@ -28,7 +28,7 @@ module Ai::Settings
       gpustack_api_key.present?
     when "bedrock"
       bedrock_access_key_id.present? && bedrock_secret_access_key.present?
-    when "vertex_ai"
+    when "vertexai"
       vertex_ai_project.present?
     when "ollama"
       true

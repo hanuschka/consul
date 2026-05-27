@@ -49,20 +49,20 @@
       data-adm--masterportal-import-panel-target="actions"
     >
       <% if supports_domain_records? %>
-        <label class="masterportal-import-panel--switch">
+        <label class="kern-switch">
           <input
             type="checkbox"
-            class="masterportal-import-panel--switch-input"
+            class="kern-switch__input"
             data-adm--masterportal-import-panel-target="createResourceCheckbox"
           >
-          <span class="masterportal-import-panel--switch-track">
-            <span class="masterportal-import-panel--switch-thumb"></span>
+          <span class="kern-switch__track">
+            <span class="kern-switch__thumb"></span>
           </span>
-          <span class="masterportal-import-panel--switch-text">
-            <span class="masterportal-import-panel--switch-label">
+          <span class="kern-switch__text">
+            <span class="kern-switch__label">
               <%= t(".create_resource_label", resource_name: resource_name) %>
             </span>
-            <span class="masterportal-import-panel--switch-description">
+            <span class="kern-switch__description">
               <%= t(".create_resource_description") %>
             </span>
           </span>

@@ -1,0 +1,56 @@
+.adm-button-with-progress {
+  display: inline-grid;
+  grid-template-areas: "adm-button-with-progress-stack";
+  align-items: stretch;
+  justify-items: stretch;
+}
+
+.adm-button-with-progress__trigger {
+  grid-area: adm-button-with-progress-stack;
+}
+
+.adm-button-with-progress__trigger[aria-disabled="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.adm-button-with-progress__loading,
+.adm-button-with-progress__success {
+  grid-area: adm-button-with-progress-stack;
+  visibility: hidden;
+  pointer-events: none;
+  cursor: default;
+}
+
+.adm-button-with-progress__loading.-active,
+.adm-button-with-progress__success.-active {
+  visibility: visible;
+}
+
+.adm-button-with-progress__success {
+  border-color: var(--kern-color-feedback-success, #1B7B3A);
+
+  .kern-label {
+    color: var(--kern-color-feedback-success, #1B7B3A);
+  }
+}
+
+.adm-button-with-progress__success-icon {
+  color: var(--kern-color-feedback-success, #1B7B3A);
+}
+
+.adm-button-with-progress__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: var(--kern-color-action-default, #1A3DA5);
+  border-right-color: var(--kern-color-action-default, #1A3DA5);
+  border-radius: 50%;
+  animation: adm-button-with-progress-spin 0.8s linear infinite;
+}
+
+@keyframes adm-button-with-progress-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

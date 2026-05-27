@@ -14,7 +14,6 @@ de:
         modules: Module
         application_subitems:
           homepage: Startseite
-          documents: Dokumente
           pages: Systemseiten
           navbar: Navigation
           overview_pages: Übersichtsseiten

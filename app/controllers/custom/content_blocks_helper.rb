@@ -188,4 +188,10 @@ module ContentBlocksHelper
     result = result.gsub(/<p>\s*<\/p>/, "")
     result
   end
+
+  def safe_content_block_body(body)
+    return "" if body.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(body)
+  end
 end

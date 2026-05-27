@@ -6,6 +6,7 @@
 //
 // require idiomorph/dist/idiomorph.js
 //
+//= require ../lib/files/filter_serializer
 //= require ../projekt_studio/main
 //= require_tree ../projekt_studio/utils
 //= require_tree ../projekt_studio/templates
@@ -26,6 +27,7 @@
 //= require ../projekt_studio/modules/ContentBlock/EditModeSwitcher
 //= require ../projekt_studio/modules/ContentBlock/EditModeButtons
 //= require ../projekt_studio/modules/ContentBlock/Copy
+//= require ../projekt_studio/modules/ContentBlock/EmptyHintToggle
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/HeaderEdit

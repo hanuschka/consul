@@ -21,11 +21,11 @@
 
   .ai-stats-card > .kern-accordion__header {
     padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #faf5ff 0%, #eff6ff 100%);
+    background: #e3ecf9;
     transition: background 0.2s ease;
 
     &:hover {
-      background: linear-gradient(135deg, #f3e8ff 0%, #dbeafe 100%);
+      background: #cfdcf2;
     }
   }
 
@@ -41,10 +41,19 @@
   }
 
   .ai-stats-card--title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.0625rem;
     font-weight: 700;
     color: var(--er-text, #0f172a);
     letter-spacing: -0.01em;
+  }
+
+  .ai-stats-card--title-icon {
+    flex-shrink: 0;
+    color: var(--kern-color-action-default, #1A3DA5);
+    font-size: 1.375rem;
   }
 
   .ai-question-section--subtitle {

@@ -129,8 +129,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @proposals = pagy(base_scope)
+        @pagy, @proposals = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
+        @title_header_options = { search: true }
         @moderation_header_options = { filter_options: moderation_filter_options }
 
         @breadcrumbs = [
@@ -264,7 +265,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @investments = pagy(base_scope)
+        @pagy, @investments = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 
@@ -586,9 +587,21 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def email_templates
     authorize_phase(:update?)
 
-    @email_templates = @projekt_phase.customizable_email_templates.map do |mailer_class, mailer_action|
-      @projekt_phase.email_templates.find_or_create_by!(mailer_class: mailer_class, mailer_action: mailer_action, locale: I18n.locale)
+    @email_template_groups = @projekt_phase.customizable_email_template_groups.map do |group|
+      {
+        key: group[:key],
+        entries: group[:templates].map do |tpl|
+          record = @projekt_phase.email_templates.find_or_create_by!(
+            mailer_class: tpl[:mailer_class],
+            mailer_action: tpl[:mailer_action],
+            locale: I18n.locale
+          )
+          { template: record, recipient_type: tpl[:recipient_type] }
+        end
+      }
     end
+
+    @email_templates = @email_template_groups.flat_map { |g| g[:entries].map { |e| e[:template] } }
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -701,6 +714,47 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def evaluation_visibility
+    authorize_phase(:update?)
+    @visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    phase_evaluation_url = evaluation_adm_projekts_projekt_path(
+      @projekt_phase.projekt,
+      anchor: "phase-#{@projekt_phase.id}"
+    )
+
+    @back_button_url = phase_evaluation_url
+
+    @breadcrumbs = [
+      {
+        name: @projekt_phase.projekt.page.title,
+        url: details_adm_projekts_projekt_path(@projekt_phase.projekt)
+      },
+      { name: @projekt_phase.title, url: phase_evaluation_url },
+      { name: t(".title") }
+    ]
+  end
+
+  def update_evaluation_visibility
+    authorize_phase(:update?)
+    visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    if visibility.update(evaluation_visibility_params)
+      flash[:notice] = t(".success")
+
+      redirect_to evaluation_adm_projekts_projekt_path(
+        @projekt_phase.projekt,
+        anchor: "phase-#{@projekt_phase.id}"
+      )
+    else
+      flash[:error] = visibility.errors.full_messages.join(", ")
+
+      redirect_to evaluation_visibility_adm_projekts_phase_path(@projekt_phase)
+    end
+  end
+
   private
 
     def moderation_filter_options
@@ -737,6 +791,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       else
         @projekt_phase = ProjektPhase.find(params[:id])
       end
+    end
+
+    def evaluation_visibility_params
+      params.require(:projekt_phase_evaluation_visibility).permit(
+        *ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
+      )
     end
 
     def projekt_phase_params

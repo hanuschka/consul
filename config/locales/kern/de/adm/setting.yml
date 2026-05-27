@@ -231,9 +231,6 @@ de:
       new_form_title_placeholder: Platzhalter für den Titel
       new_form_title_placeholder_description: >
         Platzhaltertext im Titel-Feld des Meldeformulars. Geben Sie Bürgerinnen und Bürgern hier ein gutes Beispiel an die Hand (z.B. "Schlagloch in XY-Straße vor Hausnummer 123"). Leer lassen, um den Plattform-Standard zu verwenden.
-      show_in_main_menu: Mängelmelder in der Navigation
-      show_in_main_menu_description: >
-        Wenn aktiviert, wird der Mängelmelder als eigenständiger Menüpunkt in der Hauptnavigation der Plattform angezeigt. Nutzer können so direkt über das Hauptmenü auf die Mängelübersicht zugreifen, ohne erst ein Projekt aufrufen zu müssen. Deaktivieren Sie diese Option, wenn der Mängelmelder nur innerhalb bestimmter Projekte sichtbar sein soll.
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.

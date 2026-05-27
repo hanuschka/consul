@@ -49,6 +49,8 @@ de:
               generating_image: "Titelbild wird generiert…"
             errors:
               extract_failed: "Eine oder mehrere angehängte Dateien konnten nicht gelesen werden."
+              import_failed: "Der Import konnte nicht abgeschlossen werden."
+              dismiss: "Schließen"
         initial_message:
           analysis_complete: "Dokumentanalyse abgeschlossen"
           analysis_intro: "Folgendes habe ich aus Ihrem Dokument extrahiert. Bitte prüfen Sie die Felder — falls etwas nicht passt, sagen Sie es mir einfach."

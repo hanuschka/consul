@@ -2,7 +2,7 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
-<div class="kern-container my-5">
+<div class="kern-container">
   <div class="projekt-import-chat"
        data-controller="projekt-imports--chat"
        data-projekt-imports--chat-messages-url-value="<%= messages_adm_projekts_import_chat_path(@projekt_import) %>"
@@ -19,7 +19,25 @@
        data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
        data-projekt-imports--chat-progress-creating-value="<%= t('.progress.creating_projekt') %>"
        data-projekt-imports--chat-progress-generating-image-value="<%= t('.progress.generating_image') %>"
-       data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>">
+       data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>"
+       data-projekt-imports--chat-user-initials-value="<%= @chat_user_initials %>"
+       data-projekt-imports--chat-user-image-url-value="<%= @chat_user_image_url %>">
+
+    <%# Import error banner (shown once on failure, dismissible) %>
+    <div class="projekt-import-chat--error-banner -hidden"
+         role="alert"
+         data-projekt-imports--chat-target="importError"
+         data-fallback="<%= t('.errors.import_failed') %>">
+      <span class="material-symbols-outlined" aria-hidden="true">error</span>
+      <span class="projekt-import-chat--error-banner-message"
+            data-projekt-imports--chat-target="importErrorMessage"></span>
+      <button type="button"
+              class="projekt-import-chat--error-banner-dismiss"
+              aria-label="<%= t('.errors.dismiss') %>"
+              data-action="click->projekt-imports--chat#dismissImportError">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
 
     <%# Messages %>
     <div class="projekt-import-chat--messages"
@@ -27,7 +45,7 @@
          aria-live="polite"
          data-projekt-imports--chat-target="messages">
       <% @messages.each do |message| %>
-        <%= render "adm/projekts/imports/chats/message", message: message %>
+        <%= render "adm/projekts/imports/chats/message", message: message, user: @chat_user %>
       <% end %>
 
       <div class="projekt-import-chat-bubble -ai projekt-import-chat--typing-indicator -hidden"
@@ -50,7 +68,15 @@
       <div class="projekt-import-chat--topbar-group">
         <button type="button"
                 class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#regenerate">
+                data-action="click->projekt-imports--chat#startOver">
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+                <%= t(".commands.start_over") %>
+        </button>
+        <button
+           type="button"
+           class="projekt-import-chat--topbar-button"
+           data-action="click->projekt-imports--chat#regenerate"
+        >
           <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
           <%= t(".commands.regenerate") %>
         </button>
@@ -59,12 +85,6 @@
                 data-action="click->projekt-imports--chat#summarize">
           <span class="material-symbols-outlined" aria-hidden="true">format_list_bulleted</span>
           <%= t(".commands.summarize") %>
-        </button>
-        <button type="button"
-                class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#startOver">
-          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-          <%= t(".commands.start_over") %>
         </button>
       </div>
 
@@ -101,7 +121,7 @@
                   rows="1"
                   data-projekt-imports--chat-target="textarea"
                   placeholder="<%= t('.input_placeholder') %>"
-                  data-action="keydown->projekt-imports--chat#textareaKeydown"></textarea>
+                  data-action="keydown->projekt-imports--chat#textareaKeydown input->projekt-imports--chat#textareaInput"></textarea>
       </div>
 
       <button type="submit"

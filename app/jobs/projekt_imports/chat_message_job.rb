@@ -6,12 +6,15 @@ class ProjektImports::ChatMessageJob < ApplicationJob
     ai_chat = user_message.ai_chat
     projekt_import = ai_chat.resource
 
-    ai_message = ai_chat.ai_chat_messages.create!(
+    ai_message = ai_chat.ai_chat_messages.find_or_create_by!(
       role: "assistant",
-      status: "running",
-      user_message_id: user_message.id,
-      content: ""
-    )
+      user_message_id: user_message.id
+    ) do |m|
+      m.status = "running"
+      m.content = ""
+    end
+
+    ai_message.update!(status: "running") if ai_message.status != "running"
 
     ai_chat.update!(running: true)
 

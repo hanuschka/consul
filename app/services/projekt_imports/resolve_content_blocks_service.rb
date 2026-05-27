@@ -19,7 +19,7 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
       return ServiceResult.success(ai_result: data)
     end
 
-    resolved_by_index = resolve_all(input_blocks).index_by { it["index"] }
+    resolved_by_index = resolve_all(input_blocks).index_by { |b| b["index"] }
 
     data["content_blocks"] = blocks.each_with_index.map do |block, i|
       html = resolved_by_index[i]&.dig("html")
@@ -37,14 +37,14 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
   private
 
   def fetch_templates(blocks)
-    ids = blocks.map { it["template_id"] }.compact.uniq
+    ids = blocks.map { |b| b["template_id"] }.compact.uniq
     return {} if ids.empty?
 
     response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: "projekt_page")
     body = response.parsed_response
     list = Array(body.is_a?(Hash) ? body["content_block_templates"] : body)
 
-    list.select { |t| ids.include?(t["id"]) }.index_by { it["id"] }
+    list.select { |t| ids.include?(t["id"]) }.index_by { |t| t["id"] }
   end
 
   def build_input_blocks(blocks, templates)

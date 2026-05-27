@@ -49,6 +49,8 @@ en:
               generating_image: "Generating title image…"
             errors:
               extract_failed: "We could not read one or more of the attached files."
+              import_failed: "The import could not be completed."
+              dismiss: "Dismiss"
         initial_message:
           analysis_complete: "Document analysis complete"
           analysis_intro: "Here is what I extracted from your document. Review the fields below — anything that doesn't look right, just tell me."

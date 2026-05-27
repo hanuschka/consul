@@ -25,8 +25,34 @@
       $document.on("click", ".js-content-block-ai-submit", this.handleSubmit.bind(this));
       $document.on("click", ".js-content-block-ai-cancel", this.handleCancel.bind(this));
       $document.on("click", ".js-content-block-ai-modal-close", this.handleCloseRequest.bind(this));
+      $document.on("keydown", ".js-content-block-ai-modal", this.handleSubmitShortcut.bind(this));
 
+      this.applyShortcutLabel();
       this.bindUnloadCancel();
+    },
+
+    isMacPlatform() {
+      const platform =
+        (navigator.userAgentData && navigator.userAgentData.platform) ||
+        navigator.platform ||
+        navigator.userAgent;
+
+      return /Mac|iPhone|iPad|iPod/i.test(platform);
+    },
+
+    applyShortcutLabel() {
+      const label = this.isMacPlatform() ? "⌘ + Enter" : "Ctrl + Enter";
+      $(".js-content-block-ai-shortcut").text(label);
+    },
+
+    handleSubmitShortcut(e) {
+      if (e.key !== "Enter") return
+      if (!(e.metaKey || e.ctrlKey)) return
+
+      const modal = document.querySelector(".js-content-block-ai-modal");
+      if (modal.dataset.state !== "idle") return
+
+      this.handleSubmit(e);
     },
 
     bindUnloadCancel() {

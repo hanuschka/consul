@@ -55,8 +55,11 @@ de:
         prompt_placeholder: "Z.B. Ein Hinweisbanner zu den Bürgerbeteiligungsterminen mit Datum und Ort..."
         category_label: Kategorie (optional)
         category_any: Alle Kategorien
+        category_hint: "Wählen Sie eine Kategorie, um einzuschränken, welche vorhandenen Inhaltsblock-Vorlagen die KI als Inspiration verwendet (z.B. Header, Banner, Handlungsaufforderungen). Belassen Sie die Auswahl bei „Alle Kategorien“, damit die KI den passendsten Vorlagentyp für Ihren Prompt frei wählen kann."
         use_context_label: Vollständigen Projektkontext einbeziehen
+        use_context_hint: "Wenn aktiviert, erhält die KI Titel, Beschreibung, Phasen und weitere wichtige Felder Ihres Projekts, sodass der generierte Block auf echte Projektinhalte Bezug nehmen kann. Deaktiviert lassen für einen generischen, projektunabhängigen Block."
         submit: Mit KI erstellen
+        submit_shortcut_hint_html: "Tipp: %{shortcut} zum Absenden drücken"
         cancel: Generierung abbrechen
         processing_message: Inhaltsblock wird erstellt...
         fallback_note: "Vorlagen von demokratie.today sind nicht verfügbar. KI nutzt nur lokale Vorlagennamen als Inspiration."

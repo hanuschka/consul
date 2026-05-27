@@ -1,11 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Stop polling after this many consecutive failed /messages requests so a
+// persistently-down endpoint isn't hammered every 2s forever.
+const MAX_POLL_ERRORS = 5
+
 // Chat screen: polls /messages?after=:last_id every 2s, supports mid-chat
 // document attach, four command buttons, and the final import overlay.
 export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
-    "attachments", "typingIndicator", "overlay", "overlayLabel"
+    "attachments", "typingIndicator", "overlay", "overlayLabel",
+    "importError", "importErrorMessage"
   ]
 
   static values = {
@@ -23,7 +28,9 @@ export default class extends Controller {
     progressResolving: String,
     progressCreating: String,
     progressGeneratingImage: String,
-    errorExtractFailed: String
+    errorExtractFailed: String,
+    userInitials: { type: String, default: "" },
+    userImageUrl: { type: String, default: "" }
   }
 
   connect() {
@@ -31,6 +38,10 @@ export default class extends Controller {
     this.attachedDocuments = []
     this.pollTimer = null
     this.statusPollTimer = null
+    this.lastImportStatus = null
+    this.pollErrorCount = 0
+    this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
+    this.scrollToBottom()
     this.scheduleMessagesPoll()
   }
 
@@ -67,9 +78,23 @@ export default class extends Controller {
       credentials: "same-origin",
       headers: { "Accept": "application/json" }
     })
-      .then((response) => response.json())
-      .then((data) => this.handleMessages(data))
-      .catch(() => this.scheduleMessagesPoll())
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+        return response.json()
+      })
+      .then((data) => {
+        this.pollErrorCount = 0
+        this.handleMessages(data)
+      })
+      .catch(() => this.handlePollError())
+  }
+
+  handlePollError() {
+    this.pollErrorCount += 1
+    if (this.pollErrorCount >= MAX_POLL_ERRORS) return
+
+    this.scheduleMessagesPoll()
   }
 
   handleMessages(data) {
@@ -77,11 +102,7 @@ export default class extends Controller {
       data.messages.forEach((m) => this.appendOrUpdateMessage(m))
     }
 
-    if (data.ai_chat && data.ai_chat.running) {
-      this.typingIndicatorTarget.hidden = false
-    } else {
-      this.typingIndicatorTarget.hidden = true
-    }
+    this.typingIndicatorTarget.classList.toggle("-hidden", !(data.ai_chat && data.ai_chat.running))
 
     if (data.import) {
       this.handleImportState(data.import)
@@ -91,28 +112,21 @@ export default class extends Controller {
   }
 
   appendOrUpdateMessage(m) {
-    let node = this.messagesTarget.querySelector(`[data-message-id="${m.id}"]`)
+    if (!m.html) return
 
-    if (!node) {
-      node = document.createElement("div")
-      node.className = `projekt-import-chat__message projekt-import-chat__message--${m.role}`
-      node.dataset.messageId = String(m.id)
-      const author = document.createElement("div")
-      author.className = "projekt-import-chat__message-author"
-      author.textContent = m.role === "assistant" ? "AI" : "You"
-      const body = document.createElement("div")
-      body.className = "projekt-import-chat__message-body"
-      node.appendChild(author)
-      node.appendChild(body)
-      this.messagesTarget.insertBefore(node, this.typingIndicatorTarget)
+    if (m.role === "user") this.removeOptimisticBubbles()
+
+    const existing = this.messagesTarget.querySelector(`[data-message-id="${m.id}"]`)
+    const template = document.createElement("template")
+    template.innerHTML = m.html.trim()
+    const fresh = template.content.firstElementChild
+    if (!fresh) return
+
+    if (existing) {
+      existing.replaceWith(fresh)
+    } else {
+      this.messagesTarget.insertBefore(fresh, this.typingIndicatorTarget)
     }
-
-    node.dataset.status = m.status
-    const body = node.querySelector(".projekt-import-chat__message-body")
-    body.innerHTML = ""
-    const text = document.createElement("div")
-    text.innerText = m.content || ""
-    body.appendChild(text)
 
     if (m.id > this.lastMessageId) this.lastMessageId = m.id
     this.scrollToBottom()
@@ -136,15 +150,23 @@ export default class extends Controller {
       return
     }
 
-    if (state.status === "failed") {
-      this.clearPollTimer()
+    if (state.status === "failed" && this.lastImportStatus !== "failed") {
       this.hideOverlay()
-      window.alert(state.error || "")
-      this.scheduleMessagesPoll()
-      return
+      this.showImportError(state.error)
     }
 
+    this.lastImportStatus = state.status
     this.scheduleMessagesPoll()
+  }
+
+  showImportError(message) {
+    this.importErrorMessageTarget.textContent =
+      message || this.importErrorTarget.dataset.fallback || ""
+    this.importErrorTarget.classList.remove("-hidden")
+  }
+
+  dismissImportError() {
+    this.importErrorTarget.classList.add("-hidden")
   }
 
   scheduleStatusPoll() {
@@ -172,7 +194,7 @@ export default class extends Controller {
         }
         if (data.status === "failed") {
           this.hideOverlay()
-          window.alert(data.error || "")
+          this.showImportError(data.error)
           return
         }
         this.scheduleStatusPoll()
@@ -182,11 +204,11 @@ export default class extends Controller {
 
   showOverlay(label) {
     this.overlayLabelTarget.textContent = label
-    this.overlayTarget.hidden = false
+    this.overlayTarget.classList.remove("-hidden")
   }
 
   hideOverlay() {
-    this.overlayTarget.hidden = true
+    this.overlayTarget.classList.add("-hidden")
   }
 
   submit(event) {
@@ -196,10 +218,19 @@ export default class extends Controller {
 
     this.sendButtonTarget.disabled = true
 
+    const optimisticAttachments = this.attachedDocuments.slice()
+
+    this.appendOptimisticUserBubble(content, optimisticAttachments)
+    this.textareaTarget.value = ""
+    this.textareaTarget.style.height = "auto"
+    this.textareaTarget.classList.remove("-scrollable")
+    this.attachedDocuments = []
+    this.renderAttachments()
+
     const formData = new FormData()
     formData.append("content", content)
-    if (this.attachedDocuments.length > 0) {
-      formData.append("attached_documents", JSON.stringify(this.attachedDocuments))
+    if (optimisticAttachments.length > 0) {
+      formData.append("attached_documents", JSON.stringify(optimisticAttachments))
     }
 
     fetch(this.sendUrlValue, {
@@ -212,16 +243,118 @@ export default class extends Controller {
       body: formData
     })
       .then((response) => response.json())
-      .then(() => {
-        this.textareaTarget.value = ""
-        this.attachedDocuments = []
-        this.renderAttachments()
+      .then((data) => {
+        this.removeOptimisticBubbles()
         this.sendButtonTarget.disabled = false
+        this.renderImmediateMessages(data)
         this.scheduleMessagesPoll()
       })
       .catch(() => {
+        this.markOptimisticAsFailed()
         this.sendButtonTarget.disabled = false
       })
+  }
+
+  renderImmediateMessages(data) {
+    if (!data || !Array.isArray(data.messages)) return
+
+    data.messages.forEach((m) => this.appendOrUpdateMessage(m))
+  }
+
+  appendOptimisticUserBubble(content, attachments) {
+    const bubble = this.buildOptimisticUserBubble(content, attachments)
+    this.messagesTarget.insertBefore(bubble, this.typingIndicatorTarget)
+    this.scrollToBottom()
+  }
+
+  buildOptimisticUserBubble(content, attachments) {
+    const bubble = document.createElement("div")
+    bubble.className = "projekt-import-chat-bubble -user is-optimistic"
+    bubble.setAttribute("data-status", "completed")
+
+    bubble.appendChild(this.buildOptimisticAvatar())
+    bubble.appendChild(this.buildOptimisticContentWrapper(content, attachments))
+
+    return bubble
+  }
+
+  buildOptimisticAvatar() {
+    const wrapper = document.createElement("div")
+    wrapper.className = "projekt-import-chat-bubble--avatar-wrapper"
+
+    const avatar = document.createElement("div")
+    avatar.className = "projekt-import-chat-bubble--avatar -user"
+    avatar.setAttribute("aria-hidden", "true")
+
+    if (this.userImageUrlValue) {
+      const img = document.createElement("img")
+      img.src = this.userImageUrlValue
+      img.alt = ""
+      img.className = "projekt-import-chat-bubble--avatar-image"
+      avatar.appendChild(img)
+    } else if (this.userInitialsValue) {
+      const span = document.createElement("span")
+      span.className = "projekt-import-chat-bubble--avatar-initials"
+      span.textContent = this.userInitialsValue
+      avatar.appendChild(span)
+    } else {
+      const icon = document.createElement("span")
+      icon.className = "material-symbols-outlined"
+      icon.textContent = "person"
+      avatar.appendChild(icon)
+    }
+
+    wrapper.appendChild(avatar)
+    return wrapper
+  }
+
+  buildOptimisticContentWrapper(content, attachments) {
+    const wrapper = document.createElement("div")
+    wrapper.className = "projekt-import-chat-bubble--wrapper"
+
+    const contentEl = document.createElement("div")
+    contentEl.className = "projekt-import-chat-bubble--content"
+    if (content) {
+      const p = document.createElement("p")
+      p.textContent = content
+      contentEl.appendChild(p)
+    }
+    wrapper.appendChild(contentEl)
+
+    if (attachments && attachments.length > 0) {
+      wrapper.appendChild(this.buildOptimisticDocuments(attachments))
+    }
+
+    return wrapper
+  }
+
+  buildOptimisticDocuments(attachments) {
+    const list = document.createElement("div")
+    list.className = "projekt-import-chat--message-documents"
+
+    attachments.forEach((doc) => {
+      const badge = document.createElement("span")
+      badge.className = "projekt-import-chat--document-badge"
+      const icon = document.createElement("span")
+      icon.className = "material-symbols-outlined"
+      icon.setAttribute("aria-hidden", "true")
+      icon.textContent = "description"
+      badge.appendChild(icon)
+      badge.appendChild(document.createTextNode(doc.name || ""))
+      list.appendChild(badge)
+    })
+
+    return list
+  }
+
+  removeOptimisticBubbles() {
+    const nodes = this.messagesTarget.querySelectorAll(".is-optimistic")
+    nodes.forEach((node) => node.remove())
+  }
+
+  markOptimisticAsFailed() {
+    const nodes = this.messagesTarget.querySelectorAll(".is-optimistic")
+    nodes.forEach((node) => node.classList.add("-failed"))
   }
 
   textareaKeydown(event) {
@@ -231,16 +364,32 @@ export default class extends Controller {
     }
   }
 
+  textareaInput(event) {
+    this.resizeTextarea(event.target)
+  }
+
+  resizeTextarea(textarea) {
+    // Two-step: collapse to read true scrollHeight, then grow to fit content.
+    textarea.style.height = "auto"
+    const target = textarea.scrollHeight + this.initialTextareaOffset
+    const max = parseFloat(getComputedStyle(textarea).maxHeight) || Infinity
+    textarea.classList.toggle("-scrollable", target > max)
+    textarea.style.height = target + "px"
+  }
+
   regenerate() {
-    this.sendCommand("regenerate")
+    this.sendCommand("regenerate").then((data) => this.renderImmediateMessages(data))
   }
 
   summarize() {
-    this.sendCommand("summarize")
+    this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
   }
 
   startImport() {
     if (!window.confirm(this.confirmImportValue)) return
+
+    this.dismissImportError()
+    this.lastImportStatus = null
     this.showOverlay(this.progressFinalizingValue)
     this.sendCommand("import").then((data) => {
       if (data && data.status === "importing") {
@@ -302,7 +451,8 @@ export default class extends Controller {
         this.renderAttachments()
       })
       .catch(() => {
-        window.alert(this.errorExtractFailedValue)
+        console.log("filesPicked:", this.errorExtractFailedValue)
+        // window.alert(this.errorExtractFailedValue)
       })
 
     event.target.value = ""

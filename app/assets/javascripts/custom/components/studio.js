@@ -26,6 +26,7 @@
       ProjektStudio.ContentBlock.AiEditMode.initialize();
       ProjektStudio.ContentBlock.CodeEditMode.initialize();
       ProjektStudio.ContentBlock.Copy.initialize();
+      ProjektStudio.ContentBlock.EmptyHintToggle.initialize();
 
       this.modulesInitialized = true;
     },

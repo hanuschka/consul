@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 User.class_eval do
-  audited only: [:username, :first_name, :last_name, :registered_address_id,
+  audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
 

@@ -35,6 +35,7 @@ en:
             verify: Verify
             unverify: Remove verification
             edit: Edit
+            audits: Change log
       csv_download:
         not_found: The requested file was not found or has expired.
       edit:

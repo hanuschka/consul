@@ -91,6 +91,10 @@
             wrappedElement.dataset.defaultContent = defaultContent;
           }
 
+          if (block.style.marginBottom) {
+            wrappedElement.style.marginBottom = block.style.marginBottom;
+          }
+
           block.parentNode.replaceChild(wrappedElement, block);
 
           if (wrappedElement.closest("aside, .sidebar, footer")) {

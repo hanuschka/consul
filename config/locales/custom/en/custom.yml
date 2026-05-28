@@ -111,6 +111,11 @@ en:
       sidebar_section:
         show: 'Show section'
         hide: 'Hide section'
+    shared:
+      map_component:
+        loading_pins: "Loading map pins…"
+        error_loading_pins: "Could not load map pins."
+        retry: "Retry"
     layouts:
       footer:
         navigation_heading: Footer navigation

@@ -934,11 +934,22 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       }
 
       @media screen and (min-width: $small-tablet-viewport-start) {
-        padding: 1em;
-        min-height: 45px;
+        padding: 0;
+
+        a {
+          padding: 1em;
+        }
+
+        &:not(:has(> a)) {
+          padding: 1em;
+          min-height: 45px;
+
+          a {
+            padding: 1em;
+          }
+        }
       }
     }
-
   }
 
   // Konto flyout (avatar dropdown) — overrides for the menu rendered by

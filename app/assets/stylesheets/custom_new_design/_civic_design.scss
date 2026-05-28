@@ -420,7 +420,7 @@ $civic-transition: 200ms ease;
       background: $civic-card;
       border: 1px solid $civic-border;
       border-top: none;
-      border-radius: 0 0 $civic-radius-lg $civic-radius-lg;
+      border-radius: 12px;
       padding: 24px;
       box-shadow: $civic-shadow-sm;
     }

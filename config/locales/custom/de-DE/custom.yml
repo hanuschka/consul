@@ -98,6 +98,12 @@ de:
       geo_restricted: Sie sind aufgrund von Gebiets- beschränkungen nicht berechtigt teilzunehmen.
       phase_expired: Die Phase ist bereits abgeschlossen.
 
+    shared:
+      map_component:
+        loading_pins: "Karten-Pins werden geladen…"
+        error_loading_pins: "Karten-Pins konnten nicht geladen werden."
+        retry: "Erneut versuchen"
+
     layouts:
       footer:
         impressum: Impressum

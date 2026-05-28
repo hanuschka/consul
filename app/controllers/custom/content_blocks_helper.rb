@@ -86,6 +86,11 @@ module ContentBlocksHelper
       res << " data-toolbar-position=\"#{ERB::Util.html_escape(toolbar_position.to_s)}\""
     end
 
+    persisted_margin = block.attributes_before_type_cast["margin_bottom"]
+    if persisted_margin.present?
+      res << " style=\"margin-bottom: #{persisted_margin.to_i}px\""
+    end
+
     res << ">#{block_body}</div>"
 
     res

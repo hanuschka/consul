@@ -1,11 +1,7 @@
-// Styles for ParticapationStats::AiQuestionSectionComponent (projekt footer)
-// and the equivalent /adm evaluation report section. Selectors are kept
-// generic enough to work with both DOM structures:
-// - /adm:    <details class="kern-accordion ai-stats-card">
-//              <summary class="kern-accordion__header">...
-// - footer:  <section class="ai-stats-card">
-//              <div class="custom-collapse">
-//                <button class="custom-collapse--head">...
+// Styles for the AI question section in both the projekt footer and the
+// /adm evaluation report. Both contexts use Shared::AccordionComponent
+// (<details>/<summary>) and self-contained buttons — no kern-ux base CSS,
+// no Foundation .button required.
 
 .participation-stats-ai-question {
   --er-primary: #1e40af;
@@ -34,8 +30,7 @@
   overflow: hidden;
 }
 
-.participation-stats-ai-question .ai-stats-card > .kern-accordion__header,
-.participation-stats-ai-question .ai-stats-card .custom-collapse--head {
+.participation-stats-ai-question .ai-stats-card > .shared-accordion--head {
   padding: 1.25rem 1.5rem;
   margin: 0;
   background: #e3ecf9;
@@ -46,15 +41,8 @@
   }
 }
 
-.participation-stats-ai-question .ai-stats-card[open] > .kern-accordion__header,
-.participation-stats-ai-question .ai-stats-card .custom-collapse.-opened > .custom-collapse--head {
+.participation-stats-ai-question .ai-stats-card[open] > .shared-accordion--head {
   border-bottom: 1px solid var(--er-border);
-}
-
-.participation-stats-ai-question .ai-stats-card .custom-collapse--head .icon-chevron-down {
-  margin-left: auto;
-  font-size: 18px;
-  color: var(--er-text-secondary);
 }
 
 .participation-stats-ai-question .ai-stats-card--heading {
@@ -76,7 +64,7 @@
 
 .participation-stats-ai-question .ai-stats-card--title-icon {
   flex-shrink: 0;
-  color: var(--kern-color-action-default, #1A3DA5);
+  color: #1A3DA5;
   font-size: 1.375rem;
 }
 
@@ -87,8 +75,7 @@
   font-weight: 400;
 }
 
-.participation-stats-ai-question .ai-stats-card--body,
-.participation-stats-ai-question .ai-stats-card .custom-collapse--body {
+.participation-stats-ai-question .ai-stats-card > .shared-accordion--body {
   padding: 1.5rem;
   background: var(--er-surface);
 }
@@ -124,8 +111,8 @@
   &:focus {
     outline: none;
     background: var(--er-surface);
-    border-color: var(--kern-color-action-default, #1A3DA5);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--kern-color-action-default, #1A3DA5) 20%, transparent);
+    border-color: #1A3DA5;
+    box-shadow: 0 0 0 3px color-mix(in srgb, #1A3DA5 20%, transparent);
   }
 
   &:disabled {
@@ -222,8 +209,8 @@
   background: #fee2e2;
   border-radius: 999px;
 
-  .material-symbols-outlined {
-    font-size: 1rem;
+  i {
+    font-size: 0.875rem;
   }
 }
 
@@ -255,7 +242,7 @@
   padding: 0;
 }
 
-.participation-stats-ai-question .ai-question-item .custom-collapse--head {
+.participation-stats-ai-question .ai-question-item > .shared-accordion > .shared-accordion--head {
   padding: 1rem 1.25rem;
   background: transparent;
   transition: background 0.2s ease;
@@ -265,8 +252,12 @@
   }
 }
 
-.participation-stats-ai-question .ai-question-item .custom-collapse.-opened > .custom-collapse--head {
+.participation-stats-ai-question .ai-question-item > .shared-accordion[open] > .shared-accordion--head {
   border-bottom: 1px solid var(--er-border);
+}
+
+.participation-stats-ai-question .ai-question-item > .shared-accordion > .shared-accordion--body {
+  padding: 0;
 }
 
 .participation-stats-ai-question .ai-question-item--question {
@@ -290,8 +281,8 @@
     height: 26px;
     font-size: 0.8125rem;
     font-weight: 800;
-    color: var(--kern-color-action-default, #1A3DA5);
-    background: color-mix(in srgb, var(--kern-color-action-default, #1A3DA5) 10%, transparent);
+    color: #1A3DA5;
+    background: color-mix(in srgb, #1A3DA5 10%, transparent);
     border-radius: 50%;
   }
 }
@@ -395,5 +386,105 @@
 
   &.hidden {
     display: none;
+  }
+}
+
+.participation-stats-ai-question .ai-question-form--submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #ffffff;
+  background: #1A3DA5;
+  border: 1px solid #1A3DA5;
+  border-radius: var(--er-radius);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    color: #ffffff;
+    background: #15327e;
+    border-color: #15327e;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1A3DA5;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  i {
+    font-size: 0.875rem;
+  }
+}
+
+.participation-stats-ai-question .ai-question-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--er-text);
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  &:hover,
+  &:focus {
+    color: var(--er-text);
+    background: var(--er-bg);
+    border-color: var(--er-text-muted);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1A3DA5;
+    outline-offset: 2px;
+  }
+
+  i {
+    font-size: 0.875rem;
+    color: var(--er-text-secondary);
+  }
+}
+
+.participation-stats-ai-question .ai-question-item--delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  color: #b91c1c;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--er-radius);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover,
+  &:focus {
+    background: #fee2e2;
+    border-color: #fecaca;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #b91c1c;
+    outline-offset: 2px;
   }
 }

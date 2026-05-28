@@ -31,6 +31,12 @@ p {
 
 .material-symbols-outlined {
   font-size: inherit;
+  // Reserve a stable 1em box so font-load doesn't reflow surrounding layout.
+  display: inline-block;
+  width: 1em;
+  min-width: 1em;
+  text-align: center;
+  overflow: hidden;
 }
 
 .kern-link {

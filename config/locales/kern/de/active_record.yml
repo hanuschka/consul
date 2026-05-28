@@ -64,3 +64,5 @@ de:
         rating_scale: Bewertungsskala
       individual_group:
         visible: Sichtbar
+      newsletter:
+        respect_newsletter_optout: Newsletter-Opt-out berücksichtigen

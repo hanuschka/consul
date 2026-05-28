@@ -27,6 +27,7 @@
 //= require ../projekt_studio/modules/ContentBlock/EditModeSwitcher
 //= require ../projekt_studio/modules/ContentBlock/EditModeButtons
 //= require ../projekt_studio/modules/ContentBlock/Copy
+//= require ../projekt_studio/modules/ContentBlock/EmptyHintToggle
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/HeaderEdit

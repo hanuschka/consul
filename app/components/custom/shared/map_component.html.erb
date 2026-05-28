@@ -7,8 +7,22 @@
     <p class="map-collapsible-wrapper--note">
       <%= t("custom.map.aria-label") %>
     </p>
-    <%= map_div %>
+    <% if lazy_load_map_data? %>
+      <div class="map-data-wrapper js-map-data-wrapper">
+        <%= map_div %>
+        <%= render "shared/map_component/data_overlay" %>
+      </div>
+    <% else %>
+      <%= map_div %>
+    <% end %>
   </details>
 <% else %>
-  <%= map_div %>
+  <% if lazy_load_map_data? %>
+    <div class="map-data-wrapper js-map-data-wrapper">
+      <%= map_div %>
+      <%= render "shared/map_component/data_overlay" %>
+    </div>
+  <% else %>
+    <%= map_div %>
+  <% end %>
 <% end %>

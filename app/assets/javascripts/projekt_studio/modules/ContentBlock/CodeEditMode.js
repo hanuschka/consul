@@ -199,10 +199,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       const htmlValidation = ProjektStudio.utils.validateHTML(content);
 
       if (htmlValidation.isValid) {
-        contentBlock.innerHTML = content;
+        contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(content);
       }
     }
   },
+
 
   exitCodeEditMode(contentBlockWrapper, restoreContent = false) {
     if (restoreContent) {

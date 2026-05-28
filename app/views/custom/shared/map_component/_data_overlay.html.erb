@@ -1,0 +1,17 @@
+<div class="map-data-overlay js-map-data-overlay -loading">
+  <div class="map-data-overlay--loading">
+    <%= render "shared/loader_spinner" %>
+    <p class="map-data-overlay--message">
+      <%= t("custom.shared.map_component.loading_pins") %>
+    </p>
+  </div>
+
+  <div class="map-data-overlay--error">
+    <p class="map-data-overlay--message">
+      <%= t("custom.shared.map_component.error_loading_pins") %>
+    </p>
+    <button type="button" class="button js-map-data-retry">
+      <%= t("custom.shared.map_component.retry") %>
+    </button>
+  </div>
+</div>

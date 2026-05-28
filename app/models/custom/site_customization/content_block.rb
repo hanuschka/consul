@@ -10,7 +10,7 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   belongs_to :projekt, optional: true
   acts_as_list scope: :projekt
 
-  before_validation :repair_html_body
+  before_validation :repair_html_body, :sanitize_body
 
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale
@@ -27,11 +27,24 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     end
   end
 
+  def body_stripped?
+    !!@body_stripped
+  end
+
   private
 
   def repair_html_body
     return if body.blank?
 
     self.body = Nokogiri::HTML::DocumentFragment.parse(body).to_html
+  end
+
+  def sanitize_body
+    return if body.blank?
+
+    sanitizer = AdminWYSIWYGSanitizer.new
+    original = body
+    self.body = sanitizer.sanitize(body)
+    @body_stripped = sanitizer.stripped?(original, body)
   end
 end

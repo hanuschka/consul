@@ -1,0 +1,4 @@
+<% @recipient_group.filters.reload %>
+<%= turbo_stream.update "filter-stack-footer" do %>
+  <%= render "adm/recipient_groups/footer", recipient_group: @recipient_group %>
+<% end %>

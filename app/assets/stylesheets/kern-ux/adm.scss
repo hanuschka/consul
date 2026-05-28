@@ -25,14 +25,15 @@
 @use "adm/components/icon_rail";
 @use "adm/components/table";
 @use "adm/components/email_template_component";
+@use "adm/components/recipient_group_filter_card_component";
+@use "adm/components/name_autosave_status";
 @use "adm/components/filter_pills";
 @use "components/map";
 @use "components/shared_admin_iframe";
 @use "components/subnavigation_konto_component";
 @use "adm/components/admin_projekt_import";
 @use "adm/components/evaluation_report";
-@use "adm/components/evaluation_ai_questions";
-@use "adm/components/ai_clustering";
+@use "../cross_pack/components/ai_clustering_component";
 @use "adm/components/masterportal_import_panel";
 @use "adm/components/masterportal_pins_list";
 @use "adm/components/masterportal_pins_summary";
@@ -44,6 +45,8 @@
 @use "../cross_pack/components/phase_key_metrics_card";
 @use "adm/components/phase_key_metrics_card_overrides";
 @use "../cross_pack/components/phase_evaluation_sections";
+@use "../cross_pack/components/shared_accordion";
+@use "../cross_pack/components/ai_question_section";
 
 @use "adm/partials/navbar_items";
 

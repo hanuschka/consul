@@ -16,7 +16,7 @@
     ) do |f| %>
       <%= hidden_field_tag :assistant_codename, @assistant_codename %>
 
-      <%= render Kern::FormFieldComponent.new(label: t(".questions")) do %>
+      <%= render Kern::FormFieldComponent.new(label: t(".questions"), hint: t(".questions_hint")) do %>
         <%= f.text_area :questions,
           placeholder: @ai_assistant_config["default_questions"],
           value: @ai_assistant_config["questions"],
@@ -24,7 +24,7 @@
           label: false %>
       <% end %>
 
-      <%= render Kern::FormFieldComponent.new(label: t(".criteria")) do %>
+      <%= render Kern::FormFieldComponent.new(label: t(".criteria"), hint: t(".criteria_hint")) do %>
         <%= f.text_area :criteria,
           placeholder: @ai_assistant_config["default_criteria"],
           value: @ai_assistant_config["criteria"],
@@ -32,7 +32,7 @@
           label: false %>
       <% end %>
 
-      <%= render Kern::FormFieldComponent.new(label: t(".parting_words")) do %>
+      <%= render Kern::FormFieldComponent.new(label: t(".parting_words"), hint: t(".parting_words_hint")) do %>
         <%= f.text_area :parting_words,
           placeholder: @ai_assistant_config["default_parting_words"],
           value: @ai_assistant_config["parting_words"],

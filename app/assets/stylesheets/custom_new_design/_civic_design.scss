@@ -386,19 +386,7 @@ $civic-transition: 200ms ease;
   // FOOTER PHASES CONTAINER
   // ==========================================================================
   .projekt-footer {
-    margin-top: 16px;
-
-    #footer-content {
-      background: $civic-card;
-      border: 1px solid $civic-border;
-      border-top: none;
-      border-radius: 12px;
-      box-shadow: $civic-shadow-sm;
-    }
-  }
-
-  .projekt-footer--inner {
-    padding: 24px;
+    margin-top: 5px;
   }
 
   // ==========================================================================

@@ -66,13 +66,21 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
               <div class="content-block-edit-toolbar">
-                <label
+                <div
                   class="content-block-margin-input d-flex align-items-end u-gap-5"
                   data-tooltip
                   data-hover-delay="800"
                   title="Abstand nach unten"
                 >
                   <i class="fas fa-arrows-alt-v"></i>
+                  <button
+                    type="button"
+                    class="content-block-margin-input--step js-content-block-margin-bottom-decrease"
+                    aria-label="Abstand verringern"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-minus"></i>
+                  </button>
                   <input
                     type="number"
                     class="js-content-block-margin-bottom-input"
@@ -81,7 +89,15 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     min="0"
                     max="85"
                   >
-                </label>
+                  <button
+                    type="button"
+                    class="content-block-margin-input--step js-content-block-margin-bottom-increase"
+                    aria-label="Abstand vergrößern"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
                 <div
                   class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
                   data-name="header-type"

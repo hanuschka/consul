@@ -1,5 +1,7 @@
 get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
 
+get "/map_data", to: "map_data#show", as: :map_data
+
 post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
 post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
 delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource

@@ -37,6 +37,8 @@ en:
           show_follow_button_in_sidebar_description: Shows a Follow button in the proposal sidebar. Users receive notifications when changes are made to the proposal, e.g. new comments or status changes. Enable this feature to strengthen user engagement. Disable it when the notification system should not be used.
           show_community_button_in_sidebar: Working groups
           show_community_button_in_sidebar_description: Shows a Working group button in the proposal sidebar. Through working groups users can come together in teams and collaborate on proposals. A link to the respective working group is shown on the frontend. Enable this feature in collaborative projects with deeper cooperation.
+          show_social_share_buttons: Share
+          show_social_share_buttons_description: Shows social-share buttons in the investment sidebar. Enable this feature to extend the reach of individual proposals. Disable it when sharing via external platforms is not desired, e.g. for data-protection reasons.
           show_related_content: Related content
           show_related_content_description: Shows related content below a proposal, e.g. similar proposals or thematically linked debates. A dedicated section with links to relevant content appears on the frontend. Enable this feature to promote interconnection between posts and give users additional context.
           show_comments: Comments
@@ -167,6 +169,8 @@ en:
           show_follow_button_in_proposal_sidebar_description: Shows a Follow button in a proposal's sidebar. Users receive notifications when changes are made to the proposal, e.g. new comments or status changes. Enable this feature to strengthen user engagement and keep participants informed about progress. Disable it as needed.
           show_community_button_in_proposal_sidebar: Working groups
           show_community_button_in_proposal_sidebar_description: Shows a Working group button in a proposal's sidebar, through which users can come together and collaborate on a proposal. A link to the respective working group is shown on the frontend. Enable this feature in collaborative projects where deeper cooperation is desired.
+          show_social_share_buttons: Share
+          show_social_share_buttons_description: Shows social-share buttons in a proposal's sidebar. Enable this feature to extend the reach of individual proposals. Disable it when sharing via external platforms is not desired, e.g. for data-protection reasons.
           show_related_content: Related content
           show_related_content_description: Shows related content below a proposal, e.g. thematically similar proposals or linked debates. A dedicated section with links to relevant posts appears on the frontend. Enable this feature to promote content interconnection between posts and give users additional context.
           show_comments: Comments

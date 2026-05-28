@@ -9,6 +9,16 @@ module SettingsHelper
     setting["deficiency_reports.#{name}"].presence
   end
 
+  def deficiency_reports_feature_name
+    Setting["deficiency_reports.feature_name"].presence ||
+      t("custom.deficiency_reports.index.title")
+  end
+
+  def deficiency_reports_create_cta
+    Setting["deficiency_reports.create_cta"].presence ||
+      t("custom.deficiency_reports.index.start_deficiency_report")
+  end
+
   def ideas_feature?(name)
     setting["ideas.#{name}"].presence
   end

@@ -21,8 +21,9 @@ class SavedContentBlock < ApplicationRecord
   def sanitize_content
     return if content.blank?
 
+    sanitizer = AdminWYSIWYGSanitizer.new
     original = content
-    self.content = AdminWYSIWYGSanitizer.new.sanitize(content)
-    @content_stripped = original != content
+    self.content = sanitizer.sanitize(content)
+    @content_stripped = sanitizer.stripped?(original, content)
   end
 end

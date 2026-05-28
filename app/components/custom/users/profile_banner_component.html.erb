@@ -4,7 +4,7 @@
       <%= form_for @user, as: :account, remote: true, authenticity_token: true, url: account_path do |f| %>
         <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true) do |c|%>
           <% c.with_custom_edit_button do %>
-            <button type="button" class="users-profile-banner--edit-button users-profile-banner--avatar-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
+            <button type="button" class="users-profile-banner--edit-button users-profile-banner--background-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
               <i class="fa fa-pencil-alt" aria-hidden="true"></i>
             </button>
           <% end %>

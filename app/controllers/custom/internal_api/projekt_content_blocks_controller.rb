@@ -32,7 +32,11 @@ class InternalApi::ProjektContentBlocksController < InternalApi::BaseController
   def update
     # TODO add authorization
     if @content_block.update(body: params[:html])
-      render json: { status: { message: "Content block updated" }}
+      render json: {
+        body: @content_block.body,
+        stripped: @content_block.body_stripped?,
+        status: { message: "Content block updated" }
+      }
     else
       render json: { message: "Error updating content_block" }
     end

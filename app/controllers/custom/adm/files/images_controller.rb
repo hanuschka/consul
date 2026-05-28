@@ -1,12 +1,12 @@
 class Adm::Files::ImagesController < Adm::Files::BaseController
   def index
     authorize [:adm, :image]
-    skip_policy_scope
 
     @assets =
       ImagesQuery
         .new(query_params)
         .call
+        .merge(policy_scope([:adm, Image]))
         .page(params[:page])
         .per(24)
 

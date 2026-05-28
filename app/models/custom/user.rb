@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 User.class_eval do
-  audited only: [:username, :first_name, :last_name, :registered_address_id,
+  audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
 
@@ -63,7 +63,11 @@ User.class_eval do
 
   belongs_to :api_client, optional: true
 
-  scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :projekt_managers,           -> { joins(:projekt_manager) }
+  scope :valuators,                  -> { joins(:valuator) }
+  scope :idea_managers,              -> { joins(:idea_manager) }
+  scope :officing_managers,          -> { joins(:officing_manager) }
+  scope :deficiency_report_managers, -> { joins(:deficiency_report_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }

@@ -35,6 +35,7 @@ de:
             verify: Verifizieren
             unverify: Verifizierung aufheben
             edit: Bearbeiten
+            audits: Änderungslog
       csv_download:
         not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.
       edit:

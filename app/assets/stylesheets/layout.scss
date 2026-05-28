@@ -1039,6 +1039,11 @@ footer {
         display: inline-block;
         text-align: left;
       }
+
+      img {
+        max-height: 60px;
+        max-width: 100%;
+      }
     }
   }
 }
